@@ -1,19 +1,55 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-  <title>MyQuickTag</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>MyQuickTag</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    padding-top: 80px;
+}
+
+#nome {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 12px 20px;
+    background: #25D366;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+</style>
 </head>
-<body style="font-family: Arial; text-align: center; margin-top: 50px;">
 
-  <h1>🚀 MyQuickTag</h1>
-  <p>Il tuo strumento veloce per creare tag</p>
+<body>
 
-  <button onclick="alert('Funzione in arrivo!')" 
-          style="padding: 15px; font-size: 18px;">
-    Crea Tag
-  </button>
+<div id="contenuto"></div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const nome = params.get("nome");
+
+const contenuto = document.getElementById("contenuto");
+
+if (!nome) {
+    contenuto.innerHTML = "<h2>Errore: nome mancante</h2>";
+} else {
+    contenuto.innerHTML = `
+        <div id="nome">@${nome}</div>
+        <button onclick="alert('WhatsApp click')">
+            Contattami su WhatsApp
+        </button>
+    `;
+}
+</script>
 
 </body>
 </html>
