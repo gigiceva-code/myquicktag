@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -6,31 +7,25 @@
     <title>MyQuickTag</title>
     <style>
         body { font-family: Arial; text-align: center; padding-top: 80px; }
-        input { padding: 10px; font-size: 16px; width: 80%; max-width: 300px; }
-        button { padding: 10px 15px; margin-top: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+        input { padding: 10px; width: 250px; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
         #risultato { margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Prendi il tuo nome digitale</h1>
-    <p>@tuonome è ancora libero?</p>
-    <input id="nomeInput" placeholder="scrivi qui il tuo nome">
-    <br>
-    <button onclick="verificaNome()">Verifica ora</button>
+    <h1>Cerca il tuo Tag</h1>
+    <input type="text" id="nomeInput" placeholder="Inserisci nome (es: gigi)">
+    <button onclick="cercaTag()">Verifica</button>
     <div id="risultato"></div>
 
     <script>
-        const nomiUsati = ["luca", "marco"];
-        function verificaNome() {
+        function cercaTag() {
             const nome = document.getElementById("nomeInput").value.trim().toLowerCase();
-            const risultato = document.getElementById("risultato");
-            if (!nome) { risultato.textContent = "Inserisci un nome"; return; }
-            if (nomiUsati.includes(nome)) {
-                risultato.textContent = "Nome già preso";
-                risultato.style.color = "red";
-            } else {
-                window.location.href = `tag.html?nome=${nome}`;
-            }
+            const res = document.getElementById("risultato");
+            if(!nome) return;
+            // Qui poi collegheremo Airtable con la tua chiave pat...
+            res.innerHTML = "Stiamo verificando il tag @" + nome + "...";
+            res.style.color = "blue";
         }
     </script>
 </body>
