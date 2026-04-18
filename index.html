@@ -29,19 +29,22 @@
             <h2 class="text-xl md:text-2xl text-gray-600 font-normal leading-relaxed mb-4">
                 Il tuo @nome. Identità digitale unica.
             </h2>
-            <p class="text-gray-400 text-base">Sceglilo prima che sia preso.</p>
+            <p class="text-gray-900 font-bold text-lg italic">Il tuo @nome potrebbe non esserlo ancora.</p>
         </header>
 
-        <div class="flex flex-col gap-4 justify-center mb-8">
-            <div class="relative max-w-sm mx-auto w-full">
+        <div class="flex flex-col gap-2 justify-center mb-8">
+            <div class="relative max-w-sm mx-auto w-full mb-2">
                 <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">@</span>
                 <input type="text" id="nomeInput" 
                     class="block w-full pl-10 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-0 text-lg transition-all shadow-sm" 
                     placeholder="Scrivi il tuo nome">
             </div>
-            <button onclick="verificaNome()" class="max-w-sm mx-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all active:scale-95 text-lg">
-                Verifica disponibilità
+            <p class="text-gray-400 text-sm mb-2">Ogni giorno nuovi nomi vengono registrati.</p>
+            
+            <button onclick="verificaNome()" class="max-w-sm mx-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all active:scale-95 text-xl">
+                Controlla ora
             </button>
+            <p class="text-gray-400 text-xs mt-2">Gratis per iniziare</p>
         </div>
 
         <div id="risultato" class="mb-10 transition-all min-h-[100px]"></div>
@@ -53,8 +56,7 @@
         </div>
 
         <div class="space-y-4">
-            <p class="text-gray-900 font-medium text-lg">Il tuo @nome è unico.</p>
-            <p class="text-gray-700 font-bold">Verifica se il tuo è ancora disponibile.</p>
+            <p class="text-gray-700 font-bold text-lg">Verifica se il tuo è ancora disponibile.</p>
         </div>
 
     </div>
@@ -77,7 +79,7 @@
             const nomeInMinuscolo = inputOriginale.toLowerCase();
 
             if (inputOriginale === "") {
-                risultatoArea.innerHTML = "<p class='text-red-500 font-medium'>Inserisci un nome.</p>";
+                risultatoArea.innerHTML = "<p class='text-red-500 font-medium font-bold'>Inserisci un nome.</p>";
                 return;
             }
 
@@ -104,7 +106,7 @@
                         </div>`;
                 }
             } catch (error) {
-                risultatoArea.innerHTML = "<p class='text-red-500 font-medium'>Riprova tra un istante.</p>";
+                risultatoArea.innerHTML = "<p class='text-red-500 font-medium font-bold'>Riprova tra un istante.</p>";
             }
         }
 
