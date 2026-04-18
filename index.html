@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -133,7 +132,7 @@
                         <div class="bg-green-50 border-2 border-green-100 p-6 rounded-2xl inline-block shadow-sm">
                             <h3 class="text-xl font-bold text-green-700">✅ @${inputOriginale} è disponibile</h3>
                             <p class="text-green-600 text-sm mt-2 mb-4">🎁 Gratis per 3 mesi, poi 2€/anno.</p>
-                            <button onclick="azioneRiceviTag()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md">
+                            <button onclick="azioneRiceviTag('${nomeInMinuscolo}')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md">
                                 Ricevi il tuo @${inputOriginale}
                             </button>
                         </div>`;
@@ -143,8 +142,10 @@
             }
         }
 
-        function azioneRiceviTag() {
-            alert("Sistema di registrazione in attivazione. Il tuo tag sarà pronto a breve!");
+        // FUNZIONE AGGIORNATA PER IL RE-INDIRIZZAMENTO
+        function azioneRiceviTag(nome) {
+            // Reindirizza l'utente alla sua pagina tag.html portando dietro il nome
+            window.location.href = "tag.html?nome=" + nome;
         }
     </script>
 </body>
