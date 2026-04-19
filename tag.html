@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: linear-gradient(135deg, #f5f7ff, #eef1ff); min-height: 100vh; padding: 20px; }
-        .preview-card { background: linear-gradient(135deg, #ffffff, #eef1ff); border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); animation: fadeIn 0.6s ease-out; }
+        .preview-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); animation: fadeIn 0.6s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -19,38 +19,30 @@
 
     <div class="w-full max-w-sm text-center">
         <div class="mb-6">
-            <h2 class="text-[30px] font-black text-gray-900 mb-1">@<span id="tagNome"></span></h2>
-            <p class="text-[#666] font-medium uppercase tracking-widest text-sm">Disponibile</p>
+            <h2 class="text-[40px] font-black text-gray-900 mb-1">@<span id="tagNome"></span></h2>
+            <p class="text-green-600 font-bold uppercase tracking-widest text-sm">Disponibile</p>
         </div>
 
-        <p class="text-gray-700 font-medium mb-10 leading-relaxed px-4">Uno spazio semplice per raccogliere tutto ciò che vuoi condividere.</p>
+        <p class="text-gray-700 font-medium mb-10 px-4 text-lg">Uno spazio semplice per raccogliere tutto ciò che vuoi condividere.</p>
 
         <div class="preview-card p-8 text-left border border-white mb-8">
-            <p class="text-[#777] text-[13px] mb-3 font-medium uppercase tracking-tight">Anteprima</p>
-            <h3 class="text-3xl font-bold text-gray-900 mb-4">@<span id="tagNomePreview"></span></h3>
-            <p class="text-gray-700 font-semibold mb-3 text-sm">Un solo link per:</p>
-            <ul class="space-y-3 text-gray-600 text-sm">
-                <li class="flex items-center"><span class="mr-3 text-blue-500 font-bold">→</span> Contatti</li>
-                <li class="flex items-center"><span class="mr-3 text-blue-500 font-bold">→</span> Social</li>
-                <li class="flex items-center"><span class="mr-3 text-blue-500 font-bold">→</span> Info personali o professionali</li>
+            <p class="text-gray-400 text-[12px] mb-3 font-bold uppercase">Anteprima</p>
+            <h3 class="text-3xl font-bold text-gray-900 mb-6">@<span id="tagNomePreview"></span></h3>
+            
+            <ul class="space-y-4 text-gray-600">
+                <li class="flex items-center text-sm font-medium"><span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>Contatti</li>
+                <li class="flex items-center text-sm font-medium"><span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>Link Social</li>
+                <li class="flex items-center text-sm font-medium"><span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>Bio Personale o Professionale</li>
             </ul>
         </div>
 
-        <p class="text-[13px] text-gray-500 mb-4 font-medium">
-            Se è disponibile… è ancora tuo.
-        </p>
-
-        <button onclick="ottieniTag()" class="w-full max-w-[300px] bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-xl tracking-tight">
+        <button onclick="ottieniTag()" class="w-full max-w-[300px] bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-xl">
             Ottieni @<span id="tagNomeBtn"></span>
         </button>
         
         <p class="text-[13px] text-[#777] mt-4 font-medium">
             3 mesi gratuiti · poi 2€ / anno se vuoi mantenerlo
         </p>
-
-        <footer class="mt-16 text-[10px] text-gray-400 tracking-[0.3em] uppercase opacity-50">
-            MyQuickTag Protocol
-        </footer>
     </div>
 
     <script>
