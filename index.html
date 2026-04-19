@@ -1,160 +1,97 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyQuickTag</title>
-
-<style>
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 40px 20px;
-  background: linear-gradient(135deg,#f5f7ff,#eef1ff);
-}
-
-h1 {
-  font-size: 32px;
-}
-
-h2 {
-  margin-top: 10px;
-  font-weight: 500;
-}
-
-.input-box {
-  display:flex;
-  align-items:center;
-  border:1px solid #ccc;
-  border-radius:10px;
-  padding:10px;
-  max-width:300px;
-  margin:20px auto;
-  background:white;
-}
-
-.input-box span {
-  margin-right:5px;
-}
-
-.input-box input {
-  border:none;
-  outline:none;
-  width:100%;
-  font-size:16px;
-}
-
-button {
-  padding:12px 20px;
-  border:none;
-  border-radius:10px;
-  background:#007BFF;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-}
-
-button:hover {
-  background:#0056b3;
-}
-
-#result {
-  margin-top:15px;
-  font-size:14px;
-}
-
-.footer {
-  margin-top:50px;
-  font-size:12px;
-  color:gray;
-}
-
-.footer a {
-  margin:0 10px;
-  color:gray;
-  text-decoration:none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyQuickTag - Un @nome. Una sola identità.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: linear-gradient(135deg, #f5f7ff, #eef1ff); min-height: 100vh; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </head>
+<body class="font-sans text-gray-900 flex flex-col min-h-screen">
 
-<body>
+    <div class="max-w-xl mx-auto px-6 py-20 flex-grow text-center">
+        <header class="mb-12">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 mb-4 tracking-tight">MyQuickTag</h1>
+            <h2 class="text-2xl text-gray-700 font-medium">Un @nome. Una sola identità.</h2>
+            <p class="mt-4 text-gray-500 max-w-sm mx-auto">Un solo link per condividere contatti, social e informazioni.</p>
+        </header>
 
-<h1>MyQuickTag</h1>
+        <div class="flex flex-col gap-4 justify-center mb-8">
+            <div class="flex items-center bg-white border-2 border-white rounded-2xl px-4 py-4 max-w-sm mx-auto w-full shadow-sm focus-within:border-blue-400 transition-all group">
+                <span class="text-gray-400 text-lg font-bold transition-colors group-focus-within:text-blue-500 mr-1">@</span>
+                <input type="text" id="nomeInput" placeholder="nome" class="bg-transparent border-none outline-none w-full text-lg text-gray-900 p-0 focus:ring-0">
+            </div>
+            
+            <button id="searchButton" class="max-w-sm mx-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all active:scale-95 text-xl">
+                Controlla il tuo @nome
+            </button>
+        </div>
 
-<h2>Ottieni il tuo @nome prima degli altri</h2>
+        <div id="result" class="min-h-[100px] text-lg font-bold"></div>
+    </div>
 
-<p style="margin-top:15px; color:#555;">
-Un solo link per condividere contatti, social e informazioni.
-</p>
+    <script>
+        // --- CONFIGURAZIONE AIRTABLE ---
+        const apiKey = 'pat6qz8htyV7b1NSN.f3cdd9392b92318e7b32302f93037810ecb4ee9fbd269c40c0e1c18a93b60b8e';
+        const baseId = 'app4eQDzqixPDbQTd';
+        const tableName = "Table 1";
 
-<div class="input-box">
-  <span>@</span>
-  <input type="text" id="nomeInput" placeholder="nome">
-</div>
+        const input = document.getElementById("nomeInput");
+        const result = document.getElementById("result");
+        const button = document.getElementById("searchButton");
 
-<button id="searchButton">Controlla il tuo @nome</button>
+        // click bottone
+        button.addEventListener("click", checkNome);
 
-<p id="result"></p>
+        // invio da tastiera
+        input.addEventListener("keypress", function(e) {
+          if (e.key === "Enter") {
+            checkNome();
+          }
+        });
 
-<!-- FOOTER LEGGERO -->
-<div class="footer">
-  <a href="#" onclick="alert('MyQuickTag assegna luso del nome ma non la proprietà legale del marchio.')">Termini</a>
-  <a href="#" onclick="alert('Non raccogliamo dati personali sensibili. Usato solo per gestione tag.')">Privacy</a>
-  <a href="#" onclick="alert('Usiamo cookie tecnici per il funzionamento del sito.')">Cookie</a>
-</div>
+        async function checkNome() {
+          const nome = input.value.trim().toLowerCase();
 
-<script>
+          if (!nome) {
+            result.innerHTML = "<span class='text-red-500'>Inserisci un nome.</span>";
+            return;
+          }
 
-const apiKey = "pat6qz8htyV7b1NSN.f3cdd9392b92318e7b32302f93037810ecb4ee9fbd269c40c0e1c18a93b60b8e";
-const baseId = "app4eQDzqixPDbQTd";
-const tableName = "Table 1";
+          result.innerHTML = `<div class="loader mt-4"></div><p class="text-gray-500 text-sm mt-2">Controllo...</p>`;
 
-const input = document.getElementById("nomeInput");
-const result = document.getElementById("result");
-const button = document.getElementById("searchButton");
+          // URL aggiornato con colonna {nome} e codifica spazi per "Table 1"
+          const url = `https://api.airtable.com/v0/${baseId}/Table%201?filterByFormula=LOWER({nome})='${nome}'`;
 
-button.addEventListener("click", checkNome);
+          try {
+            const res = await fetch(url, {
+              headers: {
+                Authorization: `Bearer ${apiKey}`
+              }
+            });
 
-input.addEventListener("keypress", function(e) {
-  if (e.key === "Enter") {
-    checkNome();
-  }
-});
+            const data = await res.json();
 
-async function checkNome() {
-  const nome = input.value.trim().toLowerCase();
+            if (data.records && data.records.length > 0) {
+              result.innerHTML = "<span class='text-red-600 bg-red-50 px-4 py-2 rounded-lg'>❌ Nome non disponibile</span>";
+            } else {
+              result.innerHTML = "<span class='text-green-600 bg-green-50 px-4 py-2 rounded-lg'>Perfetto. Questo @nome è tuo.</span>";
 
-  if (!nome) return;
+              // Redirect automatico dopo un breve feedback positivo
+              setTimeout(() => {
+                window.location.href = "tag.html?nome=" + nome;
+              }, 800);
+            }
 
-  result.innerHTML = "Controllo...";
-
-  const url = `https://api.airtable.com/v0/${baseId}/${tableName}?filterByFormula=LOWER({nome})='${nome}'`;
-
-  try {
-    const res = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      }
-    });
-
-    const data = await res.json();
-
-    if (data.records.length > 0) {
-      result.innerHTML = "❌ Nome non disponibile";
-    } else {
-      result.innerHTML = "Perfetto. Questo @nome è tuo.";
-
-      setTimeout(() => {
-        window.location.href = "tag.html?nome=" + nome;
-      }, 700);
-    }
-
-  } catch (error) {
-    result.innerHTML = "Errore di connessione";
-  }
-}
-
-</script>
-
+          } catch (error) {
+            result.innerHTML = "<span class='text-red-500'>Errore di connessione</span>";
+            console.log("Errore Airtable:", error);
+          }
+        }
+    </script>
 </body>
 </html>
