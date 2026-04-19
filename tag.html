@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il tuo MyQuickTag</title>
+    <title>Ottieni il tuo MyQuickTag</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             background: linear-gradient(135deg, #f5f7ff, #eef1ff);
             min-height: 100vh;
+            padding: 20px;
         }
         .preview-card {
-            background: linear-gradient(135deg, #ffffff, #f3f4ff);
+            background: linear-gradient(135deg, #ffffff, #eef1ff);
             border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
             animation: fadeIn 0.6s ease-out;
         }
         @keyframes fadeIn {
@@ -23,66 +24,69 @@
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-6 font-sans">
+<body class="flex items-center justify-center font-sans">
 
     <div class="w-full max-w-sm text-center">
         
-        <div class="mb-8">
-            <h2 class="text-4xl font-black text-gray-900 mb-1">
+        <div class="mb-6">
+            <h2 class="text-[30px] font-black text-gray-900 mb-1">
                 @<span id="tagNome"></span>
             </h2>
-            <p class="text-gray-400 font-medium">Questo tag è disponibile</p>
+            <p class="text-[#666] font-medium uppercase tracking-widest text-sm">Disponibile</p>
         </div>
 
-        <p class="text-gray-700 font-medium mb-10">
-            Questo può diventare il tuo spazio digitale.
+        <p class="text-gray-700 font-medium mb-10 leading-relaxed px-4">
+            Uno spazio semplice per raccogliere tutto ciò che vuoi condividere.
         </p>
 
-        <div class="preview-card p-8 text-left border border-white mb-8">
-            <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-4 text-center md:text-left">Anteprima</p>
+        <div class="preview-card p-8 text-left border border-white mb-10">
+            <p class="text-[#777] text-[13px] mb-3 font-medium uppercase tracking-tight">Anteprima</p>
             
-            <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center md:text-left">
+            <h3 class="text-3xl font-bold text-gray-900 mb-4">
                 @<span id="tagNomePreview"></span>
             </h3>
 
-            <p class="text-sm text-gray-500 mb-4 border-b border-gray-100 pb-2">Qui potrai inserire:</p>
+            <p class="text-gray-700 font-semibold mb-3">Un solo link per:</p>
             
             <ul class="space-y-3 text-gray-600 text-sm">
                 <li class="flex items-center">
-                    <span class="mr-2 text-blue-500">✔</span> Contatti rapidi
+                    <span class="mr-3 text-blue-500 font-bold">→</span> Contatti
                 </li>
                 <li class="flex items-center">
-                    <span class="mr-2 text-blue-500">✔</span> Link ai tuoi social
+                    <span class="mr-3 text-blue-500 font-bold">→</span> Social
                 </li>
                 <li class="flex items-center">
-                    <span class="mr-2 text-blue-500">✔</span> Info personali o professionali
+                    <span class="mr-3 text-blue-500 font-bold">→</span> Informazioni personali o professionali
                 </li>
             </ul>
         </div>
 
-        <button onclick="attivaTag()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-lg">
-            Attiva il tuo @<span id="tagNomeBtn"></span>
+        <button onclick="ottieniTag()" class="w-full max-w-[300px] bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-xl tracking-tight">
+            Ottieni @<span id="tagNomeBtn"></span>
         </button>
 
-        <p class="text-[13px] text-gray-400 mt-4">
+        <p class="text-[13px] text-[#777] mt-4 font-medium">
             Attivazione immediata · gestione semplice
         </p>
 
-        <footer class="mt-12 text-[10px] text-gray-300 tracking-widest uppercase">
+        <footer class="mt-16 text-[10px] text-gray-400 tracking-[0.3em] uppercase opacity-50">
             MyQuickTag Protocol
         </footer>
     </div>
 
     <script>
+        // Recupero del nome dall'URL
         const params = new URLSearchParams(window.location.search);
-        const nome = params.get("nome") || "tag";
+        const nomeOriginale = params.get("nome") || "tag";
+        const nome = nomeOriginale.toLowerCase();
 
         document.getElementById("tagNome").textContent = nome;
         document.getElementById("tagNomePreview").textContent = nome;
         document.getElementById("tagNomeBtn").textContent = nome;
 
-        function attivaTag() {
-            alert("Sistema di attivazione in corso. Stiamo preparando il tuo spazio @"+nome+"!");
+        function ottieniTag() {
+            // Simulazione di attivazione
+            alert("Ottimo! Stiamo preparando il tuo spazio digitale @" + nome + ".");
         }
     </script>
 </body>
