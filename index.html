@@ -31,11 +31,19 @@
             </button>
         </div>
 
-        <div id="result" class="min-h-[100px] text-lg font-bold"></div>
+        <div id="result" class="min-h-[120px] transition-all"></div>
+
+        <div style="margin-top:50px; font-size:12px; color:gray; text-align:center;">
+          <a href="#" class="hover:underline" onclick="alert('MyQuickTag assegna il diritto di utilizzo del nome ma non la proprietà del marchio.')">Termini</a>
+          |
+          <a href="#" class="hover:underline" onclick="alert('Non raccogliamo dati personali sensibili. Utilizzati solo per gestione tecnica del servizio.')">Privacy</a>
+          |
+          <a href="#" class="hover:underline" onclick="alert('Utilizziamo cookie tecnici necessari al funzionamento del sito.')">Cookie</a>
+        </div>
     </div>
 
     <script>
-        // --- CONFIGURAZIONE AIRTABLE ---
+        // --- CONFIGURAZIONE AIRTABLE (INSERITA DA GEMINI) ---
         const apiKey = 'pat6qz8htyV7b1NSN.f3cdd9392b92318e7b32302f93037810ecb4ee9fbd269c40c0e1c18a93b60b8e';
         const baseId = 'app4eQDzqixPDbQTd';
         const tableName = "Table 1";
@@ -44,61 +52,45 @@
         const result = document.getElementById("result");
         const button = document.getElementById("searchButton");
 
-        // click bottone
         button.addEventListener("click", checkNome);
-
-        // invio da tastiera
-        input.addEventListener("keypress", function(e) {
-          if (e.key === "Enter") {
-            checkNome();
-          }
-        });
+        input.addEventListener("keypress", (e) => { if (e.key === "Enter") checkNome(); });
 
         async function checkNome() {
           const nome = input.value.trim().toLowerCase();
-
           if (!nome) {
-            result.innerHTML = "<span class='text-red-500'>Inserisci un nome.</span>";
+            result.innerHTML = "<span class='text-red-500 font-bold'>Inserisci un nome.</span>";
             return;
           }
 
           result.innerHTML = `<div class="loader mt-4"></div><p class="text-gray-500 text-sm mt-2">Controllo...</p>`;
 
-          // URL aggiornato con colonna {nome} e codifica spazi per "Table 1"
           const url = `https://api.airtable.com/v0/${baseId}/Table%201?filterByFormula=LOWER({nome})='${nome}'`;
 
           try {
-            const res = await fetch(url, {
-              headers: {
-                Authorization: `Bearer ${apiKey}`
-              }
-            });
-
+            const res = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } });
             const data = await res.json();
 
             if (data.records && data.records.length > 0) {
-              result.innerHTML = "<span class='text-red-600 bg-red-50 px-4 py-2 rounded-lg'>❌ Nome non disponibile</span>";
+              result.innerHTML = `
+                <div class="mt-4 bg-red-50 p-4 rounded-xl inline-block border border-red-100">
+                    <p class="text-red-600 font-bold text-lg">❌ Nome non disponibile</p>
+                </div>`;
             } else {
-              result.innerHTML = "<span class='text-green-600 bg-green-50 px-4 py-2 rounded-lg'>Perfetto. Questo @nome è tuo.</span>";
-
-              // Redirect automatico dopo un breve feedback positivo
-              setTimeout(() => {
-                window.location.href = "tag.html?nome=" + nome;
-              }, 800);
+              result.innerHTML = `
+                <div class="mt-4 bg-green-50 p-6 rounded-xl inline-block shadow-sm border border-green-100">
+                    <p class="text-green-600 font-bold text-xl mb-1">Disponibile</p>
+                    <p class="text-gray-600 text-sm mb-4">3 mesi gratuiti · poi 2€/anno per mantenerlo</p>
+                    <button onclick="window.location.href='tag.html?nome=${nome}'" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-all">
+                        Procedi
+                    </button>
+                </div>`;
             }
 
           } catch (error) {
             result.innerHTML = "<span class='text-red-500'>Errore di connessione</span>";
-            console.log("Errore Airtable:", error);
+            console.log(error);
           }
         }
     </script>
-    <div style="margin-top:50px; font-size:12px; color:gray;">
-  <a href="#" onclick="alert('MyQuickTag assegna luso del nome ma non la proprietà legale del marchio.')">Termini</a>
-  |
-  <a href="#" onclick="alert('Non raccogliamo dati personali sensibili. Usato solo per gestione tag.')">Privacy</a>
-  |
-  <a href="#" onclick="alert('Usiamo cookie tecnici per il funzionamento del sito.')">Cookie</a>
-    </div>
 </body>
 </html>
