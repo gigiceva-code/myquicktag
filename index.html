@@ -22,20 +22,22 @@
         </header>
 
         <div class="flex flex-col gap-2 justify-center mb-6">
-            <div class="flex items-center bg-white/80 backdrop-blur-sm border-2 border-white rounded-2xl px-4 py-4 max-w-sm mx-auto w-full shadow-sm focus-within:border-blue-400 transition-all">
-                <span class="text-gray-400 text-lg font-medium mr-2">@</span>
-                <input type="text" id="nomeInput" placeholder="nome" class="bg-transparent border-none outline-none w-full text-lg text-gray-900">
-            </div>
-            
-            <div>
-                <p class="text-[13px] text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" onclick="toggleGuida()">Come funziona?</p>
-                <div id="guidaBox" class="hidden mt-3 text-[13px] text-gray-500 bg-white/90 p-4 rounded-xl border border-gray-100 shadow-sm max-w-xs mx-auto text-left">
-                    <p class="mb-1">1. Scegli un nome</p>
-                    <p class="mb-1">2. Controlla se è disponibile</p>
-                    <p>3. Attiva il tuo tag</p>
-                </div>
-            </div>
+    <div class="flex items-center bg-white/80 backdrop-blur-sm border-2 border-white rounded-2xl px-4 py-4 max-w-sm mx-auto w-full shadow-sm focus-within:border-blue-400 transition-all group">
+        <span class="text-gray-400 text-lg font-bold transition-colors group-focus-within:text-blue-500 mr-1">@</span>
+        <input type="text" id="nomeInput" placeholder="nome" 
+            class="bg-transparent border-none outline-none w-full text-lg text-gray-900 placeholder:text-gray-300 p-0 focus:ring-0">
+    </div>
+    
+    <div>
+        <p class="text-[13px] text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" onclick="toggleGuida()">Come funziona?</p>
+        <div id="guidaBox" class="hidden mt-3 text-[13px] text-gray-500 bg-white/90 p-4 rounded-xl border border-gray-100 shadow-sm max-w-xs mx-auto text-left">
+            <p class="mb-1">1. Scegli un nome</p>
+            <p class="mb-1">2. Controlla se è disponibile</p>
+            <p>3. Attiva il tuo tag</p>
         </div>
+    </div>
+</div>
+
 
         <div class="mb-8">
             <button onclick="verificaNome()" class="max-w-sm mx-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all active:scale-95 text-xl">Controlla ora</button>
