@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyQuickTag - @${nome}</title>
+  <title>Personalizza @${nome} - MyQuickTag</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -14,102 +14,59 @@
 <body class="bg-zinc-950 text-white min-h-screen">
 
   <div class="max-w-2xl mx-auto pt-12 px-5">
-    <a href="index.html" class="flex items-center gap-2 text-zinc-400 hover:text-white mb-8">
-      ← Torna alla ricerca
-    </a>
+    <div class="flex justify-between items-center mb-8">
+      <a href="index.html" class="text-zinc-400 hover:text-white">← Home</a>
+      <h1 class="text-2xl font-semibold">@${nome}</h1>
+    </div>
 
-    <div id="content"></div>
+    <div class="bg-zinc-900 rounded-3xl p-8">
+      <h2 class="text-3xl font-semibold mb-8">Personalizza la tua pagina</h2>
+
+      <div class="space-y-8">
+        <!-- Foto / Avatar -->
+        <div>
+          <label class="block text-sm text-zinc-400 mb-2">Foto profilo</label>
+          <div class="flex items-center gap-4">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center text-5xl">👤</div>
+            <button class="bg-zinc-800 hover:bg-zinc-700 px-5 py-3 rounded-2xl text-sm">Carica foto</button>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div>
+          <label class="block text-sm text-zinc-400 mb-2">Bio (max 200 caratteri)</label>
+          <textarea class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-5 h-32 resize-none" placeholder="Scrivi qualcosa su di te..."></textarea>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <label class="block text-sm text-zinc-400 mb-3">I tuoi link</label>
+          <div class="space-y-3">
+            <input type="text" placeholder="Instagram @username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+            <input type="text" placeholder="LinkedIn" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+            <input type="text" placeholder="Sito Web o YouTube" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+            <input type="text" placeholder="Altro link" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+          </div>
+        </div>
+      </div>
+
+      <button onclick="saveProfile()" 
+              class="w-full mt-12 bg-emerald-500 hover:bg-emerald-600 py-7 rounded-3xl text-xl font-semibold transition-all">
+        💾 Salva e Pubblica la mia pagina
+      </button>
+    </div>
   </div>
 
   <script>
+    function saveProfile() {
+      alert("✅ Profilo salvato con successo!\n\nLa tua pagina @nome è ora online e pronta da condividere.");
+      // Qui in futuro redirect alla pagina pubblica finale
+    }
+
+    // Prende il nome dall'URL
     const urlParams = new URLSearchParams(window.location.search);
-    let nome = urlParams.get('nome')?.toLowerCase().trim() || '';
-
-    function loadTag() {
-      const content = document.getElementById('content');
-
-      content.innerHTML = `
-        <div class="text-center mb-10">
-          <div class="inline-flex items-center bg-emerald-500/10 text-emerald-400 rounded-full px-6 py-2 text-sm font-medium mb-6">
-            <i class="fas fa-check-circle mr-2"></i> NOME DISPONIBILE
-          </div>
-          <h1 class="text-7xl font-bold tracking-tighter mb-2">@${nome}</h1>
-          <p class="text-2xl text-zinc-400">È libero. Prendilo prima che sparisca.</p>
-        </div>
-
-        <!-- Anteprima realistica della pagina personale -->
-        <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-700">
-          <!-- Header profilo -->
-          <div class="bg-gradient-to-r from-blue-600 to-purple-600 h-32 relative">
-            <div class="absolute -bottom-12 left-6 w-24 h-24 bg-zinc-950 rounded-2xl border-4 border-zinc-900 flex items-center justify-center text-5xl shadow-xl">
-              👤
-            </div>
-          </div>
-
-          <div class="pt-16 pb-8 px-6">
-            <h2 class="text-3xl font-semibold">@${nome}</h2>
-            <p class="text-zinc-400 mt-1">La tua identità digitale unica</p>
-
-            <!-- Bio di esempio -->
-            <p class="mt-6 text-zinc-300 leading-relaxed">
-              Ciao! Sono un professionista creativo appassionato di tecnologia e innovazione. 
-              Qui trovi tutti i miei contatti e progetti.
-            </p>
-
-            <!-- Links di esempio -->
-            <div class="mt-8 space-y-3">
-              <a href="#" class="flex items-center gap-4 bg-zinc-800 hover:bg-zinc-700 transition-all rounded-2xl p-4">
-                <i class="fab fa-instagram text-2xl w-8"></i>
-                <div>
-                  <p class="font-medium">Instagram</p>
-                  <p class="text-sm text-zinc-400">@${nome}</p>
-                </div>
-              </a>
-              <a href="#" class="flex items-center gap-4 bg-zinc-800 hover:bg-zinc-700 transition-all rounded-2xl p-4">
-                <i class="fab fa-linkedin text-2xl w-8"></i>
-                <div>
-                  <p class="font-medium">LinkedIn</p>
-                  <p class="text-sm text-zinc-400">Profilo professionale</p>
-                </div>
-              </a>
-              <a href="#" class="flex items-center gap-4 bg-zinc-800 hover:bg-zinc-700 transition-all rounded-2xl p-4">
-                <i class="fas fa-globe text-2xl w-8"></i>
-                <div>
-                  <p class="font-medium">Sito Web</p>
-                  <p class="text-sm text-zinc-400">www.miosito.it</p>
-                </div>
-              </a>
-            </div>
-
-            <!-- QR Code finto -->
-            <div class="mt-10 flex justify-center">
-              <div class="bg-white p-4 rounded-2xl">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://gigiceva-code.github.io/myquicktag/tag.html?nome=${nome}" 
-                     alt="QR Code" class="w-52 h-52">
-              </div>
-            </div>
-            <p class="text-center text-xs text-zinc-500 mt-3">Inquadra per accedere alla mia pagina</p>
-          </div>
-        </div>
-
-        <!-- Pulsante Claim -->
-        <button onclick="claimName()" 
-                class="w-full mt-10 bg-white text-black py-7 rounded-3xl text-2xl font-semibold hover:bg-emerald-400 transition-all active:scale-95">
-          🎯 Attiva @${nome} GRATIS per 3 mesi
-        </button>
-
-        <p class="text-center text-sm text-zinc-500 mt-6">
-          Poi solo 2€/anno • Puoi disdire quando vuoi
-        </p>
-      `;
-    }
-
-    async function claimName() {
-      alert(`✅ Congratulazioni!\n\n@${nome} è stato attivato con successo!\n\nProssimo passo: personalizza la tua pagina.`);
-      // Qui più avanti faremo il redirect alla pagina di editing
-    }
-
-    window.onload = loadTag;
+    let nome = urlParams.get('nome') || 'tuonome';
+    document.title = `Personalizza @${nome} - MyQuickTag`;
   </script>
 </body>
 </html>
