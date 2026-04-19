@@ -1,60 +1,113 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ottieni il tuo MyQuickTag</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background: linear-gradient(135deg, #f5f7ff, #eef1ff); min-height: 100vh; padding: 20px; }
-        .preview-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); animation: fadeIn 0.6s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyQuickTag - Un @nome. Una sola identità.</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    body { font-family: 'Inter', system-ui, sans-serif; }
+  </style>
 </head>
-<body class="flex items-center justify-center font-sans relative">
+<body class="bg-zinc-950 text-white min-h-screen">
 
-    <div onclick="goBack()" class="fixed top-6 left-6 text-2xl bg-white w-12 h-12 flex items-center justify-center rounded-xl shadow-md cursor-pointer z-50 hover:bg-gray-50 active:scale-90 transition-all">
-        ←
+  <div class="max-w-2xl mx-auto pt-20 px-6">
+    
+    <!-- Hero -->
+    <div class="text-center mb-12">
+      <h1 class="text-6xl font-semibold tracking-tighter mb-3">MyQuickTag</h1>
+      <p class="text-3xl text-zinc-400">Un @nome. Una sola identità.</p>
+      
+      <!-- FRASE MIGLIORATA -->
+      <p class="mt-6 text-xl text-zinc-400 font-medium">
+        Il tuo @nome.<br>Una sola volta.
+      </p>
     </div>
 
-    <div class="w-full max-w-sm text-center">
-        <div class="mb-6">
-            <h2 class="text-[40px] font-black text-gray-900 mb-1">@<span id="tagNome"></span></h2>
-            <p class="text-green-600 font-bold uppercase tracking-widest text-sm">Disponibile</p>
-        </div>
-
-        <p class="text-gray-700 font-medium mb-10 px-4 text-lg">Uno spazio semplice per raccogliere tutto ciò che vuoi condividere.</p>
-
-        <div class="preview-card p-8 text-left border border-white mb-8">
-            <p class="text-gray-400 text-[12px] mb-3 font-bold uppercase">Anteprima</p>
-            <h3 class="text-3xl font-bold text-gray-900 mb-6">@<span id="tagNomePreview"></span></h3>
-            
-            <ul class="space-y-4 text-gray-600">
-                <li class="flex items-center text-sm font-medium"><span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>Contatti</li>
-                <li class="flex items-center text-sm font-medium"><span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>Link Social</li>
-                <li class="flex items-center text-sm font-medium"><span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>Bio Personale o Professionale</li>
-            </ul>
-        </div>
-
-        <button onclick="ottieniTag()" class="w-full max-w-[300px] bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-xl">
-            Ottieni @<span id="tagNomeBtn"></span>
-        </button>
+    <!-- Barra di ricerca -->
+    <div class="relative max-w-xl mx-auto">
+      <div class="flex items-center bg-zinc-900 border border-zinc-700 rounded-3xl px-6 py-5 focus-within:border-blue-500 transition-all">
+        <span class="text-blue-500 text-4xl mr-4">@</span>
         
-        <p class="text-[13px] text-[#777] mt-4 font-medium">
-            3 mesi gratuiti · poi 2€ / anno se vuoi mantenerlo
-        </p>
+        <input 
+          id="searchInput"
+          type="text" 
+          placeholder="iltuonome"
+          class="flex-1 bg-transparent outline-none text-2xl placeholder-zinc-500"
+          autocomplete="off">
+
+        <button onclick="checkName()" 
+                class="bg-white hover:bg-blue-600 hover:text-white text-black font-semibold px-10 py-4 rounded-3xl transition-all flex items-center gap-2 text-lg">
+          <i class="fas fa-search"></i>
+          <span>Verifica disponibilità</span>
+        </button>
+      </div>
     </div>
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const nome = (params.get("nome") || "tag").toLowerCase();
+    <p id="status" class="text-center mt-6 text-base min-h-[30px]"></p>
 
-        document.getElementById("tagNome").textContent = nome;
-        document.getElementById("tagNomePreview").textContent = nome;
-        document.getElementById("tagNomeBtn").textContent = nome;
+    <div class="text-center mt-10 text-sm text-zinc-500">
+      Attivazione gratuita per 3 mesi • Rinnovo 2€/anno
+    </div>
+  </div>
 
-        function goBack() { window.location.href = "index.html"; }
-        function ottieniTag() { alert("Ottimo! Stiamo preparando il tuo spazio digitale @" + nome + "."); }
-    </script>
+  <!-- Footer -->
+  <footer class="absolute bottom-0 w-full border-t border-zinc-900 py-6">
+    <div class="max-w-2xl mx-auto px-6 text-xs text-zinc-500 text-center">
+      <div class="flex justify-center gap-6 mb-4">
+        <a href="#" class="hover:text-white">Come funziona</a>
+        <a href="#" onclick="showTerms()" class="hover:text-white">Termini</a>
+        <a href="#" onclick="showPrivacy()" class="hover:text-white">Privacy</a>
+        <a href="#" onclick="showCookies()" class="hover:text-white">Cookie</a>
+      </div>
+      © 2026 MyQuickTag.it — Progetto indipendente
+    </div>
+  </footer>
+
+  <script>
+    async function checkName() {
+      let input = document.getElementById('searchInput').value.trim();
+      const status = document.getElementById('status');
+      
+      if (!input) {
+        status.innerHTML = `<span class="text-red-400">Inserisci un nome</span>`;
+        return;
+      }
+
+      input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
+      document.getElementById('searchInput').value = input;
+
+      status.innerHTML = `<span class="text-blue-400"><i class="fas fa-spinner fa-spin"></i> Controllo in corso...</span>`;
+
+      try {
+        const res = await fetch(`https://api.airtable.com/v0/app4eQDzqixPDbQTd/Table%201?filterByFormula=LOWER({nome})%3D'${input}'`, {
+          headers: { Authorization: "Bearer pat6qz8htyV7b1NSN.f3cdd9392b92318e7b32302f93037810ecb4ee9fbd269c40c0e1c18a93b60b8e" }
+        });
+
+        const data = await res.json();
+
+        if (data.records && data.records.length > 0) {
+          status.innerHTML = `<span class="text-red-400">❌ @${input} è già preso</span>`;
+        } else {
+          status.innerHTML = `<span class="text-emerald-400">✅ @${input} è disponibile!</span>`;
+          setTimeout(() => {
+            window.location.href = `tag.html?nome=${input}`;
+          }, 800);
+        }
+      } catch (e) {
+        status.innerHTML = `<span class="text-red-400">Errore di connessione</span>`;
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') checkName();
+    });
+
+    function showTerms() { alert("Termini di Servizio"); }
+    function showPrivacy() { alert("Privacy Policy"); }
+    function showCookies() { alert("Cookie Policy"); }
+  </script>
 </body>
 </html>
