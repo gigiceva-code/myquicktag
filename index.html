@@ -6,38 +6,26 @@
   <title>MyQuickTag - Un @nome. Una sola identità.</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
-  </style>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap'); body { font-family: 'Inter', system-ui, sans-serif; }</style>
 </head>
 <body class="bg-zinc-950 text-white min-h-screen">
 
   <div class="max-w-2xl mx-auto pt-16 px-5">
-    
-    <!-- Hero -->
     <div class="text-center mb-10">
       <h1 class="text-5xl font-semibold tracking-tighter mb-3">MyQuickTag</h1>
       <p class="text-3xl text-zinc-400">Un @nome. Una sola identità.</p>
       <p class="mt-5 text-xl text-zinc-400 font-medium">Il tuo @nome.<br>Una sola volta.</p>
     </div>
 
-    <!-- Search Bar - Migliorata per smartphone -->
     <div class="max-w-xl mx-auto">
       <div class="flex flex-col sm:flex-row gap-3 bg-zinc-900 border border-zinc-700 rounded-3xl p-2">
-        
         <div class="flex-1 flex items-center px-5 py-4">
           <span class="text-blue-500 text-4xl mr-3">@</span>
-          <input 
-            id="searchInput"
-            type="text" 
-            placeholder="iltuonome"
-            class="flex-1 bg-transparent outline-none text-2xl placeholder-zinc-500"
-            autocomplete="off">
+          <input id="searchInput" type="text" placeholder="iltuonome" 
+                 class="flex-1 bg-transparent outline-none text-2xl placeholder-zinc-500" autocomplete="off">
         </div>
-
         <button onclick="checkName()" 
-                class="w-full sm:w-auto bg-white hover:bg-blue-600 hover:text-white text-black font-semibold px-10 py-5 rounded-3xl transition-all flex items-center justify-center gap-2 text-lg">
+                class="w-full sm:w-auto bg-white hover:bg-blue-600 hover:text-white text-black font-semibold px-10 py-5 rounded-3xl flex items-center justify-center gap-2 text-lg">
           <i class="fas fa-search"></i>
           <span>Verifica disponibilità</span>
         </button>
@@ -47,12 +35,11 @@
     <p id="status" class="text-center mt-6 text-base min-h-[40px]"></p>
 
     <div class="text-center mt-8 text-sm text-zinc-500">
-      Attivazione gratuita per 3 mesi • Rinnovo 2€/anno
+      Attivazione gratuita per 3 mesi • Rinnovo solo 2€/anno
     </div>
 
     <div class="mt-12 text-center">
-      <button onclick="showHowItWorks()" 
-              class="text-blue-400 hover:text-blue-300 underline text-lg">
+      <button onclick="showHowItWorks()" class="text-blue-400 hover:text-blue-300 underline text-lg">
         Come funziona MyQuickTag →
       </button>
     </div>
@@ -68,11 +55,7 @@
     async function checkName() {
       let input = document.getElementById('searchInput').value.trim();
       const status = document.getElementById('status');
-      
-      if (!input) {
-        status.innerHTML = `<span class="text-red-400">Inserisci un nome</span>`;
-        return;
-      }
+      if (!input) { status.innerHTML = `<span class="text-red-400">Inserisci un nome</span>`; return; }
 
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
       document.getElementById('searchInput').value = input;
@@ -83,30 +66,23 @@
         const res = await fetch(`https://api.airtable.com/v0/app4eQDzqixPDbQTd/Table%201?filterByFormula=LOWER({nome})%3D'${input}'`, {
           headers: { Authorization: "Bearer pat6qz8htyV7b1NSN.f3cdd9392b92318e7b32302f93037810ecb4ee9fbd269c40c0e1c18a93b60b8e" }
         });
-
         const data = await res.json();
 
         if (data.records && data.records.length > 0) {
           status.innerHTML = `<span class="text-red-400">❌ @${input} è già preso</span>`;
         } else {
           status.innerHTML = `<span class="text-emerald-400">✅ @${input} è disponibile!</span>`;
-          
-          setTimeout(() => {
-            window.location.href = `tag.html?nome=${input}`;
-          }, 1100);
+          setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 1100);
         }
       } catch (e) {
         status.innerHTML = `<span class="text-red-400">Errore di connessione</span>`;
       }
     }
 
-    // Enter key
-    document.getElementById('searchInput').addEventListener('keypress', e => {
-      if (e.key === 'Enter') checkName();
-    });
+    document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkName(); });
 
     function showHowItWorks() {
-      alert("1. Cerchi il tuo @nome\n2. Se è libero lo attivi gratis per 3 mesi\n3. Personalizzi la tua pagina\n4. Condividi solo @tuonome ovunque");
+      alert("1. Cerchi il tuo @nome\n2. Se è libero lo attivi gratis per 3 mesi\n3. Personalizzi bio, link, contatti e QR\n4. Condividi solo @tuonome ovunque");
     }
   </script>
 </body>
