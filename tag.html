@@ -7,56 +7,82 @@
     <title>Il tuo MyQuickTag</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #f9fafb; }
-        .profile-card {
-            animation: fadeIn 0.8s ease-out;
+        body {
+            background: linear-gradient(135deg, #f5f7ff, #eef1ff);
+            min-height: 100vh;
+        }
+        .preview-card {
+            background: linear-gradient(135deg, #ffffff, #f3f4ff);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            animation: fadeIn 0.6s ease-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
+<body class="flex items-center justify-center p-6 font-sans">
 
-    <div class="profile-card bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-gray-200/50 border border-gray-100 w-full max-w-sm text-center">
+    <div class="w-full max-w-sm text-center">
         
-        <p class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em] mb-8">MyQuickTag Identity</p>
-
-        <h1 id="tag" class="text-5xl font-black text-gray-900 mb-4 tracking-tight"></h1>
-
-        <div class="space-y-1 mb-10">
-            <p class="text-blue-600 font-semibold text-sm">Identità digitale attiva</p>
-            <p class="text-gray-400 text-xs">Contatti · Link · Social · QR personale</p>
+        <div class="mb-8">
+            <h2 class="text-4xl font-black text-gray-900 mb-1">
+                @<span id="tagNome"></span>
+            </h2>
+            <p class="text-gray-400 font-medium">Questo tag è disponibile</p>
         </div>
 
-        <button onclick="condividi()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-2xl transition-all active:scale-95 shadow-lg">
-            Condividi profilo
+        <p class="text-gray-700 font-medium mb-10">
+            Questo può diventare il tuo spazio digitale.
+        </p>
+
+        <div class="preview-card p-8 text-left border border-white mb-8">
+            <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-4 text-center md:text-left">Anteprima</p>
+            
+            <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center md:text-left">
+                @<span id="tagNomePreview"></span>
+            </h3>
+
+            <p class="text-sm text-gray-500 mb-4 border-b border-gray-100 pb-2">Qui potrai inserire:</p>
+            
+            <ul class="space-y-3 text-gray-600 text-sm">
+                <li class="flex items-center">
+                    <span class="mr-2 text-blue-500">✔</span> Contatti rapidi
+                </li>
+                <li class="flex items-center">
+                    <span class="mr-2 text-blue-500">✔</span> Link ai tuoi social
+                </li>
+                <li class="flex items-center">
+                    <span class="mr-2 text-blue-500">✔</span> Info personali o professionali
+                </li>
+            </ul>
+        </div>
+
+        <button onclick="attivaTag()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-lg">
+            Attiva il tuo @<span id="tagNomeBtn"></span>
         </button>
 
-        <p class="mt-8 text-[10px] text-gray-300">© 2024 MyQuickTag Protocol</p>
+        <p class="text-[13px] text-gray-400 mt-4">
+            Attivazione immediata · gestione semplice
+        </p>
+
+        <footer class="mt-12 text-[10px] text-gray-300 tracking-widest uppercase">
+            MyQuickTag Protocol
+        </footer>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const nome = params.get("nome");
+        const nome = params.get("nome") || "tag";
 
-        if (nome) {
-            document.getElementById("tag").innerText = "@" + nome.toLowerCase();
-            document.title = "@" + nome + " | MyQuickTag";
-        } else {
-            document.getElementById("tag").innerText = "@guest";
-        }
+        document.getElementById("tagNome").textContent = nome;
+        document.getElementById("tagNomePreview").textContent = nome;
+        document.getElementById("tagNomeBtn").textContent = nome;
 
-        function condividi() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Il mio MyQuickTag',
-                    url: window.location.href
-                });
-            } else {
-                alert("Copia questo link per condividere: " + window.location.href);
-            }
+        function attivaTag() {
+            alert("Sistema di attivazione in corso. Stiamo preparando il tuo spazio @"+nome+"!");
         }
     </script>
 </body>
