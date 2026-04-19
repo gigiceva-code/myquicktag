@@ -3,111 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyQuickTag - Un @nome. Una sola identità.</title>
+  <title>MyQuickTag</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
-  </style>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap'); body { font-family: 'Inter', system-ui, sans-serif; }</style>
 </head>
 <body class="bg-zinc-950 text-white min-h-screen">
 
-  <div class="max-w-2xl mx-auto pt-20 px-6">
-    
-    <!-- Hero -->
-    <div class="text-center mb-12">
-      <h1 class="text-6xl font-semibold tracking-tighter mb-3">MyQuickTag</h1>
-      <p class="text-3xl text-zinc-400">Un @nome. Una sola identità.</p>
-      
-      <!-- FRASE MIGLIORATA -->
-      <p class="mt-6 text-xl text-zinc-400 font-medium">
-        Il tuo @nome.<br>Una sola volta.
-      </p>
-    </div>
+  <div class="max-w-2xl mx-auto pt-12 px-5">
+    <a href="index.html" class="flex items-center gap-2 text-zinc-400 hover:text-white mb-8 text-sm">
+      ← Torna alla ricerca
+    </a>
 
-    <!-- Barra di ricerca -->
-    <div class="relative max-w-xl mx-auto">
-      <div class="flex items-center bg-zinc-900 border border-zinc-700 rounded-3xl px-6 py-5 focus-within:border-blue-500 transition-all">
-        <span class="text-blue-500 text-4xl mr-4">@</span>
-        
-        <input 
-          id="searchInput"
-          type="text" 
-          placeholder="iltuonome"
-          class="flex-1 bg-transparent outline-none text-2xl placeholder-zinc-500"
-          autocomplete="off">
-
-        <button onclick="checkName()" 
-                class="bg-white hover:bg-blue-600 hover:text-white text-black font-semibold px-10 py-4 rounded-3xl transition-all flex items-center gap-2 text-lg">
-          <i class="fas fa-search"></i>
-          <span>Verifica disponibilità</span>
-        </button>
-      </div>
-    </div>
-
-    <p id="status" class="text-center mt-6 text-base min-h-[30px]"></p>
-
-    <div class="text-center mt-10 text-sm text-zinc-500">
-      Attivazione gratuita per 3 mesi • Rinnovo 2€/anno
-    </div>
+    <div id="content" class="min-h-[400px]"></div>
   </div>
 
-  <!-- Footer -->
-  <footer class="absolute bottom-0 w-full border-t border-zinc-900 py-6">
-    <div class="max-w-2xl mx-auto px-6 text-xs text-zinc-500 text-center">
-      <div class="flex justify-center gap-6 mb-4">
-        <a href="#" class="hover:text-white">Come funziona</a>
-        <a href="#" onclick="showTerms()" class="hover:text-white">Termini</a>
-        <a href="#" onclick="showPrivacy()" class="hover:text-white">Privacy</a>
-        <a href="#" onclick="showCookies()" class="hover:text-white">Cookie</a>
-      </div>
-      © 2026 MyQuickTag.it — Progetto indipendente
-    </div>
-  </footer>
-
   <script>
-    async function checkName() {
-      let input = document.getElementById('searchInput').value.trim();
-      const status = document.getElementById('status');
-      
-      if (!input) {
-        status.innerHTML = `<span class="text-red-400">Inserisci un nome</span>`;
-        return;
-      }
+    const urlParams = new URLSearchParams(window.location.search);
+    let nome = urlParams.get('nome')?.toLowerCase().trim() || '';
 
-      input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      document.getElementById('searchInput').value = input;
+    async function loadTag() {
+      const content = document.getElementById('content');
+      if (!nome) { content.innerHTML = `<p class="text-red-400 text-center">Nessun nome trovato.</p>`; return; }
 
-      status.innerHTML = `<span class="text-blue-400"><i class="fas fa-spinner fa-spin"></i> Controllo in corso...</span>`;
+      content.innerHTML = `
+        <div class="text-center">
+          <div class="inline-flex items-center bg-emerald-400/10 text-emerald-400 rounded-3xl px-6 py-2 text-sm font-medium mb-8">
+            <i class="fas fa-check mr-2"></i> DISPONIBILE
+          </div>
+          <h1 class="text-7xl font-bold mb-2">@${nome}</h1>
+          <p class="text-xl text-zinc-400">Questo nome è libero. Prendilo ora.</p>
+        </div>
 
-      try {
-        const res = await fetch(`https://api.airtable.com/v0/app4eQDzqixPDbQTd/Table%201?filterByFormula=LOWER({nome})%3D'${input}'`, {
-          headers: { Authorization: "Bearer pat6qz8htyV7b1NSN.f3cdd9392b92318e7b32302f93037810ecb4ee9fbd269c40c0e1c18a93b60b8e" }
-        });
+        <div class="mt-12 bg-zinc-900 rounded-3xl p-8">
+          <h2 class="text-lg font-medium mb-6">Ecco come apparirà la tua pagina personale:</h2>
+          
+          <div class="bg-zinc-950 rounded-2xl p-6 border border-zinc-700">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center text-4xl">👤</div>
+              <div>
+                <p class="font-semibold text-xl">@${nome}</p>
+                <p class="text-zinc-400 text-sm">La tua identità digitale unica</p>
+              </div>
+            </div>
+            
+            <div class="space-y-4 text-zinc-400">
+              <div class="flex justify-between"><span>Bio</span><span class="text-emerald-400">• • •</span></div>
+              <div class="flex justify-between"><span>Link social e sito</span><span class="text-emerald-400">• • •</span></div>
+              <div class="flex justify-between"><span>Contatti diretti</span><span class="text-emerald-400">• • •</span></div>
+              <div class="flex justify-between"><span>Curriculum / Portfolio</span><span class="text-emerald-400">• • •</span></div>
+              <div class="flex justify-between"><span>Codice QR</span><span class="text-emerald-400">• • •</span></div>
+            </div>
+          </div>
 
-        const data = await res.json();
-
-        if (data.records && data.records.length > 0) {
-          status.innerHTML = `<span class="text-red-400">❌ @${input} è già preso</span>`;
-        } else {
-          status.innerHTML = `<span class="text-emerald-400">✅ @${input} è disponibile!</span>`;
-          setTimeout(() => {
-            window.location.href = `tag.html?nome=${input}`;
-          }, 800);
-        }
-      } catch (e) {
-        status.innerHTML = `<span class="text-red-400">Errore di connessione</span>`;
-      }
+          <button onclick="claimName()" 
+                  class="w-full mt-10 bg-white text-black py-6 rounded-3xl text-xl font-semibold hover:bg-emerald-400 hover:text-black transition-all">
+            Attiva @${nome} GRATIS per 3 mesi
+          </button>
+          
+          <p class="text-center text-xs text-zinc-500 mt-6">Poi rinnovi a soli 2€/anno</p>
+        </div>
+      `;
     }
 
-    document.getElementById('searchInput').addEventListener('keypress', e => {
-      if (e.key === 'Enter') checkName();
-    });
+    async function claimName() {
+      alert(`✅ @${nome} attivato con successo!\n\nOra puoi personalizzare la tua pagina (prossima funzionalità).`);
+      // Qui in futuro andrai alla pagina di editing
+    }
 
-    function showTerms() { alert("Termini di Servizio"); }
-    function showPrivacy() { alert("Privacy Policy"); }
-    function showCookies() { alert("Cookie Policy"); }
+    window.onload = loadTag;
   </script>
 </body>
 </html>
