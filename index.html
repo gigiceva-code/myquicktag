@@ -19,16 +19,12 @@
     <div class="text-center mb-12">
       <h1 class="text-6xl font-semibold tracking-tighter mb-3">MyQuickTag</h1>
       <p class="text-3xl text-zinc-400">Un @nome. Una sola identità.</p>
-      
-      <!-- FRASE MIGLIORATA -->
-      <p class="mt-6 text-xl text-zinc-400 font-medium">
-        Il tuo @nome.<br>Una sola volta.
-      </p>
+      <p class="mt-6 text-xl text-zinc-400 font-medium">Il tuo @nome.<br>Una sola volta.</p>
     </div>
 
-    <!-- Barra di ricerca -->
+    <!-- Search Bar con bottone visibile -->
     <div class="relative max-w-xl mx-auto">
-      <div class="flex items-center bg-zinc-900 border border-zinc-700 rounded-3xl px-6 py-5 focus-within:border-blue-500 transition-all">
+      <div class="flex items-center bg-zinc-900 border border-zinc-700 rounded-3xl px-5 py-5 focus-within:border-blue-500 transition-all">
         <span class="text-blue-500 text-4xl mr-4">@</span>
         
         <input 
@@ -39,29 +35,33 @@
           autocomplete="off">
 
         <button onclick="checkName()" 
-                class="bg-white hover:bg-blue-600 hover:text-white text-black font-semibold px-10 py-4 rounded-3xl transition-all flex items-center gap-2 text-lg">
+                class="bg-white hover:bg-blue-600 hover:text-white text-black font-semibold px-8 py-4 rounded-3xl transition-all flex items-center gap-2">
           <i class="fas fa-search"></i>
-          <span>Verifica disponibilità</span>
+          <span class="hidden sm:inline">Verifica disponibilità</span>
+          <span class="sm:hidden">Cerca</span>
         </button>
       </div>
     </div>
 
-    <p id="status" class="text-center mt-6 text-base min-h-[30px]"></p>
+    <p id="status" class="text-center mt-6 text-base min-h-[32px]"></p>
 
+    <!-- Trust -->
     <div class="text-center mt-10 text-sm text-zinc-500">
       Attivazione gratuita per 3 mesi • Rinnovo 2€/anno
+    </div>
+
+    <!-- Come funziona (cliccabile) -->
+    <div class="mt-16 text-center">
+      <button onclick="showHowItWorks()" 
+              class="text-blue-400 hover:text-blue-300 underline decoration-dotted text-lg">
+        Come funziona MyQuickTag →
+      </button>
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="absolute bottom-0 w-full border-t border-zinc-900 py-6">
+  <footer class="border-t border-zinc-900 py-8 mt-20">
     <div class="max-w-2xl mx-auto px-6 text-xs text-zinc-500 text-center">
-      <div class="flex justify-center gap-6 mb-4">
-        <a href="#" class="hover:text-white">Come funziona</a>
-        <a href="#" onclick="showTerms()" class="hover:text-white">Termini</a>
-        <a href="#" onclick="showPrivacy()" class="hover:text-white">Privacy</a>
-        <a href="#" onclick="showCookies()" class="hover:text-white">Cookie</a>
-      </div>
       © 2026 MyQuickTag.it — Progetto indipendente
     </div>
   </footer>
@@ -92,22 +92,25 @@
           status.innerHTML = `<span class="text-red-400">❌ @${input} è già preso</span>`;
         } else {
           status.innerHTML = `<span class="text-emerald-400">✅ @${input} è disponibile!</span>`;
+          
+          // REDIRECT AUTOMATICO alla pagina tag.html
           setTimeout(() => {
             window.location.href = `tag.html?nome=${input}`;
-          }, 800);
+          }, 1200);
         }
       } catch (e) {
-        status.innerHTML = `<span class="text-red-400">Errore di connessione</span>`;
+        status.innerHTML = `<span class="text-red-400">Errore di connessione. Riprova.</span>`;
       }
     }
 
+    // Enter key support
     document.getElementById('searchInput').addEventListener('keypress', e => {
       if (e.key === 'Enter') checkName();
     });
 
-    function showTerms() { alert("Termini di Servizio"); }
-    function showPrivacy() { alert("Privacy Policy"); }
-    function showCookies() { alert("Cookie Policy"); }
+    function showHowItWorks() {
+      alert("Come funziona:\n\n1. Cerchi il tuo @nome\n2. Se è libero lo attivi gratis per 3 mesi\n3. Personalizzi la tua pagina con link, bio, contatti e QR\n4. Condividi solo @tuonome ovunque");
+    }
   </script>
 </body>
 </html>
