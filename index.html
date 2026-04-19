@@ -58,8 +58,13 @@ button:hover {
   background:#0056b3;
 }
 
+#result {
+  margin-top:15px;
+  font-size:14px;
+}
+
 .footer {
-  margin-top:40px;
+  margin-top:50px;
   font-size:12px;
   color:gray;
 }
@@ -69,18 +74,14 @@ button:hover {
   color:gray;
   text-decoration:none;
 }
-
-#result {
-  margin-top:15px;
-  font-size:14px;
-}
 </style>
 </head>
 
 <body>
 
 <h1>MyQuickTag</h1>
-<h2>Un @nome. Una sola identità.</h2>
+
+<h2>Ottieni il tuo @nome prima degli altri</h2>
 
 <p style="margin-top:15px; color:#555;">
 Un solo link per condividere contatti, social e informazioni.
@@ -95,31 +96,25 @@ Un solo link per condividere contatti, social e informazioni.
 
 <p id="result"></p>
 
-<p style="margin-top:30px; font-size:13px; color:#666;">
-Scegli il tuo @nome, verifica se è disponibile e attivalo in pochi secondi.
-</p>
-
+<!-- FOOTER LEGGERO -->
 <div class="footer">
-  <a href="#">Termini</a>
-  <a href="#">Privacy</a>
-  <a href="#">Cookie</a>
+  <a href="#" onclick="alert('MyQuickTag assegna luso del nome ma non la proprietà legale del marchio.')">Termini</a>
+  <a href="#" onclick="alert('Non raccogliamo dati personali sensibili. Usato solo per gestione tag.')">Privacy</a>
+  <a href="#" onclick="alert('Usiamo cookie tecnici per il funzionamento del sito.')">Cookie</a>
 </div>
 
 <script>
 
-// 🔴 INSERISCI QUI I TUOI DATI
 const apiKey = "pat6qz8htyV7b1NSN.f3cdd9392b92318e7b32302f93037810ecb4ee9fbd269c40c0e1c18a93b60b8e";
 const baseId = "app4eQDzqixPDbQTd";
-const tableName = Table 1";
+const tableName = "Table 1";
 
 const input = document.getElementById("nomeInput");
 const result = document.getElementById("result");
 const button = document.getElementById("searchButton");
 
-// CLICK
 button.addEventListener("click", checkNome);
 
-// INVIO
 input.addEventListener("keypress", function(e) {
   if (e.key === "Enter") {
     checkNome();
@@ -147,7 +142,7 @@ async function checkNome() {
     if (data.records.length > 0) {
       result.innerHTML = "❌ Nome non disponibile";
     } else {
-      result.innerHTML = "✅ Disponibile";
+      result.innerHTML = "Perfetto. Questo @nome è tuo.";
 
       setTimeout(() => {
         window.location.href = "tag.html?nome=" + nome;
