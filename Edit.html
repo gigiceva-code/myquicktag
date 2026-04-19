@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalizza @${nome} - MyQuickTag</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    body { font-family: 'Inter', system-ui, sans-serif; }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen">
+
+  <div class="max-w-2xl mx-auto pt-12 px-5">
+    <div class="flex justify-between items-center mb-8">
+      <a href="index.html" class="text-zinc-400 hover:text-white">← Home</a>
+      <h1 class="text-2xl font-semibold">@${nome}</h1>
+    </div>
+
+    <div class="bg-zinc-900 rounded-3xl p-8">
+      <h2 class="text-3xl font-semibold mb-8">Personalizza la tua pagina</h2>
+
+      <div class="space-y-8">
+        <!-- Foto / Avatar -->
+        <div>
+          <label class="block text-sm text-zinc-400 mb-2">Foto profilo</label>
+          <div class="flex items-center gap-4">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center text-5xl">👤</div>
+            <button class="bg-zinc-800 hover:bg-zinc-700 px-5 py-3 rounded-2xl text-sm">Carica foto</button>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div>
+          <label class="block text-sm text-zinc-400 mb-2">Bio (max 200 caratteri)</label>
+          <textarea class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-5 h-32 resize-none" placeholder="Scrivi qualcosa su di te..."></textarea>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <label class="block text-sm text-zinc-400 mb-3">I tuoi link</label>
+          <div class="space-y-3">
+            <input type="text" placeholder="Instagram @username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+            <input type="text" placeholder="LinkedIn" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+            <input type="text" placeholder="Sito Web o YouTube" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+            <input type="text" placeholder="Altro link" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+          </div>
+        </div>
+      </div>
+
+      <button onclick="saveProfile()" 
+              class="w-full mt-12 bg-emerald-500 hover:bg-emerald-600 py-7 rounded-3xl text-xl font-semibold transition-all">
+        💾 Salva e Pubblica la mia pagina
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function saveProfile() {
+      alert("✅ Profilo salvato con successo!\n\nLa tua pagina @nome è ora online e pronta da condividere.");
+      // Qui in futuro redirect alla pagina pubblica finale
+    }
+
+    // Prende il nome dall'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    let nome = urlParams.get('nome') || 'tuonome';
+    document.title = `Personalizza @${nome} - MyQuickTag`;
+  </script>
+</body>
+</html>
