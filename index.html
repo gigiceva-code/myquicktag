@@ -2,46 +2,52 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyQuickTag - Il tuo @nome. Una sola volta.</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MyQuickTag - Il mondo dentro il tuo nome</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    
+    /* Effetto Glow dinamico */
+    .input-group:focus-within {
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+    .input-group:focus-within .at-symbol {
+      color: white;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
   </style>
 </head>
-<body class="bg-zinc-950 text-white min-h-screen">
+<body class="bg-[#0a0a0a] text-white min-h-screen flex flex-col justify-between p-6 overflow-hidden">
 
-  <div class="max-w-2xl mx-auto pt-28 px-6 text-center">
-    <h1 class="text-7xl font-black tracking-tighter mb-2 italic">MyQuickTag</h1>
-    <p class="text-5xl font-semibold text-zinc-400 mb-10">Il tuo @nome.<br>Una sola volta nella vita.</p>
+  <div class="flex-1 flex flex-col items-center justify-center text-center">
+    <h1 class="text-5xl font-black tracking-tighter mb-2 italic uppercase">MyQuickTag</h1>
+    <p class="text-lg text-zinc-500 font-medium mb-10">Il mondo dentro il tuo nome</p>
 
-    <div class="max-w-lg mx-auto">
-      <div class="flex flex-col sm:flex-row gap-3 bg-zinc-900 border border-zinc-700 rounded-3xl p-2 shadow-2xl">
-        <div class="flex-1 flex items-center px-6 py-6">
-          <span class="text-blue-500 text-5xl mr-4 font-black">@</span>
-          <input id="searchInput" type="text" placeholder="iltuonome" 
-                 class="flex-1 bg-transparent outline-none text-3xl placeholder-zinc-500 font-medium uppercase">
-        </div>
-        <button onclick="checkName()" 
-                class="w-full sm:w-auto bg-white text-black font-bold px-14 py-6 rounded-3xl text-xl hover:bg-emerald-400 hover:scale-105 transition-all">
-          Verifica
-        </button>
+    <div class="w-full max-w-sm bg-[#141414] border border-zinc-800 rounded-[2.5rem] p-2 shadow-2xl transition-all duration-300 input-group">
+      <div class="flex items-center px-5 py-4 border-b border-zinc-800/50">
+        <span class="text-2xl font-bold text-zinc-600 transition-all duration-300 at-symbol">@</span>
+        <input id="searchInput" type="text" placeholder="iltuonome" 
+               class="flex-1 bg-transparent outline-none text-xl ml-1 text-white font-semibold uppercase placeholder-zinc-800">
       </div>
+      <button onclick="checkName()" 
+              class="w-full bg-white text-black font-bold py-4 mt-2 rounded-[1.8rem] text-lg hover:bg-zinc-200 transition-all active:scale-95 duration-150">
+        Verifica
+      </button>
     </div>
+    
+    <p id="status" class="mt-8 text-xs font-black uppercase tracking-[0.2em] min-h-[20px]"></p>
+  </div>
 
-    <p id="status" class="mt-8 text-2xl min-h-[32px] font-black italic uppercase tracking-tighter"></p>
-
-    <div class="mt-20 text-sm text-zinc-500 flex justify-center gap-8 font-bold uppercase tracking-widest">
-      <div>Gratis 3 mesi</div>
-      <div>2€/anno dopo</div>
-      <div>Nome unico per sempre</div>
-    </div>
+  <div class="flex justify-around text-[9px] text-zinc-600 font-bold uppercase tracking-[0.15em] pb-4 border-t border-zinc-900/50 pt-8">
+    <div class="flex flex-col items-center"><span>Trial</span><span class="text-zinc-400">90 Giorni</span></div>
+    <div class="flex flex-col items-center"><span>Canone</span><span class="text-zinc-400">2€/Anno</span></div>
+    <div class="flex flex-col items-center"><span>Status</span><span class="text-zinc-400">Identità Unica</span></div>
   </div>
 
   <script>
-    // Integrazione Database by Gemini
     const AIRTABLE_PAT = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
@@ -52,7 +58,7 @@
       if (!input) return;
 
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = '<span class="text-blue-500 animate-pulse">ANALISI DATABASE...</span>';
+      status.innerHTML = '<span class="text-zinc-500 animate-pulse">Analisi in corso...</span>';
 
       try {
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
@@ -60,15 +66,13 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = '<span class="text-red-500">❌ TAG GIÀ PRESO</span>';
+          status.innerHTML = '<span class="text-red-500">❌ Già occupato</span>';
         } else {
-          status.innerHTML = '<span class="text-emerald-400">✅ DISPONIBILE! BLOCCALO...</span>';
-          setTimeout(() => {
-            window.location.href = `tag.html?nome=${input}`;
-          }, 800);
+          status.innerHTML = '<span class="text-emerald-500 italic">✨ Disponibile!</span>';
+          setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 700);
         }
       } catch (e) {
-        status.innerHTML = '<span class="text-red-500">ERRORE DI RETE</span>';
+        status.innerHTML = 'Errore di connessione';
       }
     }
 
