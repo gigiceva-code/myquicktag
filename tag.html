@@ -15,7 +15,6 @@
 
   <div class="max-w-2xl mx-auto pt-12 px-5">
     <a href="index.html" class="flex items-center gap-2 text-zinc-400 hover:text-white mb-8">← Torna alla ricerca</a>
-
     <div id="content"></div>
   </div>
 
@@ -25,7 +24,7 @@
 
     const API_KEY = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
     const BASE_ID = "app4eQDzqixPDbQTd";
-    const TABLE = "Table%201";
+    const TABLE = "Table 1";   // ← come richiesto da te
 
     function loadTag() {
       const content = document.getElementById('content');
@@ -67,8 +66,7 @@
           </div>
         </div>
 
-        <button onclick="claimName()" 
-                class="w-full mt-10 bg-white text-black py-7 rounded-3xl text-2xl font-semibold hover:bg-emerald-400 transition-all">
+        <button onclick="claimName()" class="w-full mt-10 bg-white text-black py-7 rounded-3xl text-2xl font-semibold hover:bg-emerald-400 transition-all">
           🎯 Attiva @${nome} GRATIS per 3 mesi
         </button>
 
@@ -76,9 +74,8 @@
       `;
     }
 
-    async function claimName() {
+    function claimName() {
       alert(`✅ @${nome} registrato con successo!`);
-      // Qui andremo a edit.html
       setTimeout(() => {
         window.location.href = `edit.html?nome=${nome}`;
       }, 800);
