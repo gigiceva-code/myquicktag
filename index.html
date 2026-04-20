@@ -7,35 +7,41 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
     body { font-family: 'Inter', system-ui, sans-serif; }
   </style>
 </head>
-<body class="bg-zinc-950 text-white overflow-x-hidden">
+<body class="bg-zinc-950 text-white min-h-screen">
 
-  <div class="max-w-2xl mx-auto pt-24 px-6 text-center">
-    <h1 class="text-7xl font-bold tracking-tighter mb-4">MyQuickTag</h1>
-    <p class="text-4xl text-zinc-400 mb-8">Il tuo @nome.<br><span class="text-white">Una sola volta.</span></p>
-    
-    <div class="max-w-xl mx-auto mt-12">
-      <div class="flex flex-col sm:flex-row gap-3 bg-zinc-900 border border-zinc-700 rounded-3xl p-2">
-        <div class="flex-1 flex items-center px-6 py-5">
-          <span class="text-blue-500 text-5xl mr-4">@</span>
+  <div class="max-w-2xl mx-auto pt-28 px-6 text-center">
+    <h1 class="text-7xl font-black tracking-tighter mb-2 italic">MyQuickTag</h1>
+    <p class="text-5xl font-semibold text-zinc-400 mb-10">Il tuo @nome.<br>Una sola volta nella vita.</p>
+
+    <div class="max-w-lg mx-auto">
+      <div class="flex flex-col sm:flex-row gap-3 bg-zinc-900 border border-zinc-700 rounded-3xl p-2 shadow-2xl">
+        <div class="flex-1 flex items-center px-6 py-6">
+          <span class="text-blue-500 text-5xl mr-4 font-black">@</span>
           <input id="searchInput" type="text" placeholder="iltuonome" 
-                 class="flex-1 bg-transparent outline-none text-3xl placeholder-zinc-500 uppercase font-bold">
+                 class="flex-1 bg-transparent outline-none text-3xl placeholder-zinc-500 font-medium uppercase">
         </div>
         <button onclick="checkName()" 
-                class="w-full sm:w-auto bg-white text-black font-bold px-12 py-5 rounded-3xl text-xl hover:bg-emerald-400 transition-all">
+                class="w-full sm:w-auto bg-white text-black font-bold px-14 py-6 rounded-3xl text-xl hover:bg-emerald-400 hover:scale-105 transition-all">
           Verifica
         </button>
       </div>
     </div>
 
-    <p id="status" class="mt-6 text-lg min-h-[30px] font-bold italic uppercase tracking-widest"></p>
+    <p id="status" class="mt-8 text-2xl min-h-[32px] font-black italic uppercase tracking-tighter"></p>
+
+    <div class="mt-20 text-sm text-zinc-500 flex justify-center gap-8 font-bold uppercase tracking-widest">
+      <div>Gratis 3 mesi</div>
+      <div>2€/anno dopo</div>
+      <div>Nome unico per sempre</div>
+    </div>
   </div>
 
   <script>
-    // Dati Airtable integrati da Gemini
+    // Integrazione Database by Gemini
     const AIRTABLE_PAT = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
@@ -46,7 +52,7 @@
       if (!input) return;
 
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = `<span class="text-blue-400 animate-pulse">RICERCA IN CORSO...</span>`;
+      status.innerHTML = '<span class="text-blue-500 animate-pulse">ANALISI DATABASE...</span>';
 
       try {
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
@@ -54,15 +60,15 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = `<span class="text-red-500 text-2xl font-black italic">❌ NOME GIÀ PRESO</span>`;
+          status.innerHTML = '<span class="text-red-500">❌ TAG GIÀ PRESO</span>';
         } else {
-          status.innerHTML = `<span class="text-emerald-400 text-2xl font-black italic">✅ DISPONIBILE! REINDIRIZZAMENTO...</span>`;
+          status.innerHTML = '<span class="text-emerald-400">✅ DISPONIBILE! BLOCCALO...</span>';
           setTimeout(() => {
             window.location.href = `tag.html?nome=${input}`;
           }, 800);
         }
       } catch (e) {
-        status.innerHTML = `<span class="text-red-500 font-bold">ERRORE DI CONNESSIONE</span>`;
+        status.innerHTML = '<span class="text-red-500">ERRORE DI RETE</span>';
       }
     }
 
