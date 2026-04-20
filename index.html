@@ -3,84 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyQuickTag - Trova il tuo nome</title>
+  <title>MyQuickTag - Il tuo @nome. Una sola volta.</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-    body { font-family: 'Inter', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', system-ui, sans-serif; }
   </style>
 </head>
-<body class="bg-zinc-950 text-white min-h-screen flex flex-col items-center justify-center px-5 text-center">
+<body class="bg-zinc-950 text-white overflow-x-hidden">
 
-  <div class="max-w-3xl w-full">
-    <div class="mb-12">
-      <h1 class="text-7xl md:text-8xl font-black tracking-tighter mb-4 italic uppercase">MyQuickTag</h1>
-      <p class="text-xl md:text-2xl text-zinc-400 font-medium">L'identità digitale che cercavi, in un unico Tag.</p>
-    </div>
-
-    <div class="bg-zinc-900 p-3 rounded-[40px] border border-zinc-800 shadow-2xl flex flex-col md:flex-row items-center gap-2">
-      <div class="flex items-center flex-1 px-6 w-full">
-        <span class="text-3xl font-bold text-emerald-500 mr-2">@</span>
-        <input id="tagInput" type="text" placeholder="iltuonome" 
-               class="bg-transparent text-2xl font-bold text-white outline-none w-full py-4 uppercase placeholder-zinc-700">
-      </div>
-      <button onclick="checkTag()" class="bg-white text-black text-xl font-bold px-12 py-5 rounded-[32px] hover:bg-emerald-400 transition-all active:scale-95 w-full md:w-auto">
-        VERIFICA
-      </button>
-    </div>
-
-    <p id="statusMsg" class="mt-8 font-bold text-lg italic uppercase tracking-widest"></p>
-
-    <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-      <div class="bg-zinc-900/50 p-6 rounded-3xl border border-zinc-800/50">
-        <i class="fas fa-bolt text-emerald-500 mb-4 text-2xl"></i>
-        <h3 class="font-bold mb-2">Rapido</h3>
-        <p class="text-sm text-zinc-500">Registra il tuo nome in meno di 30 secondi.</p>
-      </div>
-      <div class="bg-zinc-900/50 p-6 rounded-3xl border border-zinc-800/50">
-        <i class="fas fa-shield-alt text-emerald-500 mb-4 text-2xl"></i>
-        <h3 class="font-bold mb-2">Sicuro</h3>
-        <p class="text-sm text-zinc-500">La tua identità protetta nel nostro database.</p>
-      </div>
-      <div class="bg-zinc-900/50 p-6 rounded-3xl border border-zinc-800/50">
-        <i class="fas fa-share-alt text-emerald-500 mb-4 text-2xl"></i>
-        <h3 class="font-bold mb-2">Social</h3>
-        <p class="text-sm text-zinc-500">Un solo link per tutti i tuoi profili social.</p>
+  <div class="max-w-2xl mx-auto pt-24 px-6 text-center">
+    <h1 class="text-7xl font-bold tracking-tighter mb-4">MyQuickTag</h1>
+    <p class="text-4xl text-zinc-400 mb-8">Il tuo @nome.<br><span class="text-white">Una sola volta.</span></p>
+    
+    <div class="max-w-xl mx-auto mt-12">
+      <div class="flex flex-col sm:flex-row gap-3 bg-zinc-900 border border-zinc-700 rounded-3xl p-2">
+        <div class="flex-1 flex items-center px-6 py-5">
+          <span class="text-blue-500 text-5xl mr-4">@</span>
+          <input id="searchInput" type="text" placeholder="iltuonome" 
+                 class="flex-1 bg-transparent outline-none text-3xl placeholder-zinc-500 uppercase font-bold">
+        </div>
+        <button onclick="checkName()" 
+                class="w-full sm:w-auto bg-white text-black font-bold px-12 py-5 rounded-3xl text-xl hover:bg-emerald-400 transition-all">
+          Verifica
+        </button>
       </div>
     </div>
+
+    <p id="status" class="mt-6 text-lg min-h-[30px] font-bold italic uppercase tracking-widest"></p>
   </div>
 
   <script>
-    // Tuoi dati Airtable già inseriti e pronti
+    // Dati Airtable integrati da Gemini
     const AIRTABLE_PAT = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
 
-    async function checkTag() {
-      const nome = document.getElementById('tagInput').value.trim().toLowerCase();
-      const msg = document.getElementById('statusMsg');
-      if(!nome) return;
+    async function checkName() {
+      let input = document.getElementById('searchInput').value.trim();
+      const status = document.getElementById('status');
+      if (!input) return;
 
-      msg.innerText = "RICERCA IN CORSO...";
-      msg.className = "mt-8 font-bold text-lg italic text-zinc-500 animate-pulse";
-      
+      input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
+      status.innerHTML = `<span class="text-blue-400 animate-pulse">RICERCA IN CORSO...</span>`;
+
       try {
-        const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${nome}'`;
+        const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
         const response = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_PAT}` } });
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          msg.innerText = "❌ NOME GIÀ OCCUPATO";
-          msg.className = "mt-8 font-bold text-lg text-red-500";
+          status.innerHTML = `<span class="text-red-500 text-2xl font-black italic">❌ NOME GIÀ PRESO</span>`;
         } else {
-          window.location.href = `tag.html?nome=${nome}`;
+          status.innerHTML = `<span class="text-emerald-400 text-2xl font-black italic">✅ DISPONIBILE! REINDIRIZZAMENTO...</span>`;
+          setTimeout(() => {
+            window.location.href = `tag.html?nome=${input}`;
+          }, 800);
         }
       } catch (e) {
-        msg.innerText = "ERRORE DI CONNESSIONE.";
-        msg.className = "mt-8 font-bold text-lg text-red-500";
+        status.innerHTML = `<span class="text-red-500 font-bold">ERRORE DI CONNESSIONE</span>`;
       }
     }
+
+    document.getElementById('searchInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') checkName();
+    });
   </script>
 </body>
 </html>
