@@ -24,14 +24,14 @@
       <div>
         <label class="block text-sm text-zinc-400 mb-3">Foto profilo</label>
         <div class="flex items-center gap-6">
-          <div id="avatar" class="w-28 h-28 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-6xl shadow-xl">👤</div>
+          <div class="w-28 h-28 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-6xl shadow-xl">👤</div>
           <button onclick="fakeUpload()" class="bg-zinc-800 hover:bg-zinc-700 px-6 py-4 rounded-2xl">Carica foto</button>
         </div>
       </div>
 
       <!-- Bio -->
       <div>
-        <label class="block text-sm text-zinc-400 mb-2">Bio (max 280 caratteri)</label>
+        <label class="block text-sm text-zinc-400 mb-2">Bio</label>
         <textarea id="bio" rows="4" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-5" placeholder="Scrivi qualcosa su di te..."></textarea>
       </div>
 
@@ -40,7 +40,7 @@
         <label class="block text-sm text-zinc-400 mb-4">I tuoi link principali</label>
         <div class="space-y-4">
           <input id="instagram" type="text" placeholder="Instagram @username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
-          <input id="linkedin" type="text" placeholder="LinkedIn o TikTok" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+          <input id="linkedin" type="text" placeholder="LinkedIn / TikTok" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
           <input id="website" type="text" placeholder="Sito Web o Portfolio" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
         </div>
       </div>
@@ -57,25 +57,13 @@
     const nome = urlParams.get('nome') || 'tuonome';
     document.getElementById('nome').textContent = nome;
 
-    const API_KEY = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
-    const BASE_ID = "app4eQDzqixPDbQTd";
-
     function fakeUpload() {
-      alert("✅ Foto caricata (simulazione)");
+      alert("✅ Foto caricata (simulazione per ora)");
     }
 
-    async function saveProfile() {
-      const bio = document.getElementById('bio').value;
-      const instagram = document.getElementById('instagram').value;
-      const linkedin = document.getElementById('linkedin').value;
-      const website = document.getElementById('website').value;
-
-      alert(`✅ Profilo @${nome} salvato e pubblicato con successo!\n\nOra puoi condividere il tuo link!`);
-
-      // Redirect alla pagina pubblica
-      setTimeout(() => {
-        window.location.href = `profile.html?nome=${nome}`;
-      }, 1000);
+    function saveProfile() {
+      alert(`✅ @${nome} pubblicato con successo!\n\nLa tua pagina è ora online.`);
+      window.location.href = `profile.html?nome=${nome}`;
     }
   </script>
 </body>
