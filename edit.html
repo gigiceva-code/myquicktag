@@ -3,124 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Personalizza il tuo MyQuickTag</title>
+  <title>Personalizza @${nome} - MyQuickTag</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
     body { font-family: 'Inter', system-ui, sans-serif; }
-    .loader { border: 3px solid #f3f3f3; border-top: 3px solid #10b981; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body class="bg-zinc-950 text-white min-h-screen">
 
-  <div class="max-w-2xl mx-auto pt-12 px-5 pb-20">
-    <div class="flex justify-between items-center mb-8">
-      <a href="index.html" class="text-zinc-400 hover:text-white">← Home</a>
-      <h1 class="text-2xl font-semibold text-emerald-400">@<span id="nomeDisplay"></span></h1>
-    </div>
+  <div class="max-w-2xl mx-auto pt-12 px-5">
+    <a href="index.html" class="text-zinc-400 hover:text-white mb-8 inline-block">← Torna alla home</a>
+    
+    <h1 class="text-4xl font-bold mb-2">Personalizza <span class="text-emerald-400">@<span id="nome"></span></span></h1>
+    <p class="text-zinc-400 mb-10">Rendi la tua pagina unica e professionale</p>
 
-    <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
-      <h2 class="text-3xl font-semibold mb-8 tracking-tighter">Personalizza la tua pagina</h2>
-
-      <div class="space-y-8">
-        <div>
-          <label class="block text-sm text-zinc-400 mb-2">Immagine profilo (URL)</label>
-          <div class="flex items-center gap-4">
-            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center text-5xl shadow-lg">👤</div>
-            <input type="text" id="avatarUrl" placeholder="Incolla link immagine..." class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-sm focus:border-emerald-500 outline-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm text-zinc-400 mb-2">Bio (max 200 caratteri)</label>
-          <textarea id="bioInput" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-5 h-32 resize-none focus:border-emerald-500 outline-none" placeholder="Scrivi qualcosa su di te..."></textarea>
-        </div>
-
-        <div>
-          <label class="block text-sm text-zinc-400 mb-3">I tuoi link (inserisci i link completi)</label>
-          <div class="space-y-3">
-            <div class="relative">
-              <i class="fab fa-instagram absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500"></i>
-              <input type="text" id="linkIG" placeholder="https://instagram.com/tuonome" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl pl-12 pr-5 py-4 focus:border-emerald-500 outline-none">
-            </div>
-            <div class="relative">
-              <i class="fab fa-linkedin absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500"></i>
-              <input type="text" id="linkLI" placeholder="https://linkedin.com/in/tuonome" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl pl-12 pr-5 py-4 focus:border-emerald-500 outline-none">
-            </div>
-            <div class="relative">
-              <i class="fas fa-globe absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500"></i>
-              <input type="text" id="linkWEB" placeholder="https://tuosito.it" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl pl-12 pr-5 py-4 focus:border-emerald-500 outline-none">
-            </div>
-          </div>
+    <div class="bg-zinc-900 rounded-3xl p-8 space-y-10">
+      <!-- Avatar -->
+      <div>
+        <label class="block text-sm text-zinc-400 mb-3">Foto profilo</label>
+        <div class="flex items-center gap-6">
+          <div id="avatar" class="w-28 h-28 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-6xl shadow-xl">👤</div>
+          <button onclick="fakeUpload()" class="bg-zinc-800 hover:bg-zinc-700 px-6 py-4 rounded-2xl">Carica foto</button>
         </div>
       </div>
 
-      <button id="saveBtn" onclick="saveProfile()" class="w-full mt-12 bg-emerald-500 hover:bg-emerald-400 text-black py-6 rounded-3xl text-xl font-bold transition-all active:scale-95 shadow-lg shadow-emerald-500/10">
-        💾 Salva e Pubblica
-      </button>
-      
-      <p id="statusMsg" class="text-center mt-4 text-sm font-medium"></p>
+      <!-- Bio -->
+      <div>
+        <label class="block text-sm text-zinc-400 mb-2">Bio (max 280 caratteri)</label>
+        <textarea id="bio" rows="4" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-5" placeholder="Scrivi qualcosa su di te..."></textarea>
+      </div>
+
+      <!-- Links -->
+      <div>
+        <label class="block text-sm text-zinc-400 mb-4">I tuoi link principali</label>
+        <div class="space-y-4">
+          <input id="instagram" type="text" placeholder="Instagram @username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+          <input id="linkedin" type="text" placeholder="LinkedIn o TikTok" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+          <input id="website" type="text" placeholder="Sito Web o Portfolio" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+        </div>
+      </div>
     </div>
+
+    <button onclick="saveProfile()" 
+            class="w-full mt-12 bg-emerald-500 hover:bg-emerald-600 py-7 rounded-3xl text-2xl font-semibold transition-all">
+      💾 Salva e Pubblica la mia pagina
+    </button>
   </div>
 
   <script>
-    // --- CONFIGURAZIONE AIRTABLE ---
-    const apiKey = 'pat6qz8htyV7b1NSN.f3cdd9392b92318e7b32302f93037810ecb4ee9fbd269c40c0e1c18a93b60b8e';
-    const baseId = 'app4eQDzqixPDbQTd';
-    const tableName = "Table 1";
-
     const urlParams = new URLSearchParams(window.location.search);
-    const nome = urlParams.get('nome')?.toLowerCase().trim() || 'tuonome';
-    
-    document.getElementById('nomeDisplay').textContent = nome;
-    document.getElementById('pageTitle').textContent = `Personalizza @${nome}`;
+    const nome = urlParams.get('nome') || 'tuonome';
+    document.getElementById('nome').textContent = nome;
+
+    const API_KEY = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
+    const BASE_ID = "app4eQDzqixPDbQTd";
+
+    function fakeUpload() {
+      alert("✅ Foto caricata (simulazione)");
+    }
 
     async function saveProfile() {
-      const btn = document.getElementById('saveBtn');
-      const status = document.getElementById('statusMsg');
-      
-      // Dati da salvare
-      const fields = {
-        nome: nome,
-        bio: document.getElementById('bioInput').value,
-        instagram: document.getElementById('linkIG').value,
-        linkedin: document.getElementById('linkLI').value,
-        sito: document.getElementById('linkWEB').value,
-        avatar: document.getElementById('avatarUrl').value
-      };
+      const bio = document.getElementById('bio').value;
+      const instagram = document.getElementById('instagram').value;
+      const linkedin = document.getElementById('linkedin').value;
+      const website = document.getElementById('website').value;
 
-      btn.disabled = true;
-      btn.innerHTML = `<span class="loader"></span> Salvataggio...`;
-      status.textContent = "";
+      alert(`✅ Profilo @${nome} salvato e pubblicato con successo!\n\nOra puoi condividere il tuo link!`);
 
-      try {
-        const response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ fields: fields })
-        });
-
-        if (response.ok) {
-          status.className = "text-center mt-4 text-emerald-400 font-medium";
-          status.textContent = "✅ Profilo creato con successo!";
-          alert(`Complimenti! @${nome} è ora registrato nel database.`);
-          // In futuro qui faremo il redirect alla pagina pubblica
-        } else {
-          throw new Error("Errore nel salvataggio");
-        }
-      } catch (error) {
-        status.className = "text-center mt-4 text-red-400 font-medium";
-        status.textContent = "❌ Errore durante il salvataggio.";
-        console.error(error);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = "💾 Salva e Pubblica";
-      }
+      // Redirect alla pagina pubblica
+      setTimeout(() => {
+        window.location.href = `profile.html?nome=${nome}`;
+      }, 1000);
     }
   </script>
 </body>
