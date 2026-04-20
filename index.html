@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -16,7 +15,7 @@
             <div class="flex items-center gap-3 mb-6">
                 <span class="text-3xl text-blue-500">@</span>
                 <input id="tagInput" type="text" placeholder="iltuonome" 
-                       class="bg-transparent text-2xl font-semibold focus:outline-none w-full">
+                       class="bg-transparent text-2xl font-semibold focus:outline-none w-full text-white">
             </div>
 
             <div class="mt-8 mb-6">
@@ -35,7 +34,6 @@
     </div>
 
     <script>
-        // DATI CONFIGURATI PER GIGI
         const AIRTABLE_PAT = "patYjNPr7D7z5fLgW.5432d4b971165e317072e92c286567849e75529f7902911b338384f683f12445"; 
         const BASE_ID = "appG2S8jV9Ams3wYq";
         const TABLE_NAME = "Tabella 1";
@@ -54,7 +52,8 @@
             msg.className = "mt-4 text-center text-sm text-zinc-500";
 
             try {
-                const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula={nome}='${nome}'`, {
+                const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${nome}'`;
+                const response = await fetch(url, {
                     headers: { Authorization: `Bearer ${AIRTABLE_PAT}` }
                 });
                 const data = await response.json();
@@ -71,25 +70,31 @@
         }
 
         async function saveToAirtable(nome, email) {
-            const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${AIRTABLE_PAT}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    fields: {
-                        nome: nome,
-                        email: email,
-                        Data_Inizio: new Date().toISOString().split('T')[0]
-                    }
-                })
-            });
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${AIRTABLE_PAT}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fields: {
+                            "nome": nome,
+                            "email": email,
+                            "Data_Inizio": new Date().toISOString().split('T')[0]
+                        }
+                    })
+                });
 
-            if (response.ok) {
-                showSuccessModal(nome);
-            } else {
-                alert("Errore durante il salvataggio.");
+                if (response.ok) {
+                    showSuccessModal(nome);
+                } else {
+                    const errorData = await response.json();
+                    console.error(errorData);
+                    alert("Errore Airtable: " + (errorData.error.message || "riprova"));
+                }
+            } catch (e) {
+                alert("Errore di rete.");
             }
         }
 
@@ -100,17 +105,10 @@
                         <div class="text-7xl mb-6">🎉</div>
                         <h2 class="text-4xl font-bold mb-2 text-white">Complimenti!</h2>
                         <p class="text-emerald-400 text-2xl mb-8 font-semibold">@${nome} è tuo</p>
-                        
-                        <p class="text-zinc-400 mb-10 leading-relaxed">La tua identità digitale è stata creata. Ora puoi visualizzare la tua pagina personale.</p>
-                        
+                        <p class="text-zinc-400 mb-10 leading-relaxed">La tua identità digitale è stata creata.</p>
                         <button onclick="window.location.href='profile.html?nome=${nome}'" 
-                                class="w-full bg-white text-black py-6 rounded-3xl text-xl font-bold mb-4 hover:scale-105 transition">
+                                class="w-full bg-white text-black py-6 rounded-3xl text-xl font-bold mb-4">
                             Vedi il mio profilo
-                        </button>
-                        
-                        <button onclick="document.querySelector('.fixed').remove()" 
-                                class="w-full bg-transparent py-5 rounded-3xl text-zinc-500 font-medium">
-                            Chiudi
                         </button>
                     </div>
                 </div>
