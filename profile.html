@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilo MyQuickTag</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen font-sans">
+
+    <div id="profileContent" class="max-w-2xl mx-auto pt-16 px-6"></div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const nome = urlParams.get('nome')?.toLowerCase() || 'utente';
+
+        document.getElementById('profileContent').innerHTML = `
+            <div class="text-center">
+                <div class="w-32 h-32 mx-auto bg-gradient-to-tr from-blue-600 to-emerald-400 rounded-[45px] flex items-center justify-center text-6xl mb-8 shadow-lg shadow-blue-500/20">
+                    👤
+                </div>
+                <h1 class="text-5xl font-extrabold tracking-tight">@${nome}</h1>
+                <div class="inline-flex items-center gap-2 mt-4 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-full">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <p class="text-zinc-400 text-sm font-medium uppercase tracking-widest text-white">Identità Attiva</p>
+                </div>
+            </div>
+
+            <div class="mt-16 space-y-10">
+                <div class="bg-zinc-900/50 p-8 rounded-3xl border border-zinc-800 text-center">
+                    <p class="text-zinc-300 text-lg italic text-white">"Questa è la tua nuova casa digitale. Presto potrai aggiungere qui tutti i tuoi social."</p>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-6 bg-zinc-900 border border-zinc-800 rounded-3xl flex items-center justify-between opacity-50">
+                        <span class="text-zinc-500 text-white">I tuoi link appariranno qui</span>
+                        <span class="text-zinc-600">🔒</span>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="text-center mt-20 pb-10">
+                <p class="text-xs text-zinc-600 tracking-widest uppercase">Proprietà digitale di @${nome} • MyQuickTag 2026</p>
+            </footer>
+        `;
+    </script>
+</body>
+</html>
