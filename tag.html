@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyQuickTag - @${nome}</title>
+  <title>MyQuickTag - Ottieni il tuo nome</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -23,7 +23,7 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    let nome = urlParams.get('nome')?.toLowerCase().trim() || '';
+    let nome = urlParams.get('nome')?.toLowerCase().trim() || 'tag';
 
     function loadTag() {
       const content = document.getElementById('content');
@@ -54,27 +54,20 @@
             </p>
 
             <div class="mt-8 space-y-3">
-              <a href="#" class="flex items-center gap-4 bg-zinc-800 hover:bg-zinc-700 transition-all rounded-2xl p-4">
+              <div class="flex items-center gap-4 bg-zinc-800 rounded-2xl p-4 opacity-50">
                 <i class="fab fa-instagram text-2xl w-8"></i>
                 <div>
                   <p class="font-medium">Instagram</p>
                   <p class="text-sm text-zinc-400">@${nome}</p>
                 </div>
-              </a>
-              <a href="#" class="flex items-center gap-4 bg-zinc-800 hover:bg-zinc-700 transition-all rounded-2xl p-4">
-                <i class="fab fa-linkedin text-2xl w-8"></i>
-                <div>
-                  <p class="font-medium">LinkedIn</p>
-                  <p class="text-sm text-zinc-400">Profilo professionale</p>
-                </div>
-              </a>
-              <a href="#" class="flex items-center gap-4 bg-zinc-800 hover:bg-zinc-700 transition-all rounded-2xl p-4">
+              </div>
+              <div class="flex items-center gap-4 bg-zinc-800 rounded-2xl p-4 opacity-50">
                 <i class="fas fa-globe text-2xl w-8"></i>
                 <div>
                   <p class="font-medium">Sito Web</p>
-                  <p class="text-sm text-zinc-400">www.miosito.it</p>
+                  <p class="text-sm text-zinc-400">www.iltuositoweb.it</p>
                 </div>
-              </a>
+              </div>
             </div>
 
             <div class="mt-10 flex justify-center">
@@ -83,12 +76,12 @@
                      alt="QR Code" class="w-52 h-52">
               </div>
             </div>
-            <p class="text-center text-xs text-zinc-500 mt-3">Inquadra per accedere alla mia pagina</p>
+            <p class="text-center text-xs text-zinc-500 mt-3">Esempio di QR Code generato</p>
           </div>
         </div>
 
         <button onclick="claimName()" 
-                class="w-full mt-10 bg-white text-black py-7 rounded-3xl text-2xl font-semibold hover:bg-emerald-400 transition-all active:scale-95">
+                class="w-full mt-10 bg-white text-black py-7 rounded-3xl text-2xl font-semibold hover:bg-emerald-400 transition-all active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
           🎯 Attiva @${nome} GRATIS per 3 mesi
         </button>
 
@@ -99,7 +92,7 @@
     }
 
     async function claimName() {
-      // Avviso di successo
+      // Feedback visivo di successo
       alert(`✅ @${nome} attivato!\n\nOra personalizzalo.`);
       // Reindirizzamento alla pagina di modifica
       window.location.href = `edit.html?nome=${nome}`;
@@ -107,5 +100,7 @@
 
     window.onload = loadTag;
   </script>
+
 </body>
 </html>
+
