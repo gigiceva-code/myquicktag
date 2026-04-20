@@ -6,63 +6,34 @@
   <title>Personalizza @${nome} - MyQuickTag</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
-  </style>
 </head>
 <body class="bg-zinc-950 text-white min-h-screen">
-
   <div class="max-w-2xl mx-auto pt-12 px-5">
-    <a href="index.html" class="text-zinc-400 hover:text-white mb-8 inline-block">← Torna alla home</a>
-    
-    <h1 class="text-4xl font-bold mb-2">Personalizza <span class="text-emerald-400">@<span id="nome"></span></span></h1>
-    <p class="text-zinc-400 mb-10">Rendi la tua pagina unica e professionale</p>
-
-    <div class="bg-zinc-900 rounded-3xl p-8 space-y-10">
-      <!-- Avatar -->
-      <div>
-        <label class="block text-sm text-zinc-400 mb-3">Foto profilo</label>
-        <div class="flex items-center gap-6">
-          <div class="w-28 h-28 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-6xl shadow-xl">👤</div>
-          <button onclick="fakeUpload()" class="bg-zinc-800 hover:bg-zinc-700 px-6 py-4 rounded-2xl">Carica foto</button>
-        </div>
-      </div>
-
-      <!-- Bio -->
+    <h1 class="text-4xl font-bold mb-2">Personalizza <span class="text-emerald-400">@<span id="nomeDisplay"></span></span></h1>
+    <div class="bg-zinc-900 rounded-3xl p-8 space-y-10 mt-10">
       <div>
         <label class="block text-sm text-zinc-400 mb-2">Bio</label>
-        <textarea id="bio" rows="4" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-5" placeholder="Scrivi qualcosa su di te..."></textarea>
+        <textarea id="bio" rows="4" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-5 text-white" placeholder="Scrivi qualcosa su di te..."></textarea>
       </div>
-
-      <!-- Links -->
       <div>
-        <label class="block text-sm text-zinc-400 mb-4">I tuoi link principali</label>
-        <div class="space-y-4">
-          <input id="instagram" type="text" placeholder="Instagram @username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
-          <input id="linkedin" type="text" placeholder="LinkedIn / TikTok" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
-          <input id="website" type="text" placeholder="Sito Web o Portfolio" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
-        </div>
+        <label class="block text-sm text-zinc-400 mb-4">I tuoi link</label>
+        <input id="instagram" type="text" placeholder="Instagram @username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mb-4">
+        <input id="website" type="text" placeholder="Sito Web" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
       </div>
     </div>
-
-    <button onclick="saveProfile()" 
-            class="w-full mt-12 bg-emerald-500 hover:bg-emerald-600 py-7 rounded-3xl text-2xl font-semibold transition-all">
-      💾 Salva e Pubblica la mia pagina
+    <button onclick="saveProfile()" class="w-full mt-12 bg-emerald-500 hover:bg-emerald-600 py-7 rounded-3xl text-2xl font-semibold transition-all">
+      💾 Salva e Pubblica
     </button>
   </div>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const nome = urlParams.get('nome') || 'tuonome';
-    document.getElementById('nome').textContent = nome;
-
-    function fakeUpload() {
-      alert("✅ Foto caricata (simulazione per ora)");
-    }
+    document.getElementById('nomeDisplay').textContent = nome;
 
     function saveProfile() {
-      alert(`✅ @${nome} pubblicato con successo!\n\nLa tua pagina è ora online.`);
+      // Per ora simuliamo il salvataggio della bio
+      alert(`✅ Profilo di @${nome} aggiornato!`);
       window.location.href = `profile.html?nome=${nome}`;
     }
   </script>
