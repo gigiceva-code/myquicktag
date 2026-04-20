@@ -3,65 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MyQuickTag - Un mondo dentro il tuo nome</title>
+  <title>MyQuickTag - Il tuo nome nel mondo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
     body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
     
-    /* Pulsazione ancora più lenta (6s) e molto più luminosa (da 1 a 0.6) */
     .pulse-zen {
       animation: pulseZen 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     @keyframes pulseZen {
-      0%, 100% { opacity: 1; filter: brightness(100%); }
-      50% { opacity: 0.6; filter: brightness(90%); }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
     }
 
-    .input-group:focus-within {
-      border-color: rgba(255, 255, 255, 0.4);
-      box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+    .input-group {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #111111;
     }
-    .input-group:focus-within .at-symbol {
-      color: white;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    .input-group:focus-within {
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.07);
     }
   </style>
 </head>
-<body class="bg-[#0a0a0a] text-white min-h-screen flex flex-col justify-between overflow-hidden">
+<body class="bg-[#0a0a0a] text-white min-h-screen flex flex-col justify-between overflow-hidden font-inter">
 
   <header class="w-full p-6 flex justify-between items-center z-50">
-    <div class="w-8 h-8"></div> <h1 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h1>
-    <button class="text-white text-3xl focus:outline-none active:scale-95 transition-all">
+    <div class="w-8 h-8"></div>
+    <h1 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h1>
+    <button class="text-white text-3xl active:scale-95 transition-all">
       <i class="fas fa-bars"></i>
     </button>
   </header>
 
   <main class="flex-1 flex flex-col items-center justify-center p-6 text-center">
     
-    <div class="pulse-zen mb-10 w-full max-w-sm">
-      <p class="text-xl text-white font-medium leading-tight">Un mondo dentro il tuo nome</p>
-      <p class="text-xl text-white/90 font-medium leading-tight italic">Il tuo nome nel mondo</p>
+    <div class="mb-6">
+      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-3">Instant Digital Identity</p>
+      <h2 class="text-2xl font-bold tracking-tight text-white mb-1 uppercase">Crea il tuo Tag unico</h2>
+      <p class="text-zinc-400 text-sm font-medium tracking-wide">
+        Tutti i tuoi link in un solo @nome.<br>Pronto in 30 secondi.
+      </p>
     </div>
 
-    <div class="w-full max-w-[280px] bg-[#121212] border border-zinc-800 rounded-[2rem] p-2 shadow-3xl transition-all duration-500 input-group">
-      <div class="flex items-center px-5 py-3 border-b border-zinc-800/50">
-        <span class="text-2xl font-bold text-zinc-600 transition-all duration-500 at-symbol">@</span>
+    <div class="pulse-zen mb-10 w-full max-w-sm">
+      <p class="text-lg text-white/90 font-medium leading-tight">Un mondo dentro il tuo nome</p>
+      <p class="text-lg text-white/70 font-medium leading-tight italic">Il tuo nome nel mondo</p>
+    </div>
+
+    <div class="w-full max-w-[290px] rounded-[2.2rem] p-2 shadow-2xl transition-all duration-500 input-group">
+      <div class="flex items-center px-6 py-4 border-b border-white/5">
+        <span class="text-2xl font-bold text-zinc-500 at-symbol">@</span>
         <input id="searchInput" type="text" placeholder="iltuonome" 
-               class="flex-1 bg-transparent outline-none text-lg ml-1 text-white font-semibold uppercase placeholder-zinc-800 tracking-tight">
+               class="flex-1 bg-transparent outline-none text-xl ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
       </div>
       <button onclick="checkName()" 
-              class="w-full bg-white text-black font-extrabold py-3.5 mt-2 rounded-[1.5rem] text-lg hover:bg-zinc-200 transition-all active:scale-95 duration-150 shadow-lg">
+              class="w-full bg-white text-black font-black py-4 mt-2 rounded-[1.7rem] text-xl hover:bg-zinc-200 transition-all active:scale-95 duration-150 shadow-xl uppercase">
         Verifica
       </button>
     </div>
     
-    <p id="status" class="mt-8 text-xs font-black uppercase tracking-[0.3em] min-h-[20px] text-zinc-600"></p>
+    <p id="status" class="mt-8 text-[10px] font-black uppercase tracking-[0.3em] min-h-[20px] text-zinc-500"></p>
   </main>
 
-  <footer class="pb-10"></footer>
+  <footer class="pb-12 flex justify-center opacity-30">
+    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
+    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
+    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
+  </footer>
 
-  <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <script>
@@ -75,7 +86,7 @@
       if (!input) return;
 
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = '<span class="animate-pulse text-zinc-600">Analisi identità...</span>';
+      status.innerHTML = '<span class="animate-pulse">ANALISI ISTANTANEA...</span>';
 
       try {
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
@@ -83,13 +94,13 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = '<span class="text-red-600">❌ Già occupato</span>';
+          status.innerHTML = '<span class="text-red-600">GIÀ OCCUPATO</span>';
         } else {
-          status.innerHTML = '<span class="text-emerald-500">✨ Disponibile!</span>';
-          setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 700);
+          status.innerHTML = '<span class="text-emerald-400 font-bold">✨ DISPONIBILE!</span>';
+          setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 600);
         }
       } catch (e) {
-        status.innerHTML = 'Errore di connessione';
+        status.innerHTML = 'ERRORE RETE';
       }
     }
 
