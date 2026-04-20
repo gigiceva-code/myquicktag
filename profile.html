@@ -13,28 +13,25 @@
 </head>
 <body class="bg-zinc-950 text-white min-h-screen">
 
-  <div id="profileContent" class="max-w-2xl mx-auto pt-12 px-5"></div>
+  <div class="max-w-2xl mx-auto pt-12 px-5" id="profileContent">
+    <!-- Verrà riempito dal JavaScript -->
+  </div>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const nome = urlParams.get('nome')?.toLowerCase() || '';
+    const nome = urlParams.get('nome')?.toLowerCase() || 'tuonome';
 
-    // Qui in futuro recupererai i dati da Airtable
     document.getElementById('profileContent').innerHTML = `
       <div class="text-center">
-        <div class="w-32 h-32 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-7xl mb-6 shadow-2xl">👤</div>
+        <div class="w-32 h-32 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-7xl mb-6">👤</div>
         <h1 class="text-5xl font-bold">@${nome}</h1>
-        <p class="text-emerald-400 mt-1">Identità digitale su MyQuickTag</p>
+        <p class="text-emerald-400 mt-2">Identità digitale • MyQuickTag</p>
       </div>
 
       <div class="mt-12 bg-zinc-900 rounded-3xl p-8">
-        <p class="text-zinc-300 text-lg leading-relaxed text-center" id="bioText">
-          La tua bio apparirà qui una volta salvata.
+        <p class="text-zinc-300 text-lg leading-relaxed text-center">
+          La tua bio e i tuoi link appariranno qui una volta salvati dalla pagina di personalizzazione.
         </p>
-
-        <div class="mt-10 space-y-4" id="linksContainer">
-          <!-- I link appariranno qui dinamicamente in futuro -->
-        </div>
       </div>
 
       <div class="text-center mt-16 text-xs text-zinc-500">
