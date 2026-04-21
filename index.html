@@ -20,11 +20,22 @@
       overflow: hidden; margin-bottom: 10px; cursor: pointer;
     }
 
-    .hint-arrow {
-      position: absolute; bottom: 15px; right: 15px; color: #fff;
-      font-size: 18px; animation: hintPulse 1.2s infinite; z-index: 30;
+    /* FRECCIA PREMIUM ANIMATA (Copilot Style) */
+    .premium-arrow {
+      position:absolute; bottom:18px; right:18px; width:38px; height:38px;
+      border-radius:50%; background:rgba(0, 143, 90, 0.18);
+      display:flex; align-items:center; justify-content:center;
+      animation:pulseArrow 1.8s infinite ease-in-out; z-index: 40;
     }
-    @keyframes hintPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.4; } }
+    .arrow-head {
+      width:0; height:0; border-left:8px solid transparent;
+      border-right:8px solid transparent; border-top:12px solid #008f5a;
+    }
+    @keyframes pulseArrow {
+      0% { transform:scale(1); opacity:0.55; }
+      50% { transform:scale(1.22); opacity:1; }
+      100% { transform:scale(1); opacity:0.55; }
+    }
 
     .phone-button {
       width: 100%; height: 24px; background: rgba(255,255,255,0.02); border-radius: 6px;
@@ -33,12 +44,15 @@
       font-size: 8px; font-weight: 900; text-transform: uppercase;
       color: #fff; letter-spacing: 1px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.08); transform: translateX(2px); }
+    .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.08); }
 
     .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; animation: pulseEmerald 3s infinite; }
     @keyframes pulseEmerald { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 
     .input-group { border: 2px solid rgba(255, 255, 255, 0.2); background: #121212; }
+    
+    /* Stato Disponibile Migliorato */
+    .status-available { color: #ffffff !important; font-weight: 900; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
   </style>
 </head>
 <body class="h-screen flex flex-col justify-between py-1">
@@ -52,7 +66,10 @@
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
     <div id="iphoneTrigger" class="iphone-frame" onclick="runMagicDemo()">
-      <div id="demoControl" class="hint-arrow"><i class="fas fa-mouse-pointer"></i></div>
+      <div id="demoControl" class="premium-arrow">
+          <div class="arrow-head"></div>
+      </div>
+
       <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #0d0d0d 0%, #000 100%);">
           <div style="width:45px; height:8px; background:#222; border-radius:0 0 8px 8px; margin-bottom:15px;"></div>
           
@@ -117,13 +134,13 @@
         magicTimers.forEach(t => clearTimeout(t));
         magicTimers = [];
         isPlaying = false;
-        document.getElementById('demoControl').innerHTML = '<i class="fas fa-mouse-pointer"></i>';
+        document.getElementById('demoControl').innerHTML = '<div class="arrow-head"></div>';
         resetToHoles();
     }
 
     function resetToHoles() {
         const btns = document.querySelectorAll('.demo-btn');
-        btns.forEach(b => { b.innerText = "----"; b.classList.remove('active'); });
+        btns.forEach(b => { b.innerText = "----"; b.classList.remove('active'); b.style.opacity = "1"; });
         document.getElementById('demoTag').innerText = "@ NOME";
         document.getElementById('demoTag').style.color = "rgba(255,255,255,0.1)";
         document.getElementById('demoAvatar').style.borderColor = "#333";
@@ -145,9 +162,8 @@
       const qr = document.getElementById('demoQR');
       const status = document.getElementById('status');
 
-      control.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>'; // Icona cerchio/sync proposta da Copilot
+      control.innerHTML = '<i class="fas fa-sync-alt fa-spin text-white text-xs"></i>';
 
-      // ROUND 1: PROFESSIONAL
       tag.innerText = "@ ILTUOTAG";
       tag.style.color = "#10b981";
       avatar.style.borderColor = "#10b981";
@@ -158,9 +174,7 @@
       magicTimers.push(setTimeout(() => { b3.innerText = "INSTAGRAM"; b3.classList.add('active'); }, 600));
       magicTimers.push(setTimeout(() => { b4.innerText = "LINKEDIN"; b4.classList.add('active'); }, 800));
 
-      // ROUND 2: SOCIAL (Scatta dopo 2 secondi dal primo set)
       magicTimers.push(setTimeout(() => {
-          // Breve reset visivo per la "magia"
           [b1,b2,b3,b4].forEach(b => b.style.opacity = "0");
           
           magicTimers.push(setTimeout(() => {
@@ -170,8 +184,8 @@
               b4.innerText = "REDDIT"; b4.style.opacity = "1";
               qr.style.borderColor = "#10b981";
               qr.style.background = "rgba(16, 185, 129, 0.2)";
-              status.innerText = "PROVA ORA IL TUO NOME";
-              control.innerHTML = '<i class="fas fa-redo-alt"></i>'; // Icona reset finale
+              status.innerHTML = '<span class="status-available">PROVA ORA IL TUO NOME</span>';
+              control.innerHTML = '<i class="fas fa-redo-alt text-white text-xs"></i>';
           }, 400));
           
       }, 2400));
@@ -187,12 +201,15 @@
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
         const response = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_PAT}` } });
         const data = await response.json();
-        if (data.records && data.records.length > 0) status.innerHTML = 'TAG GIÀ ASSEGNATO';
-        else {
-          status.innerHTML = 'DISPONIBILE';
+        if (data.records && data.records.length > 0) {
+          status.innerHTML = 'TAG GIÀ ASSEGNATO';
+          status.classList.remove('status-available');
+        } else {
+          status.innerHTML = '<span class="status-available tracking-[0.3em]">DISPONIBILE</span>';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
       } catch (e) { status.innerHTML = 'ERRORE DI CONNESSIONE'; }
     }
   </script>
 </body>
+</html>
