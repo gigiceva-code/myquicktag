@@ -14,20 +14,20 @@
     }
     @keyframes pulseZen {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
+      50% { opacity: 0.6; }
     }
 
     .input-group {
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       background: #111111;
     }
     .input-group:focus-within {
-      border-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 40px rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
     }
   </style>
 </head>
-<body class="bg-[#0a0a0a] text-white min-h-screen flex flex-col justify-between overflow-hidden font-inter">
+<body class="bg-[#0a0a0a] text-white min-h-screen flex flex-col justify-between overflow-hidden">
 
   <header class="w-full p-6 flex justify-between items-center z-50">
     <div class="w-8 h-8"></div>
@@ -39,35 +39,34 @@
 
   <main class="flex-1 flex flex-col items-center justify-center p-6 text-center">
     
-    <div class="mb-6">
-      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-3">Instant Digital Identity</p>
-      <h2 class="text-2xl font-bold tracking-tight text-white mb-1 uppercase">Crea il tuo Tag unico</h2>
-      <p class="text-zinc-400 text-sm font-medium tracking-wide">
-        Tutti i tuoi link in un solo @nome.<br>Pronto in 30 secondi.
+    <div class="pulse-zen mb-8">
+      <p class="text-lg text-white/90 font-medium leading-tight tracking-tight">Un mondo dentro il tuo nome</p>
+      <p class="text-lg text-white/60 font-medium leading-tight italic tracking-tight">Il tuo nome nel mondo</p>
+    </div>
+
+    <div class="mb-8 w-full max-w-sm">
+      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-2">Instant Digital Identity</p>
+      <p class="text-zinc-500 text-[13px] leading-relaxed max-w-[310px] mx-auto font-medium">
+        Associa un <span class="text-zinc-300">@nome unico</span> alla tua presenza online: un punto di accesso semplice, ordinato e riconoscibile per tutto ciò che scegli di condividere.
       </p>
     </div>
 
-    <div class="pulse-zen mb-10 w-full max-w-sm">
-      <p class="text-lg text-white/90 font-medium leading-tight">Un mondo dentro il tuo nome</p>
-      <p class="text-lg text-white/70 font-medium leading-tight italic">Il tuo nome nel mondo</p>
-    </div>
-
-    <div class="w-full max-w-[290px] rounded-[2.2rem] p-2 shadow-2xl transition-all duration-500 input-group">
+    <div class="w-full max-w-[280px] rounded-[2rem] p-2 shadow-2xl transition-all duration-500 input-group">
       <div class="flex items-center px-6 py-4 border-b border-white/5">
-        <span class="text-2xl font-bold text-zinc-500 at-symbol">@</span>
+        <span class="text-2xl font-bold text-zinc-600">@</span>
         <input id="searchInput" type="text" placeholder="iltuonome" 
-               class="flex-1 bg-transparent outline-none text-xl ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
+               class="flex-1 bg-transparent outline-none text-lg ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
       </div>
       <button onclick="checkName()" 
-              class="w-full bg-white text-black font-black py-4 mt-2 rounded-[1.7rem] text-xl hover:bg-zinc-200 transition-all active:scale-95 duration-150 shadow-xl uppercase">
+              class="w-full bg-white text-black font-black py-4 mt-2 rounded-[1.6rem] text-lg hover:bg-zinc-200 transition-all active:scale-95 duration-150 shadow-xl uppercase">
         Verifica
       </button>
     </div>
     
-    <p id="status" class="mt-8 text-[10px] font-black uppercase tracking-[0.3em] min-h-[20px] text-zinc-500"></p>
+    <p id="status" class="mt-8 text-[10px] font-black uppercase tracking-[0.3em] min-h-[20px] text-zinc-600"></p>
   </main>
 
-  <footer class="pb-12 flex justify-center opacity-30">
+  <footer class="pb-10 flex justify-center opacity-10">
     <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
     <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
     <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
@@ -94,13 +93,13 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = '<span class="text-red-600">GIÀ OCCUPATO</span>';
+          status.innerHTML = '<span class="text-red-600 font-bold">GIÀ OCCUPATO</span>';
         } else {
-          status.innerHTML = '<span class="text-emerald-400 font-bold">✨ DISPONIBILE!</span>';
+          status.innerHTML = '<span class="text-emerald-500 font-bold tracking-widest italic">✨ DISPONIBILE!</span>';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 600);
         }
       } catch (e) {
-        status.innerHTML = 'ERRORE RETE';
+        status.innerHTML = 'ERRORE DI RETE';
       }
     }
 
