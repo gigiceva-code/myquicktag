@@ -9,11 +9,12 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; margin: 0; overflow-x: hidden; }
+    body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; margin: 0; overflow: hidden; }
     
     .pulse-deep { animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
     @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.98); } }
 
+    /* iPhone Luxury Dimensionato */
     .iphone-frame {
       width: 195px; height: 340px; background: #000; border-radius: 32px;
       border: 3px solid #333; position: relative;
@@ -21,18 +22,20 @@
       overflow: hidden; margin-bottom: 10px; cursor: pointer;
     }
 
+    /* Freccia Bianca Pulsante (Invito Copilot) */
     .hint-arrow {
-      position: absolute; bottom: 15px; right: 15px; color: #10b981;
-      font-size: 18px; animation: hintBounce 1.5s infinite; z-index: 30;
+      position: absolute; bottom: 15px; right: 15px; color: #fff;
+      font-size: 18px; animation: hintPulse 1.2s infinite; z-index: 30;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
     }
-    @keyframes hintBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes hintPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.5; } }
 
     .phone-button {
       width: 100%; height: 24px; background: rgba(255,255,255,0.02); border-radius: 6px;
       margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1);
       display: flex; align-items: center; padding-left: 10px;
       font-size: 8px; font-weight: 900; text-transform: uppercase;
-      color: #fff; letter-spacing: 1px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color: #fff; letter-spacing: 1px; transition: all 0.3s ease;
     }
     .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.05); }
 
@@ -52,7 +55,7 @@
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
-    <div id="iphoneTrigger" class="iphone-frame" onclick="runSmartDemo()">
+    <div id="iphoneTrigger" class="iphone-frame" onclick="runMagicDemo()">
       <div id="demoControl" class="hint-arrow"><i class="fas fa-mouse-pointer"></i></div>
       <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #0d0d0d 0%, #000 100%);">
           <div style="width:45px; height:8px; background:#222; border-radius:0 0 8px 8px; margin-bottom:15px;"></div>
@@ -61,13 +64,13 @@
               <i class="fas fa-user text-zinc-800 text-sm"></i>
           </div>
 
-          <div id="demoTag" style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.2); margin-bottom:4px; text-transform:uppercase;">@ NOME</div>
-          <div id="demoSub" style="font-size:9px; color:#444; margin-bottom:18px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
+          <div id="demoTag" style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.1); margin-bottom:4px; text-transform:uppercase;">@ NOME</div>
+          <div id="demoSub" style="font-size:9px; color:#333; margin-bottom:18px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
 
-          <div class="phone-button demo-btn" id="b1">_ _ _ _</div>
-          <div class="phone-button demo-btn" id="b2">_ _ _ _</div>
-          <div class="phone-button demo-btn" id="b3">_ _ _ _</div>
-          <div class="phone-button demo-btn" id="b4" style="width:70%;">_ _ _</div>
+          <div class="phone-button demo-btn" id="s1">----</div>
+          <div class="phone-button demo-btn" id="s2">----</div>
+          <div class="phone-button demo-btn" id="s3">----</div>
+          <div class="phone-button demo-btn" id="s4" style="width:70%;">----</div>
 
           <div id="demoQR" style="width:75px; height:75px; background:rgba(255,255,255,0.02); border-radius:12px; margin-top:auto; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-center; transition: all 0.5s;">
               <i class="fas fa-qrcode text-white/5 text-3xl"></i>
@@ -111,56 +114,67 @@
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
 
-    let isRunning = false;
-    let timers = [];
+    let isPlaying = false;
+    let magicTimers = [];
 
-    function clearTimers() {
-        timers.forEach(t => clearTimeout(t));
-        timers = [];
+    function stopMagic() {
+        magicTimers.forEach(t => clearTimeout(t));
+        isPlaying = false;
+        document.getElementById('demoControl').innerHTML = '<i class="fas fa-mouse-pointer"></i>';
+        resetToHoles();
     }
 
-    function runSmartDemo() {
-      const b1 = document.getElementById('b1'); const b2 = document.getElementById('b2');
-      const b3 = document.getElementById('b3'); const b4 = document.getElementById('b4');
-      const tag = document.getElementById('demoTag'); const qr = document.getElementById('demoQR');
-      const avatar = document.getElementById('demoAvatar'); const control = document.getElementById('demoControl');
+    function resetToHoles() {
+        const btns = document.querySelectorAll('.demo-btn');
+        btns.forEach(b => { b.innerText = "----"; b.classList.remove('active'); });
+        document.getElementById('demoTag').innerText = "@ NOME";
+        document.getElementById('demoTag').style.color = "rgba(255,255,255,0.1)";
+        document.getElementById('demoAvatar').style.borderColor = "#333";
+        document.getElementById('demoAvatar').innerHTML = '<i class="fas fa-user text-zinc-800 text-sm"></i>';
+        document.getElementById('demoQR').style.borderColor = "rgba(255,255,255,0.05)";
+        document.getElementById('status').innerText = "";
+    }
+
+    function runMagicDemo() {
+      if (isPlaying) { stopMagic(); return; }
+      
+      isPlaying = true;
+      const control = document.getElementById('demoControl');
+      const b1 = document.getElementById('s1'); const b2 = document.getElementById('s2');
+      const b3 = document.getElementById('s3'); const b4 = document.getElementById('s4');
+      const tag = document.getElementById('demoTag');
+      const avatar = document.getElementById('demoAvatar');
+      const qr = document.getElementById('demoQR');
       const status = document.getElementById('status');
 
-      if (isRunning) {
-        // RESET E STOP
-        clearTimers();
-        isRunning = false;
-        control.innerHTML = '<i class="fas fa-mouse-pointer"></i>';
-        [b1, b2, b3, b4].forEach(b => { b.innerText = "_ _ _ _"; b.classList.remove('active'); });
-        tag.innerText = "@ NOME"; tag.style.color = "rgba(255,255,255,0.2)";
-        avatar.style.borderColor = "#333"; avatar.innerHTML = '<i class="fas fa-user text-zinc-800 text-sm"></i>';
-        qr.style.background = "rgba(255,255,255,0.02)"; qr.style.borderColor = "rgba(255,255,255,0.05)";
-        status.innerText = "";
-        return;
-      }
+      control.innerHTML = '<i class="fas fa-times"></i>';
 
-      isRunning = true;
-      control.innerHTML = '<i class="fas fa-times-circle"></i>'; // Tasto per fermare
-      
-      // ANIMAZIONE 1: PROFESSIONAL
+      // ROUND 1: PROFESSIONAL & CLASSIC
       tag.innerText = "@ ILTUOTAG";
       tag.style.color = "#10b981";
       avatar.style.borderColor = "#10b981";
       avatar.innerHTML = '<i class="fas fa-user text-emerald-500 text-sm"></i>';
-      
-      timers.push(setTimeout(() => { b1.innerText = "@ BIO"; b1.classList.add('active'); }, 300));
-      timers.push(setTimeout(() => { b2.innerText = "@ CV"; b2.classList.add('active'); }, 600));
-      timers.push(setTimeout(() => { b3.innerText = "@ LINKEDIN"; b3.classList.add('active'); }, 900));
 
-      // ANIMAZIONE 2: SOCIAL (Automata)
-      timers.push(setTimeout(() => {
-        b2.innerText = "@ INSTAGRAM";
-        b3.innerText = "@ TIKTOK";
-        b4.innerText = "@ YOUTUBE";
-        b4.classList.add('active');
-        qr.style.background = "rgba(16, 185, 129, 0.4)";
-        qr.style.borderColor = "#10b981";
-        status.innerText = "PROVA ORA IL TUO NOME";
+      magicTimers.push(setTimeout(() => { b1.innerText = "BIO"; b1.classList.add('active'); }, 200));
+      magicTimers.push(setTimeout(() => { b2.innerText = "CV"; b2.classList.add('active'); }, 400));
+      magicTimers.push(setTimeout(() => { b3.innerText = "INSTAGRAM"; b3.classList.add('active'); }, 600));
+      magicTimers.push(setTimeout(() => { b4.innerText = "LINKEDIN"; b4.classList.add('active'); }, 800));
+
+      // PAUSA DI "MAGIA" E ROUND 2: SOCIAL & TREND
+      magicTimers.push(setTimeout(() => {
+        // Effetto reset veloce
+        [b1,b2,b3,b4].forEach(b => b.classList.remove('active'));
+        
+        magicTimers.push(setTimeout(() => {
+          b1.innerText = "FACEBOOK"; b1.classList.add('active');
+          b2.innerText = "TIKTOK"; b2.classList.add('active');
+          b3.innerText = "YOUTUBE"; b3.classList.add('active');
+          b4.innerText = "REDDIT"; b4.classList.add('active');
+          qr.style.borderColor = "#10b981";
+          qr.style.background = "rgba(16, 185, 129, 0.2)";
+          status.innerText = "PROVA ORA IL TUO NOME";
+        }, 300));
+        
       }, 2500));
     }
 
