@@ -15,32 +15,32 @@
         overflow-x: hidden;
     }
     
-    /* Animazione Pulsante per il Blocco Slogan */
-    .pulse-duo { 
-        animation: pulseDuo 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; 
+    /* Respiro Profondo e Lento per il Chiasmo */
+    .pulse-deep { 
+        animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; 
     }
-    @keyframes pulseDuo { 
+    @keyframes pulseDeep { 
         0%, 100% { opacity: 1; transform: scale(1); } 
-        50% { opacity: 0.5; transform: scale(0.98); } 
+        50% { opacity: 0.3; transform: scale(0.98); } 
     }
 
-    /* iPhone Mockup Scalato per dare spazio al testo */
+    /* iPhone Mockup */
     .iphone-frame {
       width: 110px;
-      height: 200px;
+      height: 190px;
       border: 3px solid #222;
       border-radius: 20px;
       background: #000;
       position: relative;
       box-shadow: 0 0 25px rgba(16, 185, 129, 0.1);
       overflow: hidden;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    /* Pulsante Verifica SMERALDO - Potenziato */
+    /* Pulsante Verifica SMERALDO */
     @keyframes pulseEmerald {
       0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-      50% { transform: scale(1.03); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
+      50% { transform: scale(1.02); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
     }
     .btn-emerald {
       background-color: #10b981;
@@ -60,7 +60,7 @@
   <header class="w-full p-6 flex justify-between items-center z-50">
     <div class="w-8 h-8"></div>
     <h1 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h1>
-    <button class="text-white text-3xl"><i class="fas fa-bars"></i></button>
+    <button class="text-white text-3xl active:scale-95"><i class="fas fa-bars"></i></button>
   </header>
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
@@ -68,13 +68,13 @@
     <div class="iphone-frame">
         <div class="h-full p-2 bg-gradient-to-b from-[#111] to-black flex flex-col items-center">
             <div class="w-6 h-1.5 bg-zinc-900 rounded-b-lg mb-3"></div> 
-            <div class="w-8 h-8 rounded-full bg-zinc-800 border border-white/5 mb-2 flex items-center justify-center text-[8px]">
-                <i class="fas fa-user text-zinc-700"></i>
+            <div class="w-8 h-8 rounded-full bg-zinc-800 border border-white/5 mb-2 flex items-center justify-center">
+                <i class="fas fa-user text-zinc-700 text-[8px]"></i>
             </div>
             <div class="text-[7px] font-black text-emerald-400 tracking-widest uppercase">@yourname</div>
             <div class="w-full space-y-1.5 mt-3 px-2 opacity-20">
-                <div class="h-1.5 bg-white rounded-full w-full"></div>
-                <div class="h-1.5 bg-white rounded-full w-3/4 mx-auto"></div>
+                <div class="h-1 bg-white rounded-full w-full"></div>
+                <div class="h-1 bg-white rounded-full w-3/4 mx-auto"></div>
             </div>
             <div class="mt-auto mb-2 w-7 h-7 bg-white/5 rounded-md flex items-center justify-center">
                 <i class="fas fa-qrcode text-white/10 text-[10px]"></i>
@@ -82,9 +82,9 @@
         </div>
     </div>
 
-    <div class="mb-6 pulse-duo">
-      <p class="text-xl font-black tracking-tighter uppercase italic leading-tight">Un mondo dentro il tuo nome</p>
-      <p class="text-xl font-black tracking-tighter uppercase italic leading-tight text-white/50 mt-1">Il tuo nome nel mondo</p>
+    <div class="mb-6 pulse-deep">
+      <p class="text-xl font-black tracking-tighter uppercase italic leading-tight text-white">Un mondo dentro il tuo nome</p>
+      <p class="text-xl font-black tracking-tighter uppercase italic leading-tight text-white mt-1">Il tuo nome nel mondo</p>
     </div>
 
     <div class="mb-8">
@@ -95,7 +95,7 @@
     </div>
 
     <div class="w-full max-w-[300px] space-y-4">
-      <div class="rounded-[2rem] p-1 input-group shadow-2xl">
+      <div class="rounded-[2.2rem] p-1 input-group shadow-2xl">
         <div class="flex items-center px-6 py-4">
           <span class="text-2xl font-black text-emerald-500">@</span>
           <input id="searchInput" type="text" placeholder="iltuonome" 
@@ -104,12 +104,12 @@
       </div>
       
       <button onclick="checkName()" 
-              class="w-full btn-emerald py-5 rounded-[2rem] text-xl uppercase tracking-widest active:scale-95 transition-transform">
+              class="w-full btn-emerald py-5 rounded-[2.2rem] text-xl uppercase tracking-widest active:scale-95 transition-transform">
         Verifica
       </button>
     </div>
     
-    <p id="status" class="mt-6 text-[10px] font-black uppercase tracking-[0.2em] min-h-[20px] text-zinc-600"></p>
+    <p id="status" class="mt-6 text-[10px] font-black uppercase tracking-[0.2em] min-h-[20px] text-zinc-600 italic"></p>
   </main>
 
   <footer class="pb-8 opacity-10 flex justify-center">
@@ -138,12 +138,12 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = 'NON DISPONIBILE';
+          status.innerHTML = 'GIÀ NOTARIZZATO';
         } else {
           status.innerHTML = 'DISPONIBILE';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
-      } catch (e) { status.innerHTML = 'ERRORE'; }
+      } catch (e) { status.innerHTML = 'ERRORE DI RETE'; }
     }
     document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkName(); });
   </script>
