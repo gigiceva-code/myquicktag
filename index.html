@@ -15,38 +15,26 @@
     @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.98); } }
 
     .iphone-frame {
-      width: 190px;
-      height: 330px;
-      background: #000;
-      border-radius: 32px;
-      border: 3px solid #333; 
-      position: relative;
+      width: 195px; height: 340px; background: #000; border-radius: 32px;
+      border: 3px solid #333; position: relative;
       box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 10px rgba(255,255,255,0.05);
-      overflow: hidden;
-      margin-bottom: 12px;
-      cursor: pointer;
+      overflow: hidden; margin-bottom: 10px; cursor: pointer;
     }
 
     .hint-arrow {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
-      color: #10b981;
-      font-size: 16px;
-      animation: hintBounce 1.5s infinite;
-      z-index: 20;
+      position: absolute; bottom: 15px; right: 15px; color: #10b981;
+      font-size: 18px; animation: hintBounce 1.5s infinite; z-index: 30;
     }
     @keyframes hintBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
     .phone-button {
-      width: 100%; height: 22px; background: rgba(255,255,255,0.03); border-radius: 6px;
-      margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);
+      width: 100%; height: 24px; background: rgba(255,255,255,0.02); border-radius: 6px;
+      margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1);
       display: flex; align-items: center; padding-left: 10px;
       font-size: 8px; font-weight: 900; text-transform: uppercase;
-      color: rgba(255,255,255,0.3); letter-spacing: 1px;
-      transition: all 0.3s ease;
+      color: #fff; letter-spacing: 1px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .phone-button.active { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); transform: scale(1.02); }
+    .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.05); }
 
     .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; animation: pulseEmerald 3s infinite; }
     @keyframes pulseEmerald { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
@@ -54,7 +42,7 @@
     .input-group { border: 2px solid rgba(255, 255, 255, 0.2); background: #121212; }
   </style>
 </head>
-<body class="h-screen flex flex-col justify-between py-2">
+<body class="h-screen flex flex-col justify-between py-1">
 
   <header class="w-full px-6 py-2 flex justify-between items-center bg-transparent">
     <div class="w-8 h-8"></div>
@@ -64,40 +52,34 @@
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
-    <div id="iphoneTrigger" class="iphone-frame" onclick="startAdvancedDemo()">
-      <div id="demoHint" class="hint-arrow"><i class="fas fa-mouse-pointer"></i></div>
-      <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #0f0f0f 0%, #000 100%);">
-          <div style="width:45px; height:8px; background:#222; border-radius:0 0 8px 8px; margin-bottom:12px;"></div>
+    <div id="iphoneTrigger" class="iphone-frame" onclick="runSmartDemo()">
+      <div id="demoControl" class="hint-arrow"><i class="fas fa-mouse-pointer"></i></div>
+      <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #0d0d0d 0%, #000 100%);">
+          <div style="width:45px; height:8px; background:#222; border-radius:0 0 8px 8px; margin-bottom:15px;"></div>
           
-          <div id="demoAvatar" style="width:60px; height:60px; border-radius:50%; background:#1a1a1a; margin-bottom:8px; border:1px solid #333; display:flex; align-items:center; justify-center; transition: 0.5s;">
+          <div id="demoAvatar" style="width:65px; height:65px; border-radius:50%; background:#1a1a1a; margin-bottom:10px; border:1px solid #333; display:flex; align-items:center; justify-center; transition: 0.5s;">
               <i class="fas fa-user text-zinc-800 text-sm"></i>
           </div>
 
-          <div id="demoTag" style="font-size:14px; font-weight:900; color:rgba(255,255,255,0.2); margin-bottom:2px; text-transform:uppercase;">@---</div>
-          <div id="demoSub" style="font-size:8px; color:#444; margin-bottom:15px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
+          <div id="demoTag" style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.2); margin-bottom:4px; text-transform:uppercase;">@ NOME</div>
+          <div id="demoSub" style="font-size:9px; color:#444; margin-bottom:18px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
 
-          <div class="phone-button demo-btn" id="btn1">_ _ _ _</div>
-          <div class="phone-button demo-btn" id="btn2">_ _ _ _</div>
-          <div class="phone-button demo-btn" id="btn3">_ _ _ _</div>
-          <div class="phone-button demo-btn" id="btn4" style="width:70%;">_ _ _</div>
+          <div class="phone-button demo-btn" id="b1">_ _ _ _</div>
+          <div class="phone-button demo-btn" id="b2">_ _ _ _</div>
+          <div class="phone-button demo-btn" id="b3">_ _ _ _</div>
+          <div class="phone-button demo-btn" id="b4" style="width:70%;">_ _ _</div>
 
-          <div id="demoQR" style="width:70px; height:70px; background:rgba(255,255,255,0.02); border-radius:12px; margin-top:auto; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-center; transition: all 0.5s;">
-              <i class="fas fa-qrcode text-white/5 text-2xl"></i>
+          <div id="demoQR" style="width:75px; height:75px; background:rgba(255,255,255,0.02); border-radius:12px; margin-top:auto; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-center; transition: all 0.5s;">
+              <i class="fas fa-qrcode text-white/5 text-3xl"></i>
           </div>
       </div>
     </div>
 
-    <p class="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em] mb-3">Immagina la tua identità così.</p>
+    <p class="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2">Immagina la tua identità così.</p>
 
     <div class="mb-4 pulse-deep">
       <p class="text-lg font-black tracking-tighter uppercase italic leading-tight text-white">Un mondo dentro il tuo nome</p>
       <p class="text-lg font-black tracking-tighter uppercase italic leading-tight text-white mt-1">Il tuo nome nel mondo</p>
-    </div>
-
-    <div class="mb-6">
-      <p class="text-zinc-400 text-[11px] max-w-[260px] mx-auto leading-tight font-medium">
-        Tutti i tuoi link in un unico Tag al prezzo di una colazione all'anno.
-      </p>
     </div>
 
     <div class="w-full max-w-[280px] space-y-3">
@@ -129,40 +111,57 @@
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
 
-    function startAdvancedDemo() {
-      const btn1 = document.getElementById('btn1');
-      const btn2 = document.getElementById('btn2');
-      const btn3 = document.getElementById('btn3');
-      const btn4 = document.getElementById('btn4');
-      const tag = document.getElementById('demoTag');
-      const qr = document.getElementById('demoQR');
-      const avatar = document.getElementById('demoAvatar');
-      const hint = document.getElementById('demoHint');
+    let isRunning = false;
+    let timers = [];
+
+    function clearTimers() {
+        timers.forEach(t => clearTimeout(t));
+        timers = [];
+    }
+
+    function runSmartDemo() {
+      const b1 = document.getElementById('b1'); const b2 = document.getElementById('b2');
+      const b3 = document.getElementById('b3'); const b4 = document.getElementById('b4');
+      const tag = document.getElementById('demoTag'); const qr = document.getElementById('demoQR');
+      const avatar = document.getElementById('demoAvatar'); const control = document.getElementById('demoControl');
       const status = document.getElementById('status');
 
-      hint.style.display = 'none';
+      if (isRunning) {
+        // RESET E STOP
+        clearTimers();
+        isRunning = false;
+        control.innerHTML = '<i class="fas fa-mouse-pointer"></i>';
+        [b1, b2, b3, b4].forEach(b => { b.innerText = "_ _ _ _"; b.classList.remove('active'); });
+        tag.innerText = "@ NOME"; tag.style.color = "rgba(255,255,255,0.2)";
+        avatar.style.borderColor = "#333"; avatar.innerHTML = '<i class="fas fa-user text-zinc-800 text-sm"></i>';
+        qr.style.background = "rgba(255,255,255,0.02)"; qr.style.borderColor = "rgba(255,255,255,0.05)";
+        status.innerText = "";
+        return;
+      }
 
-      // STEP 1: Professional (LinkedIn, Bio, CV)
-      tag.innerText = "@MARCO";
+      isRunning = true;
+      control.innerHTML = '<i class="fas fa-times-circle"></i>'; // Tasto per fermare
+      
+      // ANIMAZIONE 1: PROFESSIONAL
+      tag.innerText = "@ ILTUOTAG";
       tag.style.color = "#10b981";
       avatar.style.borderColor = "#10b981";
       avatar.innerHTML = '<i class="fas fa-user text-emerald-500 text-sm"></i>';
       
-      btn1.innerText = "@ BIO"; btn1.classList.add('active');
-      setTimeout(() => { btn2.innerText = "@ CV"; btn2.classList.add('active'); }, 200);
-      setTimeout(() => { btn3.innerText = "@ LINKEDIN"; btn3.classList.add('active'); }, 400);
+      timers.push(setTimeout(() => { b1.innerText = "@ BIO"; b1.classList.add('active'); }, 300));
+      timers.push(setTimeout(() => { b2.innerText = "@ CV"; b2.classList.add('active'); }, 600));
+      timers.push(setTimeout(() => { b3.innerText = "@ LINKEDIN"; b3.classList.add('active'); }, 900));
 
-      // STEP 2: Social Trend (Instagram, TikTok, YouTube)
-      setTimeout(() => {
-        btn2.innerText = "@ INSTAGRAM";
-        btn3.innerText = "@ TIKTOK";
-        btn4.innerText = "@ YOUTUBE";
-        btn4.classList.add('active');
+      // ANIMAZIONE 2: SOCIAL (Automata)
+      timers.push(setTimeout(() => {
+        b2.innerText = "@ INSTAGRAM";
+        b3.innerText = "@ TIKTOK";
+        b4.innerText = "@ YOUTUBE";
+        b4.classList.add('active');
         qr.style.background = "rgba(16, 185, 129, 0.4)";
         qr.style.borderColor = "#10b981";
-        qr.innerHTML = '<i class="fas fa-qrcode text-emerald-500 text-3xl"></i>';
-        status.innerText = "IL TUO MONDO IN UN TAG. PROVA ORA.";
-      }, 1500);
+        status.innerText = "PROVA ORA IL TUO NOME";
+      }, 2500));
     }
 
     async function checkName() {
@@ -171,15 +170,12 @@
       if (!input) return;
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
       status.innerHTML = 'ANALISI...';
-
       try {
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
         const response = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_PAT}` } });
         const data = await response.json();
-
-        if (data.records && data.records.length > 0) {
-          status.innerHTML = 'TAG GIÀ ASSEGNATO';
-        } else {
+        if (data.records && data.records.length > 0) status.innerHTML = 'TAG GIÀ ASSEGNATO';
+        else {
           status.innerHTML = 'DISPONIBILE';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
