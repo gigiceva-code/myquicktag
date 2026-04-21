@@ -15,7 +15,6 @@
         overflow-x: hidden;
     }
     
-    /* Respiro Profondo e Lento per il Chiasmo */
     .pulse-deep { 
         animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; 
     }
@@ -24,38 +23,51 @@
         50% { opacity: 0.3; transform: scale(0.98); } 
     }
 
-    /* Pulsante Verifica SMERALDO IPNOTICO */
-    @keyframes pulseEmerald {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-      50% { transform: scale(1.04); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
+    /* iPhone con bordi DEFINITI per visibilità esterna */
+    .iphone-frame {
+      width: 170px;
+      height: 310px;
+      background: #000;
+      border-radius: 30px;
+      /* Bordo metallico che stacca dallo sfondo nero */
+      border: 3px solid #333; 
+      position: relative;
+      /* Ombra chiara per creare profondità */
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.05);
+      overflow: hidden;
+      margin-bottom: 20px;
     }
+
     .btn-emerald {
       background-color: #10b981;
       color: #000 !important;
       font-weight: 900;
       animation: pulseEmerald 3s ease-in-out infinite;
     }
+    @keyframes pulseEmerald {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+      50% { transform: scale(1.04); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
+    }
 
     .input-group {
-      border: 2px solid rgba(255, 255, 255, 0.25);
+      border: 2px solid rgba(255, 255, 255, 0.3);
       background: #121212;
     }
 
-    /* Stile Bottoni Interni Smartphone */
     .phone-button {
       width: 100%;
       height: 22px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.06);
       border-radius: 6px;
       margin-bottom: 6px;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15); /* Bordo più marcato per l'esterno */
       display: flex;
       align-items: center;
       padding-left: 8px;
       font-size: 7px;
       font-weight: 900;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.7); /* Testo più luminoso */
       letter-spacing: 0.5px;
     }
   </style>
@@ -70,36 +82,27 @@
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
-    <div style="width:100%; display:flex; justify-content:center; margin-bottom:20px;">
-      <div style="
-        width:170px;
-        height:310px;
-        background:linear-gradient(180deg, #151515 0%, #0a0a0a 100%);
-        border-radius:28px;
-        box-shadow:0 15px 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.02);
-        padding:16px;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        border:2px solid #222;
-      ">
-        
-        <div style="width:50px; height:8px; background:#000; border-radius:5px; margin-bottom:12px;"></div>
+    <div style="width:100%; display:flex; justify-content:center;">
+      <div class="iphone-frame">
+        <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #111 0%, #000 100%);">
+            
+            <div style="width:50px; height:10px; background:#222; border-radius:0 0 8px 8px; margin-bottom:12px;"></div>
 
-        <div style="width:55px; height:55px; border-radius:50%; background:linear-gradient(45deg, #1a1a1a, #2a2a2a); margin-bottom:8px; border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-center;">
-            <i class="fas fa-user text-zinc-800 text-xs"></i>
-        </div>
+            <div style="width:55px; height:55px; border-radius:50%; background:#222; margin-bottom:8px; border:1px solid #444; display:flex; align-items:center; justify-center;">
+                <i class="fas fa-user text-zinc-600 text-xs"></i>
+            </div>
 
-        <div style="font-size:15px; font-weight:900; color:#10b981; margin-bottom:2px; text-transform:uppercase; letter-spacing:-0.5px;">@iltuonome</div>
-        <div style="font-size:8px; color:#555; margin-bottom:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Digital Identity</div>
+            <div style="font-size:15px; font-weight:900; color:#10b981; margin-bottom:2px; text-transform:uppercase;">@iltuonome</div>
+            <div style="font-size:8px; color:#666; margin-bottom:15px; font-weight:600; text-transform:uppercase;">Digital Identity</div>
 
-        <div class="phone-button">@ bio</div>
-        <div class="phone-button">@ cv</div>
-        <div class="phone-button">@ instagram</div>
-        <div class="phone-button" style="width:70%;">@ linkedin</div>
+            <div class="phone-button">@ bio</div>
+            <div class="phone-button">@ cv</div>
+            <div class="phone-button">@ instagram</div>
+            <div class="phone-button" style="width:70%;">@ linkedin</div>
 
-        <div style="width:70px; height:70px; background:rgba(16, 185, 129, 0.05); border-radius:12px; margin-top:auto; border:1px solid rgba(16, 185, 129, 0.1); display:flex; align-items:center; justify-center;">
-            <i class="fas fa-qrcode text-emerald-500/20 text-2xl"></i>
+            <div style="width:70px; height:70px; background:rgba(16, 185, 129, 0.08); border-radius:12px; margin-top:auto; border:1px solid rgba(16, 185, 129, 0.3); display:flex; align-items:center; justify-center;">
+                <i class="fas fa-qrcode text-emerald-500/30 text-2xl"></i>
+            </div>
         </div>
       </div>
     </div>
@@ -152,7 +155,7 @@
       const status = document.getElementById('status');
       if (!input) return;
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = '<span class="animate-pulse">ANALISI REGISTRO...</span>';
+      status.innerHTML = '<span class="animate-pulse">ANALISI...</span>';
 
       try {
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
@@ -160,12 +163,12 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = 'TAG GIÀ ASSEGNATO';
+          status.innerHTML = 'GIÀ NOTARIZZATO';
         } else {
           status.innerHTML = 'DISPONIBILE';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
-      } catch (e) { status.innerHTML = 'ERRORE DI CONNESSIONE'; }
+      } catch (e) { status.innerHTML = 'ERRORE CONNESSIONE'; }
     }
     document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkName(); });
   </script>
