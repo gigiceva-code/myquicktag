@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -14,7 +13,6 @@
     .pulse-deep { animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
     @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.98); } }
 
-    /* iPhone Luxury Dimensionato */
     .iphone-frame {
       width: 195px; height: 340px; background: #000; border-radius: 32px;
       border: 3px solid #333; position: relative;
@@ -22,22 +20,20 @@
       overflow: hidden; margin-bottom: 10px; cursor: pointer;
     }
 
-    /* Freccia Bianca Pulsante (Invito Copilot) */
     .hint-arrow {
       position: absolute; bottom: 15px; right: 15px; color: #fff;
       font-size: 18px; animation: hintPulse 1.2s infinite; z-index: 30;
-      text-shadow: 0 0 10px rgba(255,255,255,0.3);
     }
-    @keyframes hintPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.5; } }
+    @keyframes hintPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.4; } }
 
     .phone-button {
       width: 100%; height: 24px; background: rgba(255,255,255,0.02); border-radius: 6px;
       margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1);
       display: flex; align-items: center; padding-left: 10px;
       font-size: 8px; font-weight: 900; text-transform: uppercase;
-      color: #fff; letter-spacing: 1px; transition: all 0.3s ease;
+      color: #fff; letter-spacing: 1px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.05); }
+    .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.08); transform: translateX(2px); }
 
     .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; animation: pulseEmerald 3s infinite; }
     @keyframes pulseEmerald { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
@@ -119,6 +115,7 @@
 
     function stopMagic() {
         magicTimers.forEach(t => clearTimeout(t));
+        magicTimers = [];
         isPlaying = false;
         document.getElementById('demoControl').innerHTML = '<i class="fas fa-mouse-pointer"></i>';
         resetToHoles();
@@ -132,6 +129,7 @@
         document.getElementById('demoAvatar').style.borderColor = "#333";
         document.getElementById('demoAvatar').innerHTML = '<i class="fas fa-user text-zinc-800 text-sm"></i>';
         document.getElementById('demoQR').style.borderColor = "rgba(255,255,255,0.05)";
+        document.getElementById('demoQR').style.background = "transparent";
         document.getElementById('status').innerText = "";
     }
 
@@ -147,9 +145,9 @@
       const qr = document.getElementById('demoQR');
       const status = document.getElementById('status');
 
-      control.innerHTML = '<i class="fas fa-times"></i>';
+      control.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>'; // Icona cerchio/sync proposta da Copilot
 
-      // ROUND 1: PROFESSIONAL & CLASSIC
+      // ROUND 1: PROFESSIONAL
       tag.innerText = "@ ILTUOTAG";
       tag.style.color = "#10b981";
       avatar.style.borderColor = "#10b981";
@@ -160,22 +158,23 @@
       magicTimers.push(setTimeout(() => { b3.innerText = "INSTAGRAM"; b3.classList.add('active'); }, 600));
       magicTimers.push(setTimeout(() => { b4.innerText = "LINKEDIN"; b4.classList.add('active'); }, 800));
 
-      // PAUSA DI "MAGIA" E ROUND 2: SOCIAL & TREND
+      // ROUND 2: SOCIAL (Scatta dopo 2 secondi dal primo set)
       magicTimers.push(setTimeout(() => {
-        // Effetto reset veloce
-        [b1,b2,b3,b4].forEach(b => b.classList.remove('active'));
-        
-        magicTimers.push(setTimeout(() => {
-          b1.innerText = "FACEBOOK"; b1.classList.add('active');
-          b2.innerText = "TIKTOK"; b2.classList.add('active');
-          b3.innerText = "YOUTUBE"; b3.classList.add('active');
-          b4.innerText = "REDDIT"; b4.classList.add('active');
-          qr.style.borderColor = "#10b981";
-          qr.style.background = "rgba(16, 185, 129, 0.2)";
-          status.innerText = "PROVA ORA IL TUO NOME";
-        }, 300));
-        
-      }, 2500));
+          // Breve reset visivo per la "magia"
+          [b1,b2,b3,b4].forEach(b => b.style.opacity = "0");
+          
+          magicTimers.push(setTimeout(() => {
+              b1.innerText = "FACEBOOK"; b1.style.opacity = "1";
+              b2.innerText = "TIKTOK"; b2.style.opacity = "1";
+              b3.innerText = "YOUTUBE"; b3.style.opacity = "1";
+              b4.innerText = "REDDIT"; b4.style.opacity = "1";
+              qr.style.borderColor = "#10b981";
+              qr.style.background = "rgba(16, 185, 129, 0.2)";
+              status.innerText = "PROVA ORA IL TUO NOME";
+              control.innerHTML = '<i class="fas fa-redo-alt"></i>'; // Icona reset finale
+          }, 400));
+          
+      }, 2400));
     }
 
     async function checkName() {
@@ -197,4 +196,3 @@
     }
   </script>
 </body>
-</html>
