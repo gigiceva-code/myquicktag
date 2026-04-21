@@ -15,42 +15,49 @@
         overflow-x: hidden;
     }
     
-    .pulse-zen { animation: pulseZen 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes pulseZen { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-    /* Mockup iPhone più compatto per salvare spazio */
-    .iphone-frame {
-      width: 120px;
-      height: 220px;
-      border: 3px solid #222;
-      border-radius: 22px;
-      background: #000;
-      position: relative;
-      box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);
-      overflow: hidden;
-      margin-bottom: 1.5rem;
+    /* Animazione Pulsante per il Blocco Slogan */
+    .pulse-duo { 
+        animation: pulseDuo 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; 
+    }
+    @keyframes pulseDuo { 
+        0%, 100% { opacity: 1; transform: scale(1); } 
+        50% { opacity: 0.5; transform: scale(0.98); } 
     }
 
+    /* iPhone Mockup Scalato per dare spazio al testo */
+    .iphone-frame {
+      width: 110px;
+      height: 200px;
+      border: 3px solid #222;
+      border-radius: 20px;
+      background: #000;
+      position: relative;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.1);
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    /* Pulsante Verifica SMERALDO - Potenziato */
     @keyframes pulseEmerald {
       0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-      50% { transform: scale(1.02); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
+      50% { transform: scale(1.03); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
     }
     .btn-emerald {
       background-color: #10b981;
-      color: #000;
+      color: #000 !important;
       font-weight: 900;
       animation: pulseEmerald 3s ease-in-out infinite;
     }
 
     .input-group {
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       background: #121212;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <header class="w-full p-6 flex justify-between items-center">
+  <header class="w-full p-6 flex justify-between items-center z-50">
     <div class="w-8 h-8"></div>
     <h1 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h1>
     <button class="text-white text-3xl"><i class="fas fa-bars"></i></button>
@@ -59,36 +66,36 @@
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
     <div class="iphone-frame">
-        <div class="h-full p-3 bg-gradient-to-b from-[#111] to-black flex flex-col items-center">
-            <div class="w-8 h-2 bg-zinc-900 rounded-b-lg mb-4"></div> 
-            <div class="w-10 h-10 rounded-full bg-zinc-800 border border-white/5 mb-2 flex items-center justify-center">
-                <i class="fas fa-user text-zinc-600 text-[10px]"></i>
+        <div class="h-full p-2 bg-gradient-to-b from-[#111] to-black flex flex-col items-center">
+            <div class="w-6 h-1.5 bg-zinc-900 rounded-b-lg mb-3"></div> 
+            <div class="w-8 h-8 rounded-full bg-zinc-800 border border-white/5 mb-2 flex items-center justify-center text-[8px]">
+                <i class="fas fa-user text-zinc-700"></i>
             </div>
-            <div class="text-[8px] font-black text-emerald-400 tracking-widest uppercase">@yourname</div>
-            <div class="w-full space-y-1.5 mt-4 px-2">
-                <div class="h-2 bg-white/5 rounded-full w-full"></div>
-                <div class="h-2 bg-white/5 rounded-full w-4/5 mx-auto"></div>
+            <div class="text-[7px] font-black text-emerald-400 tracking-widest uppercase">@yourname</div>
+            <div class="w-full space-y-1.5 mt-3 px-2 opacity-20">
+                <div class="h-1.5 bg-white rounded-full w-full"></div>
+                <div class="h-1.5 bg-white rounded-full w-3/4 mx-auto"></div>
             </div>
-            <div class="mt-auto mb-2 w-8 h-8 bg-white/5 rounded-md flex items-center justify-center border border-white/5">
-                <i class="fas fa-qrcode text-white/10 text-sm"></i>
+            <div class="mt-auto mb-2 w-7 h-7 bg-white/5 rounded-md flex items-center justify-center">
+                <i class="fas fa-qrcode text-white/10 text-[10px]"></i>
             </div>
         </div>
     </div>
 
-    <div class="mb-4">
-      <p class="text-xl text-white font-black tracking-tighter uppercase italic leading-tight">Un mondo dentro il tuo nome</p>
-      <p class="pulse-zen text-lg text-white/40 font-medium italic tracking-tight leading-none">Il tuo nome nel mondo</p>
+    <div class="mb-6 pulse-duo">
+      <p class="text-xl font-black tracking-tighter uppercase italic leading-tight">Un mondo dentro il tuo nome</p>
+      <p class="text-xl font-black tracking-tighter uppercase italic leading-tight text-white/50 mt-1">Il tuo nome nel mondo</p>
     </div>
 
-    <div class="mb-6">
-      <p class="text-[9px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-2">Instant Digital Identity</p>
+    <div class="mb-8">
+      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-2">Instant Digital Identity</p>
       <p class="text-zinc-400 text-[12px] max-w-[280px] mx-auto leading-relaxed">
         Sfrutta l’innovazione: tutti i tuoi link in un unico Tag al prezzo di una colazione all'anno.
       </p>
     </div>
 
-    <div class="w-full max-w-[300px] space-y-3">
-      <div class="rounded-[2rem] p-1 input-group shadow-xl">
+    <div class="w-full max-w-[300px] space-y-4">
+      <div class="rounded-[2rem] p-1 input-group shadow-2xl">
         <div class="flex items-center px-6 py-4">
           <span class="text-2xl font-black text-emerald-500">@</span>
           <input id="searchInput" type="text" placeholder="iltuonome" 
@@ -102,13 +109,13 @@
       </button>
     </div>
     
-    <p id="status" class="mt-4 text-[9px] font-black uppercase tracking-[0.2em] min-h-[20px] text-zinc-600"></p>
+    <p id="status" class="mt-6 text-[10px] font-black uppercase tracking-[0.2em] min-h-[20px] text-zinc-600"></p>
   </main>
 
-  <footer class="pb-6 opacity-10 flex justify-center">
-    <div class="w-1 h-1 bg-white rounded-full mx-1"></div>
-    <div class="w-1 h-1 bg-white rounded-full mx-1"></div>
-    <div class="w-1 h-1 bg-white rounded-full mx-1"></div>
+  <footer class="pb-8 opacity-10 flex justify-center">
+    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
+    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
+    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
   </footer>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -123,7 +130,7 @@
       const status = document.getElementById('status');
       if (!input) return;
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = '<span class="animate-pulse italic">NOTARIZING...</span>';
+      status.innerHTML = '<span class="animate-pulse">ANALISI...</span>';
 
       try {
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
@@ -131,13 +138,14 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = 'ALREADY TAKEN';
+          status.innerHTML = 'NON DISPONIBILE';
         } else {
-          status.innerHTML = 'AVAILABLE FOR CAPTURE';
+          status.innerHTML = 'DISPONIBILE';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
-      } catch (e) { status.innerHTML = 'ERROR'; }
+      } catch (e) { status.innerHTML = 'ERRORE'; }
     }
+    document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkName(); });
   </script>
 </body>
 </html>
