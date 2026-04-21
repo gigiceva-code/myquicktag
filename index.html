@@ -1,95 +1,91 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MyQuickTag - La tua identità digitale esclusiva. Un unico Tag per bio, CV e social. Prenota ora il tuo nome digitale.">
+  <meta name="description" content="MyQuickTag - La tua identità digitale esclusiva. Un unico Tag per bio, CV e social.">
   <title>MyQuickTag - Il tuo nome nel mondo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
     body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; margin: 0; overflow-x: hidden; }
     
-    /* Respiro Profondo Chiasmo */
     .pulse-deep { animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
     @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.98); } }
 
-    /* iPhone Frame con bordo Titanium */
+    /* iPhone ingrandito e definito */
     .iphone-frame {
-      width: 170px;
-      height: 310px;
+      width: 195px; /* Aumentato per leggibilità */
+      height: 350px;
       background: #000;
-      border-radius: 30px;
+      border-radius: 32px;
       border: 3px solid #333; 
       position: relative;
       box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.05);
       overflow: hidden;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       cursor: pointer;
     }
 
-    /* Freccetta Lampeggiante Interna */
     .hint-arrow {
       position: absolute;
       bottom: 15px;
       right: 15px;
       color: #10b981;
-      font-size: 14px;
+      font-size: 16px;
       animation: hintBounce 1.5s infinite;
       z-index: 20;
-      text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
     }
-    @keyframes hintBounce { 0%, 100% { transform: translateY(0) scale(1); opacity: 1; } 50% { transform: translateY(-5px) scale(1.2); opacity: 0.5; } }
+    @keyframes hintBounce { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(-5px); opacity: 0.5; } }
 
-    /* Bottoni Interni Smartphone */
     .phone-button {
-      width: 100%; height: 22px; background: rgba(255,255,255,0.06); border-radius: 6px;
-      margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.15);
-      display: flex; align-items: center; padding-left: 8px;
-      font-size: 7px; font-weight: 900; text-transform: uppercase;
+      width: 100%; height: 24px; background: rgba(255,255,255,0.06); border-radius: 6px;
+      margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; padding-left: 10px;
+      font-size: 8px; font-weight: 900; text-transform: uppercase;
       color: rgba(255,255,255,0.7); letter-spacing: 0.5px;
       transition: all 0.4s ease;
     }
-    .phone-button.active { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); transform: scale(1.05); }
+    .phone-button.active { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); }
 
-    /* Pulsante Verifica SMERALDO */
     .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; animation: pulseEmerald 3s infinite; }
-    @keyframes pulseEmerald { 0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); } 50% { transform: scale(1.04); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); } }
+    @keyframes pulseEmerald { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); } }
 
-    .input-group { border: 2px solid rgba(255, 255, 255, 0.3); background: #121212; transition: border 0.3s; }
-    .input-group:focus-within { border-color: #10b981; }
+    .input-group { border: 2px solid rgba(255, 255, 255, 0.3); background: #121212; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <header class="w-full p-6 flex justify-between items-center z-50">
+  <header class="w-full p-6 flex justify-between items-center bg-transparent">
     <div class="w-8 h-8"></div>
-    <h2 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h2>
-    <button class="text-white text-3xl active:scale-95" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    <h2 class="text-3xl font-black tracking-tighter italic uppercase m-0 p-0">MyQuickTag</h2>
+    <button class="text-white text-3xl active:scale-95"><i class="fas fa-bars"></i></button>
   </header>
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
-    <div id="iphoneTrigger" class="iphone-frame" onclick="startDemo()">
-      <div class="hint-arrow"><i class="fas fa-mouse-pointer"></i></div>
+    <div id="iphoneTrigger" class="iphone-frame" onclick="toggleDemo()">
+      <div id="demoHint" class="hint-arrow"><i class="fas fa-mouse-pointer"></i></div>
       <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #111 0%, #000 100%);">
-          <div style="width:50px; height:10px; background:#222; border-radius:0 0 8px 8px; margin-bottom:12px;"></div>
-          <div style="width:55px; height:55px; border-radius:50%; background:#222; margin-bottom:8px; border:1px solid #444; display:flex; align-items:center; justify-center;">
-              <i class="fas fa-user text-zinc-600 text-xs"></i>
+          <div style="width:50px; height:10px; background:#222; border-radius:0 0 8px 8px; margin-bottom:15px;"></div>
+          <div style="width:65px; height:65px; border-radius:50%; background:#222; margin-bottom:10px; border:1px solid #444; display:flex; align-items:center; justify-center;">
+              <i class="fas fa-user text-zinc-600 text-sm"></i>
           </div>
-          <div id="demoTag" style="font-size:15px; font-weight:900; color:#10b981; margin-bottom:2px; text-transform:uppercase;">@iltuonome</div>
-          <div style="font-size:8px; color:#666; margin-bottom:15px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
+          <div id="demoTag" style="font-size:16px; font-weight:900; color:#10b981; margin-bottom:4px; text-transform:uppercase;">@iltuonome</div>
+          <div style="font-size:9px; color:#666; margin-bottom:18px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
 
           <div class="phone-button demo-btn">@ bio</div>
           <div class="phone-button demo-btn">@ cv</div>
           <div class="phone-button demo-btn">@ instagram</div>
           <div class="phone-button demo-btn" style="width:70%;">@ linkedin</div>
 
-          <div id="demoQR" style="width:70px; height:70px; background:rgba(16, 185, 129, 0.08); border-radius:12px; margin-top:auto; border:1px solid rgba(16, 185, 129, 0.3); display:flex; align-items:center; justify-center; transition: all 0.5s;">
-              <i class="fas fa-qrcode text-emerald-500/30 text-2xl"></i>
+          <div id="demoQR" style="width:80px; height:80px; background:rgba(16, 185, 129, 0.08); border-radius:12px; margin-top:auto; border:1px solid rgba(16, 185, 129, 0.3); display:flex; align-items:center; justify-center; transition: all 0.5s;">
+              <i class="fas fa-qrcode text-emerald-500/30 text-3xl"></i>
           </div>
       </div>
     </div>
+
+    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4">Immagina la tua identità così.</p>
 
     <div class="mb-6 pulse-deep">
       <p class="text-xl font-black tracking-tighter uppercase italic leading-tight text-white">Un mondo dentro il tuo nome</p>
@@ -132,24 +128,37 @@
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
 
-    // LOGICA DEMO ALLUCINANTE
-    function startDemo() {
+    let demoActive = false;
+
+    function toggleDemo() {
       const btns = document.querySelectorAll('.demo-btn');
       const qr = document.getElementById('demoQR');
-      const hint = document.querySelector('.hint-arrow');
-      
-      hint.style.display = 'none'; // Nasconde la freccia dopo il primo click
-      
-      btns.forEach((btn, index) => {
-        setTimeout(() => {
-          btn.classList.add('active');
-          if(index === btns.length - 1) {
-            qr.style.background = "rgba(16, 185, 129, 0.4)";
-            qr.style.borderColor = "#10b981";
-            document.getElementById('status').innerText = "PROVA ORA IL TUO NOME QUI SOTTO";
-          }
-        }, index * 300);
-      });
+      const hint = document.getElementById('demoHint');
+      const status = document.getElementById('status');
+
+      if (!demoActive) {
+        // START DEMO
+        demoActive = true;
+        hint.innerHTML = '<i class="fas fa-undo"></i>'; // Icona Reset
+        btns.forEach((btn, index) => {
+          setTimeout(() => {
+            if(demoActive) btn.classList.add('active');
+            if(index === btns.length - 1 && demoActive) {
+              qr.style.background = "rgba(16, 185, 129, 0.4)";
+              qr.style.borderColor = "#10b981";
+              status.innerText = "PROVA ORA IL TUO NOME QUI SOTTO";
+            }
+          }, index * 300);
+        });
+      } else {
+        // RESET DEMO
+        demoActive = false;
+        hint.innerHTML = '<i class="fas fa-mouse-pointer"></i>';
+        btns.forEach(btn => btn.classList.remove('active'));
+        qr.style.background = "rgba(16, 185, 129, 0.08)";
+        qr.style.borderColor = "rgba(16, 185, 129, 0.3)";
+        status.innerText = "";
+      }
     }
 
     async function checkName() {
