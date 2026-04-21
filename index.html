@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -13,109 +14,109 @@
     .pulse-deep { animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
     @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.98); } }
 
-    /* iPhone ingrandito e definito */
     .iphone-frame {
-      width: 195px; /* Aumentato per leggibilità */
-      height: 350px;
+      width: 190px;
+      height: 330px;
       background: #000;
       border-radius: 32px;
       border: 3px solid #333; 
       position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.05);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 10px rgba(255,255,255,0.05);
       overflow: hidden;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       cursor: pointer;
     }
 
     .hint-arrow {
       position: absolute;
-      bottom: 15px;
-      right: 15px;
+      bottom: 12px;
+      right: 12px;
       color: #10b981;
       font-size: 16px;
       animation: hintBounce 1.5s infinite;
       z-index: 20;
     }
-    @keyframes hintBounce { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(-5px); opacity: 0.5; } }
+    @keyframes hintBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
     .phone-button {
-      width: 100%; height: 24px; background: rgba(255,255,255,0.06); border-radius: 6px;
-      margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.15);
+      width: 100%; height: 22px; background: rgba(255,255,255,0.03); border-radius: 6px;
+      margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);
       display: flex; align-items: center; padding-left: 10px;
       font-size: 8px; font-weight: 900; text-transform: uppercase;
-      color: rgba(255,255,255,0.7); letter-spacing: 0.5px;
-      transition: all 0.4s ease;
+      color: rgba(255,255,255,0.3); letter-spacing: 1px;
+      transition: all 0.3s ease;
     }
-    .phone-button.active { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); }
+    .phone-button.active { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); transform: scale(1.02); }
 
     .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; animation: pulseEmerald 3s infinite; }
-    @keyframes pulseEmerald { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); } }
+    @keyframes pulseEmerald { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 
-    .input-group { border: 2px solid rgba(255, 255, 255, 0.3); background: #121212; }
+    .input-group { border: 2px solid rgba(255, 255, 255, 0.2); background: #121212; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="h-screen flex flex-col justify-between py-2">
 
-  <header class="w-full p-6 flex justify-between items-center bg-transparent">
+  <header class="w-full px-6 py-2 flex justify-between items-center bg-transparent">
     <div class="w-8 h-8"></div>
-    <h2 class="text-3xl font-black tracking-tighter italic uppercase m-0 p-0">MyQuickTag</h2>
-    <button class="text-white text-3xl active:scale-95"><i class="fas fa-bars"></i></button>
+    <h2 class="text-2xl font-black tracking-tighter italic uppercase m-0">MyQuickTag</h2>
+    <button class="text-white text-2xl active:scale-95"><i class="fas fa-bars"></i></button>
   </header>
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
-    <div id="iphoneTrigger" class="iphone-frame" onclick="toggleDemo()">
+    <div id="iphoneTrigger" class="iphone-frame" onclick="startAdvancedDemo()">
       <div id="demoHint" class="hint-arrow"><i class="fas fa-mouse-pointer"></i></div>
-      <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #111 0%, #000 100%);">
-          <div style="width:50px; height:10px; background:#222; border-radius:0 0 8px 8px; margin-bottom:15px;"></div>
-          <div style="width:65px; height:65px; border-radius:50%; background:#222; margin-bottom:10px; border:1px solid #444; display:flex; align-items:center; justify-center;">
-              <i class="fas fa-user text-zinc-600 text-sm"></i>
+      <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #0f0f0f 0%, #000 100%);">
+          <div style="width:45px; height:8px; background:#222; border-radius:0 0 8px 8px; margin-bottom:12px;"></div>
+          
+          <div id="demoAvatar" style="width:60px; height:60px; border-radius:50%; background:#1a1a1a; margin-bottom:8px; border:1px solid #333; display:flex; align-items:center; justify-center; transition: 0.5s;">
+              <i class="fas fa-user text-zinc-800 text-sm"></i>
           </div>
-          <div id="demoTag" style="font-size:16px; font-weight:900; color:#10b981; margin-bottom:4px; text-transform:uppercase;">@iltuonome</div>
-          <div style="font-size:9px; color:#666; margin-bottom:18px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
 
-          <div class="phone-button demo-btn">@ bio</div>
-          <div class="phone-button demo-btn">@ cv</div>
-          <div class="phone-button demo-btn">@ instagram</div>
-          <div class="phone-button demo-btn" style="width:70%;">@ linkedin</div>
+          <div id="demoTag" style="font-size:14px; font-weight:900; color:rgba(255,255,255,0.2); margin-bottom:2px; text-transform:uppercase;">@---</div>
+          <div id="demoSub" style="font-size:8px; color:#444; margin-bottom:15px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
 
-          <div id="demoQR" style="width:80px; height:80px; background:rgba(16, 185, 129, 0.08); border-radius:12px; margin-top:auto; border:1px solid rgba(16, 185, 129, 0.3); display:flex; align-items:center; justify-center; transition: all 0.5s;">
-              <i class="fas fa-qrcode text-emerald-500/30 text-3xl"></i>
+          <div class="phone-button demo-btn" id="btn1">_ _ _ _</div>
+          <div class="phone-button demo-btn" id="btn2">_ _ _ _</div>
+          <div class="phone-button demo-btn" id="btn3">_ _ _ _</div>
+          <div class="phone-button demo-btn" id="btn4" style="width:70%;">_ _ _</div>
+
+          <div id="demoQR" style="width:70px; height:70px; background:rgba(255,255,255,0.02); border-radius:12px; margin-top:auto; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-center; transition: all 0.5s;">
+              <i class="fas fa-qrcode text-white/5 text-2xl"></i>
           </div>
       </div>
     </div>
 
-    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4">Immagina la tua identità così.</p>
+    <p class="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em] mb-3">Immagina la tua identità così.</p>
 
-    <div class="mb-6 pulse-deep">
-      <p class="text-xl font-black tracking-tighter uppercase italic leading-tight text-white">Un mondo dentro il tuo nome</p>
-      <p class="text-xl font-black tracking-tighter uppercase italic leading-tight text-white mt-1">Il tuo nome nel mondo</p>
+    <div class="mb-4 pulse-deep">
+      <p class="text-lg font-black tracking-tighter uppercase italic leading-tight text-white">Un mondo dentro il tuo nome</p>
+      <p class="text-lg font-black tracking-tighter uppercase italic leading-tight text-white mt-1">Il tuo nome nel mondo</p>
     </div>
 
-    <div class="mb-8">
-      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-2">Instant Digital Identity</p>
-      <p class="text-zinc-400 text-[12px] max-w-[280px] mx-auto leading-relaxed font-medium">
-        Sfrutta l’innovazione: tutti i tuoi link in un unico Tag al prezzo di una colazione all'anno.
+    <div class="mb-6">
+      <p class="text-zinc-400 text-[11px] max-w-[260px] mx-auto leading-tight font-medium">
+        Tutti i tuoi link in un unico Tag al prezzo di una colazione all'anno.
       </p>
     </div>
 
-    <div class="w-full max-w-[300px] space-y-4">
-      <div class="rounded-[2.2rem] p-1 input-group shadow-2xl">
-        <div class="flex items-center px-6 py-4">
-          <span class="text-2xl font-black text-emerald-500">@</span>
+    <div class="w-full max-w-[280px] space-y-3">
+      <div class="rounded-[2rem] p-0.5 input-group shadow-xl">
+        <div class="flex items-center px-5 py-3">
+          <span class="text-xl font-black text-white">@</span>
           <input id="searchInput" type="text" placeholder="iltuonome" 
-                 class="flex-1 bg-transparent outline-none text-xl ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
+                 class="flex-1 bg-transparent outline-none text-lg ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
         </div>
       </div>
-      <button onclick="checkName()" class="w-full btn-emerald py-5 rounded-[2.2rem] text-xl uppercase tracking-widest active:scale-95 transition-transform">
+      <button onclick="checkName()" class="w-full btn-emerald py-4 rounded-[2rem] text-lg uppercase tracking-widest active:scale-95 transition-transform">
         Verifica
       </button>
     </div>
     
-    <p id="status" class="mt-6 text-[10px] font-black uppercase tracking-[0.2em] min-h-[20px] text-zinc-600 italic"></p>
+    <p id="status" class="mt-4 text-[9px] font-black uppercase tracking-[0.2em] min-h-[18px] text-zinc-600 italic"></p>
   </main>
 
-  <footer class="pb-8 opacity-10 flex justify-center">
+  <footer class="pb-4 opacity-10 flex justify-center">
     <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
     <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
     <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
@@ -128,37 +129,40 @@
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
 
-    let demoActive = false;
-
-    function toggleDemo() {
-      const btns = document.querySelectorAll('.demo-btn');
+    function startAdvancedDemo() {
+      const btn1 = document.getElementById('btn1');
+      const btn2 = document.getElementById('btn2');
+      const btn3 = document.getElementById('btn3');
+      const btn4 = document.getElementById('btn4');
+      const tag = document.getElementById('demoTag');
       const qr = document.getElementById('demoQR');
+      const avatar = document.getElementById('demoAvatar');
       const hint = document.getElementById('demoHint');
       const status = document.getElementById('status');
 
-      if (!demoActive) {
-        // START DEMO
-        demoActive = true;
-        hint.innerHTML = '<i class="fas fa-undo"></i>'; // Icona Reset
-        btns.forEach((btn, index) => {
-          setTimeout(() => {
-            if(demoActive) btn.classList.add('active');
-            if(index === btns.length - 1 && demoActive) {
-              qr.style.background = "rgba(16, 185, 129, 0.4)";
-              qr.style.borderColor = "#10b981";
-              status.innerText = "PROVA ORA IL TUO NOME QUI SOTTO";
-            }
-          }, index * 300);
-        });
-      } else {
-        // RESET DEMO
-        demoActive = false;
-        hint.innerHTML = '<i class="fas fa-mouse-pointer"></i>';
-        btns.forEach(btn => btn.classList.remove('active'));
-        qr.style.background = "rgba(16, 185, 129, 0.08)";
-        qr.style.borderColor = "rgba(16, 185, 129, 0.3)";
-        status.innerText = "";
-      }
+      hint.style.display = 'none';
+
+      // STEP 1: Professional (LinkedIn, Bio, CV)
+      tag.innerText = "@MARCO";
+      tag.style.color = "#10b981";
+      avatar.style.borderColor = "#10b981";
+      avatar.innerHTML = '<i class="fas fa-user text-emerald-500 text-sm"></i>';
+      
+      btn1.innerText = "@ BIO"; btn1.classList.add('active');
+      setTimeout(() => { btn2.innerText = "@ CV"; btn2.classList.add('active'); }, 200);
+      setTimeout(() => { btn3.innerText = "@ LINKEDIN"; btn3.classList.add('active'); }, 400);
+
+      // STEP 2: Social Trend (Instagram, TikTok, YouTube)
+      setTimeout(() => {
+        btn2.innerText = "@ INSTAGRAM";
+        btn3.innerText = "@ TIKTOK";
+        btn4.innerText = "@ YOUTUBE";
+        btn4.classList.add('active');
+        qr.style.background = "rgba(16, 185, 129, 0.4)";
+        qr.style.borderColor = "#10b981";
+        qr.innerHTML = '<i class="fas fa-qrcode text-emerald-500 text-3xl"></i>';
+        status.innerText = "IL TUO MONDO IN UN TAG. PROVA ORA.";
+      }, 1500);
     }
 
     async function checkName() {
@@ -166,7 +170,7 @@
       const status = document.getElementById('status');
       if (!input) return;
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = '<span class="animate-pulse">ANALISI...</span>';
+      status.innerHTML = 'ANALISI...';
 
       try {
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
@@ -174,14 +178,13 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = 'NON DISPONIBILE';
+          status.innerHTML = 'TAG GIÀ ASSEGNATO';
         } else {
           status.innerHTML = 'DISPONIBILE';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
-      } catch (e) { status.innerHTML = 'ERRORE RETE'; }
+      } catch (e) { status.innerHTML = 'ERRORE DI CONNESSIONE'; }
     }
-    document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkName(); });
   </script>
 </body>
 </html>
