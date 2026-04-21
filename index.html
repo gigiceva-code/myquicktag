@@ -7,8 +7,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
-    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background-color: #0a0a0a; }
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background-color: #0a0a0a; color: white; }
     
+    /* Animazione Pulsazione Zen per gli Slogan */
     .pulse-zen {
       animation: pulseZen 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
@@ -17,9 +18,24 @@
       50% { opacity: 0.6; }
     }
 
+    /* Animazione Flicker Digitale Subliminale */
+    .flicker-evocation {
+      opacity: 0;
+      animation: flickerSubliminal 5s linear infinite;
+    }
+    @keyframes flickerSubliminal {
+      0%, 94% { opacity: 0; transform: translateX(0); }
+      95% { opacity: 0.15; transform: translateX(-1px); }
+      96% { opacity: 0; transform: translateX(1px); }
+      97% { opacity: 0.1; transform: translateX(0); }
+      100% { opacity: 0; }
+    }
+
+    /* Stili per il Box Input */
     .input-group {
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: #111111;
+      transition: all 0.5s;
     }
     .input-group:focus-within {
       border-color: rgba(255, 255, 255, 0.4);
@@ -27,12 +43,11 @@
     }
   </style>
 </head>
-<body class="text-white min-h-screen flex flex-col justify-between overflow-hidden">
+<body class="min-h-screen flex flex-col justify-between overflow-hidden font-inter">
 
   <header class="w-full p-6 flex justify-between items-center z-50">
-    <div class="w-8 h-8"></div>
-    <h1 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h1>
-    <button class="text-white text-3xl active:scale-95 transition-all">
+    <div class="w-8 h-8"></div> <h1 class="text-3xl font-black tracking-tighter italic uppercase text-white">MyQuickTag</h1>
+    <button class="text-white text-3xl active:scale-95 transition-all focus:outline-none">
       <i class="fas fa-bars"></i>
     </button>
   </header>
@@ -44,8 +59,16 @@
       <p class="text-lg text-white/50 font-medium italic tracking-tight">Il tuo nome nel mondo</p>
     </div>
 
-    <div class="mb-8 w-full max-w-[340px] mx-auto">
-      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-3">Protocollo d'Identità Innovativo</p>
+    <div class="w-full h-16 flex items-center justify-center mb-6 relative overflow-hidden">
+      <div class="flicker-evocation text-zinc-800 text-5xl">
+        <i class="fas fa-qrcode opacity-30"></i>
+        <div class="absolute w-8 h-px bg-zinc-700 top-1/2 left-full ml-2 transform -translate-y-1/2 opacity-20"></div>
+        <div class="absolute w-6 h-px bg-zinc-700 top-3/4 left-full ml-3 transform -translate-y-1/2 opacity-20"></div>
+      </div>
+    </div>
+
+    <div class="mb-10 w-full max-w-[340px] mx-auto">
+      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-3">Instant Digital Identity</p>
       <p class="text-zinc-300 text-[14px] leading-relaxed font-medium mb-4">
         Sfrutta l’innovazione: tutti i tuoi link in un unico Tag. Una soluzione potente, al prezzo di una colazione all'anno.
       </p>
@@ -54,7 +77,7 @@
       </p>
     </div>
 
-    <div class="w-full max-w-[280px] rounded-[2rem] p-2 shadow-2xl transition-all duration-500 input-group">
+    <div class="w-full max-w-[280px] rounded-[2rem] p-2 shadow-2xl input-group">
       <div class="flex items-center px-6 py-4 border-b border-white/5">
         <span class="text-2xl font-bold text-zinc-600">@</span>
         <input id="searchInput" type="text" placeholder="iltuonome" 
@@ -78,6 +101,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <script>
+    // Configurazione Airtable
     const AIRTABLE_PAT = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
@@ -87,18 +111,22 @@
       const status = document.getElementById('status');
       if (!input) return;
 
+      // Pulizia input
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
       status.innerHTML = '<span class="animate-pulse">INTERROGAZIONE REGISTRO ESCLUSIVO...</span>';
 
       try {
+        // Chiamata API Airtable
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
         const response = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_PAT}` } });
         const data = await response.json();
 
+        // Logica di risposta
         if (data.records && data.records.length > 0) {
           status.innerHTML = '<span class="text-red-600 font-bold">TAG GIÀ NOTARIZZATO</span>';
         } else {
           status.innerHTML = '<span class="text-emerald-500 font-bold tracking-widest">✨ DISPONIBILE PER CATTURA!</span>';
+          // Reindirizzamento alla pagina risultati
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
       } catch (e) {
@@ -106,6 +134,7 @@
       }
     }
 
+    // Gestione tasto Invio
     document.getElementById('searchInput').addEventListener('keypress', e => {
       if (e.key === 'Enter') checkName();
     });
