@@ -9,123 +9,106 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
     body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background-color: #0a0a0a; color: white; }
     
-    /* Animazione Slogan */
     .pulse-zen { animation: pulseZen 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
     @keyframes pulseZen { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-    /* Mockup iPhone Premium */
+    /* Mockup iPhone con visibilità migliorata */
     .iphone-frame {
-      width: 160px;
-      height: 320px;
-      border: 6px solid #1a1a1a;
+      width: 140px;
+      height: 280px;
+      border: 3px solid #333; /* Bordo visibile */
       border-radius: 24px;
       background: #000;
       position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.1);
+      box-shadow: 0 0 30px rgba(255,255,255,0.05);
       overflow: hidden;
+      margin-bottom: 2rem;
     }
     .iphone-screen {
-      padding: 15px;
+      padding: 12px;
       height: 100%;
       background: linear-gradient(180deg, #111 0%, #050505 100%);
       display: flex;
+      flex-direction: center;
       flex-direction: column;
       align-items: center;
     }
-    .profile-pic {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: linear-gradient(45deg, #333, #111);
-      margin-bottom: 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    .mock-link {
-      width: 100%;
-      height: 22px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 6px;
-      margin-bottom: 6px;
-      border: 0.5px solid rgba(255,255,255,0.1);
-    }
 
-    /* Pulsante Smeraldo Pulsante */
+    /* Pulsante Verifica - IL CUORE DELLA PAGINA */
     @keyframes pulseEmerald {
-      0%, 100% { box-shadow: 0 0 0px rgba(16, 185, 129, 0); }
-      50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.4); }
+      0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+      50% { transform: scale(1.03); box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); }
     }
     .btn-emerald {
       background-color: #10b981;
+      color: #000 !important;
+      font-weight: 900;
       animation: pulseEmerald 3s ease-in-out infinite;
     }
 
     .input-group {
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: #111;
+      border: 2px solid rgba(255, 255, 255, 0.3); /* Più visibile */
+      background: #151515;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between overflow-hidden">
+<body class="min-h-screen flex flex-col justify-between">
 
   <header class="w-full p-6 flex justify-between items-center z-50">
     <div class="w-8 h-8"></div>
     <h1 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h1>
-    <button class="text-white text-3xl active:scale-95"><i class="fas fa-bars"></i></button>
+    <button class="text-white text-3xl"><i class="fas fa-bars"></i></button>
   </header>
 
   <main class="flex-1 flex flex-col items-center justify-center p-6 text-center">
     
-    <div class="iphone-frame mb-8 scale-90 md:scale-100 transition-transform duration-700">
+    <div class="iphone-frame scale-90">
         <div class="iphone-screen">
-            <div class="w-10 h-1 bg-zinc-800 rounded-full mb-6"></div> <div class="profile-pic flex items-center justify-center">
-                <i class="fas fa-user text-zinc-600 text-xs"></i>
+            <div class="w-8 h-3 bg-zinc-800 rounded-b-lg mb-6"></div> 
+            <div class="w-12 h-12 rounded-full bg-zinc-900 border border-white/10 mb-3 flex items-center justify-center">
+                <i class="fas fa-user text-zinc-700 text-xs"></i>
             </div>
-            <div class="text-[10px] font-bold text-white mb-1">@MARCO</div>
-            <div class="text-[7px] text-zinc-500 mb-4 tracking-wide text-center">Digital Identity Manager</div>
-            
-            <div class="mock-link flex items-center px-2">
-                <div class="w-2 h-2 rounded-full bg-emerald-500/40 mr-2"></div>
-                <div class="w-12 h-1 bg-zinc-700 rounded-full"></div>
+            <div class="text-[10px] font-black text-emerald-400 mb-1">@iltuonome</div>
+            <div class="w-full space-y-2 mt-4 px-2">
+                <div class="h-4 bg-white/5 rounded-md border border-white/5"></div>
+                <div class="h-4 bg-white/5 rounded-md border border-white/5"></div>
+                <div class="h-4 bg-white/5 rounded-md border border-white/5"></div>
             </div>
-            <div class="mock-link flex items-center px-2">
-                <div class="w-2 h-2 rounded-full bg-blue-500/40 mr-2"></div>
-                <div class="w-10 h-1 bg-zinc-700 rounded-full"></div>
-            </div>
-            
-            <div class="mt-auto mb-4 w-12 h-12 bg-white/10 rounded-lg border border-white/5 flex items-center justify-center">
-                <i class="fas fa-qrcode text-white/30 text-xl"></i>
+            <div class="mt-auto mb-4 w-10 h-10 bg-white/10 rounded flex items-center justify-center">
+                <i class="fas fa-qrcode text-white/20 text-lg"></i>
             </div>
         </div>
     </div>
 
-    <div class="pulse-zen mb-4">
-      <p class="text-lg text-white/90 font-medium tracking-tight">Un mondo dentro il tuo nome</p>
-      <p class="text-lg text-white/40 font-medium italic tracking-tight leading-none">Il tuo nome nel mondo</p>
-    </div>
-
-    <div class="mb-8 w-full max-w-[340px] mx-auto">
+    <div class="mb-8">
+      <div class="pulse-zen mb-4">
+        <p class="text-xl text-white font-bold tracking-tight uppercase">Un mondo dentro il tuo nome</p>
+      </div>
       <p class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-3">Instant Digital Identity</p>
-      <p class="text-zinc-400 text-[13px] leading-relaxed font-medium mb-5">
-        Sfrutta l’innovazione: tutti i tuoi link in un unico Tag. Una soluzione potente, al prezzo di una colazione all'anno.
+      <p class="text-zinc-400 text-sm max-w-[300px] mx-auto leading-relaxed">
+        Sfrutta l’innovazione: tutti i tuoi link in un unico Tag al prezzo di una colazione all'anno.
       </p>
     </div>
 
-    <div class="w-full max-w-[280px] rounded-[2.2rem] p-2 shadow-2xl input-group">
-      <div class="flex items-center px-6 py-4 border-b border-white/5">
-        <span class="text-2xl font-bold text-emerald-500">@</span>
-        <input id="searchInput" type="text" placeholder="iltuonome" 
-               class="flex-1 bg-transparent outline-none text-lg ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
+    <div class="w-full max-w-[300px] space-y-4">
+      <div class="rounded-[2rem] p-1 input-group shadow-xl">
+        <div class="flex items-center px-6 py-4">
+          <span class="text-2xl font-black text-emerald-500">@</span>
+          <input id="searchInput" type="text" placeholder="iltuonome" 
+                 class="flex-1 bg-transparent outline-none text-xl ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
+        </div>
       </div>
+      
       <button onclick="checkName()" 
-              class="w-full btn-emerald text-black font-black py-4 mt-2 rounded-[1.8rem] text-lg hover:brightness-110 transition-all active:scale-95 shadow-xl uppercase">
+              class="w-full btn-emerald py-5 rounded-[2rem] text-xl uppercase tracking-widest shadow-2xl transition-transform active:scale-95">
         Verifica
       </button>
     </div>
     
-    <p id="status" class="mt-6 text-[9px] font-black uppercase tracking-[0.3em] min-h-[20px] text-zinc-500"></p>
+    <p id="status" class="mt-6 text-[10px] font-black uppercase tracking-[0.2em] min-h-[20px] text-zinc-500"></p>
   </main>
 
-  <footer class="pb-8 flex justify-center opacity-10">
+  <footer class="pb-8 opacity-10 flex justify-center">
     <div class="w-1 h-1 bg-white rounded-full mx-1"></div>
     <div class="w-1 h-1 bg-white rounded-full mx-1"></div>
     <div class="w-1 h-1 bg-white rounded-full mx-1"></div>
@@ -143,7 +126,7 @@
       const status = document.getElementById('status');
       if (!input) return;
       input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = '<span class="animate-pulse italic">NOTARIZZAZIONE IN CORSO...</span>';
+      status.innerHTML = '<span class="animate-pulse">ANALISI REGISTRO...</span>';
 
       try {
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
@@ -151,14 +134,13 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = '<span class="text-red-600 font-bold">TAG GIÀ OCCUPATO</span>';
+          status.innerHTML = '<span class="text-red-500">GIÀ NOTARIZZATO</span>';
         } else {
-          status.innerHTML = '<span class="text-emerald-500 font-bold tracking-widest italic">✨ DISPONIBILE!</span>';
+          status.innerHTML = '<span class="text-emerald-500 italic">✨ DISPONIBILE!</span>';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
       } catch (e) { status.innerHTML = 'ERRORE DI RETE'; }
     }
-    document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkName(); });
   </script>
 </body>
 </html>
