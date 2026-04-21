@@ -1,109 +1,93 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyQuickTag - Identità Digitale Esclusiva</title>
+  <meta name="description" content="MyQuickTag - La tua identità digitale esclusiva. Un unico Tag per bio, CV e social. Prenota ora il tuo nome digitale.">
+  <title>MyQuickTag - Il tuo nome nel mondo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
-    body { 
-        font-family: 'Inter', sans-serif; 
-        background-color: #0a0a0a; 
-        color: white;
-        margin: 0;
-        overflow-x: hidden;
-    }
+    body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; margin: 0; overflow-x: hidden; }
     
-    .pulse-deep { 
-        animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; 
-    }
-    @keyframes pulseDeep { 
-        0%, 100% { opacity: 1; transform: scale(1); } 
-        50% { opacity: 0.3; transform: scale(0.98); } 
-    }
+    /* Respiro Profondo Chiasmo */
+    .pulse-deep { animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.98); } }
 
-    /* iPhone con bordi DEFINITI per visibilità esterna */
+    /* iPhone Frame con bordo Titanium */
     .iphone-frame {
       width: 170px;
       height: 310px;
       background: #000;
       border-radius: 30px;
-      /* Bordo metallico che stacca dallo sfondo nero */
       border: 3px solid #333; 
       position: relative;
-      /* Ombra chiara per creare profondità */
       box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.05);
       overflow: hidden;
       margin-bottom: 20px;
+      cursor: pointer;
     }
 
-    .btn-emerald {
-      background-color: #10b981;
-      color: #000 !important;
-      font-weight: 900;
-      animation: pulseEmerald 3s ease-in-out infinite;
+    /* Freccetta Lampeggiante Interna */
+    .hint-arrow {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      color: #10b981;
+      font-size: 14px;
+      animation: hintBounce 1.5s infinite;
+      z-index: 20;
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
     }
-    @keyframes pulseEmerald {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-      50% { transform: scale(1.04); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
-    }
+    @keyframes hintBounce { 0%, 100% { transform: translateY(0) scale(1); opacity: 1; } 50% { transform: translateY(-5px) scale(1.2); opacity: 0.5; } }
 
-    .input-group {
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      background: #121212;
-    }
-
+    /* Bottoni Interni Smartphone */
     .phone-button {
-      width: 100%;
-      height: 22px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 6px;
-      margin-bottom: 6px;
-      border: 1px solid rgba(255,255,255,0.15); /* Bordo più marcato per l'esterno */
-      display: flex;
-      align-items: center;
-      padding-left: 8px;
-      font-size: 7px;
-      font-weight: 900;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7); /* Testo più luminoso */
-      letter-spacing: 0.5px;
+      width: 100%; height: 22px; background: rgba(255,255,255,0.06); border-radius: 6px;
+      margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; padding-left: 8px;
+      font-size: 7px; font-weight: 900; text-transform: uppercase;
+      color: rgba(255,255,255,0.7); letter-spacing: 0.5px;
+      transition: all 0.4s ease;
     }
+    .phone-button.active { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); transform: scale(1.05); }
+
+    /* Pulsante Verifica SMERALDO */
+    .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; animation: pulseEmerald 3s infinite; }
+    @keyframes pulseEmerald { 0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); } 50% { transform: scale(1.04); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); } }
+
+    .input-group { border: 2px solid rgba(255, 255, 255, 0.3); background: #121212; transition: border 0.3s; }
+    .input-group:focus-within { border-color: #10b981; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
   <header class="w-full p-6 flex justify-between items-center z-50">
     <div class="w-8 h-8"></div>
-    <h1 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h1>
-    <button class="text-white text-3xl active:scale-95"><i class="fas fa-bars"></i></button>
+    <h2 class="text-3xl font-black tracking-tighter italic uppercase">MyQuickTag</h2>
+    <button class="text-white text-3xl active:scale-95" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </header>
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
-    <div style="width:100%; display:flex; justify-content:center;">
-      <div class="iphone-frame">
-        <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #111 0%, #000 100%);">
-            
-            <div style="width:50px; height:10px; background:#222; border-radius:0 0 8px 8px; margin-bottom:12px;"></div>
+    <div id="iphoneTrigger" class="iphone-frame" onclick="startDemo()">
+      <div class="hint-arrow"><i class="fas fa-mouse-pointer"></i></div>
+      <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #111 0%, #000 100%);">
+          <div style="width:50px; height:10px; background:#222; border-radius:0 0 8px 8px; margin-bottom:12px;"></div>
+          <div style="width:55px; height:55px; border-radius:50%; background:#222; margin-bottom:8px; border:1px solid #444; display:flex; align-items:center; justify-center;">
+              <i class="fas fa-user text-zinc-600 text-xs"></i>
+          </div>
+          <div id="demoTag" style="font-size:15px; font-weight:900; color:#10b981; margin-bottom:2px; text-transform:uppercase;">@iltuonome</div>
+          <div style="font-size:8px; color:#666; margin-bottom:15px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
 
-            <div style="width:55px; height:55px; border-radius:50%; background:#222; margin-bottom:8px; border:1px solid #444; display:flex; align-items:center; justify-center;">
-                <i class="fas fa-user text-zinc-600 text-xs"></i>
-            </div>
+          <div class="phone-button demo-btn">@ bio</div>
+          <div class="phone-button demo-btn">@ cv</div>
+          <div class="phone-button demo-btn">@ instagram</div>
+          <div class="phone-button demo-btn" style="width:70%;">@ linkedin</div>
 
-            <div style="font-size:15px; font-weight:900; color:#10b981; margin-bottom:2px; text-transform:uppercase;">@iltuonome</div>
-            <div style="font-size:8px; color:#666; margin-bottom:15px; font-weight:600; text-transform:uppercase;">Digital Identity</div>
-
-            <div class="phone-button">@ bio</div>
-            <div class="phone-button">@ cv</div>
-            <div class="phone-button">@ instagram</div>
-            <div class="phone-button" style="width:70%;">@ linkedin</div>
-
-            <div style="width:70px; height:70px; background:rgba(16, 185, 129, 0.08); border-radius:12px; margin-top:auto; border:1px solid rgba(16, 185, 129, 0.3); display:flex; align-items:center; justify-center;">
-                <i class="fas fa-qrcode text-emerald-500/30 text-2xl"></i>
-            </div>
-        </div>
+          <div id="demoQR" style="width:70px; height:70px; background:rgba(16, 185, 129, 0.08); border-radius:12px; margin-top:auto; border:1px solid rgba(16, 185, 129, 0.3); display:flex; align-items:center; justify-center; transition: all 0.5s;">
+              <i class="fas fa-qrcode text-emerald-500/30 text-2xl"></i>
+          </div>
       </div>
     </div>
 
@@ -127,9 +111,7 @@
                  class="flex-1 bg-transparent outline-none text-xl ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
         </div>
       </div>
-      
-      <button onclick="checkName()" 
-              class="w-full btn-emerald py-5 rounded-[2.2rem] text-xl uppercase tracking-widest active:scale-95 transition-transform">
+      <button onclick="checkName()" class="w-full btn-emerald py-5 rounded-[2.2rem] text-xl uppercase tracking-widest active:scale-95 transition-transform">
         Verifica
       </button>
     </div>
@@ -150,6 +132,26 @@
     const BASE_ID = "appG2S8jV9Ams3wYq";
     const TABLE_NAME = "Tabella 1";
 
+    // LOGICA DEMO ALLUCINANTE
+    function startDemo() {
+      const btns = document.querySelectorAll('.demo-btn');
+      const qr = document.getElementById('demoQR');
+      const hint = document.querySelector('.hint-arrow');
+      
+      hint.style.display = 'none'; // Nasconde la freccia dopo il primo click
+      
+      btns.forEach((btn, index) => {
+        setTimeout(() => {
+          btn.classList.add('active');
+          if(index === btns.length - 1) {
+            qr.style.background = "rgba(16, 185, 129, 0.4)";
+            qr.style.borderColor = "#10b981";
+            document.getElementById('status').innerText = "PROVA ORA IL TUO NOME QUI SOTTO";
+          }
+        }, index * 300);
+      });
+    }
+
     async function checkName() {
       let input = document.getElementById('searchInput').value.trim();
       const status = document.getElementById('status');
@@ -163,12 +165,12 @@
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-          status.innerHTML = 'GIÀ NOTARIZZATO';
+          status.innerHTML = 'NON DISPONIBILE';
         } else {
           status.innerHTML = 'DISPONIBILE';
           setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
         }
-      } catch (e) { status.innerHTML = 'ERRORE CONNESSIONE'; }
+      } catch (e) { status.innerHTML = 'ERRORE RETE'; }
     }
     document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkName(); });
   </script>
