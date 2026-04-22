@@ -1,15 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attiva la tua Tag | MyQuickTag</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root { --smeraldo: #00C896; --dark: #1a1a1a; }
-        body { font-family: 'Inter', system-ui, sans-serif; margin: 0; background: #f9f9f9; color: var(--dark); display: flex; justify-content: center; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: #f9f9f9; color: var(--dark); display: flex; justify-content: center; }
         .container { max-width: 400px; width: 100%; padding: 20px; text-align: center; }
         
-        /* iPhone Mockup */
         .iphone-x {
             position: relative; width: 280px; height: 520px; margin: 20px auto;
             border: 12px solid #222; border-radius: 40px; background: white;
@@ -19,8 +22,6 @@
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
             width: 150px; height: 25px; background: #222; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; z-index: 10;
         }
-
-        /* Screen Content */
         .screen { padding: 40px 20px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; }
         .user-badge { font-size: 24px; font-weight: 800; color: var(--smeraldo); margin-bottom: 10px; }
         .placeholder-box { 
@@ -30,24 +31,18 @@
         }
         @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
 
-        /* Form & CTA */
-        .input-group { margin-top: 15px; }
         input[type="email"] {
             width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #eee;
             margin-bottom: 12px; box-sizing: border-box; font-size: 16px; text-align: center;
         }
-        input:focus { border-color: var(--smeraldo); outline: none; }
-        
         .buy-btn {
             width: 100%; padding: 18px; background: var(--smeraldo); color: white;
             border: none; border-radius: 12px; font-size: 18px; font-weight: 700;
             cursor: pointer; transition: all 0.3s; text-transform: uppercase;
         }
         .buy-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,200,150,0.3); }
-
         .microcopy { font-size: 12px; color: #999; margin-top: 10px; }
-
-        /* Success State */
+        
         #success-ui { display: none; padding-top: 60px; }
         .checkmark { font-size: 80px; color: var(--smeraldo); display: block; margin-bottom: 20px; }
     </style>
@@ -55,8 +50,8 @@
 <body>
 
 <div class="container" id="main-ui">
-    <h1 id="mainTitle" style="font-size: 22px;">Stai per attivare la tua Tag</h1>
-    <p style="color: #666; font-size: 14px;">Personalizza il tuo profilo unico:</p>
+    <h1 id="mainTitle" style="font-size: 22px; font-weight: 800;">Stai per attivare @nome</h1>
+    <p style="color: #666; font-size: 14px; margin-bottom: 10px;">Personalizza il tuo profilo unico:</p>
 
     <div class="iphone-x">
         <div class="iphone-notch"></div>
@@ -84,27 +79,28 @@
 </div>
 
 <script>
-    // 1. CORREZIONE PARAMETRO: leggo "nome" invece di "name"
+    // 🟡 3. PARAMETRO URL: Utilizzo coerente di ?nome=
     const params = new URLSearchParams(window.location.search);
     const username = params.get("nome") || "utente";
     
-    // Aggiornamento dinamico UI
+    // Aggiornamento dinamico delle stringhe (Punto 3 e 4)
     document.getElementById("previewName").innerText = "@" + username;
     document.getElementById("mainTitle").innerText = "Stai per attivare @" + username;
     document.getElementById("actionBtn").innerText = "Attiva @" + username;
 
-    // 2. CONFIGURAZIONE AIRTABLE (Credenziali caricate)
+    // 🟡 6. SICUREZZA: TODO: spostare su backend/proxy per sicurezza
     const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
     const BASE_ID = 'appLqZ8j4W7kP3...';
     const TABLE_NAME = 'Leads';
 
+    // 🟡 4. TAG.HTML FETCH: Verifica della POST verso Airtable
     async function attivaOra() {
         const emailInput = document.getElementById("userEmail");
         const email = emailInput.value;
         const btn = document.getElementById("actionBtn");
 
         if(!email.includes("@") || email.length < 5) { 
-            alert("Inserisci una email valida per ricevere la tua Tag."); 
+            alert("Inserisci una email valida."); 
             return; 
         }
 
@@ -112,7 +108,7 @@
         btn.disabled = true;
 
         try {
-            const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`, {
+            const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
@@ -129,21 +125,21 @@
             });
 
             if (response.ok) {
-                // Transizione UI Successo
                 document.getElementById("main-ui").style.display = "none";
                 document.getElementById("displayEmail").innerText = email;
                 document.getElementById("success-ui").style.display = "block";
 
+                // 🟡 5. REDIRECT: Verifica URL finale
                 setTimeout(() => {
-                    window.location.href = "https://myquicktag.vercel.app/dashboard?user=" + username;
+                    window.location.href = "https://myquicktag.vercel.app/dashboard?user=" + encodeURIComponent(username);
                 }, 3000);
             } else {
-                throw new Error("Errore API");
+                throw new Error("Errore API Airtable");
             }
 
         } catch (e) {
-            console.error(e);
-            alert("C'è stato un piccolo intoppo tecnico. Riprova tra un istante.");
+            console.error("Errore tecnico:", e);
+            alert("Errore di connessione. Riprova.");
             btn.innerText = "Attiva @" + username;
             btn.disabled = false;
         }
