@@ -1,82 +1,97 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Luxury Link-in-Bio</title>
+    <title>MyQuickTag | Instant Digital Identity</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #ffffff; overflow-x: hidden; }
         .text-smeraldo { color: #00C896; }
         .bg-smeraldo { background-color: #00C896; }
-        .border-smeraldo { border-color: #00C896; }
         
-        /* iPhone Mockup Luxury */
-        .iphone-luxury {
-            position: relative; width: 270px; height: 540px; margin: 0 auto;
-            border: 12px solid #1f1f1f; border-radius: 42px; background: #000;
-            box-shadow: 0 0 40px rgba(0, 200, 150, 0.15); overflow: hidden;
+        /* Animazione Pulsante Soft */
+        @keyframes softPulse {
+            0% { opacity: 0.4; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.4; transform: scale(0.98); }
         }
-        .notch {
+        .animate-pulse-slow { animation: softPulse 4s infinite ease-in-out; }
+
+        /* iPhone Mockup Dark Luxury */
+        .iphone-preview {
+            position: relative; width: 220px; height: 440px; margin: 0 auto 30px;
+            border: 8px solid #1a1a1a; border-radius: 35px; background: #000;
+            box-shadow: 0 0 40px rgba(0, 200, 150, 0.08); overflow: hidden;
+        }
+        .notch-dark {
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 130px; height: 22px; background: #1f1f1f; border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; z-index: 10;
+            width: 100px; height: 18px; background: #1a1a1a; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
         }
-        .screen-content { padding: 40px 20px; display: flex; flex-direction: column; gap: 12px; height: 100%; }
-        .skeleton { height: 45px; background: #1a1a1a; border-radius: 10px; width: 100%; border: 1px solid #222; }
-        .glow-avatar { width: 70px; height: 70px; background: linear-gradient(135deg, #00C896, #008f6b); border-radius: 50%; margin: 20px auto; box-shadow: 0 0 20px rgba(0, 200, 150, 0.4); }
+        .screen-inner { padding: 30px 15px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .avatar-placeholder { width: 60px; height: 60px; background: linear-gradient(135deg, #111, #000); border-radius: 50%; border: 1px solid #222; margin-top: 20px; }
+        .skeleton-line { height: 8px; background: #111; border-radius: 4px; width: 60%; }
+        .skeleton-box { height: 35px; background: #080808; border-radius: 10px; width: 100%; border: 1px solid #161616; }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased min-h-screen flex flex-col items-center justify-center py-10">
 
-    <header class="p-8 text-center">
-        <span class="text-3xl font-900 tracking-tighter italic">
-            MyQuick<span class="text-smeraldo">Tag</span>
-        </span>
-    </header>
+    <div class="iphone-preview">
+        <div class="notch-dark"></div>
+        <div class="screen-inner">
+            <div class="avatar-placeholder"></div>
+            <div class="text-smeraldo font-bold text-[10px] tracking-widest uppercase">Preview Mode</div>
+            <div class="skeleton-line mt-2"></div>
+            <div class="skeleton-box mt-4"></div>
+            <div class="skeleton-box"></div>
+            <div class="skeleton-box"></div>
+        </div>
+    </div>
 
-    <main class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center py-12">
+    <div class="max-w-md w-full px-6 text-center">
         
-        <div class="text-center md:text-left order-2 md:order-1">
-            <h1 class="text-5xl md:text-6xl font-900 tracking-tight leading-[1.05] mb-8">
-                Il tuo nome è il tuo <br><span class="text-smeraldo">brand di lusso.</span>
+        <div class="space-y-1 mb-6">
+            <h1 class="text-3xl font-900 tracking-tighter uppercase leading-tight animate-pulse-slow">
+                Un mondo dentro <br> il tuo nome
             </h1>
-            <p class="text-gray-400 text-xl mb-12 max-w-lg">
-                Prenota la tua tag esclusiva e crea la tua identità digitale in 30 secondi. Elegante, veloce, definitiva.
-            </p>
+            <h2 class="text-xl font-700 tracking-tight text-gray-500 uppercase animate-pulse-slow" style="animation-delay: 2s;">
+                Il tuo nome nel mondo
+            </h2>
+        </div>
+        
+        <p class="text-smeraldo font-900 tracking-[0.4em] text-[11px] uppercase mb-10">
+            Instant Digital Identity
+        </p>
 
-            <div class="bg-[#111] p-2 rounded-3xl border border-[#222] shadow-2xl max-w-sm mx-auto md:mx-0">
-                <div class="flex items-center bg-[#000] rounded-2xl p-2 border border-[#222] focus-within:border-smeraldo transition-all">
-                    <span class="pl-4 text-gray-500 font-bold text-2xl">@</span>
-                    <input type="text" id="tagInput" placeholder="tuonome" 
-                        class="w-full p-3 text-xl font-bold outline-none bg-transparent text-white placeholder:text-gray-700">
-                </div>
-                <button onclick="checkTag()" id="mainBtn" 
-                    class="w-full mt-3 bg-smeraldo text-[#0a0a0a] py-5 rounded-2xl font-900 text-lg shadow-[0_0_20px_rgba(0,200,150,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-widest">
-                    VERIFICA DISPONIBILITÀ
-                </button>
+        <p class="text-gray-500 text-sm mb-10 leading-relaxed px-4">
+            L'evoluzione del tuo biglietto da visita. <br>
+            Tutti i tuoi link in un unico Tag.
+        </p>
+
+        <div class="space-y-4 px-2">
+            <div class="relative flex items-center bg-[#000] rounded-full border-2 border-[#161616] p-1 focus-within:border-smeraldo transition-all duration-500">
+                <span class="pl-5 text-smeraldo font-bold text-xl">@</span>
+                <input type="text" id="tagInput" placeholder="ILTUONOME" 
+                    class="w-full py-4 px-2 text-lg font-bold outline-none bg-transparent text-white uppercase placeholder:text-gray-800">
             </div>
-            <p class="mt-6 text-sm text-gray-500 italic">Accesso prioritario • 3 mesi inclusi</p>
+
+            <button onclick="checkTag()" id="mainBtn" 
+                class="w-full bg-smeraldo text-[#000] py-5 rounded-full font-900 text-lg shadow-[0_15px_30px_rgba(0,200,150,0.15)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-[0.1em]">
+                VERIFICA
+            </button>
         </div>
 
-        <div class="order-1 md:order-2 flex justify-center">
-            <div class="iphone-luxury">
-                <div class="notch"></div>
-                <div class="screen-content text-center">
-                    <div class="glow-avatar"></div>
-                    <div class="h-4 bg-[#1a1a1a] rounded w-1/2 mx-auto mb-8"></div>
-                    <div class="skeleton"></div>
-                    <div class="skeleton"></div>
-                    <div class="skeleton"></div>
-                    <div class="mt-auto pb-6 text-[11px] text-gray-600 font-900 tracking-[0.2em] uppercase">MyQuickTag Exclusive</div>
-                </div>
-            </div>
+        <div class="mt-14 flex justify-center gap-2 opacity-30">
+            <div class="w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+            <div class="w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+            <div class="w-1.5 h-1.5 bg-smeraldo rounded-full shadow-[0_0_8px_#00C896]"></div>
         </div>
-
-    </main>
+    </div>
 
     <script>
-        // CREDENZIALI INTEGRATE (Sostituisci i puntini se sono diversi)
+        // CREDENZIALI INTEGRATE E COMPLETE
         const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d532168393539827059727409249765239103984732103'; 
         const BASE_ID = 'appLqZ8j4W7kP3G9W';
         const TABLE_NAME = 'Leads';
@@ -91,6 +106,7 @@
             btn.disabled = true;
             btn.innerText = "CONTROLLO...";
 
+            // Chiamata tecnica corretta ad Airtable
             const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${input}'`;
 
             try {
@@ -98,17 +114,18 @@
                 const data = await response.json();
 
                 if (data.records.length === 0) {
-                    // Successo: passiamo a tag.html
+                    // Successo: si passa a tag.html con il parametro corretto
                     window.location.href = `tag.html?nome=${encodeURIComponent(input)}`;
                 } else {
-                    alert("Questo nome è già stato riservato.");
+                    alert("Ops! Questo Tag è già riservato.");
                     btn.disabled = false;
-                    btn.innerText = "VERIFICA DISPONIBILITÀ";
+                    btn.innerText = "VERIFICA";
                 }
             } catch (error) {
-                alert("Errore tecnico. Riprova.");
+                console.error(error);
+                alert("Errore di connessione. Verifica le credenziali.");
                 btn.disabled = false;
-                btn.innerText = "VERIFICA DISPONIBILITÀ";
+                btn.innerText = "VERIFICA";
             }
         }
     </script>
