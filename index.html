@@ -4,33 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag - Home</title>
+    <title>MyQuickTag | Crea il tuo profilo unico</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-smeraldo { background-color: #00C896; }
+        .text-smeraldo { color: #00C896; }
+    </style>
 </head>
-<body class="bg-white font-['Inter']">
+<body class="bg-white">
 
-    <div class="container mx-auto px-4 py-20 text-center">
-        <input type="text" id="tagInput" placeholder="Scegli il tuo nome" class="border-2 p-4 rounded-xl">
-        <button onclick="checkTag()" id="mainBtn" class="bg-[#00C896] text-white p-4 rounded-xl font-bold">Verifica</button>
-    </div>
+    <nav class="p-6">
+        <div class="max-w-7xl mx-auto flex justify-center">
+            <span class="text-2xl font-800 tracking-tighter">MyQuick<span class="text-smeraldo">Tag</span></span>
+        </div>
+    </nav>
+
+    <main class="max-w-md mx-auto px-6 pt-12 pb-24 text-center">
+        <h1 class="text-4xl font-800 tracking-tight text-gray-900 mb-4">
+            Il tuo nome è il tuo <span class="text-smeraldo">brand.</span>
+        </h1>
+        <p class="text-gray-500 text-lg mb-10">
+            Prenota la tua tag personale e crea la tua pagina in meno di 30 secondi.
+        </p>
+
+        <div class="bg-gray-50 p-2 rounded-2xl border-2 border-gray-100 shadow-sm">
+            <div class="flex items-center bg-white rounded-xl p-2">
+                <span class="pl-3 text-gray-400 font-bold text-xl">@</span>
+                <input type="text" id="tagInput" placeholder="tuonome" 
+                    class="w-full p-3 text-xl font-bold outline-none bg-transparent placeholder:text-gray-300">
+            </div>
+            <button onclick="checkTag()" id="mainBtn" 
+                class="w-full mt-2 bg-smeraldo text-white py-4 rounded-xl font-800 text-lg shadow-lg shadow-[#00C896]/20 active:scale-95 transition-all">
+                VERIFICA DISPONIBILITÀ
+            </button>
+        </div>
+
+        <p class="mt-6 text-sm text-gray-400">
+            Unisciti agli utenti che hanno già scelto la loro tag.
+        </p>
+    </main>
 
     <script>
-        // TODO: spostare su backend/proxy per sicurezza (API Key esposta lato client)
-        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
-        const BASE_ID = 'appLqZ8j4W7kP3...';
+        // 🟡 6. SICUREZZA: TODO: spostare su backend/proxy
+        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; // Inserisci il tuo token completo
+        const BASE_ID = 'appLqZ8j4W7kP3...'; // Inserisci il tuo Base ID completo
         const TABLE_NAME = 'Leads';
 
         async function checkTag() {
-            const input = document.getElementById('tagInput').value.trim();
+            const inputField = document.getElementById('tagInput');
+            const input = inputField.value.trim().toLowerCase();
             const btn = document.getElementById('mainBtn');
             
-            if(!input) return alert("Inserisci un nome");
+            if(!input) return alert("Scegli un nome prima!");
 
             btn.disabled = true;
             btn.innerText = "CONTROLLO...";
 
-            // FIX 1: URL Airtable corretto con encodeURIComponent e filterByFormula
+            // 🔴 1. FIX URL: Link corretto per filtrare su Airtable
             const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${input}'`;
 
             try {
@@ -42,21 +74,20 @@
                 
                 const data = await response.json();
 
-                // Se il record non esiste (tag libera), procediamo alla pagina tag
                 if (data.records.length === 0) {
-                    // FIX 3: Uniformato parametro URL a ?nome=
+                    // 🟡 3. PARAMETRO: Passaggio a tag.html con ?nome=
                     window.location.href = `tag.html?nome=${encodeURIComponent(input)}`;
                 } else {
-                    alert("Questo nome è già occupato, provane un altro!");
+                    alert("Ops! @"+input+" è già preso. Prova un'altra variante!");
                     btn.disabled = false;
-                    btn.innerText = "Verifica";
+                    btn.innerText = "VERIFICA DISPONIBILITÀ";
                 }
 
             } catch (error) {
-                console.error("Errore tecnico:", error);
-                alert("Errore di connessione. Riprova tra un istante.");
+                console.error("Errore:", error);
+                alert("Errore di connessione. Verifica la tua connessione o le chiavi Airtable.");
                 btn.disabled = false;
-                btn.innerText = "Verifica";
+                btn.innerText = "VERIFICA DISPONIBILITÀ";
             }
         }
     </script>
