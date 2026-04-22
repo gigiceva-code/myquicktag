@@ -1,250 +1,64 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MyQuickTag - La tua identità digitale esclusiva. Un unico Tag per bio, CV e social.">
-  <title>MyQuickTag - Il tuo nome nel mondo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; margin: 0; overflow: hidden; }
-    
-    .pulse-deep { animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.98); } }
-
-    .iphone-frame {
-      width: 195px; height: 340px; background: #000; border-radius: 32px;
-      border: 3px solid #333; position: relative;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 10px rgba(255,255,255,0.05);
-      overflow: hidden; margin-bottom: 10px; cursor: pointer;
-    }
-
-    /* FRECCIA PREMIUM ANIMATA (Copilot Style) */
-    .premium-arrow {
-      position:absolute; bottom:18px; right:18px; width:38px; height:38px;
-      border-radius:50%; background:rgba(0, 143, 90, 0.18);
-      display:flex; align-items:center; justify-content:center;
-      animation:pulseArrow 1.8s infinite ease-in-out; z-index: 40;
-    }
-    .arrow-head {
-      width:0; height:0; border-left:8px solid transparent;
-      border-right:8px solid transparent; border-top:12px solid #008f5a;
-    }
-    @keyframes pulseArrow {
-      0% { transform:scale(1); opacity:0.55; }
-      50% { transform:scale(1.22); opacity:1; }
-      100% { transform:scale(1); opacity:0.55; }
-    }
-
-    .phone-button {
-      width: 100%; height: 24px; background: rgba(255,255,255,0.02); border-radius: 6px;
-      margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1);
-      display: flex; align-items: center; padding-left: 10px;
-      font-size: 8px; font-weight: 900; text-transform: uppercase;
-      color: #fff; letter-spacing: 1px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.08); }
-
-    .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; animation: pulseEmerald 3s infinite; }
-    @keyframes pulseEmerald { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
-
-    .input-group { border: 2px solid rgba(255, 255, 255, 0.2); background: #121212; }
-    
-    /* Stato Disponibile Migliorato */
-    .status-available { color: #ffffff !important; font-weight: 900; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyQuickTag - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="min-h-screen flex flex-col justify-between py-4 pb-16">
-    <header class="w-full px-6 py-4 flex justify-between items-center bg-transparent">
-  <div class="w-8"></div>
+<body class="bg-white font-['Inter']">
 
-  <div class="flex flex-col items-center">
-    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]">
-      <style>
-        .draw-path {
-          stroke-dasharray: 400;
-          stroke-dashoffset: 400;
-          animation: draw 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        @keyframes draw { to { stroke-dashoffset: 0; } }
-        .inner-at { 
-          opacity: 0; 
-          animation: fadeIn 0.8s ease forwards 1s; 
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-      </style>
-      
-      <path class="draw-path" d="M80 50C80 66.5685 66.5685 80 50 80C33.4315 80 20 66.5685 20 50C20 33.4315 33.4315 20 50 20C60.5 20 69.5 25.5 74.5 34" 
-            stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
-      
-      <path class="draw-path" d="M60 60L85 85" 
-            stroke="#10b981" stroke-width="7" stroke-linecap="round" style="animation-delay: 0.5s;"/>
-
-      <text x="50" y="56" text-anchor="middle" font-family="Arial" font-weight="900" font-size="28" fill="#10b981" class="inner-at">@</text>
-      
-      <circle cx="50" cy="50" r="2" fill="white" class="inner-at" style="animation-delay: 1.5s;"/>
-    </svg>
-
-    <h2 class="text-[12px] font-black tracking-[0.5em] text-white uppercase italic mt-2">
-      MyQuickTag
-    </h2>
-  </div>
-
-  <button class="text-white text-2xl active:scale-95 w-8">
-    <i class="fas fa-bars"></i>
-  </button>
-</header>
-
-
-
-  <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
-    
-    <div id="iphoneTrigger" class="iphone-frame" onclick="runMagicDemo()">
-      <div id="demoControl" class="premium-arrow">
-          <div class="arrow-head"></div>
-      </div>
-
-      <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #0d0d0d 0%, #000 100%);">
-          <div style="width:45px; height:8px; background:#222; border-radius:0 0 8px 8px; margin-bottom:15px;"></div>
-          
-          <div id="demoAvatar" style="width:65px; height:65px; border-radius:50%; background:#1a1a1a; margin-bottom:10px; border:1px solid #333; display:flex; align-items:center; justify-center; transition: 0.5s;">
-              <i class="fas fa-user text-zinc-800 text-sm"></i>
-          </div>
-
-          <div id="demoTag" style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.1); margin-bottom:4px; text-transform:uppercase;">@ NOME</div>
-          <div id="demoSub" style="font-size:9px; color:#333; margin-bottom:18px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
-
-          <div class="phone-button demo-btn" id="s1">----</div>
-          <div class="phone-button demo-btn" id="s2">----</div>
-          <div class="phone-button demo-btn" id="s3">----</div>
-          <div class="phone-button demo-btn" id="s4" style="width:70%;">----</div>
-
-          <div id="demoQR" style="width:75px; height:75px; background:rgba(255,255,255,0.02); border-radius:12px; margin-top:auto; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-center; transition: all 0.5s;">
-              <i class="fas fa-qrcode text-white/5 text-3xl"></i>
-          </div>
-      </div>
+    <div class="container mx-auto px-4 py-20 text-center">
+        <input type="text" id="tagInput" placeholder="Scegli il tuo nome" class="border-2 p-4 rounded-xl">
+        <button onclick="checkTag()" id="mainBtn" class="bg-[#00C896] text-white p-4 rounded-xl font-bold">Verifica</button>
     </div>
 
-    <p class="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2">Immagina la tua identità così.</p>
+    <script>
+        // TODO: spostare su backend/proxy per sicurezza (API Key esposta lato client)
+        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
+        const BASE_ID = 'appLqZ8j4W7kP3...';
+        const TABLE_NAME = 'Leads';
 
-    <div class="mb-4 pulse-deep">
-      <p class="text-lg font-black tracking-tighter uppercase italic leading-tight text-white">Un mondo dentro il tuo nome</p>
-      <p class="text-lg font-black tracking-tighter uppercase italic leading-tight text-white mt-1">Il tuo nome nel mondo</p>
-    </div>
+        async function checkTag() {
+            const input = document.getElementById('tagInput').value.trim();
+            const btn = document.getElementById('mainBtn');
+            
+            if(!input) return alert("Inserisci un nome");
 
-    <div class="w-full max-w-[280px] space-y-3">
-      <div class="rounded-[2rem] p-0.5 input-group shadow-xl">
-        <div class="flex items-center px-5 py-3">
-          <span class="text-xl font-black text-white">@</span>
-          <input id="searchInput" type="text" placeholder="iltuonome" 
-                 class="flex-1 bg-transparent outline-none text-lg ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
-        </div>
-      </div>
-      <button onclick="checkName()" class="w-full btn-emerald py-4 rounded-[2rem] text-lg uppercase tracking-widest active:scale-95 transition-transform">
-        Verifica
-      </button>
-    </div>
-    
-    <p id="status" class="mt-4 text-[9px] font-black uppercase tracking-[0.2em] min-h-[18px] text-zinc-600 italic"></p>
-  </main>
+            btn.disabled = true;
+            btn.innerText = "CONTROLLO...";
 
-  <footer class="pb-4 opacity-10 flex justify-center">
-    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
-    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
-    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
-  </footer>
+            // FIX 1: URL Airtable corretto con encodeURIComponent e filterByFormula
+            const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${input}'`;
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+            try {
+                const response = await fetch(url, {
+                    headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` }
+                });
+                
+                if (!response.ok) throw new Error("Errore API");
+                
+                const data = await response.json();
 
-  <script>
-    const AIRTABLE_PAT = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
-    const BASE_ID = "appG2S8jV9Ams3wYq";
-    const TABLE_NAME = "Tabella 1";
+                // Se il record non esiste (tag libera), procediamo alla pagina tag
+                if (data.records.length === 0) {
+                    // FIX 3: Uniformato parametro URL a ?nome=
+                    window.location.href = `tag.html?nome=${encodeURIComponent(input)}`;
+                } else {
+                    alert("Questo nome è già occupato, provane un altro!");
+                    btn.disabled = false;
+                    btn.innerText = "Verifica";
+                }
 
-    let isPlaying = false;
-    let magicTimers = [];
-
-    function stopMagic() {
-        magicTimers.forEach(t => clearTimeout(t));
-        magicTimers = [];
-        isPlaying = false;
-        document.getElementById('demoControl').innerHTML = '<div class="arrow-head"></div>';
-        resetToHoles();
-    }
-
-    function resetToHoles() {
-        const btns = document.querySelectorAll('.demo-btn');
-        btns.forEach(b => { b.innerText = "----"; b.classList.remove('active'); b.style.opacity = "1"; });
-        document.getElementById('demoTag').innerText = "@ NOME";
-        document.getElementById('demoTag').style.color = "rgba(255,255,255,0.1)";
-        document.getElementById('demoAvatar').style.borderColor = "#333";
-        document.getElementById('demoAvatar').innerHTML = '<i class="fas fa-user text-zinc-800 text-sm"></i>';
-        document.getElementById('demoQR').style.borderColor = "rgba(255,255,255,0.05)";
-        document.getElementById('demoQR').style.background = "transparent";
-        document.getElementById('status').innerText = "";
-    }
-
-    function runMagicDemo() {
-      if (isPlaying) { stopMagic(); return; }
-      
-      isPlaying = true;
-      const control = document.getElementById('demoControl');
-      const b1 = document.getElementById('s1'); const b2 = document.getElementById('s2');
-      const b3 = document.getElementById('s3'); const b4 = document.getElementById('s4');
-      const tag = document.getElementById('demoTag');
-      const avatar = document.getElementById('demoAvatar');
-      const qr = document.getElementById('demoQR');
-      const status = document.getElementById('status');
-
-      control.innerHTML = '<i class="fas fa-sync-alt fa-spin text-white text-xs"></i>';
-
-      tag.innerText = "@ ILTUOTAG";
-      tag.style.color = "#10b981";
-      avatar.style.borderColor = "#10b981";
-      avatar.innerHTML = '<i class="fas fa-user text-emerald-500 text-sm"></i>';
-
-      magicTimers.push(setTimeout(() => { b1.innerText = "BIO"; b1.classList.add('active'); }, 200));
-      magicTimers.push(setTimeout(() => { b2.innerText = "CV"; b2.classList.add('active'); }, 400));
-      magicTimers.push(setTimeout(() => { b3.innerText = "INSTAGRAM"; b3.classList.add('active'); }, 600));
-      magicTimers.push(setTimeout(() => { b4.innerText = "LINKEDIN"; b4.classList.add('active'); }, 800));
-
-      magicTimers.push(setTimeout(() => {
-          [b1,b2,b3,b4].forEach(b => b.style.opacity = "0");
-          
-          magicTimers.push(setTimeout(() => {
-              b1.innerText = "FACEBOOK"; b1.style.opacity = "1";
-              b2.innerText = "TIKTOK"; b2.style.opacity = "1";
-              b3.innerText = "YOUTUBE"; b3.style.opacity = "1";
-              b4.innerText = "REDDIT"; b4.style.opacity = "1";
-              qr.style.borderColor = "#10b981";
-              qr.style.background = "rgba(16, 185, 129, 0.2)";
-              status.innerHTML = '<span class="status-available">PROVA ORA IL TUO NOME</span>';
-              control.innerHTML = '<i class="fas fa-redo-alt text-white text-xs"></i>';
-          }, 400));
-          
-      }, 2400));
-    }
-
-    async function checkName() {
-      let input = document.getElementById('searchInput').value.trim();
-      const status = document.getElementById('status');
-      if (!input) return;
-      input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = 'ANALISI...';
-      try {
-        const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
-        const response = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_PAT}` } });
-        const data = await response.json();
-        if (data.records && data.records.length > 0) {
-          status.innerHTML = 'TAG GIÀ ASSEGNATO';
-          status.classList.remove('status-available');
-        } else {
-          status.innerHTML = '<span class="status-available tracking-[0.3em]">DISPONIBILE</span>';
-          setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
+            } catch (error) {
+                console.error("Errore tecnico:", error);
+                alert("Errore di connessione. Riprova tra un istante.");
+                btn.disabled = false;
+                btn.innerText = "Verifica";
+            }
         }
-      } catch (e) { status.innerHTML = 'ERRORE DI CONNESSIONE'; }
-    }
-  </script>
+    </script>
 </body>
 </html>
