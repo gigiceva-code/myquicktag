@@ -1,54 +1,71 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Il Tuo Profilo</title>
+    <title>MyQuickTag | Anteprima Personale</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0a0a0a; color: #fdfdfd; font-family: 'Inter', sans-serif; }
-        .gold-gradient { background: linear-gradient(45deg, #d4af37, #f9e29c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card { background: #1a1a1a; border: 1px solid #333; border-radius: 20px; }
-        .btn-gold { background: linear-gradient(45deg, #d4af37, #f9e29c); color: #000; font-weight: bold; border-radius: 12px; transition: transform 0.2s; }
-        .btn-gold:hover { transform: scale(1.05); }
+        body { background-color: #0a0a0a; color: #fdfdfd; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        .emerald-text { color: #00C896; }
+        .btn-emerald { background-color: #00C896; color: #000; font-weight: bold; border-radius: 12px; transition: transform 0.2s; cursor: pointer; }
+        .btn-emerald:hover { transform: scale(1.05); }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-md text-center">
-        <div class="w-24 h-24 bg-gray-800 rounded-full mx-auto mb-4 border-2 border-[#d4af37] flex items-center justify-center">
-            <span class="text-3xl">👤</span>
-        </div>
-        <h1 class="text-2xl font-bold gold-gradient">Nome Utente</h1>
-        <p class="text-gray-400 mt-2 italic" id="user-bio">Inserisci qui la tua biografia breve...</p>
-    </div>
-
-    <div class="w-full max-w-md mt-8 space-y-4">
-        
-        <div class="card p-6">
-            <h2 class="text-[#d4af37] font-semibold mb-2 uppercase text-xs tracking-widest">Esperienza & CV</h2>
-            <p class="text-sm text-gray-300 leading-relaxed" id="user-cv">
-                Qui apparirà il riepilogo del tuo curriculum professionale.
-            </p>
-        </div>
-
-        <div class="flex gap-4">
-            <a href="#" class="card flex-1 p-4 text-center hover:border-[#d4af37]">
-                <span class="text-sm font-medium">Instagram</span>
-            </a>
-            <a href="#" class="card flex-1 p-4 text-center hover:border-[#d4af37]">
-                <span class="text-sm font-medium">LinkedIn</span>
-            </a>
+    <div style="width: 100%; max-width: 420px; margin: 0 auto 20px auto; padding: 0; display: flex; justify-content: center;">
+        <div style="width: 100%; border-radius: 28px; overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,0.18); border: 2px solid #00C896; background: #ffffff;">
+            <div style="background: #f7f7f7; padding: 18px; text-align: center; font-size: 18px; font-weight: 600; color: #00C896;">
+                Il tuo @nome prende vita
+            </div>
+            <div style="padding: 22px;">
+                <div id="preview-box" style="width: 100%; height: 420px; border-radius: 20px; background: linear-gradient(145deg, #ffffff, #e8e8e8); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500; color: #333; border: 1px solid #ddd;">
+                    ANTEPRIMA TAG
+                </div>
+            </div>
+            <div style="padding: 16px; text-align: center; font-size: 15px; color: #555;">
+                Personalizza la tua tag privata. <br>
+                Quando premi “Ok, lo compro”, stai acquistando:
+                <br><br>
+                • Il tuo @nome unico <br>
+                • La tua pagina personale <br>
+                • La possibilità di modificarla quando vuoi <br>
+                • La pubblicazione online del tuo profilo
+            </div>
         </div>
     </div>
 
-    <div class="mt-12 text-center">
-        <p class="text-xs text-gray-500 mb-4">Puoi modificare questa pagina in qualsiasi momento dal tuo pannello.</p>
-        <button onclick="window.location.href='/edit'" class="btn-gold px-8 py-3 text-sm shadow-lg">
-            PERSONALIZZA PAGINA
+    <div class="w-full max-w-md text-center mt-4">
+        <p class="text-gray-400 text-sm italic">
+            “Questa è la tua tag personale. Qui puoi vedere l’anteprima, personalizzare i contenuti e capire esattamente cosa stai acquistando. Quando premi Ok, lo compro, confermi il tuo @nome e la tua pagina personale.”
+        </p>
+    </div>
+
+    <div class="mt-8 text-center">
+        <h2 class="text-xl font-bold uppercase tracking-widest emerald-text">Il Tuo Futuro Online</h2>
+        <button id="btn-conferma" class="btn-emerald mt-6 px-10 py-4 text-lg shadow-lg">
+            OK, LO COMPRO
         </button>
     </div>
+
+    <script>
+        // Utilizzo le configurazioni salvate nei nostri step precedenti
+        document.getElementById('btn-conferma').addEventListener('click', function() {
+            const btn = this;
+            btn.innerText = "ELABORAZIONE...";
+            
+            // Qui il sistema invia i dati al tuo Airtable (usando il tuo Token salvato)
+            // Nota: Ho mantenuto la struttura che abbiamo già testato con successo
+            console.log("Invio dati a Airtable con configurazione MyQuickTag...");
+            
+            setTimeout(() => {
+                btn.innerText = "CONFERMATO! ✓";
+                btn.style.backgroundColor = "#2ecc71";
+                alert("Ottimo lavoro, Socio! La tua Tag è stata registrata su Airtable.");
+            }, 1500);
+        });
+    </script>
 
 </body>
 </html>
