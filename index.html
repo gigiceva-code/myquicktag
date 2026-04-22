@@ -23,22 +23,23 @@
         }
         .screen-content { padding: 30px 15px; display: flex; flex-direction: column; gap: 10px; height: 100%; }
         .skeleton { height: 40px; background: #f3f4f6; border-radius: 8px; width: 100%; }
+        .skeleton-circle { width: 60px; height: 60px; background: #00C896; border-radius: 50%; margin: 20px auto; }
     </style>
 </head>
-<body class="bg-white">
+<body class="bg-white text-[#1a1a1a]">
 
     <header class="p-6 text-center">
         <div class="inline-block">
-            <span class="text-3xl font-800 tracking-tighter text-gray-900">
+            <span class="text-3xl font-800 tracking-tighter">
                 MyQuick<span class="text-smeraldo">Tag</span>
             </span>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center py-10">
+    <main class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center py-10">
         
         <div class="text-center md:text-left order-2 md:order-1">
-            <h1 class="text-5xl font-800 tracking-tight text-gray-900 leading-[1.1] mb-6">
+            <h1 class="text-5xl font-800 tracking-tight leading-[1.1] mb-6">
                 Il tuo nome è il tuo <span class="text-smeraldo">brand.</span>
             </h1>
             <p class="text-gray-500 text-xl mb-10">
@@ -46,7 +47,7 @@
             </p>
 
             <div class="bg-gray-50 p-2 rounded-3xl border-2 border-gray-100 shadow-sm max-w-sm mx-auto md:mx-0">
-                <div class="flex items-center bg-white rounded-2xl p-2 shadow-inner">
+                <div class="flex items-center bg-white rounded-2xl p-2 shadow-inner border border-gray-100">
                     <span class="pl-3 text-gray-400 font-bold text-xl">@</span>
                     <input type="text" id="tagInput" placeholder="tuonome" 
                         class="w-full p-3 text-xl font-bold outline-none bg-transparent">
@@ -56,19 +57,19 @@
                     VERIFICA DISPONIBILITÀ
                 </button>
             </div>
-            <p class="mt-4 text-xs text-gray-400">3 mesi gratuiti • Nessuna carta richiesta</p>
+            <p class="mt-4 text-xs text-gray-400">3 mesi gratuiti • Poi decidi tu</p>
         </div>
 
         <div class="order-1 md:order-2 flex justify-center">
             <div class="iphone-frame">
                 <div class="notch"></div>
-                <div class="screen-content">
-                    <div class="w-16 h-16 bg-smeraldo rounded-full mx-auto mt-6 mb-4"></div>
-                    <div class="h-6 bg-gray-200 rounded w-3/4 mx-auto mb-6"></div>
+                <div class="screen-content text-center">
+                    <div class="skeleton-circle"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2 mx-auto mb-6"></div>
                     <div class="skeleton"></div>
                     <div class="skeleton"></div>
                     <div class="skeleton"></div>
-                    <div class="mt-auto h-4 bg-gray-100 rounded w-1/2 mx-auto"></div>
+                    <div class="mt-auto pb-4 text-[10px] text-gray-300 font-bold tracking-widest uppercase">MyQuickTag Preview</div>
                 </div>
             </div>
         </div>
@@ -76,9 +77,9 @@
     </main>
 
     <script>
-        // TODO: spostare su backend/proxy per sicurezza
-        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
-        const BASE_ID = 'appLqZ8j4W7kP3...';
+        // CREDENZIALI INTEGRATE
+        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d532168393539827059727409249765239103984732103'; 
+        const BASE_ID = 'appLqZ8j4W7kP3G9W'; // ID Completo
         const TABLE_NAME = 'Leads';
 
         async function checkTag() {
@@ -91,21 +92,30 @@
             btn.disabled = true;
             btn.innerText = "CONTROLLO...";
 
+            // Chiamata tecnica ad Airtable per verificare disponibilità
             const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${input}'`;
 
             try {
-                const response = await fetch(url, { headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` } });
+                const response = await fetch(url, { 
+                    headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` } 
+                });
+                
+                if (!response.ok) throw new Error("Errore API");
+                
                 const data = await response.json();
 
                 if (data.records.length === 0) {
+                    // Tag libera -> Vai alla registrazione
                     window.location.href = `tag.html?nome=${encodeURIComponent(input)}`;
                 } else {
-                    alert("Ops! @" + input + " è già occupato.");
+                    alert("Ops! @" + input + " è già occupato. Prova qualcosa di diverso!");
                     btn.disabled = false;
                     btn.innerText = "VERIFICA DISPONIBILITÀ";
                 }
+
             } catch (error) {
-                alert("Connessione instabile.");
+                console.error("Errore:", error);
+                alert("Errore di connessione con il database.");
                 btn.disabled = false;
                 btn.innerText = "VERIFICA DISPONIBILITÀ";
             }
