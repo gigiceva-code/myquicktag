@@ -1,55 +1,84 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Crea il tuo profilo unico</title>
+    <title>MyQuickTag | Il tuo Brand in un Link</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .bg-smeraldo { background-color: #00C896; }
         .text-smeraldo { color: #00C896; }
+        .bg-smeraldo { background-color: #00C896; }
+        
+        /* iPhone Mockup Style */
+        .iphone-frame {
+            position: relative; width: 260px; height: 520px; margin: 0 auto;
+            border: 10px solid #1a1a1a; border-radius: 36px; background: #fff;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); overflow: hidden;
+        }
+        .notch {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 20px; background: #1a1a1a; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 10;
+        }
+        .screen-content { padding: 30px 15px; display: flex; flex-direction: column; gap: 10px; height: 100%; }
+        .skeleton { height: 40px; background: #f3f4f6; border-radius: 8px; width: 100%; }
     </style>
 </head>
 <body class="bg-white">
 
-    <nav class="p-6">
-        <div class="max-w-7xl mx-auto flex justify-center">
-            <span class="text-2xl font-800 tracking-tighter">MyQuick<span class="text-smeraldo">Tag</span></span>
+    <header class="p-6 text-center">
+        <div class="inline-block">
+            <span class="text-3xl font-800 tracking-tighter text-gray-900">
+                MyQuick<span class="text-smeraldo">Tag</span>
+            </span>
         </div>
-    </nav>
+    </header>
 
-    <main class="max-w-md mx-auto px-6 pt-12 pb-24 text-center">
-        <h1 class="text-4xl font-800 tracking-tight text-gray-900 mb-4">
-            Il tuo nome è il tuo <span class="text-smeraldo">brand.</span>
-        </h1>
-        <p class="text-gray-500 text-lg mb-10">
-            Prenota la tua tag personale e crea la tua pagina in meno di 30 secondi.
-        </p>
+    <main class="max-w-4xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center py-10">
+        
+        <div class="text-center md:text-left order-2 md:order-1">
+            <h1 class="text-5xl font-800 tracking-tight text-gray-900 leading-[1.1] mb-6">
+                Il tuo nome è il tuo <span class="text-smeraldo">brand.</span>
+            </h1>
+            <p class="text-gray-500 text-xl mb-10">
+                Prenota la tua tag personale e crea la tua pagina in meno di 30 secondi. Professionale, veloce, unica.
+            </p>
 
-        <div class="bg-gray-50 p-2 rounded-2xl border-2 border-gray-100 shadow-sm">
-            <div class="flex items-center bg-white rounded-xl p-2">
-                <span class="pl-3 text-gray-400 font-bold text-xl">@</span>
-                <input type="text" id="tagInput" placeholder="tuonome" 
-                    class="w-full p-3 text-xl font-bold outline-none bg-transparent placeholder:text-gray-300">
+            <div class="bg-gray-50 p-2 rounded-3xl border-2 border-gray-100 shadow-sm max-w-sm mx-auto md:mx-0">
+                <div class="flex items-center bg-white rounded-2xl p-2 shadow-inner">
+                    <span class="pl-3 text-gray-400 font-bold text-xl">@</span>
+                    <input type="text" id="tagInput" placeholder="tuonome" 
+                        class="w-full p-3 text-xl font-bold outline-none bg-transparent">
+                </div>
+                <button onclick="checkTag()" id="mainBtn" 
+                    class="w-full mt-2 bg-smeraldo text-white py-4 rounded-2xl font-800 text-lg shadow-lg shadow-[#00C896]/30 active:scale-95 transition-all">
+                    VERIFICA DISPONIBILITÀ
+                </button>
             </div>
-            <button onclick="checkTag()" id="mainBtn" 
-                class="w-full mt-2 bg-smeraldo text-white py-4 rounded-xl font-800 text-lg shadow-lg shadow-[#00C896]/20 active:scale-95 transition-all">
-                VERIFICA DISPONIBILITÀ
-            </button>
+            <p class="mt-4 text-xs text-gray-400">3 mesi gratuiti • Nessuna carta richiesta</p>
         </div>
 
-        <p class="mt-6 text-sm text-gray-400">
-            Unisciti agli utenti che hanno già scelto la loro tag.
-        </p>
+        <div class="order-1 md:order-2 flex justify-center">
+            <div class="iphone-frame">
+                <div class="notch"></div>
+                <div class="screen-content">
+                    <div class="w-16 h-16 bg-smeraldo rounded-full mx-auto mt-6 mb-4"></div>
+                    <div class="h-6 bg-gray-200 rounded w-3/4 mx-auto mb-6"></div>
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                    <div class="mt-auto h-4 bg-gray-100 rounded w-1/2 mx-auto"></div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
-        // 🟡 6. SICUREZZA: TODO: spostare su backend/proxy
-        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; // Inserisci il tuo token completo
-        const BASE_ID = 'appLqZ8j4W7kP3...'; // Inserisci il tuo Base ID completo
+        // TODO: spostare su backend/proxy per sicurezza
+        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
+        const BASE_ID = 'appLqZ8j4W7kP3...';
         const TABLE_NAME = 'Leads';
 
         async function checkTag() {
@@ -57,35 +86,26 @@
             const input = inputField.value.trim().toLowerCase();
             const btn = document.getElementById('mainBtn');
             
-            if(!input) return alert("Scegli un nome prima!");
+            if(!input) return alert("Scegli un nome!");
 
             btn.disabled = true;
             btn.innerText = "CONTROLLO...";
 
-            // 🔴 1. FIX URL: Link corretto per filtrare su Airtable
             const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${input}'`;
 
             try {
-                const response = await fetch(url, {
-                    headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` }
-                });
-                
-                if (!response.ok) throw new Error("Errore API");
-                
+                const response = await fetch(url, { headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` } });
                 const data = await response.json();
 
                 if (data.records.length === 0) {
-                    // 🟡 3. PARAMETRO: Passaggio a tag.html con ?nome=
                     window.location.href = `tag.html?nome=${encodeURIComponent(input)}`;
                 } else {
-                    alert("Ops! @"+input+" è già preso. Prova un'altra variante!");
+                    alert("Ops! @" + input + " è già occupato.");
                     btn.disabled = false;
                     btn.innerText = "VERIFICA DISPONIBILITÀ";
                 }
-
             } catch (error) {
-                console.error("Errore:", error);
-                alert("Errore di connessione. Verifica la tua connessione o le chiavi Airtable.");
+                alert("Connessione instabile.");
                 btn.disabled = false;
                 btn.innerText = "VERIFICA DISPONIBILITÀ";
             }
