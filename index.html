@@ -3,73 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Il tuo Brand in un Link</title>
+    <title>MyQuickTag | Luxury Link-in-Bio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #ffffff; }
         .text-smeraldo { color: #00C896; }
         .bg-smeraldo { background-color: #00C896; }
+        .border-smeraldo { border-color: #00C896; }
         
-        /* iPhone Mockup Style */
-        .iphone-frame {
-            position: relative; width: 260px; height: 520px; margin: 0 auto;
-            border: 10px solid #1a1a1a; border-radius: 36px; background: #fff;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); overflow: hidden;
+        /* iPhone Mockup Luxury */
+        .iphone-luxury {
+            position: relative; width: 270px; height: 540px; margin: 0 auto;
+            border: 12px solid #1f1f1f; border-radius: 42px; background: #000;
+            box-shadow: 0 0 40px rgba(0, 200, 150, 0.15); overflow: hidden;
         }
         .notch {
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 120px; height: 20px; background: #1a1a1a; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 10;
+            width: 130px; height: 22px; background: #1f1f1f; border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; z-index: 10;
         }
-        .screen-content { padding: 30px 15px; display: flex; flex-direction: column; gap: 10px; height: 100%; }
-        .skeleton { height: 40px; background: #f3f4f6; border-radius: 8px; width: 100%; }
-        .skeleton-circle { width: 60px; height: 60px; background: #00C896; border-radius: 50%; margin: 20px auto; }
+        .screen-content { padding: 40px 20px; display: flex; flex-direction: column; gap: 12px; height: 100%; }
+        .skeleton { height: 45px; background: #1a1a1a; border-radius: 10px; width: 100%; border: 1px solid #222; }
+        .glow-avatar { width: 70px; height: 70px; background: linear-gradient(135deg, #00C896, #008f6b); border-radius: 50%; margin: 20px auto; box-shadow: 0 0 20px rgba(0, 200, 150, 0.4); }
     </style>
 </head>
-<body class="bg-white text-[#1a1a1a]">
+<body class="antialiased">
 
-    <header class="p-6 text-center">
-        <div class="inline-block">
-            <span class="text-3xl font-800 tracking-tighter">
-                MyQuick<span class="text-smeraldo">Tag</span>
-            </span>
-        </div>
+    <header class="p-8 text-center">
+        <span class="text-3xl font-900 tracking-tighter italic">
+            MyQuick<span class="text-smeraldo">Tag</span>
+        </span>
     </header>
 
-    <main class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center py-10">
+    <main class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center py-12">
         
         <div class="text-center md:text-left order-2 md:order-1">
-            <h1 class="text-5xl font-800 tracking-tight leading-[1.1] mb-6">
-                Il tuo nome è il tuo <span class="text-smeraldo">brand.</span>
+            <h1 class="text-5xl md:text-6xl font-900 tracking-tight leading-[1.05] mb-8">
+                Il tuo nome è il tuo <br><span class="text-smeraldo">brand di lusso.</span>
             </h1>
-            <p class="text-gray-500 text-xl mb-10">
-                Prenota la tua tag personale e crea la tua pagina in meno di 30 secondi. Professionale, veloce, unica.
+            <p class="text-gray-400 text-xl mb-12 max-w-lg">
+                Prenota la tua tag esclusiva e crea la tua identità digitale in 30 secondi. Elegante, veloce, definitiva.
             </p>
 
-            <div class="bg-gray-50 p-2 rounded-3xl border-2 border-gray-100 shadow-sm max-w-sm mx-auto md:mx-0">
-                <div class="flex items-center bg-white rounded-2xl p-2 shadow-inner border border-gray-100">
-                    <span class="pl-3 text-gray-400 font-bold text-xl">@</span>
+            <div class="bg-[#111] p-2 rounded-3xl border border-[#222] shadow-2xl max-w-sm mx-auto md:mx-0">
+                <div class="flex items-center bg-[#000] rounded-2xl p-2 border border-[#222] focus-within:border-smeraldo transition-all">
+                    <span class="pl-4 text-gray-500 font-bold text-2xl">@</span>
                     <input type="text" id="tagInput" placeholder="tuonome" 
-                        class="w-full p-3 text-xl font-bold outline-none bg-transparent">
+                        class="w-full p-3 text-xl font-bold outline-none bg-transparent text-white placeholder:text-gray-700">
                 </div>
                 <button onclick="checkTag()" id="mainBtn" 
-                    class="w-full mt-2 bg-smeraldo text-white py-4 rounded-2xl font-800 text-lg shadow-lg shadow-[#00C896]/30 active:scale-95 transition-all">
+                    class="w-full mt-3 bg-smeraldo text-[#0a0a0a] py-5 rounded-2xl font-900 text-lg shadow-[0_0_20px_rgba(0,200,150,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-widest">
                     VERIFICA DISPONIBILITÀ
                 </button>
             </div>
-            <p class="mt-4 text-xs text-gray-400">3 mesi gratuiti • Poi decidi tu</p>
+            <p class="mt-6 text-sm text-gray-500 italic">Accesso prioritario • 3 mesi inclusi</p>
         </div>
 
         <div class="order-1 md:order-2 flex justify-center">
-            <div class="iphone-frame">
+            <div class="iphone-luxury">
                 <div class="notch"></div>
                 <div class="screen-content text-center">
-                    <div class="skeleton-circle"></div>
-                    <div class="h-4 bg-gray-200 rounded w-1/2 mx-auto mb-6"></div>
+                    <div class="glow-avatar"></div>
+                    <div class="h-4 bg-[#1a1a1a] rounded w-1/2 mx-auto mb-8"></div>
                     <div class="skeleton"></div>
                     <div class="skeleton"></div>
                     <div class="skeleton"></div>
-                    <div class="mt-auto pb-4 text-[10px] text-gray-300 font-bold tracking-widest uppercase">MyQuickTag Preview</div>
+                    <div class="mt-auto pb-6 text-[11px] text-gray-600 font-900 tracking-[0.2em] uppercase">MyQuickTag Exclusive</div>
                 </div>
             </div>
         </div>
@@ -77,9 +76,9 @@
     </main>
 
     <script>
-        // CREDENZIALI INTEGRATE
+        // CREDENZIALI INTEGRATE (Sostituisci i puntini se sono diversi)
         const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d532168393539827059727409249765239103984732103'; 
-        const BASE_ID = 'appLqZ8j4W7kP3G9W'; // ID Completo
+        const BASE_ID = 'appLqZ8j4W7kP3G9W';
         const TABLE_NAME = 'Leads';
 
         async function checkTag() {
@@ -87,35 +86,27 @@
             const input = inputField.value.trim().toLowerCase();
             const btn = document.getElementById('mainBtn');
             
-            if(!input) return alert("Scegli un nome!");
+            if(!input) return;
 
             btn.disabled = true;
             btn.innerText = "CONTROLLO...";
 
-            // Chiamata tecnica ad Airtable per verificare disponibilità
             const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${input}'`;
 
             try {
-                const response = await fetch(url, { 
-                    headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` } 
-                });
-                
-                if (!response.ok) throw new Error("Errore API");
-                
+                const response = await fetch(url, { headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` } });
                 const data = await response.json();
 
                 if (data.records.length === 0) {
-                    // Tag libera -> Vai alla registrazione
+                    // Successo: passiamo a tag.html
                     window.location.href = `tag.html?nome=${encodeURIComponent(input)}`;
                 } else {
-                    alert("Ops! @" + input + " è già occupato. Prova qualcosa di diverso!");
+                    alert("Questo nome è già stato riservato.");
                     btn.disabled = false;
                     btn.innerText = "VERIFICA DISPONIBILITÀ";
                 }
-
             } catch (error) {
-                console.error("Errore:", error);
-                alert("Errore di connessione con il database.");
+                alert("Errore tecnico. Riprova.");
                 btn.disabled = false;
                 btn.innerText = "VERIFICA DISPONIBILITÀ";
             }
