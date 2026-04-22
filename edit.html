@@ -1,41 +1,91 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personalizza @${nome} - MyQuickTag</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica Tag | MyQuickTag</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="bg-zinc-950 text-white min-h-screen">
-  <div class="max-w-2xl mx-auto pt-12 px-5">
-    <h1 class="text-4xl font-bold mb-2">Personalizza <span class="text-emerald-400">@<span id="nomeDisplay"></span></span></h1>
-    <div class="bg-zinc-900 rounded-3xl p-8 space-y-10 mt-10">
-      <div>
-        <label class="block text-sm text-zinc-400 mb-2">Bio</label>
-        <textarea id="bio" rows="4" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-5 text-white" placeholder="Scrivi qualcosa su di te..."></textarea>
-      </div>
-      <div>
-        <label class="block text-sm text-zinc-400 mb-4">I tuoi link</label>
-        <input id="instagram" type="text" placeholder="Instagram @username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mb-4">
-        <input id="website" type="text" placeholder="Sito Web" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
-      </div>
+<body class="bg-[#f3f4f6] font-['Inter']">
+
+    <div class="max-w-lg mx-auto p-6">
+        <header class="flex justify-between items-center py-6">
+            <h1 class="text-xl font-800">Modifica <span class="text-[#00C896]" id="editTitle">@nome</span></h1>
+            <a href="#" id="viewBtn" target="_blank" class="text-sm font-bold text-gray-500">Vedi Profilo</a>
+        </header>
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm space-y-6">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">La tua Bio</label>
+                <textarea id="bioInput" rows="3" class="w-full border-2 border-gray-100 rounded-xl p-4 focus:border-[#00C896] outline-none" placeholder="Racconta chi sei..."></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Link Social (Instagram)</label>
+                <input type="text" id="socialInput" class="w-full border-2 border-gray-100 rounded-xl p-4 focus:border-[#00C896] outline-none" placeholder="https://instagram.com/tuonome">
+            </div>
+
+            <button onclick="saveChanges()" id="saveBtn" class="w-full bg-[#00C896] text-white p-4 rounded-xl font-bold shadow-lg shadow-[#00C896]/20 transition-transform active:scale-95">
+                SALVA MODIFICHE
+            </button>
+        </div>
     </div>
-    <button onclick="saveProfile()" class="w-full mt-12 bg-emerald-500 hover:bg-emerald-600 py-7 rounded-3xl text-2xl font-semibold transition-all">
-      💾 Salva e Pubblica
-    </button>
-  </div>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const nome = urlParams.get('nome') || 'tuonome';
-    document.getElementById('nomeDisplay').textContent = nome;
+    <script>
+        // 🟡 3. PARAMETRO URL: ?nome=
+        const params = new URLSearchParams(window.location.search);
+        const username = params.get("nome") || "utente";
 
-    function saveProfile() {
-      // Per ora simuliamo il salvataggio della bio
-      alert(`✅ Profilo di @${nome} aggiornato!`);
-      window.location.href = `profile.html?nome=${nome}`;
-    }
-  </script>
+        document.getElementById("editTitle").innerText = "@" + username;
+        document.getElementById("viewBtn").href = `profile.html?nome=${username}`;
+
+        // 🟡 6. SICUREZZA: TODO: spostare su backend/proxy
+        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
+        const BASE_ID = 'appLqZ8j4W7kP3...';
+        const TABLE_NAME = 'Leads';
+
+        async function saveChanges() {
+            const btn = document.getElementById("saveBtn");
+            const bio = document.getElementById("bioInput").value;
+            
+            btn.innerText = "SALVATAGGIO...";
+            btn.disabled = true;
+
+            // Logica: Prima cerchiamo il record per avere l'ID, poi facciamo PATCH
+            try {
+                const searchUrl = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`;
+                const searchRes = await fetch(searchUrl, { headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` } });
+                const searchData = await searchRes.json();
+
+                if (searchData.records.length > 0) {
+                    const recordId = searchData.records[0].id;
+                    
+                    const updateRes = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${recordId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "fields": {
+                                "Bio": bio
+                            }
+                        })
+                    });
+
+                    if (updateRes.ok) {
+                        alert("Modifiche salvate con successo!");
+                    }
+                }
+            } catch (e) {
+                alert("Errore nel salvataggio.");
+            } finally {
+                btn.innerText = "SALVA MODIFICHE";
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
