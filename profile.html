@@ -1,26 +1,66 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profilo MyQuickTag</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilo | MyQuickTag</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="bg-zinc-950 text-white min-h-screen flex items-center justify-center p-5">
-  <div class="max-w-md w-full text-center" id="profileContent"></div>
+<body class="bg-gray-50 font-['Inter'] flex justify-center items-start min-h-screen">
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const nome = urlParams.get('nome') || 'utente';
+    <div class="max-w-md w-full p-6 text-center">
+        <div class="mt-10">
+            <div class="w-24 h-24 bg-[#00C896] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold" id="avatarLetter">
+                -
+            </div>
+            <h1 class="text-2xl font-800 text-gray-900" id="profileName">@nome</h1>
+            <p class="text-gray-500 mt-2" id="profileBio">Caricamento profilo...</p>
+        </div>
 
-    document.getElementById('profileContent').innerHTML = `
-      <div class="w-32 h-32 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-7xl mb-6 shadow-2xl font-bold">👤</div>
-      <h1 class="text-5xl font-bold mb-2 uppercase tracking-tighter">@${nome}</h1>
-      <p class="text-emerald-400 font-medium mb-10 italic">Identità digitale MyQuickTag</p>
-      <div class="bg-zinc-900 border border-zinc-800 p-8 rounded-3xl shadow-xl">
-        <p class="text-zinc-400 leading-relaxed">Benvenuto sul mio profilo ufficiale! Presto qui troverai tutti i miei link e contenuti esclusivi.</p>
-      </div>
-    `;
-  </script>
+        <div class="mt-8 space-y-4" id="linksContainer">
+            </div>
+
+        <div class="mt-20 text-xs text-gray-400">
+            Creato con <span class="font-bold text-[#00C896]">MyQuickTag</span>
+        </div>
+    </div>
+
+    <script>
+        // 🟡 3. PARAMETRO URL: ?nome=
+        const params = new URLSearchParams(window.location.search);
+        const username = params.get("nome") || "utente";
+
+        // 🟡 6. SICUREZZA: TODO: spostare su backend/proxy
+        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
+        const BASE_ID = 'appLqZ8j4W7kP3...';
+        const TABLE_NAME = 'Leads';
+
+        async function fetchProfile() {
+            document.getElementById("profileName").innerText = "@" + username;
+            document.getElementById("avatarLetter").innerText = username.charAt(0).toUpperCase();
+
+            // 🟡 1. FETCH AIRTABLE: URL Corretto
+            const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`;
+
+            try {
+                const response = await fetch(url, {
+                    headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` }
+                });
+                const data = await response.json();
+
+                if (data.records.length > 0) {
+                    const fields = data.records[0].fields;
+                    document.getElementById("profileBio").innerText = fields.Bio || "Nessuna bio inserita.";
+                    // Qui potresti aggiungere la logica per mostrare i link social se presenti
+                }
+            } catch (error) {
+                console.error("Errore caricamento profilo:", error);
+            }
+        }
+
+        fetchProfile();
+    </script>
 </body>
 </html>
