@@ -1,76 +1,65 @@
+
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MyQuickTag - La tua identità digitale esclusiva. Un unico Tag per bio, CV e social.">
+  <meta name="description" content="MyQuickTag - La tua identità digitale esclusiva.">
   <title>MyQuickTag - Il tuo nome nel mondo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
     body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; margin: 0; overflow-x: hidden; }
     
-    /* LOGO Q@ FUSA (Marchio di fabbrica) */
-    .logo-q-fusa { position: relative; display: inline-block; color: #10b981; font-weight: 900; font-style: italic; }
-    .logo-q-fusa::after { content: '@'; position: absolute; top: 18%; left: 15%; font-size: 0.55em; color: #0a0a0a; font-weight: 900; font-style: normal; }
+    /* LOGO Q@ FUSA */
+    .logo-q { position: relative; display: inline-block; color: #10b981; }
+    .logo-q::after { content: '@'; position: absolute; top: 18%; left: 15%; font-size: 0.55em; color: #0a0a0a; font-weight: 900; font-style: normal; }
 
+    /* ANIMAZIONE RESPIRO SLOGAN */
     .pulse-deep { animation: pulseDeep 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.98); } }
+    @keyframes pulseDeep { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.98); } }
 
+    /* iPHONE FRAME & DEMO */
     .iphone-frame {
       width: 195px; height: 340px; background: #000; border-radius: 32px;
       border: 3px solid #333; position: relative;
       box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 10px rgba(16, 185, 129, 0.1);
-      overflow: hidden; margin: 0 auto 10px; cursor: pointer;
+      overflow: hidden; margin: 0 auto 15px; cursor: pointer;
     }
 
-    /* FRECCIA PREMIUM ANIMATA */
+    /* FRECCIA PREMIUM COPILOT STYLE */
     .premium-arrow {
       position:absolute; bottom:18px; right:18px; width:38px; height:38px;
-      border-radius:50%; background:rgba(16, 185, 129, 0.18);
+      border-radius:50%; background:rgba(16, 185, 129, 0.15);
       display:flex; align-items:center; justify-content:center;
       animation:pulseArrow 1.8s infinite ease-in-out; z-index: 40;
     }
-    .arrow-head { width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:12px solid #10b981; }
-    @keyframes pulseArrow { 0% { transform:scale(1); opacity:0.55; } 50% { transform:scale(1.22); opacity:1; } 100% { transform:scale(1); opacity:0.55; } }
+    .arrow-head { width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-top:10px solid #10b981; }
+    @keyframes pulseArrow { 0%, 100% { transform:scale(1); opacity:0.6; } 50% { transform:scale(1.2); opacity:1; } }
 
     .phone-button {
       width: 100%; height: 24px; background: rgba(255,255,255,0.02); border-radius: 6px;
-      margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.08);
       display: flex; align-items: center; padding-left: 10px;
-      font-size: 8px; font-weight: 900; text-transform: uppercase;
-      color: #fff; letter-spacing: 1px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 8px; font-weight: 900; text-transform: uppercase; color: #fff; letter-spacing: 1px;
     }
-    .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.08); color: #10b981; }
+    .phone-button.active { border-color: #10b981; background: rgba(16, 185, 129, 0.1); color: #10b981; }
 
-    .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; }
-    .btn-emerald:active { transform: scale(0.95); transition: 0.1s; }
+    /* BOTTONE VERIFICA */
+    .btn-emerald { background-color: #10b981; color: #000 !important; font-weight: 900; transition: 0.3s; }
+    .btn-emerald:active { transform: scale(0.95); }
 
-    .input-group { border: 2px solid rgba(255, 255, 255, 0.1); background: #111; transition: 0.3s; }
-    .input-group:focus-within { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-    
-    .status-available { color: #ffffff !important; font-weight: 900; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); letter-spacing: 0.2em; }
+    /* STATUS DISPONIBILE */
+    .status-available { color: #ffffff !important; font-weight: 900; text-shadow: 0 0 12px rgba(16, 185, 129, 0.6); tracking: 0.2em; }
   </style>
 </head>
-<body class="h-screen flex flex-col justify-between py-1">
+<body class="min-h-screen flex flex-col justify-between py-4">
 
-  <header class="w-full px-6 py-4 flex justify-between items-center bg-transparent">
-    <div class="w-8"></div> <div class="flex flex-col items-center">
-      <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M80 50C80 66.5685 66.5685 80 50 80C33.4315 80 20 66.5685 20 50C20 33.4315 33.4315 20 50 20C60.5 20 69.5 25.5 74.5 34" 
-              stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
-        <path d="M60 60L85 85" stroke="#10b981" stroke-width="8" stroke-linecap="round"/>
-        <circle cx="50" cy="50" r="3" fill="white" />
-      </svg>
-      
-      <h2 class="text-xl font-900 tracking-tighter italic uppercase mt-1">
-        <span class="logo-q-fusa text-2xl">Q</span><span class="text-[#10b981]">uick</span><span class="text-white">Tag</span>
-      </h2>
-    </div>
-
-    <button class="text-white text-2xl active:scale-95 w-8">
-      <i class="fas fa-bars"></i>
-    </button>
+  <header class="w-full px-8 flex justify-center items-center">
+    <h2 class="text-2xl font-900 tracking-tighter italic uppercase">
+      <span class="logo-q text-3xl">Q</span><span class="text-[#10b981]">uick</span>Tag
+    </h2>
   </header>
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
@@ -81,62 +70,62 @@
       </div>
 
       <div class="h-full p-4 flex flex-col items-center" style="background: linear-gradient(180deg, #0d0d0d 0%, #000 100%);">
-          <div style="width:45px; height:8px; background:#222; border-radius:0 0 8px 8px; margin-bottom:15px;"></div>
+          <div style="width:40px; height:6px; background:#222; border-radius:0 0 8px 8px; margin-bottom:20px;"></div>
           
-          <div id="demoAvatar" style="width:65px; height:65px; border-radius:50%; background:#1a1a1a; margin-bottom:10px; border:1px solid #333; display:flex; align-items:center; justify-center; transition: 0.5s;">
+          <div id="demoAvatar" style="width:60px; height:60px; border-radius:50%; background:#1a1a1a; margin-bottom:12px; border:1px solid #333; display:flex; align-items:center; justify-content:center;">
               <i class="fas fa-user text-zinc-800 text-sm"></i>
           </div>
 
-          <div id="demoTag" style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.1); margin-bottom:4px; text-transform:uppercase;">@ NOME</div>
-          <div id="demoSub" style="font-size:9px; color:#333; margin-bottom:18px; font-weight:600; text-transform:uppercase;">Identità Digitale</div>
+          <div id="demoTag" style="font-size:14px; font-weight:900; color:rgba(255,255,255,0.1); margin-bottom:4px; text-transform:uppercase;">@ ILTUOTAG</div>
+          <div style="font-size:8px; color:#444; margin-bottom:20px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Digital Identity</div>
 
           <div class="phone-button demo-btn" id="s1">----</div>
           <div class="phone-button demo-btn" id="s2">----</div>
           <div class="phone-button demo-btn" id="s3">----</div>
           <div class="phone-button demo-btn" id="s4" style="width:70%;">----</div>
 
-          <div id="demoQR" style="width:75px; height:75px; background:rgba(255,255,255,0.02); border-radius:12px; margin-top:auto; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-center; transition: all 0.5s;">
-              <i class="fas fa-qrcode text-white/5 text-3xl"></i>
+          <div id="demoQR" style="width:65px; height:65px; background:rgba(255,255,255,0.02); border-radius:10px; margin-top:auto; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center;">
+              <i class="fas fa-qrcode text-white/5 text-2xl"></i>
           </div>
       </div>
     </div>
 
-    <p class="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2">Immagina la tua identità così.</p>
-
-    <div class="mb-4 pulse-deep">
-      <p class="text-lg font-black tracking-tighter uppercase italic leading-tight text-white">Un mondo dentro il tuo nome</p>
-      <p class="text-lg font-black tracking-tighter uppercase italic leading-tight text-white mt-1 opacity-40">Il tuo nome nel mondo</p>
+    <div class="mb-6 pulse-deep">
+      <p class="text-xl font-900 tracking-tighter uppercase italic leading-tight">Un mondo dentro il tuo nome</p>
+      <p class="text-xl font-900 tracking-tighter uppercase italic leading-tight text-zinc-500">Il tuo nome nel mondo</p>
+      <p class="text-[#10b981] font-900 tracking-[0.4em] text-[10px] uppercase mt-3">Instant Digital Identity</p>
     </div>
 
-    <div class="w-full max-w-[280px] space-y-3">
-      <div class="rounded-[2rem] p-0.5 input-group shadow-xl">
-        <div class="flex items-center px-5 py-3">
-          <span class="text-xl font-black text-[#10b981]">@</span>
-          <input id="searchInput" type="text" placeholder="iltuonome" 
-                 class="flex-1 bg-transparent outline-none text-lg ml-1 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
-        </div>
+    <div class="w-full max-w-[280px] space-y-4">
+      <div class="flex items-center bg-[#111] border-2 border-zinc-800 rounded-full px-5 py-3 focus-within:border-[#10b981] transition-all">
+        <span class="text-xl font-900 text-[#10b981]">@</span>
+        <input id="searchInput" type="text" placeholder="iltuonome" 
+               class="flex-1 bg-transparent outline-none text-lg ml-2 text-white font-bold uppercase placeholder-zinc-800 tracking-tighter">
       </div>
-      <button onclick="checkName()" class="w-full btn-emerald py-4 rounded-[2rem] text-lg uppercase tracking-widest active:scale-95 transition-transform">
+      
+      <button onclick="checkName()" class="w-full btn-emerald py-4 rounded-full text-lg uppercase tracking-widest shadow-[0_10px_30px_rgba(16,185,129,0.2)]">
         Verifica
       </button>
     </div>
     
-    <p id="status" class="mt-4 text-[9px] font-black uppercase tracking-[0.2em] min-h-[18px] text-zinc-600 italic"></p>
+    <p id="status" class="mt-4 text-[10px] font-900 uppercase tracking-widest min-h-[20px] text-zinc-600 italic"></p>
   </main>
 
-  <footer class="pb-4 opacity-10 flex justify-center">
-    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
-    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
-    <div class="w-1.5 h-1.5 bg-white rounded-full mx-1"></div>
+  <footer class="pb-6 opacity-20 flex justify-center space-x-2">
+    <div class="w-1 h-1 bg-white rounded-full"></div>
+    <div class="w-1 h-1 bg-white rounded-full"></div>
+    <div class="w-1 h-1 bg-white rounded-full"></div>
   </footer>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <script>
-    // CREDENZIALI RECUPERATE
-    const AIRTABLE_PAT = "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c";
-    const BASE_ID = "appG2S8jV9Ams3wYq";
-    const TABLE_NAME = "Tabella 1";
+    // CREDENZIALI RECUPERATE DALL'ALTRA CHAT
+    const AT_CFG = {
+        t: "patWfr8e2nM0vvhtR.69b3beff785c42c9d59a6d1f898023a16ce907f43e22716d94b497eef8dec54c",
+        b: "appG2S8jV9Ams3wYq",
+        s: "Tabella 1"
+    };
 
     let isPlaying = false;
     let magicTimers = [];
@@ -146,13 +135,13 @@
         magicTimers = [];
         isPlaying = false;
         document.getElementById('demoControl').innerHTML = '<div class="arrow-head"></div>';
-        resetToHoles();
+        resetDemoVisuals();
     }
 
-    function resetToHoles() {
+    function resetDemoVisuals() {
         const btns = document.querySelectorAll('.demo-btn');
         btns.forEach(b => { b.innerText = "----"; b.classList.remove('active'); b.style.opacity = "1"; });
-        document.getElementById('demoTag').innerText = "@ NOME";
+        document.getElementById('demoTag').innerText = "@ ILTUOTAG";
         document.getElementById('demoTag').style.color = "rgba(255,255,255,0.1)";
         document.getElementById('demoAvatar').style.borderColor = "#333";
         document.getElementById('demoAvatar').innerHTML = '<i class="fas fa-user text-zinc-800 text-sm"></i>';
@@ -163,60 +152,67 @@
     function runMagicDemo() {
       if (isPlaying) { stopMagic(); return; }
       isPlaying = true;
+      
       const control = document.getElementById('demoControl');
       const b1 = document.getElementById('s1'); const b2 = document.getElementById('s2');
       const b3 = document.getElementById('s3'); const b4 = document.getElementById('s4');
       const tag = document.getElementById('demoTag');
       const avatar = document.getElementById('demoAvatar');
       const qr = document.getElementById('demoQR');
-      const status = document.getElementById('status');
 
       control.innerHTML = '<i class="fas fa-sync-alt fa-spin text-white text-xs"></i>';
-
-      tag.innerText = "@ ILTUOTAG";
+      tag.innerText = "@ LUCA_ROSSI";
       tag.style.color = "#10b981";
       avatar.style.borderColor = "#10b981";
       avatar.innerHTML = '<i class="fas fa-user text-emerald-500 text-sm"></i>';
 
-      magicTimers.push(setTimeout(() => { b1.innerText = "BIO"; b1.classList.add('active'); }, 200));
-      magicTimers.push(setTimeout(() => { b2.innerText = "CV"; b2.classList.add('active'); }, 400));
-      magicTimers.push(setTimeout(() => { b3.innerText = "INSTAGRAM"; b3.classList.add('active'); }, 600));
-      magicTimers.push(setTimeout(() => { b4.innerText = "LINKEDIN"; b4.classList.add('active'); }, 800));
+      // ROUND 1: PROFESSIONAL
+      magicTimers.push(setTimeout(() => { b1.innerText = "BIO"; b1.classList.add('active'); }, 300));
+      magicTimers.push(setTimeout(() => { b2.innerText = "CURRICULUM"; b2.classList.add('active'); }, 600));
+      magicTimers.push(setTimeout(() => { b3.innerText = "PORTFOLIO"; b3.classList.add('active'); }, 900));
+      magicTimers.push(setTimeout(() => { b4.innerText = "CONTATTI"; b4.classList.add('active'); }, 1200));
 
+      // PAUSA MAGICA E CAMBIO ROUND
       magicTimers.push(setTimeout(() => {
           [b1,b2,b3,b4].forEach(b => b.style.opacity = "0");
+          
           magicTimers.push(setTimeout(() => {
-              b1.innerText = "FACEBOOK"; b1.style.opacity = "1";
+              // ROUND 2: SOCIAL
+              b1.innerText = "INSTAGRAM"; b1.style.opacity = "1";
               b2.innerText = "TIKTOK"; b2.style.opacity = "1";
               b3.innerText = "YOUTUBE"; b3.style.opacity = "1";
-              b4.innerText = "REDDIT"; b4.style.opacity = "1";
+              b4.innerText = "LINKEDIN"; b4.style.opacity = "1";
               qr.style.borderColor = "#10b981";
               qr.style.background = "rgba(16, 185, 129, 0.2)";
-              status.innerHTML = '<span class="status-available">PROVA ORA IL TUO NOME</span>';
               control.innerHTML = '<i class="fas fa-redo-alt text-white text-xs"></i>';
-          }, 400));
-      }, 2400));
+          }, 500));
+      }, 3000));
     }
 
     async function checkName() {
       let input = document.getElementById('searchInput').value.trim();
       const status = document.getElementById('status');
       if (!input) return;
-      input = input.replace('@', '').replace(/\s+/g, '').toLowerCase();
-      status.innerHTML = 'ANALISI...';
+      
+      input = input.replace('@', '').toLowerCase();
+      status.innerHTML = 'ANALISI DISPONIBILITÀ...';
+      
       try {
-        const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${input}'`;
-        const response = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_PAT}` } });
+        const url = `https://api.airtable.com/v0/${AT_CFG.b}/${encodeURIComponent(AT_CFG.s)}?filterByFormula={nome}='${input}'`;
+        const response = await fetch(url, { headers: { Authorization: `Bearer ${AT_CFG.t}` } });
         const data = await response.json();
+        
         if (data.records && data.records.length > 0) {
           status.innerHTML = 'TAG GIÀ ASSEGNATO';
+          status.classList.remove('status-available');
         } else {
           status.innerHTML = '<span class="status-available tracking-[0.3em]">DISPONIBILE</span>';
-          setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 800);
+          setTimeout(() => { window.location.href = `tag.html?nome=${input}`; }, 1000);
         }
-      } catch (e) { status.innerHTML = 'ERRORE DI CONNESSIONE'; }
+      } catch (e) { 
+          status.innerHTML = 'ERRORE DI CONNESSIONE'; 
+      }
     }
   </script>
 </body>
 </html>
-
