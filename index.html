@@ -55,24 +55,31 @@
 </head>
 <body class="h-screen flex flex-col justify-between py-1">
 
-  <header class="w-full px-6 py-4 flex justify-between items-center bg-transparent">
-    <div class="w-8"></div> <div class="flex flex-col items-center">
-      <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M80 50C80 66.5685 66.5685 80 50 80C33.4315 80 20 66.5685 20 50C20 33.4315 33.4315 20 50 20C60.5 20 69.5 25.5 74.5 34" 
-              stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
-        <path d="M60 60L85 85" stroke="#10b981" stroke-width="8" stroke-linecap="round"/>
-        <circle cx="50" cy="50" r="3" fill="white" />
-      </svg>
-      
-      <h2 class="text-xl font-900 tracking-tighter italic uppercase mt-1">
-        <span class="logo-q-fusa text-2xl">Q</span><span class="text-[#10b981]">uick</span><span class="text-white">Tag</span>
-      </h2>
-    </div>
+  <header class="w-full pt-12 pb-6 flex flex-col items-center bg-transparent">
+  
+  <div class="mb-4">
+    <svg width="85" height="85" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" stroke="#10b981" stroke-width="1" stroke-dasharray="2 4" opacity="0.3"/>
+      <path d="M72 50C72 62.1503 62.1503 72 50 72C37.8497 72 28 62.1503 28 50C28 37.8497 37.8497 28 50 28C57.5 28 64.5 32 68 38L78 55" 
+            stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="50" y="56" fill="white" font-family="Arial, sans-serif" font-weight="900" font-size="20" text-anchor="middle">@</text>
+    </svg>
+  </div>
 
-    <button class="text-white text-2xl active:scale-95 w-8">
-      <i class="fas fa-bars"></i>
-    </button>
-  </header>
+  <div class="text-center">
+    <h1 class="text-2xl font-black uppercase italic tracking-[0.3em] flex items-center justify-center">
+      <span class="text-white">My</span>
+      <span class="text-[#10b981] mx-1">Quick</span>
+      <span class="text-white">Tag</span>
+    </h1>
+    
+    <p class="text-[10px] font-bold text-[#10b981] uppercase tracking-[0.4em] mt-2 opacity-80">
+      Instant Digital Identity
+    </p>
+  </div>
+
+</header>
+
 
   <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
     
