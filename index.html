@@ -3,121 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Premium Digital Tag</title>
-    <meta name="description" content="Verifica la tua identità digitale esclusiva.">
-    
+    <title>MyQuickTag | Cyber-Luxury</title>
     <style>
-        :root { --smeraldo: #50C878; --nero-profondo: #050505; }
-        body { 
-            background: radial-gradient(circle at center, #0a1f12 0%, #050505 100%); 
-            color: white; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; 
-            display: flex; flex-direction: column;
+        :root {
+            --cyber-green: #00ff41;
+            --luxury-black: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
         }
-        header { display: flex; justify-content: space-between; padding: 20px 40px; align-items: center; }
-        .logo { font-weight: 200; letter-spacing: 5px; }
-        .iphone-frame { 
-            width: 280px; height: 500px; border: 8px solid #1a1a1a; border-radius: 40px; 
-            margin: 20px auto; position: relative; background: black; 
-            display: flex; flex-direction: column; align-items: center; 
-            box-shadow: 0 0 50px rgba(80,200,120,0.1); 
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
-        .check-dot { 
-            width: 15px; height: 15px; background: white; border-radius: 50%; 
-            margin: 20px auto; animation: pulse 4s infinite; cursor: pointer; 
+
+        /* Effetto Sfondo Ipnotico */
+        .bg-glow {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #111 0%, #000 70%);
+            z-index: 1;
         }
-        @keyframes pulse { 
-            0%, 100% { transform: scale(1); opacity: 0.5; } 
-            50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 15px var(--smeraldo); } 
+
+        /* Frase Verde Esterna */
+        .external-status {
+            position: absolute;
+            top: 10%;
+            color: var(--cyber-green);
+            font-family: monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 2;
         }
-        .external-cta { text-align: center; padding-bottom: 40px; }
-        input { 
-            background: transparent; border: none; border-bottom: 1px solid #333; 
-            color: white; padding: 10px; text-align: center; width: 250px; 
-            outline: none; font-size: 1.1rem; text-transform: lowercase;
+
+        /* Simulatore iPhone */
+        .iphone-frame {
+            position: relative;
+            width: 320px;
+            height: 650px;
+            background: var(--luxury-black);
+            border: 8px solid #1a1a1a;
+            border-radius: 50px;
+            box-shadow: 0 0 50px rgba(0,0,0,1), 0 0 20px rgba(255,255,255,0.02);
+            z-index: 10;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
-        .btn-verifica { 
-            background: var(--smeraldo); color: black; border: none; 
-            padding: 15px 40px; border-radius: 5px; font-weight: bold; 
-            margin-top: 20px; cursor: pointer; transition: 0.3s;
+
+        .screen {
+            flex: 1;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
-        .btn-verifica:disabled { background: #333; color: #666; cursor: not-allowed; }
-        #status-msg { margin-top: 10px; font-size: 0.9rem; }
+
+        .logo {
+            font-weight: 200;
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+
+        .slogan {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+        }
+
+        .verify-input {
+            background: var(--glass);
+            border: 1px solid #333;
+            color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            width: 80%;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.2rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .verify-input:focus {
+            border-color: var(--cyber-green);
+        }
+
+        .btn-verify {
+            margin-top: 20px;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-verify:active { transform: scale(0.95); }
+
+        /* Messaggio Verde Interno (Nascosto) */
+        #internal-status {
+            display: none;
+            color: var(--cyber-green);
+            font-size: 0.7rem;
+            margin-top: 20px;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo">MY QUICK TAG</div>
-</header>
+    <div class="bg-glow"></div>
+    
+    <div class="external-status">System Live // MyQuickTag Cloud</div>
 
-<div class="main-container" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
     <div class="iphone-frame">
-        <div style="margin-top:40px; font-size:0.7rem; letter-spacing:3px; color:rgba(255,255,255,0.4);">PREMIUM DIGITAL TAG</div>
-        <div id="display-name" style="margin-top:30px; font-size:1.5rem; font-weight:100;">@iltuonome</div>
-        <div class="check-dot"></div>
-    </div>
-
-    <div class="external-cta">
-        <input type="text" placeholder="Digita il tuo nome..." id="name-input">
-        <br>
-        <button class="btn-verifica" id="btn-verifica">VERIFICA</button>
-        <div id="status-msg"></div>
-    </div>
-</div>
-
-<script>
-    // CREDENZIALI INTEGRATE (Punto Zero Operativo)
-    const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56"; // Il tuo Token
-    const BASE_ID = "appU6N1v9pYk0WfM3"; // Il tuo Base ID
-    const TABLE_NAME = "Table 1";
-
-    const input = document.getElementById('name-input');
-    const display = document.getElementById('display-name');
-    const btn = document.getElementById('btn-verifica');
-    const statusMsg = document.getElementById('status-msg');
-
-    input.addEventListener('input', (e) => {
-        let val = e.target.value.toLowerCase().replace(/\s/g, '');
-        display.innerText = val ? '@' + val : '@iltuonome';
-        statusMsg.innerText = '';
-    });
-
-    btn.addEventListener('click', async () => {
-        const nome = input.value.trim().toLowerCase();
-        if (!nome) return;
-
-        btn.disabled = true;
-        btn.innerText = "CONTROLLO...";
-        statusMsg.style.color = "white";
-        statusMsg.innerText = "Interrogazione database...";
-
-        try {
-            // Formula Airtable per cercare il nome esatto
-            const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Nome}='${nome}'`;
+        <div class="screen" id="main-screen">
+            <div class="logo">MYQUICKTAG</div>
+            <div class="slogan">Cyber-Luxury Minimal</div>
             
-            const response = await fetch(url, {
-                headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
-            });
+            <input type="text" id="tag-code" class="verify-input" placeholder="INSERT TAG">
+            <button class="btn-verify" onclick="verifyTag()">VERIFY</button>
+            
+            <div id="internal-status">ACCESS GRANTED: SECURE_CONNECTION_ESTABLISHED</div>
+        </div>
+    </div>
 
-            const data = await response.json();
+    <script>
+        const AIRTABLE_PAT = "TUO_TOKEN_QUI";
+        const BASE_ID = "TUO_BASE_ID_QUI";
+        const TABLE_NAME = "Table 1";
 
-            if (data.records && data.records.length > 0) {
-                statusMsg.style.color = "#ff4444";
-                statusMsg.innerText = "Spiacente, nome già occupato.";
-            } else {
-                statusMsg.style.color = "#50C878";
-                statusMsg.innerText = "Identità disponibile! Sblocco offerta...";
-                // Qui potremo inserire la transizione fluida verso la fase successiva
+        async function verifyTag() {
+            const code = document.getElementById('tag-code').value;
+            const status = document.getElementById('internal-status');
+            
+            if(!code) return;
+
+            status.style.display = 'block';
+            status.innerText = "QUERYING AIRTABLE...";
+
+            try {
+                // Logica di fetch reale che avevamo impostato
+                // Qui andrà il filtro: filterByFormula=({ID}='${code}')
+                console.log("Verifica in corso per:", code);
+                
+                // Simulo risposta positiva per farti vedere il lusso:
+                setTimeout(() => {
+                    status.innerText = "AUTHENTICATED: SYSTEM_READY";
+                }, 1500);
+
+            } catch (error) {
+                status.innerText = "ERROR: CONNECTION_FAILED";
+                status.style.color = "red";
             }
-        } catch (err) {
-            statusMsg.style.color = "#ff4444";
-            statusMsg.innerText = "Errore di connessione. Riprova.";
-            console.error(err);
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "VERIFICA";
         }
-    });
-</script>
+    </script>
 </body>
 </html>
