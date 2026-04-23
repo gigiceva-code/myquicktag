@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -10,12 +9,11 @@
             --smeraldo: #50C878;
             --nero-profondo: #050505;
             --grigio-luxury: #1a1a1a;
-            --font-main: 'Inter', -apple-system, sans-serif;
         }
 
         body, html {
             margin: 0; padding: 0;
-            font-family: var(--font-main);
+            font-family: 'Inter', sans-serif;
             background: radial-gradient(circle at center, #0a1f12 0%, #050505 100%);
             color: white;
             height: 100vh;
@@ -23,28 +21,20 @@
             overflow: hidden;
         }
 
-        /* HEADER: LOGO E TITOLO */
         header {
             display: flex; justify-content: space-between;
             padding: 30px 50px; align-items: center;
         }
 
-        .brand-box { display: flex; flex-direction: column; }
         .logo { font-weight: 200; letter-spacing: 7px; font-size: 1.2rem; margin: 0; }
-        .slogan { font-size: 0.5rem; letter-spacing: 3px; color: var(--smeraldo); text-transform: uppercase; margin-top: 5px; opacity: 0.8; }
 
-        .nav-icon { cursor: pointer; opacity: 0.7; transition: 0.3s; }
-        .nav-icon:hover { opacity: 1; }
-
-        /* MAIN CONTAINER: L'ESPERIENZA */
         .main-container {
             flex: 1;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            padding-bottom: 50px;
         }
 
-        /* IPHONE INTERATTIVO LUXURY */
+        /* IPHONE IPNOTICO */
         .iphone-frame {
             width: 280px; height: 530px;
             border: 10px solid var(--grigio-luxury);
@@ -53,14 +43,6 @@
             position: relative;
             display: flex; flex-direction: column; align-items: center;
             box-shadow: 0 0 60px rgba(80, 200, 120, 0.1);
-            transition: transform 0.5s ease;
-        }
-
-        .iphone-notch {
-            width: 120px; height: 25px;
-            background: var(--grigio-luxury);
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
         }
 
         .iphone-display {
@@ -80,7 +62,6 @@
             font-size: 1.7rem; font-weight: 100;
             color: var(--smeraldo);
             text-shadow: 0 0 15px rgba(80, 200, 120, 0.4);
-            transition: all 0.3s ease;
         }
 
         .check-dot {
@@ -95,17 +76,10 @@
             50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 20px var(--smeraldo); }
         }
 
-        /* CONTROLLI ESTERNI */
+        /* CONTROLLI */
         .input-section {
             margin-top: 40px;
             text-align: center;
-        }
-
-        .input-title {
-            font-size: 0.8rem; letter-spacing: 2px;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 15px;
-            text-transform: uppercase;
         }
 
         input {
@@ -114,11 +88,8 @@
             color: white; padding: 12px;
             font-size: 1.3rem; text-align: center;
             width: 280px; outline: none;
-            transition: 0.3s;
             text-transform: lowercase;
         }
-
-        input:focus { border-bottom-color: var(--smeraldo); }
 
         .btn-luxury {
             background: var(--smeraldo);
@@ -128,11 +99,6 @@
             margin-top: 30px; cursor: pointer;
             letter-spacing: 2px; transition: 0.4s;
             text-transform: uppercase;
-        }
-
-        .btn-luxury:hover { 
-            letter-spacing: 4px;
-            box-shadow: 0 0 30px rgba(80, 200, 120, 0.3);
         }
 
         #feedback {
@@ -150,22 +116,12 @@
 <body>
 
     <header>
-        <div class="brand-box">
-            <h1 class="logo">MY QUICK TAG</h1>
-            <span class="slogan">The Digital Elite</span>
-        </div>
-        <div class="nav-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="18" y2="18"></line>
-            </svg>
-        </div>
+        <h1 class="logo">MY QUICK TAG</h1>
+        <div style="opacity:0.5; font-size:0.8rem;">[ PREMIUM ]</div>
     </header>
 
     <div class="main-container">
         <div class="iphone-frame" id="iphone">
-            <div class="iphone-notch"></div>
             <div class="iphone-display">
                 <div class="label-preview">Identity Preview</div>
                 <div id="display-name">@iltuonome</div>
@@ -174,20 +130,18 @@
         </div>
 
         <div class="input-section">
-            <div class="input-title">Claim Your Identity</div>
-            <input type="text" id="main-input" placeholder="enter name..." autocomplete="off">
+            <input type="text" id="main-input" placeholder="Verifica il tuo nome..." autocomplete="off">
             <br>
-            <button class="btn-luxury" id="btn-verifica">Verify Availability</button>
+            <button class="btn-luxury" id="btn-verifica">VERIFICA DISPONIBILITÀ</button>
             <div id="feedback"></div>
         </div>
     </div>
 
     <footer>
-        © 2026 MY QUICK TAG — LIMITED EDITION ACCESS
+        © 2026 MY QUICK TAG — EXCLUSIVE ACCESS
     </footer>
 
     <script>
-        // CREDENZIALI AIRTABLE (Blindate e Operative)
         const AT_KEY = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
         const AT_BASE = "appU6N1v9pYk0WfM3";
         const AT_TABLE = "Table 1";
@@ -196,25 +150,18 @@
         const display = document.getElementById('display-name');
         const btn = document.getElementById('btn-verifica');
         const feedback = document.getElementById('feedback');
-        const iphone = document.getElementById('iphone');
 
-        // Effetto specchio e interazione visiva
         input.addEventListener('input', (e) => {
             let val = e.target.value.toLowerCase().trim().replace(/\s/g, '');
             display.innerText = val ? '@' + val : '@iltuonome';
             feedback.innerText = "";
-            
-            // Micro-reazione dell'iPhone alla scrittura
-            iphone.style.transform = "scale(1.02)";
-            setTimeout(() => { iphone.style.transform = "scale(1)"; }, 100);
         });
 
-        // Logica di verifica reale con Table 1
         btn.addEventListener('click', async () => {
             const nome = input.value.toLowerCase().trim().replace(/\s/g, '');
             if(!nome) return;
 
-            btn.innerText = "Searching...";
+            btn.innerText = "RICERCA IN CORSO...";
             btn.disabled = true;
 
             try {
@@ -226,16 +173,15 @@
 
                 if (data.records && data.records.length > 0) {
                     feedback.style.color = "#ff4444";
-                    feedback.innerText = "Identity Already Claimed";
+                    feedback.innerText = "NOME GIÀ OCCUPATO";
                 } else {
                     feedback.style.color = "#50C878";
-                    feedback.innerText = "Identity Available";
-                    // Qui attiveremo lo step successivo della Tag Experience
+                    feedback.innerText = "NOME DISPONIBILE";
                 }
             } catch (error) {
-                feedback.innerText = "Connection Error";
+                feedback.innerText = "ERRORE DI CONNESSIONE";
             } finally {
-                btn.innerText = "Verify Availability";
+                btn.innerText = "VERIFICA DISPONIBILITÀ";
                 btn.disabled = false;
             }
         });
