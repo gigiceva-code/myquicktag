@@ -3,188 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Premium Digital Tag</title>
+    <title>MyQuickTag - Punto Zero</title>
     <style>
         :root {
-            --smeraldo: #50C878;
-            --nero-profondo: #050505;
-            --grigio-luxury: #1a1a1a;
+            --brand-green: #00ff7f; /* Il verde corretto */
+            --luxury-black: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
         body, html {
-            margin: 0; padding: 0;
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at center, #0a1f12 0%, #050505 100%);
-            color: white;
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+            color: #fff;
+            font-family: 'Inter', -apple-system, sans-serif;
             height: 100vh;
-            display: flex; flex-direction: column;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
+            flex-direction: column;
         }
 
-        header {
-            display: flex; justify-content: space-between;
-            padding: 30px 50px; align-items: center;
-        }
-
-        .logo { font-weight: 200; letter-spacing: 7px; font-size: 1.2rem; margin: 0; }
-
-        .main-container {
-            flex: 1;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-        }
-
-        /* IPHONE IPNOTICO */
-        .iphone-frame {
-            width: 280px; height: 530px;
-            border: 10px solid var(--grigio-luxury);
-            border-radius: 45px;
-            background: #000;
-            position: relative;
-            display: flex; flex-direction: column; align-items: center;
-            box-shadow: 0 0 60px rgba(80, 200, 120, 0.1);
-        }
-
-        .iphone-display {
-            margin-top: 60px;
+        /* Logo e Intestazione */
+        .logo-container {
             text-align: center;
-            width: 100%;
-        }
-
-        .label-preview {
-            font-size: 0.6rem; letter-spacing: 4px;
-            color: rgba(255,255,255,0.3);
-            text-transform: uppercase;
             margin-bottom: 30px;
         }
 
-        #display-name {
-            font-size: 1.7rem; font-weight: 100;
-            color: var(--smeraldo);
-            text-shadow: 0 0 15px rgba(80, 200, 120, 0.4);
+        .main-logo {
+            width: 80px; /* Misura approssimativa da immagine */
+            filter: drop-shadow(0 0 10px rgba(0,255,127,0.5));
         }
 
-        .check-dot {
-            width: 12px; height: 12px;
-            background: white; border-radius: 50%;
-            margin: 60px auto;
-            animation: breathe 4s infinite ease-in-out;
+        .main-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin: 10px 0;
         }
 
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 20px var(--smeraldo); }
+        .main-slogan {
+            font-size: 0.7rem;
+            color: var(--brand-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        /* CONTROLLI */
-        .input-section {
-            margin-top: 40px;
+        /* Simulatore iPhone */
+        .iphone-frame {
+            position: relative;
+            width: 290px; /* Proporzione da immagine */
+            height: 580px;
+            background: #000;
+            border: 8px solid #2a2a2a;
+            border-radius: 40px;
+            box-shadow: 0 0 30px rgba(0,255,127,0.1), inset 0 0 10px rgba(255,255,255,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        /* Isola Dinamica (Finta) */
+        .dynamic-island {
+            width: 90px;
+            height: 25px;
+            background: #1a1a1a;
+            border-radius: 15px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+        }
+
+        .screen {
+            flex: 1;
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Avatar e Identità */
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .profile-placeholder {
+            width: 70px;
+            height: 70px;
+            background: #333;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .user-handle {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .user-tagline {
+            font-size: 0.6rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Social Button Grid (Il cuore della UX) */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .social-btn {
+            background: var(--glass);
+            border: 1px solid #1a1a1a;
+            color: #999;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.6rem;
             text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: capitalize;
         }
 
-        input {
-            background: transparent; border: none;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            color: white; padding: 12px;
-            font-size: 1.3rem; text-align: center;
-            width: 280px; outline: none;
-            text-transform: lowercase;
+        .social-btn:hover {
+            border-color: var(--brand-green);
+            color: #fff;
+            transform: translateY(-2px);
         }
 
-        .btn-luxury {
-            background: var(--smeraldo);
-            color: black; border: none;
-            padding: 18px 50px; border-radius: 2px;
-            font-weight: 800; font-size: 0.8rem;
-            margin-top: 30px; cursor: pointer;
-            letter-spacing: 2px; transition: 0.4s;
+        /* Campo Password - Fedele all'immagine */
+        .password-field {
+            width: 100px;
+            margin: 15px 0;
+        }
+
+        .password-input {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            color: #fff;
+            font-family: monospace;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            outline: none;
+        }
+
+        .password-input:focus {
+            border-color: var(--brand-green);
+        }
+
+        /* QR Code Verde - Fedele all'immagine */
+        .qr-section {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .qr-image {
+            width: 70px;
+            height: 70px;
+            filter: drop-shadow(0 0 5px rgba(0,255,127,0.3));
+        }
+
+        .arrow-action {
+            position: absolute;
+            right: 0;
+            background: var(--brand-green);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .arrow-action svg {
+            width: 15px;
+            fill: #000;
+        }
+
+        /* Text Block Esterno 1 */
+        .tag-story-block {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #fff;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .tag-story-line-1 { font-style: italic; }
+        .tag-story-line-2 { font-weight: 700; text-transform: uppercase; font-size: 1rem; margin: 5px 0; }
+        .tag-story-line-3 { font-weight: 200; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;}
+
+        /* Form di Inserimento Esterno */
+        .insertion-form {
+            position: relative;
+            width: 320px;
+            margin-top: 20px;
+            z-index: 2;
+        }
+
+        .handle-input-container {
+            width: 100%;
+            background: #111;
+            border-radius: 20px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .handle-input-at {
+            color: var(--brand-green);
+            font-size: 1.2rem;
+            font-family: monospace;
+            margin-right: 5px;
+        }
+
+        .handle-input-field {
+            background: transparent;
+            border: none;
+            color: #999;
+            width: 100%;
+            font-size: 1rem;
+            outline: none;
             text-transform: uppercase;
         }
 
-        #feedback {
-            margin-top: 20px; font-size: 0.7rem; letter-spacing: 2px;
-            min-height: 20px; text-transform: uppercase;
+        /* Pulsante Verifica Esterno Verde */
+        .btn-verify-outer {
+            width: 100%;
+            background: var(--brand-green);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        footer {
-            padding: 30px; font-size: 0.5rem;
-            color: rgba(255,255,255,0.2); text-align: center;
-            letter-spacing: 3px;
+        .btn-verify-outer:hover {
+            transform: scale(1.02);
         }
+
+        /* Sparkle Icon */
+        .sparkle-icon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2;
+        }
+
+        .sparkle-icon svg {
+            width: 20px;
+            fill: var(--brand-green);
+        }
+
     </style>
 </head>
 <body>
 
-    <header>
-        <h1 class="logo">MY QUICK TAG</h1>
-        <div style="opacity:0.5; font-size:0.8rem;">[ PREMIUM ]</div>
-    </header>
+    <div class="logo-container">
+        <svg class="main-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="#fff" stroke-width="2" fill="none"/>
+            <text x="35" y="70" font-size="50" font-family="Arial" fill="#fff">@</text>
+            <circle cx="50" cy="50" r="40" stroke="#00ff7f" stroke-width="3" fill="none"/>
+            <text x="35" y="70" font-size="50" font-family="Arial" fill="#00ff7f">@</text>
+            </svg>
+        <div class="main-title">My Quick Tag</div>
+        <div class="main-slogan">Instant Digital Identity</div>
+    </div>
 
-    <div class="main-container">
-        <div class="iphone-frame" id="iphone">
-            <div class="iphone-display">
-                <div class="label-preview">Identity Preview</div>
-                <div id="display-name">@iltuonome</div>
-                <div class="check-dot"></div>
+    <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        
+        <div class="screen" id="main-screen">
+            <div class="profile-section">
+                <div class="profile-placeholder"></div>
+                <div class="user-handle">@ ILTUOTAG</div>
+                <div class="user-tagline">Identità Digitale</div>
             </div>
-        </div>
 
-        <div class="input-section">
-            <input type="text" id="main-input" placeholder="Verifica il tuo nome..." autocomplete="off">
-            <br>
-            <button class="btn-luxury" id="btn-verifica">VERIFICA DISPONIBILITÀ</button>
-            <div id="feedback"></div>
+            <div class="social-grid">
+                <div class="social-btn">Facebook</div>
+                <div class="social-btn">TikTok</div>
+                <div class="social-btn">LinkedIn</div>
+                <div class="social-btn">Twitter</div>
+                <div class="social-btn">Reddit</div>
+                <div class="social-btn">Instagram</div>
+            </div>
+
+            <div class="password-field">
+                <input type="password" class="password-input" value="1234" maxlength="4">
+            </div>
+
+            <div class="qr-section">
+                <svg class="qr-image" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                   <rect width="100" height="100" fill="#00ff7f22"/>
+                   <rect x="10" y="10" width="80" height="80" fill="none" stroke="#00ff7f" stroke-width="5"/>
+                   <rect x="25" y="25" width="50" height="50" fill="#00ff7f"/>
+                </svg>
+                <div class="arrow-action">
+                    <svg viewBox="0 0 10 10">
+                        <path d="M5,0 L5,8 M1,4 L5,8 L9,4" fill="none" stroke="#000" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
         </div>
     </div>
 
-    <footer>
-        © 2026 MY QUICK TAG — EXCLUSIVE ACCESS
-    </footer>
+    <div class="tag-story-block">
+        <div class="tag-story-line-1">Immagina la tua identità così.</div>
+        <div class="tag-story-line-2">Un mondo dentro il tuo nome</div>
+        <div class="tag-story-line-3">Il tuo nome nel mondo</div>
+    </div>
 
-    <script>
-        const AT_KEY = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
-        const AT_BASE = "appU6N1v9pYk0WfM3";
-        const AT_TABLE = "Table 1";
+    <div class="insertion-form">
+        <div class="handle-input-container">
+            <span class="handle-input-at">@</span>
+            <input type="text" class="handle-input-field" value="ILTUONOME" readonly>
+        </div>
+        <button class="btn-verify-outer">VERIFICA</button>
+    </div>
 
-        const input = document.getElementById('main-input');
-        const display = document.getElementById('display-name');
-        const btn = document.getElementById('btn-verifica');
-        const feedback = document.getElementById('feedback');
+    <div class="sparkle-icon">
+        <svg viewBox="0 0 10 10">
+            <path d="M5,0 L6.5,3.5 L10,5 L6.5,6.5 L5,10 L3.5,6.5 L0,5 L3.5,3.5 Z"/>
+        </svg>
+    </div>
 
-        input.addEventListener('input', (e) => {
-            let val = e.target.value.toLowerCase().trim().replace(/\s/g, '');
-            display.innerText = val ? '@' + val : '@iltuonome';
-            feedback.innerText = "";
-        });
-
-        btn.addEventListener('click', async () => {
-            const nome = input.value.toLowerCase().trim().replace(/\s/g, '');
-            if(!nome) return;
-
-            btn.innerText = "RICERCA IN CORSO...";
-            btn.disabled = true;
-
-            try {
-                const url = `https://api.airtable.com/v0/${AT_BASE}/${encodeURIComponent(AT_TABLE)}?filterByFormula={Nome}='${nome}'`;
-                const response = await fetch(url, {
-                    headers: { Authorization: `Bearer ${AT_KEY}` }
-                });
-                const data = await response.json();
-
-                if (data.records && data.records.length > 0) {
-                    feedback.style.color = "#ff4444";
-                    feedback.innerText = "NOME GIÀ OCCUPATO";
-                } else {
-                    feedback.style.color = "#50C878";
-                    feedback.innerText = "NOME DISPONIBILE";
-                }
-            } catch (error) {
-                feedback.innerText = "ERRORE DI CONNESSIONE";
-            } finally {
-                btn.innerText = "VERIFICA DISPONIBILITÀ";
-                btn.disabled = false;
-            }
-        });
-    </script>
 </body>
 </html>
