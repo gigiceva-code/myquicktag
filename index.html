@@ -52,53 +52,78 @@
 </head>
 <body>
 
-<header style="display: flex; justify-content: space-between; align-items: center; padding: 30px 5%; max-width: 1200px; margin: 0 auto; position: relative; z-index: 100;">
-    <div class="menu-hamburger" style="width: 30px; cursor: pointer;">
-        <span style="display: block; height: 1px; background: white; margin: 6px 0; transition: 0.3s;"></span>
-        <span style="display: block; height: 1px; background: white; margin: 6px 0; transition: 0.3s; width: 18px;"></span>
-        <span style="display: block; height: 1px; background: white; margin: 6px 0; transition: 0.3s;"></span>
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 40px 5% 20px 5%; max-width: 1200px; margin: 0 auto 40px auto; flex-wrap: nowrap;">
+    <div style="width: 30px; cursor: pointer; flex-shrink: 0;">
+        <div style="height: 1px; background: white; margin: 6px 0; width: 25px;"></div>
+        <div style="height: 1px; background: white; margin: 6px 0; width: 15px;"></div>
+        <div style="height: 1px; background: white; margin: 6px 0; width: 25px;"></div>
     </div>
 
-    <div style="text-align: center;">
-        <svg width="65" height="65" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 10px;">
-            <circle cx="50" cy="50" r="42" stroke="#50C878" stroke-width="2.5"/>
-            <path d="M50 35C41.7 35 35 41.7 35 50C35 58.3 41.7 65 50 65C53.5 65 56.5 63.5 58.5 61.5V65L65 72" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="50" cy="50" r="8" stroke="white" stroke-width="2.5"/>
+    <div style="text-align: center; flex-grow: 1; min-width: 200px;">
+        <svg width="60" height="60" viewBox="0 0 100 100" style="margin-bottom: 15px;">
+            <circle cx="50" cy="50" r="40" stroke="#50C878" stroke-width="2.5" fill="none" />
+            <path d="M50 32C40 32 32 40 32 50C32 60 40 68 50 68C53.5 68 56.5 66.5 58.5 64.5V68L65 74.5" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="50" cy="50" r="10" stroke="white" stroke-width="2.5" fill="none"/>
         </svg>
-        <h1 style="font-weight: 100; letter-spacing: 12px; font-size: 1.6rem; text-transform: uppercase; color: white; margin: 0;">MY QUICK TAG</h1>
-        <p style="color: #50C878; font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase; font-weight: 400; margin-top: 5px;">INSTANT DIGITAL IDENTITY</p>
+        <h1 style="font-weight: 100; letter-spacing: 6px; font-size: 1.1rem; text-transform: uppercase; color: white; margin: 0; white-space: nowrap; font-family: 'Inter', sans-serif;">MY QUICK TAG</h1>
+        <p style="color: #50C878; font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 400; margin-top: 8px; white-space: nowrap;">INSTANT DIGITAL IDENTITY</p>
     </div>
 
-    <div class="user-icon" style="width: 30px; text-align: right; opacity: 0.6;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.2">
+    <div style="width: 30px; text-align: right; flex-shrink: 0;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.2" style="opacity: 0.5;">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
         </svg>
     </div>
-</header> 
-
+</header>
 <div class="main-stage">
     <div class="iphone-frame">
         <div class="trigger-pallino"></div>
-        <div class="screen">
-            <div class="notch"></div>
-            <div class="avatar">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div id="display-name" style="font-size: 1.4rem; font-weight: 200; letter-spacing: 3px; margin-bottom: 5px;">@iltuonome</div>
-            <div style="color: var(--smeraldo); font-size: 0.6rem; letter-spacing: 3px; font-weight: 700;">PREMIUM DIGITAL TAG</div>
-            
-            <div class="social-placeholder">---- SOCIAL ----</div>
-            
-            <div id="cv-preview" style="width: 100%; height: 60px; background: rgba(255,255,255,0.02); border: 1px dashed #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #444; font-size: 0.6rem;">CURRICULUM VITAE PRE-SET</div>
+    <div class="screen" style="width: 100%; padding: 20px; display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
+                
+                <div style="width: 100px; height: 25px; background: #000; border-radius: 0 0 15px 15px; margin-bottom: 20px; margin-top: -20px;"></div>
 
-            <div class="input-box">
-                <span style="color: var(--smeraldo)">@</span>
-                <input type="text" id="tag-input" placeholder="digita il tuo nome unico..." autocomplete="off">
-            </div>
-            <button class="btn-verify" onclick="checkTag()">Verifica Disponibilità</button>
-            <p style="font-size: 0.5rem; color: #444; margin-top: 10px; letter-spacing: 1px;">SBLOCCA L'OFFERTA RISERVATA</p>
-        </div>
-    </div>
+                <div style="width: 70px; height: 70px; background: #222; border-radius: 50%; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; border: 1px solid #333;">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+
+                <div id="display-name" style="font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; color: white; margin-bottom: 5px;">@ILTUNOME</div>
+                <div style="font-size: 0.6rem; color: #50C878; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 30px;">Identità Digitale</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 20px;">
+                    <div style="background: rgba(80, 200, 120, 0.05); border: 1px solid rgba(80, 200, 120, 0.2); padding: 10px; border-radius: 12px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #50C878; font-size: 0.65rem; font-weight: bold;">Instagram</span>
+                        <span style="color: #444; font-size: 0.6rem;">----</span>
+                    </div>
+                    <div style="background: rgba(80, 200, 120, 0.05); border: 1px solid rgba(80, 200, 120, 0.2); padding: 10px; border-radius: 12px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #50C878; font-size: 0.65rem; font-weight: bold;">TikTok</span>
+                        <span style="color: #444; font-size: 0.6rem;">----</span>
+                    </div>
+                </div>
+
+                <div style="width: 100%; background: #111; border: 1px solid #222; padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 20px;">
+                    <div style="color: #666; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase;">Curriculum Vitae Pre-set</div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: auto; margin-bottom: 20px; width: 100%;">
+                    <div style="width: 70px; height: 70px; background: rgba(80, 200, 120, 0.1); border: 1px solid #50C878; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="1.5">
+                            <path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM10 3h1v1h-1zM10 8h1v1h-1z"/>
+                        </svg>
+                    </div>
+                    <div style="width: 40px; height: 40px; border: 1px solid #50C878; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                    </div>
+                </div>
+
+                <div style="width: 100%; background: #000; border: 1px solid #333; border-radius: 20px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #50C878;">@</span>
+                    <input type="text" id="tag-input" placeholder="digita il tuo nome unico..." style="background: transparent; border: none; color: white; font-size: 0.8rem; width: 100%; outline: none;">
+                </div>
+                
+                <button onclick="checkAvailability()" style="width: 100%; background: #50C878; border: none; padding: 15px; border-radius: 20px; color: black; font-weight: 800; text-transform: uppercase; font-size: 0.8rem; margin-top: 10px; cursor: pointer; box-shadow: 0 0 20px rgba(80, 200, 120, 0.4);">
+                    Verifica Disponibilità
+                </button>
+            </div> 
 </div>
 
 <footer style="padding: 20px; text-align: center; font-size: 0.6rem; color: #222; letter-spacing: 2px;">
