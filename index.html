@@ -3,232 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Digital Identity</title>
+    <title>MY QUICK TAG | Instant Digital Identity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-green: #00df82;
-            --dark-bg: #000000;
-            --iphone-black: #0b0b0b;
+            --bg-color: #050505;
+            --emerald: #50C878;
+            --text-white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --neon-glow: 0 0 15px rgba(80, 200, 120, 0.4);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            margin: 0;
-            background-color: var(--dark-bg);
-            color: white;
+            background-color: var(--bg-color);
+            color: var(--text-white);
             font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
             overflow-x: hidden;
-        }
-
-        /* LOGO E HEADER */
-        .header { text-align: center; margin-bottom: 20px; }
-        .logo-q {
-            width: 80px;
-            height: 80px;
-            border: 3px solid var(--neon-green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: var(--neon-green);
-            margin: 0 auto 10px;
-            box-shadow: 0 0 15px rgba(0, 223, 130, 0.3);
-        }
-        .brand-name { font-weight: 800; letter-spacing: 6px; font-size: 22px; margin: 5px 0; }
-        .slogan { color: var(--neon-green); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
-
-        /* SIMULATORE IPHONE */
-        .iphone {
-            width: 300px;
-            height: 600px;
-            background: var(--iphone-black);
-            border: 8px solid #1f1f1f;
-            border-radius: 45px;
-            position: relative;
-            padding: 20px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.8);
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        .dynamic-island {
-            width: 80px;
-            height: 25px;
-            background: #000;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .avatar {
-            width: 85px;
-            height: 85px;
-            background: #222;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-
-        .user-id { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
-        .sub-text { font-size: 10px; color: #555; text-transform: uppercase; margin-bottom: 25px; }
-
-        /* VERIFICA INTERNA */
-        .status-bar-green {
+        /* --- HEADER --- */
+        header {
             width: 100%;
-            background: var(--neon-green);
-            color: #000;
-            border-radius: 8px;
-            padding: 8px;
-            font-size: 11px;
-            font-weight: 700;
+            max-width: 1200px;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
+            align-items: center;
+            z-index: 100;
         }
 
-        /* GRID SOCIAL */
+        .menu-hamburger { width: 30px; cursor: pointer; }
+        .menu-hamburger div { height: 2px; background: white; margin: 5px 0; border-radius: 2px; }
+        
+        .logo-center {
+            text-align: center;
+        }
+        .logo-center img { height: 50px; filter: drop-shadow(var(--neon-glow)); }
+
+        .login-icon svg { width: 28px; fill: white; cursor: pointer; }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        h1 { font-family: 'Orbitron', sans-serif; letter-spacing: 5px; font-size: 1.8rem; margin-bottom: 10px; }
+        .slogan { color: var(--emerald); font-weight: bold; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 40px; }
+
+        /* --- IPHONE CORE --- */
+        .iphone-container {
+            position: relative;
+            width: 280px;
+            height: 580px;
+            background: #111;
+            border: 8px solid #222;
+            border-radius: 40px;
+            box-shadow: 0 0 50px rgba(0,0,0,1), var(--neon-glow);
+            animation: breathe 4s infinite ease-in-out;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(80, 200, 120, 0.2); }
+            50% { transform: scale(1.02); box-shadow: 0 0 50px rgba(80, 200, 120, 0.5); }
+        }
+
+        .iphone-top-bar { width: 100px; height: 25px; background: #000; border-radius: 0 0 15px 15px; margin-bottom: 40px; }
+
+        .profile-placeholder {
+            width: 80px; height: 80px; background: var(--glass); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+        }
+
+        .profile-tag { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; margin-bottom: 5px; }
+        .profile-sub { font-size: 0.6rem; opacity: 0.5; text-transform: uppercase; margin-bottom: 30px; }
+
         .social-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
         }
 
         .social-item {
-            border: 1px solid var(--neon-green);
-            border-radius: 8px;
-            padding: 6px;
-            font-size: 9px;
-            color: var(--neon-green);
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-
-        /* PIN / PASSWORD */
-        .pin-container {
-            margin-top: 20px;
-            width: 60%;
-            border: 1px solid #333;
-            border-radius: 15px;
+            background: var(--glass);
+            border: 1px solid rgba(80, 200, 120, 0.3);
             padding: 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
             text-align: center;
-            letter-spacing: 5px;
-            font-size: 18px;
         }
 
-        /* QR CODE */
-        .qr-section {
-            margin-top: auto;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding-bottom: 10px;
-        }
-        .qr-box {
-            width: 80px;
-            height: 80px;
-            border: 2px solid var(--neon-green);
-            padding: 5px;
+        .trigger-dot {
+            width: 15px; height: 15px; background: white; border-radius: 50%;
+            margin-top: 20px; box-shadow: 0 0 10px white;
         }
 
-        /* TESTO ESTERNO */
-        .external-text { text-align: center; margin-top: 25px; }
-        .ext-1 { font-style: italic; font-size: 12px; color: #888; }
-        .ext-2 { font-weight: 700; font-size: 16px; margin: 5px 0; text-transform: uppercase; }
-        .ext-3 { font-weight: 300; letter-spacing: 2px; font-size: 13px; color: #bbb; }
+        /* --- INPUT AREA --- */
+        .input-section { width: 100%; max-width: 350px; margin-top: 50px; text-align: center; }
 
-        /* INPUT VERIFICA FINALE */
-        .final-input-container {
-            margin-top: 20px;
-            width: 320px;
+        .input-wrapper {
             position: relative;
+            background: var(--glass);
+            border-radius: 50px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .input-pill {
-            width: 100%;
-            background: #111;
-            border: 1px solid #222;
-            padding: 15px;
-            border-radius: 25px;
+
+        input {
+            background: transparent;
+            border: none;
             color: white;
-            font-size: 16px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-        .btn-verify-neon {
+            font-size: 1rem;
             width: 100%;
-            background: var(--neon-green);
+            outline: none;
+            text-align: center;
+        }
+
+        .btn-verify {
+            background: var(--emerald);
             color: #000;
             border: none;
-            padding: 15px;
-            border-radius: 25px;
-            font-weight: 800;
-            text-transform: uppercase;
+            padding: 18px 0;
+            width: 100%;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
             cursor: pointer;
+            transition: transform 0.2s;
         }
+
+        .btn-verify:active { transform: scale(0.95); }
+
+        .payoff {
+            margin-top: 40px;
+            text-align: center;
+            font-style: italic;
+            opacity: 0.8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .payoff b { display: block; text-transform: uppercase; font-style: normal; font-size: 1.1rem; margin-bottom: 5px; }
+
+        /* Status Active */
+        .active-profile .social-grid { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo-q">@</div>
-        <div class="brand-name">MY QUICK TAG</div>
-        <div class="slogan">Instant Digital Identity</div>
-    </div>
-
-    <div class="iphone">
-        <div class="dynamic-island"></div>
-        <div class="avatar"></div>
-        <div class="user-id">@ ILTUOTAG</div>
-        <div class="sub-text">Identità Digitale</div>
-
-        <div class="status-bar-green">
-            <span>VERIFICA</span>
-            <span>iltuonome</span>
+    <header>
+        <div class="menu-hamburger"><div></div><div></div><div></div></div>
+        <div class="logo-center">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" stroke="#50C878" stroke-width="2"/>
+                <path d="M40 40C40 34.4772 44.4772 30 50 30C55.5228 30 60 34.4772 60 40V60" stroke="white" stroke-width="4"/>
+                <circle cx="50" cy="50" r="10" fill="#50C878"/>
+            </svg>
         </div>
-
-        <div class="social-grid">
-            <div class="social-item">Facebook</div>
-            <div class="social-item">TikTok</div>
-            <div class="social-item">LinkedIn</div>
-            <div class="social-item">Twitter</div>
-            <div class="social-item">Reddit</div>
-            <div class="social-item">Instagram</div>
+        <div class="login-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
+    </header>
 
-        <div class="pin-container">••••</div>
+    <main>
+        <h1>MY QUICK TAG</h1>
+        <p class="slogan">Instant Digital Identity</p>
 
-        <div class="qr-section">
-            <div class="qr-box">
-                <svg viewBox="0 0 100 100" fill="var(--neon-green)">
-                    <rect x="10" y="10" width="20" height="20"/>
-                    <rect x="70" y="10" width="20" height="20"/>
-                    <rect x="10" y="70" width="20" height="20"/>
-                    <rect x="40" y="40" width="20" height="20"/>
-                </svg>
+        <div class="iphone-container" id="iphone">
+            <div class="iphone-top-bar"></div>
+            <div class="profile-placeholder">
+                <svg width="40" height="40" fill="rgba(255,255,255,0.2)" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             </div>
-            <div style="background: var(--neon-green); border-radius: 50%; padding: 5px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M7 10l5 5 5-5H7z"/></svg>
+            <div class="profile-tag" id="display-tag">@ILTUOTAG</div>
+            <div class="profile-sub">Identità Digitale</div>
+
+            <div class="social-grid">
+                <div class="social-item">Facebook</div>
+                <div class="social-item">TikTok</div>
+                <div class="social-item">Twitter</div>
+                <div class="social-item">Instagram</div>
             </div>
+
+            <div class="trigger-dot"></div>
         </div>
-    </div>
 
-    <div class="external-text">
-        <div class="ext-1">Immagina la tua identità così.</div>
-        <div class="ext-2">Un mondo dentro il tuo nome</div>
-        <div class="ext-3">Il tuo nome nel mondo</div>
-    </div>
+        <div class="input-section">
+            <div class="input-wrapper">
+                <input type="text" id="tagInput" placeholder="@ILTUONOME" spellcheck="false">
+            </div>
+            <button class="btn-verify" onclick="verifyTag()">VERIFICA</button>
+            <p style="font-size: 0.7rem; margin-top: 10px; opacity: 0.5;">PROVA ORA IL TUO NOME</p>
+        </div>
 
-    <div class="final-input-container">
-        <input type="text" class="input-pill" value="@ ILTUONOME" readonly>
-        <button class="btn-verify-neon">VERIFICA</button>
-    </div>
+        <div class="payoff">
+            <b>Un mondo dentro il tuo nome</b>
+            il tuo nome nel mondo
+        </div>
+    </main>
 
+    <script>
+        const AIRTABLE_BASE = 'appU6N1v9pYk0WfM3';
+        const AIRTABLE_KEY = 'patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56';
+        const TABLE_NAME = 'Table 1';
+
+        async function verifyTag() {
+            const input = document.getElementById('tagInput').value;
+            const display = document.getElementById('display-tag');
+            const iphone = document.getElementById('iphone');
+
+            if(!input) return alert("Inserisci un nome");
+
+            display.innerText = input.startsWith('@') ? input.toUpperCase() : '@' + input.toUpperCase();
+            
+            // Animazione Feedback
+            iphone.classList.add('active-profile');
+
+            // Logica Airtable (Esempio Fetch)
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${TABLE_NAME}`, {
+                    headers: { Authorization: `Bearer ${AIRTABLE_KEY}` }
+                });
+                const data = await response.json();
+                console.log("Dati sincronizzati:", data);
+                // Qui puoi aggiungere la logica di controllo duplicati o salvataggio
+            } catch (error) {
+                console.error("Errore Airtable:", error);
+            }
+        }
+    </script>
 </body>
 </html>
