@@ -3,117 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Premium Digital Tag</title>
+    <title>MyQuickTag | Luxury Minimal</title>
     <style>
         :root { --smeraldo: #50C878; --nero: #050505; }
-        body { margin: 0; background: var(--nero); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { margin: 0; background: var(--nero); color: white; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; }
         
-        /* HEADER SIMMETRICO */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; }
-        .hamburger { width: 30px; cursor: pointer; }
-        .hamburger div { height: 2px; background: white; margin: 5px 0; transition: 0.3s; }
-        .logo-box { text-align: center; }
-        .logo-svg { width: 50px; margin-bottom: 5px; }
-        .title { font-weight: 100; letter-spacing: 5px; font-size: 1.1rem; margin: 0; }
-        .slogan { color: var(--smeraldo); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; }
+        /* HEADER REFINED */
+        header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 30px 0; max-width: 400px; }
+        .logo-center { text-align: center; flex: 1; }
+        .title { font-weight: 100; letter-spacing: 8px; font-size: 1.2rem; margin: 5px 0; color: white; }
+        .slogan { color: var(--smeraldo); font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; }
 
-        /* IPHONE & INTERAZIONE */
-        .main { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
-        .iphone { width: 280px; height: 550px; border: 10px solid #1a1a1a; border-radius: 45px; background: black; position: relative; box-shadow: 0 0 50px rgba(80,200,120,0.1); display: flex; flex-direction: column; align-items: center; }
-        .iphone-screen { padding: 40px 20px; text-align: center; width: 100%; box-sizing: border-box; }
-        .premium-label { font-size: 0.5rem; letter-spacing: 3px; color: var(--smeraldo); margin-bottom: 30px; }
-        #display-name { font-size: 1.5rem; font-weight: 100; margin-bottom: 40px; }
+        /* IPHONE FRAME LUXURY */
+        .iphone { width: 300px; height: 580px; border: 12px solid #1a1a1a; border-radius: 50px; background: black; position: relative; margin-top: 20px; box-shadow: 0 0 60px rgba(80, 200, 120, 0.15); }
+        .screen { padding: 60px 20px; text-align: center; }
+        .tag-label { font-size: 0.5rem; letter-spacing: 4px; color: var(--smeraldo); text-transform: uppercase; margin-bottom: 40px; opacity: 0.7; }
+        #display-name { font-size: 1.8rem; font-weight: 100; margin-bottom: 50px; color: white; }
         
-        /* SOCIAL & CV (HIDDEN START) */
-        .modules { display: none; opacity: 0; transition: 1s; }
-        .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .social-icon { font-size: 0.6rem; border: 1px solid var(--smeraldo); padding: 5px; color: var(--smeraldo); }
-        .cv-module { border: 1px solid white; padding: 15px; font-size: 0.7rem; margin-top: 20px; letter-spacing: 1px; }
+        /* MODULI SOCIAL & CV */
+        .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; opacity: 0.4; }
+        .social-box { border: 1px solid var(--smeraldo); padding: 8px; font-size: 0.5rem; color: var(--smeraldo); letter-spacing: 1px; }
+        .cv-box { border: 1px solid white; margin-top: 25px; padding: 15px; font-size: 0.7rem; letter-spacing: 2px; opacity: 0.3; }
 
-        /* INPUT ESTERNO */
-        .input-area { margin-top: 30px; text-align: center; }
-        input { background: transparent; border: none; border-bottom: 1px solid #333; color: white; text-align: center; font-size: 1.2rem; padding: 10px; outline: none; width: 250px; }
-        .btn { background: var(--smeraldo); color: black; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; margin-top: 20px; letter-spacing: 2px; }
-        
-        .pulse { width: 12px; height: 12px; background: white; border-radius: 50%; margin: 20px auto; animation: breathe 4s infinite; }
-        @keyframes breathe { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 20px var(--smeraldo); } }
+        /* INPUT AREA */
+        .input-container { margin-top: 40px; text-align: center; }
+        input { background: transparent; border: none; border-bottom: 1px solid #333; color: white; text-align: center; font-size: 1.1rem; padding: 15px; width: 280px; outline: none; font-weight: 100; }
+        .btn-check { background: var(--smeraldo); color: black; border: none; padding: 20px 60px; font-weight: 800; margin-top: 30px; letter-spacing: 3px; cursor: pointer; border-radius: 4px; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="hamburger"><div></div><div style="width:20px"></div><div></div></div>
-    <div class="logo-box">
-        <svg class="logo-svg" viewBox="0 0 100 100" fill="none">
+    <div style="padding-left:20px">☰</div>
+    <div class="logo-center">
+        <svg width="45" height="45" viewBox="0 0 100 100" fill="none">
             <circle cx="50" cy="50" r="45" stroke="#50C878" stroke-width="3" />
-            <path d="M50 30C38.9543 30 30 38.9543 30 50C30 61.0457 38.9543 70 50 70C55.5228 70 60.5228 67.7614 64.1421 64.1421L75 75" stroke="#50C878" stroke-width="3" stroke-linecap="round"/>
             <circle cx="50" cy="50" r="15" stroke="white" stroke-width="3" />
+            <path d="M65 65 L80 80" stroke="#50C878" stroke-width="3" stroke-linecap="round"/>
         </svg>
-        <h1 class="title">MY QUICK TAG</h1>
+        <div class="title">MY QUICK TAG</div>
         <div class="slogan">Instant Digital Identity</div>
     </div>
-    <div style="width:30px">👤</div>
+    <div style="padding-right:20px">👤</div>
 </header>
 
-<div class="main">
-    <div class="iphone">
-        <div class="iphone-screen">
-            <div class="premium-label">Premium Digital Tag</div>
-            <div id="display-name">@iltuonome</div>
-            <div id="status-pulse" class="pulse"></div>
-            
-            <div id="modules" class="modules">
-                <div class="social-grid">
-                    <div class="social-icon">INSTA</div><div class="social-icon">TIKTOK</div><div class="social-icon">LINKED</div>
-                </div>
-                <div class="cv-module">PROFESSIONAL CV</div>
-            </div>
+<div class="iphone">
+    <div class="screen">
+        <div class="tag-label">Premium Digital Tag</div>
+        <div id="display-name">@iltuonome</div>
+        <div class="social-grid">
+            <div class="social-box">INSTA</div><div class="social-box">TIKTOK</div><div class="social-box">LINKED</div>
+            <div class="social-box">X</div><div class="social-box">FB</div><div class="social-box">WEB</div>
         </div>
-    </div>
-
-    <div class="input-area">
-        <input type="text" id="tag-input" placeholder="Digita il tuo nome unico..." autocomplete="off">
-        <br>
-        <button class="btn" id="verify-btn">VERIFICA</button>
-        <p id="msg" style="font-size: 0.7rem; margin-top: 15px; letter-spacing: 1px;"></p>
+        <div class="cv-box">PROFESSIONAL CV</div>
     </div>
 </div>
 
+<div class="input-container">
+    <input type="text" id="tag-input" placeholder="Digita il tuo nome unico..." autocomplete="off">
+    <br>
+    <button class="btn-check">VERIFICA</button>
+</div>
+
 <script>
-    const KEY = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
-    const BASE = "appU6N1v9pYk0WfM3";
     const input = document.getElementById('tag-input');
     const display = document.getElementById('display-name');
-    const btn = document.getElementById('verify-btn');
-    const modules = document.getElementById('modules');
-
     input.addEventListener('input', (e) => {
         display.innerText = e.target.value ? '@' + e.target.value.toLowerCase() : '@iltuonome';
     });
-
-    btn.addEventListener('click', async () => {
-        const name = input.value.trim().toLowerCase();
-        if(!name) return;
-        btn.innerText = "CONTROLLO...";
-        
-        try {
-            const resp = await fetch(`https://api.airtable.com/v0/${BASE}/Table%201?filterByFormula={Nome}='${name}'`, {
-                headers: { Authorization: `Bearer ${KEY}` }
-            });
-            const data = await resp.json();
-            
-            if(data.records.length > 0) {
-                document.getElementById('msg').innerText = "NON DISPONIBILE";
-                document.getElementById('msg').style.color = "red";
-            } else {
-                document.getElementById('msg').innerText = "DISPONIBILE - SBLOCCA OFFERTA";
-                document.getElementById('msg').style.color = "#50C878";
-                modules.style.display = "block";
-                setTimeout(() => modules.style.opacity = "1", 100);
-            }
-        } catch (e) { console.error(e); }
-        btn.innerText = "VERIFICA";
-    });
 </script>
+
 </body>
 </html>
