@@ -5,40 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <body>
 <style>
-    :root { --smeraldo: #50C878; --bg-dark: #050505; }
+    :root { --smeraldo: #50C878; }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
     
+    /* SFONDO NERO ASSOLUTO (Corretto) */
     body { 
-        background: radial-gradient(circle at center, #0a1a0f 0%, #050505 100%) !important; 
+        background-color: #000000 !important; 
         min-height: 100vh; 
         color: white; 
         overflow-x: hidden; 
     }
     
-    /* Frame iPhone stile Cyber-Luxury */
+    /* iPhone Frame Nero con bordo sottile */
     .iphone-frame {
-        background: #000; border: 8px solid #1a1a1a; border-radius: 45px;
+        background: #000; border: 4px solid #1a1a1a; border-radius: 45px;
         width: 310px; height: 630px; margin: 0 auto 40px auto; position: relative;
-        box-shadow: 0 0 50px rgba(80, 200, 120, 0.15); overflow: hidden;
+        box-shadow: 0 0 30px rgba(80, 200, 120, 0.1); overflow: hidden;
     }
     .screen { padding: 20px; display: flex; flex-direction: column; align-items: center; height: 100%; }
 
-    /* Griglia Social ordinata a 3 colonne */
+    /* Griglia Social Sottile Smeraldo */
     .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin: 15px 0; }
     .social-item {
-        background: rgba(80, 200, 120, 0.05); border: 1px solid rgba(80, 200, 120, 0.2);
+        background: transparent; border: 1px solid rgba(80, 200, 120, 0.4);
         border-radius: 8px; padding: 6px; text-align: center; font-size: 0.55rem;
-        color: var(--smeraldo); text-transform: uppercase; font-weight: bold;
+        color: var(--smeraldo); text-transform: uppercase;
     }
 
-    /* Pulsante con bagliore neon */
+    /* Pulsante Smeraldo Pieno */
     .btn-verify {
         background: var(--smeraldo); color: black; border: none;
         padding: 15px; border-radius: 20px; font-weight: 900;
         text-transform: uppercase; width: 100%; cursor: pointer;
-        box-shadow: 0 0 25px rgba(80, 200, 120, 0.6);
     }
 </style>
+
 </header>
 <div class="main-stage">
     <div class="iphone-frame">
@@ -54,13 +55,13 @@
                 <div id="display-name" style="font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; color: white; margin-bottom: 5px;">@ILTUNOME</div>
                 <div style="font-size: 0.6rem; color: #50C878; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 30px;">Identità Digitale</div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 20px;">
+                <div style="display: grid; gri-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 20px;">
                     <div style="background: rgba(80, 200, 120, 0.05); border: 1px solid rgba(80, 200, 120, 0.2); padding: 10px; border-radius: 12px; display: flex; align-items: center; gap: 8px;">
                         <span style="color: #50C878; font-size: 0.65rem; font-weight: bold;">Instagram</span>
                         <span style="color: #444; font-size: 0.6rem;">----</span>
                     </div>
                     <div style="background: rgba(80, 200, 120, 0.05); border: 1px solid rgba(80, 200, 120, 0.2); padding: 10px; border-radius: 12px; display: flex; align-items: center; gap: 8px;">
-                        <span style="color: #50C878; font-size: 0.65rem; font-weight: bold;">TikTok</span>
+                        <span style="color: #50C878;d font-size: 0.65rem; font-weight: bold;">TikTok</span>
                         <span style="color: #444; font-size: 0.6rem;">----</span>
                     </div>
                 </div>
