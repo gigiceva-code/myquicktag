@@ -52,20 +52,29 @@
 </head>
 <body>
 
-<header>
-    <div class="menu-hamburger"><span></span><span></span><span></span></div>
-    <div class="logo-box">
-        <svg width="40" height="40" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" stroke="#50C878" stroke-width="3" fill="none"/>
-            <circle cx="50" cy="50" r="15" stroke="white" stroke-width="3" fill="none"/>
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 30px 5%; max-width: 1200px; margin: 0 auto; position: relative; z-index: 100;">
+    <div class="menu-hamburger" style="width: 30px; cursor: pointer;">
+        <span style="display: block; height: 1px; background: white; margin: 6px 0; transition: 0.3s;"></span>
+        <span style="display: block; height: 1px; background: white; margin: 6px 0; transition: 0.3s; width: 18px;"></span>
+        <span style="display: block; height: 1px; background: white; margin: 6px 0; transition: 0.3s;"></span>
+    </div>
+
+    <div style="text-align: center;">
+        <svg width="65" height="65" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 10px;">
+            <circle cx="50" cy="50" r="42" stroke="#50C878" stroke-width="2.5"/>
+            <path d="M50 35C41.7 35 35 41.7 35 50C35 58.3 41.7 65 50 65C53.5 65 56.5 63.5 58.5 61.5V65L65 72" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="8" stroke="white" stroke-width="2.5"/>
         </svg>
-        <div class="title">MY QUICK TAG</div>
-        <div class="slogan-top">Instant Digital Identity</div>
+        <h1 style="font-weight: 100; letter-spacing: 12px; font-size: 1.6rem; text-transform: uppercase; color: white; margin: 0;">MY QUICK TAG</h1>
+        <p style="color: #50C878; font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase; font-weight: 400; margin-top: 5px;">INSTANT DIGITAL IDENTITY</p>
     </div>
-    <div class="user-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+
+    <div class="user-icon" style="width: 30px; text-align: right; opacity: 0.6;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
     </div>
-</header>
+</header> 
 
 <div class="main-stage">
     <div class="iphone-frame">
