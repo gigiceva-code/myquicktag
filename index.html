@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Premium Digital Tag</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700;800&display=swap" rel="stylesheet">
+    <body>
+<style>
     :root { --smeraldo: #50C878; --bg-dark: #050505; }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-    body { background: radial-gradient(circle at center, #0a1a0f 0%, #050505 100%); min-height: 100vh; color: white; display: flex; flex-direction: column; }
     
-    /* Header e Titoli */
-    header { width: 100%; z-index: 10; }
-    h1 { font-weight: 100; letter-spacing: 6px; text-shadow: 0 0 15px rgba(80, 200, 120, 0.3); }
-
-    /* iPhone Frame Premium */
-    .iphone-frame {
-        background: #000; border: 8px solid #1a1a1a; border-radius: 45px;
-        width: 310px; height: 630px; margin: 0 auto; position: relative;
-        box-shadow: 0 0 50px rgba(80, 200, 120, 0.1); overflow: hidden;
+    body { 
+        background: radial-gradient(circle at center, #0a1a0f 0%, #050505 100%) !important; 
+        min-height: 100vh; 
+        color: white; 
+        overflow-x: hidden; 
     }
     
+    /* Frame iPhone stile Cyber-Luxury */
+    .iphone-frame {
+        background: #000; border: 8px solid #1a1a1a; border-radius: 45px;
+        width: 310px; height: 630px; margin: 0 auto 40px auto; position: relative;
+        box-shadow: 0 0 50px rgba(80, 200, 120, 0.15); overflow: hidden;
+    }
     .screen { padding: 20px; display: flex; flex-direction: column; align-items: center; height: 100%; }
 
-    /* Griglia Social 3 Colonne (Come foto Speranza) */
+    /* Griglia Social ordinata a 3 colonne */
     .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin: 15px 0; }
     .social-item {
         background: rgba(80, 200, 120, 0.05); border: 1px solid rgba(80, 200, 120, 0.2);
@@ -30,48 +31,14 @@
         color: var(--smeraldo); text-transform: uppercase; font-weight: bold;
     }
 
-    /* Input e Bottone Neon */
-    .input-box {
-        width: 100%; background: #000; border: 1px solid #333; 
-        border-radius: 20px; padding: 12px; margin-bottom: 10px;
-    }
+    /* Pulsante con bagliore neon */
     .btn-verify {
         background: var(--smeraldo); color: black; border: none;
         padding: 15px; border-radius: 20px; font-weight: 900;
         text-transform: uppercase; width: 100%; cursor: pointer;
         box-shadow: 0 0 25px rgba(80, 200, 120, 0.6);
     }
-
-    /* QR Code con Glow */
-    .qr-area {
-        border: 1px solid var(--smeraldo); border-radius: 12px;
-        padding: 8px; background: rgba(80, 200, 120, 0.03);
-        box-shadow: inset 0 0 10px rgba(80, 200, 120, 0.1);
-    }
-<body>
-
-<header style="display: flex; justify-content: space-between; align-items: center; padding: 40px 5% 20px 5%; max-width: 1200px; margin: 0 auto 40px auto; flex-wrap: nowrap;">
-    <div style="width: 30px; cursor: pointer; flex-shrink: 0;">
-        <div style="height: 1px; background: white; margin: 6px 0; width: 25px;"></div>
-        <div style="height: 1px; background: white; margin: 6px 0; width: 15px;"></div>
-        <div style="height: 1px; background: white; margin: 6px 0; width: 25px;"></div>
-    </div>
-
-    <div style="text-align: center; flex-grow: 1; min-width: 200px;">
-        <svg width="60" height="60" viewBox="0 0 100 100" style="margin-bottom: 15px;">
-            <circle cx="50" cy="50" r="40" stroke="#50C878" stroke-width="2.5" fill="none" />
-            <path d="M50 32C40 32 32 40 32 50C32 60 40 68 50 68C53.5 68 56.5 66.5 58.5 64.5V68L65 74.5" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <circle cx="50" cy="50" r="10" stroke="white" stroke-width="2.5" fill="none"/>
-        </svg>
-        <h1 style="font-weight: 100; letter-spacing: 6px; font-size: 1.1rem; text-transform: uppercase; color: white; margin: 0; white-space: nowrap; font-family: 'Inter', sans-serif;">MY QUICK TAG</h1>
-        <p style="color: #50C878; font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 400; margin-top: 8px; white-space: nowrap;">INSTANT DIGITAL IDENTITY</p>
-    </div>
-
-    <div style="width: 30px; text-align: right; flex-shrink: 0;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.2" style="opacity: 0.5;">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-        </svg>
-    </div>
+</style>
 </header>
 <div class="main-stage">
     <div class="iphone-frame">
