@@ -3,74 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Luxury Minimal</title>
+    <title>MyQuickTag | Premium Digital Tag</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --smeraldo: #50C878; --nero: #050505; }
-        body { margin: 0; background: var(--nero); color: white; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; }
-        
-        /* HEADER REFINED */
-        header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 30px 0; max-width: 400px; }
-        .logo-center { text-align: center; flex: 1; }
-        .title { font-weight: 100; letter-spacing: 8px; font-size: 1.2rem; margin: 5px 0; color: white; }
-        .slogan { color: var(--smeraldo); font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; }
-
-        /* IPHONE FRAME LUXURY */
-        .iphone { width: 300px; height: 580px; border: 12px solid #1a1a1a; border-radius: 50px; background: black; position: relative; margin-top: 20px; box-shadow: 0 0 60px rgba(80, 200, 120, 0.15); }
-        .screen { padding: 60px 20px; text-align: center; }
-        .tag-label { font-size: 0.5rem; letter-spacing: 4px; color: var(--smeraldo); text-transform: uppercase; margin-bottom: 40px; opacity: 0.7; }
-        #display-name { font-size: 1.8rem; font-weight: 100; margin-bottom: 50px; color: white; }
-        
-        /* MODULI SOCIAL & CV */
-        .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; opacity: 0.4; }
-        .social-box { border: 1px solid var(--smeraldo); padding: 8px; font-size: 0.5rem; color: var(--smeraldo); letter-spacing: 1px; }
-        .cv-box { border: 1px solid white; margin-top: 25px; padding: 15px; font-size: 0.7rem; letter-spacing: 2px; opacity: 0.3; }
-
-        /* INPUT AREA */
-        .input-container { margin-top: 40px; text-align: center; }
-        input { background: transparent; border: none; border-bottom: 1px solid #333; color: white; text-align: center; font-size: 1.1rem; padding: 15px; width: 280px; outline: none; font-weight: 100; }
-        .btn-check { background: var(--smeraldo); color: black; border: none; padding: 20px 60px; font-weight: 800; margin-top: 30px; letter-spacing: 3px; cursor: pointer; border-radius: 4px; }
+        :root {
+            --smeraldo: #50C878;
+            --smeraldo-glow: rgba(80, 200, 120, 0.3);
+            --nero-assoluto: #050505;
+            --grigio-soffuso: #666;
+            --bianco-luxury: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--nero-assoluto);
+            color: var(--bianco-luxury);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background: radial-gradient(circle at center, #0a1f14 0%, var(--nero-assoluto) 70%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header { padding: 30px 5%; max-width: 1200px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .logo-box { text-align: center; flex-grow: 1; }
+        .title { font-weight: 100; letter-spacing: 10px; font-size: 1.4rem; text-transform: uppercase; margin: 5px 0; }
+        .slogan-top { color: var(--smeraldo); font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; font-weight: 400; }
+        .menu-hamburger { width: 30px; cursor: pointer; }
+        .menu-hamburger span { display: block; height: 1px; background: var(--bianco-luxury); margin: 6px 0; transition: 0.3s; }
+        .menu-hamburger span:nth-child(2) { width: 18px; }
+        .user-icon { width: 30px; text-align: right; opacity: 0.7; }
+        .main-stage { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        @keyframes pulseRespiro {
+            0% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 20px var(--bianco-luxury); }
+            100% { transform: scale(1); opacity: 0.4; }
+        }
+        .trigger-pallino { width: 10px; height: 10px; background: var(--bianco-luxury); border-radius: 50%; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); z-index: 10; animation: pulseRespiro 4s infinite ease-in-out; }
+        .iphone-frame { position: relative; width: 320px; height: 650px; background: #000; border: 8px solid #1a1a1a; border-radius: 50px; box-shadow: 0 0 50px rgba(0,0,0,0.9); overflow: hidden; display: flex; flex-direction: column; }
+        .screen { padding: 20px; display: flex; flex-direction: column; align-items: center; height: 100%; }
+        .notch { width: 120px; height: 25px; background: #1a1a1a; border-radius: 0 0 15px 15px; margin-bottom: 30px; }
+        .avatar { width: 80px; height: 80px; background: #111; border-radius: 50%; margin-bottom: 15px; border: 1px solid #222; display: flex; align-items: center; justify-content: center; }
+        .input-box { width: 100%; background: #0a0a0a; border: 1px solid #222; border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-top: auto; }
+        input { background: transparent; border: none; color: white; outline: none; width: 100%; font-family: 'Inter'; font-size: 0.9rem; }
+        .btn-verify { width: 100%; background: var(--smeraldo); color: black; border: none; padding: 15px; border-radius: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
+        .btn-verify:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--smeraldo-glow); }
+        .social-placeholder { color: #333; font-size: 0.7rem; letter-spacing: 2px; margin: 20px 0; }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="padding-left:20px">☰</div>
-    <div class="logo-center">
-        <svg width="45" height="45" viewBox="0 0 100 100" fill="none">
-            <circle cx="50" cy="50" r="45" stroke="#50C878" stroke-width="3" />
-            <circle cx="50" cy="50" r="15" stroke="white" stroke-width="3" />
-            <path d="M65 65 L80 80" stroke="#50C878" stroke-width="3" stroke-linecap="round"/>
+    <div class="menu-hamburger"><span></span><span></span><span></span></div>
+    <div class="logo-box">
+        <svg width="40" height="40" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" stroke="#50C878" stroke-width="3" fill="none"/>
+            <circle cx="50" cy="50" r="15" stroke="white" stroke-width="3" fill="none"/>
         </svg>
         <div class="title">MY QUICK TAG</div>
-        <div class="slogan">Instant Digital Identity</div>
+        <div class="slogan-top">Instant Digital Identity</div>
     </div>
-    <div style="padding-right:20px">👤</div>
+    <div class="user-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
 </header>
 
-<div class="iphone">
-    <div class="screen">
-        <div class="tag-label">Premium Digital Tag</div>
-        <div id="display-name">@iltuonome</div>
-        <div class="social-grid">
-            <div class="social-box">INSTA</div><div class="social-box">TIKTOK</div><div class="social-box">LINKED</div>
-            <div class="social-box">X</div><div class="social-box">FB</div><div class="social-box">WEB</div>
+<div class="main-stage">
+    <div class="iphone-frame">
+        <div class="trigger-pallino"></div>
+        <div class="screen">
+            <div class="notch"></div>
+            <div class="avatar">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div id="display-name" style="font-size: 1.4rem; font-weight: 200; letter-spacing: 3px; margin-bottom: 5px;">@iltuonome</div>
+            <div style="color: var(--smeraldo); font-size: 0.6rem; letter-spacing: 3px; font-weight: 700;">PREMIUM DIGITAL TAG</div>
+            
+            <div class="social-placeholder">---- SOCIAL ----</div>
+            
+            <div id="cv-preview" style="width: 100%; height: 60px; background: rgba(255,255,255,0.02); border: 1px dashed #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #444; font-size: 0.6rem;">CURRICULUM VITAE PRE-SET</div>
+
+            <div class="input-box">
+                <span style="color: var(--smeraldo)">@</span>
+                <input type="text" id="tag-input" placeholder="digita il tuo nome unico..." autocomplete="off">
+            </div>
+            <button class="btn-verify" onclick="checkTag()">Verifica Disponibilità</button>
+            <p style="font-size: 0.5rem; color: #444; margin-top: 10px; letter-spacing: 1px;">SBLOCCA L'OFFERTA RISERVATA</p>
         </div>
-        <div class="cv-box">PROFESSIONAL CV</div>
     </div>
 </div>
 
-<div class="input-container">
-    <input type="text" id="tag-input" placeholder="Digita il tuo nome unico..." autocomplete="off">
-    <br>
-    <button class="btn-check">VERIFICA</button>
-</div>
+<footer style="padding: 20px; text-align: center; font-size: 0.6rem; color: #222; letter-spacing: 2px;">
+    PRIVACY & COOKIE POLICY | TERMS OF SERVICE
+</footer>
 
 <script>
     const input = document.getElementById('tag-input');
     const display = document.getElementById('display-name');
+
     input.addEventListener('input', (e) => {
-        display.innerText = e.target.value ? '@' + e.target.value.toLowerCase() : '@iltuonome';
+        let val = e.target.value.toLowerCase().replace(/\s/g, '');
+        display.innerText = val ? `@${val}` : '@iltuonome';
     });
+
+    async function checkTag() {
+        const val = input.value;
+        if(!val) return;
+        alert("Verifica in corso per: " + val + ". Benvenuto nel Lusso Digitale.");
+        // Qui collegheremo Airtable nel prossimo step
+    }
 </script>
 
 </body>
