@@ -83,8 +83,28 @@
         phone.classList.toggle('iphone-active');
     }
 </script>
+<div style="margin-top: 25px; margin-bottom: 25px; text-align: center;">
+    <p class="slogan-pulse" style="color: #ffffff; font-family: sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 2px; margin: 8px 0; text-transform: uppercase;">
+        Il mondo nel tuo nome
+    </p>
+    <p class="slogan-pulse" style="color: #ffffff; font-family: sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 2px; margin: 8px 0; text-transform: uppercase; animation-delay: 1.5s;">
+        Il tuo nome nel mondo
+    </p>
+</div>
+
+<style>
+    @keyframes sloganGlow {
+        0% { opacity: 0.3; text-shadow: 0 0 5px rgba(255,255,255,0.1); }
+        50% { opacity: 1; text-shadow: 0 0 15px rgba(80, 200, 120, 0.5); }
+        100% { opacity: 0.3; text-shadow: 0 0 5px rgba(255,255,255,0.1); }
+    }
+    .slogan-pulse {
+        animation: sloganGlow 3s infinite ease-in-out;
+    }
+</style>
 
     </div> </body>
 </html>
+
 
   
