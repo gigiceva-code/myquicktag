@@ -2,90 +2,74 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifica Tag | MyQuickTag</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit</title>
+
+<style>
+body {
+    background:#000;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    padding:40px;
+}
+textarea {
+    width:250px;
+    height:100px;
+}
+button {
+    padding:15px;
+    background:#50C878;
+    border:none;
+    border-radius:10px;
+}
+</style>
 </head>
-<body class="bg-[#f3f4f6] font-['Inter']">
 
-    <div class="max-w-lg mx-auto p-6">
-        <header class="flex justify-between items-center py-6">
-            <h1 class="text-xl font-800">Modifica <span class="text-[#00C896]" id="editTitle">@nome</span></h1>
-            <a href="#" id="viewBtn" target="_blank" class="text-sm font-bold text-gray-500">Vedi Profilo</a>
-        </header>
+<body>
 
-        <div class="bg-white rounded-3xl p-6 shadow-sm space-y-6">
-            <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">La tua Bio</label>
-                <textarea id="bioInput" rows="3" class="w-full border-2 border-gray-100 rounded-xl p-4 focus:border-[#00C896] outline-none" placeholder="Racconta chi sei..."></textarea>
-            </div>
+<h2 id="nome"></h2>
 
-            <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Link Social (Instagram)</label>
-                <input type="text" id="socialInput" class="w-full border-2 border-gray-100 rounded-xl p-4 focus:border-[#00C896] outline-none" placeholder="https://instagram.com/tuonome">
-            </div>
+<textarea id="bio" placeholder="Scrivi la tua bio"></textarea>
+<br><br>
+<button onclick="salva()">Salva</button>
 
-            <button onclick="saveChanges()" id="saveBtn" class="w-full bg-[#00C896] text-white p-4 rounded-xl font-bold shadow-lg shadow-[#00C896]/20 transition-transform active:scale-95">
-                SALVA MODIFICHE
-            </button>
-        </div>
-    </div>
+<script>
+const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
+const BASE_ID = "app4eQDzqixPDbQTd";
+const TABLE_NAME = "Table 1";
 
-    <script>
-        // 🟡 3. PARAMETRO URL: ?nome=
-        const params = new URLSearchParams(window.location.search);
-        const username = params.get("nome") || "utente";
+const params = new URLSearchParams(window.location.search);
+const username = params.get("nome");
 
-        document.getElementById("editTitle").innerText = "@" + username;
-        document.getElementById("viewBtn").href = `profile.html?nome=${username}`;
+document.getElementById("nome").innerText = "@" + username;
 
-        // 🟡 6. SICUREZZA: TODO: spostare su backend/proxy
-        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
-        const BASE_ID = 'appLqZ8j4W7kP3...';
-        const TABLE_NAME = 'Leads';
+async function salva(){
+    const bio = document.getElementById("bio").value;
 
-        async function saveChanges() {
-            const btn = document.getElementById("saveBtn");
-            const bio = document.getElementById("bioInput").value;
-            
-            btn.innerText = "SALVATAGGIO...";
-            btn.disabled = true;
+    const res = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`, {
+        headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+    });
 
-            // Logica: Prima cerchiamo il record per avere l'ID, poi facciamo PATCH
-            try {
-                const searchUrl = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`;
-                const searchRes = await fetch(searchUrl, { headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` } });
-                const searchData = await searchRes.json();
+    const data = await res.json();
+    const id = data.records[0].id;
 
-                if (searchData.records.length > 0) {
-                    const recordId = searchData.records[0].id;
-                    
-                    const updateRes = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${recordId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            "fields": {
-                                "Bio": bio
-                            }
-                        })
-                    });
+    await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${id}`, {
+        method: "PATCH",
+        headers: {
+            Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            fields: { Bio: bio }
+        })
+    });
 
-                    if (updateRes.ok) {
-                        alert("Modifiche salvate con successo!");
-                    }
-                }
-            } catch (e) {
-                alert("Errore nel salvataggio.");
-            } finally {
-                btn.innerText = "SALVA MODIFICHE";
-                btn.disabled = false;
-            }
-        }
-    </script>
+    alert("Salvato!");
+    window.location.href = "profile.html?nome=" + username;
+}
+</script>
+
 </body>
 </html>
