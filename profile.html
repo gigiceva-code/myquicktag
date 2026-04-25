@@ -2,65 +2,50 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profilo | MyQuickTag</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profilo</title>
+
+<style>
+body {
+    background:#000;
+    color:white;
+    text-align:center;
+    font-family:Arial;
+    padding:40px;
+}
+</style>
 </head>
-<body class="bg-gray-50 font-['Inter'] flex justify-center items-start min-h-screen">
 
-    <div class="max-w-md w-full p-6 text-center">
-        <div class="mt-10">
-            <div class="w-24 h-24 bg-[#00C896] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold" id="avatarLetter">
-                -
-            </div>
-            <h1 class="text-2xl font-800 text-gray-900" id="profileName">@nome</h1>
-            <p class="text-gray-500 mt-2" id="profileBio">Caricamento profilo...</p>
-        </div>
+<body>
 
-        <div class="mt-8 space-y-4" id="linksContainer">
-            </div>
+<h1 id="nome"></h1>
+<p id="bio"></p>
 
-        <div class="mt-20 text-xs text-gray-400">
-            Creato con <span class="font-bold text-[#00C896]">MyQuickTag</span>
-        </div>
-    </div>
+<script>
+const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
+const BASE_ID = "app4eQDzqixPDbQTd";
+const TABLE_NAME = "Table 1";
 
-    <script>
-        // 🟡 3. PARAMETRO URL: ?nome=
-        const params = new URLSearchParams(window.location.search);
-        const username = params.get("nome") || "utente";
+const params = new URLSearchParams(window.location.search);
+const username = params.get("nome");
 
-        // 🟡 6. SICUREZZA: TODO: spostare su backend/proxy
-        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d5321...'; 
-        const BASE_ID = 'appLqZ8j4W7kP3...';
-        const TABLE_NAME = 'Leads';
+document.getElementById("nome").innerText = "@" + username;
 
-        async function fetchProfile() {
-            document.getElementById("profileName").innerText = "@" + username;
-            document.getElementById("avatarLetter").innerText = username.charAt(0).toUpperCase();
+async function load(){
+    const res = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`, {
+        headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+    });
 
-            // 🟡 1. FETCH AIRTABLE: URL Corretto
-            const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`;
+    const data = await res.json();
 
-            try {
-                const response = await fetch(url, {
-                    headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` }
-                });
-                const data = await response.json();
+    if(data.records.length > 0){
+        document.getElementById("bio").innerText = data.records[0].fields.Bio || "";
+    }
+}
 
-                if (data.records.length > 0) {
-                    const fields = data.records[0].fields;
-                    document.getElementById("profileBio").innerText = fields.Bio || "Nessuna bio inserita.";
-                    // Qui potresti aggiungere la logica per mostrare i link social se presenti
-                }
-            } catch (error) {
-                console.error("Errore caricamento profilo:", error);
-            }
-        }
+load();
+</script>
 
-        fetchProfile();
-    </script>
 </body>
 </html>
