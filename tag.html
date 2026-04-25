@@ -1,170 +1,78 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag | Instant Digital Identity</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; }
-        .text-smeraldo { color: #00C896; }
-        .bg-smeraldo { background-color: #00C896; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attiva Tag</title>
 
-        /* Logo Q con @ fusa */
-        .logo-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 2rem; }
-        .q-logo { font-size: 3rem; font-weight: 900; color: #00C896; position: relative; line-height: 1; }
-        .q-logo::after { content: '@'; position: absolute; font-size: 1.2rem; top: 50%; left: 50%; transform: translate(-50%, -40%); color: #00C896; }
-
-        /* Animazione Respiro Slogan */
-        @keyframes luxuryPulse {
-            0%, 100% { opacity: 1; filter: brightness(100%); }
-            50% { opacity: 0.3; filter: brightness(60%); }
-        }
-        .animate-respiro { animation: luxuryPulse 5s infinite ease-in-out; }
-
-        /* iPhone e Animazione Intermittenza */
-        .iphone-frame {
-            position: relative; width: 220px; height: 440px; margin: 0 auto;
-            border: 10px solid #1a1a1a; border-radius: 38px; background: #000;
-            box-shadow: 0 0 35px rgba(0, 200, 150, 0.12); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .iphone-active { transform: scale(1.05); box-shadow: 0 0 50px rgba(0, 200, 150, 0.4); border-color: #222; }
-        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 20px; background: #1a1a1a; border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; }
-
-        /* Freccia Pulsante Bianca */
-        @keyframes arrowBounce {
-            0%, 100% { transform: translateY(0); opacity: 1; }
-            50% { transform: translateY(10px); opacity: 0.3; }
-        }
-        .arrow-trigger { cursor: pointer; animation: arrowBounce 1.5s infinite; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 15px solid white; margin: 20px auto; width: 0; }
-
-        /* Tasto Verifica Pulsante */
-        @keyframes buttonGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(0, 200, 150, 0.2); transform: scale(1); }
-            50% { box-shadow: 0 0 30px rgba(0, 200, 150, 0.5); transform: scale(1.02); }
-        }
-        .btn-pulse { animation: buttonGlow 2s infinite ease-in-out; }
-
-        /* Tasto Reset Circolare */
-        .btn-reset { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; border-radius: 50%; border: 1px solid #222; background: #000; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; z-index: 50; }
-        .btn-reset:hover { border-color: #00C896; transform: rotate(180deg); }
-
-        .hidden-content { opacity: 0; transition: opacity 1s ease-in; }
-        .visible { opacity: 1 !important; }
-    </style>
+<style>
+body {
+    background: #000;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    padding: 40px;
+}
+input {
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    width: 250px;
+}
+button {
+    padding: 15px;
+    background: #50C878;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+</style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
 
-    <header class="logo-container">
-        <div class="q-logo">Q</div>
-        <h1 class="text-3xl font-900 tracking-tighter uppercase italic">
-            My<span class="text-smeraldo">Quick</span>Tag
-        </h1>
-    </header>
+<body>
 
-    <div id="hero-phone" class="iphone-frame mb-4">
-        <div class="notch"></div>
-        <div id="phone-content" class="p-6 flex flex-col items-center gap-4 hidden-content">
-            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-smeraldo to-green-900 mt-8"></div>
-            <div class="text-smeraldo text-[10px] font-bold tracking-widest uppercase">@iltuonome</div>
-            <div class="w-full h-8 bg-[#111] rounded-lg border border-[#222]"></div>
-            <div class="w-full h-8 bg-[#111] rounded-lg border border-[#222]"></div>
-            <div class="w-full h-8 bg-[#111] rounded-lg border border-[#222]"></div>
-        </div>
-    </div>
+<h2 id="nome"></h2>
+<p>3 mesi gratis · poi 2€/anno</p>
 
-    <div class="arrow-trigger" onclick="activatePhone()"></div>
+<input id="email" placeholder="Inserisci email">
+<br>
+<button onclick="salva()">Conferma</button>
 
-    <div class="mb-10">
-        <h2 class="text-2xl md:text-3xl font-900 uppercase leading-tight animate-respiro">
-            Un mondo dentro <br> il tuo nome
-        </h2>
-        <h3 class="text-xl md:text-2xl font-700 uppercase text-gray-500 animate-respiro mt-1" style="animation-delay: 2.5s;">
-            Il tuo nome nel mondo
-        </h3>
-        <p class="text-smeraldo font-900 tracking-[0.4em] text-[11px] uppercase mt-8">
-            Instant Digital Identity
-        </p>
-    </div>
+<script>
+const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
+const BASE_ID = "app4eQDzqixPDbQTd";
+const TABLE_NAME = "Table 1";
 
-    <div class="w-full max-w-sm">
-        <div class="flex items-center bg-[#000] rounded-full border-2 border-[#161616] p-1 focus-within:border-smeraldo transition-all duration-500 mb-4">
-            <span class="pl-6 text-white font-bold text-2xl">@</span>
-            <input type="text" id="tagInput" placeholder="ILTUONOME" 
-                class="w-full py-4 px-2 text-lg font-bold outline-none bg-transparent text-white uppercase placeholder:text-gray-800">
-        </div>
+const params = new URLSearchParams(window.location.search);
+const username = params.get("nome");
 
-        <button onclick="checkTag()" id="mainBtn" 
-            class="w-full bg-[#111] text-gray-600 py-5 rounded-full font-900 text-lg transition-all uppercase tracking-widest cursor-not-allowed">
-            Attendere... (10s)
-        </button>
-        
-        <p class="text-[10px] text-gray-500 mt-6 uppercase tracking-widest font-bold">
-            Verifica il tuo nome e scopri le offerte esclusive che ti abbiamo riservato
-        </p>
-    </div>
+document.getElementById("nome").innerText = "@" + username;
 
-    <div class="btn-reset" onclick="resetAnimation()">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00C896" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-    </div>
+async function salva(){
+    const email = document.getElementById("email").value;
+    if(!email.includes("@")) return alert("Email non valida");
 
-    <script>
-        const btn = document.getElementById('mainBtn');
-        const phone = document.getElementById('hero-phone');
-        const phoneContent = document.getElementById('phone-content');
-
-        // CREDENZIALI
-        const AIRTABLE_TOKEN = 'pat7XmPCH9o7vNf1i.7f89d532168393539827059727409249765239103984732103'; 
-        const BASE_ID = 'appLqZ8j4W7kP3G9W';
-        const TABLE_NAME = 'Table 1';
-
-        // Sblocco tasto dopo 10s
-        setTimeout(() => {
-            btn.innerText = "VERIFICA";
-            btn.classList.remove('bg-[#111]', 'text-gray-600', 'cursor-not-allowed');
-            btn.classList.add('bg-smeraldo', 'text-black', 'btn-pulse');
-            btn.style.cursor = "pointer";
-        }, 10000);
-
-        function activatePhone() {
-            phone.classList.add('iphone-active');
-            phoneContent.classList.add('visible');
-        }
-
-        function resetAnimation() {
-            phone.classList.remove('iphone-active');
-            phoneContent.classList.remove('visible');
-            document.querySelectorAll('.animate-respiro').forEach(el => {
-                el.style.animation = 'none';
-                el.offsetHeight;
-                el.style.animation = null;
-            });
-        }
-
-        async function checkTag() {
-            if(btn.innerText.includes("Attendere")) return;
-            const input = document.getElementById('tagInput').value.trim().toLowerCase();
-            if(!input) return;
-
-            btn.innerText = "CONTROLLO...";
-            const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${input}'`;
-
-            try {
-                const response = await fetch(url, { headers: { "Authorization": `Bearer ${AIRTABLE_TOKEN}` } });
-                const data = await response.json();
-                if (data.records && data.records.length === 0) {
-                    window.location.href = `tag.html?nome=${encodeURIComponent(input)}`;
-                } else {
-                    alert("Tag già occupata!");
-                    btn.innerText = "VERIFICA";
-                }
-            } catch (e) {
-                alert("Errore database.");
-                btn.innerText = "VERIFICA";
+    await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            fields: {
+                Tag: "@" + username,
+                Email: email,
+                Stato: "Attivo",
+                Data: new Date().toISOString()
             }
-        }
-    </script>
+        })
+    });
+
+    alert("Tag creata!");
+    window.location.href = "edit.html?nome=" + username;
+}
+</script>
+
 </body>
 </html>
-
