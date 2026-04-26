@@ -86,9 +86,10 @@
     
     /* Ingrandimento controllato: raddoppia senza distruggere il layout */
     .iphone-active { 
-        transform: scale(1.8) translateY(10px) !important; 
-        box-shadow: 0 0 50px rgba(80, 200, 120, 0.4) !important;
-    }
+    transform: scale(1.6) translateY(30px) !important; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8) !important; /* Ombra nera, non verde */
+    z-index: 100 !important;
+}
 </style>
 <script>
     function toggleIphone() {
