@@ -72,11 +72,7 @@
 </div>
 
 <style>
-    @keyframes pulse {
-        0% { transform: scale(0.95); opacity: 0.5; }
-        50% { transform: scale(1.05); opacity: 0.8; }
-        100% { transform: scale(0.95); opacity: 0.5; }
-    }
+   
     @keyframes sloganGlow {
         0% { opacity: 0.4; text-shadow: 0 0 5px rgba(255,255,255,0.1); }
         50% { opacity: 1; text-shadow: 0 0 15px rgba(80, 200, 120, 0.7); color: #50C878; }
@@ -84,12 +80,12 @@
     }
     .slogan-pulse { animation: sloganGlow 4s infinite ease-in-out; }
     
-    /* Ingrandimento controllato: raddoppia senza distruggere il layout */
+    /* Ingrandimento controllato e sobrio */
     .iphone-active { 
-    transform: scale(1.6) translateY(30px) !important; 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8) !important; /* Ombra nera, non verde */
-    z-index: 100 !important;
-}
+        transform: scale(1.6) translateY(60px) !important; 
+        box-shadow: 0 40px 100px rgba(0,0,0,0.9) !important; 
+        z-index: 100 !important;
+    }
 </style>
 <script>
     function toggleIphone() {
