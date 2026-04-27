@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -5,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>MyQuickTag - Istant Digital Identity</title>
     <style>
-        /* RESET LUXURY */
+        /* RESET & BASE */
         body {
             background-color: #000000;
             margin: 0;
@@ -16,8 +17,8 @@
             min-height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: #ffffff;
-            overflow: hidden; /* Blocca lo scroll per questa fase */
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden; /* Evita oscillazioni laterali */
         }
 
         .container {
@@ -31,18 +32,89 @@
             box-sizing: border-box;
         }
 
-        /* ANIMAZIONE IPHONE: ESPANSIONE CALIBRATA E SOLLEVATA */
-        /* Scala ridotta a 1.90 e translateY negativo (-15px) per staccarlo dal fondo Android */
+        /* --- BLOCCO 1: BLINDATO --- */
         .iphone-active { 
             transform: scale(1.90) translateY(-15px) !important; 
             box-shadow: 0 60px 150px rgba(0,0,0,0.98) !important; 
             z-index: 100 !important;
         }
+
+        #iphone-mockup {
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            will-change: transform;
+        }
+
+        /* --- BLOCCO 2: LUXURY & OPERATIVO --- */
+        .section-2 {
+            margin-top: 80px; /* Spazio per lo scroll guidato */
+            padding-bottom: 100px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Input Premium */
+        .input-group {
+            width: 100%;
+            max-width: 320px;
+            margin-top: 40px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 18px;
+            color: #50C878;
+            font-size: 18px;
+            text-align: center;
+            outline: none;
+            transition: border 0.3s;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            border-color: #50C878;
+        }
+
+        /* Bottone Verde Smeraldo */
+        .btn-verifica {
+            width: 100%;
+            max-width: 320px;
+            background-color: #50C878;
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 800;
+            margin-top: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .btn-verifica:active {
+            transform: scale(0.98);
+            background-color: #45b36b;
+        }
+
+        .slogan-b2 {
+            font-size: 18px;
+            font-weight: 300;
+            line-height: 1.4;
+            max-width: 280px;
+            margin-top: 25px;
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        
         <div style="position: relative; width: 80px; height: 80px; margin-top: 30px; margin-bottom: 10px;">
             <div style="width: 100%; height: 100%; border: 8px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
             <div style="position: absolute; width: 8px; height: 25px; background: #50C878; bottom: -2px; right: -2px; transform: rotate(-45deg); border-radius: 4px;"></div>
@@ -50,25 +122,35 @@
         </div>
 
         <h1 style="font-size: 32px; font-weight: 900; letter-spacing: 1px; margin: 0; text-transform: uppercase; line-height: 1;">MYQUICKTAG</h1>
-        
-        <p style="color: #50C878; font-size: 13px; font-weight: 600; letter-spacing: 3px; margin-top: 6px; margin-bottom: 20px; text-transform: uppercase;">
-            Istant Digital Identity
-        </p>
+        <p style="color: #50C878; font-size: 13px; font-weight: 600; letter-spacing: 3px; margin-top: 6px; margin-bottom: 20px; text-transform: uppercase;">Istant Digital Identity</p>
 
         <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center;">
-            
-            <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">
-                Tap to Simulate
-            </span>
-            
-            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); z-index: 10; display: flex; flex-direction: column; align-items: center; will-change: transform;">
+            <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">Tap to Simulate</span>
+            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center;">
                 <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px;"></div>
                 <div style="margin-top: 50px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
                      <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="container section-2">
+        
+        <div style="position: relative; width: 40px; height: 40px;">
+            <div style="width: 100%; height: 100%; border: 4px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
+            <div style="position: absolute; width: 4px; height: 12px; background: #50C878; bottom: -1px; right: -1px; transform: rotate(-45deg); border-radius: 2px;"></div>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-size: 18px; font-weight: bold;">@</div>
+        </div>
+
+        <p class="slogan-b2">
+            Un'identità digitale che mette il tuo nome <b style="color:#fff;">al centro del mondo</b>.
+        </p>
+
+        <div class="input-group">
+            <input type="text" placeholder="@tuonome" spellcheck="false">
+            <button class="btn-verifica">Verifica</button>
+        </div>
     </div>
 
     <script>
