@@ -90,39 +90,40 @@
             <span style="font-size: 10px; font-weight: 900; letter-spacing: 4px; color: rgba(255,255,255,0.7); text-transform: uppercase;">MYQUICKTAG</span>
         </div>
 
-        <h2 style="font-size: 17px; font-weight: 300; color: #50C878; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px;">
-            Premium Digital Tag
-        </h2>
+        <h2 style="font-size: 18px; font-weight: 600; color: #50C878; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; text-shadow: 0 0 10px rgba(80, 200, 120, 0.2);">
+    Premium Digital Tag
+</h2>
 
-        <div style="margin-bottom: 50px;">
-            <p style="font-size: 15px; color: #777; letter-spacing: 1px; margin: 8px 0; font-weight: 300;">il mondo nel tuo nome</p>
-            <p style="font-size: 15px; color: #777; letter-spacing: 1px; margin: 8px 0; font-weight: 300;">il tuo nome nel mondo</p>
-            <div style="width: 20px; height: 1px; background: #333; margin: 25px auto;"></div>
-            <p style="font-size: 19px; font-weight: 300; line-height: 1.5; color: #fff; max-width: 320px; margin: 0 auto; text-transform: uppercase; letter-spacing: 1.5px;">
-                Un'identità digitale che mette il tuo nome <br>
-                <span style="font-weight: 900;">al centro del mondo</span>
-            </p>
-        </div>
-
-        <div class="input-group" style="width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center;">
-            <div style="margin-bottom: 12px; font-size: 9px; color: #50C878; letter-spacing: 3px; text-transform: uppercase; opacity: 0.6;">
-                Claim yours
-            </div>
-            
-         <div style="position: relative; width: 100%; display: flex; align-items: center; justify-content: center; border-bottom: 1.5px solid #333; transition: border-color 0.4s; padding-left: 15px;" id="input-line">
-    <span id="at-symbol" style="color: #444; font-size: 26px; font-weight: bold; padding-bottom: 8px; margin-right: 5px; transition: color 0.3s ease;">@</span>
+<div style="margin-bottom: 50px;">
+    <p style="font-size: 15px; color: #aaa; letter-spacing: 1px; margin: 8px 0; font-weight: 400;">il mondo nel tuo nome</p>
+    <p style="font-size: 15px; color: #aaa; letter-spacing: 1px; margin: 8px 0; font-weight: 400;">il tuo nome nel mondo</p>
+    <div style="width: 25px; height: 1px; background: #444; margin: 25px auto;"></div>
     
-    <input type="text" placeholder="tuonome" spellcheck="false" 
-           oninput="document.getElementById('at-symbol').style.color = this.value.length > 0 ? '#ffffff' : '#444';"
-           onfocus="document.getElementById('input-line').style.borderColor='#50C878'"
-           onblur="document.getElementById('input-line').style.borderColor='#333'"
-           style="width: auto; background: transparent; border: none; padding: 8px 4px; color: #ffffff; font-size: 26px; font-weight: 400; outline: none; flex-grow: 0; caret-color: #ffffff;">
-</div> 
-            
-            <button class="btn-verifica" style="width: 100%; margin-top: 45px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 30px rgba(80, 200, 120, 0.2);">
-                VERIFICA
-            </button>
-        </div>
+    <p style="font-size: 19px; font-weight: 400; line-height: 1.5; color: #ffffff; max-width: 320px; margin: 0 auto; text-transform: uppercase; letter-spacing: 1.5px;">
+        Un'identità digitale che mette il tuo nome <br>
+        <span style="font-weight: 900; color: #ffffff;">al centro del mondo</span>
+    </p>
+</div>
+
+<div class="input-group" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+    <div style="margin-bottom: 12px; font-size: 10px; color: #50C878; letter-spacing: 3px; text-transform: uppercase; font-weight: 600;">
+        Claim yours
+    </div>
+    
+    <div style="display: inline-flex; align-items: center; border-bottom: 1.5px solid #333; transition: border-color 0.4s; min-width: 200px; justify-content: center;" id="input-line">
+        <span id="at-symbol" style="color: #444; font-size: 26px; font-weight: bold; padding-bottom: 8px; transition: color 0.3s ease;">@</span>
+        <input type="text" placeholder="tuonome" spellcheck="false" 
+               oninput="document.getElementById('at-symbol').style.color = this.value.length > 0 ? '#ffffff' : '#444';"
+               onfocus="document.getElementById('input-line').style.borderColor='#50C878'"
+               onblur="document.getElementById('input-line').style.borderColor='#333'"
+               style="width: 160px; background: transparent; border: none; padding: 8px 10px; color: #ffffff; font-size: 26px; font-weight: 400; outline: none; caret-color: #ffffff; text-align: left;">
+    </div>
+    
+    <button class="btn-verifica" style="width: 280px; margin-top: 45px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;">
+        VERIFICA
+    </button>
+</div>
+
     </div>  
    
     <script>
