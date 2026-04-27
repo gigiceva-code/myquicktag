@@ -2,7 +2,8 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> <title>MyQuickTag - Istant Digital Identity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MyQuickTag - Istant Digital Identity</title>
     <style>
         /* RESET LUXURY */
         body {
@@ -13,29 +14,28 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Font nativi premium */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: #ffffff;
-            overflow-x: hidden;
+            overflow: hidden; /* Blocca lo scroll per questa fase */
             -webkit-font-smoothing: antialiased;
         }
 
         .container {
             width: 100%;
-            max-width: 600px; /* Compattezza mobile */
+            max-width: 600px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 20px; /* Aria laterale */
+            padding: 20px;
             box-sizing: border-box;
         }
 
-        /* ANIMAZIONE IPHONE: ESPANSIONE CALIBRATA */
-        /* Abbiamo aumentato la scala (da 1.6 a 1.95) e ridotto la traslazione (translateY) */
-        /* per farlo espandere di più restando centrato, quasi a toccare i bordi. */
+        /* ANIMAZIONE IPHONE: ESPANSIONE CALIBRATA E SOLLEVATA */
+        /* Scala ridotta a 1.90 e translateY negativo (-15px) per staccarlo dal fondo Android */
         .iphone-active { 
-            transform: scale(1.95) translateY(5px) !important; 
-            box-shadow: 0 50px 120px rgba(0,0,0,0.95) !important; 
+            transform: scale(1.90) translateY(-15px) !important; 
+            box-shadow: 0 60px 150px rgba(0,0,0,0.98) !important; 
             z-index: 100 !important;
         }
     </style>
@@ -55,21 +55,23 @@
             Istant Digital Identity
         </p>
 
-        <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 480px; width: 100%; justify-content: center;">
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center;">
             
             <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">
                 Tap to Simulate
             </span>
             
-            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 130px; height: 260px; background: #1a1a1a; border: 3px solid #333; border-radius: 26px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); cursor: pointer; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); /* Transizione più fluida e lenta */ z-index: 10; display: flex; flex-direction: column; align-items: center; will-change: transform;">
-                <div style="width: 40px; height: 12px; background: #000; border-radius: 6px; margin-top: 8px;"></div>
-                <div style="margin-top: 45px; width: 55px; height: 55px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
-                     <span style="color: #50C878; font-size: 22px; font-weight: bold;">@</span>
+            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); z-index: 10; display: flex; flex-direction: column; align-items: center; will-change: transform;">
+                <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px;"></div>
+                <div style="margin-top: 50px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
+                     <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
                 </div>
             </div>
         </div>
 
-    </div> <script>
+    </div>
+
+    <script>
         function toggleIphone() {
             const phone = document.getElementById('iphone-mockup');
             phone.classList.toggle('iphone-active');
