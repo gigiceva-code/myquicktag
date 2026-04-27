@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> <title>MyQuickTag - Istant Digital Identity</title>
     <style>
+        /* RESET LUXURY */
         body {
             background-color: #000000;
             margin: 0;
@@ -14,88 +13,63 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Font nativi premium */
             color: #ffffff;
-            padding-top: 60px;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 600px; /* Compattezza mobile */
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
+            padding: 20px; /* Aria laterale */
+            box-sizing: border-box;
         }
 
-        @keyframes sloganGlow {
-            0% { opacity: 0.2; text-shadow: 0 0 0px rgba(255,255,255,0); }
-            50% { opacity: 1; text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
-            100% { opacity: 0.2; text-shadow: 0 0 0px rgba(255,255,255,0); }
-        }
-
-        .slogan-pulse { 
-            animation: sloganGlow 5s infinite ease-in-out; 
-            color: #ffffff !important; 
-            text-align: center;
-        }
-        
+        /* ANIMAZIONE IPHONE: ESPANSIONE CALIBRATA */
+        /* Abbiamo aumentato la scala (da 1.6 a 1.95) e ridotto la traslazione (translateY) */
+        /* per farlo espandere di più restando centrato, quasi a toccare i bordi. */
         .iphone-active { 
-            transform: scale(1.8) translateY(50px) !important; 
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9) !important; 
+            transform: scale(1.95) translateY(5px) !important; 
+            box-shadow: 0 50px 120px rgba(0,0,0,0.95) !important; 
             z-index: 100 !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-    <div style="position: relative; width: 80px; height: 80px; margin-bottom: 15px;">
-        <div style="width: 100%; height: 100%; border: 8px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
-        <div style="position: absolute; width: 8px; height: 25px; background: #50C878; bottom: -2px; right: -2px; transform: rotate(-45deg); border-radius: 4px;"></div>
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-size: 40px; font-weight: bold;">@</div>
-    </div>
-
-    <h1 style="font-size: 32px; font-weight: 900; letter-spacing: 1px; margin: 0; text-transform: uppercase;">MYQUICKTAG</h1>
-    <p style="color: #50C878; font-size: 11px; font-weight: 600; letter-spacing: 3px; margin-top: 5px; text-transform: uppercase;">PREMIUM DIGITAL TAG</p>
-
-    <div style="margin: 50px 0; position: relative; display: flex; flex-direction: column; align-items: center; min-height: 420px;">
-        <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; opacity: 0.8;">Tap to Simulate</span>
         
-        <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); cursor: pointer; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 10; display: flex; flex-direction: column; align-items: center;">
-            <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px;"></div>
-            <div style="margin-top: 55px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
-                 <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
+        <div style="position: relative; width: 80px; height: 80px; margin-top: 30px; margin-bottom: 10px;">
+            <div style="width: 100%; height: 100%; border: 8px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
+            <div style="position: absolute; width: 8px; height: 25px; background: #50C878; bottom: -2px; right: -2px; transform: rotate(-45deg); border-radius: 4px;"></div>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-size: 40px; font-weight: bold;">@</div>
+        </div>
+
+        <h1 style="font-size: 32px; font-weight: 900; letter-spacing: 1px; margin: 0; text-transform: uppercase; line-height: 1;">MYQUICKTAG</h1>
+        
+        <p style="color: #50C878; font-size: 13px; font-weight: 600; letter-spacing: 3px; margin-top: 6px; margin-bottom: 20px; text-transform: uppercase;">
+            Istant Digital Identity
+        </p>
+
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 480px; width: 100%; justify-content: center;">
+            
+            <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">
+                Tap to Simulate
+            </span>
+            
+            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 130px; height: 260px; background: #1a1a1a; border: 3px solid #333; border-radius: 26px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); cursor: pointer; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); /* Transizione più fluida e lenta */ z-index: 10; display: flex; flex-direction: column; align-items: center; will-change: transform;">
+                <div style="width: 40px; height: 12px; background: #000; border-radius: 6px; margin-top: 8px;"></div>
+                <div style="margin-top: 45px; width: 55px; height: 55px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
+                     <span style="color: #50C878; font-size: 22px; font-weight: bold;">@</span>
+                </div>
             </div>
         </div>
-    </div>
 
-        <div id="blocco-2" style="margin-top: 100px; padding-bottom: 120px; display: flex; flex-direction: column; align-items: center; width: 100%;">
-            <div style="display: flex; align-items: center; gap: 10px; opacity: 0.4; margin-bottom: 50px;">
-                <div style="position: relative; width: 25px; height: 25px;">
-                    <div style="width: 100%; height: 100%; border: 2px solid #50C878; border-radius: 50%;"></div>
-                    <div style="position: absolute; width: 2px; height: 8px; background: #50C878; bottom: 0; right: 0; transform: rotate(-45deg);"></div>
-                </div>
-                <span style="font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">MyQuickTag</span>
-            </div>
-
-            <div style="text-align: center; margin-bottom: 50px;">
-                <p class="slogan-pulse" style="font-size: 18px; font-weight: 700; letter-spacing: 2px; margin: 10px 0; text-transform: uppercase;">Il mondo nel tuo nome</p>
-                <p class="slogan-pulse" style="font-size: 18px; font-weight: 700; letter-spacing: 2px; margin: 10px 0; text-transform: uppercase;">Il tuo nome nel mondo</p>
-            </div>
-
-            <div style="width: 85%; max-width: 320px;">
-                <div style="position: relative; margin-bottom: 20px;">
-                    <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #50C878; font-weight: bold; font-size: 18px;">@</span>
-                    <input type="text" placeholder="tuonome" style="width: 100%; background: #111; border: 1px solid #333; border-radius: 12px; padding: 15px 15px 15px 40px; color: #fff; font-size: 16px; outline: none; box-sizing: border-box;">
-                </div>
-                <button style="width: 100%; background: #50C878; color: #000; border: none; border-radius: 12px; padding: 18px; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;">
-                    Verifica Disponibilità
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
+    </div> <script>
         function toggleIphone() {
             const phone = document.getElementById('iphone-mockup');
             phone.classList.toggle('iphone-active');
@@ -103,5 +77,3 @@
     </script>
 </body>
 </html>
-
-  
