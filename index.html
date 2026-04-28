@@ -96,12 +96,12 @@
         <div id="claim-section" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 320px; margin: 0 auto;">
     <div style="display: inline-flex; align-items: center; justify-content: center; position: relative; width: 100%;">
         <span id="at-symbol" style="color: rgba(255, 255, 255, 0.2); font-size: 26px; font-weight: bold; transition: color 0.3s ease;">@</span>
-        <input type="text" placeholder="tuonome" 
-               onfocus="handleActivation(true)" 
-               onblur="if(this.value=='') handleActivation(false)"
-               oninput="adjustInputWidth(this)"
-               style="min-width: 140px; width: auto; background: transparent; border: none; padding: 0 0 0 4px; color: #ffffff; font-size: 26px; outline: none; text-align: left;">
-    </div>
+       : auto; <input type="text" placeholder="tuonome" 
+       onfocus="handleActivation(true)" 
+       onblur="handleActivation(false)"
+       oninput="adjustInputWidth(this)"
+       style="width: 140px; max-width: 240px; background: transparent; border: none; padding: 0 0 0 4px; color: #ffffff; font-size: 26px; outline: none; text-align: left; transition: width 0.2s ease;">
+
     <div id="input-line-container" style="width: 40px; height: 1.5px; background: rgba(255, 255, 255, 0.2); margin-top: 8px; transition: all 0.5s ease;"></div>
 </div>
  
@@ -151,7 +151,7 @@
     </div>
 
     <script>
-    function toggleIphone() {
+function toggleIphone() {
     const phone = document.getElementById('iphone-mockup');
     phone.classList.toggle('iphone-active');
 }
@@ -162,22 +162,25 @@ function handleActivation(active) {
     if (active) {
         at.style.color = "#ffffff";
         line.style.width = "100%";
+        line.style.maxWidth = "280px";
         line.style.background = "#50C878";
     } else {
-        at.style.color = "rgba(255, 255, 255, 0.2)";
-        line.style.width = "40px";
-        line.style.background = "rgba(255, 255, 255, 0.2)";
+        const input = document.querySelector('#claim-section input');
+        if (input.value === '') {
+            at.style.color = "rgba(255, 255, 255, 0.2)";
+            line.style.width = "40px";
+            line.style.background = "rgba(255, 255, 255, 0.2)";
+        }
     }
 }
 
 function adjustInputWidth(el) {
-    // Questa riga fa sì che l'input si allarghi mentre scrivi
-    el.style.width = (el.value.length + 1) + "ch";
+    // Calcola la larghezza in base ai caratteri
+    el.style.width = (el.value.length > 0) ? (el.value.length + 1) + "ch" : "140px";
     handleActivation(true);
 }
+</script>
 
-}
-
-    </script>
+   
 </body>
 </html>
