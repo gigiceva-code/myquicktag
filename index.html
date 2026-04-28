@@ -93,16 +93,14 @@
             </p>
         </div>
 
-           <div class="input-group" id="claim-section" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-            <div style="margin-bottom: 12px; font-size: 10px; color: #50C878; letter-spacing: 3px; text-transform: uppercase; font-weight: 600;">Claim yours</div>
-            
-            <div style="display: inline-flex; align-items: center; justify-content: center; position: relative; padding-bottom: 8px;">
-                <span id="at-symbol" style="color: rgba(255, 255, 255, 0.2); font-size: 26px; font-weight: bold; transition: color 0.3s ease;">@</span>
-                <input type="text" placeholder="tuonome" oninput="handleInput(this)" style="width: 160px; background: transparent; border: none; padding: 0 0 0 8px; color: #ffffff; font-size: 26px; outline: none; text-align: left;">
-            </div>
-            
-            <div id="input-line-container" style="width: 40px; height: 1.5px; background: rgba(255, 255, 255, 0.2); transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);"></div>
-        </div>
+          <div id="claim-section" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+    <div style="display: inline-flex; align-items: center; justify-content: center; position: relative;">
+        <span id="at-symbol" style="color: rgba(255, 255, 255, 0.2); font-size: 26px; font-weight: bold; transition: color 0.3s ease;">@</span>
+        <input type="text" placeholder="tuonome" oninput="handleInput(this)" style="width: 180px; background: transparent; border: none; padding: 0 0 0 2px; color: #ffffff; font-size: 26px; outline: none; text-align: left; margin-left: -2px;">
+    </div>
+    
+    <div id="input-line-container" style="width: 40px; height: 1.5px; background: rgba(255, 255, 255, 0.2); margin-top: 8px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+</div>
 
             <button class="btn-verifica" style="width: 280px; margin-top: 45px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;">VERIFICA</button>
         </div>
@@ -152,7 +150,21 @@
         function toggleIphone() {
             const phone = document.getElementById('iphone-mockup');
             phone.classList.toggle('iphone-active');
-        }
+        function handleInput(el) {
+    const at = document.getElementById('at-symbol');
+    const line = document.getElementById('input-line-container');
+    
+    if (el.value.length > 0) {
+        at.style.color = "#ffffff"; // Accende la @
+        line.style.width = "220px"; // Allunga la linea
+        line.style.background = "#50C878"; // Diventa verde
+    } else {
+        at.style.color = "rgba(255, 255, 255, 0.2)"; // Spegne la @
+        line.style.width = "40px"; // Accorcia la linea
+        line.style.background = "rgba(255, 255, 255, 0.2)"; // Torna grigia
+    }
+}
+
     </script>
 </body>
 </html>
