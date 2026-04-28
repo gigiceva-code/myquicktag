@@ -147,21 +147,23 @@
     </div>
 
     <script>
-        function toggleIphone() {
-            const phone = document.getElementById('iphone-mockup');
-            phone.classList.toggle('iphone-active');
-        function handleInput(el) {
+    function toggleIphone() {
+    const phone = document.getElementById('iphone-mockup');
+    phone.classList.toggle('iphone-active');
+}
+
+function handleInput(el) {
     const at = document.getElementById('at-symbol');
     const line = document.getElementById('input-line-container');
-    
     if (el.value.length > 0) {
-        at.style.color = "#ffffff"; // Accende la @
-        line.style.width = "220px"; // Allunga la linea
-        line.style.background = "#50C878"; // Diventa verde
+        at.style.color = "#ffffff";
+        line.style.width = "100%";
+        line.style.maxWidth = "280px";
+        line.style.background = "#50C878";
     } else {
-        at.style.color = "rgba(255, 255, 255, 0.2)"; // Spegne la @
-        line.style.width = "40px"; // Accorcia la linea
-        line.style.background = "rgba(255, 255, 255, 0.2)"; // Torna grigia
+        at.style.color = "rgba(255, 255, 255, 0.2)";
+        line.style.width = "40px";
+        line.style.background = "rgba(255, 255, 255, 0.2)";
     }
 }
 
