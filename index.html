@@ -93,17 +93,18 @@
             </p>
         </div>
 
-        <div id="claim-section" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 320px; margin: 0 auto;">
-    <div style="display: inline-flex; align-items: center; justify-content: center; position: relative; width: 100%;">
+       <div id="claim-section" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 300px; margin: 0 auto;">
+    <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
         <span id="at-symbol" style="color: rgba(255, 255, 255, 0.2); font-size: 26px; font-weight: bold; transition: color 0.3s ease;">@</span>
-       : auto; <input type="text" placeholder="tuonome" 
-       onfocus="handleActivation(true)" 
-       onblur="handleActivation(false)"
-       oninput="adjustInputWidth(this)"
-       style="width: 140px; max-width: 240px; background: transparent; border: none; padding: 0 0 0 4px; color: #ffffff; font-size: 26px; outline: none; text-align: left; transition: width 0.2s ease;">
-
+        <input type="text" placeholder="tuonome" 
+               onfocus="handleActivation(true)" 
+               onblur="handleActivation(false)"
+               oninput="adjustInputWidth(this)"
+               style="width: 120px; background: transparent; border: none; padding: 0 0 0 5px; color: #ffffff; font-size: 26px; outline: none; text-align: left;">
+    </div>
     <div id="input-line-container" style="width: 40px; height: 1.5px; background: rgba(255, 255, 255, 0.2); margin-top: 8px; transition: all 0.5s ease;"></div>
 </div>
+ 
  
 
             <button class="btn-verifica" style="width: 280px; margin-top: 45px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;">VERIFICA</button>
@@ -159,27 +160,27 @@ function toggleIphone() {
 function handleActivation(active) {
     const at = document.getElementById('at-symbol');
     const line = document.getElementById('input-line-container');
-    if (active) {
+    const input = document.querySelector('#claim-section input');
+    
+    if (active || input.value.length > 0) {
         at.style.color = "#ffffff";
         line.style.width = "100%";
-        line.style.maxWidth = "280px";
         line.style.background = "#50C878";
     } else {
-        const input = document.querySelector('#claim-section input');
-        if (input.value === '') {
-            at.style.color = "rgba(255, 255, 255, 0.2)";
-            line.style.width = "40px";
-            line.style.background = "rgba(255, 255, 255, 0.2)";
-        }
+        at.style.color = "rgba(255, 255, 255, 0.2)";
+        line.style.width = "40px";
+        line.style.background = "rgba(255, 255, 255, 0.2)";
     }
 }
 
 function adjustInputWidth(el) {
-    // Calcola la larghezza in base ai caratteri
-    el.style.width = (el.value.length > 0) ? (el.value.length + 1) + "ch" : "140px";
+    // Calcola la larghezza: 1ch per ogni lettera + un minimo di base
+    const length = el.value.length;
+    el.style.width = length > 8 ? (length + 1) + "ch" : "120px";
     handleActivation(true);
 }
 </script>
+
 
    
 </body>
