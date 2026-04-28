@@ -124,7 +124,32 @@
                        style="width: 100%; background: transparent; border: none; color: #ffffff; font-size: 32px; font-weight: 400; outline: none; caret-color: #50C878; padding: 10px 0;">
             </div>
             
-            <div id="input-line-container"></div>
+                      <div id="input-line-container"></div>
+
+            <button class="btn-verifica" style="width: 280px; margin-top: 50px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;">
+                VERIFICA
+            </button>
+        </div>
+    </div> ```
+
+### 2. Lo Script (Il motore finale)
+Adesso vai in fondo al file, dove hai il tag `<script>`. Sostituisci tutto quello che c'è tra `<script>` e `</script>` con questo (così teniamo sia il movimento dell'iPhone che l'accensione della @):
+
+```javascript
+        function toggleIphone() {
+            const phone = document.getElementById('iphone-mockup');
+            phone.classList.toggle('iphone-active');
+        }
+
+        function handleInput(el) {
+            const section = document.getElementById('claim-section');
+            if (el.value.length > 0) {
+                section.classList.add('is-active');
+            } else {
+                section.classList.remove('is-active');
+            }
+        }
+  <div id="input-line-container"></div>
 
             <button class="btn-verifica" style="width: 280px; margin-top: 50px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;">
                 VERIFICA
