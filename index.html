@@ -123,7 +123,7 @@
         <h2 style="font-size: 18px; font-weight: 700; color: #50C878; letter-spacing: 3px; text-transform: uppercase; margin-top: 45px; margin-bottom: 40px;">VISIBILITÀ ISTANTANEA</h2>
         <h3 style="font-size: 28px; font-weight: 700; color: #fff; margin: 0; letter-spacing: -0.5px; text-align: center;">L'essenza del tuo Tag</h3>
     </div>
-<div id="claim-section-3" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 320px; margin: 0 auto 50px auto; min-height: 100px;">
+
     <div style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative;">
         <span id="at-symbol-3" style="color: rgba(255, 255, 255, 0.2); font-size: 26px; font-weight: bold; transition: color 0.3s ease;">@</span>
         <input type="text" placeholder="tuonome" 
@@ -158,11 +158,22 @@
         </p>
     </div>
 
-    <button class="btn-verifica" style="width: 320px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 4px; font-size: 15px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 30px rgba(80, 200, 120, 0.2); transition: all 0.2s ease;">
-        VERIFICA DISPONIBILITÀ
-    </button>
+  <div id="claim-section-3" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 320px; margin: 20px auto 40px auto;">
+    <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+        <span id="at-symbol-3" style="color: rgba(255, 255, 255, 0.2); font-size: 26px; font-weight: bold; transition: color 0.3s ease;">@</span>
+        <input type="text" placeholder="tuonome" 
+               onfocus="handleActivation3(true)" 
+               onblur="handleActivation3(false)"
+               oninput="adjustInputWidth3(this)"
+               style="width: 120px; background: transparent; border: none; padding: 0 0 0 10px; color: #ffffff; font-size: 26px; outline: none; text-align: left;">
+    </div>
+    <div id="input-line-container-3" style="width: 40px; height: 1.5px; background: rgba(255, 255, 255, 0.2); margin-top: 10px; transition: all 0.5s ease; margin-left: auto; margin-right: auto;"></div>
 </div>
-    
+
+<button class="btn-verifica" style="width: 320px; background: #50C878; ...">
+    VERIFICA DISPONIBILITÀ
+</button>
+  
 <script>
 // --- 1. LOGICA IPHONE (Ripristinata) ---
 function toggleIphone() {
