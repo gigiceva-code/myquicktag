@@ -155,19 +155,22 @@
 </div>
 
     <script>
+<script>
+// --- LOGICA IPHONE ---
 function toggleIphone() {
-    const phone = document.getElementById('iphone-mockup');
-    phone.classList.toggle('iphone-active');
+    // Qui incolla la tua funzione esistente che apre l'iPhone
+    // Se non la trovi, fammelo sapere che la riscriviamo
 }
 
+// --- LOGICA BLOCCO 2 (Originale) ---
 function handleActivation(active) {
     const at = document.getElementById('at-symbol');
     const line = document.getElementById('input-line-container');
     const input = document.querySelector('#claim-section input');
     
-    if (active || input.value.length > 0) {
+    if (active || (input && input.value.length > 0)) {
         at.style.color = "#ffffff";
-        line.style.width = "100%";
+        line.style.width = "320px";
         line.style.background = "#50C878";
     } else {
         at.style.color = "rgba(255, 255, 255, 0.2)";
@@ -177,33 +180,33 @@ function handleActivation(active) {
 }
 
 function adjustInputWidth(el) {
-    // Calcola la larghezza: 1ch per ogni lettera + un minimo di base
     const length = el.value.length;
     el.style.width = length > 8 ? (length + 1) + "ch" : "120px";
     handleActivation(true);
 }
-       // --- NUOVO CODICE DA AGGIUNGERE (BLOCCO 3) ---
-function handleActivation3(active) {
-    const at = document.getElementById('at-symbol-3');
-    const line = document.getElementById('input-line-container-3');
-    const input = document.querySelector('#claim-section-3 input');
-    
-    if (active || input.value.length > 0) {
-        at.style.color = "#ffffff";
-        line.style.width = "320px"; 
-        line.style.background = "#50C878";
-    } else {
-        at.style.color = "rgba(255, 255, 255, 0.2)";
-        line.style.width = "40px";
-        line.style.background = "rgba(255, 255, 255, 0.2)";
-    }
 
+// --- LOGICA BLOCCO 3 (Nuova e Indipendente) ---
+function handleActivation3(active) {
+    const at3 = document.getElementById('at-symbol-3');
+    const line3 = document.getElementById('input-line-container-3');
+    const input3 = document.querySelector('#claim-section-3 input');
+    
+    if (active || (input3 && input3.value.length > 0)) {
+        at3.style.color = "#ffffff";
+        line3.style.width = "320px"; 
+        line3.style.background = "#50C878";
+    } else {
+        at3.style.color = "rgba(255, 255, 255, 0.2)";
+        line3.style.width = "40px";
+        line3.style.background = "rgba(255, 255, 255, 0.2)";
+    }
+}
 
 function adjustInputWidth3(el) {
     const length = el.value.length;
     el.style.width = length > 8 ? (length + 1) + "ch" : "120px";
     handleActivation3(true);
-} 
+}
 </script>
 
 
