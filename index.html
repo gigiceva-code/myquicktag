@@ -182,6 +182,28 @@ function adjustInputWidth(el) {
     el.style.width = length > 8 ? (length + 1) + "ch" : "120px";
     handleActivation(true);
 }
+       // --- NUOVO CODICE DA AGGIUNGERE (BLOCCO 3) ---
+function handleActivation3(active) {
+    const at = document.getElementById('at-symbol-3');
+    const line = document.getElementById('input-line-container-3');
+    const input = document.querySelector('#claim-section-3 input');
+    
+    if (active || input.value.length > 0) {
+        at.style.color = "#ffffff";
+        line.style.width = "320px"; 
+        line.style.background = "#50C878";
+    } else {
+        at.style.color = "rgba(255, 255, 255, 0.2)";
+        line.style.width = "40px";
+        line.style.background = "rgba(255, 255, 255, 0.2)";
+    }
+
+
+function adjustInputWidth3(el) {
+    const length = el.value.length;
+    el.style.width = length > 8 ? (length + 1) + "ch" : "120px";
+    handleActivation3(true);
+} 
 </script>
 
 
