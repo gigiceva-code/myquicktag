@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -31,9 +32,8 @@
             box-sizing: border-box;
         }
 
-       .iphone-active { 
+        .iphone-active { 
             transform: scale(1.90) translateY(-15px) !important; 
-            margin-bottom: 120px !important; /* Spinge giù la bridge quando si apre */
             box-shadow: 0 60px 150px rgba(0,0,0,0.98) !important; 
             z-index: 100 !important;
         }
@@ -47,22 +47,9 @@
             transform: scale(0.96);
             background-color: #45b36b !important;
         }
-        #tagline-dinamica {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 420px;
-    text-align: center;
-    font-size: 13px;
-    line-height: 1.4;
-    color: #ffffffcc;
-    margin-top: 12px;
-    pointer-events: none;
-}
     </style>
 </head>
-<body> 
+<body>
 
     <div class="container">
         <div style="position: relative; width: 80px; height: 80px; margin-top: 30px; margin-bottom: 10px;">
@@ -74,26 +61,18 @@
         <h1 style="font-size: 32px; font-weight: 900; letter-spacing: 1px; margin: 0; text-transform: uppercase; line-height: 1;">MYQUICKTAG</h1>
         <p style="color: #50C878; font-size: 13px; font-weight: 600; letter-spacing: 3px; margin-top: 6px; margin-bottom: 20px; text-transform: uppercase;">Istant Digital Identity</p>
 
-      <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center; padding-bottom: 120px;">
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center;">
             <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">Tap to Simulate</span>
             <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center;">
                 <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px;"></div>
                 <div style="margin-top: 50px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
                      <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
-                    
                 </div>
             </div>
         </div>
     </div>
-    <div id="tagline-dinamica">
-  Il tuo biglietto da visita digitale con QR: nessun costo per 3 mesi, poi 2€/anno. Nessuna carta richiesta, lo attivi e lo disattivi quando vuoi.
-    </div>
-<div style="margin-top: 30px; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); padding: 0 25px; max-width: 420px; width: 100%; box-sizing: border-box;">
-    <h2 style="font-size: 14px; font-weight: 900; letter-spacing: 2px; color: #ffffff; margin-bottom: 15px; text-transform: uppercase; margin-top: 0;">Un biglietto da visita digitale, evoluto.</h2>
-    <p style="font-size: 16px; color: #d1d1d1; line-height: 1.6; font-weight: 300; margin: 0;">Molto più di una pagina web: uno spazio essenziale, intuitivo e pronto da condividere ovunque.</p>
-</div>
 
- <div class="container section-2" style="margin-top: 280px; padding-bottom: 120px;">
+    <div class="container section-2" style="margin-top: 280px; padding-bottom: 120px;">
         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 50px;">
             <div style="position: relative; width: 42px; height: 42px; margin-bottom: 8px; opacity: 0.9;">
                 <div style="width: 100%; height: 100%; border: 3px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
@@ -166,23 +145,10 @@
     </div>
 
     <script>
-function aggiornaPosizioneFrase() {
-    const iphone = document.getElementById("iphone-mockup");
-    const frase = document.getElementById("tagline-dinamica");
-    const rect = iphone.getBoundingClientRect();
-    frase.style.top = rect.bottom + "px";
-}
-
-function toggleIphone() {
-    const iphone = document.getElementById("iphone-mockup");
-    iphone.classList.toggle("iphone-active");
-    aggiornaPosizioneFrase();
-}
-
-window.addEventListener("scroll", aggiornaPosizioneFrase);
-window.addEventListener("resize", aggiornaPosizioneFrase);
-
-document.addEventListener("DOMContentLoaded", aggiornaPosizioneFrase);
+        function toggleIphone() {
+            const phone = document.getElementById('iphone-mockup');
+            phone.classList.toggle('iphone-active');
+        }
     </script>
 </body>
 </html>
