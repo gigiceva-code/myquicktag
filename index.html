@@ -58,55 +58,24 @@
         </div>
 
         <h1 style="font-size: 32px; font-weight: 900; letter-spacing: 1px; margin: 0; text-transform: uppercase; line-height: 1;">MYQUICKTAG</h1>
-<p style="color: #50C878; font-size: 13px; font-weight: 600; letter-spacing: 3px; margin-top: 6px; margin-bottom: 20px; text-transform: uppercase;">Istant Digital Identity</p>
+        <p style="color: #50C878; font-size: 13px; font-weight: 600; letter-spacing: 3px; margin-top: 6px; margin-bottom: 20px; text-transform: uppercase;">Istant Digital Identity</p>
 
-<div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center;">
-    <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">Tap to Simulate</span>
-
-    <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center;">
-        <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px;"></div>
-        <div style="margin-top: 50px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
-            <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
-        </div>
-    </div>
-
-    <!-- FRASE AGGANCIATA ALL’IPHONE -->
-    <div id="iphone-wrapper" style="display:flex; flex-direction:column; align-items:center; margin-top:15px;">
-        <div id="iphone-text" style="
-            max-width: 260px;
-            text-align: center;
-            margin-top: 15px;
-            color: #ffffff;
-            opacity: 0.92;
-            font-size: 13px;
-            line-height: 1.45;
-            font-weight: 300;
-            transition: transform 0.7s cubic-bezier(0.19,1,0.22,1);
-        ">
-            <div style="margin-bottom: 12px;">
-                <strong style="font-weight:600;">Molto più di una semplice pagina web.</strong><br>
-                Il tuo spazio digitale essenziale, intuitivo e sempre pronto da condividere ovunque.
-            </div>
-
-            <div style="margin-bottom: 12px;">
-                Invialo via chat, pubblicalo sui social o mostra il tuo QR fisico in un istante.<br>
-                La tua identità professionale diventa immediata, chiara e sempre accessibile.
-            </div>
-
-            <div>
-                Provalo gratuitamente per 90 giorni.<br>
-                Poi decidi se restare nel network a soli <strong style="font-weight:600;">2€ l’anno</strong>, con disdetta immediata e senza vincoli.
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center;">
+            <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">Tap to Simulate</span>
+            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px;"></div>
+                <div style="margin-top: 50px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
+                     <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
+                </div>
             </div>
         </div>
     </div>
 
-</div> <!-- fine container hero -->
-
-<div class="container section-2" style="margin-top: 280px; padding-bottom: 120px;">
-    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 50px;">
-        <div style="position: relative; width: 42px; height: 42px; margin-bottom: 8px; opacity: 0.9;">
-            <div style="width: 100%; height: 100%; border: 3px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
-            <div style="position: absolute; width: 4px; height: 13px; background: #50C878; bottom: -1px; right: -1px; transform: rotate(-45deg); border-radius: 2px;"></div>
+    <div class="container section-2" style="margin-top: 280px; padding-bottom: 120px;">
+        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 50px;">
+            <div style="position: relative; width: 42px; height: 42px; margin-bottom: 8px; opacity: 0.9;">
+                <div style="width: 100%; height: 100%; border: 3px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
+                <div style="position: absolute; width: 4px; height: 13px; background: #50C878; bottom: -1px; right: -1px; transform: rotate(-45deg); border-radius: 2px;"></div>
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-size: 19px; font-weight: bold;">@</div>
             </div>
             <span style="font-size: 10px; font-weight: 900; letter-spacing: 4px; color: rgba(255,255,255,0.7); text-transform: uppercase;">MYQUICKTAG</span>
@@ -176,16 +145,8 @@
 
     <script>
         function toggleIphone() {
-    const phone = document.getElementById('iphone-mockup');
-    phone.classList.toggle('iphone-active');
-
-    const text = document.getElementById('iphone-text');
-
-    if (phone.classList.contains('iphone-active')) {
-        text.style.transform = "translateY(55px)";
-    } else {
-        text.style.transform = "translateY(0)";
-    }
+            const phone = document.getElementById('iphone-mockup');
+            phone.classList.toggle('iphone-active');
         }
     </script>
 </body>
