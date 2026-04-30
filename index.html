@@ -31,14 +31,11 @@
             box-sizing: border-box;
         }
 
-.iphone-active { 
-    transform: scale(1.90) !important; 
-    transform-origin: top center !important; 
-    /* Questo margine crea il vuoto fisico per spingere la bridge */
-    margin-bottom: 255px !important; 
-    z-index: 10;
-}
-
+        .iphone-active { 
+            transform: scale(1.90) translateY(-15px) !important; 
+            box-shadow: 0 60px 150px rgba(0,0,0,0.98) !important; 
+            z-index: 100 !important;
+        }
 
         #iphone-mockup {
             transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
@@ -52,15 +49,7 @@
     </style>
 </head>
 <body>
-<style>
-    .iphone-active { 
-        transform: scale(1.90) !important; 
-        transform-origin: top center !important; 
-        margin-bottom: 255px !important; 
-        z-index: 10;
-        transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1) !important;
-    }
-</style>
+
     <div class="container">
         <div style="position: relative; width: 80px; height: 80px; margin-top: 30px; margin-bottom: 10px;">
             <div style="width: 100%; height: 100%; border: 8px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
@@ -71,47 +60,17 @@
         <h1 style="font-size: 32px; font-weight: 900; letter-spacing: 1px; margin: 0; text-transform: uppercase; line-height: 1;">MYQUICKTAG</h1>
         <p style="color: #50C878; font-size: 13px; font-weight: 600; letter-spacing: 3px; margin-top: 6px; margin-bottom: 20px; text-transform: uppercase;">Istant Digital Identity</p>
 
-        <div style="position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; padding-top: 10px">
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center;">
             <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">Tap to Simulate</span>
-            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; margin: 0 auto; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center;">
+            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center;">
                 <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px;"></div>
                 <div style="margin-top: 50px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
                      <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
                 </div>
             </div>
         </div>
-   <div style="margin-top: 30px; padding: 0 25px; max-width: 420px; margin-left: auto; margin-right: auto; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);">
+    </div>
 
-            <div style="margin-bottom: 80px;">
-                <h2 style="font-size: 14px; font-weight: 900; letter-spacing: 2px; color: #ffffff; margin-bottom: 15px; text-transform: uppercase;">
-                    Un biglietto da visita digitale, evoluto.
-                </h2>
-                <p style="font-size: 16px; color: #d1d1d1; line-height: 1.6; font-weight: 300;">
-                    Molto più di una pagina web: uno spazio essenziale, intuitivo e pronto da condividere ovunque. Invialo via chat, caricalo sui social o mostralo tramite il tuo QR fisico. La tua identità professionale, semplificata.
-                </p>
-            </div>
-
-            <div style="margin-bottom: 80px;">
-                <p style="font-size: 18px; color: #ffffff; line-height: 1.5; font-weight: 400;">
-                    Sperimenta MyQuickTag <span style="color: #50C878; font-weight: 700;">gratuitamente</span> per i primi 90 giorni.
-                </p>
-                <p style="font-size: 15px; color: #d1d1d1; margin-top: 10px;">
-                    Avrai tutto il tempo per decidere se continuare a far parte del network a soli <span style="font-weight: 600; color: #ffffff;">2€ l'anno</span>.
-                </p>
-            </div>
-
-            <div style="margin-bottom: 40px;">
-                <p style="font-size: 13px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; margin-bottom: 5px;">
-                    Nessun metodo di pagamento richiesto per l'attivazione.
-                </p>
-                <p style="font-size: 13px; color: rgba(255,255,255,0.5);">
-                    Disdici quando vuoi, con un solo click.
-                </p>
-            </div>
-
-            <div style="width: 1px; height: 50px; background: linear-gradient(to bottom, #50C878, transparent); margin: 0 auto;"></div>
-        </div>
-         </div>
     <div class="container section-2" style="margin-top: 280px; padding-bottom: 120px;">
         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 50px;">
             <div style="position: relative; width: 42px; height: 42px; margin-bottom: 8px; opacity: 0.9;">
@@ -119,7 +78,7 @@
                 <div style="position: absolute; width: 4px; height: 13px; background: #50C878; bottom: -1px; right: -1px; transform: rotate(-45deg); border-radius: 2px;"></div>
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-size: 19px; font-weight: bold;">@</div>
             </div>
-           <span style="font-size: 13px; font-weight: 900; letter-spacing: 2px; color: rgba(255,255,255,0.9); text-transform: uppercase;">MYQUICKTAG</span> 
+            <span style="font-size: 10px; font-weight: 900; letter-spacing: 4px; color: rgba(255,255,255,0.7); text-transform: uppercase;">MYQUICKTAG</span>
         </div>
 
         <h2 style="font-size: 18px; font-weight: 700; color: #50C878; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px;">Premium Digital Tag</h2>
@@ -134,153 +93,61 @@
             </p>
         </div>
 
-       <div id="claim-section" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 320px; margin: 0 auto;">
-    <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-        <span id="at-symbol" style="color: rgba(255, 255, 255, 0.2); font-size: 26px; font-weight: bold; transition: color 0.3s ease;">@</span>
-        <input type="text" placeholder="tuonome" 
-               onfocus="handleActivation(true)" 
-               onblur="handleActivation(false)"
-               oninput="adjustInputWidth(this)"
-               style="width: 120px; background: transparent; border: none; padding: 0 0 0 5px; color: #ffffff; font-size: 26px; outline: none; text-align: left;">
-    </div>
-<div id="input-line-container" style="width: 40px; height: 1.5px; background: rgba(255, 255, 255, 0.2); margin-top: 8px; transition: all 0.5s ease; margin-left: auto; margin-right: auto;"></div>
-</div>
- 
- 
-
-        <button class="btn-verifica" style="width: 320px; margin-top: 65px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 4px; font-size: 15px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 30px rgba(80, 200, 120, 0.2); transition: all 0.2s ease;">VERIFICA DISPONIBILITÀ</button>
-        
-    
-
-<div class="container section-3" style="margin-top: 150px; padding-bottom: 100px; display: flex; flex-direction: column; align-items: center;">
-    
-    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 60px;">
-        <div style="position: relative; width: 42px; height: 42px; margin-bottom: 8px; opacity: 0.9;">
-            <div style="width: 100%; height: 100%; border: 3px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
-            <div style="position: absolute; width: 4px; height: 13px; background: #50C878; bottom: -1px; right: -1px; transform: rotate(-45deg); border-radius: 2px;"></div>
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-size: 19px; font-weight: bold;">@</div>
+        <div class="input-group" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <div style="margin-bottom: 12px; font-size: 10px; color: #50C878; letter-spacing: 3px; text-transform: uppercase; font-weight: 600;">Claim yours</div>
+            <div style="display: inline-flex; align-items: center; border-bottom: 1.5px solid #50C878; min-width: 180px; justify-content: center;">
+                <span style="color: #ffffff; font-size: 26px; font-weight: bold; padding-bottom: 6px;">@</span>
+                <input type="text" placeholder="tuonome" style="width: 140px; background: transparent; border: none; padding: 8px 0 8px 2px; color: #ffffff; font-size: 26px; outline: none; text-align: left;">
+            </div>
+            <button class="btn-verifica" style="width: 280px; margin-top: 45px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;">VERIFICA</button>
         </div>
-        <span style="font-size: 13px; font-weight: 900; letter-spacing: 2px; color: rgba(255,255,255,0.9); text-transform: uppercase;">MYQUICKTAG</span> 
-        <h2 style="font-size: 18px; font-weight: 700; color: #50C878; letter-spacing: 3px; text-transform: uppercase; margin-top: 45px; margin-bottom: 40px;">VISIBILITÀ ISTANTANEA</h2>
-        <h3 style="font-size: 28px; font-weight: 700; color: #fff; margin: 0; letter-spacing: -0.5px; text-align: center;">L'essenza del tuo Tag</h3>
-    </div>
-
-      <div class="identity-card" style="width: 100%; max-width: 440px; background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(20,20,20,1) 100%); border: 1px solid rgba(80, 200, 120, 0.4); border-radius: 12px; padding: 30px 25px; margin-bottom: 25px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box;">
-        <div style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">Semplicità</div>
-        <h3 style="color: #fff; font-size: 22px; font-weight: 700; margin: 0 0 12px 0; letter-spacing: -0.5px; line-height: 1.2;">Oltre il dominio.<br>Tu, e basta.</h3>
-        <p style="color: #ffffff; font-size: 15px; line-height: 1.6; font-weight: 400; margin: 0; opacity: 0.9;">
-            Trasforma il tuo <span style="color: #50C878; font-weight: 600;">@nome</span> in una pagina web dinamica. Niente estensioni o complicazioni: uno spazio unico per essere raggiunto.
-        </p>
-    </div>
-
-    <div class="identity-card" style="width: 100%; max-width: 440px; background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(20,20,20,1) 100%); border: 1px solid rgba(80, 200, 120, 0.4); border-radius: 12px; padding: 30px 25px; margin-bottom: 25px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box;">
-        <div style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">Autorità</div>
-        <h3 style="color: #fff; font-size: 22px; font-weight: 700; margin: 0 0 12px 0; letter-spacing: -0.5px; line-height: 1.2;">Il tuo Brand,<br>senza intermediari.</h3>
-        <p style="color: #ffffff; font-size: 15px; line-height: 1.6; font-weight: 400; margin: 0; opacity: 0.9;">
-            L'esclusività è tutto. Presenta la tua impresa con un <span style="color: #50C878; font-weight: 600;">@nome</span> unico: personalizza i tuoi tag e lancia il tuo mondo digitale.
-        </p>
-    </div>
-
-    <div class="identity-card" style="width: 100%; max-width: 440px; background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(20,20,20,1) 100%); border: 1px solid rgba(80, 200, 120, 0.4); border-radius: 12px; padding: 30px 25px; margin-bottom: 40px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box;">
-        <div style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">Emozione</div>
-        <h3 style="color: #fff; font-size: 22px; font-weight: 700; margin: 0 0 12px 0; letter-spacing: -0.5px; line-height: 1.2;">Il prestigio<br>di un istante.</h3>
-        <p style="color: #ffffff; font-size: 15px; line-height: 1.6; font-weight: 400; margin: 0; opacity: 0.9;">
-            La vera eleganza non urla. Condividere il tuo <span style="color: #50C878; font-weight: 600;">@nome</span> è un gesto di stile che rende memorabile ogni tua nuova connessione.
-        </p>
-    </div>
-
-
-  <div id="claim-section-3" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 320px; margin: 20px auto 40px auto;">
-    <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-        <span id="at-symbol-3" style="color: rgba(255, 255, 255, 0.2); font-size: 26px; font-weight: bold; transition: color 0.3s ease;">@</span>
-        <input type="text" placeholder="tuonome" 
-               onfocus="handleActivation3(true)" 
-               onblur="handleActivation3(false)"
-               oninput="adjustInputWidth3(this)"
-               style="width: 120px; background: transparent; border: none; padding: 0 0 0 10px; color: #ffffff; font-size: 26px; outline: none; text-align: left;">
-    </div>
-    <div id="input-line-container-3" style="width: 40px; height: 1.5px; background: rgba(255, 255, 255, 0.2); margin-top: 10px; transition: all 0.5s ease; margin-left: auto; margin-right: auto;"></div>
-</div>
-
-<button class="btn-verifica" 
-        style="width: 320px; 
-               background-color: #50C878; 
-               color: #000; 
-               border: none; 
-               padding: 20px; 
-               border-radius: 4px; 
-               font-size: 15px; 
-               font-weight: 900; 
-               letter-spacing: 2px; 
-               text-transform: uppercase; 
-               cursor: pointer; 
-               box-shadow: 0 10px 30px rgba(80, 200, 120, 0.2); 
-               transition: all 0.2s ease;
-               margin-top: 20px; 
-               display: block; 
-               margin-left: auto; 
-               margin-right: auto;">
-    VERIFICA DISPONIBILITÀ
-</button>
-
-  
-<script>
-// --- 1. LOGICA IPHONE (Ripristinata) ---
-function toggleIphone() {
-    const phone = document.getElementById('iphone-mockup');
-    if (phone) {
-        phone.classList.toggle('iphone-active');
-    }
-}
-
-// --- 2. LOGICA BLOCCO 2 (Originale) ---
-function handleActivation(active) {
-    const at = document.getElementById('at-symbol');
-    const line = document.getElementById('input-line-container');
-    const input = document.querySelector('#claim-section input');
     
-    if (active || (input && input.value.length > 0)) {
-        at.style.color = "#ffffff";
-        line.style.width = "320px";
-        line.style.background = "#50C878";
-    } else {
-        at.style.color = "rgba(255, 255, 255, 0.2)";
-        line.style.width = "40px";
-        line.style.background = "rgba(255, 255, 255, 0.2)";
-    }
-}
+    <div class="container section-3" style="margin-top: 150px; padding-bottom: 100px;">
+        
+        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 60px;">
+            <div style="position: relative; width: 32px; height: 32px; margin-bottom: 10px;">
+                <div style="width: 100%; height: 100%; border: 2.5px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
+                <div style="position: absolute; width: 3px; height: 10px; background: #50C878; bottom: -1px; right: -1px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-size: 14px; font-weight: bold;">@</div>
+            </div>
+            <div style="color: #50C878; font-size: 11px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px;">VISIBILITÀ ISTANTANEA</div>
+            <h2 style="font-size: 28px; font-weight: 700; color: #fff; margin: 0; letter-spacing: -0.5px;">L'essenza del tuo Tag</h2>
+        </div>
 
-function adjustInputWidth(el) {
-    const length = el.value.length;
-    el.style.width = length > 8 ? (length + 1) + "ch" : "120px";
-    handleActivation(true);
-}
+        <div class="identity-card" style="width: 100%; max-width: 480px; background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(80, 200, 120, 0.2); border-radius: 32px; padding: 45px 30px; margin: 0 auto 40px auto; text-align: left; backdrop-filter: blur(20px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); box-sizing: border-box;">
+            <div style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;">Semplicità</div>
+            <h3 style="color: #fff; font-size: 24px; font-weight: 700; margin: 0 0 18px 0; letter-spacing: -0.5px; line-height: 1.2;">Oltre il dominio.<br>Tu, e basta.</h3>
+            <p style="color: #d1d1d1; font-size: 16px; line-height: 1.7; font-weight: 400; margin: 0;">
+                Trasforma il tuo <span style="color: #50C878; font-weight: 600;">@nome</span> in una pagina web dinamica che viaggia con te. Niente estensioni, niente complicazioni: un unico spazio per essere raggiunto.
+            </p>
+        </div>
 
-// --- 3. LOGICA BLOCCO 3 (Nuova e Indipendente) ---
-function handleActivation3(active) {
-    const at3 = document.getElementById('at-symbol-3');
-    const line3 = document.getElementById('input-line-container-3');
-    const input3 = document.querySelector('#claim-section-3 input');
-    
-    if (active || (input3 && input3.value.length > 0)) {
-        at3.style.color = "#ffffff";
-        line3.style.width = "320px"; 
-        line3.style.background = "#50C878";
-    } else {
-        at3.style.color = "rgba(255, 255, 255, 0.2)";
-        line3.style.width = "40px";
-        line3.style.background = "rgba(255, 255, 255, 0.2)";
-    }
-}
+        <div class="identity-card" style="width: 100%; max-width: 480px; background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(80, 200, 120, 0.2); border-radius: 32px; padding: 45px 30px; margin: 0 auto 40px auto; text-align: left; backdrop-filter: blur(20px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); box-sizing: border-box;">
+            <div style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;">Autorità</div>
+            <h3 style="color: #fff; font-size: 24px; font-weight: 700; margin: 0 0 18px 0; letter-spacing: -0.5px; line-height: 1.2;">Il tuo Brand,<br>senza intermediari.</h3>
+            <p style="color: #d1d1d1; font-size: 16px; line-height: 1.7; font-weight: 400; margin: 0;">
+                Per il tuo business, l'esclusività è tutto. Presenta la tua impresa con un <span style="color: #50C878; font-weight: 600;">@nome</span> unico: personalizza i tuoi tag e lancia il tuo mondo digitale.
+            </p>
+        </div>
 
-function adjustInputWidth3(el) {
-    const length = el.value.length;
-    el.style.width = length > 8 ? (length + 1) + "ch" : "120px";
-    handleActivation3(true);
-}
-</script>
+        <div class="identity-card" style="width: 100%; max-width: 480px; background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(80, 200, 120, 0.2); border-radius: 32px; padding: 45px 30px; margin: 0 auto 50px auto; text-align: left; backdrop-filter: blur(20px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); box-sizing: border-box;">
+            <div style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;">Emozione</div>
+            <h3 style="color: #fff; font-size: 24px; font-weight: 700; margin: 0 0 18px 0; letter-spacing: -0.5px; line-height: 1.2;">Il prestigio<br>di un istante.</h3>
+            <p style="color: #d1d1d1; font-size: 16px; line-height: 1.7; font-weight: 400; margin: 0;">
+                La vera eleganza non urla, lascia il segno. Condividere il tuo <span style="color: #50C878; font-weight: 600;">@nome</span> è un gesto di stile che crea desiderio e rende memorabile ogni connessione.
+            </p>
+        </div>
 
+        <button class="btn-verifica" style="width: 280px; margin-top: 40px; background: #50C878; color: #000; border: none; padding: 20px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;">
+            VERIFICA DISPONIBILITÀ
+        </button>
+    </div>
 
-   
+    <script>
+        function toggleIphone() {
+            const phone = document.getElementById('iphone-mockup');
+            phone.classList.toggle('iphone-active');
+        }
+    </script>
 </body>
 </html>
