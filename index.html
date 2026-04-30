@@ -47,6 +47,19 @@
             transform: scale(0.96);
             background-color: #45b36b !important;
         }
+        #tagline-dinamica {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #ffffffcc;
+    margin-top: 12px;
+    pointer-events: none;
+}
     </style>
 </head>
 <body> 
@@ -153,10 +166,23 @@
     </div>
 
     <script>
-        function toggleIphone() {
-            const phone = document.getElementById('iphone-mockup');
-            phone.classList.toggle('iphone-active');
-        }
+function aggiornaPosizioneFrase() {
+    const iphone = document.getElementById("iphone-mockup");
+    const frase = document.getElementById("tagline-dinamica");
+    const rect = iphone.getBoundingClientRect();
+    frase.style.top = rect.bottom + "px";
+}
+
+function toggleIphone() {
+    const iphone = document.getElementById("iphone-mockup");
+    iphone.classList.toggle("iphone-active");
+    aggiornaPosizioneFrase();
+}
+
+window.addEventListener("scroll", aggiornaPosizioneFrase);
+window.addEventListener("resize", aggiornaPosizioneFrase);
+
+document.addEventListener("DOMContentLoaded", aggiornaPosizioneFrase);
     </script>
 </body>
 </html>
