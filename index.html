@@ -31,10 +31,11 @@
             box-sizing: border-box;
         }
 
-     .iphone-active { 
+.iphone-active { 
     transform: scale(1.90) !important; 
-    margin-bottom: 250px !important; /* Aumentato per dare più spazio */
-    transform-origin: top center !important; 
+    transform-origin: top center !important; /* Lo tiene ancorato in alto */
+    margin-bottom: 260px !important; /* Spinge giù la frase bridge */
+    transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1) !important; /* Movimento fluido */
 }
 
         #iphone-mockup {
