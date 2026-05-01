@@ -73,6 +73,16 @@
     <div id="welcome-at" style="margin-top: 50px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444; transition: opacity 0.5s ease;">
          <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
     </div>
+        if (iphone.classList.contains('iphone-active')) {
+            backArrow.style.opacity = "1";
+            welcomeAt.style.opacity = "0";
+            document.getElementById('iphone-editor').style.opacity = "1"; // AGGIUNTO
+            history.pushState({view: 'iphone'}, '');
+        } else {
+            backArrow.style.opacity = "0";
+            welcomeAt.style.opacity = "1";
+            document.getElementById('iphone-editor').style.opacity = "0"; // AGGIUNTO
+        }
 
 </div>
 
@@ -149,11 +159,14 @@
             VERIFICA DISPONIBILITÀ
         </button>
     </div>
-<script>
+
+
+   <script>
     function toggleIphone() {
         const iphone = document.getElementById('iphone-mockup');
         const backArrow = document.getElementById('back-arrow');
         const welcomeAt = document.getElementById('welcome-at');
+        const editor = document.getElementById('iphone-editor');
         
         iphone.classList.toggle('iphone-active');
         
@@ -161,25 +174,26 @@
             // Entra in modalità "Aperto"
             backArrow.style.opacity = "1";
             welcomeAt.style.opacity = "0";
+            editor.style.opacity = "1";
             // Aggiunge un punto finto nella cronologia per intercettare il tasto indietro
             history.pushState({view: 'iphone'}, '');
         } else {
             // Chiude l'iPhone
             backArrow.style.opacity = "0";
             welcomeAt.style.opacity = "1";
+            editor.style.opacity = "0";
         }
     }
 
     // Gestisce il tasto indietro fisico di Android
     window.onpopstate = function(event) {
         const iphone = document.getElementById('iphone-mockup');
-        if (iphone.classList.contains('iphone-active')) {
+        if (iphone && iphone.classList.contains('iphone-active')) {
             toggleIphone(); // Chiude l'iPhone invece di uscire dal sito
         }
     };
 </script>
-
-    
+ 
 
 </body>
 </html>
