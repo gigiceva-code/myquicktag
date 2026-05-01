@@ -65,6 +65,8 @@
             <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">Tap to Simulate</span>
          <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center; overflow: hidden;">
     
+    <div id="back-arrow" style="position: absolute; top: 15px; left: 15px; opacity: 0; transition: opacity 0.5s ease; z-index: 30; color: #ffffff; font-size: 18px;">✕</div>
+
     <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px; z-index: 10;"></div>
 
     <div style="position: relative; width: 100%; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -73,7 +75,7 @@
              <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
         </div>
 
-        <div id="iphone-editor" style="position: absolute; top: 20px; opacity: 0; transition: all 0.5s ease; display: flex; flex-direction: column; align-items: center; pointer-events: none;">
+        <div id="iphone-editor" onclick="event.stopPropagation()" style="position: absolute; top: 20px; opacity: 0; transition: all 0.5s ease; display: flex; flex-direction: column; align-items: center; pointer-events: none;">
             <div style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #50C878; background: #333; margin-bottom: 8px; display: flex; align-items: center; justify-content: center;">
                 <span style="font-size: 8px; color: #888;">FOTO</span>
             </div>
@@ -84,7 +86,7 @@
     </div>
 </div>
 
-    </div>
+  </div>
 
     <div class="container section-2" style="margin-top: 280px; padding-bottom: 120px;">
         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 50px;">
@@ -163,22 +165,37 @@
         const phone = document.getElementById('iphone-mockup');
         const welcomeAt = document.getElementById('welcome-at');
         const editor = document.getElementById('iphone-editor');
+        const arrow = document.getElementById('back-arrow');
 
-        phone.classList.toggle('iphone-active');
+        const isActive = phone.classList.toggle('iphone-active');
 
-        if (phone.classList.contains('iphone-active')) {
-            // iPhone APERTO: nascondi la @ e mostra l'editor
+        if (isActive) {
+            // STATO APERTO
             welcomeAt.style.opacity = "0";
             editor.style.opacity = "1";
             editor.style.pointerEvents = "auto";
+            arrow.style.opacity = "1";
+            
+            // Gestione tasto indietro Android: aggiungiamo uno stato alla cronologia
+            window.history.pushState({ iphoneOpen: true }, "");
         } else {
-            // iPhone CHIUSO: mostra la @ e nascondi l'editor
+            // STATO CHIUSO
             welcomeAt.style.opacity = "1";
             editor.style.opacity = "0";
             editor.style.pointerEvents = "none";
+            arrow.style.opacity = "0";
         }
     }
+
+    // Ascolta il tasto indietro del telefono (Android/Browser)
+    window.onpopstate = function(event) {
+        const phone = document.getElementById('iphone-mockup');
+        if (phone.classList.contains('iphone-active')) {
+            toggleIphone(); // Chiude l'iPhone invece di tornare indietro nella pagina
+        }
+    };
 </script>
+
 
 </body>
 </html>    
