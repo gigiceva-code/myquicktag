@@ -149,8 +149,7 @@
             VERIFICA DISPONIBILITÀ
         </button>
     </div>
-
-    <script>
+<script>
     function toggleIphone() {
         const iphone = document.getElementById('iphone-mockup');
         const backArrow = document.getElementById('back-arrow');
@@ -159,14 +158,28 @@
         iphone.classList.toggle('iphone-active');
         
         if (iphone.classList.contains('iphone-active')) {
+            // Entra in modalità "Aperto"
             backArrow.style.opacity = "1";
             welcomeAt.style.opacity = "0";
+            // Aggiunge un punto finto nella cronologia per intercettare il tasto indietro
+            history.pushState({view: 'iphone'}, '');
         } else {
+            // Chiude l'iPhone
             backArrow.style.opacity = "0";
             welcomeAt.style.opacity = "1";
         }
     }
+
+    // Gestisce il tasto indietro fisico di Android
+    window.onpopstate = function(event) {
+        const iphone = document.getElementById('iphone-mockup');
+        if (iphone.classList.contains('iphone-active')) {
+            toggleIphone(); // Chiude l'iPhone invece di uscire dal sito
+        }
+    };
 </script>
+
+    
 
 </body>
 </html>
