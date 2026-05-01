@@ -63,13 +63,27 @@
 
         <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center;">
             <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">Tap to Simulate</span>
-            <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px;"></div>
-                <div style="margin-top: 50px; width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444;">
-                     <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
-                </div>
-            </div>
+         <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center; overflow: hidden;">
+    
+    <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px; z-index: 10;"></div>
+
+    <div style="position: relative; width: 100%; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        
+        <div id="welcome-at" style="width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444; transition: all 0.5s ease;">
+             <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
         </div>
+
+        <div id="iphone-editor" style="position: absolute; top: 20px; opacity: 0; transition: all 0.5s ease; display: flex; flex-direction: column; align-items: center; pointer-events: none;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #50C878; background: #333; margin-bottom: 8px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 8px; color: #888;">FOTO</span>
+            </div>
+            <div style="color: #ffffff; font-size: 11px; font-weight: bold; margin-bottom: 2px;">@IlTuoNome</div>
+            <div style="color: #50C878; font-size: 7px; letter-spacing: 1px; text-transform: uppercase;">Professione / Bio</div>
+        </div>
+
+    </div>
+</div>
+
     </div>
 
     <div class="container section-2" style="margin-top: 280px; padding-bottom: 120px;">
@@ -145,10 +159,26 @@
     </div>
 
     <script>
-        function toggleIphone() {
-            const phone = document.getElementById('iphone-mockup');
-            phone.classList.toggle('iphone-active');
+    function toggleIphone() {
+        const phone = document.getElementById('iphone-mockup');
+        const welcomeAt = document.getElementById('welcome-at');
+        const editor = document.getElementById('iphone-editor');
+
+        phone.classList.toggle('iphone-active');
+
+        if (phone.classList.contains('iphone-active')) {
+            // iPhone APERTO: nascondi la @ e mostra l'editor
+            welcomeAt.style.opacity = "0";
+            editor.style.opacity = "1";
+            editor.style.pointerEvents = "auto";
+        } else {
+            // iPhone CHIUSO: mostra la @ e nascondi l'editor
+            welcomeAt.style.opacity = "1";
+            editor.style.opacity = "0";
+            editor.style.pointerEvents = "none";
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>    
