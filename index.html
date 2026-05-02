@@ -115,16 +115,16 @@
 </style>
 
 
-<div class="container section-2" style="margin-top: -20px; padding-top: 60px; padding-bottom: 100px; display: flex; flex-direction: column; align-items: center; text-align: center; background: #000;">
+<div class="container section-2" style="margin-top: -80px; padding-top: 0; padding-bottom: 100px; display: flex; flex-direction: column; align-items: center; text-align: center; background: #000; position: relative; z-index: 2;">
     
     <h2 style="font-size: 16px; font-weight: 700; color: #50C878; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 35px;">
         Premium Digital Tag
     </h2>
 
-    <div style="width: 100%; max-width: 300px; padding: 25px 15px; border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; background: rgba(255,255,255,0.02); backdrop-filter: blur(5px); box-shadow: 0 0 15px rgba(255,255,255,0.05); margin-bottom: 40px;">
+    <div style="width: 100%; max-width: 300px; padding: 25px 15px; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 20px; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(255,255,255,0.1); margin-bottom: 40px; box-sizing: border-box;">
         <p style="font-size: 15px; color: #ffffff; letter-spacing: 1.5px; margin: 0; font-weight: 300; text-transform: lowercase;">il mondo nel tuo nome</p>
         
-        <div style="width: 40px; height: 1.5px; background: #50C878; margin: 15px auto; box-shadow: 0 0 8px rgba(80, 200, 120, 0.6);"></div>
+        <div style="width: 40px; height: 2px; background: #50C878; margin: 15px auto; box-shadow: 0 0 10px rgba(80, 200, 120, 0.8);"></div>
         
         <p style="font-size: 15px; color: #ffffff; letter-spacing: 1.5px; margin: 0; font-weight: 300; text-transform: lowercase;">il tuo nome nel mondo</p>
     </div>
@@ -134,19 +134,28 @@
         <span style="font-weight: 800; color: #50C878; text-transform: uppercase;">semplice e unico</span>
     </p>
 
-    <div class="input-group" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-        <div style="margin-bottom: 15px; font-size: 11px; color: rgba(80, 200, 120, 0.8); letter-spacing: 4px; text-transform: uppercase; font-weight: 600;">Claim yours</div>
+    <div class="input-group" style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div style="margin-bottom: 15px; font-size: 11px; color: rgba(80, 200, 120, 0.9); letter-spacing: 4px; text-transform: uppercase; font-weight: 600;">Claim yours</div>
         
-        <div style="display: inline-flex; align-items: center; border-bottom: 2px solid #50C878; min-width: 200px; justify-content: center; padding-bottom: 5px;">
-            <span style="color: #ffffff; font-size: 32px; font-weight: bold; margin-right: 5px;">@</span>
-            <input type="text" placeholder="tuonome" style="width: 150px; background: transparent; border: none; color: #ffffff; font-size: 28px; font-weight: 600; outline: none; text-align: left; font-family: 'Inter', sans-serif;">
+        <div style="display: flex; align-items: center; border-bottom: 2px solid #50C878; width: 220px; justify-content: center; padding-bottom: 5px; margin: 0 auto;">
+            <span style="color: #ffffff; font-size: 32px; font-weight: bold; line-height: 1;">@</span>
+            <input type="text" placeholder="tuonome" class="custom-placeholder" style="width: 160px; background: transparent; border: none; color: #ffffff; font-size: 28px; font-weight: 600; outline: none; text-align: left; font-family: 'Inter', sans-serif; margin-left: 5px;">
         </div>
 
-        <button class="btn-verifica" style="width: 280px; margin-top: 50px; background: #50C878; color: #000; border: none; padding: 22px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: all 0.3s ease;">
+        <button class="btn-verifica" style="width: 280px; margin-top: 50px; background: #50C878; color: #000; border: none; padding: 22px; border-radius: 50px; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.4);">
             VERIFICA
         </button>
     </div>
 </div>
+
+<style>
+    /* Placeholder più luminoso per UX */
+    .custom-placeholder::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        opacity: 1;
+    }
+</style>
+
 
     
     
