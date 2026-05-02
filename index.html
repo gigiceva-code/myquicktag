@@ -84,23 +84,29 @@
     <div style="color: #ffffff; font-size: 11px; font-weight: bold; margin-bottom: 2px;">@IlTuoNome</div>
     <div style="color: #50C878; font-size: 7px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;">Professione / Bio</div>
 
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 80%;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 85%; margin-top: 5px;">
         
-        <div style="aspect-ratio: 1/1; background: rgba(255,255,255,0.05); border: 1px dashed rgba(80, 200, 120, 0.3); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="width: 20px; height: 20px; background: #333; border-radius: 50%;"></div>
+        <div id="social-ig" onclick="activateSocial('ig')" style="aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border: 1px dashed rgba(80, 200, 120, 0.2); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease;">
+            <div style="width: 22px; height: 22px; border: 2px solid #555; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <div style="width: 10px; height: 10px; border: 2px solid #555; border-radius: 50%;"></div>
+                <div style="width: 3px; height: 3px; background: #555; border-radius: 50%; position: absolute; top: 2px; right: 2px;"></div>
+            </div>
+            <span style="font-size: 7px; color: #555; margin-top: 4px; font-weight: bold;">INSTAGRAM</span>
         </div>
 
-        <div style="aspect-ratio: 1/1; background: rgba(255,255,255,0.05); border: 1px dashed rgba(80, 200, 120, 0.3); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="width: 20px; height: 20px; background: #333; border-radius: 50%;"></div>
+        <div id="social-wa" onclick="activateSocial('wa')" style="aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border: 1px dashed rgba(80, 200, 120, 0.2); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease;">
+            <div style="width: 22px; height: 22px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div style="width: 12px; height: 12px; border: 2px solid #555; border-bottom: none; border-left: none; transform: rotate(45deg); margin-top: 2px;"></div>
+            </div>
+            <span style="font-size: 7px; color: #555; margin-top: 4px; font-weight: bold;">WHATSAPP</span>
         </div>
 
-        <div style="aspect-ratio: 1/1; background: rgba(255,255,255,0.05); border: 1px dashed rgba(80, 200, 120, 0.3); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="width: 20px; height: 20px; background: #333; border-radius: 50%;"></div>
-        </div>
+        <div style="aspect-ratio: 1/1; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.05); border-radius: 12px;"></div>
 
-        <div style="aspect-ratio: 1/1; background: rgba(255,255,255,0.05); border: 1px dashed rgba(80, 200, 120, 0.3); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="width: 20px; height: 20px; background: #333; border-radius: 50%;"></div>
-        </div>
+        <div style="aspect-ratio: 1/1; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.05); border-radius: 12px;"></div>
+
+    </div>
+
 
     </div>
 </div>
@@ -206,6 +212,19 @@
         }
     }
 
+        function activateSocial(type) {
+        const id = type === 'ig' ? 'social-ig' : 'social-wa';
+        const el = document.getElementById(id);
+        
+        // Simula l'attivazione: cambiamo il bordo e il colore del testo in Verde MyQuickTag
+        el.style.border = "1px solid #50C878";
+        el.style.background = "rgba(80, 200, 120, 0.1)";
+        el.querySelector('span').style.color = "#50C878";
+        
+        // Qui in futuro potremo far apparire il prompt: "Inserisci il tuo username"
+        console.log(type + " selezionato");
+    }
+        
     // Ascolta il tasto indietro del telefono (Android/Browser)
     window.onpopstate = function(event) {
         const phone = document.getElementById('iphone-mockup');
