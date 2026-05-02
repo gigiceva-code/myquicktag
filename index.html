@@ -1,5 +1,5 @@
 
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -31,22 +31,6 @@
             padding: 20px;
             box-sizing: border-box;
         }
-
-        .iphone-active { 
-            transform: scale(1.90) translateY(-15px) !important; 
-            box-shadow: 0 60px 150px rgba(0,0,0,0.98) !important; 
-            z-index: 100 !important;
-        }
-
-        #iphone-mockup {
-            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            will-change: transform;
-        }
-
-        .btn-verifica:active {
-            transform: scale(0.96);
-            background-color: #45b36b !important;
-        }
     </style>
 </head>
 <body>
@@ -59,59 +43,16 @@
         </div>
 
         <h1 style="font-size: 32px; font-weight: 900; letter-spacing: 1px; margin: 0; text-transform: uppercase; line-height: 1;">MYQUICKTAG</h1>
+        
         <p style="color: #50C878; font-size: 13px; font-weight: 600; letter-spacing: 3px; margin-top: 6px; margin-bottom: 20px; text-transform: uppercase;">Istant Digital Identity</p>
 
-        <div style="position: relative; display: flex; flex-direction: column; align-items: center; min-height: 500px; width: 100%; justify-content: center;">
-            <span style="color: #50C878; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; opacity: 0.8; font-weight: 600;">Tap to Simulate</span>
-         <div id="iphone-mockup" onclick="toggleIphone()" style="position: relative; width: 140px; height: 280px; background: #1a1a1a; border: 3px solid #333; border-radius: 28px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); cursor: pointer; display: flex; flex-direction: column; align-items: center; overflow: hidden;">
-    
-    <div id="back-arrow" style="position: absolute; top: 15px; left: 15px; opacity: 0; transition: opacity 0.5s ease; z-index: 30; color: #ffffff; font-size: 18px;">✕</div>
-
-    <div style="width: 45px; height: 12px; background: #000; border-radius: 6px; margin-top: 10px; z-index: 10;"></div>
-
-    <div style="position: relative; width: 100%; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        
-        <div id="welcome-at" style="width: 60px; height: 60px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; border: 1px solid #444; transition: all 0.5s ease;">
-             <span style="color: #50C878; font-size: 24px; font-weight: bold;">@</span>
+        <div id="section-1-content" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            
         </div>
-
-  <div id="iphone-editor" onclick="event.stopPropagation()" style="position: absolute; top: 20px; opacity: 0; transition: all 0.5s ease; display: flex; flex-direction: column; align-items: center; pointer-events: none; width: 100%;">
-    
-    <div style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #50C878; background: #333; margin-bottom: 8px; display: flex; align-items: center; justify-content: center;">
-        <span style="font-size: 8px; color: #888;">FOTO</span>
-    </div>
-    
-    <div style="color: #ffffff; font-size: 11px; font-weight: bold; margin-bottom: 2px;">@IlTuoNome</div>
-    <div style="color: #50C878; font-size: 7px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;">Professione / Bio</div>
-
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 85%; margin-top: 5px;">
-        
-        <div id="social-ig" onclick="activateSocial('ig')" style="aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border: 1px dashed rgba(80, 200, 120, 0.2); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease;">
-            <div style="width: 22px; height: 22px; border: 2px solid #555; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative;">
-                <div style="width: 10px; height: 10px; border: 2px solid #555; border-radius: 50%;"></div>
-                <div style="width: 3px; height: 3px; background: #555; border-radius: 50%; position: absolute; top: 2px; right: 2px;"></div>
-            </div>
-            <span style="font-size: 7px; color: #555; margin-top: 4px; font-weight: bold;">INSTAGRAM</span>
-        </div>
-
-        <div id="social-wa" onclick="activateSocial('wa')" style="aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border: 1px dashed rgba(80, 200, 120, 0.2); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease;">
-            <div style="width: 22px; height: 22px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                <div style="width: 12px; height: 12px; border: 2px solid #555; border-bottom: none; border-left: none; transform: rotate(45deg); margin-top: 2px;"></div>
-            </div>
-            <span style="font-size: 7px; color: #555; margin-top: 4px; font-weight: bold;">WHATSAPP</span>
-        </div>
-
-        <div style="aspect-ratio: 1/1; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.05); border-radius: 12px;"></div>
-
-        <div style="aspect-ratio: 1/1; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.05); border-radius: 12px;"></div>
 
     </div>
 
 
-    </div>
-</div>
-      
-  </div>
 
     <div class="container section-2" style="margin-top: 280px; padding-bottom: 120px;">
         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 50px;">
@@ -186,53 +127,9 @@
     </div>
 
     <script>
-    function toggleIphone() {
-        const phone = document.getElementById('iphone-mockup');
-        const welcomeAt = document.getElementById('welcome-at');
-        const editor = document.getElementById('iphone-editor');
-        const arrow = document.getElementById('back-arrow');
-
-        const isActive = phone.classList.toggle('iphone-active');
-
-        if (isActive) {
-            // STATO APERTO
-            welcomeAt.style.opacity = "0";
-            editor.style.opacity = "1";
-            editor.style.pointerEvents = "auto";
-            arrow.style.opacity = "1";
-            
-            // Gestione tasto indietro Android: aggiungiamo uno stato alla cronologia
-            window.history.pushState({ iphoneOpen: true }, "");
-        } else {
-            // STATO CHIUSO
-            welcomeAt.style.opacity = "1";
-            editor.style.opacity = "0";
-            editor.style.pointerEvents = "none";
-            arrow.style.opacity = "0";
-        }
-    }
-
-        function activateSocial(type) {
-        const id = type === 'ig' ? 'social-ig' : 'social-wa';
-        const el = document.getElementById(id);
-        
-        // Simula l'attivazione: cambiamo il bordo e il colore del testo in Verde MyQuickTag
-        el.style.border = "1px solid #50C878";
-        el.style.background = "rgba(80, 200, 120, 0.1)";
-        el.querySelector('span').style.color = "#50C878";
-        
-        // Qui in futuro potremo far apparire il prompt: "Inserisci il tuo username"
-        console.log(type + " selezionato");
-    }
-        
-    // Ascolta il tasto indietro del telefono (Android/Browser)
-    window.onpopstate = function(event) {
-        const phone = document.getElementById('iphone-mockup');
-        if (phone.classList.contains('iphone-active')) {
-            toggleIphone(); // Chiude l'iPhone invece di tornare indietro nella pagina
-        }
-    };
+    // Script pulito - In attesa di nuove istruzioni
 </script>
+
 
 
 </body>
