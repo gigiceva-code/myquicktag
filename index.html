@@ -21,31 +21,31 @@
             overflow-x: hidden;
         }
 
-        .container {
+ .container {
     width: 100%;
     max-width: 600px;
-    height: 100vh; /* Obbligatorio per definire l'area di visione */
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    box-sizing: border-box;
     margin: 0 auto;
-    
-    /* LOGICA SCROLL SNAP */
     overflow-y: scroll; 
     scroll-snap-type: y mandatory; 
     scroll-behavior: smooth;
-    
-    /* NASCONDI SCROLLBAR (Per estetica Luxury) */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-/* Nasconde scrollbar per Chrome, Safari e Opera */
 .container::-webkit-scrollbar {
     display: none;
 }
+
+section {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100vh;
+}
+
 
 
 <div class="container" style="background: #000; font-family: 'Inter', sans-serif;">
