@@ -21,7 +21,7 @@
             overflow-x: hidden;
         }
 
- .container {
+  .container {
     width: 100%;
     max-width: 600px;
     height: 100vh;
@@ -29,11 +29,13 @@
     flex-direction: column;
     margin: 0 auto;
     overflow-y: scroll; 
-    scroll-snap-type: y mandatory; 
+    /* Cambiato in proximity per evitare salti bruschi */
+    scroll-snap-type: y proximity; 
     scroll-behavior: smooth;
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
 
 .container::-webkit-scrollbar {
     display: none;
@@ -162,9 +164,8 @@ section {
         </button>
     </div> </section>    
 
-  <section class="section-3" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 60px 20px; height: auto; min-height: 100vh; scroll-snap-align: start; box-sizing: border-box;">
-  
-    
+    <section class="section-3" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 60px 20px; height: auto; min-height: 100vh; scroll-snap-align: none; box-sizing: border-box;">
+
         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 60px;">
             <div style="position: relative; width: 32px; height: 32px; margin-bottom: 10px;">
                 <div style="width: 100%; height: 100%; border: 2.5px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
