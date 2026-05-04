@@ -114,7 +114,13 @@ button:active, .btn-cyber:active, .btn-verifica:active {
     color: #50C878 !important;
     text-shadow: 0 0 10px rgba(80, 200, 120, 0.3);
 }
-      
+section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always; /* Forza il browser a fermarsi su ogni sezione */
+    flex-shrink: 0;
+    width: 100%;
+    height: 100vh;
+}      
 </style>
 
 <body>
@@ -285,20 +291,26 @@ button:active, .btn-cyber:active, .btn-verifica:active {
         <h2 style="color: #fff; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px;">Scelto dai Professionisti.</h2>
         <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;">La prova del valore</p>
     </div>
-
-    <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; max-width: 340px;">
-        <div style="display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(80, 200, 120, 0.2); padding: 15px; border-radius: 16px;">
-            <div style="width: 45px; height: 45px; border-radius: 50%; background: #333; margin-right: 15px; border: 1.5px solid #50C878; display: flex; align-items: center; justify-content: center; font-size: 20px;">👤</div>
-            <div>
-                <div style="color: #fff; font-weight: 700; font-size: 14px;">@alex_vogue <span style="color: #50C878; font-size: 10px; margin-left: 5px;">• Creator</span></div>
-                <div style="color: rgba(255,255,255,0.6); font-size: 12px; font-style: italic;">"Il mio intero mondo in un unico @tag."</div>
+<div style="width: 100%; display: flex; flex-direction: column; gap: 10px; max-width: 340px;">
+        <div style="display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(80, 200, 120, 0.2); padding: 12px; border-radius: 14px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #111; margin-right: 12px; border: 1.5px solid #50C878; display: flex; align-items: center; justify-content: center; font-size: 18px;">📸</div>
+            <div style="text-align: left;">
+                <div style="color: #fff; font-weight: 700; font-size: 13px;">@alex_vogue <span style="color: #50C878; font-size: 9px; margin-left: 5px; font-weight: 400;">• Creator</span></div>
+                <div style="color: rgba(255,255,255,0.5); font-size: 11px; font-style: italic;">"Il mio mondo in un unico @tag."</div>
             </div>
         </div>
-        <div style="display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 16px;">
-            <div style="width: 45px; height: 45px; border-radius: 50%; background: #333; margin-right: 15px; border: 1.5px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 20px;">👔</div>
-            <div>
-                <div style="color: #fff; font-weight: 700; font-size: 14px;">@m_rossi_ceo <span style="color: rgba(255,255,255,0.4); font-size: 10px; margin-left: 5px;">• Manager</span></div>
-                <div style="color: rgba(255,255,255,0.6); font-size: 12px; font-style: italic;">"Semplice, pulito, professionale."</div>
+        <div style="display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 14px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #111; margin-right: 12px; border: 1.5px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 18px;">👔</div>
+            <div style="text-align: left;">
+                <div style="color: #fff; font-weight: 700; font-size: 13px;">@m_rossi_ceo <span style="color: rgba(255,255,255,0.4); font-size: 9px; margin-left: 5px; font-weight: 400;">• Manager</span></div>
+                <div style="color: rgba(255,255,255,0.5); font-size: 11px; font-style: italic;">"Semplice, pulito, professionale."</div>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 14px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #111; margin-right: 12px; border: 1.5px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 18px;">🏛️</div>
+            <div style="text-align: left;">
+                <div style="color: #fff; font-weight: 700; font-size: 13px;">@studio_arch <span style="color: rgba(255,255,255,0.4); font-size: 9px; margin-left: 5px; font-weight: 400;">• Business</span></div>
+                <div style="color: rgba(255,255,255,0.5); font-size: 11px; font-style: italic;">"L'eleganza della rapidità."</div>
             </div>
         </div>
     </div>
