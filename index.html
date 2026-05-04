@@ -145,6 +145,11 @@
     }
     .btn-cyber { transition: all 0.3s ease; }
     .btn-cyber:active { transform: scale(0.96); }
+    @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-5px);}
+    60% {transform: translateY(-3px);}
+}
 </style>
 <section class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px 60px 20px; box-sizing: border-box;">
 
@@ -190,15 +195,22 @@
         </div>
     </div>
 
-    <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; padding-bottom: 10px;">
-        <button onclick="scrollToS2()" class="btn-cyber" style="width: 100%; padding: 22px; background: #50C878; color: #000; border: none; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase;">
+   <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; padding-bottom: 20px;">
+        
+        <button onclick="scrollToS2()" class="btn-cyber" style="width: 100%; padding: 20px; background: #50C878; color: #000; border: none; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase;">
             SCEGLI IL TUO @TAG
         </button>
 
-        <p style="margin-top: 15px; font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 400; letter-spacing: 1px; text-transform: uppercase;">
+        <p style="margin-top: 15px; font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;">
             Provalo ora. Decidi dopo.
         </p>
-    </div> 
+
+        <div onclick="scrollToS2()" style="margin-top: 25px; cursor: pointer; opacity: 0.5; animation: bounce 2s infinite;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+            </svg>
+        </div>
+    </div>
 </section>
 
 <section class="section-2" style="height: 100vh; min-height: 100vh; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #000; box-sizing: border-box; padding: 20px; flex-shrink: 0;">
