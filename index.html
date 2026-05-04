@@ -217,38 +217,46 @@
 </div>
     </div>
 </section>
+<section class="section-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px 30px 20px; box-sizing: border-box; position: relative; height: 100vh; scroll-snap-align: start;">
 
-<section class="section-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px 30px 20px; box-sizing: border-box; position: relative;">
-
-    <div style="text-align: center; margin-top: 20px;">
+    <div style="text-align: center; margin-top: 10px;">
         <p style="color: #50C878; font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px;">INSTANT DIGITAL IDENTITY</p>
-        <h2 style="font-size: 20px; font-weight: 300; line-height: 1.5; color: #fff; max-width: 300px; margin: 0 auto; letter-spacing: 0.5px;">
-            Il tuo Tag digitale come una pagina web,<br>
-            <span style="font-weight: 700; opacity: 0.9;">semplice, unica e veloce.</span>
+        
+        <div style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 30px 20px; margin: 20px 0; background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); width: 280px;">
+            <p style="font-size: 18px; font-weight: 300; color: #fff; margin: 0; letter-spacing: 1px;">il mondo nel tuo nome</p>
+            <div style="width: 40px; height: 2px; background: #50C878; margin: 15px auto;"></div>
+            <p style="font-size: 18px; font-weight: 300; color: #fff; margin: 0; letter-spacing: 1px;">il tuo nome nel mondo</p>
+        </div>
+
+        <h2 style="font-size: 16px; font-weight: 300; line-height: 1.5; color: #fff; max-width: 300px; margin: 15px auto 0 auto; letter-spacing: 0.5px;">
+            Il tuo tag digitale come una pagina web,<br>
+            <span style="font-weight: 700; color: #fff;">semplice, unica e veloce.</span>
         </h2>
-        <p style="color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 10px; letter-spacing: 0.5px;">Condividi chi sei in un solo clic.</p>
+        <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 8px; letter-spacing: 0.5px;">Condividi chi sei in un solo clic.</p>
     </div>
 
-    <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; margin-top: -20px;">
+    <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
         
-        <div style="position: relative; width: 100%; display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-            <span id="at-symbol" style="font-size: 24px; font-weight: 700; color: rgba(255,255,255,0.2); transition: all 0.3s ease; margin-right: 2px;">@</span>
-            
-            <input type="text" id="tag-input" placeholder="tuonome" 
-                onfocus="activateInput()" onblur="deactivateInput()"
-                style="background: transparent; border: none; color: #fff; font-size: 24px; font-weight: 700; outline: none; width: auto; min-width: 120px; padding: 0; margin: 0; letter-spacing: -0.5px;">
+        <div style="position: relative; width: 100%; display: flex; align-items: center; justify-content: center; padding-bottom: 12px; margin-bottom: 5px;">
+            <div style="display: flex; align-items: center;">
+                <span id="at-symbol" style="font-size: 26px; font-weight: 700; color: rgba(255,255,255,0.15); transition: all 0.3s ease;">@</span>
+                
+                <input type="text" id="tag-input" placeholder="tuonome" 
+                    onfocus="activateInput()" onblur="deactivateInput()"
+                    style="background: transparent; border: none; color: #fff; font-size: 26px; font-weight: 700; outline: none; width: 160px; padding: 0; margin-left: 2px; letter-spacing: -1px;">
+            </div>
             
             <div id="input-line" style="position: absolute; bottom: 0; left: 50%; width: 0%; height: 2px; background: #50C878; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-50%);"></div>
         </div>
 
-        <p style="color: rgba(255,255,255,0.3); font-size: 10px; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px;">Digita e verifica la disponibilità</p>
+        <p style="color: rgba(255,255,255,0.3); font-size: 10px; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px;">Digita e verifica la disponibilità</p>
 
-        <button class="btn-verifica" style="width: 100%; margin-top: 30px; padding: 20px; background: #50C878; color: #000; border: none; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase;">
+        <button class="btn-verifica" style="width: 100%; margin-top: 25px; padding: 20px; background: #50C878; color: #000; border: none; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px;">
             VERIFICA ORA
         </button>
     </div>
 
-    <div onclick="scrollToS3()" style="cursor: pointer; opacity: 0.8; animation: bounce 2s infinite; margin-bottom: 10px;">
+    <div onclick="scrollToS3()" style="cursor: pointer; opacity: 0.8; animation: bounce 2s infinite; padding-bottom: 10px;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
         </svg>
