@@ -240,16 +240,17 @@
     </p>
 </div> 
 
-   <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
+  <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
     
-    <div style="position: relative; width: 100%; display: flex; align-items: center; justify-content: center; padding-bottom: 12px;">
-        <div style="display: flex; align-items: center; position: relative;">
+    <div style="position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; padding-bottom: 12px;">
+        
+        <div style="display: flex; align-items: center; justify-content: center;">
             
-            <span id="at-symbol" style="font-size: 26px; font-weight: 700; color: rgba(255,255,255,0.15); transition: all 0.3s ease; position: absolute; left: 0;">@</span>
+            <span id="at-symbol" style="font-size: 26px; font-weight: 700; color: rgba(255,255,255,0.15); transition: all 0.3s ease; margin-right: 8px; display: inline-block;">@</span>
             
             <input type="text" id="tag-input" placeholder="tuonome" 
                 onfocus="activateInput()" onblur="deactivateInput()"
-                style="background: transparent; border: none; color: #fff; font-size: 26px; font-weight: 700; outline: none; width: 220px; padding: 0 0 0 30px; margin: 0; letter-spacing: -1px;">
+                style="background: transparent; border: none; color: #fff; font-size: 26px; font-weight: 700; outline: none; width: 220px; padding: 0; margin: 0; letter-spacing: -1px;">
         </div>
         
         <div id="input-line" style="position: absolute; bottom: 0; left: 50%; width: 0%; height: 2px; background: #50C878; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-50%);"></div>
