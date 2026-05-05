@@ -450,31 +450,43 @@ function deactivateInput() {
         <div style="width: 22px; height: 2px; background: #50C878;"></div>
     </div>
 
-<div id="menu-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 999; display: none; flex-direction: column; justify-content: center; align-items: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);">
+<div id="menu-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 999; display: none; flex-direction: column; padding: 60px 40px; box-sizing: border-box; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
     
     <div onclick="toggleMenu()" style="position: absolute; top: 65px; right: 25px; width: 44px; display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 4px;">
-        <div style="width: 8px; height: 8px; border-left: 2px solid #50C878; border-top: 2px solid #50C878; transform: rotate(45deg); opacity: 0.8;"></div>
-        <div style="width: 8px; height: 8px; border-left: 2px solid #50C878; border-top: 2px solid #50C878; transform: rotate(45deg); opacity: 0.4;"></div>
+        <div style="width: 8px; height: 8px; border-left: 1.5px solid #50C878; border-top: 1.5px solid #50C878; transform: rotate(45deg); opacity: 0.7;"></div>
+        <div style="width: 8px; height: 8px; border-left: 1.5px solid #50C878; border-top: 1.5px solid #50C878; transform: rotate(45deg); opacity: 0.3;"></div>
     </div>
 
-    <nav style="display: flex; flex-direction: column; align-items: center; gap: 35px;">
-        <a href="#s1" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 24px; font-weight: 200; letter-spacing: 5px; text-transform: uppercase; transition: 0.3s;">Home</a>
-        <a href="#s2" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 24px; font-weight: 200; letter-spacing: 5px; text-transform: uppercase; transition: 0.3s;">Shop</a>
-        <a href="#s3" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 24px; font-weight: 200; letter-spacing: 5px; text-transform: uppercase; transition: 0.3s;">Features</a>
-        <a href="#s4" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 24px; font-weight: 200; letter-spacing: 5px; text-transform: uppercase; transition: 0.3s;">Ecosystem</a>
+    <nav style="margin-top: 50px; display: flex; flex-direction: column; gap: 28px;">
+        <p style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 5px;">Navigation</p>
+        <a href="#" style="color: #ffffff; text-decoration: none; font-size: 22px; font-weight: 200; letter-spacing: 2px; text-transform: uppercase;">Ecosystem</a>
+        <a href="#" style="color: #ffffff; text-decoration: none; font-size: 22px; font-weight: 200; letter-spacing: 2px; text-transform: uppercase;">Business Solutions</a>
+        <a href="#" style="color: #ffffff; text-decoration: none; font-size: 22px; font-weight: 200; letter-spacing: 2px; text-transform: uppercase;">Setup Guide</a>
+        <a href="#" style="color: #50C878; text-decoration: none; font-size: 22px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase;">Reserve Tag</a>
     </nav>
 
-    <div style="position: absolute; bottom: 50px; width: 100%; text-align: center; padding: 0 40px; box-sizing: border-box;">
-        <div style="width: 30px; height: 1px; background: #50C878; margin: 0 auto 20px auto; opacity: 0.5;"></div>
-        <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; font-weight: 300; max-width: 250px; margin: 0 auto;">
-            MyQuickTag™ — Connettiamo il tuo mondo fisico alla tua identità digitale in un istante.
+    <div style="margin-top: 50px;">
+        <p style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px;">Social Channels</p>
+        <p style="color: rgba(255,255,255,0.4); font-size: 13px; font-weight: 300; letter-spacing: 1px; line-height: 1.4;">
+            Official channels launching soon.<br>Stay tuned for the digital revolution.
         </p>
-        <div style="margin-top: 25px; display: flex; justify-content: center; gap: 20px;">
-            <a href="mailto:info@myquicktag.com" style="color: #50C878; text-decoration: none; font-size: 10px; font-weight: 700; letter-spacing: 1px;">CONTACT</a>
-            <a href="#" style="color: #50C878; text-decoration: none; font-size: 10px; font-weight: 700; letter-spacing: 1px;">PRIVACY</a>
+        <div style="margin-top: 12px; display: flex; gap: 15px; color: #ffffff; font-size: 11px; font-weight: 600; opacity: 0.8; letter-spacing: 1px;">
+            <span>INSTAGRAM</span> • <span>LINKEDIN</span> • <span>TIKTOK</span>
         </div>
     </div>
+
+    <div style="margin-top: auto; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <a href="mailto:info@myquicktag.com" style="color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 300; letter-spacing: 0.5px;">info@myquicktag.com</a>
+            <div style="display: flex; gap: 25px; margin-top: 10px;">
+                <a href="#" style="color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;">Privacy Policy</a>
+                <a href="#" style="color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;">Terms of Service</a>
+            </div>
+        </div>
+        <p style="margin-top: 25px; color: rgba(255,255,255,0.2); font-size: 8px; letter-spacing: 2px; text-transform: uppercase;">© MyQuickTag Global Registry • Elite Standards</p>
+    </div>
 </div>
+
 
 
 
