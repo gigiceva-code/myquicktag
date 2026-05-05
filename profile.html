@@ -1,26 +1,39 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profilo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MyQuickTag Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --green: #50C878; --bg: #000; --card: #111; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        /* Brand Identity */
+        #nome { font-size: 18px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: var(--green); margin-bottom: 30px; }
+        
+        /* Foto e Testi */
+        .profile-img { width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--green); padding: 4px; margin-bottom: 20px; display: none; }
+        .profile-img img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        #realName { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+        #bio { font-size: 14px; color: #A0A0A0; text-align: center; max-width: 300px; line-height: 1.6; margin-bottom: 30px; }
 
-<style>
-body {
-    background:#000;
-    color:white;
-    text-align:center;
-    font-family:Arial;
-    padding:40px;
-}
-</style>
+        /* Links */
+        .links-container { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
+        .btn-link { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 15px; text-decoration: none; color: white; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        /* Share FAB */
+        .share-fab { position: fixed; bottom: 30px; background: var(--green); color: black; padding: 14px 28px; border-radius: 50px; font-weight: 900; font-size: 12px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(80, 200, 120, 0.3); }
+    </style>
 </head>
-
 <body>
 
-<h1 id="nome"></h1>
-<p id="bio"></p>
+    <div id="nome">@CARICAMENTO...</div>
+    <div class="profile-img" id="imgContainer"><img id="userImg" src=""></div>
+    <div id="realName"></div>
+    <p id="bio"></p>
+    <div class="links-container" id="links"></div>
+    <div class="share-fab" onclick="shareProfile()">Condividi Profilo</div>
 
 <script>
 const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
@@ -30,22 +43,39 @@ const TABLE_NAME = "Table 1";
 const params = new URLSearchParams(window.location.search);
 const username = params.get("nome");
 
-document.getElementById("nome").innerText = "@" + username;
+if(username) { document.getElementById("nome").innerText = "@" + username.toUpperCase(); }
 
 async function load(){
-    const res = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`, {
-        headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
-    });
-
-    const data = await res.json();
-
-    if(data.records.length > 0){
-        document.getElementById("bio").innerText = data.records[0].fields.Bio || "";
-    }
+    try {
+        const res = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`, {
+            headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+        });
+        const data = await res.json();
+        if(data.records.length > 0){
+            const fields = data.records[0].fields;
+            document.getElementById("bio").innerText = fields.Bio || "";
+            document.getElementById("realName").innerText = fields.Nome || "";
+            if(fields.Foto) {
+                document.getElementById("userImg").src = fields.Foto;
+                document.getElementById("imgContainer").style.display = "block";
+            }
+            if(fields.WhatsApp) {
+                const wa = document.createElement("a");
+                wa.href = `https://wa.me/${fields.WhatsApp}`;
+                wa.className = "btn-link";
+                wa.innerHTML = "💬 WHATSAPP";
+                document.getElementById("links").appendChild(wa);
+            }
+        }
+    } catch (e) { console.error("Errore"); }
 }
 
+function shareProfile() {
+    if (navigator.share) {
+        navigator.share({ title: `MyQuickTag | @${username}`, url: window.location.href });
+    }
+}
 load();
 </script>
-
 </body>
 </html>
