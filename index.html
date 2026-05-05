@@ -447,18 +447,31 @@ function deactivateInput() {
         <div style="width: 22px; height: 2px; background: #50C878;"></div>
         <div style="width: 22px; height: 2px; background: #50C878;"></div>
     </div>
-<div id="menu-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 999; display: none; flex-direction: column; align-items: center; justify-content: center; transition: all 0.4s ease;">
+
+<div id="menu-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(20px); z-index: 999; display: none; flex-direction: column; align-items: center; justify-content: space-between; padding: 100px 30px 50px 30px; box-sizing: border-box; transition: all 0.4s ease;">
     
-    <div onclick="toggleMenu()" style="position: absolute; top: 30px; right: 30px; color: #50C878; font-size: 40px; cursor: pointer; font-weight: 100;">&times;</div>
+    <div onclick="toggleMenu()" style="position: absolute; top: 30px; right: 30px; color: #50C878; font-size: 40px; cursor: pointer;">&times;</div>
 
-    <nav style="display: flex; flex-direction: column; align-items: center; gap: 40px;">
-        <a href="#s1" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 22px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase;">Home</a>
-        <a href="#s2" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 22px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase;">Reserve Tag</a>
-        <a href="#s3" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 22px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase;">Power</a>
-        <a href="#s4" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 22px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase;">Ecosystem</a>
+    <nav style="display: flex; flex-direction: column; align-items: center; gap: 25px;">
+        <a href="#s1" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 18px; font-weight: 300; letter-spacing: 3px; text-transform: uppercase;">Home</a>
+        <a href="#s2" onclick="toggleMenu()" style="color: #ffffff; text-decoration: none; font-size: 18px; font-weight: 300; letter-spacing: 3px; text-transform: uppercase;">Shop</a>
     </nav>
-</div>
 
+    <div style="text-align: center; max-width: 300px; margin: 40px 0;">
+        <p style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px;">Il Progetto</p>
+        <p style="color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.6; font-weight: 300;">
+            MyQuickTag nasce per eliminare le barriere tra identità fisica e digitale. Un ecosistema esclusivo per chi non accetta compromessi sulla propria visibilità.
+        </p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+        <div style="display: flex; gap: 20px;">
+            <a href="mailto:info@myquicktag.com" style="color: #ffffff; text-decoration: none; font-size: 11px; letter-spacing: 1px; opacity: 0.6;">CONTATTI</a>
+            <a href="#" style="color: #ffffff; text-decoration: none; font-size: 11px; letter-spacing: 1px; opacity: 0.6;">PRIVACY</a>
+        </div>
+        <p style="color: #50C878; font-size: 9px; letter-spacing: 2px; opacity: 0.4;">MYQUICKTAG © 2026</p>
+    </div>
+</div>
 
   
 </body>
