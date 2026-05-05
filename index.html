@@ -433,13 +433,20 @@ function deactivateInput() {
 }
   function toggleMenu() {
     const menu = document.getElementById('menu-overlay');
-    // Qui diciamo solo di mostrare o nascondere il velo nero
+    const dots = document.querySelector('.nav-dots'); // Seleziona i puntini
+    const menuIcon = document.getElementById('menu-icon'); // Seleziona l'icona di apertura
+
     if (menu.style.display === 'flex') {
         menu.style.display = 'none';
+        if(dots) dots.style.display = 'flex'; // Fa tornare i puntini
+        if(menuIcon) menuIcon.style.opacity = '1'; // Fa tornare l'icona
     } else {
         menu.style.display = 'flex';
+        if(dots) dots.style.display = 'none'; // Nasconde i puntini (BUG FIX)
+        if(menuIcon) menuIcon.style.opacity = '0'; // Nasconde l'icona per pulizia
     }
 }
+
   
 
 </script>
