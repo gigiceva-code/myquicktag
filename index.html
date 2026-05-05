@@ -447,18 +447,22 @@ function deactivateInput() {
     }
 }
 
-  // Memoria dello scroll per il refresh
+  
+// Memoria dello scroll "Hard" per One-Page Snap
 window.addEventListener('beforeunload', () => {
     localStorage.setItem('scrollPos', window.scrollY);
 });
 
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', () => {
     const scrollPos = localStorage.getItem('scrollPos');
     if (scrollPos) {
-        window.scrollTo({
-            top: parseInt(scrollPos),
-            behavior: 'instant' // 'instant' evita l'effetto scroll al caricamento
-        });
+        // Usiamo un micro-ritardo per assicurarci che la pagina sia pronta
+        setTimeout(() => {
+            window.scrollTo({
+                top: parseInt(scrollPos),
+                behavior: 'instant'
+            });
+        }, 50); 
     }
 });
 
