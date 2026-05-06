@@ -35,8 +35,8 @@ document.getElementById("tag-header").innerText = userParam.toUpperCase();
 
 async function load() {
     try {
-        // FORMULA CORRETTA: Usa Nome con la N maiuscola
-      const formula = "LOWER({nome})='" + userParam.toLowerCase() + "'";
+        
+     const formula = "LOWER({nome})='@" + userParam.toLowerCase() + "'";
         const url = "https://api.airtable.com/v0/" + BASE + "/" + encodeURIComponent(TABLE) + "?filterByFormula=" + encodeURIComponent(formula);
 
         const response = await fetch(url, {
@@ -44,8 +44,15 @@ async function load() {
         });
         const data = await response.json();
 
-        if (data.records && data.records.length > 0) {
-            const f = data.records[0].fields;
+      if (data.records && data.records.length > 0) {
+    // TROVATO -> NOME OCCUPATO
+    document.getElementById("bio-text").innerText = "Spiacente, @" + userParam + " è già preso.";
+    document.getElementById("links-box").innerHTML = ""; 
+} else {
+    // VUOTO -> DISPONIBILE
+    document.getElementById("bio-text").innerText = "Complimenti! @" + userParam + " è disponibile.";
+    // Qui in futuro metteremo il tasto per registrare il nome
+} 
             
             // MOSTRA BIO
             document.getElementById("bio-text").innerText = f.bio || "Nessuna biografia inserita.";
