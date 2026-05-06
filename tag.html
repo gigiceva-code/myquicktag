@@ -18,7 +18,6 @@
     <input id="email" placeholder="Inserisci la tua email">
     <br>
     <button id="btn-conferma" onclick="salva()">Conferma e Crea</button>
-
 <script>
 const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
 const BASE_ID = "app4eQDzqixPDbQTd";
@@ -48,9 +47,10 @@ async function salva(){
             },
             body: JSON.stringify({
                 fields: {
-                    "nome": username.toLowerCase(), // Salviamo 'test' senza @
-                    "email": email,                 // Assicurati che su Airtable esista colonna 'email'
-                    "bio": "Benvenuti sul mio profilo!" // Bio di default
+                    "nome": username.toLowerCase(), 
+                    "email": email,                 
+                    "bio": "Benvenuti sul mio profilo!",
+                    "Stato": "Attivo" // Campo aggiunto per evitare l'errore di Airtable
                 }
             })
         });
@@ -59,12 +59,16 @@ async function salva(){
             alert("Tag @" + username + " creata con successo!");
             window.location.href = "edit.html?nome=" + username;
         } else {
-            alert("Errore durante il salvataggio. Controlla i nomi delle colonne su Airtable.");
+            // Leggiamo l'errore specifico se Airtable rifiuta ancora
+            const errorData = await response.json();
+            alert("Errore Airtable: " + (errorData.error ? errorData.error.message : "Controlla le colonne"));
             btn.innerText = "Conferma";
             btn.disabled = false;
         }
     } catch (e) {
         alert("Errore di connessione.");
+        btn.disabled = false;
+        btn.innerText = "Conferma";
     }
 }
 </script>
