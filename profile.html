@@ -9,46 +9,29 @@
     <style>
         :root { --green: #50C878; --bg: #000; --card: #111; }
         body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        
-        /* Brand Identity: Il @nome dell'utente */
-        #nome { font-size: 16px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; color: var(--green); margin-bottom: 30px; border: 1px solid var(--green); padding: 5px 15px; border-radius: 50px; }
-        
-        /* Avatar Area */
+        #nome-header { font-size: 16px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; color: var(--green); margin-bottom: 30px; border: 1px solid var(--green); padding: 5px 15px; border-radius: 50px; }
         .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--green); padding: 5px; margin-bottom: 20px; display: none; overflow: hidden; }
         .profile-img img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        
-        /* Info Utente */
         #realName { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
         #bio { font-size: 14px; color: #A0A0A0; text-align: center; max-width: 280px; line-height: 1.6; margin-bottom: 35px; }
-
-        /* Contenitore Link Dinamici */
         .links-container { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
         .btn-link { background: var(--card); border: 1px solid rgba(255,255,255,0.1); padding: 18px; border-radius: 16px; text-decoration: none; color: white; font-weight: 600; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .btn-link:active { transform: scale(0.96); background: #1a1a1a; }
-
-        /* Share Button (L'icona simpatica) */
         .share-fab { position: fixed; bottom: 30px; background: var(--green); color: black; padding: 15px 30px; border-radius: 50px; font-weight: 900; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(80, 200, 120, 0.4); cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="nome">@CARICAMENTO...</div>
-    
-    <div class="profile-img" id="imgContainer">
-        <img id="userImg" src="" alt="Profile">
-    </div>
-
+    <div id="nome-header">@CARICAMENTO...</div>
+    <div class="profile-img" id="imgContainer"><img id="userImg" src="" alt="Profile"></div>
     <div id="realName"></div>
     <p id="bio"></p>
-
-    <div class="links-container" id="links">
-        </div>
-
+    <div class="links-container" id="links"></div>
     <div class="share-fab" onclick="shareProfile()">Condividi Profilo</div>
 
 <script>
-// I tuoi dati Airtable (già configurati)
-const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
+// CREDENZIALI AGGIORNATE DA GOOGLE KEEP
+const AIRTABLE_TOKEN = "PatAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
 const BASE_ID = "app4eQDzqixPDbQTd";
 const TABLE_NAME = "Table 1";
 
@@ -56,12 +39,12 @@ const params = new URLSearchParams(window.location.search);
 const username = params.get("nome");
 
 if(username) { 
-    document.getElementById("nome").innerText = "@" + username.toUpperCase(); 
+    document.getElementById("nome-header").innerText = "@" + username.toUpperCase(); 
 }
 
 async function load(){
     try {
-        const res = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`, {
+        const res = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='@${username}'`, {
             headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
         });
         const data = await res.json();
@@ -69,20 +52,21 @@ async function load(){
         if(data.records.length > 0){
             const fields = data.records[0].fields;
             
-            document.getElementById("realName").innerText = fields.Nome || "";
-            document.getElementById("bio").innerText = fields.Bio || "";
+            // Mapping colonne basato sugli screenshot PC
+            document.getElementById("realName").innerText = fields.nome || ""; 
+            document.getElementById("bio").innerText = fields.biografia || ""; 
             
-            if(fields.Foto) {
-                document.getElementById("userImg").src = fields.Foto;
+            if(fields.avatar) {
+                const imgUrl = Array.isArray(fields.avatar) ? fields.avatar[0].url : fields.avatar;
+                document.getElementById("userImg").src = imgUrl;
                 document.getElementById("imgContainer").style.display = "block";
             }
 
-            // Esempio di logica per pulsanti multipli
             const linksArea = document.getElementById("links");
             const menuItems = [
-                { id: 'WhatsApp', label: '💬 WHATSAPP', prefix: 'https://wa.me/' },
+                { id: 'Instagram', label: '📸 INSTAGRAM', prefix: 'https://instagram.com/' },
                 { id: 'LinkedIn', label: '💼 LINKEDIN', prefix: '' },
-                { id: 'Instagram', label: '📸 INSTAGRAM', prefix: 'https://instagram.com/' }
+                { id: 'sito', label: '🌐 SITO WEB', prefix: '' }
             ];
 
             menuItems.forEach(item => {
@@ -95,7 +79,7 @@ async function load(){
                 }
             });
         }
-    } catch (e) { console.error("Errore caricamento dati"); }
+    } catch (e) { console.error("Errore"); }
 }
 
 function shareProfile() {
