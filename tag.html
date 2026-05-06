@@ -1,43 +1,23 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Attiva Tag</title>
-
-<style>
-body {
-    background: #000;
-    color: white;
-    font-family: Arial;
-    text-align: center;
-    padding: 40px;
-}
-input {
-    padding: 15px;
-    border-radius: 10px;
-    border: none;
-    width: 250px;
-}
-button {
-    padding: 15px;
-    background: #50C878;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    margin-top: 10px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attiva Tag</title>
+    <style>
+        body { background: #000; color: white; font-family: Arial; text-align: center; padding: 40px; }
+        input { padding: 15px; border-radius: 10px; border: none; width: 250px; margin-bottom: 10px; }
+        button { padding: 15px; background: #50C878; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    </style>
 </head>
-
 <body>
 
-<h2 id="nome"></h2>
-<p>3 mesi gratis · poi 2€/anno</p>
+    <h2 id="mostra-nome"></h2>
+    <p>3 mesi gratis · poi 2€/anno</p>
 
-<input id="email" placeholder="Inserisci email">
-<br>
-<button onclick="salva()">Conferma</button>
+    <input id="email" placeholder="Inserisci la tua email">
+    <br>
+    <button id="btn-conferma" onclick="salva()">Conferma e Crea</button>
 
 <script>
 const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
@@ -45,34 +25,48 @@ const BASE_ID = "app4eQDzqixPDbQTd";
 const TABLE_NAME = "Table 1";
 
 const params = new URLSearchParams(window.location.search);
-const username = params.get("nome");
+const username = params.get("nome") || "utente";
 
-document.getElementById("nome").innerText = "@" + username;
+// Visualizziamo la chiocciola solo per estetica
+document.getElementById("mostra-nome").innerText = "@" + username.toUpperCase();
 
 async function salva(){
     const email = document.getElementById("email").value;
-    if(!email.includes("@")) return alert("Email non valida");
+    const btn = document.getElementById("btn-conferma");
 
-    await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            fields: {
-                Tag: "@" + username,
-                Email: email,
-                Stato: "Attivo",
-                Data: new Date().toISOString()
-            }
-        })
-    });
+    if(!email.includes("@")) return alert("Inserisci una email valida");
+    
+    btn.innerText = "Registrazione...";
+    btn.disabled = true;
 
-    alert("Tag creata!");
-    window.location.href = "edit.html?nome=" + username;
+    try {
+        const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                fields: {
+                    "nome": username.toLowerCase(), // Salviamo 'test' senza @
+                    "email": email,                 // Assicurati che su Airtable esista colonna 'email'
+                    "bio": "Benvenuti sul mio profilo!" // Bio di default
+                }
+            })
+        });
+
+        if (response.ok) {
+            alert("Tag @" + username + " creata con successo!");
+            window.location.href = "edit.html?nome=" + username;
+        } else {
+            alert("Errore durante il salvataggio. Controlla i nomi delle colonne su Airtable.");
+            btn.innerText = "Conferma";
+            btn.disabled = false;
+        }
+    } catch (e) {
+        alert("Errore di connessione.");
+    }
 }
 </script>
-
 </body>
 </html>
