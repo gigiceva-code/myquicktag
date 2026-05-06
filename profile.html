@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -8,13 +9,17 @@
         :root { --green: #50C878; --bg: #000; }
         body { 
             background: var(--bg); color: white; font-family: sans-serif; 
-            margin: 0; padding: 100px 20px; display: flex; flex-direction: column; align-items: center; 
+            margin: 0; padding: 120px 20px 40px; display: flex; flex-direction: column; align-items: center; 
+        }
+        .header-fix {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100px;
+            background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 100;
         }
         #tag-header { 
             color: var(--green); border: 1px solid var(--green); 
-            padding: 10px 25px; border-radius: 50px; font-weight: bold; margin-bottom: 30px;
+            padding: 10px 25px; border-radius: 50px; font-weight: bold; text-transform: uppercase;
         }
-        #bio-text { text-align: center; font-size: 1.2rem; margin-bottom: 40px; max-width: 300px; }
+        #bio-text { text-align: center; font-size: 1.1rem; margin-bottom: 30px; max-width: 300px; line-height: 1.6; }
         .link-btn { 
             width: 100%; max-width: 320px; background: #111; border: 1px solid #333;
             color: white; padding: 20px; margin-bottom: 15px; border-radius: 15px;
@@ -24,46 +29,53 @@
 </head>
 <body>
 
-    <div id="tag-header">@...</div>
-    <p id="bio-text">Caricamento profilo...</p>
+    <div class="header-fix">
+        <div id="tag-header">@...</div>
+    </div>
+    
+    <p id="bio-text">Recupero dati...</p>
     <div id="links-box" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
 
 <script>
 const TOKEN = "PatAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
 const BASE = "app4eQDzqixPDbQTd";
-const TABLE = "Table 1"; // Nome originale senza traduttore
+const TABLE = "Table 1"; 
 
 const params = new URLSearchParams(window.location.search);
-const user = params.get("nome");
+const userParam = params.get("nome") || "test";
 
-if(user) document.getElementById("tag-header").innerText = "@" + user.toUpperCase();
+document.getElementById("tag-header").innerText = "@" + userParam.toUpperCase();
 
-async function loadProfile() {
+async function load() {
     try {
-        // Cerchiamo @test nella colonna 'nome'
-        const response = await fetch(`https://api.airtable.com/v0/${BASE}/${encodeURIComponent(TABLE)}?filterByFormula={nome}='@${user}'`, {
+        // Cerchiamo la riga che ha @test nella colonna 'nome'
+        const response = await fetch(`https://api.airtable.com/v0/${BASE}/${encodeURIComponent(TABLE)}?filterByFormula={nome}='@${userParam}'`, {
             headers: { Authorization: `Bearer ${TOKEN}` }
         });
         const data = await response.json();
 
         if(data.records && data.records.length > 0) {
             const f = data.records[0].fields;
-            // biografia è il nome della colonna visto negli screen
-            document.getElementById("bio-text").innerText = f.biografia || "";
+            
+            // Usiamo 'bio' invece di 'biografia' come da tuo screen
+            document.getElementById("bio-text").innerText = f.bio || "Nessuna bio.";
             
             const box = document.getElementById("links-box");
-            if(f.Instagram) createBtn(box, "INSTAGRAM", "https://instagram.com/" + f.Instagram);
-            if(f.LinkedIn) createBtn(box, "LINKEDIN", f.LinkedIn);
-            if(f.sito) createBtn(box, "SITO WEB", f.sito);
+            box.innerHTML = ""; 
+            
+            // Usiamo i nomi esatti delle tue colonne
+            if(f.instagram) addBtn(box, "INSTAGRAM", "https://instagram.com/" + f.instagram);
+            if(f.linkedin) addBtn(box, "LINKEDIN", f.linkedin);
+            if(f.sito) addBtn(box, "SITO WEB", f.sito);
         } else {
-            document.getElementById("bio-text").innerText = "Dati non trovati per @" + user;
+            document.getElementById("bio-text").innerText = "Non trovo @" + userParam + ". Controlla che nella colonna 'nome' ci sia scritto @test";
         }
     } catch(e) {
-        document.getElementById("bio-text").innerText = "Errore di rete.";
+        document.getElementById("bio-text").innerText = "Errore di connessione.";
     }
 }
 
-function createBtn(container, label, url) {
+function addBtn(container, label, url) {
     const a = document.createElement("a");
     a.className = "link-btn";
     a.href = url.startsWith('http') ? url : 'https://' + url;
@@ -71,7 +83,7 @@ function createBtn(container, label, url) {
     container.appendChild(a);
 }
 
-if(user) loadProfile();
+load();
 </script>
 </body>
 </html>
