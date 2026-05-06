@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -9,61 +8,70 @@
         :root { --green: #50C878; --bg: #000; }
         body { 
             background: var(--bg); color: white; font-family: sans-serif; 
-            margin: 0; padding: 80px 20px 40px; /* Padding extra in alto */
-            display: flex; flex-direction: column; align-items: center; 
+            margin: 0; padding: 100px 20px; display: flex; flex-direction: column; align-items: center; 
         }
         #tag-header { 
             color: var(--green); border: 1px solid var(--green); 
-            padding: 10px 20px; border-radius: 50px; font-weight: bold;
-            margin-bottom: 30px; text-transform: uppercase;
+            padding: 10px 25px; border-radius: 50px; font-weight: bold; margin-bottom: 30px;
         }
-        #bio-text { text-align: center; font-size: 1.1rem; line-height: 1.5; margin-bottom: 30px; }
+        #bio-text { text-align: center; font-size: 1.2rem; margin-bottom: 40px; max-width: 300px; }
         .link-btn { 
-            width: 100%; max-width: 300px; background: #111; border: 1px solid #333;
-            color: white; padding: 15px; margin-bottom: 10px; border-radius: 12px;
+            width: 100%; max-width: 320px; background: #111; border: 1px solid #333;
+            color: white; padding: 20px; margin-bottom: 15px; border-radius: 15px;
             text-decoration: none; text-align: center; font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div id="tag-header">Caricamento...</div>
-    <p id="bio-text">Recupero dati in corso...</p>
+    <div id="tag-header">@...</div>
+    <p id="bio-text">Caricamento profilo...</p>
     <div id="links-box" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
 
 <script>
 const TOKEN = "PatAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
 const BASE = "app4eQDzqixPDbQTd";
-const TABLE = "Table 1"; // <--- USIAMO IL NOME IN INGLESE ORIGINALE
+const TABLE = "Table 1"; // Nome originale senza traduttore
 
-const urlParams = new URLSearchParams(window.location.search);
-const userTag = urlParams.get("nome");
+const params = new URLSearchParams(window.location.search);
+const user = params.get("nome");
 
-async function fetchData() {
+if(user) document.getElementById("tag-header").innerText = "@" + user.toUpperCase();
+
+async function loadProfile() {
     try {
-        const response = await fetch(`https://api.airtable.com/v0/${BASE}/${encodeURIComponent(TABLE)}?filterByFormula=LOWER({nome})='@${userTag.toLowerCase()}'`, {
+        // Cerchiamo @test nella colonna 'nome'
+        const response = await fetch(`https://api.airtable.com/v0/${BASE}/${encodeURIComponent(TABLE)}?filterByFormula={nome}='@${user}'`, {
             headers: { Authorization: `Bearer ${TOKEN}` }
         });
-        
         const data = await response.json();
-        
-        if (data.records && data.records.length > 0) {
-            const user = data.records[0].fields;
-            // biografia è minuscolo come abbiamo visto negli screen
-            document.getElementById("bio-text").innerText = user.biografia || "Profilo attivo.";
+
+        if(data.records && data.records.length > 0) {
+            const f = data.records[0].fields;
+            // biografia è il nome della colonna visto negli screen
+            document.getElementById("bio-text").innerText = f.biografia || "";
             
             const box = document.getElementById("links-box");
-            if(user.Instagram) addLink(box, "INSTAGRAM", "https://instagram.com/" + user.Instagram);
-            if(user.LinkedIn) addLink(box, "LINKEDIN", user.LinkedIn);
-            if(user.sito) addLink(box, "SITO WEB", user.sito);
+            if(f.Instagram) createBtn(box, "INSTAGRAM", "https://instagram.com/" + f.Instagram);
+            if(f.LinkedIn) createBtn(box, "LINKEDIN", f.LinkedIn);
+            if(f.sito) createBtn(box, "SITO WEB", f.sito);
         } else {
-            document.getElementById("bio-text").innerText = "Non trovo @" + userTag + ". Controlla che su Airtable ci sia scritto @test tutto minuscolo.";
+            document.getElementById("bio-text").innerText = "Dati non trovati per @" + user;
         }
-    } catch (err) {
-        document.getElementById("bio-text").innerText = "Errore di connessione.";
+    } catch(e) {
+        document.getElementById("bio-text").innerText = "Errore di rete.";
     }
 }
-// ... resto del codice identico
+
+function createBtn(container, label, url) {
+    const a = document.createElement("a");
+    a.className = "link-btn";
+    a.href = url.startsWith('http') ? url : 'https://' + url;
+    a.innerText = label;
+    container.appendChild(a);
+}
+
+if(user) loadProfile();
 </script>
 </body>
 </html>
