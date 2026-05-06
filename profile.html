@@ -23,7 +23,7 @@
     <div id="links-box" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
 <script>
 // DATI DI CONNESSIONE
-const TOKEN = "PatAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
+const TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
 const BASE = "app4eQDzqixPDbQTd";
 const TABLE = "Table 1"; 
 
@@ -31,12 +31,12 @@ const TABLE = "Table 1";
 const params = new URLSearchParams(window.location.search);
 const userParam = params.get("nome") || "test";
 
-// Mostra il tag con la @ solo graficamente
+// Mostra il nome con la @ solo nel titolo grafico
 document.getElementById("tag-header").innerText = "@" + userParam.toUpperCase();
 
 async function load() {
     try {
-        // CERCA IL NOME ESATTO (senza @ aggiunte dal codice)
+        // Formula pulita: cerca il nome minuscolo senza @
         const formula = "LOWER({nome})='" + userParam.toLowerCase() + "'";
         const url = "https://api.airtable.com/v0/" + BASE + "/" + encodeURIComponent(TABLE) + "?filterByFormula=" + encodeURIComponent(formula);
 
@@ -48,13 +48,14 @@ async function load() {
         if (data.records && data.records.length > 0) {
             const f = data.records[0].fields;
             
-            // MOSTRA I DATI REALI DA AIRTABLE
-            document.getElementById("bio-text").innerText = f.bio || "Nessuna biografia.";
+            // MOSTRA I DATI
+            document.getElementById("bio-text").innerText = f.bio || "Nessuna biografia inserita.";
             
             const box = document.getElementById("links-box");
             box.innerHTML = ""; 
             
-            if(f.instagram) addBtn(box, "INSTAGRAM", "https://instagram.com/" + f.instagram);
+            // AGGIUNGE I BOTTONI SOLO SE ESISTONO I LINK
+            if(f.instagram) addBtn(box, "INSTAGRAM", "https://instagram.com/" + f.instagram.replace('@', ''));
             if(f.linkedin) addBtn(box, "LINKEDIN", f.linkedin);
             if(f.sito) addBtn(box, "SITO WEB", f.sito);
             
@@ -62,7 +63,7 @@ async function load() {
             document.getElementById("bio-text").innerText = "Profilo @" + userParam + " non trovato.";
         }
     } catch(e) {
-        document.getElementById("bio-text").innerText = "Errore di connessione.";
+        document.getElementById("bio-text").innerText = "Errore di caricamento.";
     }
 }
 
@@ -71,7 +72,7 @@ function addBtn(container, label, url) {
     a.className = "link-btn";
     a.href = url.startsWith('http') ? url : 'https://' + url;
     a.innerText = label;
-    a.target = "_blank";
+    a.target = "_blank"; // Apre in una nuova pagina
     container.appendChild(a);
 }
 
