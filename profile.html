@@ -31,12 +31,12 @@ const TABLE = "Table 1";
 // RECUPERO PARAMETRO DALL'URL
 const params = new URLSearchParams(window.location.search);
 const userParam = params.get("nome") || "test";
-document.getElementById("tag-header").innerText = "@" + userParam.toUpperCase();
+document.getElementById("tag-header").innerText = userParam.toUpperCase();
 
 async function load() {
     try {
         
-  const formula = "LOWER({nome})='@" + userParam.toLowerCase() + "'";
+  const formula = "LOWER({nome})='" + userParam.toLowerCase() + "'";
         const url = "https://api.airtable.com/v0/" + BASE + "/" + encodeURIComponent(TABLE) + "?filterByFormula=" + encodeURIComponent(formula);
 
         const response = await fetch(url, {
