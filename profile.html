@@ -31,11 +31,12 @@ const TABLE = "Table 1";
 const params = new URLSearchParams(window.location.search);
 const userParam = params.get("nome") || "test";
 
-// Mostra subito il nome in alto
+// Mostra il tag con la @ solo graficamente
 document.getElementById("tag-header").innerText = "@" + userParam.toUpperCase();
 
 async function load() {
     try {
+        // CERCA IL NOME ESATTO (senza @ aggiunte dal codice)
         const formula = "LOWER({nome})='" + userParam.toLowerCase() + "'";
         const url = "https://api.airtable.com/v0/" + BASE + "/" + encodeURIComponent(TABLE) + "?filterByFormula=" + encodeURIComponent(formula);
 
@@ -45,13 +46,11 @@ async function load() {
         const data = await response.json();
 
         if (data.records && data.records.length > 0) {
-            // RECUPERO I CAMPI DEL PRIMO RECORD TROVATO
             const f = data.records[0].fields;
             
-            // MOSTRA BIO
-            document.getElementById("bio-text").innerText = f.bio || "Nessuna biografia inserita.";
+            // MOSTRA I DATI REALI DA AIRTABLE
+            document.getElementById("bio-text").innerText = f.bio || "Nessuna biografia.";
             
-            // MOSTRA LINK
             const box = document.getElementById("links-box");
             box.innerHTML = ""; 
             
@@ -60,12 +59,10 @@ async function load() {
             if(f.sito) addBtn(box, "SITO WEB", f.sito);
             
         } else {
-            // SE NON TROVA L'UTENTE
             document.getElementById("bio-text").innerText = "Profilo @" + userParam + " non trovato.";
-            document.getElementById("links-box").innerHTML = "";
         }
     } catch(e) {
-        document.getElementById("bio-text").innerText = "Errore di caricamento.";
+        document.getElementById("bio-text").innerText = "Errore di connessione.";
     }
 }
 
@@ -80,5 +77,6 @@ function addBtn(container, label, url) {
 
 load();
 </script>
+
 </body>
 </html>
