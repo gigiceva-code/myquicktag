@@ -21,7 +21,6 @@
     
     <p id="bio-text">Caricamento...</p>
     <div id="links-box" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
-
 <script>
 // DATI DI CONNESSIONE
 const TOKEN = "PatAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
@@ -32,6 +31,7 @@ const TABLE = "Table 1";
 const params = new URLSearchParams(window.location.search);
 const userParam = params.get("nome") || "test";
 
+// Mostra subito il nome in alto
 document.getElementById("tag-header").innerText = "@" + userParam.toUpperCase();
 
 async function load() {
@@ -44,15 +44,9 @@ async function load() {
         });
         const data = await response.json();
 
-      if (data.records && data.records.length > 0) {
-    // TROVATO -> NOME OCCUPATO
-    document.getElementById("bio-text").innerText = "Spiacente, @" + userParam + " è già preso.";
-    document.getElementById("links-box").innerHTML = ""; 
-} else {
-    // VUOTO -> DISPONIBILE
-    document.getElementById("bio-text").innerText = "Complimenti! @" + userParam + " è disponibile.";
-    // Qui in futuro metteremo il tasto per registrare il nome
-} 
+        if (data.records && data.records.length > 0) {
+            // RECUPERO I CAMPI DEL PRIMO RECORD TROVATO
+            const f = data.records[0].fields;
             
             // MOSTRA BIO
             document.getElementById("bio-text").innerText = f.bio || "Nessuna biografia inserita.";
@@ -66,10 +60,12 @@ async function load() {
             if(f.sito) addBtn(box, "SITO WEB", f.sito);
             
         } else {
-            document.getElementById("bio-text").innerText = "Utente @" + userParam + " non trovato nel database.";
+            // SE NON TROVA L'UTENTE
+            document.getElementById("bio-text").innerText = "Profilo @" + userParam + " non trovato.";
+            document.getElementById("links-box").innerHTML = "";
         }
     } catch(e) {
-        document.getElementById("bio-text").innerText = "Errore di connessione al database.";
+        document.getElementById("bio-text").innerText = "Errore di caricamento.";
     }
 }
 
@@ -78,6 +74,7 @@ function addBtn(container, label, url) {
     a.className = "link-btn";
     a.href = url.startsWith('http') ? url : 'https://' + url;
     a.innerText = label;
+    a.target = "_blank";
     container.appendChild(a);
 }
 
