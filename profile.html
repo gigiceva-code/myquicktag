@@ -1,41 +1,53 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>MyQuickTag Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --green: #50C878; --bg: #000; --card: #111; }
         body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        /* Brand Identity */
-        #nome { font-size: 18px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: var(--green); margin-bottom: 30px; }
+        /* Brand Identity: Il @nome dell'utente */
+        #nome { font-size: 16px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; color: var(--green); margin-bottom: 30px; border: 1px solid var(--green); padding: 5px 15px; border-radius: 50px; }
         
-        /* Foto e Testi */
-        .profile-img { width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--green); padding: 4px; margin-bottom: 20px; display: none; }
+        /* Avatar Area */
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--green); padding: 5px; margin-bottom: 20px; display: none; overflow: hidden; }
         .profile-img img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        #realName { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
-        #bio { font-size: 14px; color: #A0A0A0; text-align: center; max-width: 300px; line-height: 1.6; margin-bottom: 30px; }
+        
+        /* Info Utente */
+        #realName { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+        #bio { font-size: 14px; color: #A0A0A0; text-align: center; max-width: 280px; line-height: 1.6; margin-bottom: 35px; }
 
-        /* Links */
+        /* Contenitore Link Dinamici */
         .links-container { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
-        .btn-link { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 15px; text-decoration: none; color: white; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-link { background: var(--card); border: 1px solid rgba(255,255,255,0.1); padding: 18px; border-radius: 16px; text-decoration: none; color: white; font-weight: 600; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .btn-link:active { transform: scale(0.96); background: #1a1a1a; }
 
-        /* Share FAB */
-        .share-fab { position: fixed; bottom: 30px; background: var(--green); color: black; padding: 14px 28px; border-radius: 50px; font-weight: 900; font-size: 12px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(80, 200, 120, 0.3); }
+        /* Share Button (L'icona simpatica) */
+        .share-fab { position: fixed; bottom: 30px; background: var(--green); color: black; padding: 15px 30px; border-radius: 50px; font-weight: 900; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(80, 200, 120, 0.4); cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="nome">@CARICAMENTO...</div>
-    <div class="profile-img" id="imgContainer"><img id="userImg" src=""></div>
+    
+    <div class="profile-img" id="imgContainer">
+        <img id="userImg" src="" alt="Profile">
+    </div>
+
     <div id="realName"></div>
     <p id="bio"></p>
-    <div class="links-container" id="links"></div>
+
+    <div class="links-container" id="links">
+        </div>
+
     <div class="share-fab" onclick="shareProfile()">Condividi Profilo</div>
 
 <script>
+// I tuoi dati Airtable (già configurati)
 const AIRTABLE_TOKEN = "patAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
 const BASE_ID = "app4eQDzqixPDbQTd";
 const TABLE_NAME = "Table 1";
@@ -43,7 +55,9 @@ const TABLE_NAME = "Table 1";
 const params = new URLSearchParams(window.location.search);
 const username = params.get("nome");
 
-if(username) { document.getElementById("nome").innerText = "@" + username.toUpperCase(); }
+if(username) { 
+    document.getElementById("nome").innerText = "@" + username.toUpperCase(); 
+}
 
 async function load(){
     try {
@@ -51,23 +65,37 @@ async function load(){
             headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
         });
         const data = await res.json();
+        
         if(data.records.length > 0){
             const fields = data.records[0].fields;
-            document.getElementById("bio").innerText = fields.Bio || "";
+            
             document.getElementById("realName").innerText = fields.Nome || "";
+            document.getElementById("bio").innerText = fields.Bio || "";
+            
             if(fields.Foto) {
                 document.getElementById("userImg").src = fields.Foto;
                 document.getElementById("imgContainer").style.display = "block";
             }
-            if(fields.WhatsApp) {
-                const wa = document.createElement("a");
-                wa.href = `https://wa.me/${fields.WhatsApp}`;
-                wa.className = "btn-link";
-                wa.innerHTML = "💬 WHATSAPP";
-                document.getElementById("links").appendChild(wa);
-            }
+
+            // Esempio di logica per pulsanti multipli
+            const linksArea = document.getElementById("links");
+            const menuItems = [
+                { id: 'WhatsApp', label: '💬 WHATSAPP', prefix: 'https://wa.me/' },
+                { id: 'LinkedIn', label: '💼 LINKEDIN', prefix: '' },
+                { id: 'Instagram', label: '📸 INSTAGRAM', prefix: 'https://instagram.com/' }
+            ];
+
+            menuItems.forEach(item => {
+                if(fields[item.id]) {
+                    const a = document.createElement("a");
+                    a.href = item.prefix + fields[item.id];
+                    a.className = "btn-link";
+                    a.innerHTML = item.label;
+                    linksArea.appendChild(a);
+                }
+            });
         }
-    } catch (e) { console.error("Errore"); }
+    } catch (e) { console.error("Errore caricamento dati"); }
 }
 
 function shareProfile() {
