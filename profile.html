@@ -34,19 +34,14 @@
 <script>
 const TOKEN = "PatAnfD8O0FfKWhZc.854657155050f24025d57d5985868875385657454c504a554a5a544a42534c56";
 const BASE = "app4eQDzqixPDbQTd";
-const TABLE = "Table 1"; 
+const TABLE = "Table 1"; // <--- USIAMO IL NOME IN INGLESE ORIGINALE
 
 const urlParams = new URLSearchParams(window.location.search);
 const userTag = urlParams.get("nome");
 
-if(userTag) {
-    document.getElementById("tag-header").innerText = "@" + userTag.toUpperCase();
-}
-
 async function fetchData() {
     try {
-        // Usiamo l'ID della tabella se il nome "Table 1" fallisce
-        const response = await fetch(`https://api.airtable.com/v0/${BASE}/${encodeURIComponent(TABLE)}?filterByFormula={nome}='@${userTag}'`, {
+        const response = await fetch(`https://api.airtable.com/v0/${BASE}/${encodeURIComponent(TABLE)}?filterByFormula=LOWER({nome})='@${userTag.toLowerCase()}'`, {
             headers: { Authorization: `Bearer ${TOKEN}` }
         });
         
@@ -54,29 +49,21 @@ async function fetchData() {
         
         if (data.records && data.records.length > 0) {
             const user = data.records[0].fields;
-            document.getElementById("bio-text").innerText = user.biografia || "Nessuna biografia.";
+            // biografia è minuscolo come abbiamo visto negli screen
+            document.getElementById("bio-text").innerText = user.biografia || "Profilo attivo.";
             
             const box = document.getElementById("links-box");
-            if(user.Instagram) addLink(box, "Instagram", "https://instagram.com/" + user.Instagram);
-            if(user.LinkedIn) addLink(box, "LinkedIn", user.LinkedIn);
-            if(user.sito) addLink(box, "Sito Web", user.sito);
+            if(user.Instagram) addLink(box, "INSTAGRAM", "https://instagram.com/" + user.Instagram);
+            if(user.LinkedIn) addLink(box, "LINKEDIN", user.LinkedIn);
+            if(user.sito) addLink(box, "SITO WEB", user.sito);
         } else {
-            document.getElementById("bio-text").innerText = "Errore: Profilo @" + userTag + " non trovato su Airtable. Controlla che nella colonna 'nome' ci sia scritto @test";
+            document.getElementById("bio-text").innerText = "Non trovo @" + userTag + ". Controlla che su Airtable ci sia scritto @test tutto minuscolo.";
         }
     } catch (err) {
-        document.getElementById("bio-text").innerText = "Errore di connessione: " + err;
+        document.getElementById("bio-text").innerText = "Errore di connessione.";
     }
 }
-
-function addLink(container, label, url) {
-    const a = document.createElement("a");
-    a.href = url.startsWith('http') ? url : 'https://' + url;
-    a.className = "link-btn";
-    a.innerText = label;
-    container.appendChild(a);
-}
-
-if(userTag) fetchData();
+// ... resto del codice identico
 </script>
 </body>
 </html>
