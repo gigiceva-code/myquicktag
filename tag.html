@@ -142,7 +142,7 @@ const socialIcons = {
     facebook: "fab fa-facebook-f",
     tiktok: "fab fa-tiktok",
     telegram: "fab fa-telegram-plane",
-    sito: "fas fa-globe",
+    sito_web: "fas fa-globe",
     youtube: "fab fa-youtube",
     x: "fab fa-x-twitter",
     whatsapp: "fab fa-whatsapp"
@@ -197,7 +197,7 @@ async function caricaDatiProfilo(nome) {
                     btn.target = "_blank";
                     btn.innerHTML = `
                         <i class="${socialIcons[social]}"></i>
-                        <span>${social.toUpperCase()}</span>
+                        <span>${social === 'sito_web' ? 'SITO WEB' : social.toUpperCase()}</span>
                         <i class="fas fa-chevron-right arrow"></i>
                     `;
                     linksContainer.appendChild(btn);
