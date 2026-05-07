@@ -111,7 +111,62 @@
     </div>
 
     <script>
-        // Lo scriveremo nello STEP 2 per collegare i dati reali
+         const AIRTABLE_TOKEN = "patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9"; 
+const BASE_ID = "app4eQDzqixPDbQTd";
+const TABLE_NAME = "Table 1";
+
+const params = new URLSearchParams(window.location.search);
+const nomeUtente = params.get("nome");
+
+if (nomeUtente) {
+    caricaDatiDashboard(nomeUtente.toLowerCase());
+} else {
+    document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Accesso non autorizzato.</div>";
+}
+
+async function caricaDatiDashboard(nome) {
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula=LOWER({nome})='${nome}'`;
+    
+    try {
+        const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+        });
+        const data = await response.json();
+
+        if (data.records.length > 0) {
+            const record = data.records[0].fields;
+
+            // 1. Aggiorna Nome
+            document.getElementById("dash-user").innerText = "@" + nome.toUpperCase();
+
+            // 2. Calcolo Giorni Rimasti
+            if (record.data_scadenza) {
+                const oggi = new Date();
+                const scadenza = new Date(record.data_scadenza);
+                const diffTime = scadenza - oggi;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById("days-left").innerText = diffDays > 0 ? diffDays : "Scaduto";
+            } else {
+                document.getElementById("days-left").innerText = "∞";
+            }
+
+            // 3. Statistiche Visite
+            document.getElementById("count-visits").innerText = record.visits || "0";
+
+            // 4. Configura Link Azioni
+            document.getElementById("link-view").href = `tag.html?nome=${nome}`;
+            document.getElementById("link-edit").href = `edit.html?nome=${nome}`;
+            document.getElementById("link-qr").href = `qr.html?nome=${nome}`;
+
+        } else {
+            document.getElementById("dash-user").innerText = "Errore";
+            alert("Profilo non trovato.");
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+    }
+}
+
     </script>
 </body>
 </html>
