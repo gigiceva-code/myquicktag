@@ -2,74 +2,104 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Modifica Profilo - MyQuickTag</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent: #ffffff;
+            --text-sec: #a0a0a0;
+        }
 
-<style>
-body {
-    background:#000;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-    padding:40px;
-}
-textarea {
-    width:250px;
-    height:100px;
-}
-button {
-    padding:15px;
-    background:#50C878;
-    border:none;
-    border-radius:10px;
-}
-</style>
+        body {
+            margin: 0; padding: 20px;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .edit-container { width: 100%; max-width: 400px; }
+
+        .header { text-align: left; margin: 30px 0; width: 100%; }
+        .header h1 { font-size: 1.5rem; margin: 0; font-weight: 600; }
+        .header p { color: var(--text-sec); font-size: 0.9rem; margin-top: 5px; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { 
+            display: block; font-size: 0.75rem; color: var(--text-sec); 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; margin-left: 5px;
+        }
+
+        input, textarea {
+            width: 100%; padding: 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; color: white;
+            font-family: 'Inter', sans-serif; font-size: 0.95rem;
+            box-sizing: border-box; outline: none;
+        }
+
+        input:focus, textarea:focus { border-color: rgba(255,255,255,0.3); }
+
+        textarea { height: 100px; resize: none; }
+
+        .save-btn {
+            width: 100%; padding: 18px; margin-top: 20px;
+            background: white; color: black;
+            border: none; border-radius: 14px;
+            font-weight: 600; font-size: 1rem;
+            cursor: pointer; transition: transform 0.2s;
+        }
+
+        .save-btn:active { transform: scale(0.97); }
+
+        .back-link {
+            display: block; text-align: center; margin-top: 25px;
+            color: var(--text-sec); text-decoration: none; font-size: 0.85rem;
+        }
+    </style>
 </head>
-
 <body>
 
-<h2 id="nome"></h2>
+    <div class="edit-container">
+        <div class="header">
+            <h1 id="user-display">@NOME</h1>
+            <p>Aggiorna le tue informazioni digitali</p>
+        </div>
 
-<textarea id="bio" placeholder="Scrivi la tua bio"></textarea>
-<br><br>
-<button onclick="salva()">Salva</button>
+        <div class="form-group">
+            <label>Biografia</label>
+            <textarea id="field-bio" placeholder="Racconta chi sei..."></textarea>
+        </div>
 
-<script>
-const AIRTABLE_TOKEN = "patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9";
-const BASE_ID = "app4eQDzqixPDbQTd";
-const TABLE_NAME = "Table 1";
+        <div class="form-group">
+            <label><i class="fab fa-instagram"></i> Instagram (Link completo)</label>
+            <input type="text" id="field-instagram" placeholder="https://instagram.com/tuonome">
+        </div>
 
-const params = new URLSearchParams(window.location.search);
-const username = params.get("nome");
+        <div class="form-group">
+            <label><i class="fab fa-linkedin"></i> LinkedIn (Link completo)</label>
+            <input type="text" id="field-linkedin" placeholder="https://linkedin.com/in/tuonome">
+        </div>
 
-document.getElementById("nome").innerText = "@" + username;
+        <div class="form-group">
+            <label><i class="fas fa-globe"></i> Sito Web</label>
+            <input type="text" id="field-sito" placeholder="https://www.tuosito.it">
+        </div>
 
-async function salva(){
-    const bio = document.getElementById("bio").value;
+        <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
 
-    const res = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={Tag}='@${username}'`, {
-        headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
-    });
+        <a href="#" id="back-to-dash" class="back-link">Torna alla Dashboard</a>
+    </div>
 
-    const data = await res.json();
-    const id = data.records[0].id;
-
-    await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${id}`, {
-        method: "PATCH",
-        headers: {
-            Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            fields: { Bio: bio }
-        })
-    });
-
-    alert("Salvato!");
-    window.location.href = "profile.html?nome=" + username;
-}
-</script>
-
+    <script>
+        // Lo STEP 2 sarà il motore di caricamento e salvataggio
+    </script>
 </body>
 </html>
