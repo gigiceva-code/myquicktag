@@ -138,17 +138,24 @@ async function caricaDatiProfilo(nome) {
         const data = await response.json();
 
         if (data.records.length > 0) {
+            const recordId = data.records[0].id;
             const record = data.records[0].fields;
 
-            // Popolamento testi
+            // --- LOGICA DI CONTROLLO (Piani & Stato) ---
+            const oggi = new Date();
+            const scadenza = record.data_scadenza ? new Date(record.data_scadenza) : null;
+            
+            if (record.stato !== "Attivo" || (scadenza && oggi > scadenza)) {
+                document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo Sospeso o Scaduto.</div>";
+                return;
+            }
+
+            // --- POPOLAMENTO DATI ---
             document.getElementById("user-name").innerText = "@" + nome.toUpperCase();
             document.getElementById("user-bio").innerText = record.bio || "";
-            
-            // Gestione Immagini
             if(record.avatar) document.getElementById("user-avatar").src = record.avatar[0].url;
             if(record.cover) document.getElementById("cover-bg").style.backgroundImage = `url('${record.cover[0].url}')`;
 
-            // Generazione Dinamica Social Buttons
             const socialGrid = document.getElementById("social-grid");
             const canaliSocial = ["instagram", "linkedin", "facebook", "tiktok", "telegram", "sito", "youtube", "x"];
             
@@ -163,8 +170,18 @@ async function caricaDatiProfilo(nome) {
                 }
             });
 
-            // Footer
-            document.getElementById("visits-counter").innerText = `Visite: ${record.visits || 0}`;
+            // --- AGGIORNAMENTO VISITE (Logica Commerciale) ---
+            const nuoveVisite = (record.visits || 0) + 1;
+            document.getElementById("visits-counter").innerText = `Visite: ${nuoveVisite}`;
+
+            fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${recordId}`, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": `Bearer ${AIRTABLE_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ fields: { "visits": nuoveVisite } })
+            });
 
         } else {
             document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non trovato.</div>";
