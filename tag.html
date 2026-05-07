@@ -114,6 +114,65 @@
         </nav>
 
     </main>
+<script>
+const AIRTABLE_TOKEN = "patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9"; 
+const BASE_ID = "app4eQDzqixPDbQTd";
+const TABLE_NAME = "Table 1"; // Verifica se il nome della tabella è ancora questo
 
+const params = new URLSearchParams(window.location.search);
+const nomeUtente = params.get("nome");
+
+if (nomeUtente) {
+    caricaDatiProfilo(nomeUtente.toLowerCase());
+} else {
+    document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non specificato.</div>";
+}
+
+async function caricaDatiProfilo(nome) {
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula={nome}='${nome}'`;
+    
+    try {
+        const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+        });
+        const data = await response.json();
+
+        if (data.records.length > 0) {
+            const record = data.records[0].fields;
+
+            // Popolamento testi
+            document.getElementById("user-name").innerText = "@" + nome.toUpperCase();
+            document.getElementById("user-bio").innerText = record.bio || "";
+            
+            // Gestione Immagini
+            if(record.avatar) document.getElementById("user-avatar").src = record.avatar[0].url;
+            if(record.cover) document.getElementById("cover-bg").style.backgroundImage = `url('${record.cover[0].url}')`;
+
+            // Generazione Dinamica Social Buttons
+            const socialGrid = document.getElementById("social-grid");
+            const canaliSocial = ["instagram", "linkedin", "facebook", "tiktok", "telegram", "sito", "youtube", "x"];
+            
+            canaliSocial.forEach(social => {
+                if (record[social]) {
+                    const btn = document.createElement("a");
+                    btn.href = record[social];
+                    btn.className = "social-btn";
+                    btn.target = "_blank";
+                    btn.innerHTML = `<span>${social.toUpperCase()}</span>`;
+                    socialGrid.appendChild(btn);
+                }
+            });
+
+            // Footer
+            document.getElementById("visits-counter").innerText = `Visite: ${record.visits || 0}`;
+
+        } else {
+            document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non trovato.</div>";
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+    }
+}
+</script>
 </body>
 </html>
