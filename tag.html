@@ -2,215 +2,135 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>MyQuickTag | Digital Touch</title>
-    <meta name="description" content="Profilo digitale MyQuickTag - Connettiti con un tocco.">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyQuickTag - Digital Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-    /* Reset & Base */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-        background-color: #000000; 
-        color: #FFFFFF; 
-        font-family: 'Inter', sans-serif; 
-        display: flex; 
-        justify-content: center; 
-        min-height: 100vh;
-    }
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-color: #ffffff;
+            --text-secondary: #a0a0a0;
+        }
 
-    #profile-container {
-        width: 100%;
-        max-width: 450px; /* Perfetto per Mobile */
-        background: #000000;
-        position: relative;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
 
-    /* Header & Immagini */
-    .profile-header { position: relative; height: 220px; }
-    
-    #cover-bg { 
-        width: 100%; height: 100%; 
-        background: #111; /* Sostituito dall'immagine di Airtable */
-        background-size: cover; background-position: center;
-    }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    #avatar-container {
-        position: absolute;
-        bottom: -50px; left: 50%;
-        transform: translateX(-50%);
-        width: 110px; height: 110px;
-        border-radius: 50%;
-        border: 3px solid #000;
-        background: #222; overflow: hidden;
-    }
-    
-    #user-avatar { width: 100%; height: 100%; object-fit: cover; }
+        /* Contenitore Principale */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
 
-    /* Testi */
-    .profile-info { 
-        margin-top: 60px; text-align: center; padding: 20px; 
-    }
-    
-    #user-name { 
-        font-size: 24px; font-weight: 600; letter-spacing: -0.5px; 
-        color: #E0E0E0; /* Silver White */
-    }
-    
-    #user-bio { 
-        font-size: 14px; color: #888; margin-top: 10px; line-height: 1.5; 
-    }
+        /* Header & Avatar */
+        .header {
+            margin-top: 40px;
+            margin-bottom: 30px;
+        }
 
-    /* Griglia Social */
-    #social-grid { 
-        display: grid; grid-template-columns: repeat(2, 1fr); 
-        gap: 15px; padding: 20px; 
-    }
+        .avatar-container {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 15px;
+        }
 
-    .social-btn {
-        background: #0A0A0A; /* Nero quasi profondo */
-        border: 1px solid #1A1A1A; /* Bordo sottile ed elegante */
-        border-radius: 12px;
-        padding: 15px;
-        color: #FFF;
-        text-decoration: none;
-        display: flex; flex-direction: column; align-items: center;
-        transition: transform 0.2s, background 0.2s;
-    }
+        #user-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            padding: 5px;
+            background: linear-gradient(45deg, #222, #000);
+        }
 
-    .social-btn:active { transform: scale(0.95); background: #111; }
+        h1 { font-size: 1.4rem; font-weight: 600; margin: 10px 0 5px; letter-spacing: -0.5px; }
+        .bio { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 30px; padding: 0 20px; }
 
-    /* Footer */
-    .profile-footer { 
-        text-align: center; padding: 40px 20px; 
-        font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 2px;
-    }
-      /* Effetto Fade-in al caricamento */
-    body {
-        animation: fadeIn 0.8s ease-in-out;
-    }
+        /* Griglia Social & Link */
+        .links-container { display: flex; flex-direction: column; gap: 12px; }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+        .btn-link {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 16px 20px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
 
-    /* Arrotondamento icone e immagini */
-    #user-avatar {
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
+        .btn-link:active { transform: scale(0.97); background: rgba(255,255,255,0.1); }
 
-    #user-avatar:hover {
-        transform: scale(1.05);
-    }  
-</style>
+        .btn-link i {
+            font-size: 1.2rem;
+            width: 30px;
+            text-align: left;
+        }
 
+        .btn-link span { flex-grow: 1; text-align: center; font-weight: 400; font-size: 0.95rem; }
+        .btn-link .arrow { font-size: 0.8rem; color: var(--text-secondary); }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+    </style>
 </head>
 <body>
 
-    <main id="profile-container">
-        
-        <header class="profile-header">
-            <div id="cover-bg"></div>
-            <div id="avatar-container">
-                <img id="user-avatar" src="" alt="Avatar">
+    <div class="container">
+        <div class="header">
+            <div class="avatar-container">
+                <img id="user-avatar" src="https://via.placeholder.com/150" alt="Avatar">
             </div>
-        </header>
+            <h1 id="user-name">@NOMEUTENTE</h1>
+            <p class="bio" id="user-bio">Caricamento profilo luxury...</p>
+        </div>
 
-        <section class="profile-info">
-            <h1 id="user-name"></h1>
-            <p id="user-bio"></p>
-        </section>
+        <div class="links-container" id="social-grid">
+            <div class="btn-link">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+                <i class="fas fa-chevron-right arrow"></i>
+            </div>
+        </div>
 
-        <nav id="social-grid">
-            </nav>
+        <div class="footer">
+            MyQuickTag — BlackLuxury Edition
+        </div>
+    </div>
 
-        <footer class="profile-footer">
-            <div id="visits-counter">Visite: 0</div>
-            <div id="last-update">Aggiornato: --/--/--</div>
-        </nav>
-
-    </main>
-<script>
-const AIRTABLE_TOKEN = "patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9"; 
-const BASE_ID = "app4eQDzqixPDbQTd";
-const TABLE_NAME = "Table 1";
-
-const params = new URLSearchParams(window.location.search);
-const nomeUtente = params.get("nome");
-
-if (nomeUtente) {
-    caricaDatiProfilo(nomeUtente.toLowerCase());
-} else {
-    document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non specificato.</div>";
-}
-
-async function caricaDatiProfilo(nome) {
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula={nome}='${nome}'`;
-    
-    try {
-        const response = await fetch(url, {
-            headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
-        });
-        const data = await response.json();
-
-        if (data.records.length > 0) {
-            const recordId = data.records[0].id;
-            const record = data.records[0].fields;
-
-            // --- CONTROLLO SCADENZA ---
-            const oggi = new Date();
-            const scadenza = record.data_scadenza ? new Date(record.data_scadenza) : null;
-            
-            if (record.stato !== "Attivo" || (scadenza && oggi > scadenza)) {
-                document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo Sospeso o Scaduto.</div>";
-                return;
-            }
-
-            // --- RIEMPIMENTO DATI ---
-            document.getElementById("user-name").innerText = "@" + nome.toUpperCase();
-            document.getElementById("user-bio").innerText = record.bio || "";
-            if(record.avatar) document.getElementById("user-avatar").src = record.avatar[0].url;
-            if(record.cover) document.getElementById("cover-bg").style.backgroundImage = `url('${record.cover[0].url}')`;
-
-            const socialGrid = document.getElementById("social-grid");
-            const canaliSocial = ["instagram", "linkedin", "facebook", "tiktok", "telegram", "sito", "youtube", "x"];
-            
-            canaliSocial.forEach(social => {
-                if (record[social]) {
-                    const btn = document.createElement("a");
-                    btn.href = record[social];
-                    btn.className = "social-btn";
-                    btn.target = "_blank";
-                    btn.innerHTML = `<span>${social.toUpperCase()}</span>`;
-                    socialGrid.appendChild(btn);
-                }
-            });
-
-            // --- CONTEGGIO VISITE ---
-            const nuoveVisite = (record.visits || 0) + 1;
-            // Mostriamo le visite solo se il div esiste (lo aggiungeremo poi)
-            const vCounter = document.getElementById("visits-counter");
-            if(vCounter) vCounter.innerText = `Visite: ${nuoveVisite}`;
-
-            fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${recordId}`, {
-                method: "PATCH",
-                headers: {
-                    "Authorization": `Bearer ${AIRTABLE_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ fields: { "visits": nuoveVisite } })
-            });
-
-        } else {
-            document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non trovato.</div>";
-        }
-    } catch (error) {
-        console.error("Errore:", error);
-    }
-}
-</script>
+    <script>
+        // Lo scriveremo nella Fase 3 per collegare Airtable
+    </script>
 </body>
 </html>
