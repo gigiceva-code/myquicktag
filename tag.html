@@ -86,6 +86,25 @@
         text-align: center; padding: 40px 20px; 
         font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 2px;
     }
+      /* Effetto Fade-in al caricamento */
+    body {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* Arrotondamento icone e immagini */
+    #user-avatar {
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    #user-avatar:hover {
+        transform: scale(1.05);
+    }  
 </style>
 
 </head>
@@ -117,7 +136,7 @@
 <script>
 const AIRTABLE_TOKEN = "patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9"; 
 const BASE_ID = "app4eQDzqixPDbQTd";
-const TABLE_NAME = "Table 1"; // Verifica se il nome della tabella è ancora questo
+const TABLE_NAME = "Table 1";
 
 const params = new URLSearchParams(window.location.search);
 const nomeUtente = params.get("nome");
@@ -141,7 +160,7 @@ async function caricaDatiProfilo(nome) {
             const recordId = data.records[0].id;
             const record = data.records[0].fields;
 
-            // --- LOGICA DI CONTROLLO (Piani & Stato) ---
+            // --- CONTROLLO SCADENZA ---
             const oggi = new Date();
             const scadenza = record.data_scadenza ? new Date(record.data_scadenza) : null;
             
@@ -150,7 +169,7 @@ async function caricaDatiProfilo(nome) {
                 return;
             }
 
-            // --- POPOLAMENTO DATI ---
+            // --- RIEMPIMENTO DATI ---
             document.getElementById("user-name").innerText = "@" + nome.toUpperCase();
             document.getElementById("user-bio").innerText = record.bio || "";
             if(record.avatar) document.getElementById("user-avatar").src = record.avatar[0].url;
@@ -170,9 +189,11 @@ async function caricaDatiProfilo(nome) {
                 }
             });
 
-            // --- AGGIORNAMENTO VISITE (Logica Commerciale) ---
+            // --- CONTEGGIO VISITE ---
             const nuoveVisite = (record.visits || 0) + 1;
-            document.getElementById("visits-counter").innerText = `Visite: ${nuoveVisite}`;
+            // Mostriamo le visite solo se il div esiste (lo aggiungeremo poi)
+            const vCounter = document.getElementById("visits-counter");
+            if(vCounter) vCounter.innerText = `Visite: ${nuoveVisite}`;
 
             fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${recordId}`, {
                 method: "PATCH",
