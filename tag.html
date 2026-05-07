@@ -157,7 +157,9 @@ if (nomeUtente) {
 }
 
 async function caricaDatiProfilo(nome) {
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula={nome}='${nome}'`;
+    // Puliamo il nome da eventuali spazi o caratteri strani
+    const nomePulito = nome.trim().toLowerCase();
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula=LOWER({nome})='${nomePulito}'`;
     
     try {
         const response = await fetch(url, {
@@ -165,37 +167,36 @@ async function caricaDatiProfilo(nome) {
         });
         const data = await response.json();
 
-        if (data.records.length > 0) {
+        if (data && data.records && data.records.length > 0) {
             const record = data.records[0].fields;
 
-            // --- CONTROLLO STATO E SCADENZA ---
-            const oggi = new Date();
-            const scadenza = record.data_scadenza ? new Date(record.data_scadenza) : null;
-            
-            if (record.stato !== "Attivo" || (scadenza && oggi > scadenza)) {
-                document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo Sospeso o Scaduto.</div>";
+            // Debug: se vedi questo in console, i dati sono arrivati
+            console.log("Dati ricevuti:", record);
+
+            // --- CONTROLLO STATO ---
+            if (record.stato !== "Attivo") {
+                document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo Sospeso.</div>";
                 return;
             }
 
-            // --- AGGIORNAMENTO TESTI E IMMAGINI ---
-            document.getElementById("user-name").innerText = "@" + nome.toUpperCase();
-            document.getElementById("user-bio").innerText = record.bio || "Digital Card - MyQuickTag";
+            // --- AGGIORNAMENTO INTERFACCIA ---
+            document.getElementById("user-name").innerText = "@" + nomePulito.toUpperCase();
+            document.getElementById("user-bio").innerText = record.bio || "Digital Identity";
             
-            if(record.avatar) {
+            if(record.avatar && record.avatar[0]) {
                 document.getElementById("user-avatar").src = record.avatar[0].url;
             }
 
-            // --- GENERAZIONE DINAMICA BOTTONI ---
             const linksContainer = document.getElementById("social-grid");
-            linksContainer.innerHTML = ""; // Puliamo i placeholder
+            linksContainer.innerHTML = ""; 
 
+            // Ciclo sui social definiti nella mappa socialIcons
             Object.keys(socialIcons).forEach(social => {
                 if (record[social]) {
                     const btn = document.createElement("a");
                     btn.href = record[social];
                     btn.className = "btn-link";
                     btn.target = "_blank";
-                    
                     btn.innerHTML = `
                         <i class="${socialIcons[social]}"></i>
                         <span>${social.toUpperCase()}</span>
@@ -204,14 +205,15 @@ async function caricaDatiProfilo(nome) {
                     linksContainer.appendChild(btn);
                 }
             });
-
         } else {
-            document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non trovato.</div>";
+            console.log("Nessun record trovato per:", nomePulito);
+            document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non trovato nel database.</div>";
         }
     } catch (error) {
-        console.error("Errore:", error);
+        console.error("Errore Fetch:", error);
     }
 }
+
 
     </script>
 </body>
