@@ -130,7 +130,89 @@
     </div>
 
     <script>
-        // Lo scriveremo nella Fase 3 per collegare Airtable
+        const AIRTABLE_TOKEN = "patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9"; 
+const BASE_ID = "app4eQDzqixPDbQTd";
+const TABLE_NAME = "Table 1";
+
+const params = new URLSearchParams(window.location.search);
+const nomeUtente = params.get("nome");
+
+// Mappatura Icone Social
+const socialIcons = {
+    instagram: "fab fa-instagram",
+    linkedin: "fab fa-linkedin-in",
+    facebook: "fab fa-facebook-f",
+    tiktok: "fab fa-tiktok",
+    telegram: "fab fa-telegram-plane",
+    sito: "fas fa-globe",
+    youtube: "fab fa-youtube",
+    x: "fab fa-x-twitter",
+    whatsapp: "fab fa-whatsapp"
+};
+
+if (nomeUtente) {
+    caricaDatiProfilo(nomeUtente.toLowerCase());
+} else {
+    document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non specificato.</div>";
+}
+
+async function caricaDatiProfilo(nome) {
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula={nome}='${nome}'`;
+    
+    try {
+        const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+        });
+        const data = await response.json();
+
+        if (data.records.length > 0) {
+            const record = data.records[0].fields;
+
+            // --- CONTROLLO STATO E SCADENZA ---
+            const oggi = new Date();
+            const scadenza = record.data_scadenza ? new Date(record.data_scadenza) : null;
+            
+            if (record.stato !== "Attivo" || (scadenza && oggi > scadenza)) {
+                document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo Sospeso o Scaduto.</div>";
+                return;
+            }
+
+            // --- AGGIORNAMENTO TESTI E IMMAGINI ---
+            document.getElementById("user-name").innerText = "@" + nome.toUpperCase();
+            document.getElementById("user-bio").innerText = record.bio || "Digital Card - MyQuickTag";
+            
+            if(record.avatar) {
+                document.getElementById("user-avatar").src = record.avatar[0].url;
+            }
+
+            // --- GENERAZIONE DINAMICA BOTTONI ---
+            const linksContainer = document.getElementById("social-grid");
+            linksContainer.innerHTML = ""; // Puliamo i placeholder
+
+            Object.keys(socialIcons).forEach(social => {
+                if (record[social]) {
+                    const btn = document.createElement("a");
+                    btn.href = record[social];
+                    btn.className = "btn-link";
+                    btn.target = "_blank";
+                    
+                    btn.innerHTML = `
+                        <i class="${socialIcons[social]}"></i>
+                        <span>${social.toUpperCase()}</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    `;
+                    linksContainer.appendChild(btn);
+                }
+            });
+
+        } else {
+            document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non trovato.</div>";
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+    }
+}
+
     </script>
 </body>
 </html>
