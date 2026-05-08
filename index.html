@@ -467,26 +467,24 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function vaiAllaVerifica() {
-    // Usiamo l'ID "tag-input" che abbiamo appena trovato!
     const input = document.getElementById('tag-input'); 
     const nomeScelto = input.value.toLowerCase().trim();
     
     if(!nomeScelto) return alert("Inserisci una tag per verificare!");
 
     try {
-        // Bussiamo alla porta sicura di Vercel
-        const response = await fetch(`/api/check-and-create?nome=${nomeScelto}`);
+        // Usiamo "nomeTag" per essere coerenti con l'API
+        const response = await fetch(`/api/check-and-create?nomeTag=${nomeScelto}`);
         const data = await response.json();
 
         if (data.disponibile) {
             if(confirm("Il nome @" + nomeScelto + " è disponibile! Vuoi attivarlo ora?")) {
-                // Se preme OK, Vercel crea il profilo su Airtable
-                await fetch(`/api/check-and-create?nome=${nomeScelto}`, { method: 'POST' });
-                // Voliamo alla pagina di modifica
+                // Non serve un'altra fetch! Il record è già stato creato/aggiornato dall'API sopra.
+                // Voliamo direttamente alla pagina di modifica
                 window.location.href = `edit.html?user=${nomeScelto}`;
             }
         } else {
-            alert("Ops! Il nome @" + nomeScelto + " è già occupato. Provane un altro!");
+            alert(data.messaggio || "Ops! Il nome @" + nomeScelto + " è già occupato. Provane un altro!");
         }
     } catch (error) {
         console.error("Errore:", error);
