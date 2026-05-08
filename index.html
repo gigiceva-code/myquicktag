@@ -465,42 +465,32 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 50); 
     }
 });
-function vaiAllaVerifica() {
-    // 1. Prende l'input (usando l'ID corretto che abbiamo impostato: tag-input)
-    const input = document.getElementById('tag-input');
-    const nomeScelto = input ? input.value.trim().toLowerCase() : "";
 
-    if (nomeScelto !== "") {
-        // 2. Ti spedisce alla pagina tag.html passando il nome
-        window.location.href = "tag.html?nome=" + encodeURIComponent(nomeScelto);
-    } else {
-        alert("Inserisci una tag per verificare!");
-    }
-}
 async function vaiAllaVerifica() {
-    const input = document.getElementById('nomeTag'); // Assicurati che l'ID sia corretto
+    // Usiamo l'ID "tag-input" che abbiamo appena trovato!
+    const input = document.getElementById('tag-input'); 
     const nomeScelto = input.value.toLowerCase().trim();
     
     if(!nomeScelto) return alert("Inserisci una tag per verificare!");
 
     try {
-        // 1. Chiediamo a Vercel se il nome è libero
+        // Bussiamo alla porta sicura di Vercel
         const response = await fetch(`/api/check-and-create?nome=${nomeScelto}`);
         const data = await response.json();
 
         if (data.disponibile) {
-            if(confirm("Il nome è disponibile! Vuoi attivarlo ora?")) {
-                // 2. Se l'utente preme OK, Vercel crea il record su Airtable
+            if(confirm("Il nome @" + nomeScelto + " è disponibile! Vuoi attivarlo ora?")) {
+                // Se preme OK, Vercel crea il profilo su Airtable
                 await fetch(`/api/check-and-create?nome=${nomeScelto}`, { method: 'POST' });
-                // 3. Spediamo l'utente alla pagina di modifica
+                // Voliamo alla pagina di modifica
                 window.location.href = `edit.html?user=${nomeScelto}`;
             }
         } else {
-            alert("Ops! Questo nome è già occupato. Provane un altro!");
+            alert("Ops! Il nome @" + nomeScelto + " è già occupato. Provane un altro!");
         }
     } catch (error) {
         console.error("Errore:", error);
-        alert("C'è stato un problema con la verifica. Riprova tra un momento.");
+        alert("C'è stato un problema tecnico. Riprova tra un istante.");
     }
 }
 </script>
