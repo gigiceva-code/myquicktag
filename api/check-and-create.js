@@ -1,10 +1,24 @@
+
 export default async function handler(req, res) {
   const { nomeTag } = req.query;
   const token = process.env.AIRTABLE_TOKEN;
   const baseId = process.env.AIRTABLE_BASE_ID;
+  const table = 'Table%201';
 
   try {
-    const response = await fetch(`https://api.airtable.com/v0/${baseId}/Table%201`, {
+    // 1. CONTROLLO ESCLUSIVITÀ: Cerchiamo se il nome esiste già
+    const checkRes = await fetch(`https://api.airtable.com/v0/${baseId}/${table}?filterByFormula={Nome}='${nomeTag}'`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await checkRes.json();
+
+    if (data.records && data.records.length > 0) {
+      // Il nome esiste già! Blocchiamo tutto.
+      return res.status(200).json({ disponibile: false, messaggio: "Questo nome è già stato preso. Scegline un altro!" });
+    }
+
+    // 2. CREAZIONE: Se non esiste, lo creiamo
+    const createRes = await fetch(`https://api.airtable.com/v0/${baseId}/${table}`, {
       method: 'POST',
       headers: { 
         'Authorization': `Bearer ${token}`,
@@ -13,15 +27,15 @@ export default async function handler(req, res) {
       body: JSON.stringify({ fields: { 'Nome': nomeTag, 'stato': 'attivo' } })
     });
 
-    const risultato = await response.json();
-
-    if (!response.ok) {
-      // Se Airtable risponde picche, mandiamo l'errore al sito
-      return res.status(200).json({ disponibile: false, messaggio: "Airtable dice: " + JSON.stringify(risultato.error) });
+    if (!createRes.ok) {
+      const err = await createRes.json();
+      return res.status(200).json({ disponibile: false, messaggio: "Errore Airtable: " + err.error.message });
     }
 
+    // 3. SUCCESSO: Mandiamo il via libera
     return res.status(200).json({ disponibile: true, user: nomeTag });
+
   } catch (e) {
-    return res.status(200).json({ disponibile: false, messaggio: "Errore Sistema: " + e.message });
+    return res.status(200).json({ disponibile: false, messaggio: "Errore sistema: " + e.message });
   }
 }
