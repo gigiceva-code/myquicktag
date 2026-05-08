@@ -473,24 +473,25 @@ async function vaiAllaVerifica() {
     if(!nomeScelto) return alert("Inserisci una tag per verificare!");
 
     try {
-        // Usiamo "nomeTag" per essere coerenti con l'API
-        const response = await fetch(`/api/check-and-create?nomeTag=${nomeScelto}`);
+        // 1. Chiamata all'API
+        const response = await fetch(`/api/check-and-create?nomeTag=${encodeURIComponent(nomeScelto)}`);
         const data = await response.json();
 
         if (data.disponibile) {
+            // 2. Se è disponibile, chiedi conferma
             if(confirm("Il nome @" + nomeScelto + " è disponibile! Vuoi attivarlo ora?")) {
-                // Non serve un'altra fetch! Il record è già stato creato/aggiornato dall'API sopra.
-                // Voliamo direttamente alla pagina di modifica
-                window.location.href = `edit.html?user=${nomeScelto}`;
+                // 3. Vai alla modifica passando il nome
+                window.location.href = "edit.html?user=" + encodeURIComponent(nomeScelto);
             }
         } else {
-            alert(data.messaggio || "Ops! Il nome @" + nomeScelto + " è già occupato. Provane un altro!");
+            // 4. Se è occupato (o in grazia), mostra il messaggio dell'API
+            alert(data.messaggio || "Ops! Il nome @" + nomeScelto + " è già occupato.");
         }
     } catch (error) {
         console.error("Errore:", error);
         alert("C'è stato un problema tecnico. Riprova tra un istante.");
     }
-}
+} // <--- QUESTA È LA GRAFFA CHE MANCAVA!
 </script>
 
     
