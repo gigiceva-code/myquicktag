@@ -477,7 +477,32 @@ function vaiAllaVerifica() {
         alert("Inserisci una tag per verificare!");
     }
 }
+async function vaiAllaVerifica() {
+    const input = document.getElementById('nomeTag'); // Assicurati che l'ID sia corretto
+    const nomeScelto = input.value.toLowerCase().trim();
+    
+    if(!nomeScelto) return alert("Inserisci una tag per verificare!");
 
+    try {
+        // 1. Chiediamo a Vercel se il nome è libero
+        const response = await fetch(`/api/check-and-create?nome=${nomeScelto}`);
+        const data = await response.json();
+
+        if (data.disponibile) {
+            if(confirm("Il nome è disponibile! Vuoi attivarlo ora?")) {
+                // 2. Se l'utente preme OK, Vercel crea il record su Airtable
+                await fetch(`/api/check-and-create?nome=${nomeScelto}`, { method: 'POST' });
+                // 3. Spediamo l'utente alla pagina di modifica
+                window.location.href = `edit.html?user=${nomeScelto}`;
+            }
+        } else {
+            alert("Ops! Questo nome è già occupato. Provane un altro!");
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+        alert("C'è stato un problema con la verifica. Riprova tra un momento.");
+    }
+}
 </script>
 
     
