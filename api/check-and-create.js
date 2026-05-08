@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   const table = 'Table 1'; 
 
   try {
-    // Cerchiamo il tag (usando il nome della prima colonna che Airtable chiama di solito 'Nome' o 'Name')
+    // Cerchiamo il tag nella colonna che hai appena rinominato "Nome"
     const response = await fetch(`https://api.airtable.com/v0/${baseId}/${table}?filterByFormula={Nome}='${nomeTag}'`, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -27,30 +27,28 @@ export default async function handler(req, res) {
       }
     }
 
-    // DATE PER IL RESET
     const inizio = oggi.toISOString().split('T')[0];
     const scadenzaNuova = new Date();
     scadenzaNuova.setFullYear(scadenzaNuova.getFullYear() + 1);
     const fine = scadenzaNuova.toISOString().split('T')[0];
 
-    // QUI STA IL TRUCCO: assicurati che la colonna del nome si chiami 'Nome'
     const campi = {
-      'Nome': nomeTag, // <--- CONTROLLA CHE SU AIRTABLE LA PRIMA COLONNA SI CHIAMI "Nome"
+      'Nome': nomeTag, // Ora Airtable troverà la colonna che hai rinominato!
       'data_inizio': inizio,
       'data_scadenza': fine,
-      'bio': '', 
-      'linkedin': '', 
-      'instagram': '', 
-      'tiktok': ''
+      'stato': 'attivo',
+      'bio': '', 'linkedin': '', 'instagram': '', 'tiktok': ''
     };
 
     if (recordEsistente) {
+      // Sovrascriviamo il record scaduto
       await fetch(`https://api.airtable.com/v0/${baseId}/${table}/${recordEsistente.id}`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ fields: campi })
       });
     } else {
+      // Creiamo un nuovo record
       await fetch(`https://api.airtable.com/v0/${baseId}/${table}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -58,7 +56,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // IMPORTANTE: Questo manda il nome corretto alla pagina successiva
+    // Qui risolviamo il "Parametro mancante": passiamo il nomeTag a user
     return res.status(200).json({ disponibile: true, user: nomeTag });
 
   } catch (error) {
