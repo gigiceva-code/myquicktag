@@ -468,6 +468,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 async function vaiAllaVerifica() {
     const input = document.getElementById('tag-input'); 
+    if (!input) return alert("Errore tecnico: campo input non trovato");
+    
     const nomeScelto = input.value.toLowerCase().trim();
     
     if(!nomeScelto) return alert("Inserisci una tag per verificare!");
@@ -475,23 +477,32 @@ async function vaiAllaVerifica() {
     try {
         // 1. Chiamata all'API
         const response = await fetch(`/api/check-and-create?nomeTag=${encodeURIComponent(nomeScelto)}`);
+        
+        // Se Vercel dà errore (es. 404 o 500), lo intercettiamo qui
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error("L'API ha risposto con un errore: " + errorText);
+        }
+
         const data = await response.json();
 
         if (data.disponibile) {
             // 2. Se è disponibile, chiedi conferma
             if(confirm("Il nome @" + nomeScelto + " è disponibile! Vuoi attivarlo ora?")) {
                 // 3. Vai alla modifica passando il nome
+                // USIAMO NOME SCELTO PER ESSERE SICURI
                 window.location.href = "edit.html?user=" + encodeURIComponent(nomeScelto);
             }
         } else {
-            // 4. Se è occupato (o in grazia), mostra il messaggio dell'API
+            // 4. Se è occupato, mostra il messaggio
             alert(data.messaggio || "Ops! Il nome @" + nomeScelto + " è già occupato.");
         }
     } catch (error) {
         console.error("Errore:", error);
-        alert("C'è stato un problema tecnico. Riprova tra un istante.");
+        alert("ERRORE: " + error.message); // Questo ti dirà se il problema è Vercel o Airtable
     }
-} // <--- QUESTA È LA GRAFFA CHE MANCAVA!
+}
+
 </script>
 
     
