@@ -5,7 +5,6 @@ export default async function handler(req, res) {
   const table = 'Table 1'; 
 
   try {
-    // Cerchiamo il tag nella colonna che hai appena rinominato "Nome"
     const response = await fetch(`https://api.airtable.com/v0/${baseId}/${table}?filterByFormula={Nome}='${nomeTag}'`, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -33,7 +32,7 @@ export default async function handler(req, res) {
     const fine = scadenzaNuova.toISOString().split('T')[0];
 
     const campi = {
-      'Nome': nomeTag, // Ora Airtable troverà la colonna che hai rinominato!
+      'Nome': nomeTag, 
       'data_inizio': inizio,
       'data_scadenza': fine,
       'stato': 'attivo',
@@ -41,14 +40,12 @@ export default async function handler(req, res) {
     };
 
     if (recordEsistente) {
-      // Sovrascriviamo il record scaduto
       await fetch(`https://api.airtable.com/v0/${baseId}/${table}/${recordEsistente.id}`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ fields: campi })
       });
     } else {
-      // Creiamo un nuovo record
       await fetch(`https://api.airtable.com/v0/${baseId}/${table}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -56,7 +53,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Qui risolviamo il "Parametro mancante": passiamo il nomeTag a user
+    // IL SEGRETO È QUI: Mandiamo 'user' indietro al sito
     return res.status(200).json({ disponibile: true, user: nomeTag });
 
   } catch (error) {
