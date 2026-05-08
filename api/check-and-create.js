@@ -3,48 +3,75 @@ export default async function handler(req, res) {
   const { nomeTag } = req.query;
   const token = process.env.AIRTABLE_TOKEN;
   const baseId = process.env.AIRTABLE_BASE_ID;
+  
+  // Usiamo direttamente il nome che vedo nei tuoi screenshot
   const table = 'Table 1'; 
 
   try {
-    // 1. Cerchiamo se esiste già
+    // 1. Cerchiamo se esiste già il nome
     const response = await fetch(`https://api.airtable.com/v0/${baseId}/${table}?filterByFormula={Nome}='${nomeTag}'`, {
       headers: { Authorization: `Bearer ${token}` }
     });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      return res.status(500).json({ error: "Errore Airtable: " + errorText });
+    }
+
     const data = await response.json();
     let recordEsistente = data.records.length > 0 ? data.records[0] : null;
-
     const oggi = new Date();
-    const inizio = oggi.toISOString().split('T')[0];
-    const scadenza = new Date();
-    scadenza.setFullYear(scadenza.getFullYear() + 1);
-    const fine = scadenza.toISOString().split('T')[0];
 
-    // Prepariamo i campi (Assicurati che "Nome" sia il nome della colonna su Airtable)
+    if (recordEsistente) {
+      const dataScadenzaStr = recordEsistente.fields['data_scadenza']; 
+      if (dataScadenzaStr) {
+        const dataScadenza = new Date(dataScadenzaStr);
+        const fineGrazia = new Date(dataScadenza);
+        fineGrazia.setDate(fineGrazia.getDate() + 14);
+
+        // Se siamo ancora nei 14 giorni di grazia, è occupato
+        if (oggi < fineGrazia) {
+          return res.status(200).json({ disponibile: false });
+        }
+      }
+    }
+
+    // 2. Prepariamo i dati per la creazione/sovrascrittura
+    const inizio = oggi.toISOString().split('T')[0];
+    const scadenzaNuova = new Date();
+    scadenzaNuova.setFullYear(scadenzaNuova.getFullYear() + 1);
+    const fine = scadenzaNuova.toISOString().split('T')[0];
+
     const campi = {
-      'Nome': nomeTag, 
+      'Nome': nomeTag, // Deve corrispondere alla prima colonna rinominata
       'data_inizio': inizio,
       'data_scadenza': fine,
-      'stato': 'attivo',
-      'bio': '', 'linkedin': '', 'instagram': '', 'tiktok': ''
+      'stato': 'attivo'
     };
 
     if (recordEsistente) {
-      // Se esiste ma è scaduto (oltre 14gg), lo sovrascriviamo
+      // Aggiorniamo quello scaduto
       await fetch(`https://api.airtable.com/v0/${baseId}/${table}/${recordEsistente.id}`, {
         method: 'PATCH',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: { 
+          Authorization: `Bearer ${token}`, 
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify({ fields: campi })
       });
     } else {
-      // Se non esiste, lo creiamo da zero
+      // Creiamo uno nuovo
       await fetch(`https://api.airtable.com/v0/${baseId}/${table}`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: { 
+          Authorization: `Bearer ${token}`, 
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify({ fields: campi })
       });
     }
 
-    // Risposta per la index.html
+    // 3. MANDIAMO INDIETRO I DATI ALLA INDEX
     return res.status(200).json({ disponibile: true, user: nomeTag });
 
   } catch (error) {
