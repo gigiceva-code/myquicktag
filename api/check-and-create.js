@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   const table = 'Table 1'; 
 
   try {
+    // 1. Cerchiamo se esiste già
     const response = await fetch(`https://api.airtable.com/v0/${baseId}/${table}?filterByFormula={Nome}='${nomeTag}'`, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -18,23 +19,24 @@ export default async function handler(req, res) {
     scadenza.setFullYear(scadenza.getFullYear() + 1);
     const fine = scadenza.toISOString().split('T')[0];
 
-    // DEFINIAMO I CAMPI (Usa ESATTAMENTE questi nomi che vedo nei tuoi screen)
+    // Prepariamo i campi (Assicurati che "Nome" sia il nome della colonna su Airtable)
     const campi = {
-      "Nome": nomeTag,
-      "data_inizio": inizio,
-      "data_scadenza": fine,
-      "stato": "attivo"
+      'Nome': nomeTag, 
+      'data_inizio': inizio,
+      'data_scadenza': fine,
+      'stato': 'attivo',
+      'bio': '', 'linkedin': '', 'instagram': '', 'tiktok': ''
     };
 
     if (recordEsistente) {
-      // Se esiste ma è scaduto, lo aggiorniamo e svuotiamo i vecchi link
+      // Se esiste ma è scaduto (oltre 14gg), lo sovrascriviamo
       await fetch(`https://api.airtable.com/v0/${baseId}/${table}/${recordEsistente.id}`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields: { ...campi, "bio": "", "linkedin": "", "instagram": "", "tiktok": "" } })
+        body: JSON.stringify({ fields: campi })
       });
     } else {
-      // Se è nuovo, lo creiamo
+      // Se non esiste, lo creiamo da zero
       await fetch(`https://api.airtable.com/v0/${baseId}/${table}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -42,7 +44,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Risposta per far capire alla index dove andare
+    // Risposta per la index.html
     return res.status(200).json({ disponibile: true, user: nomeTag });
 
   } catch (error) {
