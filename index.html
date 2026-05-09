@@ -468,13 +468,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
 async function vaiAllaVerifica() {
     const input = document.getElementById('inputNome');
-    const nomeScelto = input.value.trim().toLowerCase();
+    if (!input) return alert("Errore tecnico: campo non trovato");
 
+    const nomeScelto = input.value.trim().toLowerCase();
     if (!nomeScelto) return alert("Inserisci un nome!");
 
-    // Il redirect corretto che evita il "parametro mancante"
-    window.location.href = `edit.html?user=${encodeURIComponent(nomeScelto)}`;
+    try {
+        // Qui il tuo codice originale faceva la fetch, lascialo così.
+        // Ma per il redirect usa questa riga sotto:
+        window.location.href = `edit.html?user=${encodeURIComponent(nomeScelto)}`;
+    } catch (e) {
+        console.error(e);
+    }
 }
+
 
     try {
         // 1. Chiamata all'API
