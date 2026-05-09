@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   const { nomeTag } = req.query;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const TABLE_ID = 'tblywlZwSsFKWsQn4'; 
+  const TABLE_ID = 'Table 1'; 
 
   try {
     // 1. Controlla se il nome esiste già
