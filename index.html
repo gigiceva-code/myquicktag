@@ -524,43 +524,29 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function vaiAllaVerifica() {
-    const input = document.getElementById("tagInput");
+    const input = document.getElementById("tag-input");
     if (!input) return;
 
     const nomeScelto = input.value.toLowerCase().trim();
-    const btn = document.querySelector('.btn-primary'); // Assicurati che la classe sia corrett
-const msg = document.getElementById("messaggio");
+    const btn = document.querySelector('.btn-verifica');
 
     if (!nomeScelto) {
         alert("Inserisci un @tag per verificare!");
         return;
     }
 
-    // UI: Blocco pulsante
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
 
-            try {
-        const response = await fetch(`/api/check-and-create?nomeTag=${nomeScelto}`);
-        if (!response.ok) throw new Error("Errore Server");
-        
-        const data = await response.json();
-
-        if (data.disponibile) {
-            if (msg) msg.innerText = "Disponibile!";
-        } else {
-            if (msg) msg.innerText = "Esistente!";
-        }
-        
+    try {
         window.location.href = `edit.html?u=${nomeScelto}`;
-
     } catch (error) {
         console.error(error);
-        alert("Errore di connessione. Controlla la rete.");
+        alert("Errore di connessione.");
         btn.innerText = "VERIFICA DISPONIBILITÀ";
         btn.disabled = false;
     }
-} // <--- QUESTA GRAFFA MANCAVA!
+}
 </script>
 
       
