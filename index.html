@@ -383,8 +383,7 @@
     
 
 <script>
-// 1. NAVIGAZIONE UNIFICATA (Usa questa per le freccette)
-// Esempio: onclick="scrollToSection('s2')"
+// 1. NAVIGAZIONE UNIFICATA
 function scrollToSection(id) {
     const target = document.getElementById(id);
     if (target) {
@@ -399,7 +398,6 @@ document.querySelector('.container').addEventListener('scroll', () => {
     
     sections.forEach((section, i) => {
         const rect = section.getBoundingClientRect();
-        // Se la sezione occupa il centro dello schermo, attiva il puntino
         if (rect.top >= -window.innerHeight / 2 && rect.top <= window.innerHeight / 2) {
             dots.forEach(d => d.classList.remove('active'));
             if(dots[i]) dots[i].classList.add('active');
@@ -407,7 +405,7 @@ document.querySelector('.container').addEventListener('scroll', () => {
     });
 });
 
-// 3. LOGICA INPUT S2 (Effetto luce sulla @)
+// 3. LOGICA INPUT S2 (Effetti visivi)
 function activateInput() {
     const at = document.getElementById('at-symbol');
     const line = document.getElementById('input-line');
@@ -425,40 +423,40 @@ function deactivateInput() {
     
     if (input && input.value === "") {
         if(at) {
-            at.style.color = 'rgba(255,255,255,0.2)';
+            at.style.color = 'rgba(255,255,255,0.15)';
             at.style.textShadow = 'none';
         }
         if(line) line.style.width = '0%';
     }
 }
-  function toggleMenu() {
+
+// 4. MENU OVERLAY
+function toggleMenu() {
     const menu = document.getElementById('menu-overlay');
-    const dots = document.querySelector('.nav-dots'); // Seleziona i puntini
-    const menuIcon = document.getElementById('menu-icon'); // Seleziona l'icona di apertura
+    const dots = document.querySelector('.nav-dots');
+    const menuIcon = document.getElementById('menu-icon');
 
     if (menu.style.display === 'flex') {
         menu.style.display = 'none';
-        if(dots) dots.style.display = 'flex'; // Fa tornare i puntini
-        if(menuIcon) menuIcon.style.opacity = '1'; // Fa tornare l'icona
+        if(dots) dots.style.display = 'flex';
+        if(menuIcon) menuIcon.style.opacity = '1';
     } else {
         menu.style.display = 'flex';
-        if(dots) dots.style.display = 'none'; // Nasconde i puntini (BUG FIX)
-        if(menuIcon) menuIcon.style.opacity = '0'; // Nasconde l'icona per pulizia
+        if(dots) dots.style.display = 'none';
+        if(menuIcon) menuIcon.style.opacity = '0';
     }
 }
 
-  
-// Memoria dello scroll "Hard" per One-Page Snap
+// 5. MEMORIA SCROLL
 window.addEventListener('beforeunload', () => {
-    localStorage.setItem('scrollPos', window.scrollY);
+    localStorage.setItem('scrollPos', document.querySelector('.container').scrollTop);
 });
 
 window.addEventListener('DOMContentLoaded', () => {
     const scrollPos = localStorage.getItem('scrollPos');
     if (scrollPos) {
-        // Usiamo un micro-ritardo per assicurarci che la pagina sia pronta
         setTimeout(() => {
-            window.scrollTo({
+            document.querySelector('.container').scrollTo({
                 top: parseInt(scrollPos),
                 behavior: 'instant'
             });
@@ -466,62 +464,47 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// 6. FUNZIONE CORE: VERIFICA E REDIRECT
 async function vaiAllaVerifica() {
-
-    const input = document.getElementById('tag-input'); 
-
-    if (!input) return alert("Errore tecnico: campo input non trovato");
-
-    
+    const input = document.getElementById('tag-input');
+    if (!input) return;
 
     const nomeScelto = input.value.toLowerCase().trim();
+    if(!nomeScelto) {
+        alert("Inserisci un @tag per verificare!");
+        return;
+    }
 
-    
-
-    if(!nomeScelto) return alert("Inserisci una tag per verificare!");
-
-    const input = document.getElementById('inputNome');
-
-    const nomeScelto = input.value.trim().toLowerCase();
-
-
-    if (!nomeScelto) return alert("Inserisci un nome!");
-
-
-    // Il redirect corretto che evita il "parametro mancante"
-
-    window.location.href = `edit.html?user=${encodeURIComponent(nomeScelto)}`;
-
+    // Feedback visivo immediato (opzionale: potresti aggiungere un loader qui)
+    const btn = document.querySelector('.btn-verifica');
+    btn.innerText = "VERIFICA IN CORSO...";
+    btn.disabled = true;
 
     try {
-        // 1. Chiamata all'API
         const response = await fetch(`/api/check-and-create?nomeTag=${encodeURIComponent(nomeScelto)}`);
         
-        // Se Vercel dà errore (es. 404 o 500), lo intercettiamo qui
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error("L'API ha risposto con un errore: " + errorText);
+            throw new Error("Errore di connessione al database.");
         }
 
         const data = await response.json();
 
         if (data.disponibile) {
-            // 2. Se è disponibile, chiedi conferma
-            if(confirm("Il nome @" + nomeScelto + " è disponibile! Vuoi attivarlo ora?")) {
-                // 3. Vai alla modifica passando il nome
-                // USIAMO NOME SCELTO PER ESSERE SICURI
-                window.location.href = "edit.html?user=" + encodeURIComponent(nomeScelto);
+            // REDIRECT SOLO SE DISPONIBILE
+            if(confirm(`Il nome @${nomeScelto} è disponibile! Vuoi attivarlo ora?`)) {
+                window.location.href = `edit.html?user=${encodeURIComponent(nomeScelto)}`;
             }
         } else {
-            // 4. Se è occupato, mostra il messaggio
-            alert(data.messaggio || "Ops! Il nome @" + nomeScelto + " è già occupato.");
+            alert(data.messaggio || `L'utente @${nomeScelto} è già registrato.`);
         }
     } catch (error) {
         console.error("Errore:", error);
-        alert("ERRORE: " + error.message); // Questo ti dirà se il problema è Vercel o Airtable
+        alert("Errore durante la verifica. Riprova tra poco.");
+    } finally {
+        btn.innerText = "VERIFICA DISPONIBILITÀ";
+        btn.disabled = false;
     }
 }
-
 </script>
 
     
