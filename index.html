@@ -464,53 +464,38 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// 6. FUNZIONE CORE: VERIFICA E REDIRECT
 async function vaiAllaVerifica() {
-    const input = document.getElementById('tag-input');
+    const input = document.getElementById("tagInput");
     if (!input) return;
 
     const nomeScelto = input.value.toLowerCase().trim();
-    if(!nomeScelto) {
+    const btn = document.querySelector('.btn-primary'); // Assicurati che la classe sia corretta
+    const msg = document.getElementById("messaggio"); // Se hai un elemento per i messaggi
+
+    if (!nomeScelto) {
         alert("Inserisci un @tag per verificare!");
         return;
     }
 
-    const btn = document.querySelector('.btn-verifica');
+    // UI: Blocco pulsante
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
 
     try {
-        const response = await fetch(`/api/check-and-create?nomeTag=${encodeURIComponent(nomeScelto)}`);
+        // Chiamata alla tua nuova API sicura
+        const response = await fetch(`/api/check-and-create?nomeTag=${nomeScelto}`);
         const data = await response.json();
 
         if (data.disponibile) {
-            // Reindirizza usando il parametro "u" standard
-            window.location.href = `edit.html?u=${encodeURIComponent(data.user)}`;
+            // Profilo creato o disponibile
+            window.location.href = `edit.html?u=${nomeScelto}`;
         } else {
-            alert(data.messaggio || "Questo nome non è disponibile.");
+            // Profilo già esistente
+            window.location.href = `edit.html?u=${nomeScelto}`;
         }
     } catch (error) {
         console.error("Errore:", error);
-        alert("Errore durante la verifica. Riprova tra poco.");
-    } finally {
-        btn.innerText = "VERIFICA DISPONIBILITÀ";
-        btn.disabled = false;
-    }
-}
-        const data = await response.json();
-
-        if (data.disponibile) {
-            // REDIRECT SOLO SE DISPONIBILE
-            if(confirm(`Il nome @${nomeScelto} è disponibile! Vuoi attivarlo ora?`)) {
-                window.location.href = `edit.html?user=${encodeURIComponent(nomeScelto)}`;
-            }
-        } else {
-            alert(data.messaggio || `L'utente @${nomeScelto} è già registrato.`);
-        }
-    } catch (error) {
-        console.error("Errore:", error);
-        alert("Errore durante la verifica. Riprova tra poco.");
-    } finally {
+        alert("Errore di connessione al database.");
         btn.innerText = "VERIFICA DISPONIBILITÀ";
         btn.disabled = false;
     }
