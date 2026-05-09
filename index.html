@@ -475,18 +475,28 @@ async function vaiAllaVerifica() {
         return;
     }
 
-    // Feedback visivo immediato (opzionale: potresti aggiungere un loader qui)
     const btn = document.querySelector('.btn-verifica');
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
 
     try {
         const response = await fetch(`/api/check-and-create?nomeTag=${encodeURIComponent(nomeScelto)}`);
-        
-        if (!response.ok) {
-            throw new Error("Errore di connessione al database.");
-        }
+        const data = await response.json();
 
+        if (data.disponibile) {
+            // Reindirizza usando il parametro "u" standard
+            window.location.href = `edit.html?u=${encodeURIComponent(data.user)}`;
+        } else {
+            alert(data.messaggio || "Questo nome non è disponibile.");
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+        alert("Errore durante la verifica. Riprova tra poco.");
+    } finally {
+        btn.innerText = "VERIFICA DISPONIBILITÀ";
+        btn.disabled = false;
+    }
+}
         const data = await response.json();
 
         if (data.disponibile) {
