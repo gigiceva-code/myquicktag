@@ -128,12 +128,9 @@
     </div>
 
     <script>
-        const AIRTABLE_TOKEN = "patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9"; 
-const BASE_ID = "app4eQDzqixPDbQTd";
-const TABLE_NAME = "Table 1";
-
+        
 const params = new URLSearchParams(window.location.search);
-const nomeUtente = params.get("nome");
+const nomeUtente = params.get("u"); // Cambiato da 'nome' a 'u'
 
 // Mappatura Icone Social
 const socialIcons = {
@@ -155,21 +152,15 @@ if (nomeUtente) {
 }
 
 async function caricaDatiProfilo(nome) {
-    // Puliamo il nome da eventuali spazi o caratteri strani
     const nomePulito = nome.trim().toLowerCase();
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula=LOWER({nome})='${nomePulito}'`;
     
     try {
-        const response = await fetch(url, {
-            headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
-        });
+        // Chiamata all'API sicura invece di Airtable diretto
+        const response = await fetch(`/api/get-profile?u=${nomePulito}`);
         const data = await response.json();
 
-        if (data && data.records && data.records.length > 0) {
-            const record = data.records[0].fields;
-
-            // Debug: se vedi questo in console, i dati sono arrivati
-            console.log("Dati ricevuti:", record);
+        if (data.success) {
+            const record = data.fields;
 
             // --- CONTROLLO STATO ---
             if (record.stato !== "Attivo") {
@@ -188,7 +179,7 @@ async function caricaDatiProfilo(nome) {
             const linksContainer = document.getElementById("social-grid");
             linksContainer.innerHTML = ""; 
 
-            // Ciclo sui social definiti nella mappa socialIcons
+            // Ciclo sui social
             Object.keys(socialIcons).forEach(social => {
                 if (record[social]) {
                     const btn = document.createElement("a");
@@ -204,15 +195,12 @@ async function caricaDatiProfilo(nome) {
                 }
             });
         } else {
-            console.log("Nessun record trovato per:", nomePulito);
-            document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non trovato nel database.</div>";
+            document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Profilo non trovato.</div>";
         }
     } catch (error) {
         console.error("Errore Fetch:", error);
     }
 }
-
-
     </script>
 </body>
 </html>
