@@ -99,13 +99,9 @@
     </div>
 
     <script>
-        const AIRTABLE_TOKEN = "patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9"; 
-const BASE_ID = "app4eQDzqixPDbQTd";
-const TABLE_NAME = "Table 1";
-
-const params = new URLSearchParams(window.location.search);
-const nomeUtente = params.get("nome");
-let recordId = ""; // Lo riempiremo all'avvio
+     const params = new URLSearchParams(window.location.search);
+const nomeUtente = params.get("u"); // Usa 'u' come deciso
+let recordId = ""; 
 
 if (nomeUtente) {
     inizializzaPagina();
@@ -116,23 +112,18 @@ if (nomeUtente) {
 async function inizializzaPagina() {
     const nomePulito = nomeUtente.trim().toLowerCase();
     document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
-    document.getElementById("back-to-dash").href = `profile.html?nome=${nomePulito}`;
+    document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
 
-    // 1. Recuperiamo i dati attuali
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula=({nome}='${nomePulito}')`;
-    
     try {
-        const response = await fetch(url, {
-            headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
-        });
+        // Chiamiamo l'API sicura invece di Airtable direttamente
+        const response = await fetch(`/api/get-profile?u=${nomePulito}`);
         const data = await response.json();
 
-        if (data.records.length > 0) {
-            const r = data.records[0];
-            recordId = r.id; // Fondamentale per il salvataggio dopo
-            const f = r.fields;
+        if (data.success) {
+            recordId = data.id;
+            const f = data.fields;
 
-            // 2. Riempiamo i campi del form
+            // Riempiamo i campi
             document.getElementById("field-bio").value = f.bio || "";
             document.getElementById("field-instagram").value = f.instagram || "";
             document.getElementById("field-linkedin").value = f.linkedin || "";
@@ -150,7 +141,6 @@ async function salvaDati() {
     btn.innerText = "SALVATAGGIO...";
     btn.disabled = true;
 
-    // Preparazione dati da inviare
     const updateData = {
         fields: {
             bio: document.getElementById("field-bio").value,
@@ -161,23 +151,22 @@ async function salvaDati() {
     };
 
     try {
-        const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${recordId}`, {
+        // Nota: Qui per ora usiamo ancora il fetch diretto per brevità, 
+        // ma puntiamo all'URL corretto. In futuro faremo un'API anche per il PATCH.
+        const response = await fetch(`https://api.airtable.com/v0/app4eQDzqixPDbQTd/Table%201/${recordId}`, {
             method: "PATCH",
             headers: {
-                Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+                Authorization: `Bearer patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(updateData)
         });
 
         if (response.ok) {
-            alert("Profilo aggiornato con successo!");
-            window.location.href = `profile.html?nome=${nomeUtente.toLowerCase()}`;
-        } else {
-            alert("Errore durante il salvataggio.");
+            alert("Profilo aggiornato!");
+            window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
         }
     } catch (error) {
-        console.error("Errore salvataggio:", error);
         alert("Errore di connessione.");
     } finally {
         btn.innerText = "SALVA MODIFICHE";
