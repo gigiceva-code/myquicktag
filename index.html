@@ -481,26 +481,29 @@ const msg = document.getElementById("messaggio");
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
 
-        try {
+            try {
         const response = await fetch(`/api/check-and-create?nomeTag=${nomeScelto}`);
         if (!response.ok) throw new Error("Errore Server");
         
         const data = await response.json();
 
-        // Se il messaggio esiste, lo usiamo, altrimenti usiamo l'alert classico
         if (data.disponibile) {
             if (msg) msg.innerText = "Disponibile!";
-            window.location.href = `edit.html?u=${nomeScelto}`;
         } else {
             if (msg) msg.innerText = "Esistente!";
-            window.location.href = `edit.html?u=${nomeScelto}`;
         }
+        
+        window.location.href = `edit.html?u=${nomeScelto}`;
+
     } catch (error) {
         console.error(error);
         alert("Errore di connessione. Controlla la rete.");
         btn.innerText = "VERIFICA DISPONIBILITÀ";
         btn.disabled = false;
     }
+} // <--- QUESTA GRAFFA MANCAVA!
+</script>
+
 
 </script>
 
