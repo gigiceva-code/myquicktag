@@ -2,7 +2,7 @@ export default async function handler(req, res) {
     const { u } = req.query;
     const token = process.env.AIRTABLE_TOKEN;
     const baseId = process.env.AIRTABLE_BASE_ID;
-    const table = 'Table%201';
+    const table = 'Table 1';
 
     try {
         const response = await fetch(`https://api.airtable.com/v0/${baseId}/${table}?filterByFormula=LOWER({nome})='${u.toLowerCase()}'`, {
