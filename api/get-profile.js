@@ -1,12 +1,13 @@
 export default async function handler(req, res) {
-  const { u } = req.query; // Legge il parametro 'u' dall'indirizzo
+  const { u } = req.query;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const TABLE_ID = 'tblywlZwSsFKWsQn4'; 
+  // Proviamo a usare il nome testuale che vedi tu su Airtable
+  const TABLE_NAME = 'Table 1'; 
 
   try {
-    // COSTRUZIONE URL CORRETTA: BASE_ID + / + TABLE_ID
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={nome}='${u}'`;
+    // Usiamo encodeURIComponent per gestire lo spazio tra Table e 1
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${u}'`;
     
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
@@ -17,7 +18,8 @@ export default async function handler(req, res) {
     if (data.records && data.records.length > 0) {
       return res.status(200).json(data.records[0].fields);
     } else {
-      return res.status(404).json({ errore: "Profilo non trovato" });
+      // Se non lo trova, restituiamo un errore chiaro
+      return res.status(404).json({ errore: "Profilo non trovato nel database" });
     }
   } catch (error) {
     return res.status(500).json({ errore: error.message });
