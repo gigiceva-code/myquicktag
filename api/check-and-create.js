@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     const checkData = await check.json();
 
     if (checkData.records && checkData.records.length > 0) {
-      return res.status(200).json({ disponibile: false });
+      return res.status(200).json({ available: false });
     }
 
     // 2. Creazione (scriviamo solo 'nome' e 'stato')
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     });
 
     const createData = await create.json();
-    return res.status(200).json({ available: !!createData.records });
+    return res.status(200).json({ available: true });
   } catch (e) {
     return res.status(500).json({ errore: e.message });
   }
