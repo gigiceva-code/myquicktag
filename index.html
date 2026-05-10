@@ -538,11 +538,26 @@ async function vaiAllaVerifica() {
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
 
-    try {
-        window.location.href = `edit.html?u=${nomeScelto}`;
+   try {
+        const response = await fetch('/api/check-and-create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nomeTag: nomeScelto })
+        });
+        
+        const data = await response.json();
+
+        if (data.available) {
+            // Se disponibile e creato, vai all'edit
+            window.location.href = `edit.html?u=${nomeScelto}`;
+        } else {
+            alert("Spiacente, questo @tag è già occupato!");
+            btn.innerText = "VERIFICA DISPONIBILITÀ";
+            btn.disabled = false;
+        }
     } catch (error) {
         console.error(error);
-        alert("Errore di connessione.");
+        alert("Errore durante la verifica.");
         btn.innerText = "VERIFICA DISPONIBILITÀ";
         btn.disabled = false;
     }
