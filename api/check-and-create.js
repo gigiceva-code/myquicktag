@@ -4,10 +4,8 @@ export default async function handler(req, res) {
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
   const TABLE_ID = 'tblywlZwSsFKWsQn4'; 
 
-  if (!nomeTag) return res.status(400).json({ errore: "Tag mancante" });
-
   try {
-    // Cerchiamo se esiste già (usando il nome della colonna esatto che vedo nelle tue foto: "nome")
+    // Ricerca dell'utente con URL corretto
     const urlCheck = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={nome}='${nomeTag}'`;
     const checkRes = await fetch(urlCheck, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
@@ -18,21 +16,21 @@ export default async function handler(req, res) {
       return res.status(200).json({ disponibile: false });
     }
 
-    // Se non esiste, lo creiamo. 
-    // NOTA: Ho messo "nome" tutto minuscolo come nella tua colonna Airtable
-    const createRes = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
+    // Creazione nuovo record con URL corretto
+    const urlCreate = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
+    const createRes = await fetch(urlCreate, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${AIRTABLE_TOKEN}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        records: [{ fields: { "nome": nomeTag, "stato": "Attivo" } }]
+        records: [{ fields: { "nome": nomeTag } }]
       })
     });
 
     const createData = await createRes.json();
-    return res.status(200).json({ disponibile: true, id: createData.records[0].id });
+    return res.status(200).json({ disponibile: !!createData.records });
 
   } catch (error) {
     return res.status(500).json({ errore: error.message });
