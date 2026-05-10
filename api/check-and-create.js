@@ -1,6 +1,6 @@
 
 export default async function handler(req, res) {
-  const { nomeTag } = req.query;
+  const { nomeTag } = req.body;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
   const TABLE_ID = 'tblywlZwSsFKWsQn4'; 
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     });
 
     const createData = await create.json();
-    return res.status(200).json({ disponibile: !!createData.records });
+    return res.status(200).json({ available: !!createData.records });
   } catch (e) {
     return res.status(500).json({ errore: e.message });
   }
