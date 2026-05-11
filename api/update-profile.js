@@ -1,41 +1,41 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).send('Method not allowed');
-  
+  if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
+
   const body = req.body;
-  const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
-  const BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
+  const { username_system } = body; 
 
   try {
-    // 1. Trova il record dell'utente
-    const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={nomeTag}='${body.nomeTag}'`, {
-      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+    // 1. Cerchiamo il record nella colonna username_system
+    const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula={username_system}='${username_system}'`;
+    
+    const response = await fetch(searchUrl, {
+      headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}` }
     });
     const data = await response.json();
 
     if (!data.records || data.records.length === 0) {
-      return res.status(404).json({ error: "Record non trovato" });
+      return res.status(404).json({ error: "Utente non trovato su Airtable (colonna username_system)" });
     }
 
     const recordId = data.records[0].id;
 
-    // 2. Prepariamo i campi filtrando solo quelli che hanno un valore o il piano
+    // 2. Prepariamo i campi da aggiornare
     const fieldsToUpdate = {};
-    const validFields = ["bio", "plan", "email", "phone", "whatsapp", "instagram", "facebook", "linkedin", "tiktok", "youtube", "x", "telegram", "reddit", "sito_web", "cv"];
+    const validFields = [
+      "username_display", "bio", "plan", "email", "phone", "whatsapp", 
+      "instagram", "tiktok", "facebook", "linkedin", "youtube", 
+      "x", "telegram", "reddit", "sito_web", "cv"
+    ];
     
     validFields.forEach(f => {
-      if (body[f] !== undefined) {
-        fieldsToUpdate[f] = body[f] || "";
-      }
+      if (body[f] !== undefined) fieldsToUpdate[f] = body[f];
     });
 
-    // Forza il piano se inviato
-    if (body.plan) fieldsToUpdate["plan"] = body.plan;
-
-    const update = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}/${recordId}`, {
+    // 3. Inviamo l'aggiornamento (PATCH)
+    const update = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordId}`, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+        Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ fields: fieldsToUpdate })
