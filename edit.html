@@ -147,27 +147,60 @@
         document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Accesso non autorizzato.</div>";
     }
 
-    async function inizializzaPagina() {
+  async function inizializzaPagina() {
         const nomePulito = nomeUtente.trim().toLowerCase();
         document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
         document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
 
         try {
+            // 1. Chiamata all'API per recuperare i dati
             const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+            
+            if (!response.ok) {
+                throw new Error(`Errore Server: ${response.status}`);
+            }
+
             const data = await response.json();
 
-            if (data.success) {
+            if (data.success && data.fields) {
                 const f = data.fields;
-                // Popolamento automatico usando i nomi delle colonne Airtable
-                const campi = ['bio', 'email', 'phone', 'whatsapp', 'instagram', 'tiktok', 'facebook', 'linkedin', 'youtube', 'x', 'telegram', 'reddit', 'sito_web', 'cv'];
-                campi.forEach(campo => {
-                    const el = document.getElementById(`field-${campo}`);
-                    if (el) el.value = f[campo] || "";
-                });
-            }
-        } catch (error) { console.error("Errore caricamento:", error); }
-    }
+                // 2. Mappa i campi di Airtable agli ID dell'HTML
+                // Usiamo i nomi "blindati" (tutto minuscolo)
+                const mappaCampi = {
+                    'bio': 'field-bio',
+                    'email': 'field-email',
+                    'phone': 'field-phone',
+                    'whatsapp': 'field-whatsapp',
+                    'instagram': 'field-instagram',
+                    'tiktok': 'field-tiktok',
+                    'facebook': 'field-facebook',
+                    'linkedin': 'field-linkedin',
+                    'youtube': 'field-youtube',
+                    'x': 'field-x',
+                    'telegram': 'field-telegram',
+                    'reddit': 'field-reddit',
+                    'sito_web': 'field-sito_web',
+                    'cv': 'field-cv'
+                };
 
+                for (const [colonnaAirtable, idHTML] of Object.entries(mappaCampi)) {
+                    const el = document.getElementById(idHTML);
+                    if (el) {
+                        el.value = f[colonnaAirtable] || "";
+                    }
+                }
+                
+                // Rimuoviamo la scritta caricamento se tutto va bene
+                console.log("Dati caricati correttamente");
+            } else {
+                console.error("Profilo non trovato o dati mancanti", data);
+                alert("Attenzione: Profilo creato ma non ancora leggibile. Prova a ricaricare la pagina.");
+            }
+        } catch (error) {
+            console.error("Errore durante il caricamento:", error);
+            document.getElementById("user-display").innerText = "ERRORE CARICAMENTO";
+        }
+    }
     async function salvaDati() {
         const btn = document.querySelector(".save-btn");
         btn.innerText = "SALVATAGGIO...";
