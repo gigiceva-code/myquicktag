@@ -161,13 +161,14 @@ async function salvaDati() {
     btn.innerText = "SALVATAGGIO...";
     btn.disabled = true;
 
-    // 1. Rimuoviamo la @ per cercare l'utente correttamente nel database
-    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+    // Normalizziamo il nome per il sistema (toglie @ e mette minuscolo)
+    const nomePerSistema = nomeUtente.replace('@', '').trim().toLowerCase();
 
     const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
 
     const datiDaInviare = {
-        nomeTag: nomePulito,
+        username_system: nomePerSistema, // Deve corrispondere alla colonna su Airtable
+        username_display: nomeUtente,    // Mantiene la @ e le maiuscole originali
         plan: getVal("field-plan") || "BASE",
         bio: getVal("field-bio"),
         email: getVal("field-email"),
@@ -193,19 +194,17 @@ async function salvaDati() {
         });
 
         if (response.ok) {
-            alert("Profilo aggiornato!");
-            // Torniamo al profilo usando il nome pulito
-            window.location.href = `profile.html?u=${nomePulito}`;
+            alert("Profilo aggiornato con successo!");
+            window.location.href = `profile.html?u=${nomePerSistema}`;
         } else {
             const errorData = await response.json();
-            // Questo alert ci dirà ESATTAMENTE perché Airtable dice di no
-            alert("Errore: " + (errorData.error?.message || JSON.stringify(errorData.error)));
+            alert("Errore durante il salvataggio: " + JSON.stringify(errorData.error));
         }
-    } catch (error) { 
-        alert("Errore di rete o connessione."); 
-    } finally { 
-        btn.innerText = "SALVA MODIFICHE"; 
-        btn.disabled = false; 
+    } catch (error) {
+        alert("Errore di rete.");
+    } finally {
+        btn.innerText = "SALVA MODIFICHE";
+        btn.disabled = false;
     }
 }
     </script>
