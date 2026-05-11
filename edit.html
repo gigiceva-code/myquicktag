@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -15,7 +14,6 @@
             --accent: #ffffff;
             --text-sec: #a0a0a0;
         }
-
         body {
             margin: 0; padding: 20px;
             background-color: var(--bg-color);
@@ -23,42 +21,39 @@
             color: white;
             display: flex; flex-direction: column; align-items: center;
         }
-
-        .edit-container { width: 100%; max-width: 400px; }
-
+        .edit-container { width: 100%; max-width: 400px; padding-bottom: 50px; }
         .header { text-align: left; margin: 30px 0; width: 100%; }
         .header h1 { font-size: 1.5rem; margin: 0; font-weight: 600; }
         .header p { color: var(--text-sec); font-size: 0.9rem; margin-top: 5px; }
-
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { 
-            display: block; font-size: 0.75rem; color: var(--text-sec); 
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; margin-left: 5px;
+        .section-title { 
+            font-size: 0.8rem; color: var(--accent); 
+            text-transform: uppercase; letter-spacing: 2px;
+            margin: 30px 0 15px 5px; border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
         }
-
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { 
+            display: block; font-size: 0.7rem; color: var(--text-sec); 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; margin-left: 5px;
+        }
         input, textarea {
-            width: 100%; padding: 15px;
+            width: 100%; padding: 12px 15px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px; color: white;
-            font-family: 'Inter', sans-serif; font-size: 0.95rem;
+            border-radius: 10px; color: white;
+            font-family: 'Inter', sans-serif; font-size: 0.9rem;
             box-sizing: border-box; outline: none;
         }
-
         input:focus, textarea:focus { border-color: rgba(255,255,255,0.3); }
-
-        textarea { height: 100px; resize: none; }
-
+        textarea { height: 80px; resize: none; }
         .save-btn {
-            width: 100%; padding: 18px; margin-top: 20px;
+            width: 100%; padding: 18px; margin-top: 30px;
             background: white; color: black;
             border: none; border-radius: 14px;
             font-weight: 600; font-size: 1rem;
-            cursor: pointer; transition: transform 0.2s;
+            cursor: pointer; position: sticky; bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
-
-        .save-btn:active { transform: scale(0.97); }
-
         .back-link {
             display: block; text-align: center; margin-top: 25px;
             color: var(--text-sec); text-decoration: none; font-size: 0.85rem;
@@ -69,112 +64,153 @@
 
     <div class="edit-container">
         <div class="header">
-            <h1 id="user-display">@NOME</h1>
-            <p>Aggiorna le tue informazioni digitali</p>
+            <h1 id="user-display">@CARICAMENTO...</h1>
+            <p>Gestisci i tuoi collegamenti</p>
         </div>
 
+        <div class="section-title">Bio</div>
         <div class="form-group">
-            <label>Biografia</label>
+            <label>La tua biografia</label>
             <textarea id="field-bio" placeholder="Racconta chi sei..."></textarea>
         </div>
 
+        <div class="section-title">Contatti</div>
         <div class="form-group">
-            <label><i class="fab fa-instagram"></i> Instagram (Link completo)</label>
-            <input type="text" id="field-instagram" placeholder="https://instagram.com/tuonome">
+            <label><i class="fas fa-envelope"></i> Email</label>
+            <input type="email" id="field-email" placeholder="esempio@mail.com">
+        </div>
+        <div class="form-group">
+            <label><i class="fas fa-phone"></i> Telefono</label>
+            <input type="text" id="field-phone" placeholder="+39 333...">
+        </div>
+        <div class="form-group">
+            <label><i class="fab fa-whatsapp"></i> WhatsApp</label>
+            <input type="text" id="field-whatsapp" placeholder="+39 333...">
         </div>
 
+        <div class="section-title">Social Network</div>
         <div class="form-group">
-            <label><i class="fab fa-linkedin"></i> LinkedIn (Link completo)</label>
-            <input type="text" id="field-linkedin" placeholder="https://linkedin.com/in/tuonome">
+            <label><i class="fab fa-instagram"></i> Instagram</label>
+            <input type="text" id="field-instagram" placeholder="Link profilo">
+        </div>
+        <div class="form-group">
+            <label><i class="fab fa-tiktok"></i> TikTok</label>
+            <input type="text" id="field-tiktok" placeholder="Link profilo">
+        </div>
+        <div class="form-group">
+            <label><i class="fab fa-facebook"></i> Facebook</label>
+            <input type="text" id="field-facebook" placeholder="Link profilo">
+        </div>
+        <div class="form-group">
+            <label><i class="fab fa-linkedin"></i> LinkedIn</label>
+            <input type="text" id="field-linkedin" placeholder="Link profilo">
+        </div>
+        <div class="form-group">
+            <label><i class="fab fa-youtube"></i> YouTube</label>
+            <input type="text" id="field-youtube" placeholder="Link canale">
+        </div>
+        <div class="form-group">
+            <label><i class="fab fa-x-twitter"></i> X (Twitter)</label>
+            <input type="text" id="field-x" placeholder="Link profilo">
+        </div>
+        <div class="form-group">
+            <label><i class="fab fa-telegram"></i> Telegram</label>
+            <input type="text" id="field-telegram" placeholder="Link (t.me/...)">
+        </div>
+        <div class="form-group">
+            <label><i class="fab fa-reddit"></i> Reddit</label>
+            <input type="text" id="field-reddit" placeholder="Link profilo">
         </div>
 
+        <div class="section-title">Altro</div>
         <div class="form-group">
             <label><i class="fas fa-globe"></i> Sito Web</label>
-            <input type="text" id="field-sito" placeholder="https://www.tuosito.it">
+            <input type="text" id="field-sito_web" placeholder="https://...">
+        </div>
+        <div class="form-group">
+            <label><i class="fas fa-file-pdf"></i> Link CV</label>
+            <input type="text" id="field-cv" placeholder="Link al tuo CV">
         </div>
 
         <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
 
-        <a href="#" id="back-to-dash" class="back-link">Torna alla Dashboard</a>
+        <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
     </div>
 
     <script>
-     const params = new URLSearchParams(window.location.search);
-const nomeUtente = params.get("u"); // Usa 'u' come deciso
-let recordId = ""; 
+    const params = new URLSearchParams(window.location.search);
+    const nomeUtente = params.get("u");
 
-if (nomeUtente) {
-    inizializzaPagina();
-} else {
-    document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Parametro mancante.</div>";
-}
-
-async function inizializzaPagina() {
-    const nomePulito = nomeUtente.trim().toLowerCase();
-    document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
-    document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
-
-    try {
-        // Chiamiamo l'API sicura invece di Airtable direttamente
-        const response = await fetch(`/api/get-profile?u=${nomePulito}`);
-        const data = await response.json();
-
-        if (data.success) {
-            recordId = data.id;
-            const f = data.fields;
-
-            // Riempiamo i campi
-            document.getElementById("field-bio").value = f.bio || "";
-            document.getElementById("field-instagram").value = f.instagram || "";
-            document.getElementById("field-linkedin").value = f.linkedin || "";
-            document.getElementById("field-sito").value = f.sito_web || "";
-        }
-    } catch (error) {
-        console.error("Errore inizializzazione:", error);
+    if (nomeUtente) {
+        inizializzaPagina();
+    } else {
+        document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Accesso non autorizzato.</div>";
     }
-}
 
-async function salvaDati() {
-    if (!nomeUtente) return alert("Errore: Nome utente mancante.");
+    async function inizializzaPagina() {
+        const nomePulito = nomeUtente.trim().toLowerCase();
+        document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
+        document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
 
-    const btn = document.querySelector(".save-btn");
-    btn.innerText = "SALVATAGGIO...";
-    btn.disabled = true;
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+            const data = await response.json();
 
-    // Prendiamo i valori dai campi
-    const datiDaInviare = {
-        nomeTag: nomeUtente.trim().toLowerCase(),
-        email: "", // Puoi aggiungere un campo email se serve
-        telefono: "", // Puoi aggiungere un campo telefono se serve
-        messaggio: document.getElementById("field-bio").value, // Usiamo bio come messaggio
-        // Aggiungi qui gli altri campi se vuoi passarli a update_profile.js
-    };
-
-    try {
-        // CHIAMIAMO LA TUA API (update_profile.js) invece di Airtable direttamente
-        const response = await fetch('/api/update_profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datiDaInviare)
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.success) {
-            alert("Profilo aggiornato!");
-            window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
-        } else {
-            alert("Errore durante il salvataggio: " + (result.error || "Riprova"));
-        }
-    } catch (error) {
-        alert("Errore di connessione con il server.");
-    } finally {
-        btn.innerText = "SALVA MODIFICHE";
-        btn.disabled = false;
+            if (data.success) {
+                const f = data.fields;
+                // Popolamento automatico usando i nomi delle colonne Airtable
+                const campi = ['bio', 'email', 'phone', 'whatsapp', 'instagram', 'tiktok', 'facebook', 'linkedin', 'youtube', 'x', 'telegram', 'reddit', 'sito_web', 'cv'];
+                campi.forEach(campo => {
+                    const el = document.getElementById(`field-${campo}`);
+                    if (el) el.value = f[campo] || "";
+                });
+            }
+        } catch (error) { console.error("Errore caricamento:", error); }
     }
-}
 
+    async function salvaDati() {
+        const btn = document.querySelector(".save-btn");
+        btn.innerText = "SALVATAGGIO...";
+        btn.disabled = true;
 
+        const datiDaInviare = {
+            nomeTag: nomeUtente.trim().toLowerCase(),
+            bio: document.getElementById("field-bio").value,
+            email: document.getElementById("field-email").value,
+            phone: document.getElementById("field-phone").value,
+            whatsapp: document.getElementById("field-whatsapp").value,
+            instagram: document.getElementById("field-instagram").value,
+            tiktok: document.getElementById("field-tiktok").value,
+            facebook: document.getElementById("field-facebook").value,
+            linkedin: document.getElementById("field-linkedin").value,
+            youtube: document.getElementById("field-youtube").value,
+            x: document.getElementById("field-x").value,
+            telegram: document.getElementById("field-telegram").value,
+            reddit: document.getElementById("field-reddit").value,
+            sito_web: document.getElementById("field-sito_web").value,
+            cv: document.getElementById("field-cv").value
+        };
+
+        try {
+            const response = await fetch('/api/update_profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datiDaInviare)
+            });
+
+            if (response.ok) {
+                alert("Profilo aggiornato con successo!");
+                window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
+            } else {
+                alert("Errore durante il salvataggio. Riprova.");
+            }
+        } catch (error) {
+            alert("Errore di rete.");
+        } finally {
+            btn.innerText = "SALVA MODIFICHE";
+            btn.disabled = false;
+        }
+    }
     </script>
 </body>
 </html>
