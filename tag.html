@@ -1,75 +1,139 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQuickTag - Profilo</title>
-    <link rel="stylesheet" href="style.css"> </head>
-<body>
-    <div id="tag-container" class="profile-card">
-        <div class="header">
-            <img id="display-avatar" src="default-avatar.png" alt="Avatar" class="avatar">
-            <h1 id="display-name">Caricamento...</h1>
-            <p id="display-bio"></p>
-        </div>
+    <title>MyQuickTag | Digital Profile</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --card-bg: #0a0a0a;
+            --text: #ffffff;
+            --accent: #ffffff;
+            --gray: #888888;
+        }
 
-        <div id="social-links" class="links-container">
-            </div>
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .tag-container {
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin: 10px 0;
+            text-transform: lowercase; /* Stile tech luxury */
+        }
+
+        .bio {
+            color: var(--gray);
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            background: var(--card-bg);
+            color: var(--text);
+            text-decoration: none;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid #1a1a1a;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+            transform: translateY(-2px);
+        }
+
+        .footer-logo {
+            margin-top: 50px;
+            font-size: 12px;
+            color: #333;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tag-container">
+        <img id="display-avatar" src="https://via.placeholder.com/150" alt="Avatar" class="avatar">
+        <h1 id="display-name">@loading...</h1>
+        <p id="display-bio" class="bio"></p>
+
+        <div id="social-links" class="links-container"></div>
+
+        <div class="footer-logo">MYQUICKTAG LUXURY</div>
     </div>
 
     <script>
-        // 1. Recuperiamo l'utente dalla URL (es. tag.html?u=test)
         const params = new URLSearchParams(window.location.search);
         let user = params.get("u");
 
-        if (user) {
-            // Puliamo il nome per la ricerca nel sistema
-            user = user.replace('@', '').toLowerCase();
-            caricaProfiloPubblico(user);
-        } else {
-            document.body.innerHTML = "<h1>Profilo non specificato</h1>";
-        }
-
-        async function caricaProfiloPubblico(username) {
+        async function fetchProfile() {
+            if (!user) return;
+            const cleanUser = user.replace('@', '').toLowerCase();
+            
             try {
-                const response = await fetch(`/api/get-profile?u=${username}`);
+                const response = await fetch(`/api/get-profile?u=${cleanUser}`);
                 const result = await response.json();
 
                 if (result.success) {
-                    const dati = result.fields;
-
-                    // Mostriamo il nome estetico (username_display)
-                    document.getElementById("display-name").innerText = dati.username_display || "@" + username;
-                    document.getElementById("display-bio").innerText = dati.bio || "";
+                    const d = result.fields;
+                    document.getElementById("display-name").innerText = d.username_display || "@" + cleanUser;
+                    document.getElementById("display-bio").innerText = d.bio || "";
                     
-                    // Se hai una colonna per l'immagine
-                    if (dati.avatar_url) {
-                        document.getElementById("display-avatar").src = dati.avatar_url;
-                    }
+                    const container = document.getElementById("social-links");
+                    const socialMap = ["instagram", "tiktok", "whatsapp", "linkedin", "youtube", "sito_web"];
 
-                    // Esempio di creazione dinamica dei link social
-                    const socialLinks = document.getElementById("social-links");
-                    const piattaforme = ["instagram", "tiktok", "whatsapp", "linkedin", "youtube", "sito_web"];
-
-                    piattaforme.forEach(p => {
-                        if (dati[p]) {
-                            const btn = document.createElement("a");
-                            btn.href = dati[p].startsWith('http') ? dati[p] : `https://${dati[p]}`;
-                            btn.className = `btn btn-${p}`;
-                            btn.innerText = p.toUpperCase().replace('_', ' ');
-                            btn.target = "_blank";
-                            socialLinks.appendChild(btn);
+                    socialMap.forEach(key => {
+                        if (d[key]) {
+                            const a = document.createElement("a");
+                            a.className = "btn";
+                            a.href = d[key].startsWith('http') ? d[key] : `https://${d[key]}`;
+                            a.target = "_blank";
+                            a.innerText = key.replace('_', ' ');
+                            container.appendChild(a);
                         }
                     });
-
-                } else {
-                    document.getElementById("display-name").innerText = "Profilo non trovato";
                 }
-            } catch (error) {
-                console.error("Errore nel caricamento:", error);
-            }
+            } catch (e) { console.error(e); }
         }
+        fetchProfile();
     </script>
 </body>
 </html>
