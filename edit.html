@@ -199,8 +199,10 @@
             });
 
             if (response.ok) {
-                alert("Profilo aggiornato con successo!");
-                window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
+    alert("Profilo aggiornato con successo!");
+    // Ho aggiunto la chiusura del backtick e la parentesi
+    window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
+}
             } else {
                 alert("Errore durante il salvataggio. Riprova.");
             }
