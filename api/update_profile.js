@@ -1,23 +1,10 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
   
-  // 1. ESTRAZIONE DATI: Qui aggiungiamo tutti i campi che hai su Airtable
   const { 
-    nomeTag, 
-    bio, 
-    email, 
-    phone, 
-    whatsapp, 
-    instagram, 
-    facebook, 
-    linkedin, 
-    tiktok, 
-    youtube, 
-    x, 
-    telegram, 
-    reddit, 
-    sito_web, 
-    cv 
+    nomeTag, bio, email, phone, whatsapp, 
+    instagram, facebook, linkedin, tiktok, 
+    youtube, x, telegram, reddit, sito_web, cv 
   } = req.body;
 
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
@@ -25,7 +12,7 @@ export default async function handler(req, res) {
   const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
 
   try {
-    // 2. CERCHIAMO IL RECORD
+    // 1. Trova il record
     const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={nome}='${nomeTag}'`, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
     });
@@ -37,7 +24,8 @@ export default async function handler(req, res) {
 
     const recordId = data.records[0].id;
 
-    // 3. AGGIORNIAMO IL RECORD (Nomi colonne identici agli screen di Airtable)
+    // 2. Aggiorna SOLO i campi di testo (Social e Contatti)
+    // Ho rimosso last_update e stato per evitare conflitti di permessi
     const update = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}/${recordId}`, {
       method: 'PATCH',
       headers: {
@@ -59,9 +47,7 @@ export default async function handler(req, res) {
           "telegram": telegram || "",
           "reddit": reddit || "",
           "sito_web": sito_web || "",
-          "cv": cv || "",
-          "stato": "attivo",
-          "last_update": new Date().toISOString()
+          "cv": cv || ""
         }
       })
     });
@@ -70,6 +56,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     } else {
       const errData = await update.json();
+      // Questo ci dirà esattamente quale colonna rompe le scatole nei log di Vercel
       return res.status(500).json({ error: errData });
     }
   } catch (e) {
