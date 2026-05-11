@@ -156,16 +156,18 @@
         } catch (e) { console.log(e); }
     }
 
-   async function salvaDati() {
+async function salvaDati() {
     const btn = document.querySelector(".save-btn");
     btn.innerText = "SALVATAGGIO...";
     btn.disabled = true;
 
-    // Recuperiamo i valori in modo sicuro. Se l'ID non esiste, mette stringa vuota.
+    // 1. Rimuoviamo la @ per cercare l'utente correttamente nel database
+    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+
     const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
 
     const datiDaInviare = {
-        nomeTag: nomeUtente.trim().toLowerCase(),
+        nomeTag: nomePulito,
         plan: getVal("field-plan") || "BASE",
         bio: getVal("field-bio"),
         email: getVal("field-email"),
@@ -189,14 +191,18 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datiDaInviare)
         });
+
         if (response.ok) {
             alert("Profilo aggiornato!");
-            window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
+            // Torniamo al profilo usando il nome pulito
+            window.location.href = `profile.html?u=${nomePulito}`;
         } else {
-            alert("Errore durante il salvataggio.");
+            const errorData = await response.json();
+            // Questo alert ci dirà ESATTAMENTE perché Airtable dice di no
+            alert("Errore: " + (errorData.error?.message || JSON.stringify(errorData.error)));
         }
     } catch (error) { 
-        alert("Errore di rete."); 
+        alert("Errore di rete o connessione."); 
     } finally { 
         btn.innerText = "SALVA MODIFICHE"; 
         btn.disabled = false; 
