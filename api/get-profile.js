@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
   // Proviamo a usare il nome testuale che vedi tu su Airtable
-  const TABLE_NAME = 'Table 1'; 
+  const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
 
   try {
     // Usiamo encodeURIComponent per gestire lo spazio tra Table e 1
