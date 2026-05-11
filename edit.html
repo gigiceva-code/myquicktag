@@ -128,12 +128,14 @@
 
     if (nomeUtente) { inizializzaPagina(); }
 
-    function selectPlan(plan) {
-        currentPlan = plan;
-        document.getElementById('field-plan').value = plan;
-        document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-        document.getElementById('plan-' + plan).classList.add('selected');
-    }
+   function selectPlan(plan) {
+    selectedPlan = plan;
+    document.getElementById('field-plan').value = plan;
+    
+    // Rimuove il bordo evidenziato da tutte le card e lo mette a quella scelta
+    document.querySelectorAll('.plan-card').forEach(card => card.classList.remove('selected'));
+    document.getElementById('plan-' + plan).classList.add('selected');
+}
 
     async function inizializzaPagina() {
         const nomePulito = nomeUtente.trim().toLowerCase();
