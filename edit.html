@@ -135,44 +135,45 @@ async function inizializzaPagina() {
 }
 
 async function salvaDati() {
-    if (!recordId) return alert("Errore: ID record non trovato.");
+    if (!nomeUtente) return alert("Errore: Nome utente mancante.");
 
     const btn = document.querySelector(".save-btn");
     btn.innerText = "SALVATAGGIO...";
     btn.disabled = true;
 
-    const updateData = {
-        fields: {
-            bio: document.getElementById("field-bio").value,
-            instagram: document.getElementById("field-instagram").value,
-            linkedin: document.getElementById("field-linkedin").value,
-            sito_web: document.getElementById("field-sito").value
-        }
+    // Prendiamo i valori dai campi
+    const datiDaInviare = {
+        nomeTag: nomeUtente.trim().toLowerCase(),
+        email: "", // Puoi aggiungere un campo email se serve
+        telefono: "", // Puoi aggiungere un campo telefono se serve
+        messaggio: document.getElementById("field-bio").value, // Usiamo bio come messaggio
+        // Aggiungi qui gli altri campi se vuoi passarli a update_profile.js
     };
 
     try {
-        // Nota: Qui per ora usiamo ancora il fetch diretto per brevità, 
-        // ma puntiamo all'URL corretto. In futuro faremo un'API anche per il PATCH.
-        const response = await fetch(`https://api.airtable.com/v0/app4eQDzqixPDbQTd/Table%201/${recordId}`, {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer patHk1SHEGGvX0Odw.02f0d009cc72eb8fe01b9b8ec6876217b9d57f09c135cee6a40d63611974ccc9`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(updateData)
+        // CHIAMIAMO LA TUA API (update_profile.js) invece di Airtable direttamente
+        const response = await fetch('/api/update_profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datiDaInviare)
         });
 
-        if (response.ok) {
+        const result = await response.json();
+
+        if (response.ok && result.success) {
             alert("Profilo aggiornato!");
             window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
+        } else {
+            alert("Errore durante il salvataggio: " + (result.error || "Riprova"));
         }
     } catch (error) {
-        alert("Errore di connessione.");
+        alert("Errore di connessione con il server.");
     } finally {
         btn.innerText = "SALVA MODIFICHE";
         btn.disabled = false;
     }
 }
+
 
     </script>
 </body>
