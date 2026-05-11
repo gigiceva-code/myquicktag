@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
   
   const { 
-    nomeTag, bio, email, phone, whatsapp, 
+    nomeTag, bio, plan, email, phone, whatsapp, 
     instagram, facebook, linkedin, tiktok, 
     youtube, x, telegram, reddit, sito_web, cv 
   } = req.body;
@@ -12,8 +12,8 @@ export default async function handler(req, res) {
   const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
 
   try {
-    // 1. Trova il record
-    const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={nome}='${nomeTag}'`, {
+    // 1. Trova il record dell'utente
+    const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={nomeTag}='${nomeTag}'`, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
     });
     const data = await response.json();
@@ -24,8 +24,7 @@ export default async function handler(req, res) {
 
     const recordId = data.records[0].id;
 
-    // 2. Aggiorna SOLO i campi di testo (Social e Contatti)
-    // Ho rimosso last_update e stato per evitare conflitti di permessi
+    // 2. Aggiorna i campi inclusa la colonna 'plan'
     const update = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}/${recordId}`, {
       method: 'PATCH',
       headers: {
@@ -35,6 +34,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         fields: {
           "bio": bio || "",
+          "plan": plan || "BASE",
           "email": email || "",
           "phone": phone || "",
           "whatsapp": whatsapp || "",
@@ -56,7 +56,6 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     } else {
       const errData = await update.json();
-      // Questo ci dirà esattamente quale colonna rompe le scatole nei log di Vercel
       return res.status(500).json({ error: errData });
     }
   } catch (e) {
