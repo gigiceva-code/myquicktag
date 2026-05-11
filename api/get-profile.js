@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
   const { u } = req.query;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
@@ -8,8 +7,8 @@ export default async function handler(req, res) {
   if (!u) return res.status(400).json({ success: false, error: "Username mancante" });
 
   try {
-    // 1. Usiamo TABLE_ID che è già configurato nelle tue variabili d'ambiente
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={nome}='${u.toLowerCase()}'`;
+    // MODIFICA: Cerchiamo nella colonna corretta "username_system"
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={username_system}='${u.toLowerCase()}'`;
     
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
@@ -18,7 +17,6 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (data.records && data.records.length > 0) {
-      // 2. IMPORTANTE: Restituiamo la struttura che edit.html si aspetta (success: true + fields)
       return res.status(200).json({
         success: true,
         id: data.records[0].id,
