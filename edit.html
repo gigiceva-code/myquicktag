@@ -20,7 +20,7 @@
             font-family: 'Inter', sans-serif;
             color: white;
             display: flex; flex-direction: column; align-items: center;
-                }
+        }
         .edit-container { width: 100%; max-width: 400px; padding-bottom: 50px; }
         .header { text-align: left; margin: 30px 0; width: 100%; }
         .header h1 { font-size: 1.5rem; margin: 0; font-weight: 600; }
@@ -147,60 +147,31 @@
         document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Accesso non autorizzato.</div>";
     }
 
-  async function inizializzaPagina() {
+    async function inizializzaPagina() {
         const nomePulito = nomeUtente.trim().toLowerCase();
+        // Sblocca subito il titolo per evitare il loop visivo
         document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
         document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
 
         try {
-            // 1. Chiamata all'API per recuperare i dati
             const response = await fetch(`/api/get-profile?u=${nomePulito}`);
-            
-            if (!response.ok) {
-                throw new Error(`Errore Server: ${response.status}`);
-            }
+            if (!response.ok) return;
 
             const data = await response.json();
+            const f = data.fields || data;
 
-            if (data.success && data.fields) {
-                const f = data.fields;
-                // 2. Mappa i campi di Airtable agli ID dell'HTML
-                // Usiamo i nomi "blindati" (tutto minuscolo)
-                const mappaCampi = {
-                    'bio': 'field-bio',
-                    'email': 'field-email',
-                    'phone': 'field-phone',
-                    'whatsapp': 'field-whatsapp',
-                    'instagram': 'field-instagram',
-                    'tiktok': 'field-tiktok',
-                    'facebook': 'field-facebook',
-                    'linkedin': 'field-linkedin',
-                    'youtube': 'field-youtube',
-                    'x': 'field-x',
-                    'telegram': 'field-telegram',
-                    'reddit': 'field-reddit',
-                    'sito_web': 'field-sito_web',
-                    'cv': 'field-cv'
-                };
-
-                for (const [colonnaAirtable, idHTML] of Object.entries(mappaCampi)) {
-                    const el = document.getElementById(idHTML);
-                    if (el) {
-                        el.value = f[colonnaAirtable] || "";
-                    }
-                }
-                
-                // Rimuoviamo la scritta caricamento se tutto va bene
-                console.log("Dati caricati correttamente");
-            } else {
-                console.error("Profilo non trovato o dati mancanti", data);
-                alert("Attenzione: Profilo creato ma non ancora leggibile. Prova a ricaricare la pagina.");
+            if (f) {
+                const elenco = ['bio', 'email', 'phone', 'whatsapp', 'instagram', 'tiktok', 'facebook', 'linkedin', 'youtube', 'x', 'telegram', 'reddit', 'sito_web', 'cv'];
+                elenco.forEach(c => {
+                    const el = document.getElementById(`field-${c}`);
+                    if (el && f[c]) el.value = f[c];
+                });
             }
         } catch (error) {
-            console.error("Errore durante il caricamento:", error);
-            document.getElementById("user-display").innerText = "ERRORE CARICAMENTO";
+            console.error("Errore caricamento:", error);
         }
     }
+
     async function salvaDati() {
         const btn = document.querySelector(".save-btn");
         btn.innerText = "SALVATAGGIO...";
@@ -225,19 +196,18 @@
         };
 
         try {
-            const response = await fetch('/api/update_profile', {
+            // NOTA: Assicurati che il file su github si chiami update-profile.js (trattino)
+            const response = await fetch('/api/update-profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datiDaInviare)
             });
 
             if (response.ok) {
-    alert("Profilo aggiornato con successo!");
-    // Ho aggiunto la chiusura del backtick e la parentesi
-    window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
-}
+                alert("Profilo aggiornato con successo!");
+                window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
             } else {
-                alert("Errore durante il salvataggio. Riprova.");
+                alert("Errore durante il salvataggio.");
             }
         } catch (error) {
             alert("Errore di rete.");
