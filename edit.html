@@ -58,6 +58,37 @@
             display: block; text-align: center; margin-top: 25px;
             color: var(--text-sec); text-decoration: none; font-size: 0.85rem;
         }
+       /* Stile Selettore Piani Luxury */
+.plan-selector {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin: 20px 0;
+}
+.plan-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.plan-card.selected {
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+.plan-card i {
+    font-size: 1.2rem;
+    margin-right: 15px;
+    color: var(--text-sec);
+}
+.plan-card.selected i { color: #ffffff; }
+.plan-info h3 { margin: 0; font-size: 0.9rem; font-weight: 600; }
+.plan-info p { margin: 2px 0 0; font-size: 0.75rem; color: var(--text-sec); } 
     </style>
 </head>
 <body>
@@ -131,7 +162,31 @@
             <label><i class="fas fa-file-pdf"></i> Link CV</label>
             <input type="text" id="field-cv" placeholder="Link al tuo CV">
         </div>
-
+<div class="section-title">Scegli il tuo Piano</div>
+<div class="plan-selector" id="plan-container">
+    <div class="plan-card" onclick="selectPlan('BASE', this)">
+        <i class="fas fa-seedling"></i>
+        <div class="plan-info">
+            <h3>BASE</h3>
+            <p>Bio, Avatar e 2 Link inclusi</p>
+        </div>
+    </div>
+    <div class="plan-card" onclick="selectPlan('PREMIUM', this)">
+        <i class="fas fa-crown"></i>
+        <div class="plan-info">
+            <h3>PREMIUM</h3>
+            <p>Link illimitati e funzioni extra</p>
+        </div>
+    </div>
+    <div class="plan-card" onclick="selectPlan('GOLD', this)">
+        <i class="fas fa-gem"></i>
+        <div class="plan-info">
+            <h3>GOLD</h3>
+            <p>Esperienza Business e Showroom</p>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="field-plan" value="BASE">
         <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
 
         <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
@@ -216,6 +271,21 @@
             btn.disabled = false;
         }
     }
+       let selectedPlan = "BASE";
+
+function selectPlan(plan, element) {
+    selectedPlan = plan;
+    document.getElementById('field-plan').value = plan;
+    // Rimuove la classe selected da tutti e la aggiunge al cliccato
+    document.querySelectorAll('.plan-card').forEach(card => card.classList.remove('selected'));
+    element.classList.add('selected');
+}
+
+// E nella funzione salvaDati(), aggiungi il campo plan:
+// const datiDaInviare = {
+//    ... (gli altri campi)
+//    plan: document.getElementById("field-plan").value,
+// }; 
     </script>
 </body>
 </html>
