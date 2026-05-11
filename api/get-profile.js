@@ -3,12 +3,13 @@ export default async function handler(req, res) {
   const { u } = req.query;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
-  // Proviamo a usare il nome testuale che vedi tu su Airtable
   const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
 
+  if (!u) return res.status(400).json({ success: false, error: "Username mancante" });
+
   try {
-    // Usiamo encodeURIComponent per gestire lo spazio tra Table e 1
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?filterByFormula={nome}='${u}'`;
+    // 1. Usiamo TABLE_ID che è già configurato nelle tue variabili d'ambiente
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={nome}='${u.toLowerCase()}'`;
     
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
@@ -17,12 +18,16 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (data.records && data.records.length > 0) {
-      return res.status(200).json(data.records[0].fields);
+      // 2. IMPORTANTE: Restituiamo la struttura che edit.html si aspetta (success: true + fields)
+      return res.status(200).json({
+        success: true,
+        id: data.records[0].id,
+        fields: data.records[0].fields
+      });
     } else {
-      // Se non lo trova, restituiamo un errore chiaro
-      return res.status(404).json({ errore: "Profilo non trovato nel database" });
+      return res.status(404).json({ success: false, error: "Profilo non trovato" });
     }
   } catch (error) {
-    return res.status(500).json({ errore: error.message });
+    return res.status(500).json({ success: false, error: error.message });
   }
 }
