@@ -156,34 +156,52 @@
         } catch (e) { console.log(e); }
     }
 
-    async function salvaDati() {
-        const btn = document.querySelector(".save-btn");
-        btn.innerText = "SALVATAGGIO...";
-        btn.disabled = true;
+   async function salvaDati() {
+    const btn = document.querySelector(".save-btn");
+    btn.innerText = "SALVATAGGIO...";
+    btn.disabled = true;
 
-        const datiDaInviare = {
-            nomeTag: nomeUtente.trim().toLowerCase(),
-            bio: document.getElementById("field-bio").value,
-            plan: document.getElementById("field-plan").value,
-            instagram: document.getElementById("field-instagram").value,
-            tiktok: document.getElementById("field-tiktok").value,
-            whatsapp: document.getElementById("field-whatsapp").value,
-            linkedin: document.getElementById("field-linkedin").value
-        };
+    // Recuperiamo i valori in modo sicuro. Se l'ID non esiste, mette stringa vuota.
+    const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
 
-        try {
-            const response = await fetch('/api/update-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datiDaInviare)
-            });
-            if (response.ok) {
-                alert("Profilo aggiornato!");
-                window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
-            }
-        } catch (error) { alert("Errore di rete."); }
-        finally { btn.innerText = "SALVA MODIFICHE"; btn.disabled = false; }
+    const datiDaInviare = {
+        nomeTag: nomeUtente.trim().toLowerCase(),
+        plan: getVal("field-plan") || "BASE",
+        bio: getVal("field-bio"),
+        email: getVal("field-email"),
+        phone: getVal("field-phone"),
+        whatsapp: getVal("field-whatsapp"),
+        instagram: getVal("field-instagram"),
+        tiktok: getVal("field-tiktok"),
+        facebook: getVal("field-facebook"),
+        linkedin: getVal("field-linkedin"),
+        youtube: getVal("field-youtube"),
+        x: getVal("field-x"),
+        telegram: getVal("field-telegram"),
+        reddit: getVal("field-reddit"),
+        sito_web: getVal("field-sito_web"),
+        cv: getVal("field-cv")
+    };
+
+    try {
+        const response = await fetch('/api/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datiDaInviare)
+        });
+        if (response.ok) {
+            alert("Profilo aggiornato!");
+            window.location.href = `profile.html?u=${nomeUtente.toLowerCase()}`;
+        } else {
+            alert("Errore durante il salvataggio.");
+        }
+    } catch (error) { 
+        alert("Errore di rete."); 
+    } finally { 
+        btn.innerText = "SALVA MODIFICHE"; 
+        btn.disabled = false; 
     }
+}
     </script>
 </body>
 </html>
