@@ -485,6 +485,59 @@
     </div>
 </div>
     <script>
+// 6. GESTIONE IDENTITY PORTAL (LOGIN)
+function openLogin() {
+    const loginOverlay = document.getElementById('login-overlay');
+    if (loginOverlay) {
+        loginOverlay.style.display = 'flex';
+        // Blocca lo scroll della pagina sottostante
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeLogin() {
+    const loginOverlay = document.getElementById('login-overlay');
+    if (loginOverlay) {
+        loginOverlay.style.display = 'none';
+        // Ripristina lo scroll
+        document.body.style.overflow = 'auto';
+    }
+}
+
+async function checkAccess() {
+    const tagInput = document.getElementById('login-tag').value.toLowerCase().trim();
+    const passwordInput = document.getElementById('login-password').value;
+    const btn = document.querySelector('#login-overlay button');
+
+    if (!tagInput || !passwordInput) {
+        alert("Inserisci sia il @tag che la password.");
+        return;
+    }
+
+    // Rimuoviamo l'eventuale "@" se l'utente la inserisce manualmente
+    const cleanTag = tagInput.replace('@', '');
+
+    btn.innerText = "VERIFICA IN CORSO...";
+    btn.disabled = true;
+
+    try {
+        // Qui ci collegheremo alla tua API per il controllo sicuro
+        console.log("Tentativo di accesso per:", cleanTag);
+        
+        // Per ora simuliamo un'attesa per testare la UI
+        setTimeout(() => {
+            alert("Sistema di verifica in fase di configurazione. Il tuo @tag è riconosciuto.");
+            btn.innerText = "ACCEDI";
+            btn.disabled = false;
+        }, 1500);
+
+    } catch (error) {
+        console.error("Errore login:", error);
+        alert("Errore durante l'accesso.");
+        btn.innerText = "ACCEDI";
+        btn.disabled = false;
+    }
+}
 // 1. NAVIGAZIONE UNIFICATA
 function scrollToSection(id) {
     const target = document.getElementById(id);
