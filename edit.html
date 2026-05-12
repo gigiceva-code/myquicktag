@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -47,7 +48,6 @@
         input:focus, textarea:focus { border-color: rgba(255,255,255,0.3); }
         textarea { height: 80px; resize: none; }
         
-        /* Stile Selettore Piani Luxury */
         .plan-selector { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 20px 0; }
         .plan-card {
             background: var(--card-bg);
@@ -78,39 +78,32 @@
             display: block; text-align: center; margin-top: 25px;
             color: var(--text-sec); text-decoration: none; font-size: 0.85rem;
         }
-        /* STILE PULSANTI IDENTITY STYLES */
-.style-selector {
-    margin: 30px 0;
-    text-align: left;
-}
-.style-options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 15px;
-}
-.style-card input { 
-    display: none; /* Nasconde il pallino brutto del radio button */
-}
-.style-preview {
-    padding: 15px 5px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    font-size: 10px;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.3s;
-}
-/* Quando selezioni un tema, il bordo diventa verde MyQuickTag */
-.style-card input:checked + .style-preview {
-    border-color: #2ecc71;
-    box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
-}
-.black { background: #000; color: #fff; }
-.titanium { background: #1c1c1e; color: #f5f5f7; border-color: #48484a; }
-.gold { background: #000; color: #d4af37; border-color: #d4af37; }
+        .style-selector { margin: 30px 0; text-align: left; }
+        .style-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .style-card input { display: none; }
+        .style-preview {
+            padding: 15px 5px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .style-card input:checked + .style-preview {
+            border-color: #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+        }
+        .black { background: #000; color: #fff; }
+        .titanium { background: #1c1c1e; color: #f5f5f7; border-color: #48484a; }
+        .gold { background: #000; color: #d4af37; border-color: #d4af37; }
     </style>
 </head>
 <body>
@@ -125,6 +118,24 @@
         <div class="form-group">
             <label>La tua biografia</label>
             <textarea id="field-bio" placeholder="Racconta chi sei..."></textarea>
+        </div>
+
+        <div class="section-title">Identity Styles</div>
+        <div class="style-selector">
+            <div class="style-options">
+                <label class="style-card">
+                    <input type="radio" name="digital_style" value="black" checked>
+                    <div class="style-preview black">Black DNA</div>
+                </label>
+                <label class="style-card">
+                    <input type="radio" name="digital_style" value="titanium">
+                    <div class="style-preview titanium">Titanium</div>
+                </label>
+                <label class="style-card">
+                    <input type="radio" name="digital_style" value="obsidian_gold">
+                    <div class="style-preview gold">Obsidian Gold</div>
+                </label>
+            </div>
         </div>
 
         <div class="section-title">Scegli il tuo Piano</div>
@@ -144,28 +155,23 @@
         </div>
         <input type="hidden" id="field-plan" value="BASE">
 
+        <div class="section-title">Contatti Diretti</div>
+        <div class="form-group"><label>Email</label><input type="text" id="field-email"></div>
+        <div class="form-group"><label>Telefono</label><input type="text" id="field-phone"></div>
+        <div class="form-group"><label>Sito Web</label><input type="text" id="field-sito_web"></div>
+        <div class="form-group"><label>Link CV (URL)</label><input type="text" id="field-cv"></div>
+
         <div class="section-title">Social Network</div>
+        <div class="form-group"><label>WhatsApp</label><input type="text" id="field-whatsapp"></div>
         <div class="form-group"><label>Instagram</label><input type="text" id="field-instagram"></div>
         <div class="form-group"><label>TikTok</label><input type="text" id="field-tiktok"></div>
-        <div class="form-group"><label>WhatsApp</label><input type="text" id="field-whatsapp"></div>
         <div class="form-group"><label>LinkedIn</label><input type="text" id="field-linkedin"></div>
-<div class="style-selector">
-    <h3>Identity Styles</h3>
-    <div class="style-options">
-        <label class="style-card">
-            <input type="radio" name="digital_style" value="black" checked>
-            <div class="style-preview black">Black DNA</div>
-        </label>
-        <label class="style-card">
-            <input type="radio" name="digital_style" value="titanium">
-            <div class="style-preview titanium">Titanium</div>
-        </label>
-        <label class="style-card">
-            <input type="radio" name="digital_style" value="obsidian_gold">
-            <div class="style-preview gold">Obsidian Gold</div>
-        </label>
-    </div>
-</div>
+        <div class="form-group"><label>YouTube</label><input type="text" id="field-youtube"></div>
+        <div class="form-group"><label>X (Twitter)</label><input type="text" id="field-x"></div>
+        <div class="form-group"><label>Telegram</label><input type="text" id="field-telegram"></div>
+        <div class="form-group"><label>Facebook</label><input type="text" id="field-facebook"></div>
+        <div class="form-group"><label>Reddit</label><input type="text" id="field-reddit"></div>
+
         <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
         <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
     </div>
@@ -177,17 +183,14 @@
 
     if (nomeUtente) { inizializzaPagina(); }
 
-   function selectPlan(plan) {
-    selectedPlan = plan;
-    document.getElementById('field-plan').value = plan;
-    
-    // Rimuove il bordo evidenziato da tutte le card e lo mette a quella scelta
-    document.querySelectorAll('.plan-card').forEach(card => card.classList.remove('selected'));
-    document.getElementById('plan-' + plan).classList.add('selected');
-}
+    function selectPlan(plan) {
+        document.getElementById('field-plan').value = plan;
+        document.querySelectorAll('.plan-card').forEach(card => card.classList.remove('selected'));
+        document.getElementById('plan-' + plan).classList.add('selected');
+    }
 
     async function inizializzaPagina() {
-        const nomePulito = nomeUtente.trim().toLowerCase();
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
         document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
         document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
 
@@ -195,87 +198,81 @@
             const response = await fetch(`/api/get-profile?u=${nomePulito}`);
             const data = await response.json();
             const f = data.fields || data;
+            
             if (f) {
                 if(f.plan) selectPlan(f.plan);
-                ['bio', 'instagram', 'tiktok', 'whatsapp', 'linkedin'].forEach(c => {
+                
+                // Popolamento dinamico di tutti i campi
+                const campi = ['bio', 'instagram', 'tiktok', 'whatsapp', 'linkedin', 'email', 'phone', 'facebook', 'youtube', 'x', 'telegram', 'reddit', 'sito_web', 'cv'];
+                campi.forEach(c => {
                     const el = document.getElementById(`field-${c}`);
                     if (el && f[c]) el.value = f[c];
                 });
+
+                // Caricamento dello stile radio button
+                if (f.digital_style) {
+                    const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
+                    if (radio) radio.checked = true;
+                }
             }
-        } catch (e) { console.log(e); }
-    }
-async function salvaDati() {
-    const btn = document.querySelector(".save-btn");
-    btn.innerText = "SALVATAGGIO...";
-    btn.disabled = true;
-
-    // Recupero il parametro 'u' dall'URL per essere certo dell'identità
-    const paramsSalva = new URLSearchParams(window.location.search);
-    const tagDallUrl = paramsSalva.get("u") || "";
-    
-    // Normalizzazione per trovare il record su Airtable
-    const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
-
-    if (!nomePerSistema) {
-        alert("Errore: Identificativo utente mancante.");
-        btn.innerText = "SALVA MODIFICHE";
-        btn.disabled = false;
-        return;
+        } catch (e) { console.error("Errore inizializzazione:", e); }
     }
 
-    const getVal = (id) => {
-        const el = document.getElementById(id);
-        return el ? el.value.trim() : "";
-    };
+    async function salvaDati() {
+        const btn = document.querySelector(".save-btn");
+        btn.innerText = "SALVATAGGIO...";
+        btn.disabled = true;
 
-    // MAPPA COMPLETA DI TUTTI I CAMPI (Lente di ingrandimento attiva)
-    const datiDaInviare = {
-        username_system: nomePerSistema,
-        username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
-        plan: getVal("field-plan") || "BASE",
-        digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
-        bio: getVal("field-bio"),
-        email: getVal("field-email"),
-        phone: getVal("field-phone"),
-        whatsapp: getVal("field-whatsapp"),
-        instagram: getVal("field-instagram"),
-        tiktok: getVal("field-tiktok"),
-        facebook: getVal("field-facebook"),
-        linkedin: getVal("field-linkedin"),
-        youtube: getVal("field-youtube"),
-        x: getVal("field-x"),
-        telegram: getVal("field-telegram"),
-        reddit: getVal("field-reddit"),
-        sito_web: getVal("field-sito_web"),
-        cv: getVal("field-cv")
-    };
+        const tagDallUrl = params.get("u") || "";
+        const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
 
-    try {
-        const response = await fetch('/api/update-profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datiDaInviare)
-        });
+        const getVal = (id) => {
+            const el = document.getElementById(id);
+            return el ? el.value.trim() : "";
+        };
 
-        const result = await response.json();
+        const datiDaInviare = {
+            username_system: nomePerSistema,
+            username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
+            plan: getVal("field-plan") || "BASE",
+            digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
+            bio: getVal("field-bio"),
+            email: getVal("field-email"),
+            phone: getVal("field-phone"),
+            whatsapp: getVal("field-whatsapp"),
+            instagram: getVal("field-instagram"),
+            tiktok: getVal("field-tiktok"),
+            facebook: getVal("field-facebook"),
+            linkedin: getVal("field-linkedin"),
+            youtube: getVal("field-youtube"),
+            x: getVal("field-x"),
+            telegram: getVal("field-telegram"),
+            reddit: getVal("field-reddit"),
+            sito_web: getVal("field-sito_web"),
+            cv: getVal("field-cv")
+        };
 
-        if (response.ok) {
-            alert("Profilo aggiornato con successo!");
-            window.location.href = `profile.html?u=${nomePerSistema}`;
-        } else {
-            // Se l'API restituisce un errore (es. record non trovato)
-            const errorMsg = result.error || "Errore sconosciuto durante il salvataggio";
-            alert("Errore: " + (typeof errorMsg === 'object' ? JSON.stringify(errorMsg) : errorMsg));
+        try {
+            const response = await fetch('/api/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datiDaInviare)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert("Profilo aggiornato con successo!");
+                window.location.href = `profile.html?u=${nomePerSistema}`;
+            } else {
+                alert("Errore Airtable: " + (result.error || "Utente non trovato"));
+            }
+        } catch (error) {
+            alert("Errore di rete.");
+        } finally {
+            btn.innerText = "SALVA MODIFICHE";
+            btn.disabled = false;
         }
-    } catch (error) {
-        console.error("Errore di rete:", error);
-        alert("Errore di rete: controlla la tua connessione.");
-    } finally {
-        btn.innerText = "SALVA MODIFICHE";
-        btn.disabled = false;
     }
-}
-
     </script>
 </body>
 </html>
