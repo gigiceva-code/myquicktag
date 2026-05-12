@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         fields: {
           username_system: systemName,
-          username_display: nomeTag, // CORRETTO: usiamo nomeTag invece di username
+          username_display: username, // CORRETTO: usiamo nomeTag invece di username
           digital_style: "black", 
           plan: "BASE",           
           views: 0
