@@ -215,10 +215,11 @@ async function salvaDati() {
 
     const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
 
-    const datiDaInviare = {
-        username_system: nomePerSistema, // Deve corrispondere alla colonna su Airtable
-        username_display: nomeUtente,    // Mantiene la @ e le maiuscole originali
+const datiDaInviare = {
+        username_system: nomePerSistema,
+        username_display: nomeUtente,
         plan: getVal("field-plan") || "BASE",
+        digital_style: document.querySelector('input[name="digital_style"]:checked').value, // QUESTO MANCAVA
         bio: getVal("field-bio"),
         email: getVal("field-email"),
         phone: getVal("field-phone"),
