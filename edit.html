@@ -78,6 +78,39 @@
             display: block; text-align: center; margin-top: 25px;
             color: var(--text-sec); text-decoration: none; font-size: 0.85rem;
         }
+        /* STILE PULSANTI IDENTITY STYLES */
+.style-selector {
+    margin: 30px 0;
+    text-align: left;
+}
+.style-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+.style-card input { 
+    display: none; /* Nasconde il pallino brutto del radio button */
+}
+.style-preview {
+    padding: 15px 5px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+/* Quando selezioni un tema, il bordo diventa verde MyQuickTag */
+.style-card input:checked + .style-preview {
+    border-color: #2ecc71;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+}
+.black { background: #000; color: #fff; }
+.titanium { background: #1c1c1e; color: #f5f5f7; border-color: #48484a; }
+.gold { background: #000; color: #d4af37; border-color: #d4af37; }
     </style>
 </head>
 <body>
@@ -116,7 +149,23 @@
         <div class="form-group"><label>TikTok</label><input type="text" id="field-tiktok"></div>
         <div class="form-group"><label>WhatsApp</label><input type="text" id="field-whatsapp"></div>
         <div class="form-group"><label>LinkedIn</label><input type="text" id="field-linkedin"></div>
-
+<div class="style-selector">
+    <h3>Identity Styles</h3>
+    <div class="style-options">
+        <label class="style-card">
+            <input type="radio" name="digital_style" value="black" checked>
+            <div class="style-preview black">Black DNA</div>
+        </label>
+        <label class="style-card">
+            <input type="radio" name="digital_style" value="titanium">
+            <div class="style-preview titanium">Titanium</div>
+        </label>
+        <label class="style-card">
+            <input type="radio" name="digital_style" value="obsidian_gold">
+            <div class="style-preview gold">Obsidian Gold</div>
+        </label>
+    </div>
+</div>
         <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
         <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
     </div>
