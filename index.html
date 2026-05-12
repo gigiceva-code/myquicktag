@@ -503,16 +503,57 @@ function closeLogin() {
         document.body.style.overflow = 'auto';
     }
 }
-
 async function checkAccess() {
     const tagInput = document.getElementById('login-tag').value.toLowerCase().trim();
     const passwordInput = document.getElementById('login-password').value;
     const btn = document.querySelector('#login-overlay button');
 
     if (!tagInput || !passwordInput) {
-        alert("Inserisci sia il @tag che la password.");
+        alert("Inserisci credenziali valide.");
         return;
     }
+
+    const cleanTag = tagInput.replace('@', '');
+    btn.innerText = "VERIFICA IDENTITY...";
+    btn.disabled = true;
+
+    // Configurazione Airtable (usa i tuoi dati correnti)
+    const baseId = 'IL_TUO_BASE_ID'; 
+    const tableName = 'IL_TUO_NOME_TABELLA'; 
+    const apiKey = 'IL_TUO_TOKEN_PERSONALE';
+
+    // Filtro per cercare l'utente specifico con la password corretta
+    const filter = `AND({username_system} = '${cleanTag}', {password} = '${passwordInput}')`;
+    const url = `https://api.airtable.com/v0/${baseId}/${tableName}?filterByFormula=${encodeURIComponent(filter)}`;
+
+    try {
+        const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${apiKey}` }
+        });
+        const data = await response.json();
+
+        if (data.records && data.records.length > 0) {
+            const user = data.records[0].fields;
+            btn.style.background = "#ffffff";
+            btn.innerText = "IDENTITÀ CONFERMATA";
+            
+            setTimeout(() => {
+                // Reindirizza alla dashboard o area privata dell'utente
+                window.location.href = `https://myquicktag.it/dashboard?user=${user.username_system}`;
+            }, 1000);
+        } else {
+            alert("Accesso negato: @tag o password errati.");
+            btn.innerText = "ACCEDI";
+            btn.disabled = false;
+        }
+    } catch (error) {
+        console.error("Errore Portale:", error);
+        alert("Sistema momentaneamente non raggiungibile.");
+        btn.innerText = "ACCEDI";
+        btn.disabled = false;
+    }
+}
+
 
     // Rimuoviamo l'eventuale "@" se l'utente la inserisce manualmente
     const cleanTag = tagInput.replace('@', '');
