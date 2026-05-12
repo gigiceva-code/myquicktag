@@ -518,9 +518,9 @@ async function checkAccess() {
     btn.disabled = true;
 
     // Configurazione Airtable (usa i tuoi dati correnti)
-    const baseId = 'IL_TUO_BASE_ID'; 
-    const tableName = 'IL_TUO_NOME_TABELLA'; 
-    const apiKey = 'IL_TUO_TOKEN_PERSONALE';
+    const baseId = 'AIRTABLE_BASE_ID³'; 
+    const tableName = 'AIRTABLE_TABLE ID; 
+    const apiKey = 'AIRTABLE_TOKEN';
 
     // Filtro per cercare l'utente specifico con la password corretta
     const filter = `AND({username_system} = '${cleanTag}', {password} = '${passwordInput}')`;
