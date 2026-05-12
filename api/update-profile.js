@@ -14,16 +14,16 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!data.records || data.records.length === 0) {
-      return res.status(404).json({ error: "Utente non trovato su Airtable (colonna username_system)" });
+      return res.status(404).json({ error: "Utente non trovato su Airtable" });
     }
 
     const recordId = data.records[0].id;
 
-    // 2. Prepariamo i campi da aggiornare
+    // 2. Prepariamo i campi da aggiornare (Ho aggiunto digital_style)
     const fieldsToUpdate = {};
     const validFields = [
-      "username_display", "bio", "plan", "email", "phone", "whatsapp", 
-      "instagram", "tiktok", "facebook", "linkedin", "youtube", 
+      "username_display", "bio", "plan", "digital_style", "email", "phone", 
+      "whatsapp", "instagram", "tiktok", "facebook", "linkedin", "youtube", 
       "x", "telegram", "reddit", "sito_web", "cv"
     ];
     
