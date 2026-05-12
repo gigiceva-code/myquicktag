@@ -29,13 +29,15 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${AIRTABLE_TOKEN}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        records: [{ 
-          fields: { 
-            "username_system": systemName,
-            "username_display": nomeTag // Esempio: @MYQUICKTAG
-          } 
-        }]
+     body: JSON.stringify({
+  fields: {
+    username_system: systemName,
+    username_display: username,
+    digital_style: "black", // IMPORTANTE: Imposta il tema base subito
+    plan: "BASE",           // IMPORTANTE: Imposta il piano base subito
+    views: 0
+  }
+})
       })
     });
 
