@@ -542,7 +542,7 @@ async function vaiAllaVerifica() {
         const response = await fetch('/api/check-and-create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nomeTag: nomeScelto })
+            body: JSON.stringify({ username: nomeScelto })
         });
         
         const data = await response.json();
