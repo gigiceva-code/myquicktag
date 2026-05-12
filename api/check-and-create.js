@@ -1,13 +1,13 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const { username } = req.body; // Riceve @NomeUtente dalla index
+  const { username } = req.body; // RICEVE 'username' DALLA INDEX
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
   const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
 
-  // Normalizziamo il nome per il sistema
-  const systemName = nomeTag.replace('@', '').toLowerCase().trim();
+  // CORRETTO: Qui deve usare 'username' per creare systemName
+  const systemName = username.replace('@', '').toLowerCase().trim();
 
   try {
     // 1. Controlliamo se username_system esiste già
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ available: false, username_system: systemName });
     }
 
-    // 2. CREAZIONE: Se non esiste, lo creiamo con i default blindati
+    // 2. CREAZIONE: Se non esiste, lo creiamo
     const create = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
       method: 'POST',
       headers: {
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         fields: {
           username_system: systemName,
-          username_display: username, // CORRETTO: usiamo nomeTag invece di username
+          username_display: username, // CORRETTO: usiamo la variabile definita sopra
           digital_style: "black", 
           plan: "BASE",           
           views: 0
