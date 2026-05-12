@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const { nomeTag } = req.body; // Riceve @NomeUtente dalla index
+  const { username } = req.body; // Riceve @NomeUtente dalla index
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
   const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
