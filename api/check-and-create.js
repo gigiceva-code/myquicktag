@@ -18,26 +18,24 @@ export default async function handler(req, res) {
     const checkData = await check.json();
 
     if (checkData.records && checkData.records.length > 0) {
-      // Se esiste già, diciamo che è disponibile (o rimandiamo alla edit)
       return res.status(200).json({ available: false, username_system: systemName });
     }
 
-    // 2. CREAZIONE: Se non esiste, lo creiamo con le colonne NUOVE
+    // 2. CREAZIONE: Se non esiste, lo creiamo con i default blindati
     const create = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${AIRTABLE_TOKEN}`,
         'Content-Type': 'application/json'
       },
-     body: JSON.stringify({
-  fields: {
-    username_system: systemName,
-    username_display: username,
-    digital_style: "black", // IMPORTANTE: Imposta il tema base subito
-    plan: "BASE",           // IMPORTANTE: Imposta il piano base subito
-    views: 0
-  }
-})
+      body: JSON.stringify({
+        fields: {
+          username_system: systemName,
+          username_display: nomeTag, // CORRETTO: usiamo nomeTag invece di username
+          digital_style: "black", 
+          plan: "BASE",           
+          views: 0
+        }
       })
     });
 
