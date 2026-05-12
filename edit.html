@@ -204,22 +204,36 @@
             }
         } catch (e) { console.log(e); }
     }
-
 async function salvaDati() {
     const btn = document.querySelector(".save-btn");
     btn.innerText = "SALVATAGGIO...";
     btn.disabled = true;
 
-    // Normalizziamo il nome per il sistema (toglie @ e mette minuscolo)
-    const nomePerSistema = nomeUtente.replace('@', '').trim().toLowerCase();
+    // Recupero il parametro 'u' dall'URL per essere certo dell'identità
+    const paramsSalva = new URLSearchParams(window.location.search);
+    const tagDallUrl = paramsSalva.get("u") || "";
+    
+    // Normalizzazione per trovare il record su Airtable
+    const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
 
-    const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : "";
+    if (!nomePerSistema) {
+        alert("Errore: Identificativo utente mancante.");
+        btn.innerText = "SALVA MODIFICHE";
+        btn.disabled = false;
+        return;
+    }
 
-const datiDaInviare = {
+    const getVal = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+    };
+
+    // MAPPA COMPLETA DI TUTTI I CAMPI (Lente di ingrandimento attiva)
+    const datiDaInviare = {
         username_system: nomePerSistema,
-        username_display: nomeUtente,
+        username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
         plan: getVal("field-plan") || "BASE",
-        digital_style: document.querySelector('input[name="digital_style"]:checked').value, // QUESTO MANCAVA
+        digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
         bio: getVal("field-bio"),
         email: getVal("field-email"),
         phone: getVal("field-phone"),
@@ -243,20 +257,25 @@ const datiDaInviare = {
             body: JSON.stringify(datiDaInviare)
         });
 
+        const result = await response.json();
+
         if (response.ok) {
             alert("Profilo aggiornato con successo!");
             window.location.href = `profile.html?u=${nomePerSistema}`;
         } else {
-            const errorData = await response.json();
-            alert("Errore durante il salvataggio: " + JSON.stringify(errorData.error));
+            // Se l'API restituisce un errore (es. record non trovato)
+            const errorMsg = result.error || "Errore sconosciuto durante il salvataggio";
+            alert("Errore: " + (typeof errorMsg === 'object' ? JSON.stringify(errorMsg) : errorMsg));
         }
     } catch (error) {
-        alert("Errore di rete.");
+        console.error("Errore di rete:", error);
+        alert("Errore di rete: controlla la tua connessione.");
     } finally {
         btn.innerText = "SALVA MODIFICHE";
         btn.disabled = false;
     }
 }
+
     </script>
 </body>
 </html>
