@@ -210,12 +210,11 @@ async function caricaDatiDashboard(nome) {
 async function saveFinalPassword() {
     const urlParams = new URLSearchParams(window.location.search);
     const tag = urlParams.get('u');
-    
     const pwd = document.getElementById('final-password').value;
     const btn = document.querySelector('#password-setup-overlay button');
 
     if (!pwd || pwd.length < 4) {
-        alert("Inserisci una password valida (almeno 4 caratteri).");
+        alert("La tua chiave deve avere almeno 4 caratteri.");
         return;
     }
 
@@ -223,32 +222,37 @@ async function saveFinalPassword() {
     btn.disabled = true;
 
     try {
-        const response = await fetch('/api/set-password', {
+        // 1. Chiamiamo l'API di attivazione (che deve anche creare l'utente se non esiste)
+        const responseAttivazione = await fetch('/api/attivazione-gratuita', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: tag, password: pwd })
+            body: JSON.stringify({ 
+                username_system: tag,
+                data_inizio: new Date().toISOString().split('T')[0],
+                data_scadenza: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0],
+                password: pwd // Passiamo la password insieme all'attivazione
+            })
         });
 
-        const data = await response.json();
+        const data = await responseAttivazione.json();
 
         if (data.success) {
             btn.style.background = "#4CAF50";
             btn.innerText = "PROFILO ATTIVO!";
-            
             setTimeout(() => {
                 window.location.href = `/tag.html?u=${tag}`;
             }, 1500);
         } else {
-            alert(data.message || "Errore durante il salvataggio.");
-            btn.disabled = false;
-            btn.innerText = "ATTIVA PROFILO";
+            throw new Error(data.message);
         }
     } catch (error) {
         console.error("Errore:", error);
-        alert("Errore tecnico durante l'attivazione.");
+        alert("Errore durante l'attivazione. Assicurati che il nome sia stato creato in Edit.");
         btn.disabled = false;
+        btn.innerText = "RIPROVA ATTIVAZIONE";
     }
-} 
+}
+
 </script>
    
 </body>
