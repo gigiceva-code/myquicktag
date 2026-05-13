@@ -177,6 +177,50 @@ async function caricaDatiDashboard(nome) {
         alert("Errore di connessione al database.");
     }
 }
+       async function saveFinalPassword() {
+    // 1. Recuperiamo il tag dall'URL (es. ?u=gigi)
+    const urlParams = new URLSearchParams(window.location.search);
+    const tag = urlParams.get('u') || urlParams.get('user');
+    
+    const pwd = document.getElementById('final-password').value;
+    const btn = document.querySelector('#password-setup-overlay button');
+
+    if (!pwd || pwd.length < 4) {
+        alert("Inserisci una password valida (almeno 4 caratteri).");
+        return;
+    }
+
+    btn.innerText = "ATTIVAZIONE IN CORSO...";
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('/api/set-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: tag, password: pwd })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            btn.style.background = "#4CAF50";
+            btn.innerText = "PROFILO ATTIVO!";
+            
+            setTimeout(() => {
+                // Dopo il successo, lo mandiamo al tag finale o al portale
+                window.location.href = `/tag.html?u=${tag}`;
+            }, 1500);
+        } else {
+            alert(data.message || "Errore durante il salvataggio.");
+            btn.disabled = false;
+            btn.innerText = "ATTIVA PROFILO";
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+        alert("Errore tecnico durante l'attivazione.");
+        btn.disabled = false;
+    }
+} 
     </script>
 </body>
 </html>
