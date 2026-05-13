@@ -146,7 +146,26 @@ async function caricaDatiDashboard(nome) {
 
         if (data.success) {
             const record = data.fields;
+async function caricaDatiDashboard(nome) {
+    const nomePulito = nome.trim().toLowerCase();
+    
+    try {
+        const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+        const data = await response.json();
 
+        if (data.success) {
+            const record = data.fields;
+
+            // --- INCOLLA QUI IL FRAMMENTO ---
+            if (!record.password) {
+                document.getElementById("password-setup-overlay").style.display = "flex";
+            }
+            // --------------------------------
+
+            // 1. Aggiorna Nome in alto
+            document.getElementById("dash-user").innerText = "@" + nomePulito.toUpperCase();
+
+            // ... tutto il resto del codice rimane uguale ...
             // 1. Aggiorna Nome in alto
             document.getElementById("dash-user").innerText = "@" + nomePulito.toUpperCase();
 
