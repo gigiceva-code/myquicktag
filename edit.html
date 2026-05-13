@@ -269,12 +269,14 @@
                 console.error("Errore salvataggio:", result.error);
                 alert("Errore nel cantiere: " + (result.error || "Riprova tra un istante"));
             }
-        } catch (error) {
+      } catch (error) {
             alert("Errore di rete: controlla la connessione del cantiere.");
         } finally {
             btn.innerText = "SALVA MODIFICHE";
             btn.disabled = false;
         }
+    } // <--- MANCAVA QUESTA GRAFFA DI CHIUSURA DELLA FUNZIONE
+    </script>
     </script>
 </body>
 </html>
