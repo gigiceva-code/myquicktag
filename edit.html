@@ -252,29 +252,31 @@
             cv: getVal("field-cv")
         };
 
- try {
-        // Torniamo all'endpoint esistente
-        const response = await fetch('/api/update-profile', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datiDaInviare)
-        });
+try {
+            // Puntiamo all'endpoint che gestisce la creazione/aggiornamento
+            const response = await fetch('/api/upsert-profile', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datiDaInviare)
+            });
 
-        if (response.ok) {
-            // Se il salvataggio va a buon fine, andiamo all'ufficio
-            window.location.href = `profile.html?u=${nomePerSistema}`;
-        } else {
             const result = await response.json();
-            // Se l'utente non esiste, Airtable ci darà errore qui
-            alert("Errore: " + (result.error || "L'utente deve essere presente nel database"));
+            
+            if (response.ok && result.success) {
+                // Successo: il record ora ESISTE su Airtable.
+                // Passiamo all'Ufficio (Profile) portandoci dietro il nome utente
+                window.location.href = `profile.html?u=${nomePerSistema}`;
+            } else {
+                console.error("Errore API:", result.error);
+                alert("Errore nel cantiere: " + (result.error || "Impossibile creare il profilo"));
+            }
+        } catch (error) {
+            console.error("Dettaglio Errore di Rete:", error);
+            alert("Errore di rete: la fabbrica non riesce a comunicare con il database.");
+        } finally {
+            btn.innerText = "SALVA MODIFICHE";
+            btn.disabled = false;
         }
-    } catch (error) {
-        console.error("Dettaglio tecnico:", error);
-        alert("Errore di rete: la porta /api/update-profile non risponde.");
-    } finally {
-        btn.innerText = "SALVA MODIFICHE";
-        btn.disabled = false;
-    }
     </script>
 </body>
 </html>
