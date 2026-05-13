@@ -669,20 +669,20 @@ async function vaiAllaVerifica() {
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
 
-   try {
+    try {
         const response = await fetch('/api/check-and-create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: nomeScelto })
+            body: JSON.stringify({ tag: nomeScelto }) // Modificato: usiamo 'tag'
         });
         
         const data = await response.json();
 
-        if (data.available) {
-            // Se disponibile e creato, vai all'edit
+        if (data.success) { // Modificato: verifichiamo 'success'
+            // Se disponibile e creato (in attesa), vai all'edit
             window.location.href = `edit.html?u=${nomeScelto}`;
         } else {
-            alert("Spiacente, questo @tag è già occupato!");
+            alert(data.message || "Spiacente, questo @tag è già occupato!");
             btn.innerText = "VERIFICA DISPONIBILITÀ";
             btn.disabled = false;
         }
