@@ -134,24 +134,30 @@ if (nomeUtente) {
 } else {
     document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Accesso non autorizzato.</div>";
 }
-async function attivaTrialTreMesi(tag) {
+    async function attivaTrialTreMesi(tag) {
+    const oggi = new Date();
+    const scadenza = new Date();
+    scadenza.setMonth(oggi.getMonth() + 3); // Calcola esattamente 3 mesi da oggi
+
     try {
         const response = await fetch('/api/attivazione-gratuita', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 username_system: tag,
+                data_inizio: oggi.toISOString().split('T')[0],
+                data_scadenza: scadenza.toISOString().split('T')[0],
                 mesi: 3 
             })
         });
         
         const data = await response.json();
         if (data.success) {
-            console.log("Trial 3 mesi attivata");
+            console.log("Contratto registrato: Inizio e Scadenza salvati su Airtable.");
             return true;
         }
     } catch (error) {
-        console.error("Errore attivazione:", error);
+        console.error("Errore tecnico durante l'attivazione:", error);
     }
     return false;
 }
