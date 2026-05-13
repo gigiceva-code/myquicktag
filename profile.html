@@ -134,7 +134,27 @@ if (nomeUtente) {
 } else {
     document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Accesso non autorizzato.</div>";
 }
-
+async function attivaTrialTreMesi(tag) {
+    try {
+        const response = await fetch('/api/attivazione-gratuita', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username_system: tag,
+                mesi: 3 
+            })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            console.log("Trial 3 mesi attivata");
+            return true;
+        }
+    } catch (error) {
+        console.error("Errore attivazione:", error);
+    }
+    return false;
+}
 async function caricaDatiDashboard(nome) {
     const nomePulito = nome.trim().toLowerCase();
     
