@@ -549,30 +549,7 @@ async function checkAccess() {
 }
 
 
-    // Rimuoviamo l'eventuale "@" se l'utente la inserisce manualmente
-    const cleanTag = tagInput.replace('@', '');
-
-    btn.innerText = "VERIFICA IN CORSO...";
-    btn.disabled = true;
-
-    try {
-        // Qui ci collegheremo alla tua API per il controllo sicuro
-        console.log("Tentativo di accesso per:", cleanTag);
-        
-        // Per ora simuliamo un'attesa per testare la UI
-        setTimeout(() => {
-            alert("Sistema di verifica in fase di configurazione. Il tuo @tag è riconosciuto.");
-            btn.innerText = "ACCEDI";
-            btn.disabled = false;
-        }, 1500);
-
-    } catch (error) {
-        console.error("Errore login:", error);
-        alert("Errore durante l'accesso.");
-        btn.innerText = "ACCEDI";
-        btn.disabled = false;
-    }
-}
+   
 // 1. NAVIGAZIONE UNIFICATA
 function scrollToSection(id) {
     const target = document.getElementById(id);
