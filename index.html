@@ -517,32 +517,26 @@ async function checkAccess() {
     btn.innerText = "VERIFICA IDENTITY...";
     btn.disabled = true;
 
-    // Configurazione Airtable (usa i tuoi dati correnti)
-    const baseId = 'AIRTABLE_BASE_ID³'; 
-    const tableName = 'AIRTABLE_TABLE ID; 
-    const apiKey = 'AIRTABLE_TOKEN';
-
-    // Filtro per cercare l'utente specifico con la password corretta
-    const filter = `AND({username_system} = '${cleanTag}', {password} = '${passwordInput}')`;
-    const url = `https://api.airtable.com/v0/${baseId}/${tableName}?filterByFormula=${encodeURIComponent(filter)}`;
-
     try {
-        const response = await fetch(url, {
-            headers: { Authorization: `Bearer ${apiKey}` }
+        // Chiamata al tuo nuovo endpoint sicuro su Vercel
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: cleanTag, pwd: passwordInput })
         });
+
         const data = await response.json();
 
-        if (data.records && data.records.length > 0) {
-            const user = data.records[0].fields;
+        if (data.success) {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
             
             setTimeout(() => {
-                // Reindirizza alla dashboard o area privata dell'utente
-                window.location.href = `https://myquicktag.it/dashboard?user=${user.username_system}`;
+                // Reindirizzamento al portale utente
+                window.location.href = `/portal?user=${data.username}`;
             }, 1000);
         } else {
-            alert("Accesso negato: @tag o password errati.");
+            alert(data.message || "Accesso negato.");
             btn.innerText = "ACCEDI";
             btn.disabled = false;
         }
