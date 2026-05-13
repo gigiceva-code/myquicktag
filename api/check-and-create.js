@@ -33,7 +33,7 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 fields: {
                     username_system: tag, // Nome colonna esatto
-                    stato: 'In attesa'    // Segnala che manca la password
+                    stato: 'in attesa'    // Segnala che manca la password
                 }
             })
         });
