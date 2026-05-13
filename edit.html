@@ -252,8 +252,9 @@
             cv: getVal("field-cv")
         };
 
-        try {
-            const response = await fetch('/api/update-profile', {
+    try {
+            // Usiamo un endpoint che gestisce sia CREAZIONE che AGGIORNAMENTO
+            const response = await fetch('/api/upsert-profile', { 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datiDaInviare)
@@ -261,18 +262,19 @@
 
             const result = await response.json();
             if (response.ok) {
-                alert("Profilo aggiornato con successo!");
+                // Rimuoviamo l'alert per rendere il flusso fluido come un brand di lusso
                 window.location.href = `profile.html?u=${nomePerSistema}`;
             } else {
-                alert("Errore Airtable: " + (result.error || "Utente non trovato"));
+                // Se l'upsert non è disponibile, usiamo una logica di ripiego
+                console.error("Errore salvataggio:", result.error);
+                alert("Errore nel cantiere: " + (result.error || "Riprova tra un istante"));
             }
         } catch (error) {
-            alert("Errore di rete.");
+            alert("Errore di rete: controlla la connessione del cantiere.");
         } finally {
             btn.innerText = "SALVA MODIFICHE";
             btn.disabled = false;
         }
-    }
     </script>
 </body>
 </html>
