@@ -67,6 +67,22 @@
         .btn-primary { border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); }
     </style>
 </head>
+    <!-- Overlay per impostazione Password -->
+<div id="password-setup-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:white; font-family: sans-serif;">
+    
+    <div style="text-align:center; max-width:400px; padding:20px;">
+        <h2 style="letter-spacing:2px; margin-bottom:10px;">PROTEGGI LA TUA IDENTITÀ</h2>
+        <p style="opacity:0.7; font-size:14px; margin-bottom:30px;">Il tuo @tag è pronto. Crea una password per accedere al tuo Identity Portal in futuro.</p>
+        
+        <input type="password" id="final-password" placeholder="Scegli la tua Password" 
+               style="width:100%; padding:15px; background:transparent; border:1px solid #333; color:white; border-radius:5px; margin-bottom:20px; outline:none; text-align:center;">
+        
+        <button onclick="saveFinalPassword()" 
+                style="width:100%; padding:15px; background:#ffffff; color:#000; border:none; border-radius:5px; cursor:pointer; font-weight:bold; letter-spacing:1px;">
+            ATTIVA PROFILO
+        </button>
+    </div>
+</div>
 <body>
 
     <div class="dashboard-container">
