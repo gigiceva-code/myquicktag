@@ -145,15 +145,11 @@ async function caricaDatiDashboard(nome) {
         if (data.success) {
             const record = data.fields;
 
-            // 1. Controllo Password: se manca, mostra l'overlay
-            if (!record.password) {
-                document.getElementById("password-setup-overlay").style.display = "flex";
-            }
+            // MODIFICA: Non mostriamo più l'overlay qui. 
+            // Se vuoi, puoi aggiungere un avviso visivo nella dashboard se manca la password.
 
-            // 2. Aggiorna Nome in alto
             document.getElementById("dash-user").innerText = "@" + nomePulito.toUpperCase();
 
-            // 3. Calcolo Giorni Rimasti
             if (record.data_scadenza) {
                 const oggi = new Date();
                 const scadenza = new Date(record.data_scadenza);
@@ -164,20 +160,17 @@ async function caricaDatiDashboard(nome) {
                 document.getElementById("days-left").innerText = "90";
             }
 
-            // 4. Statistiche Visite (Usa 'views' se 'visits' non esiste)
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
 
-            // 5. Link di Navigazione
             document.getElementById("link-view").href = `tag.html?u=${nomePulito}`;
             document.getElementById("link-edit").href = `edit.html?u=${nomePulito}`;
             document.getElementById("link-qr").href = `qr.html?u=${nomePulito}`;
 
         } else {
-            alert("Errore: Profilo non trovato su Airtable.");
+            alert("Errore: Profilo non trovato.");
         }
     } catch (error) {
         console.error("Errore critico:", error);
-        alert("Errore di connessione al database.");
     }
 }
 
