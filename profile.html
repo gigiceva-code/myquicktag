@@ -223,7 +223,7 @@ async function saveFinalPassword() {
 
     try {
         // 1. Chiamiamo l'API di attivazione (che deve anche creare l'utente se non esiste)
-        const responseAttivazione = await fetch('/api/attivazione-gratuita', {
+        const responseAttivazione = await fetch('/api/set-password', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
