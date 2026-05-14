@@ -529,9 +529,13 @@ async function checkAccess() {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
             
+           if (data.success) {
+            btn.style.background = "#ffffff";
+            btn.innerText = "IDENTITÀ CONFERMATA";
+            
             setTimeout(() => {
-                // CORREZIONE 404 E NUOVO FLUSSO: Mandiamo l'utente a edit.html
-                window.location.href = `edit.html?u=${data.username}`;
+                // Reindirizzamento al profilo utente registrato
+                window.location.href = `profile.html?u=${data.username}`;
             }, 1000);
         } else {
             alert(data.message || "Accesso negato.");
