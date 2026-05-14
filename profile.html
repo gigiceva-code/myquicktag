@@ -134,35 +134,9 @@ if (nomeUtente) {
 } else {
     document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Accesso non autorizzato.</div>";
 }
-    async function attivaTrialTreMesi(tag) {
-    const oggi = new Date();
-    const scadenza = new Date();
-    scadenza.setMonth(oggi.getMonth() + 3); // Calcola esattamente 3 mesi da oggi
 
-    try {
-        const response = await fetch('/api/attivazione-gratuita', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                username_system: tag,
-                data_inizio: oggi.toISOString().split('T')[0],
-                data_scadenza: scadenza.toISOString().split('T')[0],
-                mesi: 3 
-            })
-        });
-        
-        const data = await response.json();
-        if (data.success) {
-            console.log("Contratto registrato: Inizio e Scadenza salvati su Airtable.");
-            return true;
-        }
-    } catch (error) {
-        console.error("Errore tecnico durante l'attivazione:", error);
-    }
-    return false;
-}
 async function caricaDatiDashboard(nome) {
-    const nomePulito = nome.trim().toLowerCase();
+    const nomePulito = nome.replace('@', '').trim().toLowerCase();
     
     try {
         const response = await fetch(`/api/get-profile?u=${nomePulito}`);
@@ -171,15 +145,15 @@ async function caricaDatiDashboard(nome) {
         if (data.success) {
             const record = data.fields;
 
-            // Controllo Password: se manca, mostra l'overlay
+            // 1. Controllo Password: se manca, mostra l'overlay
             if (!record.password) {
                 document.getElementById("password-setup-overlay").style.display = "flex";
             }
 
-            // 1. Aggiorna Nome in alto
+            // 2. Aggiorna Nome in alto
             document.getElementById("dash-user").innerText = "@" + nomePulito.toUpperCase();
 
-            // 2. Calcolo Giorni Rimasti
+            // 3. Calcolo Giorni Rimasti
             if (record.data_scadenza) {
                 const oggi = new Date();
                 const scadenza = new Date(record.data_scadenza);
@@ -190,16 +164,16 @@ async function caricaDatiDashboard(nome) {
                 document.getElementById("days-left").innerText = "90";
             }
 
-            // 3. Statistiche Visite
-            document.getElementById("count-visits").innerText = record.visits || "0";
+            // 4. Statistiche Visite (Usa 'views' se 'visits' non esiste)
+            document.getElementById("count-visits").innerText = record.views || record.visits || "0";
 
-            // 4. Link di Navigazione
+            // 5. Link di Navigazione
             document.getElementById("link-view").href = `tag.html?u=${nomePulito}`;
             document.getElementById("link-edit").href = `edit.html?u=${nomePulito}`;
             document.getElementById("link-qr").href = `qr.html?u=${nomePulito}`;
 
         } else {
-            alert("Errore: Profilo non trovato.");
+            alert("Errore: Profilo non trovato su Airtable.");
         }
     } catch (error) {
         console.error("Errore critico:", error);
@@ -207,11 +181,9 @@ async function caricaDatiDashboard(nome) {
     }
 }
 
-
 async function saveFinalPassword() {
     const urlParams = new URLSearchParams(window.location.search);
     const tagRaw = urlParams.get('u') || "";
-    // Puliama il tag: togliamo @, spazi e rendiamo minuscolo
     const tagPulito = tagRaw.replace('@', '').trim().toLowerCase();
     
     const pwd = document.getElementById('final-password').value;
@@ -230,7 +202,7 @@ async function saveFinalPassword() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                username_system: tagPulito, // Mandiamo il nome pulito
+                username_system: tagPulito,
                 password: pwd 
             })
         });
@@ -244,37 +216,17 @@ async function saveFinalPassword() {
                 window.location.href = `tag.html?u=${tagPulito}`;
             }, 1500);
         } else {
-            // Se l'API risponde ma con errore (es. 404)
             throw new Error(data.message || "Errore sconosciuto");
         }
     } catch (error) {
         console.error("Errore:", error);
-        alert("Errore durante l'attivazione. Assicurati che il nome sia stato creato in Edit.");
+        alert("Errore durante l'attivazione.");
         btn.disabled = false;
         btn.innerText = "RIPROVA ATTIVAZIONE";
     }
 }
-
-        const data = await responseAttivazione.json();
-
-        if (data.success) {
-            btn.style.background = "#4CAF50";
-            btn.innerText = "PROFILO ATTIVO!";
-            setTimeout(() => {
-                window.location.href = `/tag.html?u=${tag}`;
-            }, 1500);
-        } else {
-            throw new Error(data.message);
-        }
-    } catch (error) {
-        console.error("Errore:", error);
-        alert("Errore durante l'attivazione. Assicurati che il nome sia stato creato in Edit.");
-        btn.disabled = false;
-        btn.innerText = "RIPROVA ATTIVAZIONE";
-    }
-}
-
 </script>
+
    
 </body>
 </html>
