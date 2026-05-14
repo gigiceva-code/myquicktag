@@ -529,6 +529,9 @@ async function checkAccess() {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
             
+            // Se l'utente fa il login con successo, puliamo eventuali tag in corso di registrazione
+            localStorage.removeItem('myquicktag_pending');
+
             setTimeout(() => {
                 // Reindirizzamento al profilo utente registrato
                 window.location.href = `profile.html?u=${data.username}`;
@@ -610,7 +613,7 @@ function toggleMenu() {
     }
 }
 
-// 5. MEMORIA SCROLL
+// 5. MEMORIA SCROLL E SESSIONE PENDING
 window.addEventListener('beforeunload', () => {
     const container = document.querySelector('.container');
     if(container) localStorage.setItem('scrollPos', container.scrollTop);
@@ -627,6 +630,14 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }, 50); 
     }
+
+    // CONTROLLO TAG IN SOSPESO: Se l'utente torna, gli prepariamo il tag che stava registrando
+    const tagInCorso = localStorage.getItem('myquicktag_pending');
+    const inputTag = document.getElementById('tag-input');
+    if (tagInCorso && inputTag) {
+        inputTag.value = tagInCorso;
+        activateInput(); // Accendiamo gli effetti luxury visto che il campo è pieno
+    }
 });
 
 async function vaiAllaVerifica() {
@@ -638,6 +649,13 @@ async function vaiAllaVerifica() {
 
     if (!nomeScelto) {
         alert("Inserisci un @tag per verificare!");
+        return;
+    }
+
+    // RECUPERO MEMORIA: Se il nome è quello che stavamo già registrando, bypassiamo la creazione
+    const tagInCorso = localStorage.getItem('myquicktag_pending');
+    if (nomeScelto === tagInCorso) {
+        window.location.href = `edit.html?u=${nomeScelto}`;
         return;
     }
 
@@ -654,6 +672,8 @@ async function vaiAllaVerifica() {
         const data = await response.json();
 
         if (data.success) {
+            // SALVIAMO IL TAG NEL BROWSER PRIMA DI ANDARE ALL'EDIT
+            localStorage.setItem('myquicktag_pending', nomeScelto);
             window.location.href = `edit.html?u=${nomeScelto}`;
         } else {
             alert(data.message || "Spiacente, questo @tag è già occupato!");
