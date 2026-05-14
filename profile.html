@@ -207,9 +207,13 @@ async function caricaDatiDashboard(nome) {
     }
 }
 
+
 async function saveFinalPassword() {
     const urlParams = new URLSearchParams(window.location.search);
-    const tag = urlParams.get('u');
+    const tagRaw = urlParams.get('u') || "";
+    // Puliama il tag: togliamo @, spazi e rendiamo minuscolo
+    const tagPulito = tagRaw.replace('@', '').trim().toLowerCase();
+    
     const pwd = document.getElementById('final-password').value;
     const btn = document.querySelector('#password-setup-overlay button');
 
@@ -222,17 +226,34 @@ async function saveFinalPassword() {
     btn.disabled = true;
 
     try {
-        // 1. Chiamiamo l'API di attivazione (che deve anche creare l'utente se non esiste)
-        const responseAttivazione = await fetch('/api/set-password', { 
+        const responseAttivazione = await fetch('/api/set-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                username_system: tag,
-                data_inizio: new Date().toISOString().split('T')[0],
-                data_scadenza: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0],
-                password: pwd // Passiamo la password insieme all'attivazione
+                username_system: tagPulito, // Mandiamo il nome pulito
+                password: pwd 
             })
         });
+
+        const data = await responseAttivazione.json();
+
+        if (data.success) {
+            btn.style.background = "#4CAF50";
+            btn.innerText = "PROFILO ATTIVO!";
+            setTimeout(() => {
+                window.location.href = `tag.html?u=${tagPulito}`;
+            }, 1500);
+        } else {
+            // Se l'API risponde ma con errore (es. 404)
+            throw new Error(data.message || "Errore sconosciuto");
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+        alert("Errore durante l'attivazione. Assicurati che il nome sia stato creato in Edit.");
+        btn.disabled = false;
+        btn.innerText = "RIPROVA ATTIVAZIONE";
+    }
+}
 
         const data = await responseAttivazione.json();
 
