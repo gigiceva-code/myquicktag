@@ -484,7 +484,7 @@
         </button>
     </div>
 </div>
- <script>
+<script>
 // 6. GESTIONE IDENTITY PORTAL (LOGIN)
 function openLogin() {
     const loginOverlay = document.getElementById('login-overlay');
@@ -526,10 +526,6 @@ async function checkAccess() {
         const data = await response.json();
 
         if (data.success) {
-            btn.style.background = "#ffffff";
-            btn.innerText = "IDENTITÀ CONFERMATA";
-            
-           if (data.success) {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
             
@@ -616,14 +612,16 @@ function toggleMenu() {
 
 // 5. MEMORIA SCROLL
 window.addEventListener('beforeunload', () => {
-    localStorage.setItem('scrollPos', document.querySelector('.container').scrollTop);
+    const container = document.querySelector('.container');
+    if(container) localStorage.setItem('scrollPos', container.scrollTop);
 });
 
 window.addEventListener('DOMContentLoaded', () => {
     const scrollPos = localStorage.getItem('scrollPos');
-    if (scrollPos) {
+    const container = document.querySelector('.container');
+    if (scrollPos && container) {
         setTimeout(() => {
-            document.querySelector('.container').scrollTo({
+            container.scrollTo({
                 top: parseInt(scrollPos),
                 behavior: 'instant'
             });
@@ -670,8 +668,6 @@ async function vaiAllaVerifica() {
     }
 }
 </script>
-
-      
-
+    
 </body>
 </html>    
