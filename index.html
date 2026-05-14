@@ -484,13 +484,12 @@
         </button>
     </div>
 </div>
-    <script>
+ <script>
 // 6. GESTIONE IDENTITY PORTAL (LOGIN)
 function openLogin() {
     const loginOverlay = document.getElementById('login-overlay');
     if (loginOverlay) {
         loginOverlay.style.display = 'flex';
-        // Blocca lo scroll della pagina sottostante
         document.body.style.overflow = 'hidden';
     }
 }
@@ -499,10 +498,10 @@ function closeLogin() {
     const loginOverlay = document.getElementById('login-overlay');
     if (loginOverlay) {
         loginOverlay.style.display = 'none';
-        // Ripristina lo scroll
         document.body.style.overflow = 'auto';
     }
 }
+
 async function checkAccess() {
     const tagInput = document.getElementById('login-tag').value.toLowerCase().trim();
     const passwordInput = document.getElementById('login-password').value;
@@ -518,7 +517,6 @@ async function checkAccess() {
     btn.disabled = true;
 
     try {
-        // Chiamata al tuo nuovo endpoint sicuro su Vercel
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -532,8 +530,8 @@ async function checkAccess() {
             btn.innerText = "IDENTITÀ CONFERMATA";
             
             setTimeout(() => {
-                // Reindirizzamento al portale utente
-                window.location.href = `/profile.html?u=${data.username}`;
+                // CORREZIONE 404 E NUOVO FLUSSO: Mandiamo l'utente a edit.html
+                window.location.href = `edit.html?u=${data.username}`;
             }, 1000);
         } else {
             alert(data.message || "Accesso negato.");
@@ -548,8 +546,6 @@ async function checkAccess() {
     }
 }
 
-
-   
 // 1. NAVIGAZIONE UNIFICATA
 function scrollToSection(id) {
     const target = document.getElementById(id);
@@ -650,13 +646,12 @@ async function vaiAllaVerifica() {
         const response = await fetch('/api/check-and-create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: nomeScelto }) // Modificato: usiamo 'tag'
+            body: JSON.stringify({ tag: nomeScelto })
         });
         
         const data = await response.json();
 
-        if (data.success) { // Modificato: verifichiamo 'success'
-            // Se disponibile e creato (in attesa), vai all'edit
+        if (data.success) {
             window.location.href = `edit.html?u=${nomeScelto}`;
         } else {
             alert(data.message || "Spiacente, questo @tag è già occupato!");
