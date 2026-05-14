@@ -24,10 +24,10 @@ export default async function handler(req, res) {
 
         const recordId = searchData.records[0].id;
 
-        // 2. Aggiorniamo il record con password e nuovo stato
+          // 2. Aggiorniamo il record con password e nuovo stato
         const updateUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`;
         const updateRes = await fetch(updateUrl, {
-            method: 'PATCH', // Usiamo PATCH per aggiornare solo alcuni campi
+            method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -35,10 +35,12 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 fields: {
                     password: password,
-                    stato: 'attivo' // Passa ufficialmente ad attivo
+                    // CORREZIONE: Usa il nome esatto della colonna che vedi nella foto 1000029253.jpg
+                    stato: 'attivo' 
                 }
             })
         });
+      
 
         if (updateRes.ok) {
             res.status(200).json({ success: true, message: 'Password impostata e profilo attivo!' });
