@@ -217,66 +217,69 @@
             }
         } catch (e) { console.error("Errore inizializzazione:", e); }
     }
+async function salvaDati() {
+    const btn = document.querySelector(".save-btn");
+    btn.innerText = "SALVATAGGIO...";
+    btn.disabled = true;
 
-    async function salvaDati() {
-        const btn = document.querySelector(".save-btn");
-        btn.innerText = "SALVATAGGIO...";
-        btn.disabled = true;
+    const tagDallUrl = params.get("u") || "";
+    const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
 
-        const tagDallUrl = params.get("u") || "";
-        const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
+    const getVal = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+    };
 
-        const getVal = (id) => {
-            const el = document.getElementById(id);
-            return el ? el.value.trim() : "";
-        };
+    const datiDaInviare = {
+        username_system: nomePerSistema,
+        username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
+        plan: getVal("field-plan") || "BASE",
+        digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
+        bio: getVal("field-bio"),
+        email: getVal("field-email"),
+        phone: getVal("field-phone"),
+        whatsapp: getVal("field-whatsapp"),
+        instagram: getVal("field-instagram"),
+        tiktok: getVal("field-tiktok"),
+        facebook: getVal("field-facebook"),
+        linkedin: getVal("field-linkedin"),
+        youtube: getVal("field-youtube"),
+        x: getVal("field-x"),
+        telegram: getVal("field-telegram"),
+        reddit: getVal("field-reddit"),
+        sito_web: getVal("field-sito_web"),
+        cv: getVal("field-cv"),
+        // Novità dal piano ChatGPT: impostiamo lo stato iniziale
+        account_status: "pending",
+        views: 0
+    };
 
-        const datiDaInviare = {
-            username_system: nomePerSistema,
-            username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
-            plan: getVal("field-plan") || "BASE",
-            digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
-            bio: getVal("field-bio"),
-            email: getVal("field-email"),
-            phone: getVal("field-phone"),
-            whatsapp: getVal("field-whatsapp"),
-            instagram: getVal("field-instagram"),
-            tiktok: getVal("field-tiktok"),
-            facebook: getVal("field-facebook"),
-            linkedin: getVal("field-linkedin"),
-            youtube: getVal("field-youtube"),
-            x: getVal("field-x"),
-            telegram: getVal("field-telegram"),
-            reddit: getVal("field-reddit"),
-            sito_web: getVal("field-sito_web"),
-            cv: getVal("field-cv")
-        };
+    try {
+        // CAMBIATO: Puntiamo a update-profile.js che hai nella cartella
+        const response = await fetch('/api/update-profile', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datiDaInviare)
+        });
 
-try {
-            // Puntiamo all'endpoint che gestisce la creazione/aggiornamento
-            const response = await fetch('/api/upsert-profile', { 
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datiDaInviare)
-            });
-
-            const result = await response.json();
-            
-            if (response.ok && result.success) {
-                // Successo: il record ora ESISTE su Airtable.
-                // Passiamo all'Ufficio (Profile) portandoci dietro il nome utente
-                window.location.href = `profile.html?u=${nomePerSistema}`;
-            } else {
-                console.error("Errore API:", result.error);
-                alert("Errore nel cantiere: " + (result.error || "Impossibile creare il profilo"));
-            }
-        } catch (error) {
-            console.error("Dettaglio Errore di Rete:", error);
-            alert("Errore di rete: la fabbrica non riesce a comunicare con il database.");
-        } finally {
-            btn.innerText = "SALVA MODIFICHE";
-            btn.disabled = false;
+        const result = await response.json();
+        
+        // Se l'API risponde con successo (sia che abbia creato o aggiornato)
+        if (response.ok || result.success) {
+            window.location.href = `profile.html?u=${nomePerSistema}`;
+        } else {
+            console.error("Errore API:", result.error);
+            alert("Errore nel cantiere: " + (result.error || "Impossibile salvare il profilo"));
         }
+    } catch (error) {
+        console.error("Errore di rete:", error);
+        alert("Il cantiere non comunica con l'ufficio. Verifica il file api/update-profile.js");
+    } finally {
+        btn.innerText = "SALVA MODIFICHE";
+        btn.disabled = false;
+    }
+}
+
     </script>
 </body>
 </html>
