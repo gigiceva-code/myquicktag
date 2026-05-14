@@ -484,7 +484,7 @@
         </button>
     </div>
 </div>
-<script>
+  <script>
 // 6. GESTIONE IDENTITY PORTAL (LOGIN)
 function openLogin() {
     const loginOverlay = document.getElementById('login-overlay');
@@ -644,7 +644,8 @@ async function vaiAllaVerifica() {
     const input = document.getElementById("tag-input");
     if (!input) return;
 
-    const nomeScelto = input.value.toLowerCase().trim();
+    // PULIZIA INPUT: togliamo sempre la @ e rendiamo minuscolo per il confronto
+    const nomeScelto = input.value.toLowerCase().trim().replace('@', '');
     const btn = document.querySelector('.btn-verifica');
 
     if (!nomeScelto) {
@@ -652,9 +653,10 @@ async function vaiAllaVerifica() {
         return;
     }
 
-    // RECUPERO MEMORIA: Se il nome è quello che stavamo già registrando, bypassiamo la creazione
+    // RECUPERO MEMORIA: Confrontiamo il nome pulito
     const tagInCorso = localStorage.getItem('myquicktag_pending');
-    if (nomeScelto === tagInCorso) {
+    if (tagInCorso && nomeScelto === tagInCorso.toLowerCase().trim().replace('@', '')) {
+        // Se i nomi puliti corrispondono, vai dritto all'edit senza chiamare il server
         window.location.href = `edit.html?u=${nomeScelto}`;
         return;
     }
@@ -672,7 +674,7 @@ async function vaiAllaVerifica() {
         const data = await response.json();
 
         if (data.success) {
-            // SALVIAMO IL TAG NEL BROWSER PRIMA DI ANDARE ALL'EDIT
+            // SALVIAMO IL TAG PULITO NEL BROWSER PRIMA DI ANDARE ALL'EDIT
             localStorage.setItem('myquicktag_pending', nomeScelto);
             window.location.href = `edit.html?u=${nomeScelto}`;
         } else {
@@ -687,7 +689,7 @@ async function vaiAllaVerifica() {
         btn.disabled = false;
     }
 }
-</script>
+</script>  
     
 </body>
 </html>    
