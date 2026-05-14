@@ -1,15 +1,14 @@
 export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Metodo non consentito' });
-    }
+    if (req.method !== 'POST') return res.status(405).json({ message: 'Metodo non consentito' });
 
-    const { tag, password } = req.body;
+    // Leggiamo username_system e password dal corpo della richiesta
+    const { username_system, password } = req.body;
+    const tag = username_system; // per compatibilità
 
     const baseId = process.env.AIRTABLE_BASE_ID;
     const tableId = process.env.AIRTABLE_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
 
-    // 1. Cerchiamo l'ID del record associato al tag
     const searchUrl = `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={username_system}='${tag}'`;
 
     try {
@@ -24,9 +23,11 @@ export default async function handler(req, res) {
 
         const recordId = searchData.records[0].id;
 
-          // 2. Aggiorniamo il record con password e nuovo stato
-        const updateUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`;
-        const updateRes = await fetch(updateUrl, {
+        // Calcoliamo le date per i 3 mesi trial
+        const oggi = new Date().toISOString().split('T')[0];
+        const scadenza = new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0];
+
+        const updateRes = await fetch(`https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -35,17 +36,17 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 fields: {
                     password: password,
-                    // CORREZIONE: Usa il nome esatto della colonna che vedi nella foto 1000029253.jpg
-                    stato: 'attivo' 
+                    stato: 'attivo', // Deve corrispondere alla tua colonna su Airtable
+                    data_inizio: oggi,
+                    data_scadenza: scadenza
                 }
             })
         });
-      
 
         if (updateRes.ok) {
-            res.status(200).json({ success: true, message: 'Password impostata e profilo attivo!' });
+            res.status(200).json({ success: true, message: 'Profilo attivato con successo!' });
         } else {
-            res.status(500).json({ success: false, message: 'Errore durante l\'attivazione' });
+            res.status(500).json({ success: false, message: 'Errore durante l\'aggiornamento Airtable' });
         }
     } catch (error) {
         res.status(500).json({ success: false, message: 'Errore di sistema' });
