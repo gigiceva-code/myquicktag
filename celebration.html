@@ -6,7 +6,20 @@
     <title>Benvenuto in MyQuickTag</title>
     <link id="dynamic-manifest" rel="manifest" href="/api/manifest?u=user">
     <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
+    <script>
+    // Recuperiamo l'utente dall'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const utente = urlParams.get('u') || 'user';
     
+    // Troviamo il tag manifest che hai già alla riga 7 tramite il suo ID
+    const manifestLink = document.getElementById('dynamic-manifest');
+    
+    // Gli iniettiamo l'indirizzo dinamico che abbiamo creato prima
+    if (manifestLink) {
+        manifestLink.href = `/api/manifest?u=${utente}`;
+    }
+</script>
+
     <style>
         body {
             background-color: #000000;
