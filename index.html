@@ -526,18 +526,12 @@ async function checkAccess() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: cleanTag, pwd: passwordInput })
         });
-
         const data = await response.json();
-
         if (data.success) {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
-            
-            // Se l'utente fa il login con successo, puliamo eventuali tag in corso di registrazione
             localStorage.removeItem('myquicktag_pending');
-
             setTimeout(() => {
-                // Reindirizzamento al profilo utente registrato
                 window.location.href = `profile.html?u=${data.username}`;
             }, 1000);
         } else {
@@ -562,18 +556,20 @@ function scrollToSection(id) {
 }
 
 // 2. GESTIONE PUNTINI (Dots laterali)
-document.querySelector('.container').addEventListener('scroll', () => {
-    const sections = document.querySelectorAll('section');
-    const dots = document.querySelectorAll('.dot');
-    
-    sections.forEach((section, i) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top >= -window.innerHeight / 2 && rect.top <= window.innerHeight / 2) {
-            dots.forEach(d => d.classList.remove('active'));
-            if(dots[i]) dots[i].classList.add('active');
-        }
+const containerElement = document.querySelector('.container');
+if (containerElement) {
+    containerElement.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('section');
+        const dots = document.querySelectorAll('.dot');
+        sections.forEach((section, i) => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top >= -window.innerHeight / 2 && rect.top <= window.innerHeight / 2) {
+                dots.forEach(d => d.classList.remove('active'));
+                if(dots[i]) dots[i].classList.add('active');
+            }
+        });
     });
-});
+}
 
 // 3. LOGICA INPUT S2 (Effetti visivi)
 function activateInput() {
@@ -590,7 +586,6 @@ function deactivateInput() {
     const input = document.getElementById('tag-input');
     const at = document.getElementById('at-symbol');
     const line = document.getElementById('input-line');
-    
     if (input && input.value === "") {
         if(at) {
             at.style.color = 'rgba(255,255,255,0.15)';
@@ -605,7 +600,6 @@ function toggleMenu() {
     const menu = document.getElementById('menu-overlay');
     const dots = document.querySelector('.nav-dots');
     const menuIcon = document.getElementById('menu-icon');
-
     if (menu.style.display === 'flex') {
         menu.style.display = 'none';
         if(dots) dots.style.display = 'flex';
@@ -635,95 +629,57 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 50); 
     }
 
-   // 5. MEMORIA SCROLL E SESSIONE PENDING
-window.addEventListener('beforeunload', () => {
-    const container = document.querySelector('.container');
-    if(container) localStorage.setItem('scrollPos', container.scrollTop);
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-    const scrollPos = localStorage.getItem('scrollPos');
-    const container = document.querySelector('.container');
-    if (scrollPos && container) {
-        setTimeout(() => {
-            container.scrollTo({
-                top: parseInt(scrollPos),
-                behavior: 'instant'
-            });
-        }, 50); 
-    }
-
-    // CONTROLLO TAG IN SOSPESO E AGGIORNAMENTO ICONA DINAMICA
     const tagInCorso = localStorage.getItem('myquicktag_pending');
     if (tagInCorso) {
         try {
             const nomePulito = tagInCorso.toLowerCase().trim().replace('@', '');
-            
-            // AGGIORNA I LINK NELL'HEAD PER L'ICONA SMARTPHONE
             const manifestLink = document.getElementById('dynamic-manifest');
             const iconLink = document.getElementById('dynamic-icon');
-            
             if (manifestLink) manifestLink.href = `/api/manifest?u=${nomePulito}`;
             if (iconLink) iconLink.href = `/api/generate-icon?u=${nomePulito}`;
-
             const inputTag = document.getElementById('tag-input');
             if (inputTag) {
                 inputTag.value = tagInCorso;
-                // Verifichiamo che la funzione esista prima di chiamarla
-                if (typeof activateInput === "function") {
-                    activateInput(); 
-                }
+                if (typeof activateInput === "function") activateInput(); 
             }
         } catch (e) {
-            console.error("Errore nell'aggiornamento icona:", e);
+            console.error("Errore icona:", e);
         }
     }
 });
+
 async function vaiAllaVerifica() {
     const input = document.getElementById("tag-input");
     if (!input) return;
-
-    // PULIZIA INPUT: togliamo sempre la @ e rendiamo minuscolo per il confronto
     const nomeScelto = input.value.toLowerCase().trim().replace('@', '');
     const btn = document.querySelector('.btn-verifica');
-
     if (!nomeScelto) {
         alert("Inserisci un @tag per verificare!");
         return;
     }
-
-    // RECUPERO MEMORIA: Confrontiamo il nome pulito
     const tagInCorso = localStorage.getItem('myquicktag_pending');
     if (tagInCorso && nomeScelto === tagInCorso.toLowerCase().trim().replace('@', '')) {
-        // Se i nomi puliti corrispondono, vai dritto all'edit senza chiamare il server
         window.location.href = `edit.html?u=${nomeScelto}`;
         return;
     }
-
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
-
     try {
         const response = await fetch('/api/check-and-create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: nomeScelto })
         });
-        
         const data = await response.json();
-
         if (data.success) {
-            // SALVIAMO IL TAG PULITO NEL BROWSER PRIMA DI ANDARE ALL'EDIT
             localStorage.setItem('myquicktag_pending', nomeScelto);
             window.location.href = `edit.html?u=${nomeScelto}`;
         } else {
-            alert(data.message || "Spiacente, questo @tag è già occupato!");
+            alert(data.message || "Occupato!");
             btn.innerText = "VERIFICA DISPONIBILITÀ";
             btn.disabled = false;
         }
     } catch (error) {
-        console.error(error);
-        alert("Errore durante la verifica.");
         btn.innerText = "VERIFICA DISPONIBILITÀ";
         btn.disabled = false;
     }
