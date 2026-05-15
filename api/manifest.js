@@ -3,8 +3,9 @@ export default function handler(req, res) {
     const utente = u ? u.toUpperCase() : 'USER';
     const displayUtente = utente.startsWith('@') ? utente : `@${utente}`;
 
-    // Configurazione Icona: Nero assoluto, Testo bianco, Font rimpicciolito per eleganza
-    const userIcon = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=512&font-size=0.35&uppercase=true&bold=true&length=10`;
+    // Generazione icone Luxury: sfondo nero, testo bianco, font proporzionato
+    const icon192 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=192&font-size=0.35&uppercase=true&bold=true&length=10`;
+    const icon512 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=512&font-size=0.35&uppercase=true&bold=true&length=10`;
 
     const manifest = {
         "name": `MyQuickTag ${displayUtente}`,
@@ -12,12 +13,18 @@ export default function handler(req, res) {
         "description": "Luxury Digital Identity",
         "start_url": `/tag.html?u=${utente.toLowerCase()}`,
         "display": "standalone",
-        "orientation": "portrait",
         "background_color": "#000000",
         "theme_color": "#000000",
+        "orientation": "portrait",
         "icons": [
             {
-                "src": userIcon,
+                "src": icon192,
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "any maskable"
+            },
+            {
+                "src": icon512,
                 "sizes": "512x512",
                 "type": "image/png",
                 "purpose": "any maskable"
