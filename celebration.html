@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benvenuto in MyQuickTag</title>
+    <link id="dynamic-manifest" rel="manifest" href="/api/manifest?u=user">
+    <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
+    
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .celebration-box {
+            animation: fadeIn 2s ease-in;
+        }
+
+        h1 {
+            font-weight: 200;
+            letter-spacing: 4px;
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 10px;
+        }
+
+        #display-tag {
+            font-size: 3rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 40px;
+            background: linear-gradient(to bottom, #ffffff, #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-install {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-install:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="celebration-box">
+        <h1>IL TUO TAG È ATTIVO</h1>
+        <span id="display-tag">@UTENTE</span>
+        
+        <button class="btn-install" onclick="showGuide()">
+            AGGIUNGI <span id="btn-tag">@UTENTE</span> ALLA HOME
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Recuperiamo il nome salvato nella registrazione
+            const tag = localStorage.getItem('myquicktag_pending') || 'user';
+            const nomePulito = tag.toLowerCase().trim().replace('@', '');
+            
+            // Personalizziamo i testi nella pagina
+            document.getElementById('display-tag').innerText = `@${nomePulito.toUpperCase()}`;
+            document.getElementById('btn-tag').innerText = `@${nomePulito.toUpperCase()}`;
+            
+            // Aggiorniamo il manifest per il telefono
+            document.getElementById('dynamic-manifest').href = `/api/manifest?u=${nomePulito}`;
+            document.getElementById('dynamic-icon').href = `/api/generate-icon?u=${nomePulito}`;
+        });
+
+        function showGuide() {
+            // Per ora facciamo solo un alert, nel prossimo passo creeremo l'overlay elegante
+            alert("Ottimo! Ora usa il menu del tuo browser per 'Aggiungere alla Home'.");
+        }
+    </script>
+</body>
+</html>
