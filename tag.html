@@ -165,7 +165,19 @@
             try {
                 const response = await fetch(`/api/get-profile?u=${cleanUser}`);
                 const result = await response.json();
-
+// --- AGGIUNGI DA QUI ---
+                if (!result.success || !result.fields) {
+                    document.getElementById("display-name").innerText = "IDENTITÀ NON DISPONIBILE";
+                    document.getElementById("display-bio").innerHTML = `
+                        <div style="margin-top: 20px;">
+                            <p style="opacity: 0.6;">Questo Tag non è ancora stato configurato.</p>
+                            <br><br>
+                            <a href="/" style="color: #fff; text-decoration: none; border: 1px solid #333; padding: 12px 25px; border-radius: 50px; font-size: 12px; letter-spacing: 1px;">TORNA ALLA HOME</a>
+                        </div>
+                    `;
+                    return; // Interrompe l'esecuzione così non cerca altri dati
+                }
+                // --- FINE AGGIUNTA ---
                 if (result.success) {
                     const d = result.fields;
                     document.getElementById("display-name").innerText = d.username_display || "@" + cleanUser;
