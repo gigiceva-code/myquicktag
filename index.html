@@ -635,14 +635,43 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 50); 
     }
 
-    // CONTROLLO TAG IN SOSPESO: Se l'utente torna, gli prepariamo il tag che stava registrando
-    const tagInCorso = localStorage.getItem('myquicktag_pending');
-    const inputTag = document.getElementById('tag-input');
-    if (tagInCorso && inputTag) {
-        inputTag.value = tagInCorso;
-        activateInput(); // Accendiamo gli effetti luxury visto che il campo è pieno
-    }
+   // 5. MEMORIA SCROLL E SESSIONE PENDING
+window.addEventListener('beforeunload', () => {
+    const container = document.querySelector('.container');
+    if(container) localStorage.setItem('scrollPos', container.scrollTop);
 });
+
+window.addEventListener('DOMContentLoaded', () => {
+    const scrollPos = localStorage.getItem('scrollPos');
+    const container = document.querySelector('.container');
+    if (scrollPos && container) {
+        setTimeout(() => {
+            container.scrollTo({
+                top: parseInt(scrollPos),
+                behavior: 'instant'
+            });
+        }, 50); 
+    }
+
+    // CONTROLLO TAG IN SOSPESO E AGGIORNAMENTO ICONA DINAMICA
+    const tagInCorso = localStorage.getItem('myquicktag_pending');
+    if (tagInCorso) {
+        const nomePulito = tagInCorso.toLowerCase().trim().replace('@', '');
+        
+        // AGGIORNA I LINK NELL'HEAD PER L'ICONA SMARTPHONE
+        const manifestLink = document.getElementById('dynamic-manifest');
+        const iconLink = document.getElementById('dynamic-icon');
+        
+        if (manifestLink) manifestLink.href = `/api/manifest?u=${nomePulito}`;
+        if (iconLink) iconLink.href = `/api/generate-icon?u=${nomePulito}`;
+
+        const inputTag = document.getElementById('tag-input');
+        if (inputTag) {
+            inputTag.value = tagInCorso;
+            activateInput(); 
+        }
+    }
+}); 
 
 async function vaiAllaVerifica() {
     const input = document.getElementById("tag-input");
