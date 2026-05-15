@@ -200,17 +200,20 @@ async function saveFinalPassword() {
             })
         });
 
-        const data = await responseAttivazione.json();
+                const data = await responseAttivazione.json();
 
         if (data.success) {
             btn.style.background = "#4CAF50";
             btn.innerText = "PROFILO ATTIVO!";
+            
+            // Il momento del cambio: lo mandiamo alla celebrazione
             setTimeout(() => {
-                window.location.href = `tag.html?u=${tagPulito}`;
+                window.location.href = `celebration.html`; 
             }, 1500);
         } else {
             throw new Error(data.message || "Errore sconosciuto");
         }
+
     } catch (error) {
         console.error("Errore:", error);
         alert("Errore durante l'attivazione.");
