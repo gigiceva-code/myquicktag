@@ -6,19 +6,6 @@
     <title>Benvenuto in MyQuickTag</title>
     <link id="dynamic-manifest" rel="manifest" href="/api/manifest?u=user">
     <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
-    <script>
-    // Recuperiamo l'utente dall'URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const utente = urlParams.get('u') || 'user';
-    
-    // Troviamo il tag manifest che hai già alla riga 7 tramite il suo ID
-    const manifestLink = document.getElementById('dynamic-manifest');
-    
-    // Gli iniettiamo l'indirizzo dinamico che abbiamo creato prima
-    if (manifestLink) {
-        manifestLink.href = `/api/manifest?u=${utente}`;
-    }
-</script>
 
     <style>
         body {
@@ -86,59 +73,58 @@
         <h1>IL TUO TAG È ATTIVO</h1>
         <span id="display-tag">@UTENTE</span>
         
-        <button class="btn-install" onclick="showGuide()">
+        <button class="btn-install" id="main-install-btn">
             AGGIUNGI <span id="btn-tag">@UTENTE</span> ALLA HOME
         </button>
     </div>
 
     <script>
+        let deferredPrompt;
+        let nomeUtenteGlobale = 'user';
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Recuperiamo il nome salvato nella registrazione
+            // 1. Recuperiamo il nome dalla registrazione
             const tag = localStorage.getItem('myquicktag_pending') || 'user';
-            const nomePulito = tag.toLowerCase().trim().replace('@', '');
+            nomeUtenteGlobale = tag.toLowerCase().trim().replace('@', '');
             
-            // Personalizziamo i testi nella pagina
-            document.getElementById('display-tag').innerText = `@${nomePulito.toUpperCase()}`;
-            document.getElementById('btn-tag').innerText = `@${nomePulito.toUpperCase()}`;
+            // 2. Personalizziamo i testi Luxury nella pagina
+            document.getElementById('display-tag').innerText = `@${nomeUtenteGlobale.toUpperCase()}`;
+            document.getElementById('btn-tag').innerText = `@${nomeUtenteGlobale.toUpperCase()}`;
             
-            // Aggiorniamo il manifest per il telefono
-            document.getElementById('dynamic-manifest').href = `/api/manifest?u=${nomePulito}`;
-            document.getElementById('dynamic-icon').href = `/api/generate-icon?u=${nomePulito}`;
+            // 3. Aggiorniamo i link dinamici per il Manifest PWA
+            document.getElementById('dynamic-manifest').href = `/api/manifest?u=${nomeUtenteGlobale}`;
+            document.getElementById('dynamic-icon').href = `/api/generate-icon?u=${nomeUtenteGlobale}`;
         });
 
-        function showGuide() {
-            // Per ora facciamo solo un alert, nel prossimo passo creeremo l'overlay elegante
-            alert("Ottimo! Ora usa il menu del tuo browser per 'Aggiungere alla Home'.");
+        // Intercettiamo l'evento di installazione nativo dello smartphone
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e; // Salviamo il comando del telefono
+        });
+
+        // Gestione del click sul bottone principale bianco
+        const mainBtn = document.getElementById('main-install-btn');
+        if (mainBtn) {
+            mainBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    // Se il telefono è pronto, fa partire l'installazione reale
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`Risultato installazione: ${outcome}`);
+                    deferredPrompt = null;
+                } else {
+                    // Se l'app è già installata o il browser non supporta il prompt diretto, 
+                    // mandiamo l'utente direttamente a vedere la sua scheda senza bloccarlo
+                    window.location.href = `/tag.html?u=${nomeUtenteGlobale}`;
+                }
+            });
         }
-       let deferredPrompt;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Impedisce a Chrome di mostrare il suo mini-banner automatico in basso
-    e.preventDefault();
-    // Salva l'evento così possiamo usarlo al click sul nostro banner
-    deferredPrompt = e;
-    
-    // Rende visibile il tuo banner personalizzato (assicurati che l'ID sia corretto)
-    const banner = document.getElementById("activation-banner");
-    if (banner) banner.style.display = "block";
-});
-
-// Associa l'installazione al click sul tasto del tuo banner
-// Sostituisci 'tuo-bottone-ok' con l'ID reale del tasto dentro il banner
-const installBtn = document.getElementById('tuo-bottone-ok'); 
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            // Mostra il prompt nativo di installazione
-            deferredPrompt.prompt();
-            // Attende la risposta dell'utente
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`Risposta installazione: ${outcome}`);
-            // Reset della variabile, l'evento si usa una volta sola
+        // Se l'utente ha già installato l'app con successo, portalo direttamente al profilo
+        window.addEventListener('appinstalled', () => {
             deferredPrompt = null;
-        }
-    });
-} 
+            window.location.href = `/tag.html?u=${nomeUtenteGlobale}`;
+        });
     </script>
 </body>
 </html>
