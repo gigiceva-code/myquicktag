@@ -16,17 +16,17 @@ export default function handler(req, res) {
     const icon192 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=192&font-size=0.35&uppercase=true&bold=true&length=10`;
     const icon512 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=512&font-size=0.35&uppercase=true&bold=true&length=10`;
 
-   // Costruiamo il manifest dinamico blindando ID univoco per ogni utente
-  const manifest = {
-      "id": `tag_pwa_${utenteMinuscolo}`,
+ // Costruiamo il manifest dinamico con Pretty URL isolati per utente
+    const manifest = {
+      // L'ID ora punta al percorso pulito
+      "id": `/u/${utenteMinuscolo}`,
       "name": `MyQuickTag ${displayUtente}`,
       "short_name": displayUtente,
       "description": "Luxury Digital Identity",
-      "start_url": `/tag.html?u=${utenteMinuscolo}&pwa_mode=true`,
-      
-      // MODIFICATO: Isoliamo lo scope sulla pagina specifica dell'utente
-      "scope": `/tag.html`, 
-      
+      // Lo start_url si apre sul percorso pulito
+      "start_url": `/u/${utenteMinuscolo}?pwa_mode=true`,
+      // LA CHIAVE DI VOLTA: lo scope isolato blocca la sovrascrittura!
+      "scope": `/u/${utenteMinuscolo}/`,
       "display": "standalone",
       "background_color": "#000000",
       "theme_color": "#000000",
