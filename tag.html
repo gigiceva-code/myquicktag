@@ -170,7 +170,7 @@
             try {
                 const response = await fetch(`/api/get-profile?u=${cleanUser}`);
                 const result = await response.json();
--
+
                 if (!result.success || !result.fields) {
                     document.getElementById("display-name").innerText = "IDENTITÀ NON DISPONIBILE";
                     document.getElementById("display-bio").innerHTML = `
