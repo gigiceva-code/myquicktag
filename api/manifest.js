@@ -17,16 +17,16 @@ export default function handler(req, res) {
     const icon512 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=512&font-size=0.35&uppercase=true&bold=true&length=10`;
 
    // Costruiamo il manifest dinamico blindando ID univoco per ogni utente
-    const manifest = {
-      // L'ID è la chiave di volta assoluta: dice al telefono "sono un'app diversa dalle altre"
+  const manifest = {
       "id": `tag_pwa_${utenteMinuscolo}`,
       "name": `MyQuickTag ${displayUtente}`,
       "short_name": displayUtente,
       "description": "Luxury Digital Identity",
-      // Lo start_url dice al telefono esattamente quale pagina aprire quando clicchi l'icona
       "start_url": `/tag.html?u=${utenteMinuscolo}&pwa_mode=true`,
-      // Lo scope deve essere pulito e senza punti interrogativi per essere valido
-      "scope": "/",
+      
+      // MODIFICATO: Isoliamo lo scope sulla pagina specifica dell'utente
+      "scope": `/tag.html`, 
+      
       "display": "standalone",
       "background_color": "#000000",
       "theme_color": "#000000",
