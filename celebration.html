@@ -4,8 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Benvenuto in MyQuickTag</title>
-    <link id="dynamic-manifest" rel="manifest" href="/api/manifest?u=user">
-    <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
+    
+    <script>
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const utenteUrl = urlParams.get('u');
+            const utenteLocal = localStorage.getItem('myquicktag_pending');
+            
+            // Priorità all'URL, altrimenti usa il localStorage, altrimenti 'user'
+            let utenteTrovato = utenteUrl || utenteLocal || 'user';
+            utenteTrovato = utenteTrovato.toLowerCase().trim().replace('@', '');
+            
+            // Salviamo subito una variabile globale per il corpo della pagina
+            window.NOME_UTENTE_IMMEDIATO = utenteTrovato;
+
+            // Creiamo i tag manifest e icona a tempo di record
+            const manifestLink = document.createElement('link');
+            manifestLink.id = "dynamic-manifest";
+            manifestLink.rel = "manifest";
+            manifestLink.href = `/api/manifest?u=${utenteTrovato}`;
+
+            const iconLink = document.createElement('link');
+            iconLink.id = "dynamic-icon";
+            iconLink.rel = "apple-touch-icon";
+            iconLink.href = `/api/generate-icon?u=${utenteTrovato}`;
+
+            // Li infiliamo nella testa della pagina prima che Chrome si muova
+            document.head.appendChild(manifestLink);
+            document.head.appendChild(iconLink);
+        })();
+    </script>
 
     <style>
         body {
@@ -80,20 +108,12 @@
 
     <script>
         let deferredPrompt;
-        let nomeUtenteGlobale = 'user';
+        const nomeUtenteGlobale = window.NOME_UTENTE_IMMEDIATO || 'user';
 
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Recuperiamo il nome dalla registrazione
-            const tag = localStorage.getItem('myquicktag_pending') || 'user';
-            nomeUtenteGlobale = tag.toLowerCase().trim().replace('@', '');
-            
-            // 2. Personalizziamo i testi Luxury nella pagina
+            // Personalizziamo i testi Luxury nella pagina con il nome recuperato all'inizio
             document.getElementById('display-tag').innerText = `@${nomeUtenteGlobale.toUpperCase()}`;
             document.getElementById('btn-tag').innerText = `@${nomeUtenteGlobale.toUpperCase()}`;
-            
-            // 3. Aggiorniamo i link dinamici per il Manifest PWA
-            document.getElementById('dynamic-manifest').href = `/api/manifest?u=${nomeUtenteGlobale}`;
-            document.getElementById('dynamic-icon').href = `/api/generate-icon?u=${nomeUtenteGlobale}`;
         });
 
         // Intercettiamo l'evento di installazione nativo dello smartphone
@@ -107,14 +127,11 @@
         if (mainBtn) {
             mainBtn.addEventListener('click', async () => {
                 if (deferredPrompt) {
-                    // Se il telefono è pronto, fa partire l'installazione reale
                     deferredPrompt.prompt();
                     const { outcome } = await deferredPrompt.userChoice;
                     console.log(`Risultato installazione: ${outcome}`);
                     deferredPrompt = null;
                 } else {
-                    // Se l'app è già installata o il browser non supporta il prompt diretto, 
-                    // mandiamo l'utente direttamente a vedere la sua scheda senza bloccarlo
                     window.location.href = `/tag.html?u=${nomeUtenteGlobale}`;
                 }
             });
@@ -126,5 +143,4 @@
             window.location.href = `/tag.html?u=${nomeUtenteGlobale}`;
         });
     </script>
-</body>
-</html>
+</head>
