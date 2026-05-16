@@ -194,37 +194,48 @@
     }
 
     async function inizializzaPagina() {
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-        const manifestLink = document.getElementById('dynamic-manifest');
-        const iconLink = document.getElementById('dynamic-icon');
-        if (manifestLink) manifestLink.href = `/api/manifest?u=${nomePulito}`;
-        if (iconLink) iconLink.href = `/api/generate-icon?u=${nomePulito}`;
-        document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
-        document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
-
-        try {
-            const response = await fetch(`/api/get-profile?u=${nomePulito}`);
-            const data = await response.json();
-            const f = data.fields || data;
-            
-            if (f) {
-                if(f.plan) selectPlan(f.plan);
-                
-                // Popolamento dinamico di tutti i campi
-                const campi = ['bio', 'instagram', 'tiktok', 'whatsapp', 'linkedin', 'email', 'phone', 'facebook', 'youtube', 'x', 'telegram', 'reddit', 'sito_web', 'cv'];
-                campi.forEach(c => {
-                    const el = document.getElementById(`field-${c}`);
-                    if (el && f[c]) el.value = f[c];
-                });
-
-                // Caricamento dello stile radio button
-                if (f.digital_style) {
-                    const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
-                    if (radio) radio.checked = true;
-                }
-            }
-        } catch (e) { console.error("Errore inizializzazione:", e); }
+    // Se manca il nome utente nell'URL, evitiamo il crash di sistema
+    if (!nomeUtente) {
+        console.error("Nome utente mancante nell'URL");
+        return;
     }
+
+    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+    
+    // Configurazione dinamica dei manifest per PWA
+    const manifestLink = document.getElementById('dynamic-manifest');
+    const iconLink = document.getElementById('dynamic-icon');
+    if (manifestLink) manifestLink.href = `/api/manifest?u=${nomePulito}`;
+    if (iconLink) iconLink.href = `/api/generate-icon?u=${nomePulito}`;
+
+    document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
+    document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
+
+    try {
+        const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+        const data = await response.json();
+        const f = data.fields || data;
+        
+        if (f) {
+            if(f.plan) selectPlan(f.plan);
+            
+            // Popolamento dinamico di tutti i campi
+            const campi = ['bio', 'instagram', 'tiktok', 'whatsapp', 'linkedin', 'email', 'phone', 'facebook', 'youtube', 'x', 'telegram', 'reddit', 'sito_web', 'cv'];
+            campi.forEach(c => {
+                const el = document.getElementById(`field-${c}`);
+                if (el && f[c]) el.value = f[c];
+            });
+
+            // Caricamento dello stile radio button
+            if (f.digital_style) {
+                const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
+                if (radio) radio.checked = true;
+            }
+        }
+    } catch (e) { console.error("Errore inizializzazione:", e); }
+}
+
+    
 async function salvaDati() {
     const btn = document.querySelector(".save-btn");
     btn.innerText = "SALVATAGGIO...";
