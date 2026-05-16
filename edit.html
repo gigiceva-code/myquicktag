@@ -239,28 +239,25 @@ async function salvaDati() {
     };
 
     const datiDaInviare = {
-        username_system: nomePerSistema,
-        username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
-        plan: getVal("field-plan") || "BASE",
-        digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
-        bio: getVal("field-bio"),
-        email: getVal("field-email"),
-        phone: getVal("field-phone"),
-        whatsapp: getVal("field-whatsapp"),
-        instagram: getVal("field-instagram"),
-        tiktok: getVal("field-tiktok"),
-        facebook: getVal("field-facebook"),
-        linkedin: getVal("field-linkedin"),
-        youtube: getVal("field-youtube"),
-        x: getVal("field-x"),
-        telegram: getVal("field-telegram"),
-        reddit: getVal("field-reddit"),
-        sito_web: getVal("field-sito_web"),
-        cv: getVal("field-cv"),
-        // Novità dal piano ChatGPT: impostiamo lo stato iniziale
-        account_status: "pending",
-        views: 0
-    };
+    username_system: nomePerSistema,
+    username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
+    plan: getVal("field-plan") || "BASE",
+    digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
+    bio: getVal("field-bio"),
+    email: getVal("field-email"),
+    phone: getVal("field-phone"),
+    whatsapp: getVal("field-whatsapp"),
+    instagram: getVal("field-instagram"),
+    tiktok: getVal("field-tiktok"),
+    facebook: getVal("field-facebook"),
+    linkedin: getVal("field-linkedin"),
+    youtube: getVal("field-youtube"),
+    x: getVal("field-x"),
+    telegram: getVal("field-telegram"),
+    reddit: getVal("field-reddit"),
+    sito_web: getVal("field-sito_web"),
+    cv: getVal("field-cv")
+};
 
     try {
         // CAMBIATO: Puntiamo a update-profile.js che hai nella cartella
@@ -272,13 +269,13 @@ async function salvaDati() {
 
         const result = await response.json();
         
-        // Se l'API risponde con successo (sia che abbia creato o aggiornato)
         if (response.ok || result.success) {
-            window.location.href = `profile.html?u=${nomePerSistema}`;
-        } else {
-            console.error("Errore API:", result.error);
-            alert("Errore nel cantiere: " + (result.error || "Impossibile salvare il profilo"));
-        }
+    window.location.href = `profile.html?u=${nomePerSistema}`;
+} else {
+    console.error("Errore API:", result.error);
+    alert("Impossibile salvare le modifiche. Si prega di riprovare tra pochi istanti.");
+}
+
     } catch (error) {
         console.error("Errore di rete:", error);
         alert("Il cantiere non comunica con l'ufficio. Verifica il file api/update-profile.js");
