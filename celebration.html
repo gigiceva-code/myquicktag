@@ -110,6 +110,35 @@
             // Per ora facciamo solo un alert, nel prossimo passo creeremo l'overlay elegante
             alert("Ottimo! Ora usa il menu del tuo browser per 'Aggiungere alla Home'.");
         }
+       let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Impedisce a Chrome di mostrare il suo mini-banner automatico in basso
+    e.preventDefault();
+    // Salva l'evento così possiamo usarlo al click sul nostro banner
+    deferredPrompt = e;
+    
+    // Rende visibile il tuo banner personalizzato (assicurati che l'ID sia corretto)
+    const banner = document.getElementById("activation-banner");
+    if (banner) banner.style.display = "block";
+});
+
+// Associa l'installazione al click sul tasto del tuo banner
+// Sostituisci 'tuo-bottone-ok' con l'ID reale del tasto dentro il banner
+const installBtn = document.getElementById('tuo-bottone-ok'); 
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            // Mostra il prompt nativo di installazione
+            deferredPrompt.prompt();
+            // Attende la risposta dell'utente
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`Risposta installazione: ${outcome}`);
+            // Reset della variabile, l'evento si usa una volta sola
+            deferredPrompt = null;
+        }
+    });
+} 
     </script>
 </body>
 </html>
