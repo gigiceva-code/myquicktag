@@ -187,7 +187,8 @@ async function saveFinalPassword() {
         return;
     }
 
-    btn.innerText = "ATTIVAZIONE IN CORSO...";
+    // Qui inseriamo la rotellina che gira (fa-spinner fa-spin) di FontAwesome vicino al testo
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> ATTIVAZIONE IN CORSO...';
     btn.disabled = true;
 
     try {
@@ -204,12 +205,13 @@ async function saveFinalPassword() {
 
         if (data.success) {
             btn.style.background = "#4CAF50";
-            btn.innerText = "PROFILO ATTIVO!";
+            // Rimettiamo un'icona di spunta quando ha finito con successo
+            btn.innerHTML = '<i class="fas fa-check" style="margin-right: 10px;"></i> PROFILO ATTIVO!';
             
-            // CORREZIONE 1: Aggiorna la memoria del telefono con il nuovo account attivo
+            // 1. Mettiamo in cassaforte il nome dell'utente corrente nella memoria del telefono
             localStorage.setItem('myquicktag_pending', tagPulito);
             
-            // CORREZIONE 2: Passa il nome utente pulito anche nell'URL di celebrazione
+            // 2. Lo mandiamo alla celebrazione dicendo chiaramente a Chrome chi è l'utente attuale
             setTimeout(() => {
                 window.location.href = `celebration.html?u=${tagPulito}`; 
             }, 1500);
@@ -224,7 +226,6 @@ async function saveFinalPassword() {
         btn.innerText = "RIPROVA ATTIVAZIONE";
     }
 }
-
     btn.innerText = "ATTIVAZIONE IN CORSO...";
     btn.disabled = true;
 
