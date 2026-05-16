@@ -163,11 +163,14 @@
         async function fetchProfile() {
             if (!user) return;
             const cleanUser = user.replace('@', '').toLowerCase();
-            
+            const manifestLink = document.getElementById('dynamic-manifest');
+            const iconLink = document.getElementById('dynamic-icon');
+            if (manifestLink) manifestLink.href = `/api/manifest?u=${cleanUser}`;
+            if (iconLink) iconLink.href = `/api/generate-icon?u=${cleanUser}`;
             try {
                 const response = await fetch(`/api/get-profile?u=${cleanUser}`);
                 const result = await response.json();
-// --- AGGIUNGI DA QUI ---
+-
                 if (!result.success || !result.fields) {
                     document.getElementById("display-name").innerText = "IDENTITÀ NON DISPONIBILE";
                     document.getElementById("display-bio").innerHTML = `
