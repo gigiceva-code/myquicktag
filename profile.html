@@ -187,7 +187,7 @@ async function saveFinalPassword() {
         return;
     }
 
-    // Qui inseriamo la rotellina che gira (fa-spinner fa-spin) di FontAwesome vicino al testo
+    // Rotellina Luxury animata inserita correttamente
     btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> ATTIVAZIONE IN CORSO...';
     btn.disabled = true;
 
@@ -205,13 +205,12 @@ async function saveFinalPassword() {
 
         if (data.success) {
             btn.style.background = "#4CAF50";
-            // Rimettiamo un'icona di spunta quando ha finito con successo
             btn.innerHTML = '<i class="fas fa-check" style="margin-right: 10px;"></i> PROFILO ATTIVO!';
             
             // 1. Mettiamo in cassaforte il nome dell'utente corrente nella memoria del telefono
             localStorage.setItem('myquicktag_pending', tagPulito);
             
-            // 2. Lo mandiamo alla celebrazione dicendo chiaramente a Chrome chi è l'utente attuale
+            // 2. Lo mandiamo alla celebrazione con l'utente agganciato nell'URL
             setTimeout(() => {
                 window.location.href = `celebration.html?u=${tagPulito}`; 
             }, 1500);
@@ -226,42 +225,7 @@ async function saveFinalPassword() {
         btn.innerText = "RIPROVA ATTIVAZIONE";
     }
 }
-    btn.innerText = "ATTIVAZIONE IN CORSO...";
-    btn.disabled = true;
-
-    try {
-        const responseAttivazione = await fetch('/api/set-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                username_system: tagPulito,
-                password: pwd 
-            })
-        });
-
-                const data = await responseAttivazione.json();
-
-        if (data.success) {
-            btn.style.background = "#4CAF50";
-            btn.innerText = "PROFILO ATTIVO!";
-            
-            // Il momento del cambio: lo mandiamo alla celebrazione
-            setTimeout(() => {
-                window.location.href = `celebration.html`; 
-            }, 1500);
-        } else {
-            throw new Error(data.message || "Errore sconosciuto");
-        }
-
-    } catch (error) {
-        console.error("Errore:", error);
-        alert("Errore durante l'attivazione.");
-        btn.disabled = false;
-        btn.innerText = "RIPROVA ATTIVAZIONE";
-    }
-}
 </script>
-
    
 </body>
 </html>
