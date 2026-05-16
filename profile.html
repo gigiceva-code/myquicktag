@@ -200,6 +200,44 @@ async function saveFinalPassword() {
             })
         });
 
+        const data = await responseAttivazione.json();
+
+        if (data.success) {
+            btn.style.background = "#4CAF50";
+            btn.innerText = "PROFILO ATTIVO!";
+            
+            // CORREZIONE 1: Aggiorna la memoria del telefono con il nuovo account attivo
+            localStorage.setItem('myquicktag_pending', tagPulito);
+            
+            // CORREZIONE 2: Passa il nome utente pulito anche nell'URL di celebrazione
+            setTimeout(() => {
+                window.location.href = `celebration.html?u=${tagPulito}`; 
+            }, 1500);
+        } else {
+            throw new Error(data.message || "Errore sconosciuto");
+        }
+
+    } catch (error) {
+        console.error("Errore:", error);
+        alert("Errore durante l'attivazione.");
+        btn.disabled = false;
+        btn.innerText = "RIPROVA ATTIVAZIONE";
+    }
+}
+
+    btn.innerText = "ATTIVAZIONE IN CORSO...";
+    btn.disabled = true;
+
+    try {
+        const responseAttivazione = await fetch('/api/set-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username_system: tagPulito,
+                password: pwd 
+            })
+        });
+
                 const data = await responseAttivazione.json();
 
         if (data.success) {
