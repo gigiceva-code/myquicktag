@@ -16,16 +16,17 @@ export default function handler(req, res) {
     const icon192 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=192&font-size=0.35&uppercase=true&bold=true&length=10`;
     const icon512 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=512&font-size=0.35&uppercase=true&bold=true&length=10`;
 
-    // Costruiamo il manifest dinamico blindando ID e SCOPE univoci per ogni utente
+   // Costruiamo il manifest dinamico blindando ID univoco per ogni utente
     const manifest = {
-      // L'ID deve essere unico e con percorso assoluto per forzare Android a separare le icone
-      "id": `/tag.html?u=${utenteMinuscolo}`,
+      // L'ID è la chiave di volta assoluta: dice al telefono "sono un'app diversa dalle altre"
+      "id": `tag_pwa_${utenteMinuscolo}`,
       "name": `MyQuickTag ${displayUtente}`,
       "short_name": displayUtente,
       "description": "Luxury Digital Identity",
+      // Lo start_url dice al telefono esattamente quale pagina aprire quando clicchi l'icona
       "start_url": `/tag.html?u=${utenteMinuscolo}&pwa_mode=true`,
-      // Lo scope isola l'app in modo che non vada a sovrascrivere o leggere gli altri profili
-      "scope": `/tag.html?u=${utenteMinuscolo}`,
+      // Lo scope deve essere pulito e senza punti interrogativi per essere valido
+      "scope": "/",
       "display": "standalone",
       "background_color": "#000000",
       "theme_color": "#000000",
@@ -35,7 +36,6 @@ export default function handler(req, res) {
         { "src": icon512, "sizes": "512x512", "type": "image/png", "purpose": "any" }
       ]
     };
-
     // Forziamo il browser a non tenere MAI in cache questo file per non mischiare gli utenti
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
