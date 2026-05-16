@@ -193,21 +193,9 @@
         document.getElementById('plan-' + plan).classList.add('selected');
     }
 
-    async function inizializzaPagina() {
-    // Se manca il nome utente nell'URL, evitiamo il crash di sistema
-    if (!nomeUtente) {
-        console.error("Nome utente mancante nell'URL");
-        return;
-    }
-
-    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
     
-    // Configurazione dinamica dei manifest per PWA
-    const manifestLink = document.getElementById('dynamic-manifest');
-    const iconLink = document.getElementById('dynamic-icon');
-    if (manifestLink) manifestLink.href = `/api/manifest?u=${nomePulito}`;
-    if (iconLink) iconLink.href = `/api/generate-icon?u=${nomePulito}`;
-
+async function inizializzaPagina() {
+    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
     document.getElementById("user-display").innerText = "@" + nomePulito.toUpperCase();
     document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
 
