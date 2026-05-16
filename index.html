@@ -629,23 +629,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 50); 
     }
 
-    const tagInCorso = localStorage.getItem('myquicktag_pending');
-    if (tagInCorso) {
-        try {
-            const nomePulito = tagInCorso.toLowerCase().trim().replace('@', '');
-            const manifestLink = document.getElementById('dynamic-manifest');
-            const iconLink = document.getElementById('dynamic-icon');
-            if (manifestLink) manifestLink.href = `/api/manifest?u=${nomePulito}`;
-            if (iconLink) iconLink.href = `/api/generate-icon?u=${nomePulito}`;
-            const inputTag = document.getElementById('tag-input');
-            if (inputTag) {
-                inputTag.value = tagInCorso;
-                if (typeof activateInput === "function") activateInput(); 
-            }
-        } catch (e) {
-            console.error("Errore icona:", e);
-        }
-    }
+  
 });
 
 async function vaiAllaVerifica() {
