@@ -1,26 +1,22 @@
-const CACHE_NAME = 'myquicktag-v1';
 
-// Installazione del Service Worker
+const CACHE_NAME = 'myquicktag-v2'; // Cambiato a v2 per forzare l'aggiornamento
+
 self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Attivazione e pulizia dei vecchi dati
 self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-// Intercettazione delle richieste: la chiave per non sovrascrivere i profili
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Se la richiesta contiene un utente (?u=), andiamo DIRETTAMENTE alla rete
-  // Senza salvare in cache, così eliminiamo il salto da test a tost!
-  if (url.searchParams.has('u')) {
+  // Forza il browser a bypassare sempre la cache per le pagine dei profili e per il manifest
+  if (url.searchParams.has('u') || url.pathname.includes('manifest')) {
     return event.respondWith(fetch(event.request));
   }
 
-  // Per i file statici normali (immagini, loghi), usa la strategia standard
   event.respondWith(
     fetch(event.request).catch(() => {
       return caches.match(event.request);
