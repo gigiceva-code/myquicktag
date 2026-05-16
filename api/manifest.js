@@ -1,21 +1,31 @@
 export default function handler(req, res) {
   try {
-    const { u } = req.query;
-    const utente = u ? u.toUpperCase() : 'USER';
-    const utenteMinuscolo = utente.toLowerCase().trim();
-    const displayUtente = utente.startsWith('@') ? utente : `@${utente}`;
+    // 1. Recupero robusto del parametro 'u' (controlla sia la query classica che l'URL grezzo)
+    let u = req.query.u;
+    if (!u && req.url.includes('?')) {
+      const urlParams = new URLSearchParams(req.url.split('?')[1]);
+      u = urlParams.get('u');
+    }
 
+    // Se non trova nulla, usa 'user' come paracadute, ma ora l'estrazione è a prova di bomba
+    const utente = u ? u.toUpperCase() : 'USER';
+    const utenteMinuscolo = utente.replace('@', '').trim().toLowerCase();
+    const displayUtente = `@${utenteMinuscolo.toUpperCase()}`;
+
+    // Generazione icone Luxury Dinamiche
     const icon192 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=192&font-size=0.35&uppercase=true&bold=true&length=10`;
     const icon512 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=512&font-size=0.35&uppercase=true&bold=true&length=10`;
 
+    // Costruiamo il manifest dinamico blindando ID e SCOPE univoci per ogni utente
     const manifest = {
-      // L'id dice ad Android che questa app è strutturalmente diversa dalle altre
-      "id": `/myquicktag-pwa-${utenteMinuscolo}`,
+      // L'ID deve essere unico e con percorso assoluto per forzare Android a separare le icone
+      "id": `/tag.html?u=${utenteMinuscolo}`,
       "name": `MyQuickTag ${displayUtente}`,
       "short_name": displayUtente,
       "description": "Luxury Digital Identity",
-      // Lo start_url unico impedisce la sovrascrittura delle icone sulla Home
-      "start_url": `/tag.html?u=${utenteMinuscolo}&pwa_id=${utenteMinuscolo}`,
+      "start_url": `/tag.html?u=${utenteMinuscolo}&pwa_mode=true`,
+      // Lo scope isola l'app in modo che non vada a sovrascrivere o leggere gli altri profili
+      "scope": `/tag.html?u=${utenteMinuscolo}`,
       "display": "standalone",
       "background_color": "#000000",
       "theme_color": "#000000",
@@ -26,10 +36,15 @@ export default function handler(req, res) {
       ]
     };
 
+    // Forziamo il browser a non tenere MAI in cache questo file per non mischiare gli utenti
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    
     return res.status(200).json(manifest);
   } catch (error) {
+    console.error("Errore Manifest:", error);
     return res.status(500).json({ error: "Errore di configurazione" });
   }
 }
