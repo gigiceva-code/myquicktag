@@ -180,16 +180,21 @@ async function saveFinalPassword() {
     const tagPulito = tagRaw.replace('@', '').trim().toLowerCase();
     
     const pwd = document.getElementById('final-password').value;
-    const btn = document.querySelector('#password-setup-overlay button');
+    
+    // MODIFICATO: Cerchiamo il bottone in modo più ampio o specifico. 
+    // Se il tuo bottone ha un ID specifico (es. id="save-btn"), usa document.getElementById('save-btn')
+    const btn = document.querySelector('#password-setup-overlay button') || document.querySelector('#password-overlay button') || document.querySelector('.save-btn');
 
     if (!pwd || pwd.length < 4) {
         alert("La tua chiave deve avere almeno 4 caratteri.");
         return;
     }
 
-    // Rotellina Luxury animata inserita correttamente
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> ATTIVAZIONE IN CORSO...';
-    btn.disabled = true;
+    if (btn) {
+        // Avviamo la rotellina Luxury animata
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="margin-right: 10px;"></i> ATTIVAZIONE IN CORSO...';
+        btn.disabled = true;
+    }
 
     try {
         const responseAttivazione = await fetch('/api/set-password', {
@@ -204,11 +209,13 @@ async function saveFinalPassword() {
         const data = await responseAttivazione.json();
 
         if (data.success) {
-            btn.style.background = "#4CAF50";
-            btn.innerHTML = '<i class="fas fa-check" style="margin-right: 10px;"></i> PROFILO ATTIVO!';
+            if (btn) {
+                btn.style.background = "#4CAF50";
+                btn.innerHTML = '<i class="fas fa-check" style="margin-right: 10px;"></i> PROFILO ATTIVO!';
+            }
             
+            // Rimosso definitivamente il localStorage fantasma come concordato
             
-            // 2. Lo mandiamo alla celebrazione con l'utente agganciato nell'URL
             setTimeout(() => {
                 window.location.href = `celebration.html?u=${tagPulito}`; 
             }, 1500);
@@ -219,10 +226,14 @@ async function saveFinalPassword() {
     } catch (error) {
         console.error("Errore:", error);
         alert("Errore durante l'attivazione.");
-        btn.disabled = false;
-        btn.innerText = "RIPROVA ATTIVAZIONE";
+        if (btn) {
+            btn.disabled = false;
+            // Usiamo innerHTML così non rompiamo la struttura se vogliamo rimettere icone
+            btn.innerHTML = 'RIPROVA ATTIVAZIONE';
+        }
     }
 }
+
 </script>
    
 </body>
