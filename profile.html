@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Dashboard - MyQuickTag</title>
+    <title>Identity Console - MyQuickTag</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,8 +11,8 @@
             --bg-color: #000000; /* Nero Assoluto Luxury */
             --card-bg: rgba(255, 255, 255, 0.02);
             --border-color: rgba(255, 255, 255, 0.06);
-            --accent-smeraldo: #50C878; /* Verde Smeraldo Istituzionale */
-            --text-sec: #6c6c70; /* Grigio scuro calibrato per il minimalismo */
+            --accent-smeraldo: #50C878; /* Verde Smeraldo Brand */
+            --text-sec: #6c6c70; /* Grigio Calmo e Sobrio */
         }
 
         body {
@@ -26,12 +26,12 @@
 
         .dashboard-container { width: 100%; max-width: 400px; }
 
-        /* Header Premium Identity */
+        /* Header Console Minimal Luxury */
         .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
-        .user-welcome h1 { font-size: 1.7rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: #ffffff; }
-        .user-welcome p { color: var(--accent-smeraldo); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin: 8px 0 0; }
+        .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
+        .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; }
 
-        /* Matrici statistiche minimali */
+        /* Matrici Statistiche Pulite */
         .stats-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px;
         }
@@ -40,14 +40,13 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 22px; border-radius: 16px; text-align: left;
-            transition: border 0.3s ease;
         }
 
         .stat-card i { color: var(--accent-smeraldo); font-size: 0.95rem; margin-bottom: 14px; display: block; }
         .stat-card .value { font-size: 1.6rem; font-weight: 500; display: block; color: #ffffff; letter-spacing: -0.5px; }
         .stat-card .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; display: block; font-weight: 500; }
 
-        /* Liste d'azione ad alta conversione */
+        /* Navigazione d'Élite */
         .menu-label { font-size: 0.7rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; margin-left: 4px; font-weight: 600; }
         
         .action-btn {
@@ -61,10 +60,10 @@
 
         .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
         .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.8; }
-        .action-btn span { flex-grow: 1; font-size: 0.9rem; font-weight: 400; letter-spacing: -0.2px; }
+        .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
         .action-btn .chevron { font-size: 0.75rem; color: var(--text-sec); opacity: 0.6; }
 
-        /* Il pilastro d'élite visivo */
+        /* Focus sul Profilo Pubblico Attivo */
         .btn-primary { 
             border: 1px solid rgba(80, 200, 120, 0.25); 
             background: rgba(80, 200, 120, 0.03); 
@@ -77,8 +76,8 @@
 
     <div class="dashboard-container">
         <div class="user-welcome">
-            <h1 id="dash-user">@UTENTE</h1>
-            <p>Premium Identity Hub</p>
+            <h1>Identity Console</h1>
+            <p id="dash-user">@UTENTE</p>
         </div>
 
         <div class="stats-grid">
@@ -94,23 +93,23 @@
             </div>
         </div>
 
-        <div class="menu-label">Management & Logistics</div>
+        <div class="menu-label">Identity System</div>
         
         <a href="#" id="link-view" class="action-btn btn-primary">
             <i class="fas fa-arrow-right btn-icon"></i>
-            <span>Digital Showroom</span>
+            <span>View Tag</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
         <a href="#" id="link-edit" class="action-btn">
             <i class="fas fa-sliders-h btn-icon"></i>
-            <span>Craft & Configuration</span>
+            <span>Configure</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
         <a href="#" id="link-qr" class="action-btn">
             <i class="fas fa-qrcode btn-icon"></i>
-            <span>Instant Acquisition Gate</span>
+            <span>QR Identity</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
@@ -150,7 +149,7 @@ async function caricaDatiDashboard(nome) {
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
 
-            // Rotte pulite ad alta tecnologia
+            // Rotte pulite per l'architettura PWA
             document.getElementById("link-view").href = `/u/${nomePulito}`;
             document.getElementById("link-edit").href = `/edit?u=${nomePulito}`;
             document.getElementById("link-qr").href = `/qr?u=${nomePulito}`;
@@ -166,4 +165,3 @@ async function caricaDatiDashboard(nome) {
    
 </body>
 </html>
-
