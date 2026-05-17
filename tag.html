@@ -165,8 +165,8 @@
             const cleanUser = user.replace('@', '').toLowerCase();
             const manifestLink = document.getElementById('dynamic-manifest');
             const iconLink = document.getElementById('dynamic-icon');
-            if (manifestLink) manifestLink.href = `/api/manifest?u=${cleanUser}`;
-            if (iconLink) iconLink.href = `/api/generate-icon?u=${cleanUser}`;
+          if (manifestLink) manifestLink.href = `/u/${cleanUser}/manifest.json`;
+if (iconLink) iconLink.href = `/api/generate-icon?u=${cleanUser}`;
             try {
                 const response = await fetch(`/api/get-profile?u=${cleanUser}`);
                 const result = await response.json();
