@@ -153,9 +153,16 @@
         </div>
     </div>
 
-    <script>
+   <script>
         const params = new URLSearchParams(window.location.search);
-        const user = params.get("u");
+        // 1. Cerca l'utente con il vecchio metodo (?u=test)
+        let user = params.get("u");
+
+        // 2. Se non lo trova, lo estrae dal percorso pulito (/u/test)
+        if (!user && window.location.pathname.startsWith('/u/')) {
+            const parts = window.location.pathname.split('/');
+            user = parts[2]; // Prende il valore subito dopo "/u/"
+        }
 
         function openPwd() { document.getElementById('password-overlay').style.display = 'flex'; }
         function closePwd() { document.getElementById('password-overlay').style.display = 'none'; }
