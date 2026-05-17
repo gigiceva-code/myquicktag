@@ -26,7 +26,7 @@ export default function handler(req, res) {
       // Lo start_url si apre sul percorso pulito
       "start_url": `/u/${utenteMinuscolo}?pwa_mode=true`,
       // LA CHIAVE DI VOLTA: lo scope isolato blocca la sovrascrittura!
-      "scope": `/u/${utenteMinuscolo}/`,
+     "scope": `/u/${utenteMinuscolo}`,
       "display": "standalone",
       "background_color": "#000000",
       "theme_color": "#000000",
