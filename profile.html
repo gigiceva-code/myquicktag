@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -9,122 +8,112 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --accent: #ffffff;
-            --text-sec: #a0a0a0;
+            --bg-color: #000000; /* Nero Assoluto Luxury */
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-smeraldo: #50C878; /* Il Verde del Brand */
+            --text-sec: #8e8e93;
         }
 
         body {
-            margin: 0; padding: 20px;
+            margin: 0; padding: 24px;
             background-color: var(--bg-color);
             font-family: 'Inter', sans-serif;
             color: white;
             display: flex; flex-direction: column; align-items: center;
+            -webkit-font-smoothing: antialiased;
         }
 
         .dashboard-container { width: 100%; max-width: 400px; }
 
         /* Header Dashboard */
         .user-welcome { text-align: left; margin: 40px 0 30px; width: 100%; }
-        .user-welcome h1 { font-size: 1.5rem; margin: 0; font-weight: 600; }
-        .user-welcome p { color: var(--text-sec); font-size: 0.9rem; margin: 5px 0 0; }
+        .user-welcome h1 { font-size: 1.6rem; margin: 0; font-weight: 600; letter-spacing: -0.5px; }
+        .user-welcome p { color: var(--text-sec); font-size: 0.9rem; margin: 6px 0 0; }
 
         /* Card Statistiche */
         .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 35px;
         }
 
         .stat-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 20px; border-radius: 18px; text-align: left;
-            backdrop-filter: blur(10px);
         }
 
-        .stat-card i { color: var(--text-sec); font-size: 1rem; margin-bottom: 10px; display: block; }
-        .stat-card .value { font-size: 1.3rem; font-weight: 600; display: block; }
-        .stat-card .label { font-size: 0.7rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card i { color: var(--accent-smeraldo); font-size: 1rem; margin-bottom: 12px; display: block; }
+        .stat-card .value { font-size: 1.4rem; font-weight: 600; display: block; color: #ffffff; }
+        .stat-card .label { font-size: 0.7rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; display: block; }
 
         /* Menu Azioni */
-        .menu-label { font-size: 0.75rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; margin-left: 5px; }
+        .menu-label { font-size: 0.75rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; margin-left: 5px; font-weight: 600; }
         
         .action-btn {
             display: flex; align-items: center;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 18px 20px; border-radius: 16px;
-            text-decoration: none; color: white; margin-bottom: 12px;
-            transition: all 0.3s ease;
+            text-decoration: none; color: white; margin-bottom: 14px;
+            transition: all 0.2s ease;
         }
 
-        .action-btn:active { transform: scale(0.98); background: rgba(255,255,255,0.1); }
-        .action-btn i { width: 35px; font-size: 1.1rem; }
+        .action-btn:active { transform: scale(0.98); background: rgba(255,255,255,0.08); }
+        .action-btn i.btn-icon { width: 35px; font-size: 1.1rem; color: #ffffff; }
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; }
         .action-btn .chevron { font-size: 0.8rem; color: var(--text-sec); }
 
-        .btn-primary { border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); }
+        /* Il Bottone d'élite per visualizzare il lavoro finito */
+        .btn-primary { 
+            border: 1px solid var(--accent-smeraldo); 
+            background: rgba(80, 200, 120, 0.08); 
+        }
+        .btn-primary i.btn-icon { color: var(--accent-smeraldo); }
     </style>
 </head>
-    <!-- Overlay per impostazione Password -->
-<div id="password-setup-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:white; font-family: sans-serif;">
-    
-    <div style="text-align:center; max-width:400px; padding:20px;">
-        <h2 style="letter-spacing:2px; margin-bottom:10px;">PROTEGGI LA TUA IDENTITÀ</h2>
-        <p style="opacity:0.7; font-size:14px; margin-bottom:30px;">Il tuo @tag è pronto. Crea una password per accedere al tuo Identity Portal in futuro.</p>
-        
-        <input type="password" id="final-password" placeholder="Scegli la tua Password" 
-               style="width:100%; padding:15px; background:transparent; border:1px solid #333; color:white; border-radius:5px; margin-bottom:20px; outline:none; text-align:center;">
-        
-        <button onclick="saveFinalPassword()" 
-                style="width:100%; padding:15px; background:#ffffff; color:#000; border:none; border-radius:5px; cursor:pointer; font-weight:bold; letter-spacing:1px;">
-            ATTIVA PROFILO
-        </button>
-    </div>
-</div>
 <body>
 
     <div class="dashboard-container">
         <div class="user-welcome">
             <h1 id="dash-user">@UTENTE</h1>
-            <p>Gestione del tuo Digital Profile</p>
+            <p>Ufficio di Comando • MyQuickTag</p>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <i class="fas fa-eye"></i>
+                <i class="fas fa-chart-line"></i>
                 <span class="value" id="count-visits">-</span>
-                <span class="label">Visite Totali</span>
+                <span class="label">Scansioni</span>
             </div>
             <div class="stat-card">
-                <i class="fas fa-clock"></i>
+                <i class="fas fa-shield-alt"></i>
                 <span class="value" id="days-left">-</span>
-                <span class="label">Giorni Rimasti</span>
+                <span class="label">Giorni Free</span>
             </div>
         </div>
 
-        <div class="menu-label">Azioni Rapide</div>
+        <div class="menu-label">Personalizzazione e Lavoro</div>
         
-        <a href="#" id="link-view" class="action-btn btn-primary" target="_blank">
-            <i class="fas fa-external-link-alt"></i>
-            <span>Visualizza la tua Tag</span>
+        <a href="#" id="link-view" class="action-btn btn-primary">
+            <i class="fas fa-external-link-alt btn-icon"></i>
+            <span>Visualizza la tua Chiave (Tag)</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
         <a href="#" id="link-edit" class="action-btn">
-            <i class="fas fa-user-edit"></i>
-            <span>Modifica Profilo</span>
+            <i class="fas fa-sliders-h btn-icon"></i>
+            <span>Modifica Profilo e Contatti</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
         <a href="#" id="link-qr" class="action-btn">
-            <i class="fas fa-qrcode"></i>
-            <span>Il tuo QR Code</span>
+            <i class="fas fa-qrcode btn-icon"></i>
+            <span>Il tuo QR Code Dinamico</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
     </div>
+
 <script>
 const params = new URLSearchParams(window.location.search);
 const nomeUtente = params.get("u"); 
@@ -132,7 +121,7 @@ const nomeUtente = params.get("u");
 if (nomeUtente) {
     caricaDatiDashboard(nomeUtente.toLowerCase());
 } else {
-    document.body.innerHTML = "<div style='padding:50px; text-align:center;'>Accesso non autorizzato.</div>";
+    document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif;'>Accesso negato. Parametro mancante.</div>";
 }
 
 async function caricaDatiDashboard(nome) {
@@ -145,11 +134,10 @@ async function caricaDatiDashboard(nome) {
         if (data.success) {
             const record = data.fields;
 
-            // MODIFICA: Non mostriamo più l'overlay qui. 
-            // Se vuoi, puoi aggiungere un avviso visivo nella dashboard se manca la password.
-
+            // Aggiorna l'interfaccia con il tag maiuscolo d'impatto
             document.getElementById("dash-user").innerText = "@" + nomePulito.toUpperCase();
 
+            // Calcolo dei giorni di prova gratuiti rimanenti (target 90 giorni)
             if (record.data_scadenza) {
                 const oggi = new Date();
                 const scadenza = new Date(record.data_scadenza);
@@ -160,80 +148,21 @@ async function caricaDatiDashboard(nome) {
                 document.getElementById("days-left").innerText = "90";
             }
 
+            // Conteggio visualizzazioni reali dal database
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
 
-            document.getElementById("link-view").href = `tag.html?u=${nomePulito}`;
-            document.getElementById("link-edit").href = `edit.html?u=${nomePulito}`;
-            document.getElementById("link-qr").href = `qr.html?u=${nomePulito}`;
+            // PRETTY URL: Indirizziamo i pulsanti sui percorsi d'élite puliti
+            document.getElementById("link-view").href = `/u/${nomePulito}`;
+            document.getElementById("link-edit").href = `/edit?u=${nomePulito}`;
+            document.getElementById("link-qr").href = `/qr?u=${nomePulito}`;
 
         } else {
-            alert("Errore: Profilo non trovato.");
+            alert("Errore: Profilo non trovato all'interno dell'ecosistema.");
         }
     } catch (error) {
-        console.error("Errore critico:", error);
+        console.error("Errore nel recupero dati di cantiere:", error);
     }
 }
-
-async function saveFinalPassword() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tagRaw = urlParams.get('u') || "";
-    const tagPulito = tagRaw.replace('@', '').trim().toLowerCase();
-    
-    const pwd = document.getElementById('final-password').value;
-    
-    // MODIFICATO: Cerchiamo il bottone in modo più ampio o specifico. 
-    // Se il tuo bottone ha un ID specifico (es. id="save-btn"), usa document.getElementById('save-btn')
-    const btn = document.querySelector('#password-setup-overlay button') || document.querySelector('#password-overlay button') || document.querySelector('.save-btn');
-
-    if (!pwd || pwd.length < 4) {
-        alert("La tua chiave deve avere almeno 4 caratteri.");
-        return;
-    }
-
-    if (btn) {
-        // Avviamo la rotellina Luxury animata
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="margin-right: 10px;"></i> ATTIVAZIONE IN CORSO...';
-        btn.disabled = true;
-    }
-
-    try {
-        const responseAttivazione = await fetch('/api/set-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                username_system: tagPulito,
-                password: pwd 
-            })
-        });
-
-        const data = await responseAttivazione.json();
-
-        if (data.success) {
-            if (btn) {
-                btn.style.background = "#4CAF50";
-                btn.innerHTML = '<i class="fas fa-check" style="margin-right: 10px;"></i> PROFILO ATTIVO!';
-            }
-            
-            // Rimosso definitivamente il localStorage fantasma come concordato
-            
-            setTimeout(() => {
-                window.location.href = `celebration.html?u=${tagPulito}`; 
-            }, 1500);
-        } else {
-            throw new Error(data.message || "Errore sconosciuto");
-        }
-
-    } catch (error) {
-        console.error("Errore:", error);
-        alert("Errore durante l'attivazione.");
-        if (btn) {
-            btn.disabled = false;
-            // Usiamo innerHTML così non rompiamo la struttura se vogliamo rimettere icone
-            btn.innerHTML = 'RIPROVA ATTIVAZIONE';
-        }
-    }
-}
-
 </script>
    
 </body>
