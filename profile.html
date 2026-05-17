@@ -10,7 +10,7 @@
         :root {
             --bg-color: #000000; /* Nero Assoluto Luxury */
             --card-bg: rgba(255, 255, 255, 0.02);
-            --border-color: rgba(255, 255, 255, 0.06);
+            --border-white: rgba(255, 255, 255, 0.9); /* Bianco Nitido per i contorni d'élite */
             --accent-smeraldo: #50C878; /* Verde Smeraldo Brand */
             --text-sec: #6c6c70; /* Grigio Calmo e Sobrio */
         }
@@ -31,14 +31,14 @@
         .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
         .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; }
 
-        /* Matrici Statistiche Pulite */
+        /* Matrici Statistiche con contorni bianchi netti */
         .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 35px;
         }
 
         .stat-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-white); /* Aggiornato a bianco nitido */
             padding: 22px; border-radius: 16px; text-align: left;
         }
 
@@ -46,13 +46,23 @@
         .stat-card .value { font-size: 1.6rem; font-weight: 500; display: block; color: #ffffff; letter-spacing: -0.5px; }
         .stat-card .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; display: block; font-weight: 500; }
 
-        /* Navigazione d'Élite */
-        .menu-label { font-size: 0.7rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; margin-left: 4px; font-weight: 600; }
+        /* Divisore Centrale Istituzionale Premium */
+        .menu-label { 
+            font-size: 0.85rem; 
+            color: var(--accent-smeraldo); /* Tinto di Verde Smeraldo */
+            text-align: center; /* Portato al centro perfetto */
+            text-transform: lowercase; /* Forzato in minuscolo di lusso */
+            letter-spacing: 1.5px; 
+            margin: 0 auto 25px auto; 
+            font-weight: 400; 
+            width: 100%;
+        }
         
+        /* Navigazione d'Élite con contorni bianchi netti */
         .action-btn {
             display: flex; align-items: center;
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-white); /* Aggiornato a bianco nitido */
             padding: 20px; border-radius: 14px;
             text-decoration: none; color: white; margin-bottom: 14px;
             transition: all 0.2s ease;
@@ -63,9 +73,8 @@
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
         .action-btn .chevron { font-size: 0.75rem; color: var(--text-sec); opacity: 0.6; }
 
-        /* Focus sul Profilo Pubblico Attivo */
+        /* Focus sul Profilo Pubblico con accento interno verde soft */
         .btn-primary { 
-            border: 1px solid rgba(80, 200, 120, 0.25); 
             background: rgba(80, 200, 120, 0.03); 
         }
         .btn-primary i.btn-icon { color: var(--accent-smeraldo); opacity: 1; }
@@ -93,7 +102,7 @@
             </div>
         </div>
 
-        <div class="menu-label">Identity System</div>
+        <div class="menu-label">identity system</div>
         
         <a href="#" id="link-view" class="action-btn btn-primary">
             <i class="fas fa-arrow-right btn-icon"></i>
