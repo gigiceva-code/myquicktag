@@ -3,6 +3,10 @@
     {
       "source": "/u/:username",
       "destination": "/tag.html?u=:username"
+    },
+    {
+      "source": "/u/:username/manifest.json",
+      "destination": "/api/manifest?u=:username"
     }
   ]
 }
