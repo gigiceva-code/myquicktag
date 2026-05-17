@@ -1,3 +1,4 @@
+
 export default function handler(req, res) {
   try {
     // 1. Recupero robusto del parametro 'u' (controlla sia la query classica che l'URL grezzo)
@@ -12,30 +13,32 @@ export default function handler(req, res) {
     const utenteMinuscolo = utente.replace('@', '').trim().toLowerCase();
     const displayUtente = `@${utenteMinuscolo.toUpperCase()}`;
 
-    // Generazione icone Luxury Dinamiche
-    const icon192 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=192&font-size=0.35&uppercase=true&bold=true&length=10`;
-    const icon512 = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUtente)}&background=000000&color=ffffff&size=512&font-size=0.35&uppercase=true&bold=true&length=10`;
+    // LA CHIAVE DI VOLTA: Chiamiamo il nostro generatore interno che disegna il logo Q-@ d'autore
+    // Passiamo comunque il parametro ?u= per retrocompatibilità, anche se l'icona ora mostra il brand di lusso
+    const icon192 = `/api/generate-icons?u=${utenteMinuscolo}`;
+    const icon512 = `/api/generate-icons?u=${utenteMinuscolo}`;
 
- // Costruiamo il manifest dinamico con Pretty URL isolati per utente
+    // Costruiamo il manifest dinamico con Pretty URL isolati per utente
     const manifest = {
       // L'ID ora punta al percorso pulito
       "id": `/u/${utenteMinuscolo}`,
       "name": `MyQuickTag ${displayUtente}`,
-      "short_name": displayUtente,
+      "short_name": displayUtente, // Questo mantiene il nome utente (es. @GIGI) SOTTO l'icona sul telefono!
       "description": "Luxury Digital Identity",
       // Lo start_url si apre sul percorso pulito
       "start_url": `/u/${utenteMinuscolo}?pwa_mode=true`,
-      // LA CHIAVE DI VOLTA: lo scope isolato blocca la sovrascrittura!
-     "scope": `/u/${utenteMinuscolo}`,
+      // Lo scope isolato blocca la sovrascrittura delle icone sulla home!
+      "scope": `/u/${utenteMinuscolo}`,
       "display": "standalone",
       "background_color": "#000000",
       "theme_color": "#000000",
       "orientation": "portrait",
       "icons": [
-        { "src": icon192, "sizes": "192x192", "type": "image/png", "purpose": "any" },
-        { "src": icon512, "sizes": "512x512", "type": "image/png", "purpose": "any" }
+        { "src": icon192, "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
+        { "src": icon512, "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
       ]
     };
+    
     // Forziamo il browser a non tenere MAI in cache questo file per non mischiare gli utenti
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
