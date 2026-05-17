@@ -10,7 +10,7 @@ export default function handler(req, res) {
     
     <path d="M 235 235 L 285 285" stroke="#50C878" stroke-width="24" stroke-linecap="round" />
     
-    <text x="150" y="166" 
+    <text x="148" y="152" 
           font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
           font-size="115" 
           font-weight="900" 
