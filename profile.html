@@ -10,7 +10,7 @@
         :root {
             --bg-color: #000000; /* Nero Assoluto Luxury */
             --card-bg: rgba(255, 255, 255, 0.02);
-            --border-white: rgba(255, 255, 255, 0.9); /* Bianco Nitido per i contorni d'élite */
+            --border-white: rgba(255, 255, 255, 0.9); /* Bianco Nitido d'élite per i contorni */
             --accent-smeraldo: #50C878; /* Verde Smeraldo Brand */
             --text-sec: #6c6c70; /* Grigio Calmo e Sobrio */
         }
@@ -33,12 +33,12 @@
 
         /* Matrici Statistiche con contorni bianchi netti */
         .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 35px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px;
         }
 
         .stat-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-white); /* Aggiornato a bianco nitido */
+            border: 1px solid var(--border-white);
             padding: 22px; border-radius: 16px; text-align: left;
         }
 
@@ -46,27 +46,30 @@
         .stat-card .value { font-size: 1.6rem; font-weight: 500; display: block; color: #ffffff; letter-spacing: -0.5px; }
         .stat-card .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; display: block; font-weight: 500; }
 
-        /* Divisore Centrale Istituzionale Premium */
+        /* Divisore Centrale calibrato al millimetro per la leggibilità display */
         .menu-label { 
-            font-size: 0.85rem; 
-            color: var(--accent-smeraldo); /* Tinto di Verde Smeraldo */
-            text-align: center; /* Portato al centro perfetto */
-            text-transform: lowercase; /* Forzato in minuscolo di lusso */
-            letter-spacing: 1.5px; 
-            margin: 0 auto 25px auto; 
+            font-size: 1rem; /* Aumentato per evitare l'effetto zoom */
+            color: var(--accent-smeraldo); 
+            text-align: center; 
+            text-transform: lowercase; 
+            letter-spacing: 3px; /* Più respiro tra i caratteri */
+            margin: 10px auto 30px auto; /* Più aria sopra e sotto */
             font-weight: 400; 
             width: 100%;
         }
         
-        /* Navigazione d'Élite con contorni bianchi netti */
+        /* Navigazione d'Élite con contorni bianchi netti e passo allargato */
         .action-btn {
             display: flex; align-items: center;
             background: var(--card-bg);
-            border: 1px solid var(--border-white); /* Aggiornato a bianco nitido */
+            border: 1px solid var(--border-white);
             padding: 20px; border-radius: 14px;
-            text-decoration: none; color: white; margin-bottom: 14px;
+            text-decoration: none; color: white; 
+            margin-bottom: 18px; /* Dilatato il passo verticale per riempire lo schermo */
             transition: all 0.2s ease;
         }
+
+        .action-btn:last-child { margin-bottom: 0; } /* Rimuove l'ultimo margine in eccesso */
 
         .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
         .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.8; }
@@ -122,6 +125,12 @@
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
+        <a href="#" id="link-account" class="action-btn">
+            <i class="fas fa-user-shield btn-icon"></i>
+            <span>Account & Security</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
+
     </div>
 
 <script>
@@ -158,10 +167,11 @@ async function caricaDatiDashboard(nome) {
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
 
-            // Rotte pulite per l'architettura PWA
+            // Rotte pulite ad alta tecnologia per l'architettura PWA
             document.getElementById("link-view").href = `/u/${nomePulito}`;
             document.getElementById("link-edit").href = `/edit?u=${nomePulito}`;
             document.getElementById("link-qr").href = `/qr?u=${nomePulito}`;
+            document.getElementById("link-account").href = `/account?u=${nomePulito}`;
 
         } else {
             alert("Errore: Identità non rilevata nell'ecosistema.");
