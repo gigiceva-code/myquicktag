@@ -60,8 +60,8 @@
         }
 
         .action-btn:active { transform: scale(0.98); background: rgba(255,255,255,0.08); }
-        .action-btn i.btn-icon { width: 35px; font-size: 1.1rem; color: #ffffff; }
-        .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; }
+        .action-btn i.btn-icon { width: 35px; font-size: 1.15rem; color: #ffffff; }
+        .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; padding-left: 2px; }
         .action-btn .chevron { font-size: 0.8rem; color: var(--text-sec); }
 
         /* Il Bottone d'élite per visualizzare il lavoro finito */
@@ -96,7 +96,7 @@
         <div class="menu-label">Personalizzazione e Lavoro</div>
         
         <a href="#" id="link-view" class="action-btn btn-primary">
-            <i class="fas fa-external-link-alt btn-icon"></i>
+            <i class="fas fa-arrow-right btn-icon"></i>
             <span>Visualizza la tua Chiave (Tag)</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
@@ -152,7 +152,7 @@ async function caricaDatiDashboard(nome) {
             // Conteggio visualizzazioni reali dal database
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
 
-            // PRETTY URL: Indirizziamo i pulsanti sui percorsi d'élite puliti
+            // PRETTY URL: Indirizziamo TUTTI i pulsanti sui percorsi d'élite puliti, non più file .html
             document.getElementById("link-view").href = `/u/${nomePulito}`;
             document.getElementById("link-edit").href = `/edit?u=${nomePulito}`;
             document.getElementById("link-qr").href = `/qr?u=${nomePulito}`;
