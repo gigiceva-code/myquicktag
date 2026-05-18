@@ -64,6 +64,18 @@
         .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
         .btn-primary { background: rgba(255, 255, 255, 0.01); }
     </style>
+            .pulsing-effect {
+            border: 1px solid var(--accent-smeraldo) !important;
+            color: var(--accent-smeraldo) !important;
+            box-shadow: 0 0 15px rgba(80, 200, 120, 0.2);
+            animation: soft-pulse 2s infinite;
+        }
+        @keyframes soft-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(80, 200, 120, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(80, 200, 120, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(80, 200, 120, 0); }
+        }
+
 </head>
 <body>
 
@@ -147,6 +159,15 @@ async function caricaDatiDashboard(nomeMinuto) {
         if (data.success && data.fields) {
             const record = data.fields;
 
+            // Logica Magic Button: si attiva solo se il profilo è da sbloccare
+            const stato = (record.stato || "").toLowerCase().trim();
+            const btnView = document.getElementById("link-view");
+            
+            if (stato === "in attesa") {
+                btnView.querySelector("span").innerText = "Attiva la tua Identità";
+                btnView.classList.add("pulsing-effect");
+            }
+
             if (record.username_display) {
                 const displayPulito = record.username_display.replace('@', '').trim();
                 document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
@@ -165,9 +186,29 @@ async function caricaDatiDashboard(nomeMinuto) {
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
         }
     } catch (error) {
-        console.error("Errore di cantiere:", error);
+        console.warn("Il sistema sta ripristinando la connessione con l'identità digitale.");
     }
 }
+
+    // AGGIORNAMENTO BOTTONE MAGIC
+async function checkMagicButton(nomeMinuto) {
+    try {
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const data = await response.json();
+        if (data.success && data.fields) {
+            const stato = (data.fields.stato || "").toLowerCase().trim();
+            const btnView = document.getElementById("link-view");
+
+            if (stato === "in attesa") {
+                btnView.querySelector("span").innerText = "Attiva la tua Identità";
+                btnView.classList.add("pulsing-effect");
+            }
+        }
+    } catch (e) {
+        console.error("Errore magic button:", e);
+    }
+}
+
 </script>
    
 </body>
