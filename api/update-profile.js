@@ -44,10 +44,10 @@ export default async function handler(req, res) {
       if (update.ok) return res.status(200).json({ success: true, action: 'updated' });
       
     } else {
-      // --- LOGICA CREATE (Il cuore dell'architettura finale) ---
+      // --- LOGICA CREATE ---
       // Aggiungiamo i campi obbligatori per il nuovo profilo
       fieldsToSave.username_system = username_system;
-      fieldsToSave.stato = "In attesa"; 
+      fieldsToSave.stato = "in attesa"; // TUTTO MINUSCOLO come richiesto
       fieldsToSave.views = 0;
 
       const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
