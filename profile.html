@@ -6,12 +6,16 @@
     <title>Identity Console - MyQuickTag</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link id="dynamic-manifest" rel="manifest" href="">
+    <link id="dynamic-icon" rel="icon" href="">
+
     <style>
         :root {
-            --bg-color: #000000; /* Nero Assoluto Luxury */
+            --bg-color: #000000;
             --card-bg: rgba(255, 255, 255, 0.02);
-            --border-white: rgba(255, 255, 255, 0.9); /* Bianco Nitido d'élite */
-            --accent-smeraldo: #50C878; /* Verde Smeraldo Brand */
+            --border-white: rgba(255, 255, 255, 0.9);
+            --accent-smeraldo: #50C878;
             --text-sec: #6c6c70; 
         }
 
@@ -27,69 +31,37 @@
         .dashboard-container { 
             width: 100%; 
             max-width: 400px; 
-            min-height: 88vh; /* Distribuisce i pesi verticalmente per eliminare il vuoto in basso */
+            min-height: 88vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Header Console Minimal Luxury */
         .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
         .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
         .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; text-transform: uppercase; }
 
-        /* Matrici Statistiche */
-        .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-white);
-            padding: 22px; border-radius: 16px; text-align: left;
-        }
-
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-white); padding: 22px; border-radius: 16px; text-align: left; }
         .stat-card i { color: var(--accent-smeraldo); font-size: 0.95rem; margin-bottom: 14px; display: block; }
         .stat-card .value { font-size: 1.6rem; font-weight: 500; display: block; color: #ffffff; letter-spacing: -0.5px; }
         .stat-card .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; display: block; font-weight: 500; }
 
-        /* Divisore Centrale Nitido e Leggibile sul Display */
-        .menu-label { 
-            font-size: 1rem; 
-            color: var(--accent-smeraldo); 
-            text-align: center; 
-            text-transform: lowercase; 
-            letter-spacing: 3px; 
-            margin: 15px auto 35px auto; 
-            font-weight: 400; 
-            width: 100%;
-        }
+        .menu-label { font-size: 1rem; color: var(--accent-smeraldo); text-align: center; text-transform: lowercase; letter-spacing: 3px; margin: 15px auto 35px auto; font-weight: 400; width: 100%; }
         
-        /* Navigazione d'Élite con passo allargato per occupare lo schermo */
         .action-btn {
             display: flex; align-items: center;
-            background: var(--card-bg);
-            border: 1px solid var(--border-white);
-            padding: 22px; /* Più spessore interno per un feeling premium */
-            border-radius: 14px;
-            text-decoration: none; color: white; 
-            margin-bottom: 20px; /* Più aria tra i pulsanti */
+            background: var(--card-bg); border: 1px solid var(--border-white);
+            padding: 22px; border-radius: 14px;
+            text-decoration: none; color: white; margin-bottom: 20px;
             transition: all 0.2s ease;
         }
-
         .action-btn:last-child { margin-bottom: 0; }
-
         .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
         
-        /* Icone di sinistra: Tutte uniformate in Bianco Puro */
         .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.9; }
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
-        
-        /* Chevron di destra: Sottili e Verde Smeraldo Intelligente */
         .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
-
-        .btn-primary { 
-            background: rgba(255, 255, 255, 0.01); 
-        }
+        .btn-primary { background: rgba(255, 255, 255, 0.01); }
     </style>
 </head>
 <body>
@@ -138,39 +110,40 @@
             <span>Account & Security</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
-
     </div>
 
 <script>
 const params = new URLSearchParams(window.location.search);
 const nomeUtenteURL = params.get("u") || ""; 
 
-// Inizializzazione immediata dell'interfaccia basata sull'URL come paracadute di sicurezza
 if (nomeUtenteURL) {
     const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
-    document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
-    
-    // Configurazione immediata delle rotte per garantire la fluidità del flusso PWA
-    document.getElementById("link-view").href = `/u/${nomeIniziale.toLowerCase()}`;
-    document.getElementById("link-edit").href = `/edit?u=${nomeIniziale.toLowerCase()}`;
-    document.getElementById("link-qr").href = `/qr?u=${nomeIniziale.toLowerCase()}`;
-    document.getElementById("link-account").href = `/account?u=${nomeIniziale.toLowerCase()}`;
+    const nomeMinuto = nomeIniziale.toLowerCase();
 
-    caricaDatiDashboard(nomeIniziale.toLowerCase());
+    // RIPRISTINO ATTIVAZIONE PWA IMMEDIATA
+    document.getElementById("dynamic-manifest").href = `/api/manifest?u=${nomeMinuto}`;
+    document.getElementById("dynamic-icon").href = `/api/icon?u=${nomeMinuto}`;
+
+    // Configurazione rotte
+    document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
+    document.getElementById("link-view").href = `/u/${nomeMinuto}`;
+    document.getElementById("link-edit").href = `/edit?u=${nomeMinuto}`;
+    document.getElementById("link-qr").href = `/qr?u=${nomeMinuto}`;
+    document.getElementById("link-account").href = `/account?u=${nomeMinuto}`;
+
+    caricaDatiDashboard(nomeMinuto);
 } else {
     document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif; color:#6c6c70; font-size:0.9rem; letter-spacing:1px;'>ACCESS DENIED. PARAMETER MISSING.</div>";
 }
 
 async function caricaDatiDashboard(nomeMinuto) {
     try {
-        // Interrogazione asincrona su username_system (sempre minuscolo)
         const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
         const data = await response.json();
 
         if (data.success && data.fields) {
             const record = data.fields;
 
-            // Se disponibile, estraiamo lo username_display per la resa grafica
             if (record.username_display) {
                 const displayPulito = record.username_display.replace('@', '').trim();
                 document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
@@ -188,9 +161,8 @@ async function caricaDatiDashboard(nomeMinuto) {
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
         }
-        // In caso di ritardo del database (nuovo utente), le rotte di default impostate sopra tengono in piedi il flusso
     } catch (error) {
-        console.error("Errore asincrono di cantiere:", error);
+        console.error("Errore di cantiere:", error);
     }
 }
 </script>
