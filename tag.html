@@ -137,131 +137,83 @@
     </div>
 
     <script>
-        // 1. Estrazione utente pulita per Vercel Rewrites
-        const params = new URLSearchParams(window.location.search);
-        let nomeUtenteURL = params.get("u") || ""; 
+    const params = new URLSearchParams(window.location.search);
+    let nomeUtenteURL = params.get("u") || ""; 
+    if (!nomeUtenteURL) {
+        const pathParts = window.location.pathname.split('/');
+        const uIndex = pathParts.indexOf('u');
+        if (uIndex !== -1 && pathParts[uIndex + 1]) nomeUtenteURL = pathParts[uIndex + 1];
+    }
 
-        if (!nomeUtenteURL) {
-            const pathParts = window.location.pathname.split('/');
-            const uIndex = pathParts.indexOf('u');
-            if (uIndex !== -1 && pathParts[uIndex + 1]) {
-                nomeUtenteURL = pathParts[uIndex + 1];
-            }
-        }
+    let globalUtente = "";
+    let deferredPrompt;
+    let identitaVerificata = false; // NUOVO: Blocca il bottone finché non sappiamo lo stato
 
-        let globalUtente = "";
+    if (nomeUtenteURL) {
+        globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
+        document.getElementById("dynamic-manifest").href = `/api/manifest?u=${globalUtente}`;
+        document.getElementById("dynamic-icon").href = `/api/icon?u=${globalUtente}`;
+        caricaProfiloPubblico(globalUtente);
+    }
 
-        if (nomeUtenteURL) {
-            const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
-            globalUtente = nomeIniziale.toLowerCase();
+    async function caricaProfiloPubblico(nomeMinuto) {
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+            const data = await response.json();
+            if (data.success && data.fields) {
+                const record = data.fields;
+                document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+                document.getElementById("tag-bio").innerText = record.bio || "";
+                document.getElementById("tag-avatar").style.display = "block";
 
-            // Attivazione dinamica del Manifest per la PWA
-            document.getElementById("dynamic-manifest").href = `/api/manifest?u=${globalUtente}`;
-            document.getElementById("dynamic-icon").href = `/api/icon?u=${globalUtente}`;
-
-            caricaProfiloPubblico(globalUtente);
-        } else {
-            document.getElementById("tag-bio").innerText = "ACCESSO NEGATO: Utente non specificato.";
-        }
-
-        async function caricaProfiloPubblico(nomeMinuto) {
-            try {
-                const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-                const data = await response.json();
-
-                if (data.success && data.fields) {
-                    const record = data.fields;
-
-                    // Popoliamo la UI
-                    const displayPulito = (record.username_display || nomeMinuto).replace('@', '').trim();
-                    document.getElementById("tag-username").innerText = "@" + displayPulito.toUpperCase();
-                    
-                    if (record.bio) {
-                        document.getElementById("tag-bio").innerText = record.bio;
-                    } else {
-                        document.getElementById("tag-bio").innerText = "";
-                    }
-
-                    // Se hai un sistema per l'immagine profilo, si attiverebbe qui
-                    document.getElementById("tag-avatar").style.display = "block";
-                    // document.getElementById("tag-avatar").src = record.avatar_url || "default.png";
-
-                    // Controllo di attivazione (campo single-select in Airtable)
-                    if (record.stato === "in attesa" || record.stato === "In attesa") {
-                        document.getElementById("activation-modal").style.display = "flex";
-                    } else {
-                        mostraBottonePWA();
-                    }
-                }
-            } catch (error) {
-                console.error("Errore di caricamento:", error);
-            }
-        }
-
-        async function salvaPasswordEAttiva() {
-            const pwd = document.getElementById("new-password").value;
-            if (pwd.length < 4) {
-                alert("La password deve essere di almeno 4 caratteri.");
-                return;
-            }
-
-            try {
-                // Spara all'endpoint che aggiorna Airtable usando username_system
-                const response = await fetch('/api/update-profile', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        u: globalUtente,
-                        password: pwd,
-                        stato: "Attivo" 
-                    })
-                });
-                
-                const resData = await response.json();
-                if (resData.success) {
-                    document.getElementById("activation-modal").style.display = "none";
-                    setTimeout(() => {
-                        alert("Identità Attivata! Ora puoi installare l'app.");
-                        mostraBottonePWA();
-                    }, 300);
+                // LOGICA SEMAFORO:
+                if (record.stato === "In attesa") {
+                    document.getElementById("activation-modal").style.display = "flex";
+                    identitaVerificata = false;
                 } else {
-                    alert("Errore durante l'attivazione. Riprova.");
+                    identitaVerificata = true;
+                    mostraBottonePWA(); // Mostra solo se attivo
                 }
-            } catch (e) {
-                console.error(e);
-                alert("Errore di rete durante il salvataggio.");
             }
-        }
+        } catch (error) { console.error("Errore:", error); }
+    }
 
-        // Logica nativa PWA (Intercetta l'installazione)
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            // Se la pagina è già attiva, mostriamo subito il bottone
-            if (document.getElementById("activation-modal").style.display === "none" || document.getElementById("activation-modal").style.display === "") {
-                mostraBottonePWA();
-            }
+    async function salvaPasswordEAttiva() {
+        const pwd = document.getElementById("new-password").value;
+        if (pwd.length < 4) return alert("Minimo 4 caratteri");
+
+        const response = await fetch('/api/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ u: globalUtente, password: pwd, stato: "Attivo" })
         });
-
-        function mostraBottonePWA() {
-            if (deferredPrompt && !document.getElementById("btn-installa-pwa")) {
-                const btn = document.createElement('button');
-                btn.id = "btn-installa-pwa";
-                btn.className = "pwa-btn";
-                btn.innerHTML = `<i class="fas fa-download"></i> Installa @${globalUtente.toUpperCase()} su Home`;
-                
-                btn.onclick = async () => {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        btn.style.display = 'none';
-                    }
-                    deferredPrompt = null;
-                };
-                document.getElementById("links-container").prepend(btn);
-            }
+        
+        const resData = await response.json();
+        if (resData.success) {
+            document.getElementById("activation-modal").style.display = "none";
+            identitaVerificata = true; // Sblocca il semaforo
+            mostraBottonePWA();
+        } else {
+            alert("Errore di attivazione. Il sistema non trova l'utente.");
         }
-    </script>
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
+    function mostraBottonePWA() {
+        if (deferredPrompt && identitaVerificata && !document.getElementById("btn-installa-pwa")) {
+            const btn = document.createElement('button');
+            btn.id = "btn-installa-pwa";
+            btn.className = "pwa-btn";
+            btn.innerHTML = `<i class="fas fa-download"></i> Installa App`;
+            btn.onclick = () => { deferredPrompt.prompt(); };
+            document.getElementById("links-container").prepend(btn);
+        }
+    }
+</script>
+
 </body>
 </html>
