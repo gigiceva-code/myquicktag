@@ -140,7 +140,8 @@ if (nomeUtenteURL) {
 
 async function caricaDatiDashboard(nomeMinuto) {
     try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        // Aggiungiamo un parametro anti-cache temporaneo per forzare Vercel a evitare il 304 sui test
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}&_nocache=${new Date().getTime()}`);
         const data = await response.json();
 
         if (data.success && data.fields) {
@@ -148,25 +149,34 @@ async function caricaDatiDashboard(nomeMinuto) {
 
             if (record.username_display) {
                 const displayPulito = record.username_display.replace('@', '').trim();
-                document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
+                const elementUser = document.getElementById("dash-user");
+                if (elementUser) elementUser.innerText = "@" + displayPulito.toUpperCase();
             }
 
-            if (record.data_scadenza) {
-                const oggi = new Date();
-                const scadenza = new Date(record.data_scadenza);
-                const diffTime = scadenza - oggi;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                document.getElementById("days-left").innerText = diffDays > 0 ? diffDays + " GG" : "0 GG";
-            } else {
-                document.getElementById("days-left").innerText = "90 GG";
+            const elementDays = document.getElementById("days-left");
+            if (elementDays) {
+                if (record.data_scadenza) {
+                    const oggi = new Date();
+                    const scadenza = new Date(record.data_scadenza);
+                    const diffTime = scadenza - oggi;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    elementDays.innerText = diffDays > 0 ? diffDays + " GG" : "0 GG";
+                } else {
+                    elementDays.innerText = "90 GG";
+                }
             }
 
-            document.getElementById("count-visits").innerText = record.views || record.visits || "0";
+            // PROTEZIONE CRITICA: Se i campi non esistono in Airtable, mettiamo "0" senza mandare in crash la pagina
+            const elementVisits = document.getElementById("count-visits");
+            if (elementVisits) {
+                elementVisits.innerText = record.views || record.visits || "0";
+            }
         }
     } catch (error) {
-        console.error("Errore di cantiere:", error);
+        console.error("Errore di cantiere bloccato:", error);
     }
 }
+
 </script>
    
 </body>
