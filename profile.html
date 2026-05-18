@@ -63,7 +63,7 @@
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
         .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
         .btn-primary { background: rgba(255, 255, 255, 0.01); }
-    </style>
+    
             .pulsing-effect {
             border: 1px solid var(--accent-smeraldo) !important;
             color: var(--accent-smeraldo) !important;
@@ -75,7 +75,7 @@
             70% { box-shadow: 0 0 0 10px rgba(80, 200, 120, 0); }
             100% { box-shadow: 0 0 0 0 rgba(80, 200, 120, 0); }
         }
-
+</style>
 </head>
 <body>
 
@@ -159,7 +159,17 @@ async function caricaDatiDashboard(nomeMinuto) {
         if (data.success && data.fields) {
             const record = data.fields;
 
-            // Logica Magic Button: si attiva solo se il profilo è da sbloccare
+              const record = data.fields;
+
+            // AGGIUNTA LOGICA PULSANTE
+            const stato = (record.stato || "").toLowerCase().trim();
+            const btnView = document.getElementById("link-view");
+            if (stato === "in attesa") {
+                btnView.querySelector("span").innerText = "Attiva la tua Identità";
+                btnView.classList.add("pulsing-effect");
+            }
+            // FINE AGGIUNTA
+          // Logica Magic Button: si attiva solo se il profilo è da sbloccare
             const stato = (record.stato || "").toLowerCase().trim();
             const btnView = document.getElementById("link-view");
             
