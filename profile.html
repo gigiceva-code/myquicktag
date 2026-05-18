@@ -16,7 +16,7 @@
             --card-bg: rgba(255, 255, 255, 0.02);
             --border-white: rgba(255, 255, 255, 0.9);
             --accent-smeraldo: #50C878;
-            --accent-ambra: #FFBF00;
+            --accent-amber: #FFBF00;
             --accent-rubino: #DE3163;
             --text-sec: #6c6c70; 
         }
@@ -57,15 +57,16 @@
             padding: 22px; border-radius: 14px;
             text-decoration: none; color: white; margin-bottom: 20px;
             transition: all 0.2s ease;
+            cursor: pointer;
         }
         .action-btn:last-child { margin-bottom: 0; }
         .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
         
         .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.9; }
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
-        .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
+        .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; transition: color 0.3s ease; }
 
-        /* Tavoletta di Vetro Satinata Base (Default Smeraldo) */
+        /* REPLICA ESATTA DELLA TAVOLETTA DI VETRO PREMIUM IN 3D */
         .glass-hero-btn {
             position: relative;
             display: flex;
@@ -86,6 +87,11 @@
             transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
         }
 
+        /* PATCH CRUCIALE: Evita che i sotto-elementi blocchino il click sul link */
+        .glass-hero-btn * {
+            pointer-events: none;
+        }
+
         .glass-hero-btn::before {
             content: '';
             position: absolute;
@@ -94,7 +100,11 @@
             pointer-events: none;
         }
 
-        .glass-content-top { display: flex; align-items: center; width: 100%; }
+        .glass-content-top {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
         
         .glass-sub-text {
             font-size: 0.65rem !important;
@@ -118,24 +128,20 @@
                 0 0 15px 2px rgba(80, 200, 120, 0.15) !important;
         }
 
-        /* STATI DINAMICI DI SCADENZA CON COMPATIBILITÀ GRACE PERIOD */
-        
-        /* Stato di Avviso o Grazia (Arancione) */
         .glass-hero-btn.state-warning {
             box-shadow: 
                 inset 0 1px 1px rgba(255, 255, 255, 0.4),
                 0 12px 24px rgba(0, 0, 0, 0.5), 
-                0 0 30px 4px rgba(255, 191, 0, 0.22) !important;
+                0 0 30px 4px rgba(255, 191, 0, 0.25) !important;
         }
-        .glass-hero-btn.state-warning .glass-sub-text { color: var(--accent-ambra) !important; }
-        .glass-hero-btn.state-warning .chevron { color: var(--accent-ambra) !important; }
+        .glass-hero-btn.state-warning .glass-sub-text { color: var(--accent-amber) !important; }
+        .glass-hero-btn.state-warning .chevron { color: var(--accent-amber) !important; }
 
-        /* Stato Bloccato Oltre i 14 Giorni di Grazia (Rosso) */
         .glass-hero-btn.state-danger {
             box-shadow: 
                 inset 0 1px 1px rgba(255, 255, 255, 0.4),
                 0 12px 24px rgba(0, 0, 0, 0.5), 
-                0 0 30px 4px rgba(222, 49, 99, 0.25) !important;
+                0 0 30px 4px rgba(222, 49, 99, 0.3) !important;
         }
         .glass-hero-btn.state-danger .glass-sub-text { color: var(--accent-rubino) !important; }
         .glass-hero-btn.state-danger .chevron { color: var(--accent-rubino) !important; }
@@ -200,18 +206,20 @@ if (nomeUtenteURL) {
     const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
     const nomeMinuto = nomeIniziale.toLowerCase();
 
-    // Attivazione Manifest Dinamico
     document.getElementById("dynamic-manifest").href = `/api/manifest?u=${nomeMinuto}`;
     document.getElementById("dynamic-icon").href = `/api/icon?u=${nomeMinuto}`;
 
-    // Configurazione visualizzazione header
     document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
     
-    // Ancoraggio logica parametrica nativa
     document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
     document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
     document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
     document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
+
+    // SICUREZZA AGGIUNTIVA VIA SCRIPT: Forza la navigazione sul click della lastra
+    document.getElementById("link-view").addEventListener("click", function(e) {
+        window.location.href = this.href;
+    });
 
     caricaDatiDashboard(nomeMinuto);
 } else {
@@ -231,17 +239,15 @@ async function caricaDatiDashboard(nomeMinuto) {
                 document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
             }
 
-            // CALCOLO GIORNI REALI DALLA SCADENZA DI AIRTABLE
-            let giorniEffettivi = 90; 
+            let diffDays = 90; 
 
             if (record.data_scadenza) {
                 const oggi = new Date();
                 const scadenza = new Date(record.data_scadenza);
                 const diffTime = scadenza - oggi;
-                giorniEffettivi = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 
-                // Aggiorna il contatore visivo della card (mostra 0 GG se è scaduto)
-                document.getElementById("days-left").innerText = giorniEffettivi > 0 ? giorniEffettivi + " GG" : "0 GG";
+                document.getElementById("days-left").innerText = diffDays > 0 ? diffDays + " GG" : "0 GG";
             } else {
                 document.getElementById("days-left").innerText = "90 GG";
             }
@@ -249,24 +255,19 @@ async function caricaDatiDashboard(nomeMinuto) {
             const btnView = document.getElementById("link-view");
             const badgeStatus = document.getElementById("badge-status");
 
-            // REGIA DEI COLORI CON LOGICA DI GRAZIA (+14 GIORNI EXTRA)
-            if (giorniEffettivi < -14) {
-                // Sospensione Totale: Oltre i 14 giorni di tolleranza (Rosso)
+            if (diffDays < -14) {
                 btnView.classList.add("state-danger");
                 btnView.classList.remove("state-warning");
                 badgeStatus.innerText = "Identity Suspended";
-            } else if (giorniEffettivi <= 0) {
-                // Periodo di Grazia attivo: Scaduto ma dentro i 14 giorni (Arancione)
+            } else if (diffDays <= 0) {
                 btnView.classList.add("state-warning");
                 btnView.classList.remove("state-danger");
                 badgeStatus.innerText = "Grace Period Active";
-            } else if (giorniEffettivi <= 10) {
-                // Pre-avviso: Mancano meno di 10 giorni alla scadenza (Arancione)
+            } else if (diffDays <= 10) {
                 btnView.classList.add("state-warning");
                 btnView.classList.remove("state-danger");
                 badgeStatus.innerText = "Identity Expiring";
             } else {
-                // Regolare: Tutto online e verde (Verde)
                 btnView.classList.remove("state-warning", "state-danger");
                 badgeStatus.innerText = "Active Identity";
             }
