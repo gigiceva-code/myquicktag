@@ -10,9 +10,9 @@
         :root {
             --bg-color: #000000; /* Nero Assoluto Luxury */
             --card-bg: rgba(255, 255, 255, 0.02);
-            --border-white: rgba(255, 255, 255, 0.9); /* Bianco Nitido d'élite per i contorni */
+            --border-white: rgba(255, 255, 255, 0.9); /* Bianco Nitido d'élite */
             --accent-smeraldo: #50C878; /* Verde Smeraldo Brand */
-            --text-sec: #6c6c70; /* Grigio Calmo e Sobrio */
+            --text-sec: #6c6c70; 
         }
 
         body {
@@ -27,7 +27,7 @@
         .dashboard-container { 
             width: 100%; 
             max-width: 400px; 
-            min-height: 85vh; /* Spinge la struttura a occupare lo schermo verticalmente eliminando il vuoto sotto */
+            min-height: 88vh; /* Distribuisce i pesi verticalmente per eliminare il vuoto in basso */
             display: flex;
             flex-direction: column;
         }
@@ -35,9 +35,9 @@
         /* Header Console Minimal Luxury */
         .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
         .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
-        .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; }
+        .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; text-transform: uppercase; }
 
-        /* Matrici Statistiche con contorni bianchi netti */
+        /* Matrici Statistiche */
         .stats-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px;
         }
@@ -52,7 +52,7 @@
         .stat-card .value { font-size: 1.6rem; font-weight: 500; display: block; color: #ffffff; letter-spacing: -0.5px; }
         .stat-card .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; display: block; font-weight: 500; }
 
-        /* Divisore Centrale calibrato al millimetro per la leggibilità display */
+        /* Divisore Centrale Nitido e Leggibile sul Display */
         .menu-label { 
             font-size: 1rem; 
             color: var(--accent-smeraldo); 
@@ -64,15 +64,15 @@
             width: 100%;
         }
         
-        /* Navigazione d'Élite con contorni bianchi netti e passo allargato */
+        /* Navigazione d'Élite con passo allargato per occupare lo schermo */
         .action-btn {
             display: flex; align-items: center;
             background: var(--card-bg);
             border: 1px solid var(--border-white);
-            padding: 22px; /* Padding aumentato a 22px per dare imponenza */
+            padding: 22px; /* Più spessore interno per un feeling premium */
             border-radius: 14px;
             text-decoration: none; color: white; 
-            margin-bottom: 20px; /* Spazio aumentato a 20px per eliminare il vuoto in basso */
+            margin-bottom: 20px; /* Più aria tra i pulsanti */
             transition: all 0.2s ease;
         }
 
@@ -80,11 +80,11 @@
 
         .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
         
-        /* Icone di sinistra: TUTTE uniformate in Bianco Puro (inclusa la freccia di View Tag) */
+        /* Icone di sinistra: Tutte uniformate in Bianco Puro */
         .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.9; }
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
         
-        /* Piccoli Chevron a destra: tinti in Verde Smeraldo per il dettaglio d'élite */
+        /* Chevron di destra: Sottili e Verde Smeraldo Intelligente */
         .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
 
         .btn-primary { 
@@ -143,27 +143,38 @@
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const nomeUtente = params.get("u"); 
+const nomeUtenteURL = params.get("u") || ""; 
 
-if (nomeUtente) {
-    // Forza il minuscolo subito all'ingresso, allineando l'URL alla logica di username_system
-    caricaDatiDashboard(nomeUtente.toLowerCase());
+// Inizializzazione immediata dell'interfaccia basata sull'URL come paracadute di sicurezza
+if (nomeUtenteURL) {
+    const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
+    document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
+    
+    // Configurazione immediata delle rotte per garantire la fluidità del flusso PWA
+    document.getElementById("link-view").href = `/u/${nomeIniziale.toLowerCase()}`;
+    document.getElementById("link-edit").href = `/edit?u=${nomeIniziale.toLowerCase()}`;
+    document.getElementById("link-qr").href = `/qr?u=${nomeIniziale.toLowerCase()}`;
+    document.getElementById("link-account").href = `/account?u=${nomeIniziale.toLowerCase()}`;
+
+    caricaDatiDashboard(nomeIniziale.toLowerCase());
 } else {
     document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif; color:#6c6c70; font-size:0.9rem; letter-spacing:1px;'>ACCESS DENIED. PARAMETER MISSING.</div>";
 }
 
-async function caricaDatiDashboard(nome) {
-    const nomePulito = nome.replace('@', '').trim().toLowerCase();
-    
+async function caricaDatiDashboard(nomeMinuto) {
     try {
-        const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+        // Interrogazione asincrona su username_system (sempre minuscolo)
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success && data.fields) {
             const record = data.fields;
 
-            // Mostra il nome in minuscolo (o come preferisci, per ora segue il flusso pulito)
-            document.getElementById("dash-user").innerText = "@" + nomePulito;
+            // Se disponibile, estraiamo lo username_display per la resa grafica
+            if (record.username_display) {
+                const displayPulito = record.username_display.replace('@', '').trim();
+                document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
+            }
 
             if (record.data_scadenza) {
                 const oggi = new Date();
@@ -176,18 +187,10 @@ async function caricaDatiDashboard(nome) {
             }
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
-
-            // Tutte le rotte vengono generate rigorosamente in minuscolo (username_system)
-            document.getElementById("link-view").href = `/u/${nomePulito}`;
-            document.getElementById("link-edit").href = `/edit?u=${nomePulito}`;
-            document.getElementById("link-qr").href = `/qr?u=${nomePulito}`;
-            document.getElementById("link-account").href = `/account?u=${nomePulito}`;
-
-        } else {
-            alert("Errore: Identità non rilevata nell'ecosistema.");
         }
+        // In caso di ritardo del database (nuovo utente), le rotte di default impostate sopra tengono in piedi il flusso
     } catch (error) {
-        console.error("Errore infrastruttura:", error);
+        console.error("Errore asincrono di cantiere:", error);
     }
 }
 </script>
