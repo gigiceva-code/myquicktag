@@ -179,24 +179,41 @@
     }
 
     async function salvaPasswordEAttiva() {
-        const pwd = document.getElementById("new-password").value;
-        if (pwd.length < 4) return alert("Minimo 4 caratteri");
+    const pwd = document.getElementById("new-password").value;
+    if (pwd.length < 4) {
+        alert("La password deve essere di almeno 4 caratteri.");
+        return;
+    }
 
+    try {
+        // Inviamo i dati con i nomi esatti che l'API vuole
         const response = await fetch('/api/update-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ u: globalUtente, password: pwd, stato: "Attivo" })
+            body: JSON.stringify({
+                username_system: globalUtente, // CAMBIATO da 'u' a 'username_system'
+                password: pwd,
+                account_status: "Attivo"      // CAMBIATO da 'stato' a 'account_status'
+            })
         });
         
         const resData = await response.json();
         if (resData.success) {
             document.getElementById("activation-modal").style.display = "none";
-            identitaVerificata = true; // Sblocca il semaforo
-            mostraBottonePWA();
+            identitaVerificata = true; 
+            setTimeout(() => {
+                alert("Identità Attivata!");
+                mostraBottonePWA();
+            }, 300);
         } else {
-            alert("Errore di attivazione. Il sistema non trova l'utente.");
+            alert("Errore: " + (resData.error || "Riprova"));
         }
+    } catch (e) {
+        console.error(e);
+        alert("Errore di rete.");
     }
+}
+
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
