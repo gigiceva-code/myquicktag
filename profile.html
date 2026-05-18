@@ -40,7 +40,7 @@
         }
 
         .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
-        .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); id: console-title; }
+        .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
         .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; text-transform: uppercase; }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px; }
@@ -66,41 +66,38 @@
         .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
         .btn-primary { background: rgba(255, 255, 255, 0.01); }
 
-        /* Variazioni di stato dinamiche per i colori della console */
-        .status-warning { color: var(--accent-amber) !important; }
-        .status-danger { color: var(--accent-rubino) !important; }
-        
-        .chevron-warning { color: var(--accent-amber) !important; }
-        .chevron-danger { color: var(--accent-rubino) !important; }
+        /* Classi di colore pulite solo per i testi dell'header */
+        .txt-warning { color: var(--accent-amber) !important; }
+        .txt-danger { color: var(--accent-rubino) !important; }
     </style>
 </head>
 <body>
 
     <div class="dashboard-container">
         <div class="user-welcome">
-            <h1 id="console-title">Identity Console</h1>
+            <h1 id="main-title">Identity Console</h1>
             <p id="dash-user">@UTENTE</p>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <i class="fas fa-chart-line" id="icon-visits"></i>
+                <i class="fas fa-chart-line" id="ico-visits"></i>
                 <span class="value" id="count-visits">-</span>
                 <span class="label">Scansioni</span>
             </div>
             <div class="stat-card">
-                <i class="fas fa-shield-alt" id="icon-status"></i>
+                <i class="fas fa-shield-alt" id="ico-status"></i>
                 <span class="value" id="days-left">-</span>
                 <span class="label">Status Trial</span>
             </div>
         </div>
 
-        <div class="menu-label" id="system-label">identity system</div>
+        <div class="menu-label" id="sub-label">identity system</div>
         
         <a href="#" id="link-view" class="action-btn btn-primary">
             <i class="fas fa-arrow-right btn-icon"></i>
-            <span id="text-view">View Tag</span>
-            <i class="fas fa-chevron-right chevron" id="chevron-view"></i>
+            <span>View Tag</span>
+            <i class="fas fa-chevron-right chevron"></i>
         </a>
 
         <a href="#" id="link-edit" class="action-btn">
@@ -173,34 +170,24 @@ async function caricaDatiDashboard(nomeMinuto) {
                 document.getElementById("days-left").innerText = "90 GG";
             }
 
-            // ELEMENTI DA AGGIORNARE IN BASE ALLO STATO COMMERCIALE
-            const consoleTitle = document.getElementById("console-title");
-            const systemLabel = document.getElementById("system-label");
-            const iconVisits = document.getElementById("icon-visits");
-            const iconStatus = document.getElementById("icon-status");
-            const textView = document.getElementById("text-view");
-            const chevronView = document.getElementById("chevron-view");
+            // GESTIONE DEI COLORI DI ALLERTA SENZA TOCCARE I PULSANTI NATIVI
+            const mainTitle = document.getElementById("main-title");
+            const subLabel = document.getElementById("sub-label");
+            const icoVisits = document.getElementById("ico-visits");
+            const icoStatus = document.getElementById("ico-status");
 
             if (diffDays < -14) {
-                // BLOCCO TOTALE (Oltre i 14 giorni di tolleranza) -> ROSSO RUBINO
-                consoleTitle.classList.add("status-danger");
-                systemLabel.classList.add("status-danger");
-                iconVisits.classList.add("status-danger");
-                iconStatus.classList.add("status-danger");
-                chevronView.classList.add("chevron-danger");
-                textView.innerText = "Tag Suspended";
+                // Oltre i 14 giorni di tolleranza commerciale -> ROSSO RUBINO
+                mainTitle.classList.add("txt-danger");
+                subLabel.classList.add("txt-danger");
+                icoVisits.classList.add("txt-danger");
+                icoStatus.classList.add("txt-danger");
             } else if (diffDays <= 0 || diffDays <= 10) {
-                // PERIODO DI GRAZIA (Fino a -14gg) o SCADENZA IMMINENTE (Sotto i 10gg) -> GIALLO AMBRA
-                consoleTitle.classList.add("status-warning");
-                systemLabel.classList.add("status-warning");
-                iconVisits.classList.add("status-warning");
-                iconStatus.classList.add("status-warning");
-                chevronView.classList.add("chevron-warning");
-                if (diffDays <= 0) {
-                    textView.innerText = "View Tag (Grace Period)";
-                } else {
-                    textView.innerText = "View Tag (Expiring)";
-                }
+                // Sotto i 10 giorni o dentro la tolleranza (fino a -14gg) -> GIALLO AMBRA
+                mainTitle.classList.add("txt-warning");
+                subLabel.classList.add("txt-warning");
+                icoVisits.classList.add("txt-warning");
+                icoStatus.classList.add("txt-warning");
             }
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
