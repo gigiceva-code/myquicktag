@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -17,8 +16,6 @@
             --card-bg: rgba(255, 255, 255, 0.02);
             --border-white: rgba(255, 255, 255, 0.9);
             --accent-smeraldo: #50C878;
-            --accent-amber: #FFBF00;
-            --accent-rubino: #DE3163;
             --text-sec: #6c6c70; 
         }
 
@@ -65,10 +62,6 @@
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
         .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
         .btn-primary { background: rgba(255, 255, 255, 0.01); }
-
-        /* Classi di colore pulite solo per i testi dell'header */
-        .txt-warning { color: var(--accent-amber) !important; }
-        .txt-danger { color: var(--accent-rubino) !important; }
     </style>
 </head>
 <body>
@@ -134,7 +127,7 @@ if (nomeUtenteURL) {
     // Configurazione visualizzazione header
     document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
     
-    // RIPRISTINO ANCORAGGIO LOGICA PARAMENTRICA COERENTE CON EDIT.HTML
+    // Ancoraggio nativo da Keep
     document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
     document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
     document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
@@ -170,24 +163,24 @@ async function caricaDatiDashboard(nomeMinuto) {
                 document.getElementById("days-left").innerText = "90 GG";
             }
 
-            // GESTIONE DEI COLORI DI ALLERTA SENZA TOCCARE I PULSANTI NATIVI
+            // CAMBIO COLORE INLINE - Nessuna classe CSS che si possa bloccare in cache
             const mainTitle = document.getElementById("main-title");
             const subLabel = document.getElementById("sub-label");
             const icoVisits = document.getElementById("ico-visits");
             const icoStatus = document.getElementById("ico-status");
 
             if (diffDays < -14) {
-                // Oltre i 14 giorni di tolleranza commerciale -> ROSSO RUBINO
-                mainTitle.classList.add("txt-danger");
-                subLabel.classList.add("txt-danger");
-                icoVisits.classList.add("txt-danger");
-                icoStatus.classList.add("txt-danger");
+                // Sospensione -> Rosso Rubino diretto
+                mainTitle.style.color = "#DE3163";
+                subLabel.style.color = "#DE3163";
+                icoVisits.style.color = "#DE3163";
+                icoStatus.style.color = "#DE3163";
             } else if (diffDays <= 0 || diffDays <= 10) {
-                // Sotto i 10 giorni o dentro la tolleranza (fino a -14gg) -> GIALLO AMBRA
-                mainTitle.classList.add("txt-warning");
-                subLabel.classList.add("txt-warning");
-                icoVisits.classList.add("txt-warning");
-                icoStatus.classList.add("txt-warning");
+                // Scadenza o Grazia -> Giallo Ambra diretto
+                mainTitle.style.color = "#FFBF00";
+                subLabel.style.color = "#FFBF00";
+                icoVisits.style.color = "#FFBF00";
+                icoStatus.style.color = "#FFBF00";
             }
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
