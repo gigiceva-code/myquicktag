@@ -120,16 +120,18 @@ if (nomeUtenteURL) {
     const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
     const nomeMinuto = nomeIniziale.toLowerCase();
 
-    // RIPRISTINO ATTIVAZIONE PWA IMMEDIATA
+    // Attivazione Manifest Dinamico
     document.getElementById("dynamic-manifest").href = `/api/manifest?u=${nomeMinuto}`;
     document.getElementById("dynamic-icon").href = `/api/icon?u=${nomeMinuto}`;
 
-    // Configurazione rotte
+    // Configurazione visualizzazione header
     document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
-    document.getElementById("link-view").href = `/u/${nomeMinuto}`;
-    document.getElementById("link-edit").href = `/edit?u=${nomeMinuto}`;
-    document.getElementById("link-qr").href = `/qr?u=${nomeMinuto}`;
-    document.getElementById("link-account").href = `/account?u=${nomeMinuto}`;
+    
+    // RIPRISTINO ANCORAGGIO LOGICA PARAMENTRICA COERENTE CON EDIT.HTML
+    document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
+    document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
+    document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
+    document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
 
     caricaDatiDashboard(nomeMinuto);
 } else {
