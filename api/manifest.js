@@ -1,34 +1,33 @@
-
 export default function handler(req, res) {
   try {
-    // 1. Recupero robusto del parametro 'u'
+    // 1. Recupero robusto del parametro 'u' (controlla sia la query classica che l'URL grezzo)
     let u = req.query.u;
     if (!u && req.url.includes('?')) {
       const urlParams = new URLSearchParams(req.url.split('?')[1]);
       u = urlParams.get('u');
     }
 
-    // Se non trova nulla, usa 'user' come paracadute
+    // Se non trova nulla, usa 'user' come paracadute, ma ora l'estrazione è a prova di bomba
     const utente = u ? u.toUpperCase() : 'USER';
     const utenteMinuscolo = utente.replace('@', '').trim().toLowerCase();
     const displayUtente = `@${utenteMinuscolo.toUpperCase()}`;
 
+    // LA CHIAVE DI VOLTA: Chiamiamo il nostro generatore interno che disegna il logo Q-@ d'autore
+    // Passiamo comunque il parametro ?u= per retrocompatibilità, anche se l'icona ora mostra il brand di lusso
     const icon192 = `/api/generate-icons?u=${utenteMinuscolo}`;
     const icon512 = `/api/generate-icons?u=${utenteMinuscolo}`;
 
     // Costruiamo il manifest dinamico con Pretty URL isolati per utente
     const manifest = {
+      // L'ID ora punta al percorso pulito
       "id": `/u/${utenteMinuscolo}`,
       "name": `MyQuickTag ${displayUtente}`,
-      "short_name": displayUtente, // Mantiene il nome utente sotto l'icona sul telefono
+      "short_name": displayUtente, // Questo mantiene il nome utente (es. @GIGI) SOTTO l'icona sul telefono!
       "description": "Luxury Digital Identity",
-      
-      // MODIFICA CHIRURGICA: L'app si apre sulla rotta del profilo utente
-      "start_url": `/u/${utenteMinuscolo}/profile?pwa_mode=true`,
-      
-      // Lo scope isolato con lo slash finale include sia il profilo che la tag senza sovrascrivere altre icone
-      "scope": `/u/${utenteMinuscolo}/`,
-      
+      // Lo start_url si apre sul percorso pulito
+      "start_url": `/u/${utenteMinuscolo}?pwa_mode=true`,
+      // Lo scope isolato blocca la sovrascrittura delle icone sulla home!
+      "scope": `/u/${utenteMinuscolo}`,
       "display": "standalone",
       "background_color": "#000000",
       "theme_color": "#000000",
