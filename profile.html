@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -39,7 +40,7 @@
         }
 
         .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
-        .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
+        .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); id: console-title; }
         .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; text-transform: uppercase; }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px; }
@@ -50,136 +51,57 @@
 
         .menu-label { font-size: 1rem; color: var(--accent-smeraldo); text-align: center; text-transform: lowercase; letter-spacing: 3px; margin: 15px auto 35px auto; font-weight: 400; width: 100%; }
         
-        /* Struttura pulsanti standard */
         .action-btn {
             display: flex; align-items: center;
             background: var(--card-bg); border: 1px solid var(--border-white);
             padding: 22px; border-radius: 14px;
             text-decoration: none; color: white; margin-bottom: 20px;
             transition: all 0.2s ease;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
         }
         .action-btn:last-child { margin-bottom: 0; }
         .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
         
         .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.9; }
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
-        .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; transition: color 0.3s ease; }
+        .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
+        .btn-primary { background: rgba(255, 255, 255, 0.01); }
 
-        /* REPLICA ESATTA DELLA TAVOLETTA DI VETRO PREMIUM IN 3D */
-        .glass-hero-btn {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
-            border: 2px solid rgba(255, 255, 255, 0.4) !important;
-            border-radius: 20px !important;
-            padding: 24px 22px !important;
-            margin-bottom: 28px;
-            overflow: hidden;
-            box-shadow: 
-                inset 0 1px 1px rgba(255, 255, 255, 0.4),
-                0 12px 24px rgba(0, 0, 0, 0.5), 
-                0 0 30px 4px rgba(80, 200, 120, 0.25) !important;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
-        }
-
-        /* Impedisce ai figli interni di intercettare il click o i tocchi */
-        .glass-hero-btn * {
-            pointer-events: none;
-        }
-
-        .glass-hero-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(115deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 30%, transparent 30.1%, transparent 100%);
-            pointer-events: none;
-        }
-
-        .glass-content-top {
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
+        /* Variazioni di stato dinamiche per i colori della console */
+        .status-warning { color: var(--accent-amber) !important; }
+        .status-danger { color: var(--accent-rubino) !important; }
         
-        .glass-sub-text {
-            font-size: 0.65rem !important;
-            color: var(--accent-smeraldo);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 500;
-            text-align: center;
-            margin-top: 6px;
-            display: block;
-            width: 100%;
-            opacity: 0.9;
-            transition: color 0.3s ease;
-        }
-
-        .glass-hero-btn:active {
-            transform: scale(0.97) !important;
-            box-shadow: 
-                inset 0 1px 1px rgba(255, 255, 255, 0.2),
-                0 6px 12px rgba(0, 0, 0, 0.5), 
-                0 0 15px 2px rgba(80, 200, 120, 0.15) !important;
-        }
-
-        .glass-hero-btn.state-warning {
-            box-shadow: 
-                inset 0 1px 1px rgba(255, 255, 255, 0.4),
-                0 12px 24px rgba(0, 0, 0, 0.5), 
-                0 0 30px 4px rgba(255, 191, 0, 0.25) !important;
-        }
-        .glass-hero-btn.state-warning .glass-sub-text { color: var(--accent-amber) !important; }
-        .glass-hero-btn.state-warning .chevron { color: var(--accent-amber) !important; }
-
-        .glass-hero-btn.state-danger {
-            box-shadow: 
-                inset 0 1px 1px rgba(255, 255, 255, 0.4),
-                0 12px 24px rgba(0, 0, 0, 0.5), 
-                0 0 30px 4px rgba(222, 49, 99, 0.3) !important;
-        }
-        .glass-hero-btn.state-danger .glass-sub-text { color: var(--accent-rubino) !important; }
-        .glass-hero-btn.state-danger .chevron { color: var(--accent-rubino) !important; }
+        .chevron-warning { color: var(--accent-amber) !important; }
+        .chevron-danger { color: var(--accent-rubino) !important; }
     </style>
 </head>
 <body>
 
     <div class="dashboard-container">
         <div class="user-welcome">
-            <h1>Identity Console</h1>
+            <h1 id="console-title">Identity Console</h1>
             <p id="dash-user">@UTENTE</p>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <i class="fas fa-chart-line"></i>
+                <i class="fas fa-chart-line" id="icon-visits"></i>
                 <span class="value" id="count-visits">-</span>
                 <span class="label">Scansioni</span>
             </div>
             <div class="stat-card">
-                <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-shield-alt" id="icon-status"></i>
                 <span class="value" id="days-left">-</span>
                 <span class="label">Status Trial</span>
             </div>
         </div>
 
-        <div class="menu-label">identity system</div>
+        <div class="menu-label" id="system-label">identity system</div>
         
-        <div id="link-view" class="action-btn glass-hero-btn">
-            <div class="glass-content-top">
-                <i class="fas fa-arrow-right btn-icon"></i>
-                <span>View Tag</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </div>
-            <span class="glass-sub-text" id="badge-status">Active Identity</span>
-        </div>
+        <a href="#" id="link-view" class="action-btn btn-primary">
+            <i class="fas fa-arrow-right btn-icon"></i>
+            <span id="text-view">View Tag</span>
+            <i class="fas fa-chevron-right chevron" id="chevron-view"></i>
+        </a>
 
         <a href="#" id="link-edit" class="action-btn">
             <i class="fas fa-sliders-h btn-icon"></i>
@@ -204,31 +126,22 @@
 const params = new URLSearchParams(window.location.search);
 const nomeUtenteURL = params.get("u") || ""; 
 
-// Variabile globale per salvare la rotta di destinazione dinamica
-let destinazioneTagHTML = "";
-
 if (nomeUtenteURL) {
     const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
     const nomeMinuto = nomeIniziale.toLowerCase();
 
+    // Attivazione Manifest Dinamico
     document.getElementById("dynamic-manifest").href = `/api/manifest?u=${nomeMinuto}`;
     document.getElementById("dynamic-icon").href = `/api/icon?u=${nomeMinuto}`;
 
+    // Configurazione visualizzazione header
     document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
     
-    // Assegnazione della rotta alla variabile
-    destinazioneTagHTML = `tag.html?u=${nomeMinuto}`;
-    
+    // RIPRISTINO ANCORAGGIO LOGICA PARAMENTRICA COERENTE CON EDIT.HTML
+    document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
     document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
     document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
     document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
-
-    // GESTIONE DIRETTA DEL CLICK SULLA TAVOLETTA
-    document.getElementById("link-view").addEventListener("click", function() {
-        if (destinazioneTagHTML) {
-            window.location.href = destinazioneTagHTML;
-        }
-    });
 
     caricaDatiDashboard(nomeMinuto);
 } else {
@@ -248,37 +161,46 @@ async function caricaDatiDashboard(nomeMinuto) {
                 document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
             }
 
-            let diffDays = 90; 
+            let diffDays = 90;
 
             if (record.data_scadenza) {
                 const oggi = new Date();
                 const scadenza = new Date(record.data_scadenza);
                 const diffTime = scadenza - oggi;
                 diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
                 document.getElementById("days-left").innerText = diffDays > 0 ? diffDays + " GG" : "0 GG";
             } else {
                 document.getElementById("days-left").innerText = "90 GG";
             }
 
-            const btnView = document.getElementById("link-view");
-            const badgeStatus = document.getElementById("badge-status");
+            // ELEMENTI DA AGGIORNARE IN BASE ALLO STATO COMMERCIALE
+            const consoleTitle = document.getElementById("console-title");
+            const systemLabel = document.getElementById("system-label");
+            const iconVisits = document.getElementById("icon-visits");
+            const iconStatus = document.getElementById("icon-status");
+            const textView = document.getElementById("text-view");
+            const chevronView = document.getElementById("chevron-view");
 
             if (diffDays < -14) {
-                btnView.classList.add("state-danger");
-                btnView.classList.remove("state-warning");
-                badgeStatus.innerText = "Identity Suspended";
-            } else if (diffDays <= 0) {
-                btnView.classList.add("state-warning");
-                btnView.classList.remove("state-danger");
-                badgeStatus.innerText = "Grace Period Active";
-            } else if (diffDays <= 10) {
-                btnView.classList.add("state-warning");
-                btnView.classList.remove("state-danger");
-                badgeStatus.innerText = "Identity Expiring";
-            } else {
-                btnView.classList.remove("state-warning", "state-danger");
-                badgeStatus.innerText = "Active Identity";
+                // BLOCCO TOTALE (Oltre i 14 giorni di tolleranza) -> ROSSO RUBINO
+                consoleTitle.classList.add("status-danger");
+                systemLabel.classList.add("status-danger");
+                iconVisits.classList.add("status-danger");
+                iconStatus.classList.add("status-danger");
+                chevronView.classList.add("chevron-danger");
+                textView.innerText = "Tag Suspended";
+            } else if (diffDays <= 0 || diffDays <= 10) {
+                // PERIODO DI GRAZIA (Fino a -14gg) o SCADENZA IMMINENTE (Sotto i 10gg) -> GIALLO AMBRA
+                consoleTitle.classList.add("status-warning");
+                systemLabel.classList.add("status-warning");
+                iconVisits.classList.add("status-warning");
+                iconStatus.classList.add("status-warning");
+                chevronView.classList.add("chevron-warning");
+                if (diffDays <= 0) {
+                    textView.innerText = "View Tag (Grace Period)";
+                } else {
+                    textView.innerText = "View Tag (Expiring)";
+                }
             }
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
