@@ -24,7 +24,13 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .dashboard-container { width: 100%; max-width: 400px; }
+        .dashboard-container { 
+            width: 100%; 
+            max-width: 400px; 
+            min-height: 85vh; /* Spinge la struttura a occupare lo schermo verticalmente eliminando il vuoto sotto */
+            display: flex;
+            flex-direction: column;
+        }
 
         /* Header Console Minimal Luxury */
         .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
@@ -33,7 +39,7 @@
 
         /* Matrici Statistiche con contorni bianchi netti */
         .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px; /* Spazio aumentato leggermente per dare aria */
         }
 
         .stat-card {
@@ -48,12 +54,12 @@
 
         /* Divisore Centrale calibrato al millimetro per la leggibilità display */
         .menu-label { 
-            font-size: 1rem; /* Aumentato per evitare l'effetto zoom */
+            font-size: 1rem; /* Evita l'effetto zoom, perfettamente leggibile ad occhio nudo */
             color: var(--accent-smeraldo); 
             text-align: center; 
             text-transform: lowercase; 
             letter-spacing: 3px; /* Più respiro tra i caratteri */
-            margin: 10px auto 30px auto; /* Più aria sopra e sotto */
+            margin: 15px auto 35px auto; /* Più aria sopra e sotto per equilibrare i pesi visivi */
             font-weight: 400; 
             width: 100%;
         }
@@ -63,25 +69,28 @@
             display: flex; align-items: center;
             background: var(--card-bg);
             border: 1px solid var(--border-white);
-            padding: 20px; border-radius: 14px;
+            padding: 22px; /* Padding interno aumentato a 22px per dare più imponenza ai tasti */
+            border-radius: 14px;
             text-decoration: none; color: white; 
-            margin-bottom: 18px; /* Dilatato il passo verticale per riempire lo schermo */
+            margin-bottom: 20px; /* Margine aumentato a 20px per distribuire i pulsanti ed eliminare il vuoto inferiore */
             transition: all 0.2s ease;
         }
 
         .action-btn:last-child { margin-bottom: 0; } /* Rimuove l'ultimo margine in eccesso */
 
         .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
-        .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.8; }
+        
+        /* Icone di sinistra: tutte uniformate in Bianco Puro, inclusa la freccia di View Tag */
+        .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.9; }
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
-        .action-btn .chevron { font-size: 0.75rem; color: var(--text-sec); opacity: 0.6; }
+        
+        /* Piccoli Chevron a destra: tinti in Verde Smeraldo per dare un dettaglio cromatico d'élite */
+        .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
 
-        /* Focus sul Profilo Pubblico con accento interno verde soft */
+        /* Focus sul Profilo Pubblico con accento interno soft */
         .btn-primary { 
-            background: rgba(80, 200, 120, 0.03); 
+            background: rgba(255, 255, 255, 0.01); 
         }
-        .btn-primary i.btn-icon { color: var(--accent-smeraldo); opacity: 1; }
-        .btn-primary span { font-weight: 500; }
     </style>
 </head>
 <body>
@@ -138,22 +147,25 @@ const params = new URLSearchParams(window.location.search);
 const nomeUtente = params.get("u"); 
 
 if (nomeUtente) {
-    caricaDatiDashboard(nomeUtente.toLowerCase());
+    // Passiamo il nome esattamente come arriva dall'URL per non compromettere la sessione e il flusso di registrazione
+    caricaDatiDashboard(nomeUtente);
 } else {
     document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif; color:#6c6c70; font-size:0.9rem; letter-spacing:1px;'>ACCESS DENIED. PARAMETER MISSING.</div>";
 }
 
 async function caricaDatiDashboard(nome) {
-    const nomePulito = nome.replace('@', '').trim().toLowerCase();
+    // Creiamo la variabile in minuscolo ESCLUSIVAMENTE per interrogare la colonna username_system di Airtable tramite API
+    const nomePulitoAPI = nome.replace('@', '').trim().toLowerCase();
     
     try {
-        const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+        const response = await fetch(`/api/get-profile?u=${nomePulitoAPI}`);
         const data = await response.json();
 
         if (data.success) {
             const record = data.fields;
 
-            document.getElementById("dash-user").innerText = "@" + nomePulito.toUpperCase();
+            // Mostriamo lo username nell'header trasformando in maiuscolo il parametro nativo per l'estetica
+            document.getElementById("dash-user").innerText = "@" + nome.toUpperCase();
 
             if (record.data_scadenza) {
                 const oggi = new Date();
@@ -167,11 +179,12 @@ async function caricaDatiDashboard(nome) {
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
 
-            // Rotte pulite ad alta tecnologia per l'architettura PWA
-            document.getElementById("link-view").href = `/u/${nomePulito}`;
-            document.getElementById("link-edit").href = `/edit?u=${nomePulito}`;
-            document.getElementById("link-qr").href = `/qr?u=${nomePulito}`;
-            document.getElementById("link-account").href = `/account?u=${nomePulito}`;
+            // PROTEZIONE DEL FLUSSO: Generiamo i link dei pulsanti mantenendo l'esatta stringa originale 'nome'
+            // Questo impedisce rotture di corrispondenza nel browser quando il popup di tag.html gestisce la password delle PWA
+            document.getElementById("link-view").href = `/u/${nome}`;
+            document.getElementById("link-edit").href = `/edit?u=${nome}`;
+            document.getElementById("link-qr").href = `/qr?u=${nome}`;
+            document.getElementById("link-account").href = `/account?u=${nome}`;
 
         } else {
             alert("Errore: Identità non rilevata nell'ecosistema.");
