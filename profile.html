@@ -159,17 +159,7 @@ async function caricaDatiDashboard(nomeMinuto) {
         if (data.success && data.fields) {
             const record = data.fields;
 
-              const record = data.fields;
-
-            // AGGIUNTA LOGICA PULSANTE
-            const stato = (record.stato || "").toLowerCase().trim();
-            const btnView = document.getElementById("link-view");
-            if (stato === "in attesa") {
-                btnView.querySelector("span").innerText = "Attiva la tua Identità";
-                btnView.classList.add("pulsing-effect");
-            }
-            // FINE AGGIUNTA
-          // Logica Magic Button: si attiva solo se il profilo è da sbloccare
+            // Logica Magic Button
             const stato = (record.stato || "").toLowerCase().trim();
             const btnView = document.getElementById("link-view");
             
@@ -199,6 +189,7 @@ async function caricaDatiDashboard(nomeMinuto) {
         console.warn("Il sistema sta ripristinando la connessione con l'identità digitale.");
     }
 }
+
 
     // AGGIORNAMENTO BOTTONE MAGIC
 async function checkMagicButton(nomeMinuto) {
