@@ -48,6 +48,7 @@
 
         .menu-label { font-size: 1rem; color: var(--accent-smeraldo); text-align: center; text-transform: lowercase; letter-spacing: 3px; margin: 15px auto 35px auto; font-weight: 400; width: 100%; }
         
+        /* Struttura base dei pulsanti standard */
         .action-btn {
             display: flex; align-items: center;
             background: var(--card-bg); border: 1px solid var(--border-white);
@@ -61,7 +62,25 @@
         .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.9; }
         .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
         .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
-        .btn-primary { background: rgba(255, 255, 255, 0.01); }
+
+        /* IL PEZZO FORTE: Effetto Tavoletta di Vetro d'Élite per View Tag */
+        .glass-hero-btn {
+            background: rgba(255, 255, 255, 0.06) !important; /* Più densità interna */
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); /* Satinatura reale */
+            border: 1px solid rgba(255, 255, 255, 0.3) !important; /* Bordo a rifrazione più morbido e vitreo */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 
+                        0 0 15px 1px rgba(80, 200, 120, 0.08); /* Micro-glow smeraldo d'atmosfera sul fondo */
+            transform: translateY(-2px); /* Leggermente sollevato nello spazio visivo */
+            margin-bottom: 24px; /* Un pizzico di respiro in più rispetto agli altri */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+
+        .glass-hero-btn:active {
+            transform: translateY(0px) scale(0.98) !important; /* Ritorno magnetico vellutato al tocco */
+            background: rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.37), 
+                        0 0 8px 1px rgba(80, 200, 120, 0.04) !important;
+        }
     </style>
 </head>
 <body>
@@ -87,7 +106,7 @@
 
         <div class="menu-label">identity system</div>
         
-        <a href="#" id="link-view" class="action-btn btn-primary">
+        <a href="#" id="link-view" class="action-btn glass-hero-btn">
             <i class="fas fa-arrow-right btn-icon"></i>
             <span>View Tag</span>
             <i class="fas fa-chevron-right chevron"></i>
@@ -127,7 +146,7 @@ if (nomeUtenteURL) {
     // Configurazione visualizzazione header
     document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
     
-    // RIPRISTINO ANCORAGGIO LOGICA PARAMENTRICA COERENTE CON EDIT.HTML
+    // Ancoraggio logica parametrica nativa
     document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
     document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
     document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
