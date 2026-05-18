@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     const validFields = [
       "username_display", "bio", "plan", "digital_style", "email", "phone", 
       "whatsapp", "instagram", "tiktok", "facebook", "linkedin", "youtube", 
-      "x", "telegram", "reddit", "sito_web", "cv"
+      "x", "telegram", "reddit", "sito_web", "cv", "stato", "password"
     ];
     
     validFields.forEach(f => {
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       // --- LOGICA CREATE (Il cuore dell'architettura finale) ---
       // Aggiungiamo i campi obbligatori per il nuovo profilo
       fieldsToSave.username_system = username_system;
-      fieldsToSave.account_status = "pending"; // Come richiesto dal piano
+      fieldsToSave.stato = "In attesa"; 
       fieldsToSave.views = 0;
 
       const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
