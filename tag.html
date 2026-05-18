@@ -3,253 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MyQuickTag | Digital Profile</title>
+    <title>Identity Console - MyQuickTag</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link id="dynamic-manifest" rel="manifest" href="">
+    <link id="dynamic-icon" rel="icon" href="">
+
     <style>
         :root {
-            --bg: #000000;
-            --card-bg: #0a0a0a;
-            --text: #ffffff;
-            --accent: #ffffff;
-            --gray: #888888;
+            --bg-color: #000000;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --border-white: rgba(255, 255, 255, 0.9);
+            --accent-smeraldo: #50C878;
+            --text-sec: #6c6c70; 
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
+            margin: 0; padding: 24px;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            display: flex; flex-direction: column; align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-container { 
+            width: 100%; 
+            max-width: 400px; 
+            min-height: 88vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
         }
 
-        .tag-container {
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            padding: 60px 20px;
-            flex-grow: 1;
-        }
+        .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
+        .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
+        .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; text-transform: uppercase; }
 
-        .avatar {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.2);
-            margin-bottom: 25px;
-            object-fit: cover;
-            background: #111;
-        }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-white); padding: 22px; border-radius: 16px; text-align: left; }
+        .stat-card i { color: var(--accent-smeraldo); font-size: 0.95rem; margin-bottom: 14px; display: block; }
+        .stat-card .value { font-size: 1.6rem; font-weight: 500; display: block; color: #ffffff; letter-spacing: -0.5px; }
+        .stat-card .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; display: block; font-weight: 500; }
 
-        h1 {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin: 10px 0;
-            text-transform: lowercase;
+        .menu-label { font-size: 1rem; color: var(--accent-smeraldo); text-align: center; text-transform: lowercase; letter-spacing: 3px; margin: 15px auto 35px auto; font-weight: 400; width: 100%; }
+        
+        /* Struttura pulsanti standard */
+        .action-btn {
+            display: flex; align-items: center;
+            background: var(--card-bg); border: 1px solid var(--border-white);
+            padding: 22px; border-radius: 14px;
+            text-decoration: none; color: white; margin-bottom: 20px;
+            transition: all 0.2s ease;
         }
+        .action-btn:last-child { margin-bottom: 0; }
+        .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
+        
+        .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.9; }
+        .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
+        .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
 
-        .bio {
-            color: var(--gray);
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 35px;
-        }
-
-        .links-container {
+        /* REPLICA ESATTA DELLA TAVOLETTA DI VETRO PREMIUM IN 3D */
+        .glass-hero-btn {
+            position: relative;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-        }
-
-        .btn {
-            background: var(--card-bg);
-            color: var(--text);
-            text-decoration: none;
-            padding: 18px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.08);
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .btn:active {
-            transform: scale(0.97);
-            background: rgba(255,255,255,0.05);
-        }
-
-        /* Banner Celebrativo */
-        #activation-banner {
-            display: none;
-            position: fixed;
-            bottom: 30px;
-            width: 90%;
-            max-width: 380px;
-            background: #ffffff;
-            color: #000000;
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            z-index: 999;
-            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(150%); }
-            to { transform: translateY(0); }
-        }
-
-        .footer-logo {
-            margin: 50px 0 120px;
-            font-size: 10px;
-            color: #444;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        /* Overlay Password */
-        #password-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98);
-            z-index: 10000;
-            flex-direction: column;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+            border: 2px solid rgba(255, 255, 255, 0.4) !important; /* Bordo spesso e lucido tridimensionale */
+            border-radius: 20px !important; /* Più arrotondato come una vera lastra smussata */
+            padding: 24px 22px !important;
+            margin-bottom: 28px;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.4),
+                0 12px 24px rgba(0, 0, 0, 0.5), 
+                0 0 30px 4px rgba(80, 200, 120, 0.25) !important; /* Aura verde smeraldo viva e calda */
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+        }
+
+        /* Il riflesso diagonale netto specchiato sulla lente */
+        .glass-hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(115deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 30%, transparent 30.1%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Allineamento elementi interni per la doppia riga di testo */
+        .glass-content-top {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .glass-sub-text {
+            font-size: 0.65rem !important;
+            color: var(--accent-smeraldo);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 6px;
+            display: block;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        .glass-hero-btn:active {
+            transform: scale(0.97) !important;
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.2),
+                0 6px 12px rgba(0, 0, 0, 0.5), 
+                0 0 15px 2px rgba(80, 200, 120, 0.15) !important;
         }
     </style>
-    <link id="dynamic-manifest" rel="manifest" href="">
-    <link id="dynamic-icon" rel="icon" href="">
 </head>
 <body>
 
-    <div class="tag-container">
-        <img id="display-avatar" src="https://via.placeholder.com/150" alt="Avatar" class="avatar">
-        <h1 id="display-name">@loading...</h1>
-        <p id="display-bio" class="bio"></p>
-        <div id="social-links" class="links-container"></div>
-        <div class="footer-logo">MyQuickTag Luxury Identity</div>
-    </div>
-
-    <div id="activation-banner">
-        <p style="margin:0 0 10px 0; font-weight:700; font-size:14px; letter-spacing:1px;">COMPLIMENTI! 🎉</p>
-        <p style="margin:0 0 15px 0; font-size:13px; opacity:0.8;">Il tuo @tag è pronto. Hai sbloccato <b>3 MESI GRATIS</b>. Attivalo ora.</p>
-        <button onclick="openPwd()" style="width:100%; padding:12px; background:#000; color:#fff; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">RISCATTA REGALO</button>
-    </div>
-
-    <div id="password-overlay">
-        <div style="text-align:center; max-width:320px; padding:20px;">
-            <h2 style="letter-spacing:2px; font-size:18px;">CREA LA TUA CHIAVE</h2>
-            <p style="opacity:0.6; font-size:13px; margin-bottom:30px;">Scegli una password per gestire il tuo profilo in futuro.</p>
-            <input type="password" id="new-pwd" placeholder="Password" style="width:100%; padding:15px; background:transparent; border:1px solid #333; color:white; border-radius:12px; margin-bottom:15px; text-align:center; outline:none;">
-            <button id="save-btn" onclick="savePwd()" style="width:100%; padding:15px; background:#fff; color:#000; border:none; border-radius:12px; font-weight:bold;">ATTIVA ORA</button>
-            <p onclick="closePwd()" style="margin-top:20px; font-size:12px; opacity:0.4; cursor:pointer;">Annulla</p>
+    <div class="dashboard-container">
+        <div class="user-welcome">
+            <h1>Identity Console</h1>
+            <p id="dash-user">@UTENTE</p>
         </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <span class="value" id="count-visits">-</span>
+                <span class="label">Scansioni</span>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-shield-alt"></i>
+                <span class="value" id="days-left">-</span>
+                <span class="label">Status Trial</span>
+            </div>
+        </div>
+
+        <div class="menu-label">identity system</div>
+        
+        <a href="#" id="link-view" class="action-btn glass-hero-btn">
+            <div class="glass-content-top">
+                <i class="fas fa-arrow-right btn-icon"></i>
+                <span>View Tag</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </div>
+            <span class="glass-sub-text">Active Identity</span>
+        </a>
+
+        <a href="#" id="link-edit" class="action-btn">
+            <i class="fas fa-sliders-h btn-icon"></i>
+            <span>Configure</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
+
+        <a href="#" id="link-qr" class="action-btn">
+            <i class="fas fa-qrcode btn-icon"></i>
+            <span>QR Identity</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
+
+        <a href="#" id="link-account" class="action-btn">
+            <i class="fas fa-user-shield btn-icon"></i>
+            <span>Account & Security</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
     </div>
 
-   <script>
-        const params = new URLSearchParams(window.location.search);
-        // 1. Cerca l'utente con il vecchio metodo (?u=test)
-        let user = params.get("u");
+<script>
+const params = new URLSearchParams(window.location.search);
+const nomeUtenteURL = params.get("u") || ""; 
 
-        // 2. Se non lo trova, lo estrae dal percorso pulito (/u/test)
-        if (!user && window.location.pathname.startsWith('/u/')) {
-            const parts = window.location.pathname.split('/');
-            user = parts[2]; // Prende il valore subito dopo "/u/"
-        }
+if (nomeUtenteURL) {
+    const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
+    const nomeMinuto = nomeIniziale.toLowerCase();
 
-        function openPwd() { document.getElementById('password-overlay').style.display = 'flex'; }
-        function closePwd() { document.getElementById('password-overlay').style.display = 'none'; }
+    // Attivazione Manifest Dinamico
+    document.getElementById("dynamic-manifest").href = `/api/manifest?u=${nomeMinuto}`;
+    document.getElementById("dynamic-icon").href = `/api/icon?u=${nomeMinuto}`;
 
-        async function fetchProfile() {
-            if (!user) return;
-            const cleanUser = user.replace('@', '').toLowerCase();
-            const manifestLink = document.getElementById('dynamic-manifest');
-            const iconLink = document.getElementById('dynamic-icon');
-          if (manifestLink) manifestLink.href = `/u/${cleanUser}/manifest.json`;
-if (iconLink) iconLink.href = `/api/generate-icon?u=${cleanUser}`;
-            try {
-                const response = await fetch(`/api/get-profile?u=${cleanUser}`);
-                const result = await response.json();
+    // Configurazione visualizzazione header
+    document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
+    
+    // Ancoraggio logica parametrica nativa
+    document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
+    document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
+    document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
+    document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
 
-                if (!result.success || !result.fields) {
-                    document.getElementById("display-name").innerText = "IDENTITÀ NON DISPONIBILE";
-                    document.getElementById("display-bio").innerHTML = `
-                        <div style="margin-top: 20px;">
-                            <p style="opacity: 0.6;">Questo Tag non è ancora stato configurato.</p>
-                            <br><br>
-                            <a href="/" style="color: #fff; text-decoration: none; border: 1px solid #333; padding: 12px 25px; border-radius: 50px; font-size: 12px; letter-spacing: 1px;">TORNA ALLA HOME</a>
-                        </div>
-                    `;
-                    return; // Interrompe l'esecuzione così non cerca altri dati
-                }
-                // --- FINE AGGIUNTA ---
-                if (result.success) {
-                    const d = result.fields;
-                    document.getElementById("display-name").innerText = d.username_display || "@" + cleanUser;
-                    document.getElementById("display-bio").innerText = d.bio || "";
-                    
-                    // Se NON ha la password, mostra il banner dei complimenti
-                    if (!d.password) {
-                        setTimeout(() => {
-                            document.getElementById("activation-banner").style.display = "block";
-                        }, 2000); // Appare dopo 2 secondi per effetto wow
-                    }
-
-                    const container = document.getElementById("social-links");
-                    const socialMap = ["instagram", "tiktok", "whatsapp", "linkedin", "youtube", "sito_web"];
-
-                    socialMap.forEach(key => {
-                        if (d[key]) {
-                            const a = document.createElement("a");
-                            a.className = "btn";
-                            a.href = d[key].startsWith('http') ? d[key] : `https://${d[key]}`;
-                            a.target = "_blank";
-                            a.innerText = key.replace('_', ' ');
-                            container.appendChild(a);
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
-        }
-
-        async function savePwd() {
-            const pwd = document.getElementById('new-pwd').value;
-            const btn = document.getElementById('save-btn');
-            if (pwd.length < 4) { alert("Minimo 4 caratteri"); return; }
-
-            btn.innerText = "ATTIVAZIONE...";
-            btn.disabled = true;
-
-            try {
-                const res = await fetch('/api/set-password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username_system: user.replace('@',''), password: pwd })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert("Profilo Attivato! Benvenuto in MyQuickTag.");
-                    window.location.href = 'celebration.html';
-                }
-            } catch (e) { alert("Errore attivazione"); btn.disabled = false; }
-        }
-
-        fetchProfile();
-        // Registrazione del Service Worker per attivare la PWA
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('Service Worker Registrato con successo!', reg.scope))
-            .catch(err => console.error('Errore registrazione Service Worker:', err));
-    });
+    caricaDatiDashboard(nomeMinuto);
+} else {
+    document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif; color:#6c6c70; font-size:0.9rem; letter-spacing:1px;'>ACCESS DENIED. PARAMETER MISSING.</div>";
 }
-    </script>
+
+async function caricaDatiDashboard(nomeMinuto) {
+    try {
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const data = await response.json();
+
+        if (data.success && data.fields) {
+            const record = data.fields;
+
+            if (record.username_display) {
+                const displayPulito = record.username_display.replace('@', '').trim();
+                document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
+            }
+
+            if (record.data_scadenza) {
+                const oggi = new Date();
+                const scadenza = new Date(record.data_scadenza);
+                const diffTime = scadenza - oggi;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById("days-left").innerText = diffDays > 0 ? diffDays + " GG" : "0 GG";
+            } else {
+                document.getElementById("days-left").innerText = "90 GG";
+            }
+
+            document.getElementById("count-visits").innerText = record.views || record.visits || "0";
+        }
+    } catch (error) {
+        console.error("Errore di cantiere:", error);
+    }
+}
+</script>
+   
 </body>
 </html>
