@@ -156,31 +156,35 @@
         caricaProfiloPubblico(globalUtente);
     }
 
-    async function caricaProfiloPubblico(nomeMinuto) {
-        try {
-            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-            const data = await response.json();
-            if (data.success && data.fields) {
-                const record = data.fields;
-                document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
-                document.getElementById("tag-bio").innerText = record.bio || "";
-                document.getElementById("tag-avatar").style.display = "block";
+    
+async function caricaProfiloPubblico(nomeMinuto) {
+    try {
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const data = await response.json();
+        
+        if (data.success && data.fields) {
+            const record = data.fields;
+            
+            // Aggiorna interfaccia
+            document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+            document.getElementById("tag-bio").innerText = record.bio || "";
+            document.getElementById("tag-avatar").style.display = "block";
 
-                // Cerca questo blocco nella tag.html e sostituiscilo così:
-if (record.stato === "in attesa" || record.stato === "In attesa") {
-    document.getElementById("activation-modal").style.display = "flex";
-    identitaVerificata = false;
-} else {
-    identitaVerificata = true;
-    // IMPORTANTE: Non chiamare mostraBottonePWA() qui se non è attivo, 
-    // lo chiameremo solo al salvataggio riuscito
-    if (record.stato === "Attivo") {
-        mostraBottonePWA();
+            // Normalizzazione stato in minuscolo per confronto sicuro
+            const stato = (record.stato || "").toLowerCase().trim();
+
+            if (stato === "in attesa") {
+                document.getElementById("activation-modal").style.display = "flex";
+                identitaVerificata = false;
+            } else if (stato === "attivo") {
+                identitaVerificata = true;
+                mostraBottonePWA();
+            }
+        }
+    } catch (error) {
+        console.error("Errore di caricamento:", error);
     }
 }
-
-        } catch (error) { console.error("Errore:", error); }
-    }
 
     async function salvaPasswordEAttiva() {
     const pwd = document.getElementById("new-password").value;
@@ -197,7 +201,7 @@ if (record.stato === "in attesa" || record.stato === "In attesa") {
             body: JSON.stringify({
                 username_system: globalUtente, // CAMBIATO da 'u' a 'username_system'
                 password: pwd,
-            stato: "Attivo"      
+            stato: "attivo"      
             })
         });
         
