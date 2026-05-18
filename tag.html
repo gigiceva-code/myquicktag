@@ -166,15 +166,19 @@
                 document.getElementById("tag-bio").innerText = record.bio || "";
                 document.getElementById("tag-avatar").style.display = "block";
 
-                // LOGICA SEMAFORO:
-                if (record.stato === "In attesa") {
-                    document.getElementById("activation-modal").style.display = "flex";
-                    identitaVerificata = false;
-                } else {
-                    identitaVerificata = true;
-                    mostraBottonePWA(); // Mostra solo se attivo
-                }
-            }
+                // Cerca questo blocco nella tag.html e sostituiscilo così:
+if (record.stato === "in attesa" || record.stato === "In attesa") {
+    document.getElementById("activation-modal").style.display = "flex";
+    identitaVerificata = false;
+} else {
+    identitaVerificata = true;
+    // IMPORTANTE: Non chiamare mostraBottonePWA() qui se non è attivo, 
+    // lo chiameremo solo al salvataggio riuscito
+    if (record.stato === "Attivo") {
+        mostraBottonePWA();
+    }
+}
+
         } catch (error) { console.error("Errore:", error); }
     }
 
