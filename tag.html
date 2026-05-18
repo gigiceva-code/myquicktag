@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Identity Console - MyQuickTag</title>
+    <title>MyQuickTag Identity</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -13,222 +13,255 @@
     <style>
         :root {
             --bg-color: #000000;
-            --card-bg: rgba(255, 255, 255, 0.02);
-            --border-white: rgba(255, 255, 255, 0.9);
             --accent-smeraldo: #50C878;
-            --text-sec: #6c6c70; 
+            --text-main: #ffffff;
+            --text-sec: #6c6c70;
         }
-
+        
         body {
             margin: 0; padding: 24px;
             background-color: var(--bg-color);
             font-family: 'Inter', sans-serif;
-            color: white;
+            color: var(--text-main);
             display: flex; flex-direction: column; align-items: center;
+            text-align: center;
             -webkit-font-smoothing: antialiased;
         }
 
-        .dashboard-container { 
-            width: 100%; 
-            max-width: 400px; 
-            min-height: 88vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
-        .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
-        .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; text-transform: uppercase; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--border-white); padding: 22px; border-radius: 16px; text-align: left; }
-        .stat-card i { color: var(--accent-smeraldo); font-size: 0.95rem; margin-bottom: 14px; display: block; }
-        .stat-card .value { font-size: 1.6rem; font-weight: 500; display: block; color: #ffffff; letter-spacing: -0.5px; }
-        .stat-card .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; display: block; font-weight: 500; }
-
-        .menu-label { font-size: 1rem; color: var(--accent-smeraldo); text-align: center; text-transform: lowercase; letter-spacing: 3px; margin: 15px auto 35px auto; font-weight: 400; width: 100%; }
-        
-        /* Struttura pulsanti standard */
-        .action-btn {
-            display: flex; align-items: center;
-            background: var(--card-bg); border: 1px solid var(--border-white);
-            padding: 22px; border-radius: 14px;
-            text-decoration: none; color: white; margin-bottom: 20px;
-            transition: all 0.2s ease;
-        }
-        .action-btn:last-child { margin-bottom: 0; }
-        .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
-        
-        .action-btn i.btn-icon { width: 32px; font-size: 1.1rem; color: #ffffff; opacity: 0.9; }
-        .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; letter-spacing: -0.2px; }
-        .action-btn .chevron { font-size: 0.75rem; color: var(--accent-smeraldo); opacity: 0.8; }
-
-        /* REPLICA ESATTA DELLA TAVOLETTA DI VETRO PREMIUM IN 3D */
-        .glass-hero-btn {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
-            border: 2px solid rgba(255, 255, 255, 0.4) !important; /* Bordo spesso e lucido tridimensionale */
-            border-radius: 20px !important; /* Più arrotondato come una vera lastra smussata */
-            padding: 24px 22px !important;
-            margin-bottom: 28px;
-            overflow: hidden;
-            box-shadow: 
-                inset 0 1px 1px rgba(255, 255, 255, 0.4),
-                0 12px 24px rgba(0, 0, 0, 0.5), 
-                0 0 30px 4px rgba(80, 200, 120, 0.25) !important; /* Aura verde smeraldo viva e calda */
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
-        }
-
-        /* Il riflesso diagonale netto specchiato sulla lente */
-        .glass-hero-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(115deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 30%, transparent 30.1%, transparent 100%);
-            pointer-events: none;
-        }
-
-        /* Allineamento elementi interni per la doppia riga di testo */
-        .glass-content-top {
-            display: flex;
-            align-items: center;
+        .profile-header {
+            margin-top: 40px;
+            display: flex; flex-direction: column; align-items: center;
             width: 100%;
         }
-        
-        .glass-sub-text {
-            font-size: 0.65rem !important;
-            color: var(--accent-smeraldo);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 500;
-            text-align: center;
-            margin-top: 6px;
-            display: block;
-            width: 100%;
-            opacity: 0.9;
+
+        .avatar {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background-color: #111;
+            border: 2px solid var(--accent-smeraldo);
+            object-fit: cover;
+            margin-bottom: 20px;
         }
 
-        .glass-hero-btn:active {
-            transform: scale(0.97) !important;
-            box-shadow: 
-                inset 0 1px 1px rgba(255, 255, 255, 0.2),
-                0 6px 12px rgba(0, 0, 0, 0.5), 
-                0 0 15px 2px rgba(80, 200, 120, 0.15) !important;
+        .username {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .bio {
+            font-size: 1rem;
+            color: var(--text-sec);
+            margin-top: 10px;
+            max-width: 320px;
+            line-height: 1.5;
+        }
+
+        .links-container {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Stile modale per la password */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 1000;
+            justify-content: center; align-items: center; padding: 24px;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: #111; border: 1px solid #333; border-radius: 20px;
+            padding: 30px 24px; width: 100%; max-width: 340px; text-align: center;
+        }
+
+        .modal-box h2 {
+            color: var(--accent-smeraldo); margin: 0 0 10px 0; font-size: 1.4rem;
+        }
+
+        .modal-box p {
+            color: #aaa; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;
+        }
+
+        .modal-box input {
+            width: 100%; padding: 16px; margin-bottom: 20px;
+            background: #000; border: 1px solid #444; color: white;
+            border-radius: 12px; box-sizing: border-box; font-size: 1rem;
+        }
+
+        .modal-box input:focus {
+            outline: none; border-color: var(--accent-smeraldo);
+        }
+
+        .modal-box button {
+            background: var(--accent-smeraldo); color: #000;
+            border: none; padding: 16px; border-radius: 12px;
+            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
+            transition: opacity 0.2s;
+        }
+        
+        .modal-box button:active { opacity: 0.8; }
+
+        /* Bottone PWA dinamico */
+        .pwa-btn {
+            background: var(--accent-smeraldo);
+            color: #000; border: none; padding: 18px; border-radius: 14px;
+            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
-        <div class="user-welcome">
-            <h1>Identity Console</h1>
-            <p id="dash-user">@UTENTE</p>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <i class="fas fa-chart-line"></i>
-                <span class="value" id="count-visits">-</span>
-                <span class="label">Scansioni</span>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-shield-alt"></i>
-                <span class="value" id="days-left">-</span>
-                <span class="label">Status Trial</span>
-            </div>
-        </div>
-
-        <div class="menu-label">identity system</div>
-        
-        <a href="#" id="link-view" class="action-btn glass-hero-btn">
-            <div class="glass-content-top">
-                <i class="fas fa-arrow-right btn-icon"></i>
-                <span>View Tag</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </div>
-            <span class="glass-sub-text">Active Identity</span>
-        </a>
-
-        <a href="#" id="link-edit" class="action-btn">
-            <i class="fas fa-sliders-h btn-icon"></i>
-            <span>Configure</span>
-            <i class="fas fa-chevron-right chevron"></i>
-        </a>
-
-        <a href="#" id="link-qr" class="action-btn">
-            <i class="fas fa-qrcode btn-icon"></i>
-            <span>QR Identity</span>
-            <i class="fas fa-chevron-right chevron"></i>
-        </a>
-
-        <a href="#" id="link-account" class="action-btn">
-            <i class="fas fa-user-shield btn-icon"></i>
-            <span>Account & Security</span>
-            <i class="fas fa-chevron-right chevron"></i>
-        </a>
+    <div class="profile-header">
+        <img src="" alt="Avatar" class="avatar" id="tag-avatar" style="display:none;">
+        <h1 class="username" id="tag-username">@...</h1>
+        <p class="bio" id="tag-bio">Caricamento identità...</p>
     </div>
 
-<script>
-const params = new URLSearchParams(window.location.search);
-const nomeUtenteURL = params.get("u") || ""; 
+    <div class="links-container" id="links-container">
+        </div>
 
-if (nomeUtenteURL) {
-    const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
-    const nomeMinuto = nomeIniziale.toLowerCase();
+    <div class="modal-overlay" id="activation-modal">
+        <div class="modal-box">
+            <h2>Ti scatta il regalo!</h2>
+            <p>Crea la tua chiave (password) per attivare la tua MyQuickTag e abilitare l'app.</p>
+            <input type="password" id="new-password" placeholder="Scegli una password">
+            <button onclick="salvaPasswordEAttiva()">Salva e Attiva</button>
+        </div>
+    </div>
 
-    // Attivazione Manifest Dinamico
-    document.getElementById("dynamic-manifest").href = `/api/manifest?u=${nomeMinuto}`;
-    document.getElementById("dynamic-icon").href = `/api/icon?u=${nomeMinuto}`;
+    <script>
+        // 1. Estrazione utente pulita per Vercel Rewrites
+        const params = new URLSearchParams(window.location.search);
+        let nomeUtenteURL = params.get("u") || ""; 
 
-    // Configurazione visualizzazione header
-    document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
-    
-    // Ancoraggio logica parametrica nativa
-    document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
-    document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
-    document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
-    document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
-
-    caricaDatiDashboard(nomeMinuto);
-} else {
-    document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif; color:#6c6c70; font-size:0.9rem; letter-spacing:1px;'>ACCESS DENIED. PARAMETER MISSING.</div>";
-}
-
-async function caricaDatiDashboard(nomeMinuto) {
-    try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-        const data = await response.json();
-
-        if (data.success && data.fields) {
-            const record = data.fields;
-
-            if (record.username_display) {
-                const displayPulito = record.username_display.replace('@', '').trim();
-                document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
+        if (!nomeUtenteURL) {
+            const pathParts = window.location.pathname.split('/');
+            const uIndex = pathParts.indexOf('u');
+            if (uIndex !== -1 && pathParts[uIndex + 1]) {
+                nomeUtenteURL = pathParts[uIndex + 1];
             }
-
-            if (record.data_scadenza) {
-                const oggi = new Date();
-                const scadenza = new Date(record.data_scadenza);
-                const diffTime = scadenza - oggi;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                document.getElementById("days-left").innerText = diffDays > 0 ? diffDays + " GG" : "0 GG";
-            } else {
-                document.getElementById("days-left").innerText = "90 GG";
-            }
-
-            document.getElementById("count-visits").innerText = record.views || record.visits || "0";
         }
-    } catch (error) {
-        console.error("Errore di cantiere:", error);
-    }
-}
-</script>
-   
+
+        let globalUtente = "";
+
+        if (nomeUtenteURL) {
+            const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
+            globalUtente = nomeIniziale.toLowerCase();
+
+            // Attivazione dinamica del Manifest per la PWA
+            document.getElementById("dynamic-manifest").href = `/api/manifest?u=${globalUtente}`;
+            document.getElementById("dynamic-icon").href = `/api/icon?u=${globalUtente}`;
+
+            caricaProfiloPubblico(globalUtente);
+        } else {
+            document.getElementById("tag-bio").innerText = "ACCESSO NEGATO: Utente non specificato.";
+        }
+
+        async function caricaProfiloPubblico(nomeMinuto) {
+            try {
+                const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+                const data = await response.json();
+
+                if (data.success && data.fields) {
+                    const record = data.fields;
+
+                    // Popoliamo la UI
+                    const displayPulito = (record.username_display || nomeMinuto).replace('@', '').trim();
+                    document.getElementById("tag-username").innerText = "@" + displayPulito.toUpperCase();
+                    
+                    if (record.bio) {
+                        document.getElementById("tag-bio").innerText = record.bio;
+                    } else {
+                        document.getElementById("tag-bio").innerText = "";
+                    }
+
+                    // Se hai un sistema per l'immagine profilo, si attiverebbe qui
+                    document.getElementById("tag-avatar").style.display = "block";
+                    // document.getElementById("tag-avatar").src = record.avatar_url || "default.png";
+
+                    // Controllo di attivazione (campo single-select in Airtable)
+                    if (record.stato === "in attesa" || record.stato === "In attesa") {
+                        document.getElementById("activation-modal").style.display = "flex";
+                    } else {
+                        mostraBottonePWA();
+                    }
+                }
+            } catch (error) {
+                console.error("Errore di caricamento:", error);
+            }
+        }
+
+        async function salvaPasswordEAttiva() {
+            const pwd = document.getElementById("new-password").value;
+            if (pwd.length < 4) {
+                alert("La password deve essere di almeno 4 caratteri.");
+                return;
+            }
+
+            try {
+                // Spara all'endpoint che aggiorna Airtable usando username_system
+                const response = await fetch('/api/update-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        u: globalUtente,
+                        password: pwd,
+                        stato: "Attivo" 
+                    })
+                });
+                
+                const resData = await response.json();
+                if (resData.success) {
+                    document.getElementById("activation-modal").style.display = "none";
+                    setTimeout(() => {
+                        alert("Identità Attivata! Ora puoi installare l'app.");
+                        mostraBottonePWA();
+                    }, 300);
+                } else {
+                    alert("Errore durante l'attivazione. Riprova.");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Errore di rete durante il salvataggio.");
+            }
+        }
+
+        // Logica nativa PWA (Intercetta l'installazione)
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Se la pagina è già attiva, mostriamo subito il bottone
+            if (document.getElementById("activation-modal").style.display === "none" || document.getElementById("activation-modal").style.display === "") {
+                mostraBottonePWA();
+            }
+        });
+
+        function mostraBottonePWA() {
+            if (deferredPrompt && !document.getElementById("btn-installa-pwa")) {
+                const btn = document.createElement('button');
+                btn.id = "btn-installa-pwa";
+                btn.className = "pwa-btn";
+                btn.innerHTML = `<i class="fas fa-download"></i> Installa @${globalUtente.toUpperCase()} su Home`;
+                
+                btn.onclick = async () => {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        btn.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                };
+                document.getElementById("links-container").prepend(btn);
+            }
+        }
+    </script>
 </body>
 </html>
