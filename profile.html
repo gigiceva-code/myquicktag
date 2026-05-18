@@ -58,6 +58,8 @@
             text-decoration: none; color: white; margin-bottom: 20px;
             transition: all 0.2s ease;
             cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
         }
         .action-btn:last-child { margin-bottom: 0; }
         .action-btn:active { transform: scale(0.99); background: rgba(255,255,255,0.05); }
@@ -87,7 +89,7 @@
             transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
         }
 
-        /* PATCH CRUCIALE: Evita che i sotto-elementi blocchino il click sul link */
+        /* Impedisce ai figli interni di intercettare il click o i tocchi */
         .glass-hero-btn * {
             pointer-events: none;
         }
@@ -170,14 +172,14 @@
 
         <div class="menu-label">identity system</div>
         
-        <a href="#" id="link-view" class="action-btn glass-hero-btn">
+        <div id="link-view" class="action-btn glass-hero-btn">
             <div class="glass-content-top">
                 <i class="fas fa-arrow-right btn-icon"></i>
                 <span>View Tag</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </div>
             <span class="glass-sub-text" id="badge-status">Active Identity</span>
-        </a>
+        </div>
 
         <a href="#" id="link-edit" class="action-btn">
             <i class="fas fa-sliders-h btn-icon"></i>
@@ -202,6 +204,9 @@
 const params = new URLSearchParams(window.location.search);
 const nomeUtenteURL = params.get("u") || ""; 
 
+// Variabile globale per salvare la rotta di destinazione dinamica
+let destinazioneTagHTML = "";
+
 if (nomeUtenteURL) {
     const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
     const nomeMinuto = nomeIniziale.toLowerCase();
@@ -211,14 +216,18 @@ if (nomeUtenteURL) {
 
     document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
     
-    document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
+    // Assegnazione della rotta alla variabile
+    destinazioneTagHTML = `tag.html?u=${nomeMinuto}`;
+    
     document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
     document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
     document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
 
-    // SICUREZZA AGGIUNTIVA VIA SCRIPT: Forza la navigazione sul click della lastra
-    document.getElementById("link-view").addEventListener("click", function(e) {
-        window.location.href = this.href;
+    // GESTIONE DIRETTA DEL CLICK SULLA TAVOLETTA
+    document.getElementById("link-view").addEventListener("click", function() {
+        if (destinazioneTagHTML) {
+            window.location.href = destinazioneTagHTML;
+        }
     });
 
     caricaDatiDashboard(nomeMinuto);
