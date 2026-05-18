@@ -6,9 +6,6 @@
     <title>Identity Console - MyQuickTag</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link id="dynamic-manifest" rel="manifest" href="">
-    <link id="dynamic-icon" rel="icon" href="">
 
     <style>
         :root {
@@ -68,7 +65,7 @@
 
     <div class="dashboard-container">
         <div class="user-welcome">
-            <h1>Identity Console</h1>
+            <h1 id="main-title">Identity Console</h1>
             <p id="dash-user">@UTENTE</p>
         </div>
 
@@ -87,25 +84,25 @@
 
         <div class="menu-label">identity system</div>
         
-        <a href="#" id="link-view" class="action-btn btn-primary">
+        <a href="tag.html" id="link-view" class="action-btn btn-primary">
             <i class="fas fa-arrow-right btn-icon"></i>
             <span>View Tag</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
-        <a href="#" id="link-edit" class="action-btn">
+        <a href="edit.html" id="link-edit" class="action-btn">
             <i class="fas fa-sliders-h btn-icon"></i>
             <span>Configure</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
-        <a href="#" id="link-qr" class="action-btn">
+        <a href="qr.html" id="link-qr" class="action-btn">
             <i class="fas fa-qrcode btn-icon"></i>
             <span>QR Identity</span>
             <i class="fas fa-chevron-right chevron"></i>
         </a>
 
-        <a href="#" id="link-account" class="action-btn">
+        <a href="account.html" id="link-account" class="action-btn">
             <i class="fas fa-user-shield btn-icon"></i>
             <span>Account & Security</span>
             <i class="fas fa-chevron-right chevron"></i>
@@ -113,6 +110,7 @@
     </div>
 
 <script>
+// Blocco totale di qualsiasi logica di caricamento o API esterna
 const params = new URLSearchParams(window.location.search);
 const nomeUtenteURL = params.get("u") || ""; 
 
@@ -120,52 +118,13 @@ if (nomeUtenteURL) {
     const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
     const nomeMinuto = nomeIniziale.toLowerCase();
 
-    // Attivazione Manifest Dinamico
-    document.getElementById("dynamic-manifest").href = `/api/manifest?u=${nomeMinuto}`;
-    document.getElementById("dynamic-icon").href = `/api/icon?u=${nomeMinuto}`;
-
-    // Configurazione visualizzazione header
     document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
     
-    // RIPRISTINO ANCORAGGIO LOGICA PARAMENTRICA COERENTE CON EDIT.HTML
+    // Scriviamo i link direttamente per escludere script iniettati
     document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
     document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
     document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
     document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
-
-    caricaDatiDashboard(nomeMinuto);
-} else {
-    document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif; color:#6c6c70; font-size:0.9rem; letter-spacing:1px;'>ACCESS DENIED. PARAMETER MISSING.</div>";
-}
-
-async function caricaDatiDashboard(nomeMinuto) {
-    try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-        const data = await response.json();
-
-        if (data.success && data.fields) {
-            const record = data.fields;
-
-            if (record.username_display) {
-                const displayPulito = record.username_display.replace('@', '').trim();
-                document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
-            }
-
-            if (record.data_scadenza) {
-                const oggi = new Date();
-                const scadenza = new Date(record.data_scadenza);
-                const diffTime = scadenza - oggi;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                document.getElementById("days-left").innerText = diffDays > 0 ? diffDays + " GG" : "0 GG";
-            } else {
-                document.getElementById("days-left").innerText = "90 GG";
-            }
-
-            document.getElementById("count-visits").innerText = record.views || record.visits || "0";
-        }
-    } catch (error) {
-        console.error("Errore di cantiere:", error);
-    }
 }
 </script>
    
