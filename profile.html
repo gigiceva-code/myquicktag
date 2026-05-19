@@ -216,12 +216,12 @@ async function caricaDatiDashboard(nomeMinuto) {
             // Logica Magic Button corretta per il nuovo layout Hero
             const stato = (record.stato || "").toLowerCase().trim();
             const btnView = document.getElementById("link-view");
-            
-            if (stato === "in attesa") {
+                        if (stato === "in attesa") {
                 document.getElementById("view-title").innerText = "Attiva la tua Identità";
                 document.getElementById("view-desc").innerText = "Il tuo profilo è pronto per essere lanciato.";
                 btnView.classList.add("pulsing-effect");
             }
+ 
 
             if (record.username_display) {
                 const displayPulito = record.username_display.replace('@', '').trim();
