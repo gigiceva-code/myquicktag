@@ -231,7 +231,57 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
         margin-top: 60px; /* Spinge il dock più in basso, staccandolo dalla griglia principale */
         margin-bottom: 20px; /* Lascia un cuscinetto d'aria dal bordo della barra Android */
     }
-
+/* Nuova Card Boutique senza tastone interno */
+    .hero-activation-card-new {
+        display: block;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 24px 20px; /* Molto più respiro interno sopra e sotto */
+        text-decoration: none;
+        transition: all 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .hero-activation-card-new:active {
+        background: rgba(255, 255, 255, 0.06);
+    }
+    .hero-header-new {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+    }
+    .qr-icon-box-new {
+        font-size: 1.5rem;
+        color: var(--accent-smeraldo); /* Mantiene l'identità del brand ma senza eccessi */
+        display: flex;
+        align-items: center;
+    }
+    .hero-text-new {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .hero-text-new h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+        letter-spacing: -0.3px;
+    }
+    .hero-text-new p {
+        margin: 0;
+        font-size: 0.85rem; /* Più grande e leggibile */
+        color: #e0e0e0; /* Grigio chiarissimo, non più nascosto dietro le quinte */
+        font-weight: 400;
+    }
+    .hero-chevron-new {
+        color: var(--accent-smeraldo);
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
 </style>
     
 </head>
@@ -249,16 +299,20 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
             </div>
         </div>
 
-              <section id="block-identity-system" style="width: 100%;">
-            <a href="#" id="link-view" class="hero-activation-card">
-                <div class="hero-header">
-                    <div class="qr-icon-box"><i class="fas fa-qrcode"></i></div>
-                    <div class="hero-text">
+            <section id="block-identity-system" style="width: 100%;">
+            <a href="#" id="link-view" class="hero-activation-card-new">
+                <div class="hero-header-new">
+                    <div class="qr-icon-box-new">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="hero-text-new">
                         <h3 id="view-title">Digital Identity</h3>
                         <p id="view-desc">Il tuo nome nel mondo.</p>
                     </div>
+                    <div class="hero-chevron-new">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
                 </div>
-                <div class="btn-visualizza">VISUALIZZA TAG <i class="fas fa-chevron-right"></i></div>
             </a>
         </section>
         <div class="stats-grid-clean">
