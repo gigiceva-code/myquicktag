@@ -20,14 +20,19 @@
         --text-sec: #6c6c70; 
     }
 
-    body {
-        margin: 0; padding: 16px;
+        body {
+        margin: 0; 
+        padding: 16px 16px 40px 16px; /* Più spazio in fondo per non toccare il bordo del telefono */
         background-color: var(--bg-color);
         font-family: 'Inter', sans-serif;
         color: white;
-        display: flex; flex-direction: column; align-items: center;
-        height: 100vh; overflow: hidden;
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+        min-height: 100vh; /* Sostituisce height: 100vh */
+        overflow-y: auto;  /* Sostituisce overflow: hidden */
     }
+ 
 
     .dashboard-container { width: 100%; max-width: 400px; display: flex; flex-direction: column; }
 
@@ -162,6 +167,42 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
         letter-spacing: 0.5px;
     }
  
+    /* Stile per il Dock orizzontale delle Utility */
+    .utility-dock {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .dock-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 12px 5px;
+        color: white;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .dock-item i {
+        color: var(--text-sec);
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+    }
+    .dock-item span {
+        font-size: 0.65rem;
+        color: var(--text-sec);
+        font-weight: 500;
+    }
+    /* Effetto quando si tocca il pulsante */
+    .dock-item:active {
+        background: rgba(255, 255, 255, 0.08);
+    }
 
 </style>
     
@@ -207,7 +248,6 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
             </div>
         </div>
 
-        
                 <section id="block-gestione">
             <div class="menu-label">gestione</div>
             
@@ -233,28 +273,25 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
                 </div>
             </div>
 
-            <a href="#" id="link-upgrade" class="action-btn">
-                <i class="fas fa-rocket btn-icon"></i>
-                <span>Upgrade</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </a>
-            <a href="#" class="action-btn">
-                <i class="fas fa-cog btn-icon"></i>
-                <span>System Settings</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </a>
-            <a href="#" class="action-btn">
-                <i class="fas fa-bolt btn-icon"></i>
-                <span>Quick Actions</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </a>
-            <a href="javascript:void(0)" class="action-btn">
-                <i class="fas fa-question-circle btn-icon"></i>
-                <span>Help & Support</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </a>
+            <div class="utility-dock">
+                <a href="#" id="link-upgrade" class="dock-item" title="Upgrade">
+                    <i class="fas fa-rocket"></i>
+                    <span>Upgrade</span>
+                </a>
+                <a href="#" class="dock-item" title="Settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="dock-item" title="Actions">
+                    <i class="fas fa-bolt"></i>
+                    <span>Actions</span>
+                </a>
+                <a href="javascript:void(0)" class="dock-item" title="Help">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Help</span>
+                </a>
+            </div>
         </section>
-
 
     </div>      
 
