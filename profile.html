@@ -517,12 +517,16 @@ function luxuryNavigate(event, url) {
 
 // Applichiamo la transizione ai tasti principali
 document.addEventListener("DOMContentLoaded", function() {
+    // Recuperiamo il parametro u direttamente qui per non farlo fallire
+    const urlParams = new URLSearchParams(window.location.search);
+    const uParam = urlParams.get("u") || "";
+    const nomeMinutoLocale = uParam.replace('@', '').trim().toLowerCase();
     
     // 1. Tasto Vedi Anteprima (La Card in alto)
     const linkView = document.getElementById('link-view');
     if (linkView) {
         linkView.addEventListener('click', function(e) {
-            luxuryNavigate(e, `tag.html?u=${nomeMinuto}`); // Metti qui il link reale della pagina anteprima
+            luxuryNavigate(e, `tag.html?u=${nomeMinutoLocale}`);
         });
     }
 
@@ -530,7 +534,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const linkEdit = document.getElementById('link-edit');
     if (linkEdit) {
         linkEdit.addEventListener('click', function(e) {
-            luxuryNavigate(e, `edit.html?u=${nomeMinuto}`); // Metti qui il link reale della pagina configure
+            luxuryNavigate(e, `edit.html?u=${nomeMinutoLocale}`);
         });
     }
 });
