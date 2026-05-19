@@ -117,13 +117,16 @@
     letter-spacing: 1px;
     font-weight: 600;
 }
-
+/* DISTANZIAMENTO BLOCCHI */
+    section {
+        margin-bottom: 40px;
+    }
 </style>
 
 </head>
 <body>
 
-    <div class="dashboard-container">
+ <div class="dashboard-container">
         <div class="user-welcome">
             <h1>Identity Console</h1>
             <p id="dash-user">@UTENTE</p>
@@ -142,40 +145,41 @@
             </div>
         </div>
 
-                    <div class="menu-label">attivazione</div>
-        
-        <a href="#" id="link-view" class="hero-activation-card">
-            <div class="hero-header">
-                <div class="qr-icon-box"><i class="fas fa-qrcode"></i></div>
-                <div class="hero-text">
-                    <h3 id="view-title">Attiva la tua Identità</h3>
-                    <p id="view-desc">Mostra, condividi e lascia il segno.</p>
+        <section id="block-identity-system">
+            <div class="menu-label">identity system</div>
+            <a href="#" id="link-view" class="hero-activation-card">
+                <div class="hero-header">
+                    <div class="qr-icon-box"><i class="fas fa-qrcode"></i></div>
+                    <div class="hero-text">
+                        <h3 id="view-title">Attiva la tua Identità</h3>
+                        <p id="view-desc">Mostra, condividi e lascia il segno.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="btn-visualizza">VISUALIZZA TAG <i class="fas fa-chevron-right"></i></div>
-        </a>
-    
+                <div class="btn-visualizza">VISUALIZZA TAG <i class="fas fa-chevron-right"></i></div>
+            </a>
+        </section>
 
+        <section id="block-gestione">
+            <div class="menu-label">gestione</div>
+            <a href="#" id="link-edit" class="action-btn">
+                <i class="fas fa-sliders-h btn-icon"></i>
+                <span>Configure</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </a>
+            <a href="#" id="link-qr" class="action-btn">
+                <i class="fas fa-qrcode btn-icon"></i>
+                <span>QR Identity</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </a>
+            <a href="#" id="link-account" class="action-btn">
+                <i class="fas fa-user-shield btn-icon"></i>
+                <span>Account & Security</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </a>
+        </section>
 
-        <div class="menu-label">gestione</div>
-
-        <a href="#" id="link-edit" class="action-btn">
-            <i class="fas fa-sliders-h btn-icon"></i>
-            <span>Configure</span>
-            <i class="fas fa-chevron-right chevron"></i>
-        </a>
-
-        <a href="#" id="link-qr" class="action-btn">
-            <i class="fas fa-qrcode btn-icon"></i>
-            <span>QR Identity</span>
-            <i class="fas fa-chevron-right chevron"></i>
-        </a>
-
-        <a href="#" id="link-account" class="action-btn">
-            <i class="fas fa-user-shield btn-icon"></i>
-            <span>Account & Security</span>
-            <i class="fas fa-chevron-right chevron"></i>
-        </a>
+        <section id="block-growth">
+            </section>
     </div>
 
 
