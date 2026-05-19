@@ -326,6 +326,23 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     .btn-main:active {
         background-color: rgba(255, 255, 255, 0.08) !important;
     }
+    /* RESET DEL COLORE DI TOCCO NATIVO (ELIMINA L'AZZURRO) */
+    a, div, span, button {
+        -webkit-tap-highlight-color: transparent !important;
+        tap-highlight-color: transparent !important;
+    }
+
+    /* L'EFFETTO RESPIRO AL CLIC (EFFETTO VELLUTO BIANCO) */
+    .hero-activation-card-new, .action-btn {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                    background-color 0.4s ease-out !important;
+    }
+
+    /* Quando il dito tocca: nessuna compressione brusca, ma un'illuminazione soffusa e lenta */
+    .hero-activation-card-new:active, .action-btn:active {
+        transform: scale(0.99) !important; /* Quasi impercettibile, molto elegante */
+        background-color: rgba(255, 255, 255, 0.08) !important; /* Bagliore bianco soft, addio azzurro */
+    }
 </style>
     
 </head>
@@ -506,15 +523,13 @@ async function checkMagicButton(nomeMinuto) {
     // GESTIONE DEL CLIC LUXURY PER MYQUICKTAG
 
 function luxuryNavigate(event, url) {
-    event.preventDefault(); // Blocca lo scatto nervoso immediato
+    event.preventDefault(); // Blocca il salto immediato
     
-    // Il bottone si comprime grazie al CSS che abbiamo messo sopra
-    // Lasciamo che il cervello dell'utente percepisca il "micropiacere" del clic
+    // Il cambio pagina si prende un attimo di respiro (350ms) per far godere l'illuminazione bianca
     setTimeout(function() {
-        window.location.href = url; // Cambia pagina in modo fluido dopo 200ms
-    }, 200);
+        window.location.href = url; 
+    }, 350); 
 }
-
 // Applichiamo la transizione ai tasti principali
 document.addEventListener("DOMContentLoaded", function() {
     // Recuperiamo il parametro u direttamente qui per non farlo fallire
