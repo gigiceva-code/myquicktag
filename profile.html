@@ -203,6 +203,20 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     .dock-item:active {
         background: rgba(255, 255, 255, 0.08);
     }
+    .dock-item i {
+        color: #b3b3b3; /* Grigio nettamente più chiaro per la visibilità all'aperto */
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+    }
+    .dock-item span {
+        font-size: 0.65rem;
+        color: #b3b3b3; /* Più visibile sotto la luce del sole */
+        font-weight: 500;
+    }
+    .dock-item {
+        background: rgba(255, 255, 255, 0.04); /* Leggermente più denso il fondo per staccare dal nero totale */
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
 </style>
     
@@ -248,14 +262,13 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
             </div>
         </div>
 
-                <section id="block-gestione">
-            
+                 <section id="block-gestione">
             <div class="core-grid">
                 <a href="#" id="link-edit" class="action-btn btn-main">
                     <i class="fas fa-sliders-h btn-icon"></i>
                     <div class="btn-text-box">
                         <span>Configure</span>
-                        <small>Gestisci i tuoi contenuti</small>
+                        <small>Configura le tue informazioni esclusive</small>
                     </div>
                     <i class="fas fa-chevron-right chevron"></i>
                 </a>
@@ -274,8 +287,8 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
 
             <div class="utility-dock">
                 <a href="#" id="link-upgrade" class="dock-item" title="Upgrade">
-                    <i class="fas fa-rocket"></i>
-                    <span>Upgrade</span>
+                    <i class="fas fa-rocket" style="color: var(--accent-smeraldo); opacity: 1;"></i>
+                    <span style="color: #ffffff; font-weight: 600;">Upgrade</span>
                 </a>
                 <a href="#" class="dock-item" title="Settings">
                     <i class="fas fa-cog"></i>
@@ -291,6 +304,7 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
                 </a>
             </div>
         </section>
+       
 
     </div>      
 
