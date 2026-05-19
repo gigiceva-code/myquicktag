@@ -310,6 +310,22 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     .hero-chevron-new {
         display: none !important;
     } 
+    /* EFFETTO VELLUTO SU TUTTI I BOTTONI DELLA DASHBOARD */
+    .hero-activation-card-new, .action-btn, .dock-item {
+        transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                    background-color 0.2s ease, 
+                    box-shadow 0.25s ease !important;
+    }
+
+    /* Quando l'utente clicca, il bottone si comprime leggermente verso l'interno, come un vero tasto fisico */
+    .hero-activation-card-new:active, .action-btn:active {
+        transform: scale(0.97); /* Micro-compressione premium */
+        background-color: rgba(255, 255, 255, 0.06) !important;
+    }
+    
+    .btn-main:active {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+    }
 </style>
     
 </head>
