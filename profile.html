@@ -176,7 +176,7 @@ async function caricaDatiDashboard(nomeMinuto) {
         if (data.success && data.fields) {
             const record = data.fields;
 
-            // Logica Magic Button aggiornata per il nuovo layout Hero
+            // Logica Magic Button corretta per il nuovo layout Hero
             const stato = (record.stato || "").toLowerCase().trim();
             const btnView = document.getElementById("link-view");
             
@@ -207,6 +207,7 @@ async function caricaDatiDashboard(nomeMinuto) {
         console.warn("Il sistema sta ripristinando la connessione con l'identità digitale.");
     }
 }
+
 
 
     // AGGIORNAMENTO BOTTONE MAGIC
