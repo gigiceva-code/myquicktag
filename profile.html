@@ -66,12 +66,17 @@
 </head>
 <body>
 
- <div class="dashboard-container">
-        <div class="user-welcome">
-            <h1>Identity Console</h1>
-            <p id="dash-user">@UTENTE</p>
+<div class="user-welcome">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Identity Console</h1>
+                    <p id="dash-user">@UTENTE</p>
+                </div>
+                <div onclick="location.reload();" style="cursor:pointer; color: var(--accent-smeraldo); padding: 10px;">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+            </div>
         </div>
-
         <div class="stats-grid">
             <div class="stat-card">
                 <i class="fas fa-chart-line"></i>
