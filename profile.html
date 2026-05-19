@@ -530,7 +530,7 @@ function luxuryNavigate(event, url) {
         window.location.href = url; 
     }, 350); 
 }
-// Applichiamo la transizione ai tasti principali
+// Applichiamo la transizione ai tasti principali (TUTTI, INCLUSI QR E ACCOUNT)
 document.addEventListener("DOMContentLoaded", function() {
     // Recuperiamo il parametro u direttamente qui per non farlo fallire
     const urlParams = new URLSearchParams(window.location.search);
@@ -550,6 +550,22 @@ document.addEventListener("DOMContentLoaded", function() {
     if (linkEdit) {
         linkEdit.addEventListener('click', function(e) {
             luxuryNavigate(e, `edit.html?u=${nomeMinutoLocale}`);
+        });
+    }
+
+    // 3. Tasto QR (Aggiunto per eliminare lo scatto nervoso)
+    const linkQR = document.getElementById('link-qr');
+    if (linkQR) {
+        linkQR.addEventListener('click', function(e) {
+            luxuryNavigate(e, `qr.html?u=${nomeMinutoLocale}`);
+        });
+    }
+
+    // 4. Tasto Account (Aggiunto per eliminare lo scatto nervoso)
+    const linkAccount = document.getElementById('link-account');
+    if (linkAccount) {
+        linkAccount.addEventListener('click', function(e) {
+            luxuryNavigate(e, `account.html?u=${nomeMinutoLocale}`);
         });
     }
 });
