@@ -432,8 +432,8 @@ if (nomeUtenteURL) {
     document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
     
     // RIPRISTINO ANCORAGGIO LOGICA PARAMENTRICA COERENTE CON EDIT.HTML
-    document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
-    document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
+   // document.getElementById("link-view").href = `tag.html?u=${nomeMinuto}`;
+   // document.getElementById("link-edit").href = `edit.html?u=${nomeMinuto}`;
     document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
     document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
 
@@ -503,6 +503,37 @@ async function checkMagicButton(nomeMinuto) {
         console.error("Errore magic button:", e);
     }
 }
+    // GESTIONE DEL CLIC LUXURY PER MYQUICKTAG
+
+function luxuryNavigate(event, url) {
+    event.preventDefault(); // Blocca lo scatto nervoso immediato
+    
+    // Il bottone si comprime grazie al CSS che abbiamo messo sopra
+    // Lasciamo che il cervello dell'utente percepisca il "micropiacere" del clic
+    setTimeout(function() {
+        window.location.href = url; // Cambia pagina in modo fluido dopo 200ms
+    }, 200);
+}
+
+// Applichiamo la transizione ai tasti principali
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // 1. Tasto Vedi Anteprima (La Card in alto)
+    const linkView = document.getElementById('link-view');
+    if (linkView) {
+        linkView.addEventListener('click', function(e) {
+            luxuryNavigate(e, `tag.html?u=${nomeMinuto}`); // Metti qui il link reale della pagina anteprima
+        });
+    }
+
+    // 2. Tasto Configure
+    const linkEdit = document.getElementById('link-edit');
+    if (linkEdit) {
+        linkEdit.addEventListener('click', function(e) {
+            luxuryNavigate(e, `edit.html?u=${nomeMinuto}`); // Metti qui il link reale della pagina configure
+        });
+    }
+});
 </script>
    
 </body>
