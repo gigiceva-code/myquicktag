@@ -173,23 +173,24 @@ if (nomeUtenteURL) {
 }
 
 async function caricaDatiDashboard(nomeMinuto) {
+    // Il timestamp forza il browser a non usare la cache e prendere dati freschi da Airtable
+    const timestamp = new Date().getTime();
     try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}&t=${timestamp}`);
         const data = await response.json();
 
         if (data.success && data.fields) {
             const record = data.fields;
 
-            // Logica Magic Button corretta per il nuovo layout Hero
+            // Logica Magic Button
             const stato = (record.stato || "").toLowerCase().trim();
             const btnView = document.getElementById("link-view");
-                        if (stato === "in attesa") {
+            if (stato === "in attesa") {
                 document.getElementById("view-title").innerText = "Attiva la tua Identità";
                 document.getElementById("view-desc").innerText = "Il tuo profilo è pronto per essere lanciato.";
                 btnView.classList.add("pulsing-effect");
             }
  
-
             if (record.username_display) {
                 const displayPulito = record.username_display.replace('@', '').trim();
                 document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
