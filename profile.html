@@ -282,6 +282,34 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
         font-size: 0.9rem;
         opacity: 0.8;
     }
+   /* INTEGRAZIONE CSS PER ANCORAGGIO ANGOLO IN BASSO A DESTRA */
+    .hero-activation-card-new {
+        position: relative !important; /* Forza la card a fare da base per l'angolo */
+        padding: 24px 20px 35px 20px !important; /* Dà più spazio sotto per non toccare lo slogan */
+    }
+
+    .action-trigger-corner {
+        position: absolute;
+        bottom: 12px;
+        right: 18px;
+        font-size: 0.75rem;
+        color: var(--accent-smeraldo); /* Verde smeraldo ufficiale */
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-transform: none; /* Mantiene il testo pulito come nel mockup */
+    }
+    
+    .action-trigger-corner i {
+        font-size: 0.65rem;
+    }
+
+    /* Nascondiamo la vecchia freccia singola a destra */
+    .hero-chevron-new {
+        display: none !important;
+    } 
 </style>
     
 </head>
