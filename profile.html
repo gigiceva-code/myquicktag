@@ -77,8 +77,7 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
         font-size: 0.9rem; 
         font-weight: 500;
     }
-    
-    .hero-activation-card {
+        .hero-activation-card {
         background: #0a0a0a; border: 1px solid rgba(80, 200, 120, 0.3);
         padding: 15px; border-radius: 20px; text-decoration: none; display: flex; flex-direction: column; gap: 10px; color: white;
     }
@@ -87,7 +86,54 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     .hero-text h3 { margin: 0; font-size: 0.9rem; }
     .hero-text p { color: #888; font-size: 0.75rem; margin: 0; }
     .btn-visualizza { background: rgba(80, 200, 120, 0.15); border: 1px solid rgba(80, 200, 120, 0.4); color: var(--accent-smeraldo); padding: 8px; border-radius: 10px; text-align: center; font-size: 0.75rem; font-weight: 600; }
+        /* Struttura della nuova griglia Core */
+    .core-grid {
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .core-row {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 10px 0;
+        margin: 5px -10px 15px -10px;
+    }
+    .btn-square {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        height: 100px;
+        flex-direction: column !important;
+        justify-content: center;
+        padding: 15px !important;
+    }
+    .btn-square i.btn-icon {
+        margin-bottom: 8px;
+        width: auto;
+        font-size: 1.2rem;
+    }
+    .btn-square span {
+        font-size: 0.8rem;
+    }
+    .btn-main {
+        margin-bottom: 10px;
+    }
+    .btn-text-box {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        text-align: left;
+    }
+    .btn-text-box small {
+        color: var(--text-sec);
+        font-size: 0.7rem;
+        margin-top: 2px;
+    }
+
 </style>
+    
 </head>
 <body>
 
@@ -130,25 +176,31 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
             </div>
         </div>
         
-        <section id="block-gestione">
+                <section id="block-gestione">
             <div class="menu-label">gestione</div>
             
-            <a href="#" id="link-edit" class="action-btn">
-                <i class="fas fa-sliders-h btn-icon"></i>
-                <span>Configure</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </a>
-            <a href="#" id="link-qr" class="action-btn">
-                <i class="fas fa-qrcode btn-icon"></i>
-                <span>QR Identity</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </a>
-            <a href="#" id="link-account" class="action-btn">
-                <i class="fas fa-user-shield btn-icon"></i>
-                <span>Account & Security</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </a>
-            
+            <div class="core-grid">
+                <a href="#" id="link-edit" class="action-btn btn-main">
+                    <i class="fas fa-sliders-h btn-icon"></i>
+                    <div class="btn-text-box">
+                        <span>Configure</span>
+                        <small>Gestisci i tuoi contenuti</small>
+                    </div>
+                    <i class="fas fa-chevron-right chevron"></i>
+                </a>
+                
+                <div class="core-row">
+                    <a href="#" id="link-qr" class="action-btn btn-square">
+                        <i class="fas fa-qrcode btn-icon"></i>
+                        <span>QR Identity</span>
+                    </a>
+                    <a href="#" id="link-account" class="action-btn btn-square">
+                        <i class="fas fa-user-shield btn-icon"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+            </div>
+
             <a href="#" id="link-upgrade" class="action-btn">
                 <i class="fas fa-rocket btn-icon"></i>
                 <span>Upgrade</span>
@@ -164,13 +216,13 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
                 <span>Quick Actions</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </a>
-
             <a href="javascript:void(0)" class="action-btn">
                 <i class="fas fa-question-circle btn-icon"></i>
                 <span>Help & Support</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </a>
-            </section>
+        </section>
+
 
     </div>      
 
