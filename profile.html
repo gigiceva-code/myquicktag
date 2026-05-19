@@ -131,6 +131,37 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
         font-size: 0.7rem;
         margin-top: 2px;
     }
+       /* Nuove statistiche stile Luxury Minimal */
+    .stats-grid-clean {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin: 20px 0 25px 0;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+    .stat-inline {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .stat-inline i {
+        color: var(--accent-smeraldo);
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    .stat-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    .stat-label {
+        font-size: 0.7rem;
+        color: var(--text-sec);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+ 
 
 </style>
     
@@ -149,32 +180,33 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
             </div>
         </div>
 
-        <section id="block-identity-system">
+                <section id="block-identity-system">
             <div class="menu-label">identity system</div>
             <a href="#" id="link-view" class="hero-activation-card">
                 <div class="hero-header">
                     <div class="qr-icon-box"><i class="fas fa-qrcode"></i></div>
                     <div class="hero-text">
                         <h3 id="view-title">Attiva la tua Identità</h3>
-                        <p id="view-desc">Mostra, condividi e lascia il segno.</p>
+                        <p id="view-desc">Il tuo profilo è pronto per essere lanciato.</p>
                     </div>
                 </div>
                 <div class="btn-visualizza">VISUALIZZA TAG <i class="fas fa-chevron-right"></i></div>
             </a>
         </section>
 
-        <div class="stats-grid">
-            <div class="stat-card">
+        <div class="stats-grid-clean">
+            <div class="stat-inline">
                 <i class="fas fa-chart-line"></i>
-                <span class="value" id="count-visits">-</span>
-                <span class="label">Scansioni</span>
+                <span class="stat-value" id="count-visits">-</span>
+                <span class="stat-label">Scansioni</span>
             </div>
-            <div class="stat-card">
+            <div class="stat-inline">
                 <i class="fas fa-shield-alt"></i>
-                <span class="value" id="days-left">-</span>
-                <span class="label">Status Trial</span>
+                <span class="stat-value" id="days-left">-</span>
+                <span class="stat-label">Status Trial</span>
             </div>
         </div>
+
         
                 <section id="block-gestione">
             <div class="menu-label">gestione</div>
