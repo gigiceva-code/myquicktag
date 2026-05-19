@@ -357,12 +357,12 @@ async function caricaDatiDashboard(nomeMinuto) {
         if (data.success && data.fields) {
             const record = data.fields;
 
-            // Logica Magic Button
+            // Logica Magic Button con Copy Boutique Aggiornato
             const stato = (record.stato || "").toLowerCase().trim();
             const btnView = document.getElementById("link-view");
             if (stato === "in attesa") {
-                document.getElementById("view-title").innerText = "Attiva la tua Identità";
-                document.getElementById("view-desc").innerText = "Il tuo profilo è pronto per essere lanciato.";
+                document.getElementById("view-title").innerText = "Digital Identity";
+                document.getElementById("view-desc").innerText = "Il tuo nome nel mondo.";
                 btnView.classList.add("pulsing-effect");
             }
  
@@ -388,9 +388,7 @@ async function caricaDatiDashboard(nomeMinuto) {
     }
 }
 
-
-
-    // AGGIORNAMENTO BOTTONE MAGIC
+// AGGIORNAMENTO BOTTONE MAGIC
 async function checkMagicButton(nomeMinuto) {
     try {
         const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
@@ -400,7 +398,9 @@ async function checkMagicButton(nomeMinuto) {
             const btnView = document.getElementById("link-view");
 
             if (stato === "in attesa") {
-                btnView.querySelector("span").innerText = "Attiva la tua Identità";
+                // Manteniamo coerenza anche qui se la funzione viene chiamata altrove
+                const titleEl = document.getElementById("view-title");
+                if (titleEl) titleEl.innerText = "Digital Identity";
                 btnView.classList.add("pulsing-effect");
             }
         }
@@ -408,7 +408,6 @@ async function checkMagicButton(nomeMinuto) {
         console.error("Errore magic button:", e);
     }
 }
-
 </script>
    
 </body>
