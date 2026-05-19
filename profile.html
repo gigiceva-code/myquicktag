@@ -45,13 +45,32 @@
     
     section { margin-bottom: 15px; }
 
-    .action-btn {
-        display: flex; align-items: center; background: transparent; border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 12px 0; text-decoration: none; color: white;
+  .action-btn {
+        display: flex; 
+        align-items: center; 
+        background: rgba(255, 255, 255, 0.03); 
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 16px 20px; 
+        text-decoration: none; 
+        color: white;
+        margin-bottom: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: all 0.2s ease;
     }
-    .action-btn i.btn-icon { width: 25px; font-size: 0.9rem; color: var(--accent-smeraldo); }
-    .action-btn span { flex-grow: 1; font-size: 0.9rem; }
+
+    .action-btn i.btn-icon { 
+        width: 30px; 
+        font-size: 1rem; 
+        color: var(--accent-smeraldo); 
+    }
+
+    .action-btn span { 
+        flex-grow: 1; 
+        font-size: 0.9rem; 
+        font-weight: 500;
+    }
     
     .hero-activation-card {
         background: #0a0a0a; border: 1px solid rgba(80, 200, 120, 0.3);
