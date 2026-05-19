@@ -12,117 +12,57 @@
     <link id="dynamic-icon" rel="icon" href="">
 
 <style>
-        :root {
-            --bg-color: #000000;
-            --card-bg: rgba(255, 255, 255, 0.02);
-            --border-white: rgba(255, 255, 255, 0.9);
-            --accent-smeraldo: #50C878;
-            --text-sec: #6c6c70; 
-        }
-
-        body {
-            margin: 0; padding: 24px;
-            background-color: var(--bg-color);
-            font-family: 'Inter', sans-serif;
-            color: white;
-            display: flex; flex-direction: column; align-items: center;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .dashboard-container { 
-            width: 100%; 
-            max-width: 400px; 
-            min-height: 88vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-welcome { text-align: left; margin: 50px 0 35px; width: 100%; }
-        .user-welcome h1 { font-size: 1.8rem; margin: 0; font-weight: 600; letter-spacing: -0.8px; color: var(--accent-smeraldo); }
-        .user-welcome p { color: #ffffff; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.2px; margin: 6px 0 0; text-transform: uppercase; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 45px; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--border-white); padding: 22px; border-radius: 16px; text-align: left; }
-        .stat-card i { color: var(--accent-smeraldo); font-size: 0.95rem; margin-bottom: 14px; display: block; }
-        .stat-card .value { font-size: 1.6rem; font-weight: 500; display: block; color: #ffffff; letter-spacing: -0.5px; }
-        .stat-card .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; display: block; font-weight: 500; }
-
-        .menu-label { font-size: 1rem; color: var(--accent-smeraldo); text-align: center; text-transform: lowercase; letter-spacing: 3px; margin: 15px auto 35px auto; font-weight: 400; width: 100%; }
-        
-        .action-btn {
-            display: flex; align-items: center;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 20px 0;
-            text-decoration: none; color: white;
-            transition: all 0.2s ease;
-        }
-        .action-btn:last-child { border-bottom: none; }
-        .action-btn:active { opacity: 0.7; transform: scale(0.99); }
-        
-        .action-btn i.btn-icon { width: 32px; font-size: 1rem; color: var(--accent-smeraldo); opacity: 0.8; }
-        .action-btn span { flex-grow: 1; font-size: 0.95rem; font-weight: 400; }
-        .action-btn .chevron { font-size: 0.75rem; color: #6c6c70; }
-
-        .pulsing-effect {
-            border: 1px solid var(--accent-smeraldo) !important;
-            box-shadow: 0 0 15px rgba(80, 200, 120, 0.2);
-            animation: soft-pulse 2s infinite;
-        }
-        @keyframes soft-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(80, 200, 120, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(80, 200, 120, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(80, 200, 120, 0); }
-        }
-
-    /* Stile card HERO - Identico alla reference */
-.hero-activation-card {
-    background: radial-gradient(circle at top right, rgba(80, 200, 120, 0.15), transparent 70%), #0a0a0a;
-    border: 1px solid rgba(80, 200, 120, 0.3);
-    padding: 20px;
-    border-radius: 24px;
-    margin-bottom: 30px;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    color: white;
-    transition: all 0.3s ease;
-}
-
-.hero-header { display: flex; align-items: center; gap: 15px; }
-
-.qr-icon-box { 
-    width: 60px; height: 60px; 
-    background: rgba(80, 200, 120, 0.15);
-    border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--accent-smeraldo); font-size: 1.6rem;
-    border: 1px solid rgba(80, 200, 120, 0.2);
-}
-
-.hero-text h3 { color: white; margin: 0; font-size: 1.1rem; font-weight: 600; }
-.hero-text p { color: #888; font-size: 0.85rem; margin: 4px 0 0; line-height: 1.4; }
-
-.btn-visualizza {
-    background: rgba(80, 200, 120, 0.15);
-    border: 1px solid rgba(80, 200, 120, 0.4);
-    color: var(--accent-smeraldo);
-    padding: 12px;
-    border-radius: 14px;
-    text-align: center;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-/* DISTANZIAMENTO BLOCCHI */
-    section {
-        margin-bottom: 40px;
+    :root {
+        --bg-color: #000000;
+        --card-bg: rgba(255, 255, 255, 0.02);
+        --border-white: rgba(255, 255, 255, 0.9);
+        --accent-smeraldo: #50C878;
+        --text-sec: #6c6c70; 
     }
-</style>
 
+    body {
+        margin: 0; padding: 16px;
+        background-color: var(--bg-color);
+        font-family: 'Inter', sans-serif;
+        color: white;
+        display: flex; flex-direction: column; align-items: center;
+        height: 100vh; overflow: hidden;
+    }
+
+    .dashboard-container { width: 100%; max-width: 400px; display: flex; flex-direction: column; }
+
+    .user-welcome { text-align: left; margin: 10px 0 15px; width: 100%; }
+    .user-welcome h1 { font-size: 1.5rem; margin: 0; font-weight: 600; color: var(--accent-smeraldo); }
+    .user-welcome p { color: #ffffff; font-size: 0.9rem; margin: 2px 0 0; text-transform: uppercase; }
+
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--border-white); padding: 12px; border-radius: 12px; }
+    .stat-card i { color: var(--accent-smeraldo); font-size: 0.8rem; margin-bottom: 5px; display: block; }
+    .stat-card .value { font-size: 1.2rem; font-weight: 500; display: block; color: #ffffff; }
+    .stat-card .label { font-size: 0.6rem; color: var(--text-sec); text-transform: uppercase; margin-top: 2px; display: block; }
+
+    .menu-label { font-size: 0.8rem; color: var(--accent-smeraldo); text-align: center; text-transform: lowercase; letter-spacing: 2px; margin: 5px auto 10px auto; }
+    
+    section { margin-bottom: 15px; }
+
+    .action-btn {
+        display: flex; align-items: center; background: transparent; border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 12px 0; text-decoration: none; color: white;
+    }
+    .action-btn i.btn-icon { width: 25px; font-size: 0.9rem; color: var(--accent-smeraldo); }
+    .action-btn span { flex-grow: 1; font-size: 0.9rem; }
+    
+    .hero-activation-card {
+        background: #0a0a0a; border: 1px solid rgba(80, 200, 120, 0.3);
+        padding: 15px; border-radius: 20px; text-decoration: none; display: flex; flex-direction: column; gap: 10px; color: white;
+    }
+    .hero-header { display: flex; align-items: center; gap: 10px; }
+    .qr-icon-box { width: 40px; height: 40px; background: rgba(80, 200, 120, 0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--accent-smeraldo); font-size: 1.2rem; }
+    .hero-text h3 { margin: 0; font-size: 0.9rem; }
+    .hero-text p { color: #888; font-size: 0.75rem; margin: 0; }
+    .btn-visualizza { background: rgba(80, 200, 120, 0.15); border: 1px solid rgba(80, 200, 120, 0.4); color: var(--accent-smeraldo); padding: 8px; border-radius: 10px; text-align: center; font-size: 0.75rem; font-weight: 600; }
+</style>
 </head>
 <body>
 
