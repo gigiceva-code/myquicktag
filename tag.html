@@ -287,7 +287,7 @@
         document.getElementById("activation-modal").style.display = "flex";
     }
 
-    async function caricaProfiloPubblico(nomeMinuto) {
+async function caricaProfiloPubblico(nomeMinuto) {
         try {
             const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
             const data = await response.json();
@@ -314,6 +314,12 @@
                     document.getElementById("profile-content").style.display = "block";
                     document.getElementById("activation-modal").style.display = "none";
                     document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                    
+                    // MODIFICA PREMIUM: Cambiamo il testo del bottone in minuscolo via script
+                    const btnRendiloTuo = document.querySelector(".rendilo-tuo-btn");
+                    if (btnRendiloTuo) {
+                        btnRendiloTuo.innerText = "Attiva la tua myquicktag";
+                    }
                     
                     // Forza l'accensione dello schermo per mostrare il profilo sotto pulito e trasparente
                     document.body.style.opacity = "1";
@@ -363,7 +369,6 @@
             document.body.style.opacity = "1";
         }
     }
-
     async function salvaPasswordEAttiva() {
         const pwd = document.getElementById("new-password").value;
         if (pwd.length < 4) {
