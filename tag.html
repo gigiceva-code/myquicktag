@@ -325,19 +325,10 @@ async function caricaProfiloPubblico(nomeMinuto) {
                 
                 document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
                 
-           // PARTENZA ANIMAZIONE (Dopo 2.5 secondi di quiete)
+                           // PARTENZA ANIMAZIONE RETTANGOLO (Dopo 2.5 secondi di quiete)
                 setTimeout(() => {
                     const overlay = document.getElementById("showroom-overlay");
-                    const circle = document.getElementById("expanding-circle");
-                    const content = document.querySelector(".conversion-content");
-                    
-                    if (overlay && circle && content) {
-                        overlay.style.display = "flex";
-                        
-                      // PARTENZA ANIMAZIONE RETTANGOLO (Dopo 2.5 secondi)
-                setTimeout(() => {
-                    const overlay = document.getElementById("showroom-overlay");
-                    const box = document.getElementById("expanding-box"); // Puntiamo al box
+                    const box = document.getElementById("expanding-box");
                     const content = document.querySelector(".conversion-content");
                     
                     if (overlay && box && content) {
@@ -348,16 +339,18 @@ async function caricaProfiloPubblico(nomeMinuto) {
                             overlay.style.backdropFilter = "blur(0px)";
                             overlay.style.webkitBackdropFilter = "blur(0px)";
                             
-                            // Il rettangolo si apre: prima prende l'altezza, poi si spalanca in larghezza
-                            box.style.width = "320px";  // Larghezza perfetta per la frase
-                            box.style.height = "210px"; // Altezza proporzionata per contenere tutto comodo
+                            // Il rettangolo premium si spalanca
+                            box.style.width = "320px";  
+                            box.style.height = "210px"; 
                             
-                            // La frase appare dolcemente al suo interno appena è aperto
+                            // La frase appare nitida al suo interno
                             content.style.opacity = "1";
                         }, 50);
                     }
                 }, 2500);
+
             } else if (stato === "attivo") {
+
                 identitaVerificata = true;
                 
                 if (backLink) backLink.style.display = "none";
