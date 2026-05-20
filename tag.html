@@ -146,7 +146,8 @@
             transform: scale(0.98) !important;
             opacity: 0.9;
         }
-     /* 1. Sfondo completamente trasparente e interazioni libere */
+        
+        /* 1. Sfondo completamente trasparente e interazioni libere */
         .showroom-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -161,7 +162,7 @@
             transition: background-color 1.5s;
         } 
 
-       /* 2. Il rettangolo fluttuante che si espande in larghezza */
+        /* 2. Il rettangolo fluttuante che si espande in larghezza */
         .expanding-box {
             width: 0px;
             height: 0px;
@@ -178,23 +179,14 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         } 
 
-   /* 2. Il cerchio fluttuante (Anello di luce puro, zero sfocatura dietro) */
-        .expanding-circle {
-            width: 0px;
-            height: 0px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.01); /* Quasi invisibile il fondo */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Un raggio di luce nitido che definisce il cerchio */
-            backdrop-filter: blur(0px); /* ELIMINATO IL BLUR: trasparenza totale */
-            -webkit-backdrop-filter: blur(0px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            pointer-events: auto;
-            transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1), height 1.8s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        .conversion-content {
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
+
         .conversion-content h2 {
             font-size: 1.3rem;
             font-weight: 500;
@@ -204,7 +196,7 @@
             color: #ffffff;
         }
 
-      /* 4. Il bottone premium in vetro satinato trasparente */
+        /* 4. Il bottone premium in vetro satinato trasparente */
         .rendilo-tuo-btn {
             background: rgba(255, 255, 255, 0.07); /* Trasparenza ghiaccio */
             color: #ffffff; /* Testo bianco puro e nitido */
@@ -252,6 +244,7 @@
         </div>
         
     </div>
+
     <div id="showroom-overlay" class="showroom-overlay">
         <div id="expanding-box" class="expanding-box"> 
             <div class="conversion-content">
@@ -260,6 +253,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal-overlay" id="activation-modal">
         <div class="modal-box">
             <h2>Attivazione Identità</h2>
@@ -293,82 +287,84 @@
     function apriModaleAttivazione() {
         document.getElementById("activation-modal").style.display = "flex";
     }
-  }
-async function caricaProfiloPubblico(nomeMinuto) {
-    try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-        const data = await response.json();
-        
-        if (data.success && data.fields) {
-            const record = data.fields;
-            const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+
+    async function caricaProfiloPubblico(nomeMinuto) {
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+            const data = await response.json();
             
-            document.getElementById("tag-username").innerText = "@" + usernamePulito;
-            document.getElementById("tag-bio").innerText = record.bio || "";
+            if (data.success && data.fields) {
+                const record = data.fields;
+                const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+                
+                document.getElementById("tag-username").innerText = "@" + usernamePulito;
+                document.getElementById("tag-bio").innerText = record.bio || "";
 
-            const backLink = document.getElementById("back-to-config");
-            if (backLink) {
-                backLink.href = `profile.html?u=${nomeMinuto}`;
-            }
-
-            const stato = (record.stato || "").toLowerCase().trim();
-
-            if (stato === "in attesa") {
-                identitaVerificata = false;
-                if (backLink) backLink.style.display = "flex";
-                
-                document.getElementById("cta-sblocco-container").style.display = "none";
-                document.getElementById("profile-content").style.display = "block";
-                document.getElementById("activation-modal").style.display = "none";
-                document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
-                
-                // Forziamo l'accensione immediata dello sfondo per mostrare il profilo nitido sotto
-                document.body.style.opacity = "1";
-                
-                // PARTENZA ANIMAZIONE RETTANGOLO (Dopo 2.5 secondi)
-                setTimeout(() => {
-                    const overlay = document.getElementById("showroom-overlay");
-                    const box = document.getElementById("expanding-box"); 
-                    const content = document.querySelector(".conversion-content");
-                    
-                    if (overlay && box && content) {
-                        overlay.style.display = "flex";
-                        
-                        setTimeout(() => {
-                            overlay.style.background = "rgba(0, 0, 0, 0)";
-                            overlay.style.backdropFilter = "blur(0px)";
-                            overlay.style.webkitBackdropFilter = "blur(0px)";
-                            
-                            // Il rettangolo d'élite si apre in larghezza e altezza
-                            box.style.width = "320px";  
-                            box.style.height = "210px"; 
-                            
-                            // La frase compare al suo interno
-                            content.style.opacity = "1";
-                        }, 50);
-                    }
-                }, 2500);
-                
-            } else if (stato === "attivo") {
-                identitaVerificata = true;
-                if (backLink) backLink.style.display = "none";
-                document.getElementById("cta-sblocco-container").style.display = "none";
-                if (document.getElementById("showroom-overlay")) {
-                    document.getElementById("showroom-overlay").style.display = "none";
+                const backLink = document.getElementById("back-to-config");
+                if (backLink) {
+                    backLink.href = `profile.html?u=${nomeMinuto}`;
                 }
-                document.getElementById("profile-content").style.display = "block";
-                mostraBottonePWA();
+
+                const stato = (record.stato || "").toLowerCase().trim();
+
+                if (stato === "in attesa") {
+                    identitaVerificata = false;
+                    if (backLink) backLink.style.display = "flex";
+                    
+                    document.getElementById("cta-sblocco-container").style.display = "none";
+                    document.getElementById("profile-content").style.display = "block";
+                    document.getElementById("activation-modal").style.display = "none";
+                    document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                    
+                    // Forza l'accensione dello schermo per mostrare il profilo sotto pulito e trasparente
+                    document.body.style.opacity = "1";
+                    
+                    // PARTENZA ANIMAZIONE RETTANGOLO (Dopo 2.5 secondi)
+                    setTimeout(() => {
+                        const overlay = document.getElementById("showroom-overlay");
+                        const box = document.getElementById("expanding-box"); 
+                        const content = document.querySelector(".conversion-content");
+                        
+                        if (overlay && box && content) {
+                            overlay.style.display = "flex";
+                            
+                            setTimeout(() => {
+                                overlay.style.background = "rgba(0, 0, 0, 0)";
+                                overlay.style.backdropFilter = "blur(0px)";
+                                overlay.style.webkitBackdropFilter = "blur(0px)";
+                                
+                                // Il rettangolo luminoso d'élite si spalanca
+                                box.style.width = "340px";  
+                                box.style.height = "210px"; 
+                                
+                                // Appena aperto, mostra fluidamente la frase e il tasto in vetro al suo interno
+                                setTimeout(() => {
+                                    content.style.opacity = "1";
+                                }, 300);
+                            }, 50);
+                        }
+                    }, 2500);
+                    
+                } else if (stato === "attivo") {
+                    identitaVerificata = true;
+                    if (backLink) backLink.style.display = "none";
+                    document.getElementById("cta-sblocco-container").style.display = "none";
+                    if (document.getElementById("showroom-overlay")) {
+                        document.getElementById("showroom-overlay").style.display = "none";
+                    }
+                    document.getElementById("profile-content").style.display = "block";
+                    mostraBottonePWA();
+                    document.body.style.opacity = "1";
+                }
+            } else {
                 document.body.style.opacity = "1";
             }
-        } else {
-            // Se il profilo non ha successo, accendi comunque lo schermo
+        } catch (error) {
+            console.error("Errore di caricamento:", error);
             document.body.style.opacity = "1";
         }
-    } catch (error) {
-        console.error("Errore di caricamento:", error);
-        document.body.style.opacity = "1";
     }
-}
+
     async function salvaPasswordEAttiva() {
         const pwd = document.getElementById("new-password").value;
         if (pwd.length < 4) {
