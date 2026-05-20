@@ -182,6 +182,11 @@
             background: rgba(255, 255, 255, 0.15); /* Si illumina leggermente sotto il dito */
             transform: scale(0.97);
         }
+      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
+function vaiAllaTag() {
+    if (!targetUserClean) return;
+    window.location.href = `/tag.html?u=${targetUserClean}`;
+}
     </style>
 </head>
 <body>
