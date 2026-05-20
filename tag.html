@@ -220,6 +220,11 @@
             background: rgba(255, 255, 255, 0.15); /* Si illumina leggermente sotto il dito */
             transform: scale(0.97);
         }
+        @keyframes popCheck {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
     </style>
 </head>
 <body>
@@ -407,7 +412,7 @@ async function caricaProfiloPubblico(nomeMinuto) {
             document.body.style.opacity = "1";
         }
     }
-    async function salvaPasswordEAttiva() {
+async function salvaPasswordEAttiva() {
         const pwd = document.getElementById("new-password").value;
         if (pwd.length < 4) {
             alert("La password deve essere di almeno 4 caratteri.");
@@ -427,13 +432,22 @@ async function caricaProfiloPubblico(nomeMinuto) {
             
             const resData = await response.json();
             if (resData.success) {
-                document.getElementById("activation-modal").style.display = "none";
-                document.getElementById("cta-sblocco-container").style.display = "none";
+                // Sblocchiamo i permessi per l'app
                 identitaVerificata = true; 
-                setTimeout(() => {
-                    alert("Identità Attivata!");
-                    mostraBottonePWA();
-                }, 300);
+                if (document.getElementById("cta-sblocco-container")) {
+                    document.getElementById("cta-sblocco-container").style.display = "none";
+                }
+                
+                // Impostiamo il nome del piano dinamico nel messaggio di successo
+                const nomePianoScelto = "PWA Identity Premium"; 
+                document.getElementById("success-plan-name").innerText = nomePianoScelto;
+
+                // CAMBIO STEP FLUIDO: Nascondiamo la password e accendiamo le congratulazioni!
+                document.getElementById("modal-step-password").style.display = "none";
+                document.getElementById("modal-step-success").style.display = "block";
+                
+                // Prepariamo in background il bottone PWA senza interrompere la modale
+                mostraBottonePWA();
             } else {
                 alert("Errore: " + (resData.error || "Riprova"));
             }
@@ -441,6 +455,12 @@ async function caricaProfiloPubblico(nomeMinuto) {
             console.error(e);
             alert("Errore di rete.");
         }
+    }
+
+    // Ricordati di aggiungere anche questa subito sotto, serve a gestire il tasto finale del successo!
+    function chiudiEEntra() {
+        document.getElementById("activation-modal").style.display = "none";
+        window.location.reload(); 
     }
 
     window.addEventListener('beforeinstallprompt', (e) => {
