@@ -12,10 +12,10 @@
 
     <style>
         /* Effetto accensione showroom */
-body {
-    opacity: 0;
-    transition: opacity 0.6s ease-out; /* 0.6 secondi di pura dissolvenza fluida */
-}
+        body {
+            opacity: 0;
+            transition: opacity 0.6s ease-out; /* 0.6 secondi di pura dissolvenza fluida */
+        }
         :root {
             --bg-color: #000000;
             --accent-smeraldo: #50C878;
@@ -37,15 +37,6 @@ body {
             margin-top: 40px;
             display: flex; flex-direction: column; align-items: center;
             width: 100%;
-        }
-
-        .avatar {
-            width: 120px; height: 120px;
-            border-radius: 50%;
-            background-color: #111;
-            border: 2px solid var(--accent-smeraldo);
-            object-fit: cover;
-            margin-bottom: 20px;
         }
 
         .username {
@@ -103,15 +94,6 @@ body {
             outline: none; border-color: var(--accent-smeraldo);
         }
 
-        .modal-box button {
-            background: var(--accent-smeraldo); color: #000;
-            border: none; padding: 16px; border-radius: 12px;
-            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
-            transition: opacity 0.2s;
-        }
-        
-        .modal-box button:active { opacity: 0.8; }
-
         /* Bottone PWA dinamico */
         .pwa-btn {
             background: var(--accent-smeraldo);
@@ -119,6 +101,7 @@ body {
             font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
             display: flex; justify-content: center; align-items: center; gap: 10px;
         }
+
         /* Stile per la freccia torna alla configurazione */
         .back-link-top {
             align-self: flex-start;
@@ -137,6 +120,32 @@ body {
             opacity: 1;
             transform: scale(0.97);
         }
+
+        /* Bottone di Sblocco nello Showroom */
+        .sblocco-btn {
+            background: #ffffff; color: #000000;
+            border: none; padding: 18px; border-radius: 14px;
+            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            box-shadow: 0 10px 25px rgba(255,255,255,0.1);
+        }
+        
+        /* Bottone di conferma interno alla modale */
+        .modal-confirm-btn {
+            background: var(--accent-smeraldo); color: #000000;
+            border: none; padding: 16px; border-radius: 12px;
+            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
+        }
+
+        /* Effetti di pressione ammortizzati senza scatti */
+        .sblocco-btn, .modal-confirm-btn {
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sblocco-btn:active, .modal-confirm-btn:active {
+            transform: scale(0.98) !important;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -154,25 +163,20 @@ body {
 
         <div class="links-container" id="links-container"></div>
         
+        <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
+            <button class="sblocco-btn" onclick="apriModaleAttivazione()">
+                <i class="fas fa-unlock-alt"></i> Sblocca la tua MyQuickTag
+            </button>
+        </div>
+        
     </div>
 
     <div class="modal-overlay" id="activation-modal">
         <div class="modal-box">
-            <h2>Ti scatta il regalo!</h2>
-            <p>Crea la tua chiave (password) per attivare la tua MyQuickTag e abilitare l'app.</p>
+            <h2>Attivazione Identità</h2>
+            <p>Imposta la tua chiave di sicurezza (password) per rendere pubblica la tua Tag e abilitare l'App.</p>
             <input type="password" id="new-password" placeholder="Scegli una password">
-            <button onclick="salvaPasswordEAttiva()">Salva e Attiva</button>
-        </div>
-    </div>
-    <div class="links-container" id="links-container">
-        </div>
-
-    <div class="modal-overlay" id="activation-modal">
-        <div class="modal-box">
-            <h2>Ti scatta il regalo!</h2>
-            <p>Crea la tua chiave (password) per attivare la tua MyQuickTag e abilitare l'app.</p>
-            <input type="password" id="new-password" placeholder="Scegli una password">
-            <button onclick="salvaPasswordEAttiva()">Salva e Attiva</button>
+            <button class="modal-confirm-btn" onclick="salvaPasswordEAttiva()">Conferma e Attiva</button>
         </div>
     </div>
 
@@ -187,7 +191,7 @@ body {
 
     let globalUtente = "";
     let deferredPrompt;
-    let identitaVerificata = false; // NUOVO: Blocca il bottone finché non sappiamo lo stato
+    let identitaVerificata = false;
 
     if (nomeUtenteURL) {
         globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
@@ -196,99 +200,89 @@ body {
         caricaProfiloPubblico(globalUtente);
     }
 
-    
-async function caricaProfiloPubblico(nomeMinuto) {
-    try {
-        // La chiamata fetch viaggia al buio mentre lo schermo è nero
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-        const data = await response.json();
-        
-        if (data.success && data.fields) {
-            const record = data.fields;
+    // Funzione per aprire la modale quando si clicca sul tasto di sblocco
+    function apriModaleAttivazione() {
+        document.getElementById("activation-modal").style.display = "flex";
+    }
+
+    async function caricaProfiloPubblico(nomeMinuto) {
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+            const data = await response.json();
             
-            // 1. Popoliamo i testi reali dietro le quinte
-            document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
-            document.getElementById("tag-bio").innerText = record.bio || "";
+            if (data.success && data.fields) {
+                const record = data.fields;
+                
+                document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+                document.getElementById("tag-bio").innerText = record.bio || "";
 
-            // Configura il link della freccia di ritorno alla configurazione (usando l'username pulito)
-            const backLink = document.getElementById("back-to-config");
-            if (backLink) {
-                backLink.href = `profile.html?u=${nomeMinuto}`;
+                const backLink = document.getElementById("back-to-config");
+                if (backLink) {
+                    backLink.href = `profile.html?u=${nomeMinuto}`;
+                }
+
+                const stato = (record.stato || "").toLowerCase().trim();
+
+                if (stato === "in attesa") {
+                    identitaVerificata = false;
+                    
+                    if (backLink) backLink.style.display = "flex";
+                    document.getElementById("cta-sblocco-container").style.display = "block";
+                    document.getElementById("profile-content").style.display = "block";
+                    document.getElementById("activation-modal").style.display = "none";
+                    
+                } else if (stato === "attivo") {
+                    identitaVerificata = true;
+                    
+                    if (backLink) backLink.style.display = "none";
+                    document.getElementById("cta-sblocco-container").style.display = "none";
+                    document.getElementById("profile-content").style.display = "block";
+                    mostraBottonePWA();
+                }
+
+                document.body.style.opacity = "1";
             }
-
-            // Normalizzazione dello stato da Airtable
-            const stato = (record.stato || "").toLowerCase().trim();
-
-            if (stato === "in attesa") {
-                // MODALITÀ SHOWROOM (Utente nuovo da attivare)
-                identitaVerificata = false;
-                
-                // Facciamo apparire la freccia bianca "Torna alla configurazione"
-                if (backLink) backLink.style.display = "flex";
-                
-                // Mostriamo il profilo compilato
-                document.getElementById("profile-content").style.display = "block";
-                
-                // IMPORTANTE: La modale di attivazione NON si apre da sola. Resta spenta.
-                document.getElementById("activation-modal").style.display = "none";
-                
-            } else if (stato === "attivo") {
-                // MODALITÀ TAG FINALE ATTIVA
-                identitaVerificata = true;
-                
-                // La freccia di ritorno sparisce (il profilo è pubblico)
-                if (backLink) backLink.style.display = "none";
-                
-                // Mostriamo il profilo attivo e lanciamo il bottone PWA
-                document.getElementById("profile-content").style.display = "block";
-                mostraBottonePWA();
-            }
-
-            // SOLO ORA che tutto è pronto, accendiamo la pagina con la dissolvenza showroom
+        } catch (error) {
+            console.error("Errore di caricamento:", error);
             document.body.style.opacity = "1";
         }
-    } catch (error) {
-        console.error("Errore di caricamento:", error);
-        // Se c'è un errore, accendiamo comunque la pagina per non lasciare l'utente al buio eterno
-        document.body.style.opacity = "1";
     }
-}
+
     async function salvaPasswordEAttiva() {
-    const pwd = document.getElementById("new-password").value;
-    if (pwd.length < 4) {
-        alert("La password deve essere di almeno 4 caratteri.");
-        return;
-    }
-
-    try {
-        // Inviamo i dati con i nomi esatti che l'API vuole
-        const response = await fetch('/api/update-profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username_system: globalUtente, // CAMBIATO da 'u' a 'username_system'
-                password: pwd,
-            stato: "attivo"      
-            })
-        });
-        
-        const resData = await response.json();
-        if (resData.success) {
-            document.getElementById("activation-modal").style.display = "none";
-            identitaVerificata = true; 
-            setTimeout(() => {
-                alert("Identità Attivata!");
-                mostraBottonePWA();
-            }, 300);
-        } else {
-            alert("Errore: " + (resData.error || "Riprova"));
+        const pwd = document.getElementById("new-password").value;
+        if (pwd.length < 4) {
+            alert("La password deve essere di almeno 4 caratteri.");
+            return;
         }
-    } catch (e) {
-        console.error(e);
-        alert("Errore di rete.");
-    }
-}
 
+        try {
+            const response = await fetch('/api/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username_system: globalUtente,
+                    password: pwd,
+                    stato: "attivo"      
+                })
+            });
+            
+            const resData = await response.json();
+            if (resData.success) {
+                document.getElementById("activation-modal").style.display = "none";
+                document.getElementById("cta-sblocco-container").style.display = "none";
+                identitaVerificata = true; 
+                setTimeout(() => {
+                    alert("Identità Attivata!");
+                    mostraBottonePWA();
+                }, 300);
+            } else {
+                alert("Errore: " + (resData.error || "Riprova"));
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Errore di rete.");
+        }
+    }
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -305,19 +299,19 @@ async function caricaProfiloPubblico(nomeMinuto) {
             document.getElementById("links-container").prepend(btn);
         }
     }
-      document.addEventListener("DOMContentLoaded", function() {
-    // Gestione del click ammortizzato sulla freccia di ritorno (250ms)
-    const backLink = document.getElementById("back-to-config");
-    if (backLink) {
-        backLink.addEventListener("click", function(e) {
-            e.preventDefault();
-            const targetUrl = this.href;
-            setTimeout(function() {
-                window.location.href = targetUrl;
-            }, 250);
-        });
-    }
-});
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const backLink = document.getElementById("back-to-config");
+        if (backLink) {
+            backLink.addEventListener("click", function(e) {
+                e.preventDefault();
+                const targetUrl = this.href;
+                setTimeout(function() {
+                    window.location.href = targetUrl;
+                }, 250);
+            });
+        }
+    });
 </script>
 
 </body>
