@@ -253,13 +253,13 @@
         
     </div>
     <div id="showroom-overlay" class="showroom-overlay">
-        <div id="expanding-box" class="expanding-box"> <div class="conversion-content">
+        <div id="expanding-box" class="expanding-box"> 
+            <div class="conversion-content">
                 <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
                 <button class="rendilo-tuo-btn" onclick="apriModaleAttivazione()">Rendilo tuo</button>
             </div>
         </div>
     </div>
-
     <div class="modal-overlay" id="activation-modal">
         <div class="modal-box">
             <h2>Attivazione Identità</h2>
@@ -293,8 +293,6 @@
     function apriModaleAttivazione() {
         document.getElementById("activation-modal").style.display = "flex";
     }
-
-
   }
 async function caricaProfiloPubblico(nomeMinuto) {
     try {
@@ -303,7 +301,6 @@ async function caricaProfiloPubblico(nomeMinuto) {
         
         if (data.success && data.fields) {
             const record = data.fields;
-            
             const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
             
             document.getElementById("tag-username").innerText = "@" + usernamePulito;
@@ -318,19 +315,20 @@ async function caricaProfiloPubblico(nomeMinuto) {
 
             if (stato === "in attesa") {
                 identitaVerificata = false;
-                
                 if (backLink) backLink.style.display = "flex";
                 
                 document.getElementById("cta-sblocco-container").style.display = "none";
                 document.getElementById("profile-content").style.display = "block";
                 document.getElementById("activation-modal").style.display = "none";
-                
                 document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
                 
-                // PARTENZA ANIMAZIONE RETTANGOLO (Dopo 2.5 secondi di quiete)
+                // Forziamo l'accensione immediata dello sfondo per mostrare il profilo nitido sotto
+                document.body.style.opacity = "1";
+                
+                // PARTENZA ANIMAZIONE RETTANGOLO (Dopo 2.5 secondi)
                 setTimeout(() => {
                     const overlay = document.getElementById("showroom-overlay");
-                    const box = document.getElementById("expanding-box");
+                    const box = document.getElementById("expanding-box"); 
                     const content = document.querySelector(".conversion-content");
                     
                     if (overlay && box && content) {
@@ -341,19 +339,18 @@ async function caricaProfiloPubblico(nomeMinuto) {
                             overlay.style.backdropFilter = "blur(0px)";
                             overlay.style.webkitBackdropFilter = "blur(0px)";
                             
-                            // Il rettangolo si spalanca
+                            // Il rettangolo d'élite si apre in larghezza e altezza
                             box.style.width = "320px";  
                             box.style.height = "210px"; 
                             
-                            // La frase appare nitida al suo interno
+                            // La frase compare al suo interno
                             content.style.opacity = "1";
                         }, 50);
                     }
                 }, 2500);
-
+                
             } else if (stato === "attivo") {
                 identitaVerificata = true;
-                
                 if (backLink) backLink.style.display = "none";
                 document.getElementById("cta-sblocco-container").style.display = "none";
                 if (document.getElementById("showroom-overlay")) {
@@ -361,9 +358,10 @@ async function caricaProfiloPubblico(nomeMinuto) {
                 }
                 document.getElementById("profile-content").style.display = "block";
                 mostraBottonePWA();
+                document.body.style.opacity = "1";
             }
-
-            // QUESTA RIGA ORA VIENE LETTA: LA PAGINA SI ACCENDE!
+        } else {
+            // Se il profilo non ha successo, accendi comunque lo schermo
             document.body.style.opacity = "1";
         }
     } catch (error) {
@@ -371,7 +369,6 @@ async function caricaProfiloPubblico(nomeMinuto) {
         document.body.style.opacity = "1";
     }
 }
-
     async function salvaPasswordEAttiva() {
         const pwd = document.getElementById("new-password").value;
         if (pwd.length < 4) {
