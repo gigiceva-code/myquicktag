@@ -146,19 +146,20 @@
             transform: scale(0.98) !important;
             opacity: 0.9;
         }
-       /* 1. Sfondo oscurato con effetto vetro opaco fluido */
+     /* 1. Sfondo completamente trasparente e interazioni libere */
         .showroom-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.4); /* Oscuramento leggero */
-            backdrop-filter: blur(0px); /* Parte senza sfocatura */
+            background: rgba(0, 0, 0, 0); /* Zero oscuramento: massima trasparenza */
+            backdrop-filter: blur(0px); /* Zero sfocatura sul profilo */
             -webkit-backdrop-filter: blur(0px);
             z-index: 900;
-            display: none; /* Sarà lo script ad accenderlo */
+            display: none; 
             justify-content: center;
             align-items: center;
-            transition: backdrop-filter 1.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 1.5s;
-        }
+            pointer-events: none; /* L'utente può ancora toccare e vedere il profilo sotto */
+            transition: background-color 1.5s;
+        } 
 
         /* 2. Il cerchio d'élite che si espande */
         .expanding-circle {
