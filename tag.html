@@ -319,7 +319,7 @@ function vaiAllaTag() {
                         document.getElementById("showroom-overlay").style.display = "none";
                     }
                     document.getElementById("profile-content").style.display = "block";
-                    mostraBottonePWA();
+                   mostraInstallatorePremium();
                     document.body.style.opacity = "1";
                 }
             } else {
@@ -331,22 +331,66 @@ function vaiAllaTag() {
         }
     }
 
+  // 1. ASCOLTATORE INTERNAZIONALE PWA
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        // Se l'utente è già attivo nel momento in cui il browser è pronto, inneschiamo l'installatore premium
+        if (identitaVerificata) {
+            mostraInstallatorePremium();
+        }
     });
 
-    function mostraBottonePWA() {
-        if (deferredPrompt && identitaVerificata && !document.getElementById("btn-installa-pwa")) {
-            const btn = document.createElement('button');
-            btn.id = "btn-installa-pwa";
-            btn.className = "pwa-btn";
-            btn.innerHTML = `<i class="fas fa-download"></i> Installa App`;
-            btn.onclick = () => { deferredPrompt.prompt(); };
-            document.getElementById("links-container").prepend(btn);
+    // 2. NUOVO INSTALLATORE FLUTTUANTE PREMIUM (Sostituisce la vecchia mostraBottonePWA)
+    function mostraInstallatorePremium() {
+        if (!deferredPrompt || !identitaVerificata || document.getElementById("premium-pwa-banner")) return;
+
+        const banner = document.createElement('div');
+        banner.id = "premium-pwa-banner";
+        banner.className = "premium-install-banner";
+        
+        banner.innerHTML = `
+            <div class="install-banner-header">
+                <p class="install-banner-text">
+                    ⚡️ <strong>Identità Attiva!</strong> Installa l'applicazione ufficiale sul tuo smartphone per gestire la tua MyQuickTag in tempo reale.
+                </p>
+                <button class="install-close-btn" onclick="chiudiBannerPremium()"><i class="fas fa-times"></i></button>
+            </div>
+            <button class="premium-install-action-btn" id="btn-effettivo-pwa">
+                <i class="fas fa-download"></i> Aggiungi alla Home
+            </button>
+        `;
+
+        document.body.appendChild(banner);
+
+        document.getElementById("btn-effettivo-pwa").onclick = () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('PWA Installata con successo');
+                    chiudiBannerPremium();
+                }
+                deferredPrompt = null;
+            });
+        };
+
+        setTimeout(() => {
+            banner.classList.add("show");
+        }, 100);
+    }
+
+    // 3. FUNZIONE DI CHIUSURA BANNER SATINATO
+    function chiudiBannerPremium() {
+        const banner = document.getElementById("premium-pwa-banner");
+        if (banner) {
+            banner.classList.remove("show");
+            setTimeout(() => {
+                banner.remove();
+            }, 500);
         }
     }
 
+    // 4. GESTIONE TRANSIZIONE LINK DI CONFIGURAZIONE (CONSERVATO)
     document.addEventListener("DOMContentLoaded", function() {
         const backLink = document.getElementById("back-to-config");
         if (backLink) {
@@ -358,7 +402,7 @@ function vaiAllaTag() {
                 }, 250);
             });
         }
-    });
+    }); 
 </script>
 
 </body>
