@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+                    <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -63,37 +63,6 @@
             gap: 16px;
         }
 
-        /* Stile modale per la password */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 1000;
-            justify-content: center; align-items: center; padding: 24px;
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-        }
-
-        .modal-box {
-            background: #111; border: 1px solid #333; border-radius: 20px;
-            padding: 30px 24px; width: 100%; max-width: 340px; text-align: center;
-        }
-
-        .modal-box h2 {
-            color: var(--accent-smeraldo); margin: 0 0 10px 0; font-size: 1.4rem;
-        }
-
-        .modal-box p {
-            color: #aaa; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;
-        }
-
-        .modal-box input {
-            width: 100%; padding: 16px; margin-bottom: 20px;
-            background: #000; border: 1px solid #444; color: white;
-            border-radius: 12px; box-sizing: border-box; font-size: 1rem;
-        }
-
-        .modal-box input:focus {
-            outline: none; border-color: var(--accent-smeraldo);
-        }
-
         /* Bottone PWA dinamico */
         .pwa-btn {
             background: var(--accent-smeraldo);
@@ -130,24 +99,17 @@
             box-shadow: 0 10px 25px rgba(255,255,255,0.1);
         }
         
-        /* Bottone di conferma interno alla modale */
-        .modal-confirm-btn {
-            background: var(--accent-smeraldo); color: #000000;
-            border: none; padding: 16px; border-radius: 12px;
-            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
-        }
-
         /* Effetti di pressione ammortizzati senza scatti */
-        .sblocco-btn, .modal-confirm-btn {
+        .sblocco-btn {
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s !important;
             -webkit-tap-highlight-color: transparent;
         }
-        .sblocco-btn:active, .modal-confirm-btn:active {
+        .sblocco-btn:active {
             transform: scale(0.98) !important;
             opacity: 0.9;
         }
         
-        /* 1. Sfondo completamente trasparente e interazioni libere */
+        /* Sfondo completamente trasparente e interazioni libere */
         .showroom-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -162,7 +124,7 @@
             transition: background-color 1.5s;
         } 
 
-        /* 2. Il rettangolo fluttuante che si espande in larghezza */
+        /* Il rettangolo fluttuante che si espande in larghezza */
         .expanding-box {
             width: 0px;
             height: 0px;
@@ -196,7 +158,7 @@
             color: #ffffff;
         }
 
-        /* 4. Il bottone premium in vetro satinato trasparente */
+        /* Il bottone premium in vetro satinato trasparente */
         .rendilo-tuo-btn {
             background: rgba(255, 255, 255, 0.07); /* Trasparenza ghiaccio */
             color: #ffffff; /* Testo bianco puro e nitido */
@@ -220,11 +182,6 @@
             background: rgba(255, 255, 255, 0.15); /* Si illumina leggermente sotto il dito */
             transform: scale(0.97);
         }
-        @keyframes popCheck {
-    0% { transform: scale(0.3); opacity: 0; }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-}
     </style>
 </head>
 <body>
@@ -243,54 +200,22 @@
         <div class="links-container" id="links-container"></div>
         
         <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
-            <button class="sblocco-btn" onclick="apriModaleAttivazione()">
+            <button class="sblocco-btn" onclick="vaiAlCheckout()">
                 <i class="fas fa-unlock-alt"></i> Sblocca la tua MyQuickTag
             </button>
         </div>
         
     </div>
 
-   <div id="showroom-overlay" class="showroom-overlay">
+    <div id="showroom-overlay" class="showroom-overlay">
         <div id="expanding-box" class="expanding-box"> 
             <div class="conversion-content">
                 <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
-                <button class="rendilo-tuo-btn" onclick="apriModaleAttivazione()">Attiva la tua myquicktag</button>
+                <button class="rendilo-tuo-btn" id="showroom-action-btn">Attiva la tua myquicktag</button>
             </div>
         </div>
     </div>
-    <div class="modal-overlay" id="activation-modal">
-        <div class="modal-box" style="position: relative; overflow: hidden;">
-            <div id="modal-step-checkout">
-                <h2 style="color: #ffffff;">Rivendica la tua Tag</h2>
-                <p>Il nome utente <span id="modal-username-summary" style="color: var(--accent-smeraldo); font-weight: 600;">@...</span> è disponibile. Bloccalo subito prima che lo faccia qualcun altro.</p>
-                
-                <div style="background: rgba(255,255,255,0.03); border: 1px solid #222; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9rem; color: #888;">
-                    Licenza d'uso esclusiva + PWA Identity
-                </div>
 
-                <button class="modal-confirm-btn" onclick="avviaAcquisto()">Procedi all'acquisto</button>
-            </div>
-
-            <div id="modal-step-password" style="display: none;">
-                <h2 style="color: var(--accent-smeraldo);">Attivazione Identità</h2>
-                <p>Acquisto completato! Imposta la tua chiave di sicurezza (password) per rendere pubblica la tua Tag e abilitare l'App.</p>
-                <input type="password" id="new-password" placeholder="Scegli una password">
-                <button class="modal-confirm-btn" onclick="salvaPasswordEAttiva()">Conferma e Attiva</button>
-            </div>
-
-            <div id="modal-step-success" style="display: none; text-align: center; padding: 10px 0;">
-                <div style="font-size: 3.5rem; margin-bottom: 15px; animation: popCheck 0.4s ease-out;">🎉</div>
-                <h2 style="color: #ffffff; margin-bottom: 10px;">Congratulazioni!</h2>
-                <p style="font-size: 1.05rem; margin-bottom: 20px;">
-                    La tua identità digitale è ufficialmente attiva. Il piano <span id="success-plan-name" style="color: var(--accent-smeraldo); font-weight: 600; text-transform: uppercase;">...</span> è ora legato al tuo nome.
-                </p>
-                <div style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 12px; border-radius: 10px; margin-bottom: 25px; font-size: 0.9rem; color: #ececec;">
-                    Il tuo profilo è online e pronto per essere condiviso col mondo.
-                </div>
-                <button class="modal-confirm-btn" onclick="chiudiEEntra()">Entra nella tua Dashboard</button>
-            </div>
-        </div>
-    </div>
     <script>
     const params = new URLSearchParams(window.location.search);
     let nomeUtenteURL = params.get("u") || ""; 
@@ -311,25 +236,13 @@
         caricaProfiloPubblico(globalUtente);
     }
 
-    // Funzione per aprire la modale resettando gli step (parte sempre dal Checkout)
-    function apriModaleAttivazione() {
-        document.getElementById("modal-step-checkout").style.display = "block";
-        document.getElementById("modal-step-password").style.display = "none";
-        document.getElementById("activation-modal").style.display = "flex";
-    }
-
-    // Gestisce il click sul bottone di acquisto (per ora simula il successo)
-    async function avviaAcquisto() {
-        console.log("Avvio del pagamento per: " + globalUtente);
-        
-        // Simuliamo che il pagamento sia andato a buon fine:
-        // Nascondiamo la schermata di acquisto e mostriamo il campo per la password
-        document.getElementById("modal-step-checkout").style.display = "none";
-        document.getElementById("modal-step-password").style.display = "block";
+    // Indirizzamento formale alla pagina commerciale esterna protetta
+    function vaiAlCheckout() {
+        if (!globalUtente) return;
+        window.location.href = `/checkout.html?u=${globalUtente}`;
     }
         
-
-async function caricaProfiloPubblico(nomeMinuto) {
+    async function caricaProfiloPubblico(nomeMinuto) {
         try {
             const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
             const data = await response.json();
@@ -354,14 +267,14 @@ async function caricaProfiloPubblico(nomeMinuto) {
                     
                     document.getElementById("cta-sblocco-container").style.display = "none";
                     document.getElementById("profile-content").style.display = "block";
-                    document.getElementById("activation-modal").style.display = "none";
-                    document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
-                    document.getElementById("modal-username-summary").innerText = `@${usernamePulito}`;
                     
-                    // MODIFICA PREMIUM: Cambiamo il testo del bottone in minuscolo via script
-                    const btnRendiloTuo = document.querySelector(".rendilo-tuo-btn");
+                    // Impostazione testi e link diretti sul modulo di vendita
+                    document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                    
+                    const btnRendiloTuo = document.getElementById("showroom-action-btn");
                     if (btnRendiloTuo) {
                         btnRendiloTuo.innerText = "Attiva la tua myquicktag";
+                        btnRendiloTuo.onclick = vaiAlCheckout;
                     }
                     
                     // Forza l'accensione dello schermo per mostrare il profilo sotto pulito e trasparente
@@ -411,56 +324,6 @@ async function caricaProfiloPubblico(nomeMinuto) {
             console.error("Errore di caricamento:", error);
             document.body.style.opacity = "1";
         }
-    }
-async function salvaPasswordEAttiva() {
-        const pwd = document.getElementById("new-password").value;
-        if (pwd.length < 4) {
-            alert("La password deve essere di almeno 4 caratteri.");
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/update-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username_system: globalUtente,
-                    password: pwd,
-                    stato: "attivo"      
-                })
-            });
-            
-            const resData = await response.json();
-            if (resData.success) {
-                // Sblocchiamo i permessi per l'app
-                identitaVerificata = true; 
-                if (document.getElementById("cta-sblocco-container")) {
-                    document.getElementById("cta-sblocco-container").style.display = "none";
-                }
-                
-                // Impostiamo il nome del piano dinamico nel messaggio di successo
-                const nomePianoScelto = "PWA Identity Premium"; 
-                document.getElementById("success-plan-name").innerText = nomePianoScelto;
-
-                // CAMBIO STEP FLUIDO: Nascondiamo la password e accendiamo le congratulazioni!
-                document.getElementById("modal-step-password").style.display = "none";
-                document.getElementById("modal-step-success").style.display = "block";
-                
-                // Prepariamo in background il bottone PWA senza interrompere la modale
-                mostraBottonePWA();
-            } else {
-                alert("Errore: " + (resData.error || "Riprova"));
-            }
-        } catch (e) {
-            console.error(e);
-            alert("Errore di rete.");
-        }
-    }
-
-    // Ricordati di aggiungere anche questa subito sotto, serve a gestire il tasto finale del successo!
-    function chiudiEEntra() {
-        document.getElementById("activation-modal").style.display = "none";
-        window.location.reload(); 
     }
 
     window.addEventListener('beforeinstallprompt', (e) => {
