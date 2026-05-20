@@ -320,6 +320,20 @@
 </button>
         </div>
     </div>
+   <div id="main-tag-profile" style="opacity: 0; transform: scale(0.98); transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); max-width: 480px; margin: 0 auto; padding: 20px;">
+    
+    <header style="text-align: center; margin-bottom: 40px; margin-top: 30px;">
+        <div class="avatar-wrapper" style="position: relative; display: inline-block;">
+            <img src="tuo-avatar.jpg" alt="Profile" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            </div>
+        <h1 style="color: #FFFFFF; font-size: 24px; font-weight: 600; margin-top: 16px; letter-spacing: -0.5px;">Nome Utente</h1>
+        <p style="color: #8E8E93; font-size: 14px; font-weight: 400; margin-top: 6px; line-height: 1.4;">Ruolo o Bio minimale in due righe.</p>
+    </header>
+
+    <main class="tag-grid" style="display: flex; flex-direction: column; gap: 16px;">
+        </main>
+    
+</div> 
 
     <script>
     const params = new URLSearchParams(window.location.search);
@@ -462,25 +476,35 @@
         }
     }
 
-    function chiudiWelcomeEMostraTag() {
-        const overlay = document.getElementById("tag-welcome-overlay");
-        if (overlay) {
+   function chiudiWelcomeEMostraTag() {
+    const overlay = document.getElementById("tag-welcome-overlay");
+    if (overlay) {
+        // 1. Iniettiamo al volo la transizione d'élite (curva cubic-bezier stile Apple)
+        overlay.style.transition = "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+        
+        // 2. Facciamo sfumare e arretrare leggermente l'overlay
+        overlay.style.opacity = "0";
+        overlay.style.transform = "scale(0.98)";
+        
+        // 3. Solo quando l'animazione è finita (dopo 400ms), lo spegniamo del tutto
+        setTimeout(function() {
             overlay.style.display = "none";
-        }
+        }, 400);
     }
+}
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const backLink = document.getElementById("back-to-config");
-        if (backLink) {
-            backLink.addEventListener("click", function(e) {
-                e.preventDefault();
-                const targetUrl = this.href;
-                setTimeout(function() {
-                    window.location.href = targetUrl;
-                }, 250);
-            });
-        }
-    });
+document.addEventListener("DOMContentLoaded", function() {
+    const backLink = document.getElementById("back-to-config");
+    if (backLink) {
+        backLink.addEventListener("click", function(e) {
+            e.preventDefault();
+            const targetUrl = this.href;
+            setTimeout(function() {
+                window.location.href = targetUrl;
+            }, 250);
+        });
+    }
+});
 </script>
 
 </body>
