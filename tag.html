@@ -161,22 +161,22 @@
             transition: background-color 1.5s;
         } 
 
-        /* 2. Il cerchio d'élite che si espande */
-        .expanding-circle {
+       /* 2. Il rettangolo fluttuante che si espande in larghezza */
+        .expanding-box {
             width: 0px;
             height: 0px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px); /* Effetto Nothing/Apple all'interno */
-            -webkit-backdrop-filter: blur(20px);
+            border-radius: 12px; /* Angoli leggermente smussati, elegantissimo */
+            background: rgba(255, 255, 255, 0.02); /* Trasparenza cristallina */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Bordo bianco luminoso e nitido */
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1), height 1.8s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
+            pointer-events: auto;
+            /* Transizione fluida su larghezza e altezza */
+            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        } 
 
    /* 2. Il cerchio fluttuante (Anello di luce puro, zero sfocatura dietro) */
         .expanding-circle {
@@ -253,8 +253,7 @@
         
     </div>
     <div id="showroom-overlay" class="showroom-overlay">
-        <div id="expanding-circle" class="expanding-circle">
-            <div class="conversion-content">
+        <div id="expanding-box" class="expanding-box"> <div class="conversion-content">
                 <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
                 <button class="rendilo-tuo-btn" onclick="apriModaleAttivazione()">Rendilo tuo</button>
             </div>
@@ -335,18 +334,27 @@ async function caricaProfiloPubblico(nomeMinuto) {
                     if (overlay && circle && content) {
                         overlay.style.display = "flex";
                         
-                      setTimeout(() => {
-                            // Massima trasparenza: rimosso lo sfondo nero e il blur sulla tag
+                      // PARTENZA ANIMAZIONE RETTANGOLO (Dopo 2.5 secondi)
+                setTimeout(() => {
+                    const overlay = document.getElementById("showroom-overlay");
+                    const box = document.getElementById("expanding-box"); // Puntiamo al box
+                    const content = document.querySelector(".conversion-content");
+                    
+                    if (overlay && box && content) {
+                        overlay.style.display = "flex";
+                        
+                        setTimeout(() => {
                             overlay.style.background = "rgba(0, 0, 0, 0)";
                             overlay.style.backdropFilter = "blur(0px)";
                             overlay.style.webkitBackdropFilter = "blur(0px)";
                             
-                            // Il cerchio si espande regolarmente
-                            circle.style.width = "340px";
-                            circle.style.height = "340px";
+                            // Il rettangolo si apre: prima prende l'altezza, poi si spalanca in larghezza
+                            box.style.width = "320px";  // Larghezza perfetta per la frase
+                            box.style.height = "210px"; // Altezza proporzionata per contenere tutto comodo
                             
+                            // La frase appare dolcemente al suo interno appena è aperto
                             content.style.opacity = "1";
-                        }, 50); 
+                        }, 50);
                     }
                 }, 2500);
                 
