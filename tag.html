@@ -325,7 +325,7 @@ async function caricaProfiloPubblico(nomeMinuto) {
                 
                 document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
                 
-                // PARTENZA ANIMAZIONE (Dopo 2.5 secondi di quiete)
+           // PARTENZA ANIMAZIONE (Dopo 2.5 secondi di quiete)
                 setTimeout(() => {
                     const overlay = document.getElementById("showroom-overlay");
                     const circle = document.getElementById("expanding-circle");
@@ -357,7 +357,6 @@ async function caricaProfiloPubblico(nomeMinuto) {
                         }, 50);
                     }
                 }, 2500);
-                
             } else if (stato === "attivo") {
                 identitaVerificata = true;
                 
