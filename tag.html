@@ -1,9 +1,9 @@
-                    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MyQuickTag Identity</title>
+    <title>MyQuickTag</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -11,11 +11,6 @@
     <link id="dynamic-icon" rel="icon" href="">
 
     <style>
-        /* Effetto accensione showroom */
-        body {
-            opacity: 0;
-            transition: opacity 0.6s ease-out; /* 0.6 secondi di pura dissolvenza fluida */
-        }
         :root {
             --bg-color: #000000;
             --accent-smeraldo: #50C878;
@@ -23,7 +18,10 @@
             --text-sec: #6c6c70;
         }
         
+        /* Effetto accensione showroom e setup base unificati */
         body {
+            opacity: 0;
+            transition: opacity 0.6s ease-out;
             margin: 0; padding: 24px;
             background-color: var(--bg-color);
             font-family: 'Inter', sans-serif;
@@ -63,7 +61,6 @@
             gap: 16px;
         }
 
-        /* Bottone PWA dinamico */
         .pwa-btn {
             background: var(--accent-smeraldo);
             color: #000; border: none; padding: 18px; border-radius: 14px;
@@ -71,7 +68,6 @@
             display: flex; justify-content: center; align-items: center; gap: 10px;
         }
 
-        /* Stile per la freccia torna alla configurazione */
         .back-link-top {
             align-self: flex-start;
             color: #ffffff;
@@ -90,17 +86,13 @@
             transform: scale(0.97);
         }
 
-        /* Bottone di Sblocco nello Showroom */
+        /* Bottone di Sblocco nello Showroom Unificato */
         .sblocco-btn {
             background: #ffffff; color: #000000;
             border: none; padding: 18px; border-radius: 14px;
             font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
             display: flex; justify-content: center; align-items: center; gap: 10px;
             box-shadow: 0 10px 25px rgba(255,255,255,0.1);
-        }
-        
-        /* Effetti di pressione ammortizzati senza scatti */
-        .sblocco-btn {
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s !important;
             -webkit-tap-highlight-color: transparent;
         }
@@ -109,435 +101,174 @@
             opacity: 0.9;
         }
         
-        /* Sfondo completamente trasparente e interazioni libere */
+        /* --- SHOWROOM OVERLAY LUXURY MINIMAL --- */
         .showroom-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0); /* Zero oscuramento: massima trasparenza */
-            backdrop-filter: blur(0px); /* Zero sfocatura sul profilo */
-            -webkit-backdrop-filter: blur(0px);
-            z-index: 900;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 4, 4, 0.75); /* Sfondo scuro premium di partenza */
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            z-index: 99999;
             display: none; 
             justify-content: center;
             align-items: center;
-            pointer-events: none; /* L'utente può ancora toccare e vedere il profilo sotto */
+            padding: 24px;
+            box-sizing: border-box;
             transition: background-color 1.5s;
         } 
 
-        /* Il rettangolo fluttuante che si espande in larghezza */
         .expanding-box {
-            width: 0px;
-            height: 0px;
-            border-radius: 12px; /* Angoli leggermente smussati, elegantissimo */
-            background: rgba(255, 255, 255, 0.02); /* Trasparenza cristallina */
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Bordo bianco luminoso e nitido */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 0px; height: 0px;
+            background: rgba(18, 18, 18, 0.8); /* Card satinata */
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Micro-bordo cristallino */
+            border-radius: 24px;
+            padding: 40px 24px;
+            max-width: 360px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
             overflow: hidden;
-            pointer-events: auto;
-            /* Transizione fluida su larghezza e altezza */
             transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         } 
 
         .conversion-content {
             opacity: 0;
             transition: opacity 0.4s ease-out;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            align-items: center;
             width: 100%;
             box-sizing: border-box;
         }
 
-        .conversion-content h2 {
-            font-size: 1.3rem;
-            font-weight: 500;
-            letter-spacing: -0.3px;
-            line-height: 1.4;
-            margin-bottom: 30px;
+        #conversion-title {
+            font-size: 1.45rem;
+            font-weight: 700;
             color: #ffffff;
+            margin: 0;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
         }
 
-        /* Il bottone premium in vetro satinato trasparente */
         .rendilo-tuo-btn {
-            background: rgba(255, 255, 255, 0.07); /* Trasparenza ghiaccio */
-            color: #ffffff; /* Testo bianco puro e nitido */
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Bordino finissimo stile orologeria */
-            padding: 16px 32px;
-            border-radius: 30px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            letter-spacing: 0.3px;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            letter-spacing: -0.2px;
             cursor: pointer;
             width: 100%;
-            backdrop-filter: blur(10px); /* Un micro-vetro nel vetro */
-            -webkit-backdrop-filter: blur(10px);
-            transition: background 0.3s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
             -webkit-tap-highlight-color: transparent;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        
-        /* Effetto reattività premium quando viene toccato */
+        .rendilo-tuo-btn:hover {
+            background: #e5e7eb;
+        }
         .rendilo-tuo-btn:active {
-            background: rgba(255, 255, 255, 0.15); /* Si illumina leggermente sotto il dito */
             transform: scale(0.97);
         }
-      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
-function vaiAllaTag() {
-    if (!targetUserClean) return;
-    window.location.href = `/tag.html?u=${targetUserClean}`;
-}
-      /* --- ENGINE INSTALLER LUXURY MINIMAL --- */
-.premium-install-banner {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(40px);
-    width: calc(100% - 32px);
-    max-width: 380px;
-    background: rgba(18, 18, 18, 0.8); /* Nero profondo semitrasparente */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Micro-bordo cristallino */
-    border-radius: 20px;
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    z-index: 99999;
-    opacity: 0;
-    visibility: hidden;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, visibility 0.4s;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
 
-/* Stato attivo con animazione fluida */
-.premium-install-banner.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-    visibility: visible;
-}
+        /* --- SCHERMATA BENVENUTO REALE TAG --- */
+        .tag-welcome-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 4, 4, 0.8);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-.install-banner-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-}
+        .tag-welcome-card {
+            background: rgba(18, 18, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px 24px;
+            max-width: 360px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: tagEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
 
-.install-banner-content-box {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    text-align: left;
-}
+        @keyframes tagEntrance {
+            from { opacity: 0; transform: scale(0.96) translateY(15px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
 
-.install-banner-title {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin: 0;
-    letter-spacing: -0.3px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+        .tag-success-icon {
+            font-size: 2.2rem;
+            color: #34d399;
+            margin-bottom: 20px;
+        }
 
-.install-banner-title i {
-    color: #34d399; /* Accento smeraldo premium */
-    font-size: 0.85rem;
-}
+        .tag-welcome-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 12px 0;
+            letter-spacing: -0.5px;
+        }
 
-.install-banner-text {
-    font-size: 0.82rem;
-    color: #9ca3af; /* Grigio attenuato minimal */
-    line-height: 1.4;
-    margin: 0;
-    font-weight: 400;
-}
+        .tag-welcome-text {
+            font-size: 0.9rem;
+            color: #a1a1aa;
+            line-height: 1.5;
+            margin: 0 0 32px 0;
+        }
 
-.install-close-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: #9ca3af;
-    cursor: pointer;
-    font-size: 0.75rem;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s, color 0.2s;
-    padding: 0;
-}
+        .tag-welcome-btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            letter-spacing: -0.2px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .tag-welcome-btn:active {
+            transform: scale(0.97);
+            background: #e4e4e7;
+        }
 
-.install-close-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-}
-
-/* Il Bottone d'Azione Principale */
-.premium-install-action-btn {
-    background: #ffffff; /* Bianco puro a contrasto assoluto */
-    color: #000000;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.88rem;
-    letter-spacing: -0.2px;
-    cursor: pointer;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.2s, background 0.2s;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-    -webkit-tap-highlight-color: transparent;
-}
-
-.premium-install-action-btn:active {
-    transform: scale(0.97);
-    background: #e5e7eb;
-}
-
-.premium-install-action-btn i {
-    font-size: 0.85rem;
-}
-   
-
-/* Mostra con animazione */
-.premium-password-container.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.password-label {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #e5e7eb; /* Grigio chiaro */
-    text-align: left;
-    display: block;
-    margin-bottom: 6px;
-}
-
-.premium-input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    font-size: 1rem;
-    padding: 14px;
-    border-radius: 12px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
-}
-
-.premium-input:focus {
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
-}
-
-.premium-password-btn {
-    background: #ffffff; /* Bianco puro a contrasto assoluto */
-    color: #000000;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.88rem;
-    letter-spacing: -0.2px;
-    cursor: pointer;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.2s, background 0.2s;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-    -webkit-tap-highlight-color: transparent;
-    margin-top: 8px;
-}
-
-.premium-password-btn:active {
-    transform: scale(0.97);
-    background: #e5e7eb;
-} 
-      /* --- SHOWROOM OVERLAY LUXURY MINIMAL --- */
-.showroom-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(4, 4, 4, 0.75); /* Sfondo scuro premium */
-    backdrop-filter: blur(18px); /* Sfoca il profilo sottostante */
-    -webkit-backdrop-filter: blur(18px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-    padding: 24px;
-    box-sizing: border-box;
-}
-
-.expanding-box {
-    background: rgba(18, 18, 18, 0.8); /* Card satinata */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Micro-bordo cristallino */
-    border-radius: 24px;
-    padding: 40px 24px;
-    max-width: 360px;
-    width: 100%;
-    box-sizing: border-box;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    text-align: center;
-}
-
-.conversion-content {
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-    align-items: center;
-}
-
-#conversion-title {
-    font-size: 1.45rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0;
-    letter-spacing: -0.5px;
-    line-height: 1.3;
-}
-
-/* Il Bottone di Conversione d'Impatto (Bianco Puro) */
-.rendilo-tuo-btn {
-    background: #ffffff;
-    color: #000000;
-    border: none;
-    padding: 16px 20px;
-    border-radius: 14px;
-    font-weight: 600;
-    font-size: 0.92rem;
-    letter-spacing: -0.2px;
-    cursor: pointer;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.2s, background 0.2s;
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
-    -webkit-tap-highlight-color: transparent;
-}
-
-.rendilo-tuo-btn:hover {
-    background: #e5e7eb;
-}
-
-.rendilo-tuo-btn:active {
-    transform: scale(0.97);
-}
-     /* --- SCHERMATA BENVENUTO REALE TAG --- */
-.tag-welcome-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(4, 4, 4, 0.8); /* Sfondo scuro di focus */
-    backdrop-filter: blur(25px); /* Effetto vetro profondo */
-    -webkit-backdrop-filter: blur(25px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999999;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.tag-welcome-card {
-    background: rgba(18, 18, 18, 0.6); /* Trasparenza d'élite */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Micro-bordo cristallino */
-    border-radius: 24px;
-    padding: 40px 24px;
-    max-width: 360px;
-    width: 100%;
-    box-sizing: border-box;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    text-align: center;
-    animation: tagEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes tagEntrance {
-    from { opacity: 0; transform: scale(0.96) translateY(15px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.tag-success-icon {
-    font-size: 2.2rem;
-    color: #34d399; /* Verde smeraldo premium */
-    margin-bottom: 20px;
-}
-
-.tag-welcome-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 12px 0;
-    letter-spacing: -0.5px;
-}
-
-.tag-welcome-text {
-    font-size: 0.9rem;
-    color: #a1a1aa;
-    line-height: 1.5;
-    margin: 0 0 32px 0;
-}
-
-/* Tasto d'Azione Bianco Puro */
-.tag-welcome-btn {
-    background: #ffffff;
-    color: #000000;
-    border: none;
-    padding: 16px;
-    border-radius: 14px;
-    font-weight: 600;
-    font-size: 0.92rem;
-    letter-spacing: -0.2px;
-    cursor: pointer;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    transition: background 0.2s, transform 0.1s;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-    -webkit-tap-highlight-color: transparent;
-}
-
-.tag-welcome-btn:active {
-    transform: scale(0.97);
-    background: #e4e4e7;
-}
-
-/* Tasto Secondario Minimal */
-.tag-skip-btn {
-    background: transparent;
-    border: none;
-    color: #71717a;
-    font-size: 0.85rem;
-    margin-top: 18px;
-    cursor: pointer;
-    text-decoration: underline;
-    transition: color 0.2s;
-}
-.tag-skip-btn:hover {
-    color: #a1a1aa;
-} 
+        .tag-skip-btn {
+            background: transparent;
+            border: none;
+            color: #71717a;
+            font-size: 0.85rem;
+            margin-top: 18px;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+        .tag-skip-btn:hover {
+            color: #a1a1aa;
+        } 
     </style>
 </head>
 <body>
@@ -547,10 +278,9 @@ function vaiAllaTag() {
     </a>
 
     <div id="profile-content" style="display: none; width: 100%; max-width: 350px;">
-        
         <div class="profile-header">
             <h1 class="username" id="tag-username">@...</h1>
-            <p class="bio" id="tag-bio">Caricamento identità...</p>
+            <p class="bio" id="tag-bio">Caricamento in corso...</p>
         </div>
 
         <div class="links-container" id="links-container"></div>
@@ -560,7 +290,6 @@ function vaiAllaTag() {
                 <i class="fas fa-unlock-alt"></i> Sblocca la tua MyQuickTag
             </button>
         </div>
-        
     </div>
 
     <div id="showroom-overlay" class="showroom-overlay">
@@ -571,25 +300,27 @@ function vaiAllaTag() {
             </div>
         </div>
     </div>
-<div id="tag-welcome-overlay" class="tag-welcome-overlay">
-    <div class="tag-welcome-card">
-        <div class="tag-success-icon">
-            <i class="fas fa-check-circle"></i>
+
+    <div id="tag-welcome-overlay" class="tag-welcome-overlay">
+        <div class="tag-welcome-card">
+            <div class="tag-success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="tag-welcome-title">Tag Attivata</h2>
+            <p class="tag-welcome-text">
+                La tua MyQuickTag è ora operativa. Installa l'applicazione per configurare i tuoi collegamenti e aggiornare la tua Tag in tempo reale.
+            </p>
+            
+            <button class="tag-welcome-btn" id="trigger-pwa-install">
+                <i class="fas fa-download"></i> Aggiungi alla Home
+            </button>
+            
+            <button class="tag-skip-btn" onclick="chiudiWelcomeEMostraTag()">
+                Visualizza la Tag
+            </button>
         </div>
-        <h2 class="tag-welcome-title">Tag Attivata</h2>
-        <p class="tag-welcome-text">
-            La tua MyQuickTag è ora operativa. Installa l'applicazione per configurare i tuoi collegamenti e aggiornare la tua Tag in tempo reale.
-        </p>
-        
-        <button class="tag-welcome-btn" id="trigger-pwa-install">
-            <i class="fas fa-download"></i> Aggiungi alla Home
-        </button>
-        
-        <button class="tag-skip-btn" onclick="chiudiWelcomeEMostraTag()">
-            Visualizza la Tag
-        </button>
     </div>
-</div>
+
     <script>
     const params = new URLSearchParams(window.location.search);
     let nomeUtenteURL = params.get("u") || ""; 
@@ -610,10 +341,14 @@ function vaiAllaTag() {
         caricaProfiloPubblico(globalUtente);
     }
 
-    // Indirizzamento formale alla pagina commerciale esterna protetta
     function vaiAlCheckout() {
         if (!globalUtente) return;
         window.location.href = `/checkout.html?u=${globalUtente}`;
+    }
+
+    function vaiAllaTag() {
+        if (!globalUtente) return;
+        window.location.href = `/tag.html?u=${globalUtente}`;
     }
         
     async function caricaProfiloPubblico(nomeMinuto) {
@@ -642,7 +377,6 @@ function vaiAllaTag() {
                     document.getElementById("cta-sblocco-container").style.display = "none";
                     document.getElementById("profile-content").style.display = "block";
                     
-                    // Impostazione testi e link diretti sul modulo di vendita
                     document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
                     
                     const btnRendiloTuo = document.getElementById("showroom-action-btn");
@@ -651,10 +385,8 @@ function vaiAllaTag() {
                         btnRendiloTuo.onclick = vaiAlCheckout;
                     }
                     
-                    // Forza l'accensione dello schermo per mostrare il profilo sotto pulito e trasparente
                     document.body.style.opacity = "1";
                     
-                    // PARTENZA ANIMAZIONE RETTANGOLO (Dopo 2.5 secondi)
                     setTimeout(() => {
                         const overlay = document.getElementById("showroom-overlay");
                         const box = document.getElementById("expanding-box"); 
@@ -664,15 +396,13 @@ function vaiAllaTag() {
                             overlay.style.display = "flex";
                             
                             setTimeout(() => {
-                                overlay.style.background = "rgba(0, 0, 0, 0)";
+                                overlay.style.background = "rgba(4, 4, 4, 0.0)"; /* Torna trasparente come da logica animazione */
                                 overlay.style.backdropFilter = "blur(0px)";
                                 overlay.style.webkitBackdropFilter = "blur(0px)";
                                 
-                                // Il rettangolo luminoso d'élite si spalanca
                                 box.style.width = "340px";  
                                 box.style.height = "210px"; 
                                 
-                                // Appena aperto, mostra fluidamente la frase e il tasto in vetro al suo interno
                                 setTimeout(() => {
                                     content.style.opacity = "1";
                                 }, 300);
@@ -688,7 +418,7 @@ function vaiAllaTag() {
                         document.getElementById("showroom-overlay").style.display = "none";
                     }
                     document.getElementById("profile-content").style.display = "block";
-                   mostraInstallatorePremium();
+                    mostraInstallatorePremium();
                     document.body.style.opacity = "1";
                 }
             } else {
@@ -700,79 +430,45 @@ function vaiAllaTag() {
         }
     }
 
- // 1. ASCOLTATORE EVENTO DI INSTALLAZIONE NATIVO BROWSER
+    // Gestione Evento Installazione PWA Nativo
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // Se l'ingranaggio del profilo ha già verificato l'utente, evochiamo l'interfaccia d'élite
         if (identitaVerificata) {
             mostraInstallatorePremium();
         }
     });
 
-    // 2. GENERATORE DELL'INTERFACCIA LUXURY INTERNA
     function mostraInstallatorePremium() {
-        // Blocco di sicurezza: usciamo se manca il prompt, se non è attivo o se è già presente a schermo
-        if (!deferredPrompt || !identitaVerificata || document.getElementById("premium-pwa-banner")) return;
-
-        // Creazione dinamica dell'elemento nel DOM
-        const banner = document.createElement('div');
-        banner.id = "premium-pwa-banner";
-        banner.className = "premium-install-banner";
+        if (!deferredPrompt || !identitaVerificata) return;
         
-        banner.innerHTML = `
-            <div class="install-banner-header">
-                <div class="install-banner-content-box">
-                    <h4 class="install-banner-title">
-                        <i class="fas fa-shield-check"></i> Identità Configurata
-                    </h4>
-                    <p class="install-banner-text">
-                        Aggiungi l'applicazione nativa alla tua home per gestire la tua MyQuickTag e monitorare gli accessi.
-                    </p>
-                </div>
-                <button class="install-close-btn" onclick="chiudiBannerPremium()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <button class="premium-install-action-btn" id="btn-effettivo-pwa">
-                <i class="fas fa-arrow-to-bottom"></i> Installa Applicazione
-            </button>
-        `;
+        const overlay = document.getElementById("tag-welcome-overlay");
+        if (overlay) {
+            overlay.style.display = "flex";
+        }
 
-        // Iniezione diretta nel body, isolato dal resto dei contenuti
-        document.body.appendChild(banner);
-
-        // Aggancio dell'azione di installazione al click sul tasto bianco
-        document.getElementById("btn-effettivo-pwa").onclick = () => {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('Premium PWA installata con successo.');
-                    chiudiBannerPremium();
-                }
-                deferredPrompt = null;
-            });
-        };
-
-        // Trigger temporizzato per far salire la card con effetto smooth
-        setTimeout(() => {
-            banner.classList.add("show");
-        }, 300);
-    }
-
-    // 3. LOGICA DI SCOMPARSA ELEGANTE
-    function chiudiBannerPremium() {
-        const banner = document.getElementById("premium-pwa-banner");
-        if (banner) {
-            banner.classList.remove("show");
-            // Eliminiamo l'elemento solo dopo che l'animazione di discesa è finita
-            setTimeout(() => {
-                banner.remove();
-            }, 600);
+        const btnInstall = document.getElementById("trigger-pwa-install");
+        if (btnInstall) {
+            btnInstall.onclick = () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('PWA installata con successo.');
+                        chiudiWelcomeEMostraTag();
+                    }
+                    deferredPrompt = null;
+                });
+            };
         }
     }
 
-    // 4. TRANSIZIONE DEL LINK DI CONFIGURAZIONE
+    function chiudiWelcomeEMostraTag() {
+        const overlay = document.getElementById("tag-welcome-overlay");
+        if (overlay) {
+            overlay.style.display = "none";
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         const backLink = document.getElementById("back-to-config");
         if (backLink) {
