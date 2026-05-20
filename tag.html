@@ -307,6 +307,237 @@ function vaiAllaTag() {
 .premium-install-action-btn i {
     font-size: 0.85rem;
 }
+   
+
+/* Mostra con animazione */
+.premium-password-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.password-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #e5e7eb; /* Grigio chiaro */
+    text-align: left;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.premium-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 14px;
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.premium-input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
+}
+
+.premium-password-btn {
+    background: #ffffff; /* Bianco puro a contrasto assoluto */
+    color: #000000;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: -0.2px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    -webkit-tap-highlight-color: transparent;
+    margin-top: 8px;
+}
+
+.premium-password-btn:active {
+    transform: scale(0.97);
+    background: #e5e7eb;
+} 
+      /* --- SHOWROOM OVERLAY LUXURY MINIMAL --- */
+.showroom-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(4, 4, 4, 0.75); /* Sfondo scuro premium */
+    backdrop-filter: blur(18px); /* Sfoca il profilo sottostante */
+    -webkit-backdrop-filter: blur(18px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.expanding-box {
+    background: rgba(18, 18, 18, 0.8); /* Card satinata */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Micro-bordo cristallino */
+    border-radius: 24px;
+    padding: 40px 24px;
+    max-width: 360px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.conversion-content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: center;
+}
+
+#conversion-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.5px;
+    line-height: 1.3;
+}
+
+/* Il Bottone di Conversione d'Impatto (Bianco Puro) */
+.rendilo-tuo-btn {
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 16px 20px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    letter-spacing: -0.2px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.rendilo-tuo-btn:hover {
+    background: #e5e7eb;
+}
+
+.rendilo-tuo-btn:active {
+    transform: scale(0.97);
+}
+     /* --- SCHERMATA BENVENUTO REALE TAG --- */
+.tag-welcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(4, 4, 4, 0.8); /* Sfondo scuro di focus */
+    backdrop-filter: blur(25px); /* Effetto vetro profondo */
+    -webkit-backdrop-filter: blur(25px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.tag-welcome-card {
+    background: rgba(18, 18, 18, 0.6); /* Trasparenza d'élite */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Micro-bordo cristallino */
+    border-radius: 24px;
+    padding: 40px 24px;
+    max-width: 360px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    text-align: center;
+    animation: tagEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tagEntrance {
+    from { opacity: 0; transform: scale(0.96) translateY(15px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.tag-success-icon {
+    font-size: 2.2rem;
+    color: #34d399; /* Verde smeraldo premium */
+    margin-bottom: 20px;
+}
+
+.tag-welcome-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.5px;
+}
+
+.tag-welcome-text {
+    font-size: 0.9rem;
+    color: #a1a1aa;
+    line-height: 1.5;
+    margin: 0 0 32px 0;
+}
+
+/* Tasto d'Azione Bianco Puro */
+.tag-welcome-btn {
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    letter-spacing: -0.2px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tag-welcome-btn:active {
+    transform: scale(0.97);
+    background: #e4e4e7;
+}
+
+/* Tasto Secondario Minimal */
+.tag-skip-btn {
+    background: transparent;
+    border: none;
+    color: #71717a;
+    font-size: 0.85rem;
+    margin-top: 18px;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+.tag-skip-btn:hover {
+    color: #a1a1aa;
+} 
     </style>
 </head>
 <body>
@@ -340,7 +571,25 @@ function vaiAllaTag() {
             </div>
         </div>
     </div>
-
+<div id="tag-welcome-overlay" class="tag-welcome-overlay">
+    <div class="tag-welcome-card">
+        <div class="tag-success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 class="tag-welcome-title">Tag Attivata</h2>
+        <p class="tag-welcome-text">
+            La tua MyQuickTag è ora operativa. Installa l'applicazione per configurare i tuoi collegamenti e aggiornare la tua Tag in tempo reale.
+        </p>
+        
+        <button class="tag-welcome-btn" id="trigger-pwa-install">
+            <i class="fas fa-download"></i> Aggiungi alla Home
+        </button>
+        
+        <button class="tag-skip-btn" onclick="chiudiWelcomeEMostraTag()">
+            Visualizza la Tag
+        </button>
+    </div>
+</div>
     <script>
     const params = new URLSearchParams(window.location.search);
     let nomeUtenteURL = params.get("u") || ""; 
