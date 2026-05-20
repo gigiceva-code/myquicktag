@@ -146,6 +146,73 @@
             transform: scale(0.98) !important;
             opacity: 0.9;
         }
+       /* 1. Sfondo oscurato con effetto vetro opaco fluido */
+        .showroom-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4); /* Oscuramento leggero */
+            backdrop-filter: blur(0px); /* Parte senza sfocatura */
+            -webkit-backdrop-filter: blur(0px);
+            z-index: 900;
+            display: none; /* Sarà lo script ad accenderlo */
+            justify-content: center;
+            align-items: center;
+            transition: backdrop-filter 1.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 1.5s;
+        }
+
+        /* 2. Il cerchio d'élite che si espande */
+        .expanding-circle {
+            width: 0px;
+            height: 0px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px); /* Effetto Nothing/Apple all'interno */
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1), height 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* 3. Il contenuto testuale che sfuma dentro il cerchio */
+        .conversion-content {
+            opacity: 0;
+            max-width: 280px;
+            padding: 20px;
+            transition: opacity 1s ease-out 0.8s; /* Parte dopo che il cerchio si è allargato */
+        }
+
+        .conversion-content h2 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+
+        /* 4. Il bottone premium "Rendilo tuo" */
+        .rendilo-tuo-btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 30px; /* Arrotondato stile lusso */
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 10px 20px rgba(255,255,255,0.05);
+        }
+        .rendilo-tuo-btn:active {
+            transform: scale(0.97);
+            opacity: 0.95;
+        } 
     </style>
 </head>
 <body>
@@ -169,6 +236,14 @@
             </button>
         </div>
         
+    </div>
+    <div id="showroom-overlay" class="showroom-overlay">
+        <div id="expanding-circle" class="expanding-circle">
+            <div class="conversion-content">
+                <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
+                <button class="rendilo-tuo-btn" onclick="apriModaleAttivazione()">Rendilo tuo</button>
+            </div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="activation-modal">
@@ -205,40 +280,78 @@
         document.getElementById("activation-modal").style.display = "flex";
     }
 
-    async function caricaProfiloPubblico(nomeMinuto) {
-        try {
-            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-            const data = await response.json();
+  async function caricaProfiloPubblico(nomeMinuto) {
+    try {
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const data = await response.json();
+        
+        if (data.success && data.fields) {
+            const record = data.fields;
             
-            if (data.success && data.fields) {
-                const record = data.fields;
+            const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+            
+            document.getElementById("tag-username").innerText = "@" + usernamePulito;
+            document.getElementById("tag-bio").innerText = record.bio || "";
+
+            const backLink = document.getElementById("back-to-config");
+            if (backLink) {
+                backLink.href = `profile.html?u=${nomeMinuto}`;
+            }
+
+            const stato = (record.stato || "").toLowerCase().trim();
+
+            if (stato === "in attesa") {
+                identitaVerificata = false;
                 
-                document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
-                document.getElementById("tag-bio").innerText = record.bio || "";
-
-                const backLink = document.getElementById("back-to-config");
-                if (backLink) {
-                    backLink.href = `profile.html?u=${nomeMinuto}`;
+                if (backLink) backLink.style.display = "flex";
+                
+                document.getElementById("cta-sblocco-container").style.display = "none";
+                document.getElementById("profile-content").style.display = "block";
+                document.getElementById("activation-modal").style.display = "none";
+                
+                document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                
+                // PARTENZA ANIMAZIONE (Dopo 2.5 secondi di quiete)
+                setTimeout(() => {
+                    const overlay = document.getElementById("showroom-overlay");
+                    const circle = document.getElementById("expanding-circle");
+                    const content = document.querySelector(".conversion-content");
+                    
+                    if (overlay && circle && content) {
+                        overlay.style.display = "flex";
+                        
+                        setTimeout(() => {
+                            overlay.style.background = "rgba(0, 0, 0, 0.5)";
+                            overlay.style.backdropFilter = "blur(4px)";
+                            overlay.style.webkitBackdropFilter = "blur(4px)";
+                            
+                            circle.style.width = "340px";
+                            circle.style.height = "340px";
+                            
+                            content.style.opacity = "1";
+                        }, 50);
+                    }
+                }, 2500);
+                
+            } else if (stato === "attivo") {
+                identitaVerificata = true;
+                
+                if (backLink) backLink.style.display = "none";
+                document.getElementById("cta-sblocco-container").style.display = "none";
+                if (document.getElementById("showroom-overlay")) {
+                    document.getElementById("showroom-overlay").style.display = "none";
                 }
+                document.getElementById("profile-content").style.display = "block";
+                mostraBottonePWA();
+            }
 
-                const stato = (record.stato || "").toLowerCase().trim();
-
-                if (stato === "in attesa") {
-                    identitaVerificata = false;
-                    
-                    if (backLink) backLink.style.display = "flex";
-                    document.getElementById("cta-sblocco-container").style.display = "block";
-                    document.getElementById("profile-content").style.display = "block";
-                    document.getElementById("activation-modal").style.display = "none";
-                    
-                } else if (stato === "attivo") {
-                    identitaVerificata = true;
-                    
-                    if (backLink) backLink.style.display = "none";
-                    document.getElementById("cta-sblocco-container").style.display = "none";
-                    document.getElementById("profile-content").style.display = "block";
-                    mostraBottonePWA();
-                }
+            document.body.style.opacity = "1";
+        }
+    } catch (error) {
+        console.error("Errore di caricamento:", error);
+        document.body.style.opacity = "1";
+    }
+}
 
                 document.body.style.opacity = "1";
             }
