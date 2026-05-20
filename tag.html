@@ -353,14 +353,6 @@ async function caricaProfiloPubblico(nomeMinuto) {
     }
   }
 
-                document.body.style.opacity = "1";
-            }
-        } catch (error) {
-            console.error("Errore di caricamento:", error);
-            document.body.style.opacity = "1";
-        }
-    }
-
     async function salvaPasswordEAttiva() {
         const pwd = document.getElementById("new-password").value;
         if (pwd.length < 4) {
