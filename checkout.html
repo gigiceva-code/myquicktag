@@ -436,10 +436,11 @@
             }
         }
 
-        // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA
-        function vaiAllaTag() {
-            window.location.href = `/${targetUserClean}`;
-        }
+     // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
+function vaiAllaTag() {
+    if (!targetUserClean) return;
+    window.location.href = `/tag.html?u=${targetUserClean}`;
+}
     </script>
 </body>
 </html>
