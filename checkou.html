@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Secure Checkout - MyQuickTag</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-checkout: #f9fafb;
+            --border-color: #e5e7eb;
+            --text-dark: #111111;
+            --text-muted: #6b7280;
+            --accent-success: #16a34a;
+            --accent-success-hover: #15803d;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-checkout);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .checkout-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            padding: 40px 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+            margin: 20px;
+        }
+
+        /* Intestazione di Sicurezza */
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .secure-badge {
+            background: #f3f4f6;
+            color: #4b5563;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .main-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+
+        /* Box Modulo Ordine / Invoice */
+        .invoice-box {
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 24px;
+        }
+
+        .invoice-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .invoice-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .item-spec {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .invoice-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 14px 0;
+        }
+
+        .total-row {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-top: 4px;
+        }
+
+        .price-tag {
+            font-size: 1.15rem;
+        }
+
+        /* Loghi Circuiti di Pagamento Istituzionali */
+        .payment-gateways {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .gateway-logo {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #9ca3af;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .legal-notice {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 24px;
+        }
+
+        /* Bottoni Standard Internazionali */
+        .action-button {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .action-button:hover {
+            background: #1f2937;
+        }
+        .action-button:active {
+            transform: scale(0.99);
+        }
+
+        .action-button.btn-success {
+            background: var(--accent-success);
+        }
+        .action-button.btn-success:hover {
+            background: var(--accent-success-hover);
+        }
+
+        /* Moduli di Input */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .standard-input {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 14px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            outline: none;
+            box-sizing: border-box;
+            width: 100%;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .standard-input:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .input-help {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Struttura Schermata di Successo */
+        .success-icon-box {
+            width: 56px;
+            height: 56px;
+            background: #dcfce7;
+            color: var(--accent-success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 0 auto 16px auto;
+        }
+
+        .badge-active {
+            background: #dcfce7;
+            color: var(--accent-success);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* Loader di caricamento iniziale */
+        #loading-screen {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-container">
+        
+        <div id="loading-screen">
+            <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 10px; color: #000;"></i>
+            <p>Verifica dei parametri dell'ordine in corso...</p>
+        </div>
+
+        <div id="step-payment" style="display: none;">
+            <div class="checkout-header">
+                <span class="secure-badge"><i class="fas fa-lock"></i> Connessione cifrata PCI-DSS</span>
+                <h2 class="main-title">Completa il tuo ordine</h2>
+            </div>
+
+            <div class="invoice-box">
+                <div class="invoice-row">
+                    <span class="item-title" id="display-username">Registrazione @...</span>
+                    <span class="item-spec" style="font-weight: 600; color: var(--text-dark);">Identity Pro</span>
+                </div>
+                <div class="invoice-row">
+                    <span class="item-spec">Licenza d'uso esclusiva + PWA Ecosystem</span>
+                    <span class="item-spec">Incluso</span>
+                </div>
+                <div class="invoice-divider"></div>
+                <div class="invoice-row total-row">
+                    <span>Totale dell'ordine</span>
+                    <span class="price-tag" id="display-price">€19,00</span>
+                </div>
+            </div>
+
+            <div class="payment-gateways">
+                <span class="gateway-logo">Visa</span>
+                <span class="gateway-logo">Mastercard</span>
+                <span class="gateway-logo">Apple Pay</span>
+                <span class="gateway-logo">Stripe</span>
+            </div>
+
+            <p class="legal-notice">Verrai indirizzato alla piattaforma di pagamento sicura. I dati della tua carta sono protetti da crittografia end-to-end.</p>
+            <button class="action-button" onclick="eseguiTransazione()">
+                Procedi al pagamento sicuro
+            </button>
+        </div>
+
+        <div id="step-password" style="display: none;">
+            <div class="checkout-header">
+                <h2 class="main-title">Configura la sicurezza</h2>
+                <p class="subtitle">Transazione approvata. Scegli ora le credenziali amministrative per accedere alla tua nuova dashboard.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="checkout-pwd" class="form-label">Scegli una password amministrativa</label>
+                <input type="password" id="checkout-pwd" class="standard-input" placeholder="Inserisci almeno 6 caratteri">
+                <span class="input-help">Questa chiave ti permetterà di modificare i link e i contenuti della tua Tag.</span>
+            </div>
+
+            <button class="action-button btn-success" onclick="salvaCredenzialiEAttiva()">
+                Conferma e Attiva Account
+            </button>
+        </div>
+
+        <div id="step-success" style="display: none;">
+            <div class="success-icon-box">✓</div>
+            <div class="checkout-header" style="margin-bottom: 20px;">
+                <h2 class="main-title">Attivazione completata</h2>
+                <p class="subtitle">Il tuo profilo digitale internazionale è ora configurato e visibile pubblicamente.</p>
+            </div>
+
+            <div class="invoice-box" style="text-align: left; font-size: 0.85rem;">
+                <div class="invoice-row" style="margin-bottom: 8px;">
+                    <span style="color: var(--text-muted);">Stato Identità:</span>
+                    <span class="badge-active">Attivo</span>
+                </div>
+                <div class="invoice-row" style="margin-bottom: 8px;">
+                    <span style="color: var(--text-muted);">Profilo Assegnato:</span>
+                    <span id="receipt-username" style="font-weight: 600;">@...</span>
+                </div>
+                <div class="invoice-row">
+                    <span style="color: var(--text-muted);">Licenza Attiva:</span>
+                    <span style="font-weight: 500;">PWA Identity Premium</span>
+                </div>
+            </div>
+
+            <button class="action-button" onclick="vaiAllaTag()">
+                Accedi alla tua PWA
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let usernameScelto = urlParams.get("u") || "";
+        let targetUserClean = usernameScelto.replace('@', '').trim().toLowerCase();
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!targetUserClean) {
+                document.getElementById("loading-screen").innerHTML = "<p style='color:red;'>Errore: Nessun profilo selezionato per il checkout.</p>";
+                return;
+            }
+            verificalndirizzoEInizializza();
+        });
+
+        // 1. CHIAMATA fetch AL DATABASE PER ACCERTARSI DELLO STATO DELL'UTENTE
+        async function verificalndirizzoEInizializza() {
+            try {
+                const response = await fetch(`/api/get-profile?u=${targetUserClean}`);
+                const data = await response.json();
+                
+                if (data.success && data.fields) {
+                    const record = data.fields;
+                    const stato = (record.stato || "").toLowerCase().trim();
+                    const usernameDisplay = record.username_display || targetUserClean.toUpperCase();
+
+                    // Se il profilo è già attivo, lo mandiamo via a protezione del sistema
+                    if (stato === "attivo") {
+                        window.location.href = `/${targetUserClean}`;
+                        return;
+                    }
+
+                    // Se è corretto e in attesa, riempiamo i campi e accendiamo lo Step 1
+                    document.getElementById("display-username").innerText = `Registrazione @${usernameDisplay}`;
+                    document.getElementById("receipt-username").innerText = `@${usernameDisplay}`;
+                    
+                    document.getElementById("loading-screen").style.display = "none";
+                    document.getElementById("step-payment").style.display = "block";
+                } else {
+                    document.getElementById("loading-screen").innerHTML = "<p style='color:red;'>Profilo non trovato nel sistema.</p>";
+                }
+            } catch (err) {
+                console.error("Errore inizializzazione:", err);
+                document.getElementById("loading-screen").innerHTML = "<p style='color:red;'>Errore di rete durante la verifica dell'ordine.</p>";
+            }
+        }
+
+        // 2. SIMULAZIONE DELLA TRANSAZIONE SUL GATEWAY BANCARIO
+        function eseguiTransazione() {
+            // Qui in futuro aggancerai la chiamata per aprire Stripe (es. stripe.redirectToCheckout)
+            console.log("Transazione avviata per l'utente: " + targetUserClean);
+            
+            // Successo transazione -> Passaggio allo Step 2 (Password)
+            document.getElementById("step-payment").style.display = "none";
+            document.getElementById("step-password").style.display = "block";
+        }
+
+        // 3. CHIAMATA fetch AL DATABASE PER SALVARE LA PASSWORD ED ATTIVARE IL PROFILO
+        async function salvaCredenzialiEAttiva() {
+            const passwordSelezionata = document.getElementById("checkout-pwd").value;
+            
+            if (!passwordSelezionata || passwordSelezionata.trim().length < 6) {
+                alert("Per motivi di sicurezza, la password deve contenere almeno 6 caratteri.");
+                return;
+            }
+
+            try {
+                // Utilizziamo la tua API ufficiale per salvare i dati su Airtable
+                const response = await fetch('/api/update-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username_system: targetUserClean,
+                        password: passwordSelezionata,
+                        stato: "attivo" // Cambiamo definitivamente lo stato sul database
+                    })
+                });
+                
+                const resData = await response.json();
+                
+                if (resData.success) {
+                    // Successo totale -> Mostriamo lo Step 3 di conferma
+                    document.getElementById("step-password").style.display = "none";
+                    document.getElementById("step-success").style.display = "block";
+                } else {
+                    alert("Errore durante la configurazione: " + (resData.error || "Riprova."));
+                }
+            } catch (error) {
+                console.error("Errore salvataggio credenziali:", error);
+                alert("Errore di connessione con il server. La transazione è valida, riprova tra qualche istante.");
+            }
+        }
+
+        // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA
+        function vaiAllaTag() {
+            window.location.href = `/${targetUserClean}`;
+        }
+    </script>
+</body>
+</html>
