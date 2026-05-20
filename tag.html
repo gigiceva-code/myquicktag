@@ -119,16 +119,51 @@ body {
             font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
             display: flex; justify-content: center; align-items: center; gap: 10px;
         }
+        /* Stile per la freccia torna alla configurazione */
+        .back-link-top {
+            align-self: flex-start;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s, transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .back-link-top:active {
+            opacity: 1;
+            transform: scale(0.97);
+        }
     </style>
 </head>
 <body>
 
-    <div class="profile-header">
-        <img src="" alt="Avatar" class="avatar" id="tag-avatar" style="display:none;">
-        <h1 class="username" id="tag-username">@...</h1>
-        <p class="bio" id="tag-bio">Caricamento identità...</p>
+    <a href="#" id="back-to-config" class="back-link-top" style="display: none;">
+        <i class="fas fa-arrow-left"></i> Torna alla configurazione
+    </a>
+
+    <div id="profile-content" style="display: none; width: 100%; max-width: 350px;">
+        
+        <div class="profile-header">
+            <h1 class="username" id="tag-username">@...</h1>
+            <p class="bio" id="tag-bio">Caricamento identità...</p>
+        </div>
+
+        <div class="links-container" id="links-container"></div>
+        
     </div>
 
+    <div class="modal-overlay" id="activation-modal">
+        <div class="modal-box">
+            <h2>Ti scatta il regalo!</h2>
+            <p>Crea la tua chiave (password) per attivare la tua MyQuickTag e abilitare l'app.</p>
+            <input type="password" id="new-password" placeholder="Scegli una password">
+            <button onclick="salvaPasswordEAttiva()">Salva e Attiva</button>
+        </div>
+    </div>
     <div class="links-container" id="links-container">
         </div>
 
@@ -164,33 +199,60 @@ body {
     
 async function caricaProfiloPubblico(nomeMinuto) {
     try {
+        // La chiamata fetch viaggia al buio mentre lo schermo è nero
         const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
         const data = await response.json();
         
         if (data.success && data.fields) {
             const record = data.fields;
             
-            // Aggiorna interfaccia
+            // 1. Popoliamo i testi reali dietro le quinte
             document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
             document.getElementById("tag-bio").innerText = record.bio || "";
-            document.getElementById("tag-avatar").style.display = "block";
 
-            // Normalizzazione stato in minuscolo per confronto sicuro
+            // Configura il link della freccia di ritorno alla configurazione (usando l'username pulito)
+            const backLink = document.getElementById("back-to-config");
+            if (backLink) {
+                backLink.href = `profile.html?u=${nomeMinuto}`;
+            }
+
+            // Normalizzazione dello stato da Airtable
             const stato = (record.stato || "").toLowerCase().trim();
 
             if (stato === "in attesa") {
-                document.getElementById("activation-modal").style.display = "flex";
+                // MODALITÀ SHOWROOM (Utente nuovo da attivare)
                 identitaVerificata = false;
+                
+                // Facciamo apparire la freccia bianca "Torna alla configurazione"
+                if (backLink) backLink.style.display = "flex";
+                
+                // Mostriamo il profilo compilato
+                document.getElementById("profile-content").style.display = "block";
+                
+                // IMPORTANTE: La modale di attivazione NON si apre da sola. Resta spenta.
+                document.getElementById("activation-modal").style.display = "none";
+                
             } else if (stato === "attivo") {
+                // MODALITÀ TAG FINALE ATTIVA
                 identitaVerificata = true;
+                
+                // La freccia di ritorno sparisce (il profilo è pubblico)
+                if (backLink) backLink.style.display = "none";
+                
+                // Mostriamo il profilo attivo e lanciamo il bottone PWA
+                document.getElementById("profile-content").style.display = "block";
                 mostraBottonePWA();
             }
+
+            // SOLO ORA che tutto è pronto, accendiamo la pagina con la dissolvenza showroom
+            document.body.style.opacity = "1";
         }
     } catch (error) {
         console.error("Errore di caricamento:", error);
+        // Se c'è un errore, accendiamo comunque la pagina per non lasciare l'utente al buio eterno
+        document.body.style.opacity = "1";
     }
 }
-
     async function salvaPasswordEAttiva() {
     const pwd = document.getElementById("new-password").value;
     if (pwd.length < 4) {
@@ -243,10 +305,19 @@ async function caricaProfiloPubblico(nomeMinuto) {
             document.getElementById("links-container").prepend(btn);
         }
     }
-       document.addEventListener("DOMContentLoaded", function() {
-            // Fa apparire il body con un respiro lento e lussuoso
-            document.body.style.opacity = "1";
-        }); 
+      document.addEventListener("DOMContentLoaded", function() {
+    // Gestione del click ammortizzato sulla freccia di ritorno (250ms)
+    const backLink = document.getElementById("back-to-config");
+    if (backLink) {
+        backLink.addEventListener("click", function(e) {
+            e.preventDefault();
+            const targetUrl = this.href;
+            setTimeout(function() {
+                window.location.href = targetUrl;
+            }, 250);
+        });
+    }
+});
 </script>
 
 </body>
