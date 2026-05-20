@@ -178,22 +178,22 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-      /* 2. Il cerchio fluttuante (ripristina i clic solo su di sé) */
+   /* 2. Il cerchio fluttuante (Anello di luce puro, zero sfocatura dietro) */
         .expanding-circle {
             width: 0px;
             height: 0px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.01); /* Quasi invisibile il fondo */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Un raggio di luce nitido che definisce il cerchio */
+            backdrop-filter: blur(0px); /* ELIMINATO IL BLUR: trasparenza totale */
+            -webkit-backdrop-filter: blur(0px);
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            pointer-events: auto; /* Questo si clicca, il resto sotto è libero! */
+            pointer-events: auto;
             transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1), height 1.8s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
         .conversion-content h2 {
             font-size: 1.3rem;
