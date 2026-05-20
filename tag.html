@@ -280,7 +280,7 @@
         document.getElementById("activation-modal").style.display = "flex";
     }
 
-  async function caricaProfiloPubblico(nomeMinuto) {
+async function caricaProfiloPubblico(nomeMinuto) {
     try {
         const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
         const data = await response.json();
@@ -351,7 +351,7 @@
         console.error("Errore di caricamento:", error);
         document.body.style.opacity = "1";
     }
-}
+  }
 
                 document.body.style.opacity = "1";
             }
