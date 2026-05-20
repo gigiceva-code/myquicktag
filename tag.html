@@ -12,60 +12,86 @@
 
     <style>
         :root {
-            --bg-color: #000000;
-            --accent-smeraldo: #50C878;
+            --bg-color: #0A0A0A;          /* Nero profondo vellutato (non piatto) */
+            --accent-smeraldo: #10B981;   /* Verde Smeraldo Premium */
             --text-main: #ffffff;
-            --text-sec: #6c6c70;
+            --text-sec: #8E8E93;          /* Grigio calibrato stile Apple iOS */
         }
         
-        /* Effetto accensione showroom e setup base unificati */
         body {
             opacity: 0;
-            transition: opacity 0.6s ease-out;
-            margin: 0; padding: 24px;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            margin: 0; 
+            padding: 24px;
             background-color: var(--bg-color);
             font-family: 'Inter', sans-serif;
             color: var(--text-main);
-            display: flex; flex-direction: column; align-items: center;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
             text-align: center;
             -webkit-font-smoothing: antialiased;
         }
 
+        /* --- STRUTTURA PROFILO PREMIUM UNIFICATA --- */
+        .profile-container {
+            display: none; 
+            opacity: 0; 
+            transform: scale(0.98); 
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%; 
+            max-width: 420px; 
+            margin: 0 auto; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
         .profile-header {
-            margin-top: 40px;
-            display: flex; flex-direction: column; align-items: center;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
             width: 100%;
+        }
+
+        .avatar-wrapper {
+            position: relative; 
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .avatar-img {
+            width: 96px; 
+            height: 96px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 2px solid rgba(255,255,255,0.08); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
         .username {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 600;
             margin: 0;
             letter-spacing: -0.5px;
+            color: #FFFFFF;
         }
 
         .bio {
-            font-size: 1rem;
+            font-size: 0.92rem;
             color: var(--text-sec);
-            margin-top: 10px;
+            margin-top: 8px;
             max-width: 320px;
-            line-height: 1.5;
+            line-height: 1.4;
+            font-weight: 400;
         }
 
         .links-container {
-            margin-top: 40px;
             width: 100%;
-            max-width: 350px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-        }
-
-        .pwa-btn {
-            background: var(--accent-smeraldo);
-            color: #000; border: none; padding: 18px; border-radius: 14px;
-            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
         }
 
         .back-link-top {
@@ -86,26 +112,35 @@
             transform: scale(0.97);
         }
 
-        /* Bottone di Sblocco nello Showroom Unificato */
+        /* Tasti di Interazione */
         .sblocco-btn {
-            background: #ffffff; color: #000000;
-            border: none; padding: 18px; border-radius: 14px;
-            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
-            box-shadow: 0 10px 25px rgba(255,255,255,0.1);
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s !important;
+            background: #ffffff; 
+            color: #000000;
+            border: none; 
+            padding: 18px; 
+            border-radius: 14px;
+            font-weight: 600; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            width: 100%;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(255,255,255,0.08);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s;
             -webkit-tap-highlight-color: transparent;
         }
         .sblocco-btn:active {
-            transform: scale(0.98) !important;
+            transform: scale(0.98);
             opacity: 0.9;
         }
         
-        /* --- SHOWROOM OVERLAY LUXURY MINIMAL --- */
+        /* --- SHOWROOM OVERLAY --- */
         .showroom-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(4, 4, 4, 0.75); /* Sfondo scuro premium di partenza */
+            background: rgba(4, 4, 4, 0.75);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             z-index: 99999;
@@ -119,14 +154,14 @@
 
         .expanding-box {
             width: 0px; height: 0px;
-            background: rgba(18, 18, 18, 0.8); /* Card satinata */
-            border: 1px solid rgba(255, 255, 255, 0.08); /* Micro-bordo cristallino */
+            background: rgba(18, 18, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 24px;
             padding: 40px 24px;
             max-width: 360px;
             width: 100%;
             box-sizing: border-box;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             text-align: center;
             overflow: hidden;
             transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -171,14 +206,10 @@
             box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
             -webkit-tap-highlight-color: transparent;
         }
-        .rendilo-tuo-btn:hover {
-            background: #e5e7eb;
-        }
-        .rendilo-tuo-btn:active {
-            transform: scale(0.97);
-        }
+        .rendilo-tuo-btn:hover { background: #e5e7eb; }
+        .rendilo-tuo-btn:active { transform: scale(0.97); }
 
-        /* --- SCHERMATA BENVENUTO REALE TAG --- */
+        /* --- TAG WELCOME OVERLAY --- */
         .tag-welcome-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -213,7 +244,7 @@
 
         .tag-success-icon {
             font-size: 2.2rem;
-            color: #34d399;
+            color: var(--accent-smeraldo);
             margin-bottom: 20px;
         }
 
@@ -259,15 +290,17 @@
         .tag-skip-btn {
             background: transparent;
             border: none;
-            color: #71717a;
-            font-size: 0.85rem;
-            margin-top: 18px;
+            color: var(--accent-smeraldo);
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 15px;
             cursor: pointer;
-            text-decoration: underline;
-            transition: color 0.2s;
+            text-decoration: none;
+            transition: opacity 0.2s;
+            display: inline-block;
         }
         .tag-skip-btn:hover {
-            color: #a1a1aa;
+            opacity: 0.8;
         } 
     </style>
 </head>
@@ -277,13 +310,17 @@
         <i class="fas fa-arrow-left"></i> Torna alla configurazione
     </a>
 
-    <div id="profile-content" style="display: none; width: 100%; max-width: 350px;">
-        <div class="profile-header">
+    <div id="profile-content" class="profile-container">
+        <header class="profile-header">
+            <div class="avatar-wrapper">
+                <img src="tuo-avatar.jpg" alt="Profile" class="avatar-img">
+            </div>
             <h1 class="username" id="tag-username">@...</h1>
             <p class="bio" id="tag-bio">Caricamento in corso...</p>
-        </div>
+        </header>
 
-        <div class="links-container" id="links-container"></div>
+        <div class="links-container" id="links-container">
+            </div>
         
         <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
             <button class="sblocco-btn" onclick="vaiAlCheckout()">
@@ -315,25 +352,11 @@
                 <i class="fas fa-download"></i> Aggiungi alla Home
             </button>
             
-           <button class="tag-skip-btn" onclick="chiudiWelcomeEMostraTag()" style="color: #10B981; font-size: 16px; font-weight: 500; background: none; border: none; cursor: pointer; margin-top: 15px;">
-    Visualizza la Tag
-</button>
+            <button class="tag-skip-btn" onclick="chiudiWelcomeEMostraTag()">
+                Visualizza la Tag
+            </button>
         </div>
     </div>
-   <div id="main-tag-profile" style="opacity: 0; transform: scale(0.98); transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); max-width: 480px; margin: 0 auto; padding: 20px;">
-    
-    <header style="text-align: center; margin-bottom: 40px; margin-top: 30px;">
-        <div class="avatar-wrapper" style="position: relative; display: inline-block;">
-            <img src="tuo-avatar.jpg" alt="Profile" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-            </div>
-        <h1 style="color: #FFFFFF; font-size: 24px; font-weight: 600; margin-top: 16px; letter-spacing: -0.5px;">Nome Utente</h1>
-        <p style="color: #8E8E93; font-size: 14px; font-weight: 400; margin-top: 6px; line-height: 1.4;">Ruolo o Bio minimale in due righe.</p>
-    </header>
-
-    <main class="tag-grid" style="display: flex; flex-direction: column; gap: 16px;">
-        </main>
-    
-</div> 
 
     <script>
     const params = new URLSearchParams(window.location.search);
@@ -360,11 +383,6 @@
         window.location.href = `/checkout.html?u=${globalUtente}`;
     }
 
-    function vaiAllaTag() {
-        if (!globalUtente) return;
-        window.location.href = `/tag.html?u=${globalUtente}`;
-    }
-        
     async function caricaProfiloPubblico(nomeMinuto) {
         try {
             const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
@@ -389,7 +407,12 @@
                     if (backLink) backLink.style.display = "flex";
                     
                     document.getElementById("cta-sblocco-container").style.display = "none";
-                    document.getElementById("profile-content").style.display = "block";
+                    
+                    const profile = document.getElementById("profile-content");
+                    if (profile) {
+                        profile.style.display = "block";
+                        setTimeout(() => { profile.style.opacity = "1"; profile.style.transform = "scale(1)"; }, 50);
+                    }
                     
                     document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
                     
@@ -410,7 +433,7 @@
                             overlay.style.display = "flex";
                             
                             setTimeout(() => {
-                                overlay.style.background = "rgba(4, 4, 4, 0.0)"; /* Torna trasparente come da logica animazione */
+                                overlay.style.background = "rgba(4, 4, 4, 0.0)"; 
                                 overlay.style.backdropFilter = "blur(0px)";
                                 overlay.style.webkitBackdropFilter = "blur(0px)";
                                 
@@ -431,7 +454,19 @@
                     if (document.getElementById("showroom-overlay")) {
                         document.getElementById("showroom-overlay").style.display = "none";
                     }
-                    document.getElementById("profile-content").style.display = "block";
+                    
+                    const profile = document.getElementById("profile-content");
+                    if (profile) {
+                        profile.style.display = "block";
+                        // Se la PWA non deve aprirsi, riveliamo subito il profilo in modo morbido
+                        setTimeout(() => {
+                            if (!deferredPrompt) {
+                                profile.style.opacity = "1";
+                                profile.style.transform = "scale(1)";
+                            }
+                        }, 50);
+                    }
+                    
                     mostraInstallatorePremium();
                     document.body.style.opacity = "1";
                 }
@@ -444,7 +479,6 @@
         }
     }
 
-    // Gestione Evento Installazione PWA Nativo
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -459,6 +493,12 @@
         const overlay = document.getElementById("tag-welcome-overlay");
         if (overlay) {
             overlay.style.display = "flex";
+            // Teniamo il profilo in background pronto e resettato per l'animazione di sblocco
+            const profile = document.getElementById("profile-content");
+            if (profile) {
+                profile.style.opacity = "0";
+                profile.style.transform = "scale(0.98)";
+            }
         }
 
         const btnInstall = document.getElementById("trigger-pwa-install");
@@ -476,36 +516,41 @@
         }
     }
 
-   function chiudiWelcomeEMostraTag() {
-    const overlay = document.getElementById("tag-welcome-overlay");
-    if (overlay) {
-        // 1. Iniettiamo al volo la transizione d'élite (curva cubic-bezier stile Apple)
-        overlay.style.transition = "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+    function chiudiWelcomeEMostraTag() {
+        const overlay = document.getElementById("tag-welcome-overlay");
+        const profile = document.getElementById("profile-content");
         
-        // 2. Facciamo sfumare e arretrare leggermente l'overlay
-        overlay.style.opacity = "0";
-        overlay.style.transform = "scale(0.98)";
-        
-        // 3. Solo quando l'animazione è finita (dopo 400ms), lo spegniamo del tutto
-        setTimeout(function() {
-            overlay.style.display = "none";
-        }, 400);
-    }
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    const backLink = document.getElementById("back-to-config");
-    if (backLink) {
-        backLink.addEventListener("click", function(e) {
-            e.preventDefault();
-            const targetUrl = this.href;
+        if (overlay) {
+            // Transizione d'uscita fluida per l'overlay
+            overlay.style.transition = "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
+            overlay.style.opacity = "0";
+            overlay.style.transform = "scale(0.95)";
+            
+            // Accensione simultanea del profilo sottostante (effetto emersione hardware nativo)
+            if (profile) {
+                profile.style.opacity = "1";
+                profile.style.transform = "scale(1)";
+            }
+            
             setTimeout(function() {
-                window.location.href = targetUrl;
-            }, 250);
-        });
+                overlay.style.display = "none";
+            }, 500);
+        }
     }
-});
-</script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const backLink = document.getElementById("back-to-config");
+        if (backLink) {
+            backLink.addEventListener("click", function(e) {
+                e.preventDefault();
+                const targetUrl = this.href;
+                setTimeout(function() {
+                    window.location.href = targetUrl;
+                }, 250);
+            });
+        }
+    });
+    </script>
 
 </body>
 </html>
