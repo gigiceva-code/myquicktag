@@ -255,10 +255,23 @@
     </div>
     <div class="modal-overlay" id="activation-modal">
         <div class="modal-box">
-            <h2>Attivazione Identità</h2>
-            <p>Imposta la tua chiave di sicurezza (password) per rendere pubblica la tua Tag e abilitare l'App.</p>
-            <input type="password" id="new-password" placeholder="Scegli una password">
-            <button class="modal-confirm-btn" onclick="salvaPasswordEAttiva()">Conferma e Attiva</button>
+            <div id="modal-step-checkout">
+                <h2 style="color: #ffffff;">Rivendica la tua Tag</h2>
+                <p>Il nome utente <span id="modal-username-summary" style="color: var(--accent-smeraldo); font-weight: 600;">@...</span> è disponibile. Bloccalo subito prima che lo faccia qualcun altro.</p>
+                
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid #222; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9rem; color: #888;">
+                    Licenza d'uso esclusiva + PWA Identity
+                </div>
+
+                <button class="modal-confirm-btn" onclick="avviaAcquisto()">Procedi all'acquisto</button>
+            </div>
+
+            <div id="modal-step-password" style="display: none;">
+                <h2>Attivazione Identità</h2>
+                <p>Acquisto completato! Imposta la tua chiave di sicurezza (password) per rendere pubblica la tua Tag e abilitare l'App.</p>
+                <input type="password" id="new-password" placeholder="Scegli una password">
+                <button class="modal-confirm-btn" onclick="salvaPasswordEAttiva()">Conferma e Attiva</button>
+            </div>
         </div>
     </div>
 
@@ -282,10 +295,23 @@
         caricaProfiloPubblico(globalUtente);
     }
 
-    // Funzione per aprire la modale quando si clicca sul tasto di sblocco
+    // Funzione per aprire la modale resettando gli step (parte sempre dal Checkout)
     function apriModaleAttivazione() {
+        document.getElementById("modal-step-checkout").style.display = "block";
+        document.getElementById("modal-step-password").style.display = "none";
         document.getElementById("activation-modal").style.display = "flex";
     }
+
+    // Gestisce il click sul bottone di acquisto (per ora simula il successo)
+    async function avviaAcquisto() {
+        console.log("Avvio del pagamento per: " + globalUtente);
+        
+        // Simuliamo che il pagamento sia andato a buon fine:
+        // Nascondiamo la schermata di acquisto e mostriamo il campo per la password
+        document.getElementById("modal-step-checkout").style.display = "none";
+        document.getElementById("modal-step-password").style.display = "block";
+    }
+        
 
 async function caricaProfiloPubblico(nomeMinuto) {
         try {
@@ -314,6 +340,7 @@ async function caricaProfiloPubblico(nomeMinuto) {
                     document.getElementById("profile-content").style.display = "block";
                     document.getElementById("activation-modal").style.display = "none";
                     document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                    document.getElementById("modal-username-summary").innerText = `@${usernamePulito}`;
                     
                     // MODIFICA PREMIUM: Cambiamo il testo del bottone in minuscolo via script
                     const btnRendiloTuo = document.querySelector(".rendilo-tuo-btn");
