@@ -187,6 +187,126 @@ function vaiAllaTag() {
     if (!targetUserClean) return;
     window.location.href = `/tag.html?u=${targetUserClean}`;
 }
+      /* --- ENGINE INSTALLER LUXURY MINIMAL --- */
+.premium-install-banner {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(40px);
+    width: calc(100% - 32px);
+    max-width: 380px;
+    background: rgba(18, 18, 18, 0.8); /* Nero profondo semitrasparente */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Micro-bordo cristallino */
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 99999;
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, visibility 0.4s;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Stato attivo con animazione fluida */
+.premium-install-banner.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.install-banner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.install-banner-content-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+}
+
+.install-banner-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.install-banner-title i {
+    color: #34d399; /* Accento smeraldo premium */
+    font-size: 0.85rem;
+}
+
+.install-banner-text {
+    font-size: 0.82rem;
+    color: #9ca3af; /* Grigio attenuato minimal */
+    line-height: 1.4;
+    margin: 0;
+    font-weight: 400;
+}
+
+.install-close-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 0.75rem;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    padding: 0;
+}
+
+.install-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+/* Il Bottone d'Azione Principale */
+.premium-install-action-btn {
+    background: #ffffff; /* Bianco puro a contrasto assoluto */
+    color: #000000;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: -0.2px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.premium-install-action-btn:active {
+    transform: scale(0.97);
+    background: #e5e7eb;
+}
+
+.premium-install-action-btn i {
+    font-size: 0.85rem;
+}
     </style>
 </head>
 <body>
@@ -331,66 +451,79 @@ function vaiAllaTag() {
         }
     }
 
-  // 1. ASCOLTATORE INTERNAZIONALE PWA
+ // 1. ASCOLTATORE EVENTO DI INSTALLAZIONE NATIVO BROWSER
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // Se l'utente è già attivo nel momento in cui il browser è pronto, inneschiamo l'installatore premium
+        // Se l'ingranaggio del profilo ha già verificato l'utente, evochiamo l'interfaccia d'élite
         if (identitaVerificata) {
             mostraInstallatorePremium();
         }
     });
 
-    // 2. NUOVO INSTALLATORE FLUTTUANTE PREMIUM (Sostituisce la vecchia mostraBottonePWA)
+    // 2. GENERATORE DELL'INTERFACCIA LUXURY INTERNA
     function mostraInstallatorePremium() {
+        // Blocco di sicurezza: usciamo se manca il prompt, se non è attivo o se è già presente a schermo
         if (!deferredPrompt || !identitaVerificata || document.getElementById("premium-pwa-banner")) return;
 
+        // Creazione dinamica dell'elemento nel DOM
         const banner = document.createElement('div');
         banner.id = "premium-pwa-banner";
         banner.className = "premium-install-banner";
         
         banner.innerHTML = `
             <div class="install-banner-header">
-                <p class="install-banner-text">
-                    ⚡️ <strong>Identità Attiva!</strong> Installa l'applicazione ufficiale sul tuo smartphone per gestire la tua MyQuickTag in tempo reale.
-                </p>
-                <button class="install-close-btn" onclick="chiudiBannerPremium()"><i class="fas fa-times"></i></button>
+                <div class="install-banner-content-box">
+                    <h4 class="install-banner-title">
+                        <i class="fas fa-shield-check"></i> Identità Configurata
+                    </h4>
+                    <p class="install-banner-text">
+                        Aggiungi l'applicazione nativa alla tua home per gestire la tua MyQuickTag e monitorare gli accessi.
+                    </p>
+                </div>
+                <button class="install-close-btn" onclick="chiudiBannerPremium()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <button class="premium-install-action-btn" id="btn-effettivo-pwa">
-                <i class="fas fa-download"></i> Aggiungi alla Home
+                <i class="fas fa-arrow-to-bottom"></i> Installa Applicazione
             </button>
         `;
 
+        // Iniezione diretta nel body, isolato dal resto dei contenuti
         document.body.appendChild(banner);
 
+        // Aggancio dell'azione di installazione al click sul tasto bianco
         document.getElementById("btn-effettivo-pwa").onclick = () => {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    console.log('PWA Installata con successo');
+                    console.log('Premium PWA installata con successo.');
                     chiudiBannerPremium();
                 }
                 deferredPrompt = null;
             });
         };
 
+        // Trigger temporizzato per far salire la card con effetto smooth
         setTimeout(() => {
             banner.classList.add("show");
-        }, 100);
+        }, 300);
     }
 
-    // 3. FUNZIONE DI CHIUSURA BANNER SATINATO
+    // 3. LOGICA DI SCOMPARSA ELEGANTE
     function chiudiBannerPremium() {
         const banner = document.getElementById("premium-pwa-banner");
         if (banner) {
             banner.classList.remove("show");
+            // Eliminiamo l'elemento solo dopo che l'animazione di discesa è finita
             setTimeout(() => {
                 banner.remove();
-            }, 500);
+            }, 600);
         }
     }
 
-    // 4. GESTIONE TRANSIZIONE LINK DI CONFIGURAZIONE (CONSERVATO)
+    // 4. TRANSIZIONE DEL LINK DI CONFIGURAZIONE
     document.addEventListener("DOMContentLoaded", function() {
         const backLink = document.getElementById("back-to-config");
         if (backLink) {
@@ -402,7 +535,7 @@ function vaiAllaTag() {
                 }, 250);
             });
         }
-    }); 
+    });
 </script>
 
 </body>
