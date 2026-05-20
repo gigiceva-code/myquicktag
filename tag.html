@@ -254,7 +254,7 @@
         </div>
     </div>
     <div class="modal-overlay" id="activation-modal">
-        <div class="modal-box">
+        <div class="modal-box" style="position: relative; overflow: hidden;">
             <div id="modal-step-checkout">
                 <h2 style="color: #ffffff;">Rivendica la tua Tag</h2>
                 <p>Il nome utente <span id="modal-username-summary" style="color: var(--accent-smeraldo); font-weight: 600;">@...</span> è disponibile. Bloccalo subito prima che lo faccia qualcun altro.</p>
@@ -267,14 +267,25 @@
             </div>
 
             <div id="modal-step-password" style="display: none;">
-                <h2>Attivazione Identità</h2>
+                <h2 style="color: var(--accent-smeraldo);">Attivazione Identità</h2>
                 <p>Acquisto completato! Imposta la tua chiave di sicurezza (password) per rendere pubblica la tua Tag e abilitare l'App.</p>
                 <input type="password" id="new-password" placeholder="Scegli una password">
                 <button class="modal-confirm-btn" onclick="salvaPasswordEAttiva()">Conferma e Attiva</button>
             </div>
+
+            <div id="modal-step-success" style="display: none; text-align: center; padding: 10px 0;">
+                <div style="font-size: 3.5rem; margin-bottom: 15px; animation: popCheck 0.4s ease-out;">🎉</div>
+                <h2 style="color: #ffffff; margin-bottom: 10px;">Congratulazioni!</h2>
+                <p style="font-size: 1.05rem; margin-bottom: 20px;">
+                    La tua identità digitale è ufficialmente attiva. Il piano <span id="success-plan-name" style="color: var(--accent-smeraldo); font-weight: 600; text-transform: uppercase;">...</span> è ora legato al tuo nome.
+                </p>
+                <div style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); padding: 12px; border-radius: 10px; margin-bottom: 25px; font-size: 0.9rem; color: #ececec;">
+                    Il tuo profilo è online e pronto per essere condiviso col mondo.
+                </div>
+                <button class="modal-confirm-btn" onclick="chiudiEEntra()">Entra nella tua Dashboard</button>
+            </div>
         </div>
     </div>
-
     <script>
     const params = new URLSearchParams(window.location.search);
     let nomeUtenteURL = params.get("u") || ""; 
