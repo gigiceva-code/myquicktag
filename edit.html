@@ -12,107 +12,145 @@
     <link id="dynamic-icon" rel="icon" href="">
 
     <style>
-       /* Effetto accensione showroom */
-body {
-    opacity: 0;
-    transition: opacity 0.6s ease-out; /* 0.6 secondi di pura dissolvenza fluida */
-} 
-        :root {
-            --bg-color: #0a0a0a;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --accent: #ffffff;
-            --text-sec: #a0a0a0;
-        }
-        body {
-            margin: 0; padding: 20px;
-            background-color: var(--bg-color);
-            font-family: 'Inter', sans-serif;
-            color: white;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .edit-container { width: 100%; max-width: 400px; padding-bottom: 100px; }
-        .header { text-align: left; margin: 30px 0; width: 100%; }
-        .header h1 { font-size: 1.5rem; margin: 0; font-weight: 600; }
-        .header p { color: var(--text-sec); font-size: 0.9rem; margin-top: 5px; }
-        .section-title { 
-            font-size: 0.8rem; color: var(--accent); 
-            text-transform: uppercase; letter-spacing: 2px;
-            margin: 30px 0 15px 5px; border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
-        }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { 
-            display: block; font-size: 0.7rem; color: var(--text-sec); 
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; margin-left: 5px;
-        }
-        input, textarea {
-            width: 100%; padding: 12px 15px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px; color: white;
-            font-family: 'Inter', sans-serif; font-size: 0.9rem;
-            box-sizing: border-box; outline: none;
-        }
-        input:focus, textarea:focus { border-color: rgba(255,255,255,0.3); }
-        textarea { height: 80px; resize: none; }
-        
-        .plan-selector { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 20px 0; }
-        .plan-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 15px;
-            cursor: pointer; transition: all 0.3s ease;
-            display: flex; align-items: center;
-        }
-        .plan-card.selected {
-            border-color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .plan-card i { font-size: 1.2rem; margin-right: 15px; color: var(--text-sec); }
-        .plan-card.selected i { color: #ffffff; }
-        .plan-info h3 { margin: 0; font-size: 0.9rem; font-weight: 600; }
-        .plan-info p { margin: 2px 0 0; font-size: 0.75rem; color: var(--text-sec); }
+           /* Effetto accensione showroom */
+    body {
+        opacity: 0;
+        transition: opacity 0.6s ease-out;
+    } 
+    :root {
+        --bg-color: #0a0a0a;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --border-color: rgba(255, 255, 255, 0.1);
+        --accent: #ffffff;
+        --text-sec: #a0a0a0;
+    }
+    body {
+        margin: 0; padding: 20px;
+        background-color: var(--bg-color);
+        font-family: 'Inter', sans-serif;
+        color: white;
+        display: flex; flex-direction: column; align-items: center;
+    }
+    .edit-container { 
+        width: 100%; 
+        max-width: 400px; 
+        padding-bottom: 120px; /* Spazio extra per non far coprire i campi dal bottone */
+    }
+    .header { text-align: left; margin: 30px 0; width: 100%; }
+    .header h1 { font-size: 1.5rem; margin: 0; font-weight: 600; }
+    .header p { color: var(--text-sec); font-size: 0.9rem; margin-top: 5px; }
+    .section-title { 
+        font-size: 0.8rem; color: var(--accent); 
+        text-transform: uppercase; letter-spacing: 2px;
+        margin: 30px 0 15px 5px; border-bottom: 1px solid var(--border-color);
+        padding-bottom: 5px;
+    }
+    .form-group { margin-bottom: 15px; text-align: left; }
+    .form-group label { 
+        display: block; font-size: 0.7rem; color: var(--text-sec); 
+        text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; margin-left: 5px;
+    }
+    input, textarea {
+        width: 100%; padding: 12px 15px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 10px; color: white;
+        font-family: 'Inter', sans-serif; font-size: 0.9rem;
+        box-sizing: border-box; outline: none;
+    }
+    input:focus, textarea:focus { border-color: rgba(255,255,255,0.3); }
+    textarea { height: 80px; resize: none; }
+    
+    .plan-selector { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 20px 0; }
+    .plan-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px; padding: 15px;
+        cursor: pointer; display: flex; align-items: center;
+    }
+    .plan-card.selected {
+        border-color: #ffffff;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .plan-card i { font-size: 1.2rem; margin-right: 15px; color: var(--text-sec); }
+    .plan-card.selected i { color: #ffffff; }
+    .plan-info h3 { margin: 0; font-size: 0.9rem; font-weight: 600; }
+    .plan-info p { margin: 2px 0 0; font-size: 0.75rem; color: var(--text-sec); }
 
-        .save-btn {
-            width: 100%; padding: 18px; margin-top: 30px;
-            background: white; color: black;
-            border: none; border-radius: 14px;
-            font-weight: 600; font-size: 1rem;
-            cursor: pointer; position: sticky; bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
-        .back-link {
-            display: block; text-align: center; margin-top: 25px;
-            color: var(--text-sec); text-decoration: none; font-size: 0.85rem;
-        }
-        .style-selector { margin: 30px 0; text-align: left; }
-        .style-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .style-card input { display: none; }
-        .style-preview {
-            padding: 15px 5px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            font-size: 10px;
-            text-transform: uppercase;
-            font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .style-card input:checked + .style-preview {
-            border-color: #2ecc71;
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
-        }
-        .black { background: #000; color: #fff; }
-        .titanium { background: #1c1c1e; color: #f5f5f7; border-color: #48484a; }
-        .gold { background: #000; color: #d4af37; border-color: #d4af37; }
+    /* CONTENITORE STICKY CON SFUMATURA FUMO LUXURY PER PROTEGGERE I TESTI */
+    .sticky-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(to top, #0a0a0a 70%, rgba(10,10,10,0) 100%);
+        padding: 15px 20px 30px 20px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 100;
+    }
+
+    .save-btn {
+        width: 100%; max-width: 400px; padding: 18px;
+        background: white; color: black;
+        border: none; border-radius: 14px;
+        font-weight: 600; font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    .back-link {
+        display: block; text-align: center; margin-top: 15px;
+        color: var(--text-sec); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.5px;
+    }
+    
+    .style-selector { margin: 30px 0; text-align: left; }
+    .style-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 15px;
+    }
+    .style-card input { display: none; }
+    .style-preview {
+        padding: 15px 5px;
+        border-radius: 8px;
+        border: 1px solid #333;
+        font-size: 10px;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+    }
+    /* Sostituito il vecchio verde con un Bianco Minimal in linea con il brand */
+    .style-card input:checked + .style-preview {
+        border-color: #ffffff;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    .black { background: #000; color: #fff; }
+    .titanium { background: #1c1c1e; color: #f5f5f7; border-color: #48484a; }
+    .gold { background: #000; color: #d4af37; border-color: #d4af37; }
+
+    /* RESET DEL TOCCO E MICROPIACERE AMMORTIZZATO SU TUTTO */
+    a, div, span, button, .plan-card, .style-preview {
+        -webkit-tap-highlight-color: transparent !important;
+        tap-highlight-color: transparent !important;
+    }
+    .plan-card, .style-preview, .save-btn, .back-link {
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                    background-color 0.3s ease, 
+                    border-color 0.3s ease !important;
+    }
+    .plan-card:active, .style-preview:active {
+        transform: scale(0.97) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+    .save-btn:active {
+        transform: scale(0.98) !important;
+        background-color: #e5e5e5 !important;
+    }
+
     </style>
 </head>
 <body>
@@ -181,9 +219,10 @@ body {
         <div class="form-group"><label>Facebook</label><input type="text" id="field-facebook"></div>
         <div class="form-group"><label>Reddit</label><input type="text" id="field-reddit"></div>
 
-        <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
-        <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
-    </div>
+        <div class="sticky-footer">
+    <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
+    <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
+</div>
 
     <script>
     const params = new URLSearchParams(window.location.search);
@@ -288,10 +327,31 @@ async function salvaDati() {
         btn.disabled = false;
     }
 }
-  document.addEventListener("DOMContentLoaded", function() {
-            // Fa apparire il body con un respiro lento e lussuoso
-            document.body.style.opacity = "1";
-        });      
+      
+    function luxuryNavigate(event, url) {
+        event.preventDefault();
+        setTimeout(function() {
+            window.location.href = url;
+        }, 250);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Fa apparire la pagina in dissolvenza
+        document.body.style.opacity = "1";
+
+        // Gestione dell'uscita ammortizzata a 250ms
+        const backLink = document.getElementById("back-to-dash");
+        if (backLink) {
+            backLink.addEventListener("click", function(e) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const uParam = urlParams.get("u") || "";
+                const nomePulitoLocale = uParam.replace('@', '').trim().toLowerCase();
+                luxuryNavigate(e, `profile.html?u=${nomePulitoLocale}`);
+            });
+        }
+    });
+
+    
 
     </script>
 </body>
