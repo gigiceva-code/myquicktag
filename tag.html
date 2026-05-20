@@ -335,16 +335,18 @@ async function caricaProfiloPubblico(nomeMinuto) {
                     if (overlay && circle && content) {
                         overlay.style.display = "flex";
                         
-                        setTimeout(() => {
-                            overlay.style.background = "rgba(0, 0, 0, 0.5)";
-                            overlay.style.backdropFilter = "blur(4px)";
-                            overlay.style.webkitBackdropFilter = "blur(4px)";
+                      setTimeout(() => {
+                            // Massima trasparenza: rimosso lo sfondo nero e il blur sulla tag
+                            overlay.style.background = "rgba(0, 0, 0, 0)";
+                            overlay.style.backdropFilter = "blur(0px)";
+                            overlay.style.webkitBackdropFilter = "blur(0px)";
                             
+                            // Il cerchio si espande regolarmente
                             circle.style.width = "340px";
                             circle.style.height = "340px";
                             
                             content.style.opacity = "1";
-                        }, 50);
+                        }, 50); 
                     }
                 }, 2500);
                 
