@@ -9,36 +9,33 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Cerchiamo se l'utente esiste già
-    const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula={username_system}='${username_system}'`;
+    // 1. Ricerca utente con URL encoding sicuro per i caratteri speciali
+    const formula = `{username_system}='${username_system}'`;
+    const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}`;
     
     const response = await fetch(searchUrl, {
       headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}` }
     });
     const data = await response.json();
 
-    // Prepariamo i campi che corrispondono alle vere colonne fisse rimaste su Airtable
+    // 2. Definiamo i campi fissi/nativi che vanno nelle colonne reali di Airtable
     const fieldsToSave = {};
-    const nativeFields = ["username_display", "bio", "plan", "digital_style", "stato", "password"];
+    const nativeFields = ["username_system", "username_display", "bio", "plan", "digital_style", "stato", "password", "email", "modulo_vcf"];
     
     nativeFields.forEach(f => {
       if (body[f] !== undefined) fieldsToSave[f] = body[f];
     });
 
-    // Impacchettiamo tutti i canali social dentro la colonna unica config_canali
-    const socialFields = [
-      "email", "phone", "whatsapp", "instagram", "tiktok", "facebook", 
-      "linkedin", "youtube", "x", "telegram", "reddit", "sito_web", "cv"
-    ];
-    
+    // 3. Logica Dinamica: Tutto quello che NON è un campo nativo finisce nel JSON dei canali
     const canaliObj = {};
-    socialFields.forEach(s => {
-      if (body[s] !== undefined) {
-        canaliObj[s] = typeof body[s] === 'string' ? body[s].trim() : body[s];
+    Object.keys(body).forEach(key => {
+      // Se il campo non è tra quelli nativi e non è vuoto, lo infiliamo nel contenitore
+      if (!nativeFields.includes(key) && body[key] !== undefined) {
+        canaliObj[key] = typeof body[key] === 'string' ? body[key].trim() : body[key];
       }
     });
     
-    // Salviamo l'intero pacchetto come stringa JSON nell'unica colonna Airtable dedicata
+    // Salviamo l'intero pacchetto dinamico come stringa JSON nella colonna dedicata
     fieldsToSave.config_canali = JSON.stringify(canaliObj);
 
     if (data.records && data.records.length > 0) {
@@ -57,9 +54,8 @@ export default async function handler(req, res) {
       
     } else {
       // --- LOGICA CREATE ---
-      fieldsToSave.username_system = username_system;
-      if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa"; // Stato di default iniziale in minuscolo
-      fieldsToSave.views = 0;
+      if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa";
+      fieldsToSave.views = 0; // Inizializza il contatore se nuovo utente
 
       const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
         method: 'POST',
