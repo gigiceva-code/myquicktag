@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -303,102 +304,101 @@
             opacity: 0.8;
         } 
        /* --- STRUTTURA UNIVERSALE DEI COLLEGAMENTI (GEOMETRIA LUXURY) --- */
-.link-box {
-    display: flex;
-    align-items: center;
-    padding: 18px 22px;
-    border-radius: 16px;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95rem;
-    letter-spacing: -0.1px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                background-color 0.25s ease, 
-                border-color 0.25s ease, 
-                box-shadow 0.25s ease;
-    -webkit-tap-highlight-color: transparent;
-}
+        .link-box {
+            display: flex;
+            align-items: center;
+            padding: 18px 22px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: -0.1px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                        background-color 0.25s ease, 
+                        border-color 0.25s ease, 
+                        box-shadow 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.link-box i {
-    font-size: 1.25rem;
-    width: 32px;
-    text-align: left;
-}
+        .link-box i {
+            font-size: 1.25rem;
+            width: 32px;
+            text-align: left;
+        }
 
-.link-box span {
-    flex-grow: 1;
-    text-align: left;
-}
+        .link-box span {
+            flex-grow: 1;
+            text-align: left;
+        }
 
-.link-box:active {
-    transform: scale(0.975);
-}
+        .link-box:active {
+            transform: scale(0.975);
+        }
 
-/* --- 1. BLACK DNA (Minimalismo Stealth & Accenti Chirurgici) --- */
-body.style-black-dna {
-    --bg-color: #050505;
-    --text-main: #FFFFFF;
-    --text-sec: #8E8E93;
-    --accent-dinamico: #10B981; /* Il verde smeraldo chirurgico */
-}
-.style-black-dna .link-box {
-    background: rgba(18, 18, 18, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    color: #FFFFFF;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-.style-black-dna .link-box i {
-    color: var(--accent-dinamico);
-}
-.style-black-dna .link-box:active {
-    border-color: rgba(16, 185, 129, 0.3);
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
-}
+        /* --- 1. BLACK DNA (Minimalismo Stealth & Accenti Chirurgici) --- */
+        body.style-black-dna {
+            --bg-color: #050505;
+            --text-main: #FFFFFF;
+            --text-sec: #8E8E93;
+            --accent-dinamico: #10B981; /* Il verde smeraldo chirurgico */
+        }
+        .style-black-dna .link-box {
+            background: rgba(18, 18, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: #FFFFFF;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .style-black-dna .link-box i {
+            color: var(--accent-dinamico);
+        }
+        .style-black-dna .link-box:active {
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
+        }
 
-/* --- 2. TITANIUM (Precisione Industriale & Riflessi Opachi) --- */
-body.style-titanium {
-    --bg-color: #121214;
-    --text-main: #F2F2F7;
-    --text-sec: #A1A1AA;
-    --accent-dinamico: #E4E4E7; /* Platino satinato */
-}
-.style-titanium .link-box {
-    background: linear-gradient(145deg, rgba(28, 28, 32, 0.8), rgba(20, 20, 23, 0.8));
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    color: #F2F2F7;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-}
-.style-titanium .link-box i {
-    color: #8E8E93;
-}
-.style-titanium .link-box:active {
-    background: rgba(34, 34, 38, 0.9);
-    border-color: rgba(255, 255, 255, 0.15);
-}
+        /* --- 2. TITANIUM (Precisione Industriale & Riflessi Opachi) --- */
+        body.style-titanium {
+            --bg-color: #121214;
+            --text-main: #F2F2F7;
+            --text-sec: #A1A1AA;
+            --accent-dinamico: #E4E4E7; /* Platino satinato */
+        }
+        .style-titanium .link-box {
+            background: linear-gradient(145deg, rgba(28, 28, 32, 0.8), rgba(20, 20, 23, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            color: #F2F2F7;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+        .style-titanium .link-box i {
+            color: #8E8E93;
+        }
+        .style-titanium .link-box:active {
+            background: rgba(34, 34, 38, 0.9);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
 
-/* --- 3. OBSIDIAN GOLD (Vetro Vulcanico & Oro Calibrato) --- */
-body.style-obsidian-gold {
-    --bg-color: #070605; /* Nero caldo profondo */
-    --text-main: #FFFFFF;
-    --text-sec: #A3A3A3;
-    --accent-dinamico: #C5A059; /* Oro satinato premium, non pacchiano */
-}
-.style-obsidian-gold .link-box {
-    background: rgba(18, 16, 14, 0.7);
-    border: 1px solid rgba(197, 160, 89, 0.12);
-    color: #FFFFFF;
-    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
-}
-.style-obsidian-gold .link-box i {
-    color: var(--accent-dinamico);
-}
-.style-obsidian-gold .link-box:active {
-    border-color: rgba(197, 160, 89, 0.4);
-    box-shadow: 0 0 22px rgba(197, 160, 89, 0.18);
-}
- 
+        /* --- 3. OBSIDIAN GOLD (Vetro Vulcanico & Oro Calibrato) --- */
+        body.style-obsidian-gold {
+            --bg-color: #070605; /* Nero caldo profondo */
+            --text-main: #FFFFFF;
+            --text-sec: #A3A3A3;
+            --accent-dinamico: #C5A059; /* Oro satinato premium, non pacchiano */
+        }
+        .style-obsidian-gold .link-box {
+            background: rgba(18, 16, 14, 0.7);
+            border: 1px solid rgba(197, 160, 89, 0.12);
+            color: #FFFFFF;
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
+        }
+        .style-obsidian-gold .link-box i {
+            color: var(--accent-dinamico);
+        }
+        .style-obsidian-gold .link-box:active {
+            border-color: rgba(197, 160, 89, 0.4);
+            box-shadow: 0 0 22px rgba(197, 160, 89, 0.18);
+        }
     </style>
 </head>
 <body>
@@ -416,8 +416,7 @@ body.style-obsidian-gold {
             <p class="bio" id="tag-bio">Caricamento in corso...</p>
         </header>
 
-        <div class="links-container" id="links-container">
-            </div>
+        <div class="links-container" id="links-container"></div>
         
         <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
             <button class="sblocco-btn" onclick="vaiAlCheckout()">
@@ -480,137 +479,158 @@ body.style-obsidian-gold {
         window.location.href = `/checkout.html?u=${globalUtente}`;
     }
 
-  async function caricaProfiloPubblico(nomeMinuto) {
-    try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-        const data = await response.json();
-        
-        if (data.success && data.fields) {
-            const record = data.fields;
-            const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+    async function caricaProfiloPubblico(nomeMinuto) {
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+            const data = await response.json();
             
-            document.getElementById("tag-username").innerText = "@" + usernamePulito;
-            document.getElementById("tag-bio").innerText = record.bio || "";
+            if (data.success && data.fields) {
+                const record = data.fields;
+                const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+                
+                document.getElementById("tag-username").innerText = "@" + usernamePulito;
+                document.getElementById("tag-bio").innerText = record.bio || "";
 
-            // --- 1. GESTIONE DINAMICA DELLO STILE D'ÉLITE ---
-            if (record.digital_style) {
-                // Converte lo stile in classe (es: "black-dna" diventa "style-black-dna")
-                document.body.className = `style-${record.digital_style.toLowerCase().trim()}`;
-            } else {
-                document.body.className = 'style-black-dna'; // Default di lusso
-            }
-
-            // --- 2. RENDERING GENERATIVO DEI PULSANTI (JSON) ---
-            const linksContainer = document.getElementById("links-container");
-            linksContainer.innerHTML = ""; // Pulisce il contenitore
-
-            if (record.config_canali) {
-                try {
-                    // Controlla se il dato è già un oggetto o se va decodificato da stringa
-                    const canali = typeof record.config_canali === 'string' 
-                        ? JSON.parse(record.config_canali) 
-                        : record.config_canali;
-
-                    // Genera millimetricamente ogni singolo tasto d'élite
-                    canali.forEach(canale => {
-                        const linkElement = document.createElement('a');
-                        linkElement.href = canale.link;
-                        linkElement.className = 'link-box';
-                        linkElement.target = '_blank';
-                        linkElement.rel = 'noopener noreferrer';
-                        linkElement.innerHTML = `
-                            <i class="${canale.icona}"></i>
-                            <span>${canale.etichetta}</span>
-                        `;
-                        linksContainer.appendChild(linkElement);
-                    });
-                } catch (jsonError) {
-                    console.error("Errore decodifica config_canali:", jsonError);
+                // --- 1. GESTIONE DINAMICA DELLO STILE D'ÉLITE ---
+                if (record.digital_style) {
+                    document.body.className = `style-${record.digital_style.toLowerCase().trim()}`;
+                } else {
+                    document.body.className = 'style-black-dna'; // Default di lusso
                 }
-            }
 
-            const backLink = document.getElementById("back-to-config");
-            if (backLink) {
-                backLink.href = `profile.html?u=${nomeMinuto}`;
-            }
+                // --- 2. RENDERING GENERATIVO DEI PULSANTI (GEOMETRIA LUXURY) ---
+                const linksContainer = document.getElementById("links-container");
+                linksContainer.innerHTML = ""; 
 
-            const stato = (record.stato || "").toLowerCase().trim();
+                // Mappatura d'élite per icone, etichette e pulizia automatica degli URL
+                const mappingCanali = {
+                    email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
+                    phone: { icon: "fas fa-phone", label: "Telefono", url: val => val.startsWith("tel:") ? val : `tel:${val}` },
+                    whatsapp: { icon: "fab fa-whatsapp", label: "WhatsApp", url: val => val.startsWith("http") ? val : `https://wa.me/${val.replace(/\s+/g, '')}` },
+                    instagram: { icon: "fab fa-instagram", label: "Instagram", url: val => val.startsWith("http") ? val : `https://instagram.com/${val.replace('@', '')}` },
+                    tiktok: { icon: "fab fa-tiktok", label: "TikTok", url: val => val.startsWith("http") ? val : `https://tiktok.com/@${val.replace('@', '')}` },
+                    facebook: { icon: "fab fa-facebook-f", label: "Facebook", url: val => val.startsWith("http") ? val : val },
+                    linkedin: { icon: "fab fa-linkedin-in", label: "LinkedIn", url: val => val.startsWith("http") ? val : val },
+                    youtube: { icon: "fab fa-youtube", label: "YouTube", url: val => val.startsWith("http") ? val : val },
+                    x: { icon: "fab fa-x-twitter", label: "X", url: val => val.startsWith("http") ? val : `https://x.com/${val.replace('@', '')}` },
+                    telegram: { icon: "fab fa-telegram-plane", label: "Telegram", url: val => val.startsWith("http") ? val : `https://t.me/${val.replace('@', '')}` },
+                    reddit: { icon: "fab fa-reddit-alien", label: "Reddit", url: val => val.startsWith("http") ? val : `https://reddit.com/user/${val}` },
+                    sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
+                    cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
+                };
 
-            if (stato === "in attesa") {
-                identitaVerificata = false;
-                if (backLink) backLink.style.display = "flex";
-                
-                document.getElementById("cta-sblocco-container").style.display = "none";
-                
-                const profile = document.getElementById("profile-content");
-                if (profile) {
-                    profile.style.display = "block";
-                    setTimeout(() => { profile.style.opacity = "1"; profile.style.transform = "scale(1)"; }, 50);
+                if (record.config_canali) {
+                    try {
+                        const canaliObj = typeof record.config_canali === 'string' 
+                            ? JSON.parse(record.config_canali) 
+                            : record.config_canali;
+
+                        // Generazione controllata e ordinata secondo il design system di MyQuickTag
+                        Object.keys(mappingCanali).forEach(chiave => {
+                            const valoreRaw = canaliObj[chiave];
+                            if (valoreRaw && valoreRaw.trim() !== "") {
+                                const info = mappingCanali[chiave];
+                                const linkCompleto = info.url(valoreRaw.trim());
+
+                                const linkElement = document.createElement('a');
+                                linkElement.href = linkCompleto;
+                                linkElement.className = 'link-box';
+                                linkElement.target = '_blank';
+                                linkElement.rel = 'noopener noreferrer';
+                                linkElement.innerHTML = `
+                                    <i class="${info.icon}"></i>
+                                    <span>${info.label}</span>
+                                `;
+                                linksContainer.appendChild(linkElement);
+                            }
+                        });
+                    } catch (jsonError) {
+                        console.error("Errore decodifica config_canali:", jsonError);
+                    }
                 }
-                
-                document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
-                
-                const btnRendiloTuo = document.getElementById("showroom-action-btn");
-                if (btnRendiloTuo) {
-                    btnRendiloTuo.innerText = "Attiva la tua myquicktag";
-                    btnRendiloTuo.onclick = vaiAlCheckout;
+
+                const backLink = document.getElementById("back-to-config");
+                if (backLink) {
+                    backLink.href = `profile.html?u=${nomeMinuto}`;
                 }
-                
-                document.body.style.opacity = "1";
-                
-                setTimeout(() => {
-                    const overlay = document.getElementById("showroom-overlay");
-                    const box = document.getElementById("expanding-box"); 
-                    const content = document.querySelector(".conversion-content");
+
+                const stato = (record.stato || "").toLowerCase().trim();
+
+                if (stato === "in attesa") {
+                    identitaVerificata = false;
+                    if (backLink) backLink.style.display = "flex";
                     
-                    if (overlay && box && content) {
-                        overlay.style.display = "flex";
+                    document.getElementById("cta-sblocco-container").style.display = "none";
+                    
+                    const profile = document.getElementById("profile-content");
+                    if (profile) {
+                        profile.style.display = "block";
+                        setTimeout(() => { profile.style.opacity = "1"; profile.style.transform = "scale(1)"; }, 50);
+                    }
+                    
+                    document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                    
+                    const btnRendiloTuo = document.getElementById("showroom-action-btn");
+                    if (btnRendiloTuo) {
+                        btnRendiloTuo.innerText = "Attiva la tua myquicktag";
+                        btnRendiloTuo.onclick = vaiAlCheckout;
+                    }
+                    
+                    document.body.style.opacity = "1";
+                    
+                    setTimeout(() => {
+                        const overlay = document.getElementById("showroom-overlay");
+                        const box = document.getElementById("expanding-box"); 
+                        const content = document.querySelector(".conversion-content");
                         
-                        setTimeout(() => {
-                            overlay.style.background = "rgba(4, 4, 4, 0.0)"; 
-                            overlay.style.backdropFilter = "blur(0px)";
-                            overlay.style.webkitBackdropFilter = "blur(0px)";
-                            
-                            box.style.width = "340px";  
-                            box.style.height = "210px"; 
+                        if (overlay && box && content) {
+                            overlay.style.display = "flex";
                             
                             setTimeout(() => {
-                                content.style.opacity = "1";
-                            }, 300);
+                                overlay.style.background = "rgba(4, 4, 4, 0.0)"; 
+                                overlay.style.backdropFilter = "blur(0px)";
+                                overlay.style.webkitBackdropFilter = "blur(0px)";
+                                
+                                box.style.width = "340px";  
+                                box.style.height = "210px"; 
+                                
+                                setTimeout(() => {
+                                    content.style.opacity = "1";
+                                }, 300);
+                            }, 50);
+                        }
+                    }, 2500);
+                    
+                } else if (stato === "attivo") {
+                    identitaVerificata = true;
+                    if (backLink) backLink.style.display = "none";
+                    document.getElementById("cta-sblocco-container").style.display = "none";
+                    if (document.getElementById("showroom-overlay")) {
+                        document.getElementById("showroom-overlay").style.display = "none";
+                    }
+                    
+                    const profile = document.getElementById("profile-content");
+                    if (profile) {
+                        profile.style.display = "block";
+                        setTimeout(() => {
+                            if (!deferredPrompt) {
+                                profile.style.opacity = "1";
+                                profile.style.transform = "scale(1)";
+                            }
                         }, 50);
                     }
-                }, 2500);
-                
-            } else if (stato === "attivo") {
-                identitaVerificata = true;
-                if (backLink) backLink.style.display = "none";
-                document.getElementById("cta-sblocco-container").style.display = "none";
-                if (document.getElementById("showroom-overlay")) {
-                    document.getElementById("showroom-overlay").style.display = "none";
+                    
+                    mostraInstallatorePremium();
+                    document.body.style.opacity = "1";
                 }
-                
-                const profile = document.getElementById("profile-content");
-                if (profile) {
-                    profile.style.display = "block";
-                    setTimeout(() => {
-                        if (!deferredPrompt) {
-                            profile.style.opacity = "1";
-                            profile.style.transform = "scale(1)";
-                        }
-                    }, 50);
-                }
-                
-                mostraInstallatorePremium();
+            } else {
                 document.body.style.opacity = "1";
             }
-        } else {
+        } catch (error) {
+            console.error("Errore di caricamento:", error);
             document.body.style.opacity = "1";
         }
-    } catch (error) {
-        console.error("Errore di caricamento:", error);
-        document.body.style.opacity = "1";
-    }
-} 
+    } 
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -626,7 +646,6 @@ body.style-obsidian-gold {
         const overlay = document.getElementById("tag-welcome-overlay");
         if (overlay) {
             overlay.style.display = "flex";
-            // Teniamo il profilo in background pronto e resettato per l'animazione di sblocco
             const profile = document.getElementById("profile-content");
             if (profile) {
                 profile.style.opacity = "0";
@@ -654,12 +673,10 @@ body.style-obsidian-gold {
         const profile = document.getElementById("profile-content");
         
         if (overlay) {
-            // Transizione d'uscita fluida per l'overlay
             overlay.style.transition = "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
             overlay.style.opacity = "0";
             overlay.style.transform = "scale(0.95)";
             
-            // Accensione simultanea del profilo sottostante (effetto emersione hardware nativo)
             if (profile) {
                 profile.style.opacity = "1";
                 profile.style.transform = "scale(1)";
