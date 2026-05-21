@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Ricerca utente con URL encoding sicuro per i caratteri speciali
+    // 1. Ricerca utente con URL encoding sicuro
     const formula = `{username_system}='${username_system}'`;
     const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}`;
     
@@ -18,19 +18,34 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-    // 2. Campi nativi fissi (Escludiamo username_system dall'update per non far arrabbiare Airtable)
+    // 2. Campi nativi fissi
     const fieldsToSave = {};
     const nativeFields = ["username_display", "bio", "plan", "digital_style", "stato", "password", "email", "modulo_vcf"];
     
     nativeFields.forEach(f => {
-      if (body[f] !== undefined) fieldsToSave[f] = body[f];
+      if (body[f] !== undefined) {
+        // Protezione: se è una stringa, puliamo gli spazi. Se è vuota, non la inviamo per evitare errori su colonne tipo Email o Select
+        if (typeof body[f] === 'string') {
+          const valueClean = body[f].trim();
+          if (valueClean !== "") {
+            fieldsToSave[f] = valueClean;
+          }
+        } else {
+          fieldsToSave[f] = body[f];
+        }
+      }
     });
 
-    // 3. Logica Dinamica: Qualsiasi altro campo che arriva finisce dentro config_canali
+    // 3. Logica Dinamica per config_canali
     const canaliObj = {};
     Object.keys(body).forEach(key => {
       if (key !== "username_system" && !nativeFields.includes(key) && body[key] !== undefined) {
-        canaliObj[key] = typeof body[key] === 'string' ? body[key].trim() : body[key];
+        if (typeof body[key] === 'string') {
+          const valClean = body[key].trim();
+          if (valClean !== "") canaliObj[key] = valClean;
+        } else {
+          canaliObj[key] = body[key];
+        }
       }
     });
     
@@ -56,8 +71,8 @@ export default async function handler(req, res) {
       
     } else {
       // --- LOGICA CREATE ---
-      fieldsToSave.username_system = username_system; // Inserito solo in creazione iniziale
-      if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa";
+      fieldsToSave.username_system = username_system;
+      if (!fieldsToSave.stato) fieldsToSave.stato = "Attivo"; // Allineato alle opzioni standard di Airtable
       fieldsToSave.views = 0;
 
       const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
