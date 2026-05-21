@@ -18,18 +18,17 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-    // 2. Campi nativi fissi
+    // 2. Definizione Campi Nativi
     const fieldsToSave = {};
     const nativeFields = ["username_display", "bio", "plan", "digital_style", "stato", "password", "email", "modulo_vcf"];
     
     nativeFields.forEach(f => {
       if (body[f] !== undefined) {
         if (typeof body[f] === 'string') {
-          // Puliamo le virgolette spurie e gli spazi vuoti
           let valueClean = body[f].replace(/['"]+/g, '').trim();
           
           if (valueClean !== "") {
-            // TRADUTTORE DI SICUREZZA PER AIRTABLE (Evita errori INVALID_MULTIPLE_CHOICE_OPTIONS)
+            // Mappatura rigida per i valori a scelta multipla dello stile (maiuscoli su Airtable)
             if (f === "digital_style") {
               const upper = valueClean.toUpperCase();
               if (upper === "BLACK" || upper === "BLACK DNA") valueClean = "BLACK DNA";
@@ -42,8 +41,8 @@ export default async function handler(req, res) {
             }
 
             if (f === "stato") {
-              // Converte prima lettera in maiuscolo (es: attivo -> Attivo, sospeso -> Sospeso)
-              valueClean = valueClean.charAt(0).toUpperCase() + valueClean.slice(1).toLowerCase();
+              // Passa il valore esattamente in minuscolo come richiesto dal tuo database
+              valueClean = valueClean.toLowerCase();
             }
 
             fieldsToSave[f] = valueClean;
@@ -54,7 +53,7 @@ export default async function handler(req, res) {
       }
     });
 
-    // 3. Logica Dinamica per config_canali (Esclude i campi di sistema e nativi)
+    // 3. Logica Dinamica Contenitore Canali
     const canaliObj = {};
     Object.keys(body).forEach(key => {
       if (key !== "username_system" && !nativeFields.includes(key) && body[key] !== undefined) {
@@ -90,7 +89,7 @@ export default async function handler(req, res) {
     } else {
       // --- LOGICA CREATE ---
       fieldsToSave.username_system = username_system;
-      if (!fieldsToSave.stato) fieldsToSave.stato = "Attivo";
+      if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa"; // Default tutto minuscolo coerente con Airtable
       fieldsToSave.views = 0;
 
       const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
