@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   if (!u) return res.status(400).json({ success: false, error: "Username mancante" });
 
   try {
-    // MODIFICA: Cerchiamo nella colonna corretta "username_system"
+    // Cerchiamo nella colonna corretta "username_system"
     const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={username_system}='${u.toLowerCase()}'`;
     
     const response = await fetch(url, {
@@ -17,10 +17,26 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (data.records && data.records.length > 0) {
+      const airtableFields = data.records[0].fields;
+      
+      // Creiamo l'oggetto finale da mandare al frontend partendo dai campi nativi
+      const responseFields = { ...airtableFields };
+
+      // Se esiste la colonna unica con i canali, la spacchettiamo al volo
+      if (airtableFields.config_canali) {
+        try {
+          const canali = JSON.parse(airtableFields.config_canali);
+          // Uniamo i canali spacchettati all'oggetto principale, così l'HTML li trova subito
+          Object.assign(responseFields, canali);
+        } catch (jsonError) {
+          console.error("Errore nel parsing di config_canali:", jsonError);
+        }
+      }
+
       return res.status(200).json({
         success: true,
         id: data.records[0].id,
-        fields: data.records[0].fields
+        fields: responseFields
       });
     } else {
       return res.status(404).json({ success: false, error: "Profilo non trovato" });
