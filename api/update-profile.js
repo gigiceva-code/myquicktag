@@ -17,17 +17,29 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-    // Prepariamo i campi comuni (bio, social, etc.)
+    // Prepariamo i campi che corrispondono alle vere colonne fisse rimaste su Airtable
     const fieldsToSave = {};
-    const validFields = [
-      "username_display", "bio", "plan", "digital_style", "email", "phone", 
-      "whatsapp", "instagram", "tiktok", "facebook", "linkedin", "youtube", 
-      "x", "telegram", "reddit", "sito_web", "cv", "stato", "password"
-    ];
+    const nativeFields = ["username_display", "bio", "plan", "digital_style", "stato", "password"];
     
-    validFields.forEach(f => {
+    nativeFields.forEach(f => {
       if (body[f] !== undefined) fieldsToSave[f] = body[f];
     });
+
+    // Impacchettiamo tutti i canali social dentro la colonna unica config_canali
+    const socialFields = [
+      "email", "phone", "whatsapp", "instagram", "tiktok", "facebook", 
+      "linkedin", "youtube", "x", "telegram", "reddit", "sito_web", "cv"
+    ];
+    
+    const canaliObj = {};
+    socialFields.forEach(s => {
+      if (body[s] !== undefined) {
+        canaliObj[s] = typeof body[s] === 'string' ? body[s].trim() : body[s];
+      }
+    });
+    
+    // Salviamo l'intero pacchetto come stringa JSON nell'unica colonna Airtable dedicata
+    fieldsToSave.config_canali = JSON.stringify(canaliObj);
 
     if (data.records && data.records.length > 0) {
       // --- LOGICA UPDATE ---
@@ -45,9 +57,8 @@ export default async function handler(req, res) {
       
     } else {
       // --- LOGICA CREATE ---
-      // Aggiungiamo i campi obbligatori per il nuovo profilo
       fieldsToSave.username_system = username_system;
-      fieldsToSave.stato = "in attesa"; // TUTTO MINUSCOLO come richiesto
+      if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa"; // Stato di default iniziale in minuscolo
       fieldsToSave.views = 0;
 
       const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
