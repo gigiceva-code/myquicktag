@@ -302,6 +302,103 @@
         .tag-skip-btn:hover {
             opacity: 0.8;
         } 
+       /* --- STRUTTURA UNIVERSALE DEI COLLEGAMENTI (GEOMETRIA LUXURY) --- */
+.link-box {
+    display: flex;
+    align-items: center;
+    padding: 18px 22px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: -0.1px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease, 
+                border-color 0.25s ease, 
+                box-shadow 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.link-box i {
+    font-size: 1.25rem;
+    width: 32px;
+    text-align: left;
+}
+
+.link-box span {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.link-box:active {
+    transform: scale(0.975);
+}
+
+/* --- 1. BLACK DNA (Minimalismo Stealth & Accenti Chirurgici) --- */
+body.style-black-dna {
+    --bg-color: #050505;
+    --text-main: #FFFFFF;
+    --text-sec: #8E8E93;
+    --accent-dinamico: #10B981; /* Il verde smeraldo chirurgico */
+}
+.style-black-dna .link-box {
+    background: rgba(18, 18, 18, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    color: #FFFFFF;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+.style-black-dna .link-box i {
+    color: var(--accent-dinamico);
+}
+.style-black-dna .link-box:active {
+    border-color: rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
+}
+
+/* --- 2. TITANIUM (Precisione Industriale & Riflessi Opachi) --- */
+body.style-titanium {
+    --bg-color: #121214;
+    --text-main: #F2F2F7;
+    --text-sec: #A1A1AA;
+    --accent-dinamico: #E4E4E7; /* Platino satinato */
+}
+.style-titanium .link-box {
+    background: linear-gradient(145deg, rgba(28, 28, 32, 0.8), rgba(20, 20, 23, 0.8));
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    color: #F2F2F7;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.style-titanium .link-box i {
+    color: #8E8E93;
+}
+.style-titanium .link-box:active {
+    background: rgba(34, 34, 38, 0.9);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* --- 3. OBSIDIAN GOLD (Vetro Vulcanico & Oro Calibrato) --- */
+body.style-obsidian-gold {
+    --bg-color: #070605; /* Nero caldo profondo */
+    --text-main: #FFFFFF;
+    --text-sec: #A3A3A3;
+    --accent-dinamico: #C5A059; /* Oro satinato premium, non pacchiano */
+}
+.style-obsidian-gold .link-box {
+    background: rgba(18, 16, 14, 0.7);
+    border: 1px solid rgba(197, 160, 89, 0.12);
+    color: #FFFFFF;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
+}
+.style-obsidian-gold .link-box i {
+    color: var(--accent-dinamico);
+}
+.style-obsidian-gold .link-box:active {
+    border-color: rgba(197, 160, 89, 0.4);
+    box-shadow: 0 0 22px rgba(197, 160, 89, 0.18);
+}
+ 
     </style>
 </head>
 <body>
