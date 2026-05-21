@@ -18,24 +18,22 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-    // 2. Definiamo i campi fissi/nativi che vanno nelle colonne reali di Airtable
+    // 2. Campi nativi fissi (Escludiamo username_system dall'update per non far arrabbiare Airtable)
     const fieldsToSave = {};
-    const nativeFields = ["username_system", "username_display", "bio", "plan", "digital_style", "stato", "password", "email", "modulo_vcf"];
+    const nativeFields = ["username_display", "bio", "plan", "digital_style", "stato", "password", "email", "modulo_vcf"];
     
     nativeFields.forEach(f => {
       if (body[f] !== undefined) fieldsToSave[f] = body[f];
     });
 
-    // 3. Logica Dinamica: Tutto quello che NON è un campo nativo finisce nel JSON dei canali
+    // 3. Logica Dinamica: Qualsiasi altro campo che arriva finisce dentro config_canali
     const canaliObj = {};
     Object.keys(body).forEach(key => {
-      // Se il campo non è tra quelli nativi e non è vuoto, lo infiliamo nel contenitore
-      if (!nativeFields.includes(key) && body[key] !== undefined) {
+      if (key !== "username_system" && !nativeFields.includes(key) && body[key] !== undefined) {
         canaliObj[key] = typeof body[key] === 'string' ? body[key].trim() : body[key];
       }
     });
     
-    // Salviamo l'intero pacchetto dinamico come stringa JSON nella colonna dedicata
     fieldsToSave.config_canali = JSON.stringify(canaliObj);
 
     if (data.records && data.records.length > 0) {
@@ -52,10 +50,15 @@ export default async function handler(req, res) {
 
       if (update.ok) return res.status(200).json({ success: true, action: 'updated' });
       
+      const updateError = await update.json();
+      console.error("AIRTABLE UPDATE REJECTED:", updateError);
+      return res.status(500).json({ error: "Airtable ha rifiutato l'update", dettagli: updateError });
+      
     } else {
       // --- LOGICA CREATE ---
+      fieldsToSave.username_system = username_system; // Inserito solo in creazione iniziale
       if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa";
-      fieldsToSave.views = 0; // Inizializza il contatore se nuovo utente
+      fieldsToSave.views = 0;
 
       const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
         method: 'POST',
@@ -67,11 +70,14 @@ export default async function handler(req, res) {
       });
 
       if (create.ok) return res.status(200).json({ success: true, action: 'created' });
+      
+      const createError = await create.json();
+      console.error("AIRTABLE CREATE REJECTED:", createError);
+      return res.status(500).json({ error: "Airtable ha rifiutato la creazione", dettagli: createError });
     }
 
-    return res.status(500).json({ error: "Errore durante l'operazione su Airtable" });
-
   } catch (e) {
-    return res.status(500).json({ error: e.message });
+    console.error("CRASH INTERNO SERVERLESS FUNCTION:", e);
+    return res.status(500).json({ error: e.message, stack: e.stack });
   }
 }
