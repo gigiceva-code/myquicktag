@@ -480,101 +480,137 @@ body.style-obsidian-gold {
         window.location.href = `/checkout.html?u=${globalUtente}`;
     }
 
-    async function caricaProfiloPubblico(nomeMinuto) {
-        try {
-            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-            const data = await response.json();
+  async function caricaProfiloPubblico(nomeMinuto) {
+    try {
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const data = await response.json();
+        
+        if (data.success && data.fields) {
+            const record = data.fields;
+            const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
             
-            if (data.success && data.fields) {
-                const record = data.fields;
-                const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
-                
-                document.getElementById("tag-username").innerText = "@" + usernamePulito;
-                document.getElementById("tag-bio").innerText = record.bio || "";
+            document.getElementById("tag-username").innerText = "@" + usernamePulito;
+            document.getElementById("tag-bio").innerText = record.bio || "";
 
-                const backLink = document.getElementById("back-to-config");
-                if (backLink) {
-                    backLink.href = `profile.html?u=${nomeMinuto}`;
+            // --- 1. GESTIONE DINAMICA DELLO STILE D'ÉLITE ---
+            if (record.digital_style) {
+                // Converte lo stile in classe (es: "black-dna" diventa "style-black-dna")
+                document.body.className = `style-${record.digital_style.toLowerCase().trim()}`;
+            } else {
+                document.body.className = 'style-black-dna'; // Default di lusso
+            }
+
+            // --- 2. RENDERING GENERATIVO DEI PULSANTI (JSON) ---
+            const linksContainer = document.getElementById("links-container");
+            linksContainer.innerHTML = ""; // Pulisce il contenitore
+
+            if (record.config_canali) {
+                try {
+                    // Controlla se il dato è già un oggetto o se va decodificato da stringa
+                    const canali = typeof record.config_canali === 'string' 
+                        ? JSON.parse(record.config_canali) 
+                        : record.config_canali;
+
+                    // Genera millimetricamente ogni singolo tasto d'élite
+                    canali.forEach(canale => {
+                        const linkElement = document.createElement('a');
+                        linkElement.href = canale.link;
+                        linkElement.className = 'link-box';
+                        linkElement.target = '_blank';
+                        linkElement.rel = 'noopener noreferrer';
+                        linkElement.innerHTML = `
+                            <i class="${canale.icona}"></i>
+                            <span>${canale.etichetta}</span>
+                        `;
+                        linksContainer.appendChild(linkElement);
+                    });
+                } catch (jsonError) {
+                    console.error("Errore decodifica config_canali:", jsonError);
                 }
+            }
 
-                const stato = (record.stato || "").toLowerCase().trim();
+            const backLink = document.getElementById("back-to-config");
+            if (backLink) {
+                backLink.href = `profile.html?u=${nomeMinuto}`;
+            }
 
-                if (stato === "in attesa") {
-                    identitaVerificata = false;
-                    if (backLink) backLink.style.display = "flex";
+            const stato = (record.stato || "").toLowerCase().trim();
+
+            if (stato === "in attesa") {
+                identitaVerificata = false;
+                if (backLink) backLink.style.display = "flex";
+                
+                document.getElementById("cta-sblocco-container").style.display = "none";
+                
+                const profile = document.getElementById("profile-content");
+                if (profile) {
+                    profile.style.display = "block";
+                    setTimeout(() => { profile.style.opacity = "1"; profile.style.transform = "scale(1)"; }, 50);
+                }
+                
+                document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                
+                const btnRendiloTuo = document.getElementById("showroom-action-btn");
+                if (btnRendiloTuo) {
+                    btnRendiloTuo.innerText = "Attiva la tua myquicktag";
+                    btnRendiloTuo.onclick = vaiAlCheckout;
+                }
+                
+                document.body.style.opacity = "1";
+                
+                setTimeout(() => {
+                    const overlay = document.getElementById("showroom-overlay");
+                    const box = document.getElementById("expanding-box"); 
+                    const content = document.querySelector(".conversion-content");
                     
-                    document.getElementById("cta-sblocco-container").style.display = "none";
-                    
-                    const profile = document.getElementById("profile-content");
-                    if (profile) {
-                        profile.style.display = "block";
-                        setTimeout(() => { profile.style.opacity = "1"; profile.style.transform = "scale(1)"; }, 50);
-                    }
-                    
-                    document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
-                    
-                    const btnRendiloTuo = document.getElementById("showroom-action-btn");
-                    if (btnRendiloTuo) {
-                        btnRendiloTuo.innerText = "Attiva la tua myquicktag";
-                        btnRendiloTuo.onclick = vaiAlCheckout;
-                    }
-                    
-                    document.body.style.opacity = "1";
-                    
-                    setTimeout(() => {
-                        const overlay = document.getElementById("showroom-overlay");
-                        const box = document.getElementById("expanding-box"); 
-                        const content = document.querySelector(".conversion-content");
+                    if (overlay && box && content) {
+                        overlay.style.display = "flex";
                         
-                        if (overlay && box && content) {
-                            overlay.style.display = "flex";
+                        setTimeout(() => {
+                            overlay.style.background = "rgba(4, 4, 4, 0.0)"; 
+                            overlay.style.backdropFilter = "blur(0px)";
+                            overlay.style.webkitBackdropFilter = "blur(0px)";
+                            
+                            box.style.width = "340px";  
+                            box.style.height = "210px"; 
                             
                             setTimeout(() => {
-                                overlay.style.background = "rgba(4, 4, 4, 0.0)"; 
-                                overlay.style.backdropFilter = "blur(0px)";
-                                overlay.style.webkitBackdropFilter = "blur(0px)";
-                                
-                                box.style.width = "340px";  
-                                box.style.height = "210px"; 
-                                
-                                setTimeout(() => {
-                                    content.style.opacity = "1";
-                                }, 300);
-                            }, 50);
-                        }
-                    }, 2500);
-                    
-                } else if (stato === "attivo") {
-                    identitaVerificata = true;
-                    if (backLink) backLink.style.display = "none";
-                    document.getElementById("cta-sblocco-container").style.display = "none";
-                    if (document.getElementById("showroom-overlay")) {
-                        document.getElementById("showroom-overlay").style.display = "none";
-                    }
-                    
-                    const profile = document.getElementById("profile-content");
-                    if (profile) {
-                        profile.style.display = "block";
-                        // Se la PWA non deve aprirsi, riveliamo subito il profilo in modo morbido
-                        setTimeout(() => {
-                            if (!deferredPrompt) {
-                                profile.style.opacity = "1";
-                                profile.style.transform = "scale(1)";
-                            }
+                                content.style.opacity = "1";
+                            }, 300);
                         }, 50);
                     }
-                    
-                    mostraInstallatorePremium();
-                    document.body.style.opacity = "1";
+                }, 2500);
+                
+            } else if (stato === "attivo") {
+                identitaVerificata = true;
+                if (backLink) backLink.style.display = "none";
+                document.getElementById("cta-sblocco-container").style.display = "none";
+                if (document.getElementById("showroom-overlay")) {
+                    document.getElementById("showroom-overlay").style.display = "none";
                 }
-            } else {
+                
+                const profile = document.getElementById("profile-content");
+                if (profile) {
+                    profile.style.display = "block";
+                    setTimeout(() => {
+                        if (!deferredPrompt) {
+                            profile.style.opacity = "1";
+                            profile.style.transform = "scale(1)";
+                        }
+                    }, 50);
+                }
+                
+                mostraInstallatorePremium();
                 document.body.style.opacity = "1";
             }
-        } catch (error) {
-            console.error("Errore di caricamento:", error);
+        } else {
             document.body.style.opacity = "1";
         }
+    } catch (error) {
+        console.error("Errore di caricamento:", error);
+        document.body.style.opacity = "1";
     }
+} 
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
