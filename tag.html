@@ -702,6 +702,25 @@
             });
         }
     });
+       async function condividiTag() {
+    const shareData = {
+        title: document.getElementById("tag-username").innerText + " | MyQuickTag",
+        text: "Scopri il mio spazio digitale:",
+        url: window.location.href
+    };
+
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData);
+        } else {
+            // Fallback: copia negli appunti se il browser non supporta la condivisione nativa
+            navigator.clipboard.writeText(window.location.href);
+            alert("Link copiato negli appunti!");
+        }
+    } catch (err) {
+        console.error("Errore durante la condivisione:", err);
+    }
+} 
     </script>
 
 </body>
