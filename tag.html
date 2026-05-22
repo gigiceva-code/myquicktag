@@ -128,9 +128,7 @@
     gap: 8px;
     margin-bottom: 20px;
 }
-       #tag-welcome-overlay {
-    display: none !important;
-}
+ 
 </style>
 
  
@@ -336,17 +334,16 @@ document.getElementById("profile-content").style.display = "block";
                         }
                     }, 2500);
                     
-               } else if (stato === "attivo") {
+     } else if (stato === "attivo") {
     identitaVerificata = true;
     if (backLink) backLink.style.display = "none";
     document.getElementById("cta-sblocco-container").style.display = "none";
     
-    // --- IL CONTROLLO CHE RISOLVE TUTTO ---
+    // Mostra il benvenuto SOLO se arrivi dal checkout
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('checkout') === 'success') {
-        document.getElementById("tag-welcome-overlay").style.display = "flex";
+        mostraInstallatorePremium();
     }
-    // --------------------------------------
 
     if (document.getElementById("showroom-overlay")) {
         document.getElementById("showroom-overlay").style.display = "none";
@@ -361,7 +358,7 @@ document.getElementById("profile-content").style.display = "block";
         }, 50);
     }
     document.body.style.opacity = "1";
-}
+} 
                     
                     const profile = document.getElementById("profile-content");
                     if (profile) {
