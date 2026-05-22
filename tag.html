@@ -373,6 +373,9 @@ document.getElementById("profile-content").style.display = "block";
     });
 
     function mostraInstallatorePremium() {
+        // --- QUESTA RIGA EVITA CHE APPAIA SE È GIÀ STATO CHIUSO ---
+        if (localStorage.getItem('welcome_overlay_chiuso') === 'true') return;
+
         if (!deferredPrompt || !identitaVerificata) return;
         
         const overlay = document.getElementById("tag-welcome-overlay");
@@ -401,6 +404,9 @@ document.getElementById("profile-content").style.display = "block";
     }
 
     function chiudiWelcomeEMostraTag() {
+        // --- QUESTA RIGA SALVA IL FATTO CHE L'HAI CHIUSO ---
+        localStorage.setItem('welcome_overlay_chiuso', 'true');
+        
         const overlay = document.getElementById("tag-welcome-overlay");
         const profile = document.getElementById("profile-content");
         
@@ -419,7 +425,6 @@ document.getElementById("profile-content").style.display = "block";
             }, 500);
         }
     }
-
     document.addEventListener("DOMContentLoaded", function() {
         const backLink = document.getElementById("back-to-config");
         if (backLink) {
