@@ -117,6 +117,13 @@
     body.style-black-dna .link-box { background: rgba(18, 18, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.04); color: #FFFFFF; }
     body.style-titanium .link-box { background: linear-gradient(145deg, rgba(28, 28, 32, 0.8), rgba(20, 20, 23, 0.8)); border: 1px solid rgba(255, 255, 255, 0.07); color: #F2F2F7; }
     body.style-obsidian-gold .link-box { background: rgba(18, 16, 14, 0.7); border: 1px solid rgba(197, 160, 89, 0.12); color: #FFFFFF; }
+   /* Forza il colore bianco per il link di ritorno */
+.torna-configurazione-link, /* usa la classe corretta se la hai */
+header a, 
+a {
+    color: #FFFFFF !important;
+    text-decoration: none; /* Rimuove anche la sottolineatura se non la vuoi */
+}    
 </style>
 
  
@@ -206,7 +213,10 @@
                 const record = data.fields;
                 const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
                 
-                document.getElementById("tag-username").innerText = "@" + usernamePulito;
+               const usernameEl = document.getElementById("tag-username");
+if (usernameEl) {
+    usernameEl.innerText = "@" + usernamePulito;
+}
                
 document.getElementById("profile-content").style.display = "block";
                 // --- 1. GESTIONE DINAMICA DELLO STILE D'ÉLITE ---
