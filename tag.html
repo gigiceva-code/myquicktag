@@ -333,16 +333,15 @@ document.getElementById("profile-content").style.display = "block";
                             }, 50);
                         }
                     }, 2500);
-                    
-     } else if (stato === "attivo") {
+} else if (stato === "attivo") {
     identitaVerificata = true;
     if (backLink) backLink.style.display = "none";
     document.getElementById("cta-sblocco-container").style.display = "none";
     
-    // Mostra il benvenuto SOLO se arrivi dal checkout
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('checkout') === 'success') {
-        mostraInstallatorePremium();
+    // Ripristiniamo la visualizzazione del nome utente forzatamente
+    const usernameEl = document.getElementById("tag-username");
+    if (usernameEl) {
+        usernameEl.innerText = "@" + usernamePulito;
     }
 
     if (document.getElementById("showroom-overlay")) {
@@ -352,14 +351,17 @@ document.getElementById("profile-content").style.display = "block";
     const profile = document.getElementById("profile-content");
     if (profile) {
         profile.style.display = "block";
-        setTimeout(() => {
-            profile.style.opacity = "1";
-            profile.style.transform = "scale(1)";
-        }, 50);
+        profile.style.opacity = "1";
+        profile.style.transform = "scale(1)";
     }
     document.body.style.opacity = "1";
-} 
-                    
+    
+    // Mostra il benvenuto solo se necessario
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('checkout') === 'success') {
+        mostraInstallatorePremium();
+    }
+}
                     const profile = document.getElementById("profile-content");
                     if (profile) {
                         profile.style.display = "block";
