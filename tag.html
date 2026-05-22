@@ -399,115 +399,62 @@
             border-color: rgba(197, 160, 89, 0.4);
             box-shadow: 0 0 22px rgba(197, 160, 89, 0.18);
         }
-    /* TAVOLETTA DI VETRO DINAMICA */
-.tag-identity-card {
-    display: flex;
-    justify-content: center;
-    margin: 40px auto;
-    width: fit-content; /* Si adatta perfettamente alla lunghezza del nome */
-    min-width: 200px;
-    max-width: 90vw;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 12px 24px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    /* Aggiungi questa riga dentro .tag-identity-card */
-background: rgba(255, 255, 255, 0.05); /* Leggermente più opaco */
-box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8); /* Ombra più profonda per staccare dal nero */
-}
+  /* TAVOLETTA DI VETRO DINAMICA - Versione Ottimizzata */
+    .tag-identity-card {
+        display: flex;
+        justify-content: center;
+        margin: 40px auto;
+        width: fit-content;
+        min-width: 200px;
+        max-width: 90vw;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 12px 24px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    }
 
-.identity-content {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
+    .identity-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
 
-.username-display {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-    color: #FFFFFF;
-    white-space: nowrap;
-}
+    .username-display {
+        font-size: clamp(1.2rem, 5vw, 1.8rem);
+        font-weight: 700;
+        margin: 0;
+        color: #FFFFFF;
+        white-space: nowrap;
+        letter-spacing: -0.5px;
+    }
 
-.divider {
-    width: 1px;
-    height: 24px;
-    background: rgba(255, 255, 255, 0.2);
-}
+    .divider {
+        width: 1px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.2);
+    }
 
-.share-trigger {
-    background: transparent;
-    border: none;
-    color: #FFFFFF;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    opacity: 0.5; /* Stato inattivo */
-}
+    .share-trigger {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #FFFFFF;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
 
-.share-trigger:disabled {
-    cursor: not-allowed;
-}
-.identity-main {
-    flex: 1;
-    text-align: left;
-}
-
-.username-display {
-    font-weight: 700;
-    letter-spacing: -1px;
-    color: #FFFFFF;
-    
-    /* Queste righe impediscono al nome di andare a capo */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    
-    /* Il font si rimpicciolisce se il nome è troppo lungo */
-    font-size: clamp(1.2rem, 5vw, 2rem); 
-    max-width: 80%;
-}
-.username-display:active {
-    opacity: 0.6;
-}
-
-.user-bio {
-    font-size: 0.95rem;
-    color: var(--text-sec);
-    margin: 8px 0 0 0;
-    font-weight: 400;
-}
-
-.share-trigger {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #FFFFFF;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    margin-left: 20px;
-}
-
-.share-trigger:active {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(0.95);
-}
-       .share-trigger:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    background: rgba(255, 255, 255, 0.02);
-} 
+    .share-trigger:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
     </style>
 </head>
 <body>
