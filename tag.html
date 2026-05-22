@@ -454,6 +454,11 @@
     background: rgba(255, 255, 255, 0.1);
     transform: scale(0.95);
 }
+       .share-trigger:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.02);
+} 
     </style>
 </head>
 <body>
@@ -463,15 +468,15 @@
     </a>
 
     <div id="profile-content" class="profile-container">
-       <header class="tag-identity-card" id="identity-card">
+      <header class="tag-identity-card" id="identity-card">
     <div class="identity-main">
-        <h1 class="username-display" onclick="condividiTag()" id="tag-username">@...</h1>
-        <p class="user-bio" id="tag-bio"></p>
+        <h1 class="username-display" id="tag-username">@hotelteespiaggegenova</h1>
+        <p class="user-bio" id="tag-bio">Design minimale. Identità digitale estesa.</p>
     </div>
-    <button class="share-trigger" onclick="condividiTag()" aria-label="Condividi">
+    <button class="share-trigger" id="btn-share" onclick="condividiTag()" aria-label="Condividi" disabled>
         <i class="fas fa-share-nodes"></i>
     </button>
-</header>
+</header> 
 
         <div class="links-container" id="links-container"></div>
         
