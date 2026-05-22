@@ -119,11 +119,15 @@
     body.style-obsidian-gold .link-box { background: rgba(18, 16, 14, 0.7); border: 1px solid rgba(197, 160, 89, 0.12); color: #FFFFFF; }
    /* Forza il colore bianco per il link di ritorno */
 .torna-configurazione-link, /* usa la classe corretta se la hai */
-header a, 
-a {
+/* Applica il bianco solo al link di ritorno in alto */
+#back-to-config {
     color: #FFFFFF !important;
-    text-decoration: none; /* Rimuove anche la sottolineatura se non la vuoi */
-}    
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
 </style>
 
  
