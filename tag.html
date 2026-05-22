@@ -399,6 +399,61 @@
             border-color: rgba(197, 160, 89, 0.4);
             box-shadow: 0 0 22px rgba(197, 160, 89, 0.18);
         }
+        /* STILE NUOVA CARD IDENTITARIA */
+.tag-identity-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.identity-main {
+    flex: 1;
+    text-align: left;
+}
+
+.username-display {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -1px;
+    cursor: pointer;
+    color: #FFFFFF;
+    transition: opacity 0.2s;
+}
+
+.username-display:active {
+    opacity: 0.6;
+}
+
+.user-bio {
+    font-size: 0.95rem;
+    color: var(--text-sec);
+    margin: 8px 0 0 0;
+    font-weight: 400;
+}
+
+.share-trigger {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    margin-left: 20px;
+}
+
+.share-trigger:active {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0.95);
+}
     </style>
 </head>
 <body>
