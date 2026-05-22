@@ -408,13 +408,15 @@
     </a>
 
     <div id="profile-content" class="profile-container">
-        <header class="profile-header">
-            <div class="avatar-wrapper">
-                <img src="tuo-avatar.jpg" alt="Profile" class="avatar-img">
-            </div>
-            <h1 class="username" id="tag-username">@...</h1>
-            <p class="bio" id="tag-bio">Caricamento in corso...</p>
-        </header>
+       <header class="tag-identity-card" id="identity-card">
+    <div class="identity-main">
+        <h1 class="username-display" onclick="condividiTag()" id="tag-username">@...</h1>
+        <p class="user-bio" id="tag-bio"></p>
+    </div>
+    <button class="share-trigger" onclick="condividiTag()" aria-label="Condividi">
+        <i class="fas fa-share-nodes"></i>
+    </button>
+</header>
 
         <div class="links-container" id="links-container"></div>
         
