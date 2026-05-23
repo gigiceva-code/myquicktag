@@ -165,21 +165,23 @@
         gap: 14px;
     }
 
-    .casella {
-        background: var(--grid-bg);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        border-radius: 16px;
-        padding: 24px 16px;
-        min-height: 110px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
-    }
+   .casella {
+    background: var(--grid-bg);
+    /* Bordo lineare netto per tagliare l'oscurità */
+    border: 1px solid rgba(255, 255, 255, 0.4); 
+    /* Doppio effetto: il primo crea l'alone di luce bianca, il secondo dà profondità allo sfondo */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), 0 10px 25px rgba(0, 0, 0, 0.5);
+    border-radius: 16px;
+    padding: 24px 16px;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
 
     .casella.hidden {
         display: none !important;
