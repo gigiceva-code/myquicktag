@@ -409,7 +409,7 @@
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
       <script>
-        // Estrazione d'élite del parametro utente (Invariato rispetto all'infrastruttura originale)
+        // Estrazione del parametro utente
         const params = new URLSearchParams(window.location.search);
         let nomeUtenteURL = params.get("u") || ""; 
         if (!nomeUtenteURL) {
@@ -492,7 +492,7 @@
 
         // Smistamento ed esecuzione logica visiva ed estetica
         function elaboraEIniettaDatiEcosistema(nomeMinuto) {
-            // 1. Configurazione testuale Username d'élite
+            // 1. Configurazione testuale Username
             const usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
             const usernameEl = document.getElementById("tag-username");
             if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
@@ -504,38 +504,50 @@
                 document.body.className = 'style-black-dna';
             }
 
-            // 3. Gestione Immagine o Logo Aziendale (Rimosso costrutto ad avatar forzato)
+            // 3. Gestione Immagine o Logo Aziendale (Blindata contro i crash se rimossa dall'HTML)
             const imgElement = document.getElementById("userImage");
             const logoContainer = document.querySelector(".logo-container");
             if (datiUtenteLocal.avatar && datiUtenteLocal.avatar.length > 0) {
-                imgElement.src = datiUtenteLocal.avatar[0].url;
-                logoContainer.style.display = "flex";
-                
-                if (datiUtenteLocal.digital_style && datiUtenteLocal.digital_style.toUpperCase().trim() === 'TITANIUM') {
-                    imgElement.className = "user-media media-logo";
-                } else {
-                    imgElement.className = "user-media";
+                if (imgElement) imgElement.src = datiUtenteLocal.avatar[0].url;
+                if (logoContainer) {
+                    logoContainer.style.display = "flex";
+                    if (datiUtenteLocal.digital_style && datiUtenteLocal.digital_style.toUpperCase().trim() === 'TITANIUM') {
+                        imgElement.className = "user-media media-logo";
+                    } else {
+                        imgElement.className = "user-media";
+                    }
                 }
             } else {
-                logoContainer.style.display = "none";
+                if (logoContainer) logoContainer.style.display = "none";
             }
 
-            // 4. Configurazione Link di Ritorno alla Console
+            // 4. Generazione Dinamica QR Code Formula (Se presente il wrapper nell'HTML)
+            if (datiUtenteLocal.qr_link) {
+                const qrWrapper = document.querySelector('.qr-wrapper');
+                if (qrWrapper) {
+                    qrWrapper.innerHTML = `<img src="${datiUtenteLocal.qr_link}" style="width:100%; height:100%; object-fit:contain;" alt="QR Code">`;
+                }
+            }
+
+            // 5. Configurazione Link di Ritorno alla Console
             const backLink = document.getElementById("back-to-config");
             if (backLink) backLink.href = `profile.html?u=${nomeMinuto}`;
 
-            // 5. Smistamento Stati di Business (Attivo / In Attesa / Sospeso)
+            // 6. Smistamento Stati di Business (Attivo / In Attesa / Sospeso)
             const stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
 
             if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
                 identitaVerificata = false;
                 if (backLink) backLink.style.display = "flex";
-                document.getElementById("cta-sblocco-container").style.display = "none";
+                
+                const ctaSblocco = document.getElementById("cta-sblocco-container");
+                if (ctaSblocco) ctaSblocco.style.display = "none";
                 
                 const profile = document.getElementById("profile-content");
                 if (profile) profile.style.display = "block";
                 
-                document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                const convTitle = document.getElementById("conversion-title");
+                if (convTitle) convTitle.innerText = `Nessun altro potrà essere @${usernamePulito}`;
                 
                 const btnRendiloTuo = document.getElementById("showroom-action-btn");
                 if (btnRendiloTuo) {
@@ -567,13 +579,14 @@
             } else if (stato === "attivo") {
                 identitaVerificata = true;
                 if (backLink) backLink.style.display = "none";
-                document.getElementById("cta-sblocco-container").style.display = "none";
                 
-                if (document.getElementById("showroom-overlay")) {
-                    document.getElementById("showroom-overlay").style.display = "none";
-                }
+                const ctaSblocco = document.getElementById("cta-sblocco-container");
+                if (ctaSblocco) ctaSblocco.style.display = "none";
                 
-                // Configurazione e auto-adattamento delle caselle della griglia modulare
+                const showroomOverlay = document.getElementById("showroom-overlay");
+                if (showroomOverlay) showroomOverlay.style.display = "none";
+                
+                // Configurazione e rimozione della classe 'hidden' dalle celle popolate
                 ottimizzaGrigliaEcosistema();
 
                 const profile = document.getElementById("profile-content");
@@ -586,39 +599,40 @@
                 }
                 document.body.style.opacity = "1";
                 
-                // Controllo attivazione PWA immediata da checkout completato
                 if (params.get('checkout') === 'success') {
                     mostraInstallatorePremium();
                 }
             }
         }
 
-        // Analisi dei canali e occultamento dinamico delle celle vuote
+        // Analisi lineare del JSON piatto e rimozione classe hidden
         function ottimizzaGrigliaEcosistema() {
-            // Bio (Campo nativo Airtable)
+            if (!datiUtenteLocal) return;
+
+            // Bio (Campo nativo di primo livello su Airtable)
             gestisciVisibilitaCella('casella-bio', datiUtenteLocal.bio);
             
-            // CV (Verifica all'interno del JSON o campo nativo)
+            // CV (Chiave all'interno della stringa JSON config_canali)
             gestisciVisibilitaCella('casella-cv', canaliConfigurati.cv);
             
-            // Contatti (Raggruppa email, phone, whatsapp o la presenza del VCF)
+            // Contatti (Verifica la presenza di chiavi piatte nel JSON o del modulo_vcf)
             const haContatti = canaliConfigurati.email || canaliConfigurati.phone || canaliConfigurati.whatsapp || datiUtenteLocal.modulo_vcf;
             gestisciVisibilitaCella('casella-contatti', haContatti);
 
-            // Social (Raggruppa le piattaforme esterne presenti nel JSON)
+            // Social (Verifica incrociata delle piattaforme piatte)
             const haSocial = canaliConfigurati.instagram || canaliConfigurati.tiktok || canaliConfigurati.facebook || 
                              canaliConfigurati.linkedin || canaliConfigurati.youtube || canaliConfigurati.x || 
                              canaliConfigurati.telegram || canaliConfigurati.reddit || canaliConfigurati.sito_web;
             gestisciVisibilitaCella('casella-social', haSocial);
 
-            // Gallery e Spazio Futuro (Verifica chiavi dedicate nel JSON)
+            // Sezioni Strutturali Aggiuntive
             gestisciVisibilitaCella('casella-gallery', canaliConfigurati.gallery);
             gestisciVisibilitaCella('casella-futuro', canaliConfigurati.futuro);
         }
 
         function gestisciVisibilitaCella(idElemento, condizione) {
             const cella = document.getElementById(idElemento);
-            if (!cella) return;
+            if (!cella) return; // Salta silenziosamente se l'ID differisce nell'HTML
             if (condizione && condizione.toString().trim() !== "") {
                 cella.classList.remove('hidden');
             } else {
@@ -626,11 +640,13 @@
             }
         }
 
-        // Interazione Overlay: Generazione dinamica dei contenuti protetti e formattati
+        // Interazione Overlay: Costruzione dinamica dei cassetti protetti
         function apriSezione(sezione) {
             const overlay = document.getElementById('overlaySezione');
             const titolo = document.getElementById('titoloSezione');
             const corpo = document.getElementById('corpoSezione');
+            
+            if (!overlay || !titolo || !corpo) return;
             
             overlay.classList.add('attiva');
             window.location.hash = sezione; 
@@ -642,8 +658,6 @@
             else if (sezione === 'social') {
                 titolo.textContent = "Canali Digitali";
                 let htmlSocial = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
-                
-                // Array di scansione ordinata dei social basato sulla mappatura originale
                 const chiaviSocial = ['instagram', 'tiktok', 'facebook', 'linkedin', 'youtube', 'x', 'telegram', 'reddit', 'sito_web'];
                 let conteggioSocial = 0;
 
@@ -683,7 +697,6 @@
                     }
                 });
 
-                // Integrazione del file VCF di rubrica se configurato su Airtable
                 if (datiUtenteLocal.modulo_vcf && datiUtenteLocal.modulo_vcf.trim() !== "") {
                     conteggioContatti++;
                     htmlContatti += `
@@ -702,7 +715,7 @@
                     corpo.innerHTML = `
                         <div style="display:flex; flex-direction:column; gap:20px; align-items:center; width:100%; padding:10px 0;">
                             <i class="fas fa-file-pdf" style="font-size:4rem; color:rgba(255,255,255,0.2);"></i>
-                            <p style="color:#aaa; text-align:center; font-size:0.9rem;">Il Curriculum Vitae è disponibile per la consultazione e il download.</p>
+                            <p style="color:#aaa; text-align:center; font-size:0.9rem;">Il Curriculum Vitae è disponibile per la consultazione.</p>
                             <a href="${cvValore.trim()}" target="_blank" rel="noopener noreferrer" style="background:#fff; color:#000; padding:14px 28px; border-radius:12px; text-decoration:none; font-weight:600; width:100%; text-align:center;">
                                 <i class="fas fa-external-link-alt"></i> Visualizza CV
                             </a>
@@ -713,16 +726,17 @@
             }
             else {
                 titolo.textContent = sezione.toUpperCase();
-                corpo.innerHTML = `<p style="color:#666; text-align:center; padding:20px 0;">Contenuto in fase di sincronizzazione.</p>`;
+                corpo.innerHTML = `<p style="color:#666; text-align:center; padding:20px 0;">In fase di sincronizzazione.</p>`;
             }
         }
 
         function chiudiSezione() {
-            document.getElementById('overlaySezione').classList.remove('attiva');
+            const overlay = document.getElementById('overlaySezione');
+            if (overlay) overlay.classList.remove('attiva');
             history.replaceState(null, null, ' '); 
         }
 
-        // Gestore Installazione Progressiva (PWA Premium Originale)
+        // PWA Native Premium Setup
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -777,9 +791,9 @@
             }
         }
 
-        // Funzioni Native Condivisione d'Élite (Web Share API con Toast Fallback)
+        // Condivisione d'Élite
         async function condividiProfilo(event) {
-            event.stopPropagation();
+            if (event) event.stopPropagation();
             const shareData = {
                 title: (document.getElementById("tag-username")?.innerText || 'MyQuickTag') + " | MyQuickTag",
                 text: "Scopri il mio spazio digitale:",
@@ -819,7 +833,7 @@
             }
         }
 
-        // Gestione transizione fluida del bottone di configurazione superiore
+        // Intercettore di transizione pulsante indietro
         document.addEventListener("DOMContentLoaded", () => {
             const backLink = document.getElementById("back-to-config");
             if (backLink) {
@@ -831,6 +845,8 @@
             }
         });
     </script>
+</body>
+</html>
 </body>
 </html> 
   
