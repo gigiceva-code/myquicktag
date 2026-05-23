@@ -307,6 +307,73 @@
         margin-bottom: 20px;
         font-size: 0.9rem;
     }
+       /* --- SHOWROOM OVERLAY (PRE-CHECKOUT) BLINDATO --- */
+    #showroom-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        display: none; /* Gestito dinamicamente da JS */
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; /* Isola l'elemento e lo mette sopra la griglia senza spostarla */
+        background: rgba(0, 0, 0, 0); 
+        transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        pointer-events: auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    #expanding-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(10, 10, 10, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        width: 0;   /* Animato da JS */
+        height: 0;  /* Animato da JS */
+        overflow: hidden;
+        transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-sizing: border-box;
+    }
+
+    .conversion-content {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        text-align: center;
+        width: 100%;
+    }
+
+    #conversion-title {
+        color: var(--accent-white);
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+        letter-spacing: -0.02em;
+    }
+
+    #showroom-action-btn {
+        background: var(--accent-white);
+        color: #000000;
+        border: none;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        width: 100%;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    #showroom-action-btn:active {
+        transform: scale(0.98);
+        background: #eeeeee;
+    } 
 </style>
    <body>
 
@@ -378,14 +445,14 @@
         </div>
     </div>
 
-    <div id="showroom-overlay" class="showroom-overlay" style="display: none;">
-        <div id="expanding-box" class="expanding-box"> 
-            <div class="conversion-content">
-                <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
-                <button class="btn-condividi-profilo" id="showroom-action-btn" style="margin-top: 15px;">Attiva la tua myquicktag</button>
-            </div>
+   <div id="showroom-overlay" style="display: none;">
+    <div id="expanding-box"> 
+        <div class="conversion-content">
+            <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
+            <button class="btn-condividi-profilo" id="showroom-action-btn" style="margin-top: 15px;">Attiva la tua myquicktag</button>
         </div>
     </div>
+</div>
 
     <div id="tag-welcome-overlay" class="tag-welcome-overlay" style="display: none;">
         <div class="contenuto-card" style="background: #111; padding: 30px; border-radius: 24px; text-align: center; align-items: center;">
@@ -499,113 +566,127 @@
             }
         }
 
-        function elaboraEIniettaDatiEcosistema(nomeMinuto) {
-            const usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
-            const usernameEl = document.getElementById("tag-username");
-            if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
+    function elaboraEIniettaDatiEcosistema(nomeMinuto) {
+    // 1. Username Display
+    const usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
+    const usernameEl = document.getElementById("tag-username");
+    if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
 
-            if (datiUtenteLocal.digital_style) {
-                document.body.className = `style-${datiUtenteLocal.digital_style.toLowerCase().trim()}`;
+    // 2. Design System
+    if (datiUtenteLocal.digital_style) {
+        document.body.className = `style-${datiUtenteLocal.digital_style.toLowerCase().trim()}`;
+    } else {
+        document.body.className = 'style-black-dna';
+    }
+
+    // 3. Gestione Logo/Immagine Blindata
+    const imgElement = document.getElementById("userImage");
+    const logoContainer = document.querySelector(".logo-container");
+    if (datiUtenteLocal.avatar && datiUtenteLocal.avatar.length > 0) {
+        if (imgElement) imgElement.src = datiUtenteLocal.avatar[0].url;
+        if (logoContainer) {
+            logoContainer.style.display = "flex";
+            if (datiUtenteLocal.digital_style && datiUtenteLocal.digital_style.toUpperCase().trim() === 'TITANIUM') {
+                imgElement.className = "user-media media-logo";
             } else {
-                document.body.className = 'style-black-dna';
-            }
-
-            const imgElement = document.getElementById("userImage");
-            const logoContainer = document.querySelector(".logo-container");
-            if (datiUtenteLocal.avatar && datiUtenteLocal.avatar.length > 0) {
-                if (imgElement) imgElement.src = datiUtenteLocal.avatar[0].url;
-                if (logoContainer) {
-                    logoContainer.style.display = "flex";
-                    if (datiUtenteLocal.digital_style && datiUtenteLocal.digital_style.toUpperCase().trim() === 'TITANIUM') {
-                        imgElement.className = "user-media media-logo";
-                    } else {
-                        imgElement.className = "user-media";
-                    }
-                }
-            } else {
-                if (logoContainer) logoContainer.style.display = "none";
-            }
-
-            if (datiUtenteLocal.qr_link) {
-                const qrWrapper = document.querySelector('.qr-wrapper');
-                if (qrWrapper) {
-                    qrWrapper.innerHTML = `<img src="${datiUtenteLocal.qr_link}" style="width:100%; height:100%; object-fit:contain;" alt="QR Code">`;
-                }
-            }
-
-            const backLink = document.getElementById("back-to-config");
-            if (backLink) backLink.href = `profile.html?u=${nomeMinuto}`;
-
-            // [FIX CRUCIALE]: Chiamata estratta ed eseguita INDIPENDENTEMENTE dallo stato del profilo
-            // Rende visibili le caselle popolate sia durante l'anteprima che a checkout completato
-            ottimizzaGrigliaEcosistema();
-
-            const stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
-
-            if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
-                identitaVerificata = false;
-                if (backLink) backLink.style.display = "flex";
-                
-                const ctaSblocco = document.getElementById("cta-sblocco-container");
-                if (ctaSblocco) ctaSblocco.style.display = "none";
-                
-                const profile = document.getElementById("profile-content");
-                if (profile) profile.style.display = "block";
-                
-                const convTitle = document.getElementById("conversion-title");
-                if (convTitle) convTitle.innerText = `Nessun altro potrà essere @${usernamePulito}`;
-                
-                const btnRendiloTuo = document.getElementById("showroom-action-btn");
-                if (btnRendiloTuo) {
-                    btnRendiloTuo.innerText = "Attiva la tua myquicktag";
-                    btnRendiloTuo.onclick = vaiAlCheckout;
-                }
-                
-                document.body.style.opacity = "1";
-                
-                setTimeout(() => {
-                    const overlay = document.getElementById("showroom-overlay");
-                    const box = document.getElementById("expanding-box"); 
-                    const content = document.querySelector(".conversion-content");
-                    
-                    if (overlay && box && content) {
-                        overlay.style.display = "flex";
-                        setTimeout(() => {
-                            overlay.style.background = "rgba(4, 4, 4, 0.0)"; 
-                            overlay.style.backdropFilter = "blur(0px)";
-                            overlay.style.webkitBackdropFilter = "blur(0px)";
-                            box.style.width = "340px";  
-                            box.style.height = "210px"; 
-                            setTimeout(() => { content.style.opacity = "1"; }, 300);
-                        }, 50);
-                    }
-                }, 2500);
-
-            } else if (stato === "attivo") {
-                identitaVerificata = true;
-                if (backLink) backLink.style.display = "none";
-                
-                const ctaSblocco = document.getElementById("cta-sblocco-container");
-                if (ctaSblocco) ctaSblocco.style.display = "none";
-                
-                const showroomOverlay = document.getElementById("showroom-overlay");
-                if (showroomOverlay) showroomOverlay.style.display = "none";
-
-                const profile = document.getElementById("profile-content");
-                if (profile) {
-                    profile.style.display = "block";
-                    setTimeout(() => {
-                        profile.style.opacity = "1";
-                        profile.style.transform = "scale(1)";
-                    }, 50);
-                }
-                document.body.style.opacity = "1";
-                
-                if (params.get('checkout') === 'success') {
-                    mostraInstallatorePremium();
-                }
+                imgElement.className = "user-media";
             }
         }
+    } else {
+        if (logoContainer) logoContainer.style.display = "none";
+    }
+
+    // 4. QR Code Wrapper
+    if (datiUtenteLocal.qr_link) {
+        const qrWrapper = document.querySelector('.qr-wrapper');
+        if (qrWrapper) {
+            qrWrapper.innerHTML = `<img src="${datiUtenteLocal.qr_link}" style="width:100%; height:100%; object-fit:contain;" alt="QR Code">`;
+        }
+    }
+
+    // 5. Link di Ritorno alla Console
+    const backLink = document.getElementById("back-to-config");
+    if (backLink) backLink.href = `profile.html?u=${nomeMinuto}`;
+
+    // Popolamento immediato della griglia (rimuove la classe hidden dove serve)
+    ottimizzaGrigliaEcosistema();
+
+    // 6. Analisi Stati + Controllo Anti-Asincronia
+    let stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
+    const isCheckoutSuccess = params.get('checkout') === 'success';
+
+    if (isCheckoutSuccess) {
+        stato = "attivo";
+    }
+
+    if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
+        identitaVerificata = false;
+        if (backLink) backLink.style.display = "flex"; // Se è un flex d'origine, ok
+        
+        const ctaSblocco = document.getElementById("cta-sblocco-container");
+        if (ctaSblocco) ctaSblocco.style.display = "none";
+        
+        // NOTA: Non tocchiamo il display di #profile-content per non sputtanare la griglia
+        const profile = document.getElementById("profile-content");
+        if (profile) {
+            profile.style.opacity = "1";
+        }
+        
+        const convTitle = document.getElementById("conversion-title");
+        if (convTitle) convTitle.innerText = `Nessun altro potrà essere @${usernamePulito}`;
+        
+        const btnRendiloTuo = document.getElementById("showroom-action-btn");
+        if (btnRendiloTuo) {
+            btnRendiloTuo.innerText = "Attiva la tua myquicktag";
+            btnRendiloTuo.onclick = vaiAlCheckout;
+        }
+        
+        document.body.style.opacity = "1";
+        
+        // Showroom Box
+        setTimeout(() => {
+            const overlay = document.getElementById("showroom-overlay");
+            const box = document.getElementById("expanding-box"); 
+            const content = document.querySelector(".conversion-content");
+            
+            if (overlay && box && content) {
+                overlay.style.display = "flex";
+                setTimeout(() => {
+                    overlay.style.background = "rgba(4, 4, 4, 0.5)"; 
+                    overlay.style.backdropFilter = "blur(10px)";
+                    overlay.style.webkitBackdropFilter = "blur(10px)";
+                    box.style.width = "340px";  
+                    box.style.height = "210px"; 
+                    setTimeout(() => { content.style.opacity = "1"; }, 250);
+                }, 50);
+            }
+        }, 400);
+
+    } else if (stato === "attivo") {
+        identitaVerificata = true;
+        if (backLink) backLink.style.display = "none";
+        
+        const ctaSblocco = document.getElementById("cta-sblocco-container");
+        if (ctaSblocco) ctaSblocco.style.display = "none";
+        
+        const showroomOverlay = document.getElementById("showroom-overlay");
+        if (showroomOverlay) showroomOverlay.style.display = "none";
+
+        const profile = document.getElementById("profile-content");
+        if (profile) {
+            // Gestiamo l'apparizione mantenendo il posizionamento nativo del CSS
+            setTimeout(() => {
+                profile.style.opacity = "1";
+                profile.style.transform = "scale(1)";
+            }, 50);
+        }
+        document.body.style.opacity = "1";
+        
+        if (isCheckoutSuccess) {
+            mostraInstallatorePremium();
+        }
+    }
+}
 
         function ottimizzaGrigliaEcosistema() {
             if (!datiUtenteLocal) return;
