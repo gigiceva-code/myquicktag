@@ -408,7 +408,7 @@
     </div>
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
-      <script>
+     <script>
         // Estrazione del parametro utente
         const params = new URLSearchParams(window.location.search);
         let nomeUtenteURL = params.get("u") || ""; 
@@ -453,13 +453,23 @@
             caricaProfiloPubblico(globalUtente);
         }
 
-        // Funzione di reindirizzamento al checkout nativo
+        // Lettore universale di sicurezza
+        function ottieniValore(chiave) {
+            if (!datiUtenteLocal) return "";
+            if (canaliConfigurati && canaliConfigurati[chiave]) {
+                return canaliConfigurati[chiave].toString().trim();
+            }
+            if (datiUtenteLocal[chiave]) {
+                return datiUtenteLocal[chiave].toString().trim();
+            }
+            return "";
+        }
+
         function vaiAlCheckout() {
             if (!globalUtente) return;
             window.location.href = `/checkout.html?u=${globalUtente}`;
         }
 
-        // Recupero dati dall'endpoint di produzione
         async function caricaProfiloPubblico(nomeMinuto) {
             try {
                 const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
@@ -468,7 +478,6 @@
                 if (data.success && data.fields) {
                     datiUtenteLocal = data.fields;
                     
-                    // Parsing sicuro della stringa JSON config_canali
                     if (datiUtenteLocal.config_canali) {
                         try {
                             canaliConfigurati = typeof datiUtenteLocal.config_canali === 'string' 
@@ -490,21 +499,17 @@
             }
         }
 
-        // Smistamento ed esecuzione logica visiva ed estetica
         function elaboraEIniettaDatiEcosistema(nomeMinuto) {
-            // 1. Configurazione testuale Username
             const usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
             const usernameEl = document.getElementById("tag-username");
             if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
 
-            // 2. Applicazione del Design System Dinamico
             if (datiUtenteLocal.digital_style) {
                 document.body.className = `style-${datiUtenteLocal.digital_style.toLowerCase().trim()}`;
             } else {
                 document.body.className = 'style-black-dna';
             }
 
-            // 3. Gestione Immagine o Logo Aziendale (Blindata contro i crash se rimossa dall'HTML)
             const imgElement = document.getElementById("userImage");
             const logoContainer = document.querySelector(".logo-container");
             if (datiUtenteLocal.avatar && datiUtenteLocal.avatar.length > 0) {
@@ -521,7 +526,6 @@
                 if (logoContainer) logoContainer.style.display = "none";
             }
 
-            // 4. Generazione Dinamica QR Code Formula (Se presente il wrapper nell'HTML)
             if (datiUtenteLocal.qr_link) {
                 const qrWrapper = document.querySelector('.qr-wrapper');
                 if (qrWrapper) {
@@ -529,11 +533,13 @@
                 }
             }
 
-            // 5. Configurazione Link di Ritorno alla Console
             const backLink = document.getElementById("back-to-config");
             if (backLink) backLink.href = `profile.html?u=${nomeMinuto}`;
 
-            // 6. Smistamento Stati di Business (Attivo / In Attesa / Sospeso)
+            // [FIX CRUCIALE]: Chiamata estratta ed eseguita INDIPENDENTEMENTE dallo stato del profilo
+            // Rende visibili le caselle popolate sia durante l'anteprima che a checkout completato
+            ottimizzaGrigliaEcosistema();
+
             const stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
 
             if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
@@ -557,7 +563,6 @@
                 
                 document.body.style.opacity = "1";
                 
-                // Animazione geometrica originale per lo showroom box
                 setTimeout(() => {
                     const overlay = document.getElementById("showroom-overlay");
                     const box = document.getElementById("expanding-box"); 
@@ -585,9 +590,6 @@
                 
                 const showroomOverlay = document.getElementById("showroom-overlay");
                 if (showroomOverlay) showroomOverlay.style.display = "none";
-                
-                // Configurazione e rimozione della classe 'hidden' dalle celle popolate
-                ottimizzaGrigliaEcosistema();
 
                 const profile = document.getElementById("profile-content");
                 if (profile) {
@@ -605,34 +607,27 @@
             }
         }
 
-        // Analisi lineare del JSON piatto e rimozione classe hidden
         function ottimizzaGrigliaEcosistema() {
             if (!datiUtenteLocal) return;
 
-            // Bio (Campo nativo di primo livello su Airtable)
-            gestisciVisibilitaCella('casella-bio', datiUtenteLocal.bio);
+            gestisciVisibilitaCella('casella-bio', ottieniValore('bio'));
+            gestisciVisibilitaCella('casella-cv', ottieniValore('cv'));
             
-            // CV (Chiave all'interno della stringa JSON config_canali)
-            gestisciVisibilitaCella('casella-cv', canaliConfigurati.cv);
-            
-            // Contatti (Verifica la presenza di chiavi piatte nel JSON o del modulo_vcf)
-            const haContatti = canaliConfigurati.email || canaliConfigurati.phone || canaliConfigurati.whatsapp || datiUtenteLocal.modulo_vcf;
+            const haContatti = ottieniValore('email') || ottieniValore('phone') || ottieniValore('whatsapp') || datiUtenteLocal.modulo_vcf;
             gestisciVisibilitaCella('casella-contatti', haContatti);
 
-            // Social (Verifica incrociata delle piattaforme piatte)
-            const haSocial = canaliConfigurati.instagram || canaliConfigurati.tiktok || canaliConfigurati.facebook || 
-                             canaliConfigurati.linkedin || canaliConfigurati.youtube || canaliConfigurati.x || 
-                             canaliConfigurati.telegram || canaliConfigurati.reddit || canaliConfigurati.sito_web;
+            const haSocial = ottieniValore('instagram') || ottieniValore('tiktok') || ottieniValore('facebook') || 
+                             ottieniValore('linkedin') || ottieniValore('youtube') || ottieniValore('x') || 
+                             ottieniValore('telegram') || ottieniValore('reddit') || ottieniValore('sito_web');
             gestisciVisibilitaCella('casella-social', haSocial);
 
-            // Sezioni Strutturali Aggiuntive
-            gestisciVisibilitaCella('casella-gallery', canaliConfigurati.gallery);
-            gestisciVisibilitaCella('casella-futuro', canaliConfigurati.futuro);
+            gestisciVisibilitaCella('casella-gallery', ottieniValore('gallery'));
+            gestisciVisibilitaCella('casella-futuro', ottieniValore('futuro'));
         }
 
         function gestisciVisibilitaCella(idElemento, condizione) {
             const cella = document.getElementById(idElemento);
-            if (!cella) return; // Salta silenziosamente se l'ID differisce nell'HTML
+            if (!cella) return; 
             if (condizione && condizione.toString().trim() !== "") {
                 cella.classList.remove('hidden');
             } else {
@@ -640,7 +635,6 @@
             }
         }
 
-        // Interazione Overlay: Costruzione dinamica dei cassetti protetti
         function apriSezione(sezione) {
             const overlay = document.getElementById('overlaySezione');
             const titolo = document.getElementById('titoloSezione');
@@ -649,11 +643,11 @@
             if (!overlay || !titolo || !corpo) return;
             
             overlay.classList.add('attiva');
-            window.location.hash = sezione; 
+            window.location.hash = SECTION; 
 
             if (sezione === 'bio') {
                 titolo.textContent = "Biografia";
-                corpo.innerHTML = `<p style="white-space: pre-line; line-height: 1.6; color: #ccc;">${datiUtenteLocal.bio || ''}</p>`;
+                corpo.innerHTML = `<p style="white-space: pre-line; line-height: 1.6; color: #ccc;">${ottieniValore('bio')}</p>`;
             } 
             else if (sezione === 'social') {
                 titolo.textContent = "Canali Digitali";
@@ -662,7 +656,7 @@
                 let conteggioSocial = 0;
 
                 chiaviSocial.forEach(chiave => {
-                    const valoreRaw = canaliConfigurati[chiave];
+                    const valoreRaw = ottieniValore(chiave);
                     if (valoreRaw && valoreRaw.trim() !== "") {
                         const info = mappingCanali[chiave];
                         const linkCompleto = info.url(valoreRaw.trim());
@@ -684,7 +678,7 @@
                 let conteggioContatti = 0;
 
                 chiaviContatto.forEach(chiave => {
-                    const valoreRaw = canaliConfigurati[chiave];
+                    const valoreRaw = ottieniValore(chiave);
                     if (valoreRaw && valoreRaw.trim() !== "") {
                         const info = mappingCanali[chiave];
                         const linkCompleto = info.url(valoreRaw.trim());
@@ -710,7 +704,7 @@
             }
             else if (sezione === 'cv') {
                 titolo.textContent = "Curriculum Vitae";
-                const cvValore = canaliConfigurati.cv;
+                const cvValore = ottieniValore('cv');
                 if (cvValore && cvValore.trim() !== "") {
                     corpo.innerHTML = `
                         <div style="display:flex; flex-direction:column; gap:20px; align-items:center; width:100%; padding:10px 0;">
@@ -736,7 +730,6 @@
             history.replaceState(null, null, ' '); 
         }
 
-        // PWA Native Premium Setup
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -791,21 +784,11 @@
             }
         }
 
-        // Condivisione d'Élite
         async function condividiProfilo(event) {
             if (event) event.stopPropagation();
             const shareData = {
                 title: (document.getElementById("tag-username")?.innerText || 'MyQuickTag') + " | MyQuickTag",
                 text: "Scopri il mio spazio digitale:",
-                url: window.location.href
-            };
-            eseguiCondivisione(shareData);
-        }
-
-        async function condividiSezione() {
-            const shareData = {
-                title: "Sezione | MyQuickTag",
-                text: "Guarda questa sezione su MyQuickTag:",
                 url: window.location.href
             };
             eseguiCondivisione(shareData);
@@ -833,7 +816,6 @@
             }
         }
 
-        // Intercettore di transizione pulsante indietro
         document.addEventListener("DOMContentLoaded", () => {
             const backLink = document.getElementById("back-to-config");
             if (backLink) {
@@ -845,6 +827,8 @@
             }
         });
     </script>
+</body>
+</html>
 </body>
 </html>
 </body>
