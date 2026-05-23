@@ -910,7 +910,7 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
             }
         }
 
-       document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
     // 1. Gestione del tasto indietro
     const backLink = document.getElementById("back-to-config");
     if (backLink) {
@@ -931,6 +931,8 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         console.log("PWA installata con successo per questo utente.");
     });
 });
+
+} // <--- Questa chiude finalmente l'if dello "stato attivo" che era rimasto aperto sopra!
 </script>
 </body>
 </html>
