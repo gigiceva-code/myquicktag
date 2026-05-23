@@ -620,77 +620,80 @@
         stato = "attivo";
     }
 
-  if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
-    identitaVerificata = false;
-    if (backLink) backLink.style.display = "flex";
-    
-    const ctaSblocco = document.getElementById("cta-sblocco-container");
-    if (ctaSblocco) ctaSblocco.style.display = "none";
-    
-    // Ripristina il layout nativo della griglia senza distruggerlo
-    const profile = document.getElementById("profile-content");
-    if (profile) {
-        profile.style.display = "grid"; // Cambia in "flex" se usi flexbox nel CSS
-        profile.style.opacity = "1";
-    }
-    
-    const convTitle = document.getElementById("conversion-title");
-    if (convTitle) convTitle.innerText = `Nessun altro potrà essere @${usernamePulito}`;
-    
-    const btnRendiloTuo = document.getElementById("showroom-action-btn");
-    if (btnRendiloTuo) {
-        btnRendiloTuo.innerText = "Attiva la tua myquicktag";
-        btnRendiloTuo.onclick = vaiAlCheckout;
-    }
-    
-    document.body.style.opacity = "1";
-    
-    // Showroom Box
-    setTimeout(() => {
-        const overlay = document.getElementById("showroom-overlay");
-        const box = document.getElementById("expanding-box"); 
-        const content = document.querySelector(".conversion-content");
+if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
+        identitaVerificata = false;
+        if (backLink) backLink.style.display = "flex";
         
-        if (overlay && box && content) {
-            overlay.style.display = "flex";
+        const ctaSblocco = document.getElementById("cta-sblocco-container");
+        if (ctaSblocco) ctaSblocco.style.display = "none";
+        
+        const profile = document.getElementById("profile-content");
+        if (profile) {
+            profile.style.display = "grid"; 
+            profile.style.opacity = "1";
+        }
+        
+        // Popoliamo la griglia ADESSO che il contenitore è visibile
+        if (typeof ottimizzaGrigliaEcosistema === "function") ottimizzaGrigliaEcosistema();
+        
+        const convTitle = document.getElementById("conversion-title");
+        if (convTitle) convTitle.innerText = `Nessun altro potrà essere @${usernamePulito}`;
+        
+        const btnRendiloTuo = document.getElementById("showroom-action-btn");
+        if (btnRendiloTuo) {
+            btnRendiloTuo.innerText = "Attiva la tua myquicktag";
+            btnRendiloTuo.onclick = vaiAlCheckout;
+        }
+        
+        document.body.style.opacity = "1";
+        
+        // Showroom Box
+        setTimeout(() => {
+            const overlay = document.getElementById("showroom-overlay");
+            const box = document.getElementById("expanding-box"); 
+            const content = document.querySelector(".conversion-content");
+            
+            if (overlay && box && content) {
+                overlay.style.display = "flex";
+                setTimeout(() => {
+                    overlay.style.background = "rgba(4, 4, 4, 0.5)"; 
+                    overlay.style.backdropFilter = "blur(10px)";
+                    overlay.style.webkitBackdropFilter = "blur(10px)";
+                    box.style.width = "340px";  
+                    box.style.height = "210px"; 
+                    setTimeout(() => { content.style.opacity = "1"; }, 250);
+                }, 50);
+            }
+        }, 400);
+
+    } else if (stato === "attivo") {
+        identitaVerificata = true;
+        if (backLink) backLink.style.display = "none";
+        
+        const ctaSblocco = document.getElementById("cta-sblocco-container");
+        if (ctaSblocco) ctaSblocco.style.display = "none";
+        
+        const showroomOverlay = document.getElementById("showroom-overlay");
+        if (showroomOverlay) showroomOverlay.style.display = "none";
+
+        const profile = document.getElementById("profile-content");
+        if (profile) {
+            profile.style.display = "grid"; 
             setTimeout(() => {
-                overlay.style.background = "rgba(4, 4, 4, 0.5)"; 
-                overlay.style.backdropFilter = "blur(10px)";
-                overlay.style.webkitBackdropFilter = "blur(10px)";
-                box.style.width = "340px";  
-                box.style.height = "210px"; 
-                setTimeout(() => { content.style.opacity = "1"; }, 250);
+                profile.style.opacity = "1";
+                profile.style.transform = "scale(1)";
+                
+                // Popoliamo la griglia anche per l'utente attivo dopo l'animazione
+                if (typeof ottimizzaGrigliaEcosistema === "function") ottimizzaGrigliaEcosistema();
             }, 50);
         }
-    }, 400);
-
-} else if (stato === "attivo") {
-    identitaVerificata = true;
-    if (backLink) backLink.style.display = "none";
-    
-    const ctaSblocco = document.getElementById("cta-sblocco-container");
-    if (ctaSblocco) ctaSblocco.style.display = "none";
-    
-    const showroomOverlay = document.getElementById("showroom-overlay");
-    if (showroomOverlay) showroomOverlay.style.display = "none";
-
-    // Ripristina il layout nativo anche per l'utente attivo
-    const profile = document.getElementById("profile-content");
-    if (profile) {
-        profile.style.display = "grid"; // Cambia in "flex" se usi flexbox nel CSS
-        setTimeout(() => {
-            profile.style.opacity = "1";
-            profile.style.transform = "scale(1)";
-        }, 50);
-    }
-    document.body.style.opacity = "1";
-    
-    if (isCheckoutSuccess) {
-        mostraInstallatorePremium();
+        document.body.style.opacity = "1";
+        
+        if (isCheckoutSuccess) {
+            mostraInstallatorePremium();
+        }
     }
 }
-}
-
         function ottimizzaGrigliaEcosistema() {
             if (!datiUtenteLocal) return;
 
