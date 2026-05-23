@@ -39,14 +39,7 @@ body {
             width: 100%;
         }
 
-        .avatar {
-            width: 120px; height: 120px;
-            border-radius: 50%;
-            background-color: #111;
-            border: 2px solid var(--accent-smeraldo);
-            object-fit: cover;
-            margin-bottom: 20px;
-        }
+        .
 
         .username {
             font-size: 1.8rem;
@@ -55,13 +48,7 @@ body {
             letter-spacing: -0.5px;
         }
 
-        .bio {
-            font-size: 1rem;
-            color: var(--text-sec);
-            margin-top: 10px;
-            max-width: 320px;
-            line-height: 1.5;
-        }
+        .
 
         .links-container {
             margin-top: 40px;
@@ -124,7 +111,7 @@ body {
 <body>
 
     <div class="profile-header">
-        <img src="" alt="Avatar" class="avatar" id="tag-avatar" style="display:none;">
+        
         <h1 class="username" id="tag-username">@...</h1>
         <p class="bio" id="tag-bio">Caricamento identità...</p>
     </div>
@@ -173,7 +160,7 @@ async function caricaProfiloPubblico(nomeMinuto) {
             // Aggiorna interfaccia
             document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
             document.getElementById("tag-bio").innerText = record.bio || "";
-            document.getElementById("tag-avatar").style.display = "block";
+            
 
             // Normalizzazione stato in minuscolo per confronto sicuro
             const stato = (record.stato || "").toLowerCase().trim();
