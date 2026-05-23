@@ -910,8 +910,8 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
             }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-    // 1. Questo è il vecchio ascoltatore del tasto indietro (lascialo così com'è)
+       document.addEventListener("DOMContentLoaded", () => {
+    // 1. Gestione del tasto indietro
     const backLink = document.getElementById("back-to-config");
     if (backLink) {
         backLink.addEventListener("click", function(e) {
@@ -921,7 +921,7 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         });
     }
 
-    // 2. AGGIUNGIAMO QUI IL NUOVO ASCOLTATORE PER LA PWA
+    // 2. Ascoltatore PWA
     window.addEventListener('appinstalled', () => {
         if (typeof usernamePulito !== 'undefined' && usernamePulito) {
             localStorage.setItem(`myquicktag_pwa_${usernamePulito}_installata`, "true");
@@ -931,9 +931,6 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         console.log("PWA installata con successo per questo utente.");
     });
 });
-});
-    </script>
+</script>
 </body>
 </html>
-
-  
