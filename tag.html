@@ -633,7 +633,7 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
             profile.style.opacity = "1";
         }
         
-        // Popoliamo la griglia ADESSO che il contenitore è visibile
+        // Popoliamo la griglia subito così l'utente la vede in chiaro sotto il messaggio
         if (typeof ottimizzaGrigliaEcosistema === "function") ottimizzaGrigliaEcosistema();
         
         const convTitle = document.getElementById("conversion-title");
@@ -647,7 +647,7 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         
         document.body.style.opacity = "1";
         
-        // Showroom Box
+        // Showroom Box (Senza blur, pagina sotto nitida)
         setTimeout(() => {
             const overlay = document.getElementById("showroom-overlay");
             const box = document.getElementById("expanding-box"); 
@@ -656,9 +656,11 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
             if (overlay && box && content) {
                 overlay.style.display = "flex";
                 setTimeout(() => {
-                    overlay.style.background = "rgba(4, 4, 4, 0.5)"; 
-                    overlay.style.backdropFilter = "blur(10px)";
-                    overlay.style.webkitBackdropFilter = "blur(10px)";
+                    // Eliminato il blur e reso lo sfondo trasparente per mostrare la tag in chiaro
+                    overlay.style.background = "rgba(0, 0, 0, 0)"; 
+                    overlay.style.backdropFilter = "none";
+                    overlay.style.webkitBackdropFilter = "none";
+                    
                     box.style.width = "340px";  
                     box.style.height = "210px"; 
                     setTimeout(() => { content.style.opacity = "1"; }, 250);
@@ -683,7 +685,6 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
                 profile.style.opacity = "1";
                 profile.style.transform = "scale(1)";
                 
-                // Popoliamo la griglia anche per l'utente attivo dopo l'animazione
                 if (typeof ottimizzaGrigliaEcosistema === "function") ottimizzaGrigliaEcosistema();
             }, 50);
         }
