@@ -408,4 +408,429 @@
     </div>
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
+      <script>
+        // Estrazione d'élite del parametro utente (Invariato rispetto all'infrastruttura originale)
+        const params = new URLSearchParams(window.location.search);
+        let nomeUtenteURL = params.get("u") || ""; 
+        if (!nomeUtenteURL) {
+            const pathParts = window.location.pathname.split('/');
+            const uIndex = pathParts.indexOf('u');
+            if (uIndex !== -1 && pathParts[uIndex + 1]) nomeUtenteURL = pathParts[uIndex + 1];
+        }
+
+        let globalUtente = "";
+        let deferredPrompt;
+        let identitaVerificata = false;
+        let datiUtenteLocal = null;
+        let canaliConfigurati = {};
+
+        // Mappatura originale sanificata per icone, etichette e pulizia URL
+        const mappingCanali = {
+            email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
+            phone: { icon: "fas fa-phone", label: "Telefono", url: val => val.startsWith("tel:") ? val : `tel:${val}` },
+            whatsapp: { icon: "fab fa-whatsapp", label: "WhatsApp", url: val => val.startsWith("http") ? val : `https://wa.me/${val.replace(/\s+/g, '')}` },
+            instagram: { icon: "fab fa-instagram", label: "Instagram", url: val => val.startsWith("http") ? val : `https://instagram.com/${val.replace('@', '')}` },
+            tiktok: { icon: "fab fa-tiktok", label: "TikTok", url: val => val.startsWith("http") ? val : `https://tiktok.com/@${val.replace('@', '')}` },
+            facebook: { icon: "fab fa-facebook-f", label: "Facebook", url: val => val.startsWith("http") ? val : val },
+            linkedin: { icon: "fab fa-linkedin-in", label: "LinkedIn", url: val => val.startsWith("http") ? val : val },
+            youtube: { icon: "fab fa-youtube", label: "YouTube", url: val => val.startsWith("http") ? val : val },
+            x: { icon: "fab fa-x-twitter", label: "X", url: val => val.startsWith("http") ? val : `https://x.com/${val.replace('@', '')}` },
+            telegram: { icon: "fab fa-telegram-plane", label: "Telegram", url: val => val.startsWith("http") ? val : `https://t.me/${val.replace('@', '')}` },
+            reddit: { icon: "fab fa-reddit-alien", label: "Reddit", url: val => val.startsWith("http") ? val : `https://reddit.com/user/${val}` },
+            sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
+            cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
+        };
+
+        // Avvio e configurazione asset PWA personalizzati
+        if (nomeUtenteURL) {
+            globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
+            
+            const dynamicManifest = document.getElementById("dynamic-manifest");
+            const dynamicIcon = document.getElementById("dynamic-icon");
+            if (dynamicManifest) dynamicManifest.href = `/api/manifest?u=${globalUtente}`;
+            if (dynamicIcon) dynamicIcon.href = `/api/icon?u=${globalUtente}`;
+            
+            caricaProfiloPubblico(globalUtente);
+        }
+
+        // Funzione di reindirizzamento al checkout nativo
+        function vaiAlCheckout() {
+            if (!globalUtente) return;
+            window.location.href = `/checkout.html?u=${globalUtente}`;
+        }
+
+        // Recupero dati dall'endpoint di produzione
+        async function caricaProfiloPubblico(nomeMinuto) {
+            try {
+                const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+                const data = await response.json();
+                
+                if (data.success && data.fields) {
+                    datiUtenteLocal = data.fields;
+                    
+                    // Parsing sicuro della stringa JSON config_canali
+                    if (datiUtenteLocal.config_canali) {
+                        try {
+                            canaliConfigurati = typeof datiUtenteLocal.config_canali === 'string' 
+                                ? JSON.parse(datiUtenteLocal.config_canali) 
+                                : datiUtenteLocal.config_canali;
+                        } catch (e) {
+                            console.error("Errore parsing config_canali:", e);
+                            canaliConfigurati = {};
+                        }
+                    }
+                    
+                    elaboraEIniettaDatiEcosistema(nomeMinuto);
+                } else {
+                    document.body.style.opacity = "1";
+                }
+            } catch (error) {
+                console.error("Errore di caricamento:", error);
+                document.body.style.opacity = "1";
+            }
+        }
+
+        // Smistamento ed esecuzione logica visiva ed estetica
+        function elaboraEIniettaDatiEcosistema(nomeMinuto) {
+            // 1. Configurazione testuale Username d'élite
+            const usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
+            const usernameEl = document.getElementById("tag-username");
+            if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
+
+            // 2. Applicazione del Design System Dinamico
+            if (datiUtenteLocal.digital_style) {
+                document.body.className = `style-${datiUtenteLocal.digital_style.toLowerCase().trim()}`;
+            } else {
+                document.body.className = 'style-black-dna';
+            }
+
+            // 3. Gestione Immagine o Logo Aziendale (Rimosso costrutto ad avatar forzato)
+            const imgElement = document.getElementById("userImage");
+            const logoContainer = document.querySelector(".logo-container");
+            if (datiUtenteLocal.avatar && datiUtenteLocal.avatar.length > 0) {
+                imgElement.src = datiUtenteLocal.avatar[0].url;
+                logoContainer.style.display = "flex";
+                
+                if (datiUtenteLocal.digital_style && datiUtenteLocal.digital_style.toUpperCase().trim() === 'TITANIUM') {
+                    imgElement.className = "user-media media-logo";
+                } else {
+                    imgElement.className = "user-media";
+                }
+            } else {
+                logoContainer.style.display = "none";
+            }
+
+            // 4. Configurazione Link di Ritorno alla Console
+            const backLink = document.getElementById("back-to-config");
+            if (backLink) backLink.href = `profile.html?u=${nomeMinuto}`;
+
+            // 5. Smistamento Stati di Business (Attivo / In Attesa / Sospeso)
+            const stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
+
+            if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
+                identitaVerificata = false;
+                if (backLink) backLink.style.display = "flex";
+                document.getElementById("cta-sblocco-container").style.display = "none";
+                
+                const profile = document.getElementById("profile-content");
+                if (profile) profile.style.display = "block";
+                
+                document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                
+                const btnRendiloTuo = document.getElementById("showroom-action-btn");
+                if (btnRendiloTuo) {
+                    btnRendiloTuo.innerText = "Attiva la tua myquicktag";
+                    btnRendiloTuo.onclick = vaiAlCheckout;
+                }
+                
+                document.body.style.opacity = "1";
+                
+                // Animazione geometrica originale per lo showroom box
+                setTimeout(() => {
+                    const overlay = document.getElementById("showroom-overlay");
+                    const box = document.getElementById("expanding-box"); 
+                    const content = document.querySelector(".conversion-content");
+                    
+                    if (overlay && box && content) {
+                        overlay.style.display = "flex";
+                        setTimeout(() => {
+                            overlay.style.background = "rgba(4, 4, 4, 0.0)"; 
+                            overlay.style.backdropFilter = "blur(0px)";
+                            overlay.style.webkitBackdropFilter = "blur(0px)";
+                            box.style.width = "340px";  
+                            box.style.height = "210px"; 
+                            setTimeout(() => { content.style.opacity = "1"; }, 300);
+                        }, 50);
+                    }
+                }, 2500);
+
+            } else if (stato === "attivo") {
+                identitaVerificata = true;
+                if (backLink) backLink.style.display = "none";
+                document.getElementById("cta-sblocco-container").style.display = "none";
+                
+                if (document.getElementById("showroom-overlay")) {
+                    document.getElementById("showroom-overlay").style.display = "none";
+                }
+                
+                // Configurazione e auto-adattamento delle caselle della griglia modulare
+                ottimizzaGrigliaEcosistema();
+
+                const profile = document.getElementById("profile-content");
+                if (profile) {
+                    profile.style.display = "block";
+                    setTimeout(() => {
+                        profile.style.opacity = "1";
+                        profile.style.transform = "scale(1)";
+                    }, 50);
+                }
+                document.body.style.opacity = "1";
+                
+                // Controllo attivazione PWA immediata da checkout completato
+                if (params.get('checkout') === 'success') {
+                    mostraInstallatorePremium();
+                }
+            }
+        }
+
+        // Analisi dei canali e occultamento dinamico delle celle vuote
+        function ottimizzaGrigliaEcosistema() {
+            // Bio (Campo nativo Airtable)
+            gestisciVisibilitaCella('casella-bio', datiUtenteLocal.bio);
+            
+            // CV (Verifica all'interno del JSON o campo nativo)
+            gestisciVisibilitaCella('casella-cv', canaliConfigurati.cv);
+            
+            // Contatti (Raggruppa email, phone, whatsapp o la presenza del VCF)
+            const haContatti = canaliConfigurati.email || canaliConfigurati.phone || canaliConfigurati.whatsapp || datiUtenteLocal.modulo_vcf;
+            gestisciVisibilitaCella('casella-contatti', haContatti);
+
+            // Social (Raggruppa le piattaforme esterne presenti nel JSON)
+            const haSocial = canaliConfigurati.instagram || canaliConfigurati.tiktok || canaliConfigurati.facebook || 
+                             canaliConfigurati.linkedin || canaliConfigurati.youtube || canaliConfigurati.x || 
+                             canaliConfigurati.telegram || canaliConfigurati.reddit || canaliConfigurati.sito_web;
+            gestisciVisibilitaCella('casella-social', haSocial);
+
+            // Gallery e Spazio Futuro (Verifica chiavi dedicate nel JSON)
+            gestisciVisibilitaCella('casella-gallery', canaliConfigurati.gallery);
+            gestisciVisibilitaCella('casella-futuro', canaliConfigurati.futuro);
+        }
+
+        function gestisciVisibilitaCella(idElemento, condizione) {
+            const cella = document.getElementById(idElemento);
+            if (!cella) return;
+            if (condizione && condizione.toString().trim() !== "") {
+                cella.classList.remove('hidden');
+            } else {
+                cella.classList.add('hidden');
+            }
+        }
+
+        // Interazione Overlay: Generazione dinamica dei contenuti protetti e formattati
+        function apriSezione(sezione) {
+            const overlay = document.getElementById('overlaySezione');
+            const titolo = document.getElementById('titoloSezione');
+            const corpo = document.getElementById('corpoSezione');
+            
+            overlay.classList.add('attiva');
+            window.location.hash = sezione; 
+
+            if (sezione === 'bio') {
+                titolo.textContent = "Biografia";
+                corpo.innerHTML = `<p style="white-space: pre-line; line-height: 1.6; color: #ccc;">${datiUtenteLocal.bio || ''}</p>`;
+            } 
+            else if (sezione === 'social') {
+                titolo.textContent = "Canali Digitali";
+                let htmlSocial = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
+                
+                // Array di scansione ordinata dei social basato sulla mappatura originale
+                const chiaviSocial = ['instagram', 'tiktok', 'facebook', 'linkedin', 'youtube', 'x', 'telegram', 'reddit', 'sito_web'];
+                let conteggioSocial = 0;
+
+                chiaviSocial.forEach(chiave => {
+                    const valoreRaw = canaliConfigurati[chiave];
+                    if (valoreRaw && valoreRaw.trim() !== "") {
+                        const info = mappingCanali[chiave];
+                        const linkCompleto = info.url(valoreRaw.trim());
+                        conteggioSocial++;
+                        htmlSocial += `
+                            <a href="${linkCompleto}" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:14px; transition: background 0.2s;">
+                                <i class="${info.icon}" style="font-size:1.2rem; width:24px; text-align:center; color:#fff;"></i> 
+                                <span style="font-weight:500; font-size:0.95rem;">${info.label}</span>
+                            </a>`;
+                    }
+                });
+                htmlSocial += `</div>`;
+                corpo.innerHTML = conteggioSocial > 0 ? htmlSocial : "<p style='color:#666;'>Nessun canale configurato.</p>";
+            } 
+            else if (sezione === 'contatti') {
+                titolo.textContent = "Informazioni di Contatto";
+                let htmlContatti = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
+                const chiaviContatto = ['phone', 'email', 'whatsapp'];
+                let conteggioContatti = 0;
+
+                chiaviContatto.forEach(chiave => {
+                    const valoreRaw = canaliConfigurati[chiave];
+                    if (valoreRaw && valoreRaw.trim() !== "") {
+                        const info = mappingCanali[chiave];
+                        const linkCompleto = info.url(valoreRaw.trim());
+                        conteggioContatti++;
+                        htmlContatti += `
+                            <a href="${linkCompleto}" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:14px;">
+                                <i class="${info.icon}" style="font-size:1.2rem; width:24px; text-align:center;"></i> 
+                                <span style="font-weight:500;">${info.label}</span>
+                            </a>`;
+                    }
+                });
+
+                // Integrazione del file VCF di rubrica se configurato su Airtable
+                if (datiUtenteLocal.modulo_vcf && datiUtenteLocal.modulo_vcf.trim() !== "") {
+                    conteggioContatti++;
+                    htmlContatti += `
+                        <a href="data:text/vcard;charset=utf-8,${encodeURIComponent(datiUtenteLocal.modulo_vcf)}" download="contatto.vcf" style="background:#fff; padding:16px; border-radius:14px; color:#000; text-decoration:none; display:flex; align-items:center; gap:14px; font-weight:600; margin-top:8px; justify-content:center;">
+                            <i class="fas fa-user-plus"></i> <span>Salva in Rubrica</span>
+                        </a>`;
+                }
+
+                htmlContatti += `</div>`;
+                corpo.innerHTML = conteggioContatti > 0 ? htmlContatti : "<p style='color:#666;'>Nessun contatto configurato.</p>";
+            }
+            else if (sezione === 'cv') {
+                titolo.textContent = "Curriculum Vitae";
+                const cvValore = canaliConfigurati.cv;
+                if (cvValore && cvValore.trim() !== "") {
+                    corpo.innerHTML = `
+                        <div style="display:flex; flex-direction:column; gap:20px; align-items:center; width:100%; padding:10px 0;">
+                            <i class="fas fa-file-pdf" style="font-size:4rem; color:rgba(255,255,255,0.2);"></i>
+                            <p style="color:#aaa; text-align:center; font-size:0.9rem;">Il Curriculum Vitae è disponibile per la consultazione e il download.</p>
+                            <a href="${cvValore.trim()}" target="_blank" rel="noopener noreferrer" style="background:#fff; color:#000; padding:14px 28px; border-radius:12px; text-decoration:none; font-weight:600; width:100%; text-align:center;">
+                                <i class="fas fa-external-link-alt"></i> Visualizza CV
+                            </a>
+                        </div>`;
+                } else {
+                    corpo.innerHTML = "<p style='color:#666;'>Nessun documento inserito.</p>";
+                }
+            }
+            else {
+                titolo.textContent = sezione.toUpperCase();
+                corpo.innerHTML = `<p style="color:#666; text-align:center; padding:20px 0;">Contenuto in fase di sincronizzazione.</p>`;
+            }
+        }
+
+        function chiudiSezione() {
+            document.getElementById('overlaySezione').classList.remove('attiva');
+            history.replaceState(null, null, ' '); 
+        }
+
+        // Gestore Installazione Progressiva (PWA Premium Originale)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (identitaVerificata) {
+                mostraInstallatorePremium();
+            }
+        });
+
+        function mostraInstallatorePremium() {
+            if (localStorage.getItem('welcome_overlay_chiuso') === 'true') return;
+            if (!deferredPrompt || !identitaVerificata) return;
+            
+            const overlay = document.getElementById("tag-welcome-overlay");
+            if (overlay) {
+                overlay.style.display = "flex";
+                const profile = document.getElementById("profile-content");
+                if (profile) {
+                    profile.style.opacity = "0";
+                    profile.style.transform = "scale(0.98)";
+                }
+            }
+
+            const btnInstall = document.getElementById("trigger-pwa-install");
+            if (btnInstall) {
+                btnInstall.onclick = () => {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            chiudiWelcomeEMostraTag();
+                        }
+                        deferredPrompt = null;
+                    });
+                };
+            }
+        }
+
+        function chiudiWelcomeEMostraTag() {
+            localStorage.setItem('welcome_overlay_chiuso', 'true');
+            const overlay = document.getElementById("tag-welcome-overlay");
+            const profile = document.getElementById("profile-content");
+            
+            if (overlay) {
+                overlay.style.transition = "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
+                overlay.style.opacity = "0";
+                overlay.style.transform = "scale(0.95)";
+                
+                if (profile) {
+                    profile.style.opacity = "1";
+                    profile.style.transform = "scale(1)";
+                }
+                setTimeout(() => { overlay.style.display = "none"; }, 500);
+            }
+        }
+
+        // Funzioni Native Condivisione d'Élite (Web Share API con Toast Fallback)
+        async function condividiProfilo(event) {
+            event.stopPropagation();
+            const shareData = {
+                title: (document.getElementById("tag-username")?.innerText || 'MyQuickTag') + " | MyQuickTag",
+                text: "Scopri il mio spazio digitale:",
+                url: window.location.href
+            };
+            eseguiCondivisione(shareData);
+        }
+
+        async function condividiSezione() {
+            const shareData = {
+                title: "Sezione | MyQuickTag",
+                text: "Guarda questa sezione su MyQuickTag:",
+                url: window.location.href
+            };
+            eseguiCondivisione(shareData);
+        }
+
+        async function eseguiCondivisione(data) {
+            try {
+                if (navigator.share) {
+                    await navigator.share(data);
+                } else {
+                    navigator.clipboard.writeText(data.url);
+                    mostraToast("Link copiato negli appunti!");
+                }
+            } catch (err) {
+                console.error("Errore durante la condivisione:", err);
+            }
+        }
+
+        function mostraToast(messaggio) {
+            const toast = document.getElementById('toastNotifica');
+            if (toast) {
+                toast.textContent = messaggio;
+                toast.classList.add('mostra');
+                setTimeout(() => { toast.classList.remove('mostra'); }, 2500);
+            }
+        }
+
+        // Gestione transizione fluida del bottone di configurazione superiore
+        document.addEventListener("DOMContentLoaded", () => {
+            const backLink = document.getElementById("back-to-config");
+            if (backLink) {
+                backLink.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const targetUrl = this.href;
+                    setTimeout(() => { window.location.href = targetUrl; }, 250);
+                });
+            }
+        });
+    </script>
+</body>
+</html> 
   
