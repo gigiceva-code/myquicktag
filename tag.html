@@ -3,128 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MyQuickTag Identity</title>
+    <title>MyQuickTag</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
 
-    <style>
-        /* Effetto accensione showroom */
-body {
-    opacity: 0;
-    transition: opacity 0.6s ease-out; /* 0.6 secondi di pura dissolvenza fluida */
+   <style>
+    :root {
+        --bg-color: #0A0A0A;
+        --accent-smeraldo: #10B981;
+        --text-main: #ffffff;
+        --text-sec: #8E8E93;
+    }
+    
+    body {
+        opacity: 1;
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        margin: 0; 
+        padding: 24px;
+        background-color: var(--bg-color);
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main);
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+        text-align: center;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .profile-container {
+        display: none; 
+        opacity: 0; 
+        transform: scale(0.98); 
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        width: 100%; 
+        max-width: 420px; 
+        margin: 0 auto; 
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+ 
+/* --- TAVOLETTA DI VETRO PREMIUM (LUMINOSA) --- */
+    .tag-identity-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 40px auto;
+        width: 100%;
+        max-width: 320px;
+        
+        /* Sfondo e Bordo Luminoso */
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1.5px solid rgba(255, 255, 255, 0.8);
+        
+        /* Alone luminoso bianco puro */
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.3), 
+                    inset 0 0 15px rgba(255, 255, 255, 0.1);
+        
+        border-radius: 28px;
+        padding: 40px 24px; /* Padding aumentato per far respirare il testo */
+        box-sizing: border-box;
+    }
+
+    .identity-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .username-display {
+        font-size: 1.3rem; /* Leggermente più grande per importanza */
+        font-weight: 700;
+        margin: 0;
+        color: #FFFFFF;
+        text-align: center;
+        word-break: break-all;
+        letter-spacing: -0.5px;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Leggera luce anche sul testo */
+    }
+
+
+    /* --- ALTRI ELEMENTI --- */
+    .links-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .link-box {
+        display: flex;
+        align-items: center;
+        padding: 18px 22px;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        width: 100%;
+        box-sizing: border-box;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .link-box:active { transform: scale(0.975); }
+
+    /* --- STILI TEMI --- */
+    body.style-black-dna .link-box { background: rgba(18, 18, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.04); color: #FFFFFF; }
+    body.style-titanium .link-box { background: linear-gradient(145deg, rgba(28, 28, 32, 0.8), rgba(20, 20, 23, 0.8)); border: 1px solid rgba(255, 255, 255, 0.07); color: #F2F2F7; }
+    body.style-obsidian-gold .link-box { background: rgba(18, 16, 14, 0.7); border: 1px solid rgba(197, 160, 89, 0.12); color: #FFFFFF; }
+   /* Forza il colore bianco per il link di ritorno */
+.torna-configurazione-link, /* usa la classe corretta se la hai */
+/* Applica il bianco solo al link di ritorno in alto */
+#back-to-config {
+    color: #FFFFFF !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
 }
-        :root {
-            --bg-color: #000000;
-            --accent-smeraldo: #50C878;
-            --text-main: #ffffff;
-            --text-sec: #6c6c70;
-        }
-        
-        body {
-            margin: 0; padding: 24px;
-            background-color: var(--bg-color);
-            font-family: 'Inter', sans-serif;
-            color: var(--text-main);
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center;
-            -webkit-font-smoothing: antialiased;
-        }
+ 
+</style>
 
-        .profile-header {
-            margin-top: 40px;
-            display: flex; flex-direction: column; align-items: center;
-            width: 100%;
-        }
-
-        .
-
-        .username {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin: 0;
-            letter-spacing: -0.5px;
-        }
-
-        .
-
-        .links-container {
-            margin-top: 40px;
-            width: 100%;
-            max-width: 350px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        /* Stile modale per la password */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 1000;
-            justify-content: center; align-items: center; padding: 24px;
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-        }
-
-        .modal-box {
-            background: #111; border: 1px solid #333; border-radius: 20px;
-            padding: 30px 24px; width: 100%; max-width: 340px; text-align: center;
-        }
-
-        .modal-box h2 {
-            color: var(--accent-smeraldo); margin: 0 0 10px 0; font-size: 1.4rem;
-        }
-
-        .modal-box p {
-            color: #aaa; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;
-        }
-
-        .modal-box input {
-            width: 100%; padding: 16px; margin-bottom: 20px;
-            background: #000; border: 1px solid #444; color: white;
-            border-radius: 12px; box-sizing: border-box; font-size: 1rem;
-        }
-
-        .modal-box input:focus {
-            outline: none; border-color: var(--accent-smeraldo);
-        }
-
-        .modal-box button {
-            background: var(--accent-smeraldo); color: #000;
-            border: none; padding: 16px; border-radius: 12px;
-            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
-            transition: opacity 0.2s;
-        }
-        
-        .modal-box button:active { opacity: 0.8; }
-
-        /* Bottone PWA dinamico */
-        .pwa-btn {
-            background: var(--accent-smeraldo);
-            color: #000; border: none; padding: 18px; border-radius: 14px;
-            font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
-        }
-    </style>
+ 
 </head>
 <body>
 
-    <div class="profile-header">
+    <a href="#" id="back-to-config" class="back-link-top" style="display: none;">
+        <i class="fas fa-arrow-left"></i> Torna alla configurazione
+    </a>
+
+    <div id="profile-content" class="profile-container">
+    <header class="tag-identity-card" id="identity-card">
+    <div class="identity-content">
+        <h1 class="username-display" id="tag-username">@tuonome</h1>
+    </div>
+</header>
+
+        <div class="links-container" id="links-container"></div>
         
-        <h1 class="username" id="tag-username">@...</h1>
-        <p class="bio" id="tag-bio">Caricamento identità...</p>
+        <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
+            <button class="sblocco-btn" onclick="vaiAlCheckout()">
+                <i class="fas fa-unlock-alt"></i> Sblocca la tua MyQuickTag
+            </button>
+        </div>
     </div>
 
-    <div class="links-container" id="links-container">
+    <div id="showroom-overlay" class="showroom-overlay">
+        <div id="expanding-box" class="expanding-box"> 
+            <div class="conversion-content">
+                <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
+                <button class="rendilo-tuo-btn" id="showroom-action-btn">Attiva la tua myquicktag</button>
+            </div>
         </div>
+    </div>
 
-    <div class="modal-overlay" id="activation-modal">
-        <div class="modal-box">
-            <h2>Ti scatta il regalo!</h2>
-            <p>Crea la tua chiave (password) per attivare la tua MyQuickTag e abilitare l'app.</p>
-            <input type="password" id="new-password" placeholder="Scegli una password">
-            <button onclick="salvaPasswordEAttiva()">Salva e Attiva</button>
+    <div id="tag-welcome-overlay" class="tag-welcome-overlay">
+        <div class="tag-welcome-card">
+            <div class="tag-success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="tag-welcome-title">Tag Attivata</h2>
+            <p class="tag-welcome-text">
+                La tua MyQuickTag è ora operativa. Installa l'applicazione per configurare i tuoi collegamenti e aggiornare la tua Tag in tempo reale.
+            </p>
+            
+            <button class="tag-welcome-btn" id="trigger-pwa-install">
+                <i class="fas fa-download"></i> Aggiungi alla Home
+            </button>
+            
+            <button class="tag-skip-btn" onclick="chiudiWelcomeEMostraTag()">
+                Visualizza la Tag
+            </button>
         </div>
     </div>
 
@@ -139,7 +194,7 @@ body {
 
     let globalUtente = "";
     let deferredPrompt;
-    let identitaVerificata = false; // NUOVO: Blocca il bottone finché non sappiamo lo stato
+    let identitaVerificata = false;
 
     if (nomeUtenteURL) {
         globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
@@ -148,93 +203,280 @@ body {
         caricaProfiloPubblico(globalUtente);
     }
 
+    function vaiAlCheckout() {
+        if (!globalUtente) return;
+        window.location.href = `/checkout.html?u=${globalUtente}`;
+    }
+
+    async function caricaProfiloPubblico(nomeMinuto) {
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+            const data = await response.json();
+            
+            if (data.success && data.fields) {
+                const record = data.fields;
+                const usernamePulito = (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
+                
+               const usernameEl = document.getElementById("tag-username");
+if (usernameEl) {
+    usernameEl.innerText = "@" + usernamePulito;
+}
+               
+document.getElementById("profile-content").style.display = "block";
+                // --- 1. GESTIONE DINAMICA DELLO STILE D'ÉLITE ---
+                if (record.digital_style) {
+                    document.body.className = `style-${record.digital_style.toLowerCase().trim()}`;
+                } else {
+                    document.body.className = 'style-black-dna'; // Default di lusso
+                }
+
+                // --- 2. RENDERING GENERATIVO DEI PULSANTI (GEOMETRIA LUXURY) ---
+                const linksContainer = document.getElementById("links-container");
+                linksContainer.innerHTML = ""; 
+
+                // Mappatura d'élite per icone, etichette e pulizia automatica degli URL
+                const mappingCanali = {
+                    email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
+                    phone: { icon: "fas fa-phone", label: "Telefono", url: val => val.startsWith("tel:") ? val : `tel:${val}` },
+                    whatsapp: { icon: "fab fa-whatsapp", label: "WhatsApp", url: val => val.startsWith("http") ? val : `https://wa.me/${val.replace(/\s+/g, '')}` },
+                    instagram: { icon: "fab fa-instagram", label: "Instagram", url: val => val.startsWith("http") ? val : `https://instagram.com/${val.replace('@', '')}` },
+                    tiktok: { icon: "fab fa-tiktok", label: "TikTok", url: val => val.startsWith("http") ? val : `https://tiktok.com/@${val.replace('@', '')}` },
+                    facebook: { icon: "fab fa-facebook-f", label: "Facebook", url: val => val.startsWith("http") ? val : val },
+                    linkedin: { icon: "fab fa-linkedin-in", label: "LinkedIn", url: val => val.startsWith("http") ? val : val },
+                    youtube: { icon: "fab fa-youtube", label: "YouTube", url: val => val.startsWith("http") ? val : val },
+                    x: { icon: "fab fa-x-twitter", label: "X", url: val => val.startsWith("http") ? val : `https://x.com/${val.replace('@', '')}` },
+                    telegram: { icon: "fab fa-telegram-plane", label: "Telegram", url: val => val.startsWith("http") ? val : `https://t.me/${val.replace('@', '')}` },
+                    reddit: { icon: "fab fa-reddit-alien", label: "Reddit", url: val => val.startsWith("http") ? val : `https://reddit.com/user/${val}` },
+                    sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
+                    cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
+                };
+
+                if (record.config_canali) {
+                    try {
+                        const canaliObj = typeof record.config_canali === 'string' 
+                            ? JSON.parse(record.config_canali) 
+                            : record.config_canali;
+
+                        // Generazione controllata e ordinata secondo il design system di MyQuickTag
+                        Object.keys(mappingCanali).forEach(chiave => {
+                            const valoreRaw = canaliObj[chiave];
+                            if (valoreRaw && valoreRaw.trim() !== "") {
+                                const info = mappingCanali[chiave];
+                                const linkCompleto = info.url(valoreRaw.trim());
+
+                                const linkElement = document.createElement('a');
+                                linkElement.href = linkCompleto;
+                                linkElement.className = 'link-box';
+                                linkElement.target = '_blank';
+                                linkElement.rel = 'noopener noreferrer';
+                                linkElement.innerHTML = `
+                                    <i class="${info.icon}"></i>
+                                    <span>${info.label}</span>
+                                `;
+                                linksContainer.appendChild(linkElement);
+                            }
+                        });
+                    } catch (jsonError) {
+                        console.error("Errore decodifica config_canali:", jsonError);
+                    }
+                }
+
+                const backLink = document.getElementById("back-to-config");
+                if (backLink) {
+                    backLink.href = `profile.html?u=${nomeMinuto}`;
+                }
+
+                const stato = (record.stato || "").toLowerCase().trim();
+
+                if (stato === "in attesa") {
+                    identitaVerificata = false;
+                    if (backLink) backLink.style.display = "flex";
+                    
+                    document.getElementById("cta-sblocco-container").style.display = "none";
+                    
+                    const profile = document.getElementById("profile-content");
+                    if (profile) {
+                        profile.style.display = "block";
+                        setTimeout(() => { profile.style.opacity = "1"; profile.style.transform = "scale(1)"; }, 50);
+                    }
+                    
+                    document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${usernamePulito}`;
+                    
+                    const btnRendiloTuo = document.getElementById("showroom-action-btn");
+                    if (btnRendiloTuo) {
+                        btnRendiloTuo.innerText = "Attiva la tua myquicktag";
+                        btnRendiloTuo.onclick = vaiAlCheckout;
+                    }
+                    
+                    document.body.style.opacity = "1";
+                    
+                    setTimeout(() => {
+                        const overlay = document.getElementById("showroom-overlay");
+                        const box = document.getElementById("expanding-box"); 
+                        const content = document.querySelector(".conversion-content");
+                        
+                        if (overlay && box && content) {
+                            overlay.style.display = "flex";
+                            
+                            setTimeout(() => {
+                                overlay.style.background = "rgba(4, 4, 4, 0.0)"; 
+                                overlay.style.backdropFilter = "blur(0px)";
+                                overlay.style.webkitBackdropFilter = "blur(0px)";
+                                
+                                box.style.width = "340px";  
+                                box.style.height = "210px"; 
+                                
+                                setTimeout(() => {
+                                    content.style.opacity = "1";
+                                }, 300);
+                            }, 50);
+                        }
+                    }, 2500);
+} else if (stato === "attivo") {
+    identitaVerificata = true;
+    if (backLink) backLink.style.display = "none";
+    document.getElementById("cta-sblocco-container").style.display = "none";
     
-async function caricaProfiloPubblico(nomeMinuto) {
-    try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-        const data = await response.json();
-        
-        if (data.success && data.fields) {
-            const record = data.fields;
-            
-            // Aggiorna interfaccia
-            document.getElementById("tag-username").innerText = "@" + (record.username_display || nomeMinuto).replace('@', '').toUpperCase();
-            document.getElementById("tag-bio").innerText = record.bio || "";
-            
+    // Ripristiniamo la visualizzazione del nome utente forzatamente
+    const usernameEl = document.getElementById("tag-username");
+    if (usernameEl) {
+        usernameEl.innerText = "@" + usernamePulito;
+    }
 
-            // Normalizzazione stato in minuscolo per confronto sicuro
-            const stato = (record.stato || "").toLowerCase().trim();
-
-            if (stato === "in attesa") {
-                document.getElementById("activation-modal").style.display = "flex";
-                identitaVerificata = false;
-            } else if (stato === "attivo") {
-                identitaVerificata = true;
-                mostraBottonePWA();
+    if (document.getElementById("showroom-overlay")) {
+        document.getElementById("showroom-overlay").style.display = "none";
+    }
+    
+    const profile = document.getElementById("profile-content");
+    if (profile) {
+        profile.style.display = "block";
+        profile.style.opacity = "1";
+        profile.style.transform = "scale(1)";
+    }
+    document.body.style.opacity = "1";
+    
+    // Mostra il benvenuto solo se necessario
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('checkout') === 'success') {
+        mostraInstallatorePremium();
+    }
+}
+                    const profile = document.getElementById("profile-content");
+                    if (profile) {
+                        profile.style.display = "block";
+                        setTimeout(() => {
+                            if (!deferredPrompt) {
+                                profile.style.opacity = "1";
+                                profile.style.transform = "scale(1)";
+                            }
+                        }, 50);
+                    }
+                    
+                    mostraInstallatorePremium();
+                    document.body.style.opacity = "1";
+                }
+            } else {
+                document.body.style.opacity = "1";
             }
+        } catch (error) {
+            console.error("Errore di caricamento:", error);
+            document.body.style.opacity = "1";
         }
-    } catch (error) {
-        console.error("Errore di caricamento:", error);
-    }
-}
-
-    async function salvaPasswordEAttiva() {
-    const pwd = document.getElementById("new-password").value;
-    if (pwd.length < 4) {
-        alert("La password deve essere di almeno 4 caratteri.");
-        return;
-    }
-
-    try {
-        // Inviamo i dati con i nomi esatti che l'API vuole
-        const response = await fetch('/api/update-profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username_system: globalUtente, // CAMBIATO da 'u' a 'username_system'
-                password: pwd,
-            stato: "attivo"      
-            })
-        });
-        
-        const resData = await response.json();
-        if (resData.success) {
-            document.getElementById("activation-modal").style.display = "none";
-            identitaVerificata = true; 
-            setTimeout(() => {
-                alert("Identità Attivata!");
-                mostraBottonePWA();
-            }, 300);
-        } else {
-            alert("Errore: " + (resData.error || "Riprova"));
-        }
-    } catch (e) {
-        console.error(e);
-        alert("Errore di rete.");
-    }
-}
-
+    } 
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        if (identitaVerificata) {
+            mostraInstallatorePremium();
+        }
     });
 
-    function mostraBottonePWA() {
-        if (deferredPrompt && identitaVerificata && !document.getElementById("btn-installa-pwa")) {
-            const btn = document.createElement('button');
-            btn.id = "btn-installa-pwa";
-            btn.className = "pwa-btn";
-            btn.innerHTML = `<i class="fas fa-download"></i> Installa App`;
-            btn.onclick = () => { deferredPrompt.prompt(); };
-            document.getElementById("links-container").prepend(btn);
+    function mostraInstallatorePremium() {
+        // --- QUESTA RIGA EVITA CHE APPAIA SE È GIÀ STATO CHIUSO ---
+        if (localStorage.getItem('welcome_overlay_chiuso') === 'true') return;
+
+        if (!deferredPrompt || !identitaVerificata) return;
+        
+        const overlay = document.getElementById("tag-welcome-overlay");
+        if (overlay) {
+            overlay.style.display = "flex";
+            const profile = document.getElementById("profile-content");
+            if (profile) {
+                profile.style.opacity = "0";
+                profile.style.transform = "scale(0.98)";
+            }
+        }
+
+        const btnInstall = document.getElementById("trigger-pwa-install");
+        if (btnInstall) {
+            btnInstall.onclick = () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('PWA installata con successo.');
+                        chiudiWelcomeEMostraTag();
+                    }
+                    deferredPrompt = null;
+                });
+            };
         }
     }
-       document.addEventListener("DOMContentLoaded", function() {
-            // Fa apparire il body con un respiro lento e lussuoso
-            document.body.style.opacity = "1";
-        }); 
-</script>
+
+    function chiudiWelcomeEMostraTag() {
+        // --- QUESTA RIGA SALVA IL FATTO CHE L'HAI CHIUSO ---
+        localStorage.setItem('welcome_overlay_chiuso', 'true');
+        
+        const overlay = document.getElementById("tag-welcome-overlay");
+        const profile = document.getElementById("profile-content");
+        
+        if (overlay) {
+            overlay.style.transition = "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
+            overlay.style.opacity = "0";
+            overlay.style.transform = "scale(0.95)";
+            
+            if (profile) {
+                profile.style.opacity = "1";
+                profile.style.transform = "scale(1)";
+            }
+            
+            setTimeout(function() {
+                overlay.style.display = "none";
+            }, 500);
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        const backLink = document.getElementById("back-to-config");
+        if (backLink) {
+            backLink.addEventListener("click", function(e) {
+                e.preventDefault();
+                const targetUrl = this.href;
+                setTimeout(function() {
+                    window.location.href = targetUrl;
+                }, 250);
+            });
+        }
+    });
+       async function condividiTag() {
+    const shareData = {
+        title: document.getElementById("tag-username").innerText + " | MyQuickTag",
+        text: "Scopri il mio spazio digitale:",
+        url: window.location.href
+    };
+
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData);
+        } else {
+            // Fallback: copia negli appunti se il browser non supporta la condivisione nativa
+            navigator.clipboard.writeText(window.location.href);
+            alert("Link copiato negli appunti!");
+        }
+    } catch (err) {
+        console.error("Errore durante la condivisione:", err);
+    }
+} 
+    </script>
 
 </body>
 </html>
