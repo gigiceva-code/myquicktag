@@ -308,4 +308,104 @@
         font-size: 0.9rem;
     }
 </style>
+   <body>
+
+    <a href="#" id="back-to-config" style="display: none;">
+        <i class="fas fa-arrow-left"></i> Torna alla configurazione
+    </a>
+
+    <div id="profile-content" class="app-container">
+        
+        <div class="smart-card" id="identity-card">
+            <div class="card-left">
+                <div class="qr-wrapper">
+                    <div class="qr-placeholder"></div>
+                </div>
+                <div class="username-base" id="tag-username">@username_system</div>
+            </div>
+            
+            <div class="card-right">
+                <div class="logo-container">
+                    <img id="userImage" class="user-media" src="" alt="User Media">
+                </div>
+                <button class="btn-condividi-profilo" onclick="condividiProfilo(event)">🔗 Condividi</button>
+            </div>
+        </div>
+
+        <div class="grid-ecosystem" id="mainGrid">
+            
+            <div class="casella" id="casella-bio" onclick="apriSezione('bio')">
+                <div class="casella-invito">Guarda la mia bio</div>
+            </div>
+
+            <div class="casella" id="casella-gallery" onclick="apriSezione('gallery')">
+                <div class="casella-invito">Esplora la mia gallery</div>
+            </div>
+
+            <div class="casella" id="casella-contatti" onclick="apriSezione('contatti')">
+                <div class="casella-invito">I miei contatti</div>
+            </div>
+
+            <div class="casella" id="casella-social" onclick="apriSezione('social')">
+                <div class="casella-invito">Canali social</div>
+            </div>
+
+            <div class="casella" id="casella-cv" onclick="apriSezione('cv')">
+                <div class="casella-invito">Curriculum Vitae</div>
+            </div>
+
+            <div class="casella" id="casella-futuro" onclick="apriSezione('futuro')">
+                <div class="casella-invito">Spazio futuro</div>
+            </div>
+
+        </div>
+
+        <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
+            <button class="btn-condividi-profilo" onclick="vaiAlCheckout()" style="width: 100%; padding: 18px; font-size: 1rem;">
+                <i class="fas fa-unlock-alt"></i> Sblocca la tua MyQuickTag
+            </button>
+        </div>
+    </div>
+
+    <div id="overlaySezione" class="pagine-overlay">
+        <div class="contenuto-card">
+            <div class="overlay-nav">
+                <button class="btn-chiudi" onclick="chiudiSezione()">← Chiudi</button>
+                <button id="btnCondividiLink" class="btn-condividi" onclick="condividiSezione()">🔗 Condividi sezione</button>
+            </div>
+            <div id="titoloSezione" class="titolo-sezione"></div>
+            <div id="corpoSezione" class="corpo-sezione"></div>
+        </div>
+    </div>
+
+    <div id="showroom-overlay" class="showroom-overlay" style="display: none;">
+        <div id="expanding-box" class="expanding-box"> 
+            <div class="conversion-content">
+                <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
+                <button class="btn-condividi-profilo" id="showroom-action-btn" style="margin-top: 15px;">Attiva la tua myquicktag</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tag-welcome-overlay" class="tag-welcome-overlay" style="display: none;">
+        <div class="contenuto-card" style="background: #111; padding: 30px; border-radius: 24px; text-align: center; align-items: center;">
+            <div style="font-size: 3rem; color: #fff; margin-bottom: 15px;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="titolo-sezione" style="margin-bottom: 10px;">Tag Attivata</h2>
+            <p class="corpo-sezione" style="margin-bottom: 20px;">
+                La tua MyQuickTag è ora operativa. Installa l'applicazione per configurare i tuoi collegamenti e aggiornare la tua Tag in tempo reale.
+            </p>
+            
+            <button class="btn-condividi-profilo" id="trigger-pwa-install" style="width: 100%; padding: 14px; margin-bottom: 10px;">
+                <i class="fas fa-download"></i> Aggiungi alla Home
+            </button>
+            
+            <button class="btn-chiudi" onclick="chiudiWelcomeEMostraTag()" style="margin-top: 10px;">
+                Visualizza la Tag
+            </button>
+        </div>
+    </div>
+
+    <div id="toastNotifica" class="toast">Link copiato!</div> 
   
