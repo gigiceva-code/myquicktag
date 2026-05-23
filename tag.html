@@ -10,4 +10,302 @@
     
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
+    <style>
+    /* --- VARIABILI E RESET --- */
+    :root {
+        --bg-color: #050505;
+        --accent-white: #ffffff;
+        --text-main: #f5f5f7;
+        --text-sec: #86868b;
+        --card-bg: linear-gradient(145deg, #0f0f11, #16161a);
+        --grid-bg: #111113;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        padding: 24px;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- STRUTTURA DI CARICAMENTO DINAMICO (HOOK PER JAVASCRIPT) --- */
+    .app-container {
+        display: none; /* Gestito dal JS: diventa flex/block dopo il caricamento da Airtable */
+        opacity: 0;
+        transform: scale(0.98);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+        flex-direction: column;
+        gap: 24px;
+        padding-bottom: 40px;
+    }
+
+    /* Stato attivo iniettato dal JS a caricamento completato */
+    .app-container.ready {
+        display: flex !important;
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* --- SMART BUSINESS CARD (TAVOLETTA PREMIUM CON QR) --- */
+    .smart-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.8); /* Bordo luminoso lineare */
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.15), 0 20px 40px rgba(0,0,0,0.6);
+        border-radius: 20px;
+        padding: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+    }
+
+    .card-left {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    .qr-wrapper {
+        background: #ffffff;
+        padding: 8px;
+        border-radius: 12px;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .qr-placeholder {
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(45deg, #000, #000 4px, #fff 4px, #fff 8px);
+        opacity: 0.85;
+    }
+
+    .username-base {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--accent-white);
+        letter-spacing: -0.3px;
+    }
+
+    /* LATO DESTRO: CORNICE GEOMETRICA PER LOGO/MEDIA (NO AVATAR TONDO) */
+    .card-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .logo-container {
+        width: 80px;
+        height: 80px;
+        border-radius: 14px; /* Taglio geometrico pulito, coerente con il brand */
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-media {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover; 
+    }
+
+    .media-logo {
+        object-fit: contain;
+        padding: 6px; /* Protegge i bordi del logo aziendale */
+    }
+
+    .btn-condividi-profilo {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--accent-white);
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-condividi-profilo:active {
+        background: var(--accent-white);
+        color: var(--bg-color);
+        box-shadow: 0 0 10px var(--accent-white);
+    }
+
+    /* --- GRIGLIA ECOSYSTEM (AUTO-ADATTANTE) --- */
+    .grid-ecosystem {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .casella {
+        background: var(--grid-bg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 16px;
+        padding: 24px 16px;
+        min-height: 110px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .casella.hidden {
+        display: none !important;
+    }
+
+    /* Se una casella rimane dispari, occupa tutta la larghezza con eleganza */
+    .casella:last-child:nth-child(odd) {
+        grid-column: span 2;
+    }
+
+    .casella:active {
+        transform: scale(0.97);
+        background: #18181c;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .casella-invito {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--accent-white);
+        line-height: 1.4;
+        letter-spacing: 0.3px;
+    }
+
+    /* --- OVERLAY PAGINE INTERNE --- */
+    .pagine-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: var(--bg-color);
+        z-index: 100;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 24px;
+        overflow-y: auto;
+    }
+
+    .pagine-overlay.attiva {
+        display: flex;
+        opacity: 1;
+    }
+
+    .contenuto-card {
+        width: 100%;
+        max-width: 420px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        margin-top: 20px;
+    }
+
+    .overlay-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 16px;
+    }
+
+    .btn-chiudi {
+        background: none;
+        border: none;
+        color: var(--text-sec);
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+
+    .btn-condividi {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-main);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+
+    .titolo-sezione {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .corpo-sezione {
+        font-size: 0.95rem;
+        color: #e8e8ed;
+        line-height: 1.6;
+    }
+
+    /* --- TOAST NOTIFICATION --- */
+    .toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: var(--accent-white);
+        color: #000000;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+        opacity: 0;
+        z-index: 200;
+        pointer-events: none;
+    }
+
+    .toast.mostra {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+
+    /* --- STILI DI COMPATIBILITÀ LINK DI CONFIGURAZIONE --- */
+    #back-to-config {
+        color: var(--accent-white) !important;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+</style>
   
