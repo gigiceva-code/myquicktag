@@ -620,15 +620,16 @@
     const isCheckoutSuccess = params.get('checkout') === 'success';
 
   // 6. Analisi Stati + Controllo Anti-Asincronia
-     stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
+    stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
     const isCheckoutSuccess = params.get('checkout') === 'success';
 
     if (isCheckoutSuccess) {
         stato = "attivo";
-        if (datiUtenteLocal) datiUtenteLocal.stato = "attivo"; // <--- AGGIUNGI QUESTA RIGA QUI
+        if (datiUtenteLocal) datiUtenteLocal.stato = "attivo"; 
         localStorage.removeItem('welcome_overlay_chiuso');
     }
-if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
+
+    if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         identitaVerificata = false;
         if (backLink) backLink.style.display = "flex";
         
@@ -641,7 +642,6 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
             profile.style.opacity = "1";
         }
         
-        // Popoliamo la griglia subito così l'utente la vede in chiaro sotto il messaggio
         if (typeof ottimizzaGrigliaEcosistema === "function") ottimizzaGrigliaEcosistema();
         
         const convTitle = document.getElementById("conversion-title");
@@ -655,7 +655,6 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         
         document.body.style.opacity = "1";
         
-        // Showroom Box (Senza blur, pagina sotto nitida)
         setTimeout(() => {
             const overlay = document.getElementById("showroom-overlay");
             const box = document.getElementById("expanding-box"); 
@@ -664,7 +663,6 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
             if (overlay && box && content) {
                 overlay.style.display = "flex";
                 setTimeout(() => {
-                    // Eliminato il blur e reso lo sfondo trasparente per mostrare la tag in chiaro
                     overlay.style.background = "rgba(0, 0, 0, 0)"; 
                     overlay.style.backdropFilter = "none";
                     overlay.style.webkitBackdropFilter = "none";
@@ -698,225 +696,184 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         }
         document.body.style.opacity = "1";
         
-        // --- MEMORIA LEGATA ALLLO USERNAME ---
         const giaInModalitaApp = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-        // Usiamo lo username specifico per non bloccare i test di nuovi utenti sullo stesso browser
         const giaInstallataNelPassato = localStorage.getItem(`myquicktag_pwa_${usernamePulito}_installata`) === "true";
 
         if (!giaInModalitaApp && !giaInstallataNelPassato && typeof mostraInstallatorePremium === "function") {
             mostraInstallatorePremium();
         }
     }
+
+    function ottimizzaGrigliaEcosistema() {
+        if (!datiUtenteLocal) return;
+        gestisciVisibilitaCella('casella-bio', ottieniValore('bio'));
+        gestisciVisibilitaCella('casella-cv', ottieniValore('cv'));
+        const haContatti = ottieniValore('email') || ottieniValore('phone') || ottieniValore('whatsapp') || datiUtenteLocal.modulo_vcf;
+        gestisciVisibilitaCella('casella-contatti', haContatti);
+        const haSocial = ottieniValore('instagram') || ottieniValore('tiktok') || ottieniValore('facebook') || ottieniValore('linkedin') || ottieniValore('youtube') || ottieniValore('x') || ottieniValore('telegram') || ottieniValore('reddit') || ottieniValore('sito_web');
+        gestisciVisibilitaCella('casella-social', haSocial);
+        gestisciVisibilitaCella('casella-gallery', ottieniValore('gallery'));
+        gestisciVisibilitaCella('casella-futuro', ottieniValore('futuro'));
     }
-        function ottimizzaGrigliaEcosistema() {
-            if (!datiUtenteLocal) return;
 
-            gestisciVisibilitaCella('casella-bio', ottieniValore('bio'));
-            gestisciVisibilitaCella('casella-cv', ottieniValore('cv'));
-            
-            const haContatti = ottieniValore('email') || ottieniValore('phone') || ottieniValore('whatsapp') || datiUtenteLocal.modulo_vcf;
-            gestisciVisibilitaCella('casella-contatti', haContatti);
-
-            const haSocial = ottieniValore('instagram') || ottieniValore('tiktok') || ottieniValore('facebook') || 
-                             ottieniValore('linkedin') || ottieniValore('youtube') || ottieniValore('x') || 
-                             ottieniValore('telegram') || ottieniValore('reddit') || ottieniValore('sito_web');
-            gestisciVisibilitaCella('casella-social', haSocial);
-
-            gestisciVisibilitaCella('casella-gallery', ottieniValore('gallery'));
-            gestisciVisibilitaCella('casella-futuro', ottieniValore('futuro'));
+    function gestisciVisibilitaCella(idElemento, condizione) {
+        const cella = document.getElementById(idElemento);
+        if (!cella) return; 
+        if (condizione && condizione.toString().trim() !== "") {
+            cella.classList.remove('hidden');
+        } else {
+            cella.classList.add('hidden');
         }
+    }
 
-        function gestisciVisibilitaCella(idElemento, condizione) {
-            const cella = document.getElementById(idElemento);
-            if (!cella) return; 
-            if (condizione && condizione.toString().trim() !== "") {
-                cella.classList.remove('hidden');
-            } else {
-                cella.classList.add('hidden');
-            }
-        }
-
-        function apriSezione(sezione) {
-            const overlay = document.getElementById('overlaySezione');
-            const titolo = document.getElementById('titoloSezione');
-            const corpo = document.getElementById('corpoSezione');
-            
-            if (!overlay || !titolo || !corpo) return;
-            
-            overlay.classList.add('attiva');
-            window.location.hash = sezione; 
-
-            if (sezione === 'bio') {
-                titolo.textContent = "Biografia";
-                corpo.innerHTML = `<p style="white-space: pre-line; line-height: 1.6; color: #ccc;">${ottieniValore('bio')}</p>`;
-            } 
-            else if (sezione === 'social') {
-                titolo.textContent = "Canali Digitali";
-                let htmlSocial = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
-                const chiaviSocial = ['instagram', 'tiktok', 'facebook', 'linkedin', 'youtube', 'x', 'telegram', 'reddit', 'sito_web'];
-                let conteggioSocial = 0;
-
-                chiaviSocial.forEach(chiave => {
-                    const valoreRaw = ottieniValore(chiave);
-                    if (valoreRaw && valoreRaw.trim() !== "") {
-                        const info = mappingCanali[chiave];
-                        const linkCompleto = info.url(valoreRaw.trim());
-                        conteggioSocial++;
-                        htmlSocial += `
-                            <a href="${linkCompleto}" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:14px; transition: background 0.2s;">
-                                <i class="${info.icon}" style="font-size:1.2rem; width:24px; text-align:center; color:#fff;"></i> 
-                                <span style="font-weight:500; font-size:0.95rem;">${info.label}</span>
-                            </a>`;
-                    }
-                });
-                htmlSocial += `</div>`;
-                corpo.innerHTML = conteggioSocial > 0 ? htmlSocial : "<p style='color:#666;'>Nessun canale configurato.</p>";
-            } 
-            else if (sezione === 'contatti') {
-                titolo.textContent = "Informazioni di Contatto";
-                let htmlContatti = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
-                const chiaviContatto = ['phone', 'email', 'whatsapp'];
-                let conteggioContatti = 0;
-
-                chiaviContatto.forEach(chiave => {
-                    const valoreRaw = ottieniValore(chiave);
-                    if (valoreRaw && valoreRaw.trim() !== "") {
-                        const info = mappingCanali[chiave];
-                        const linkCompleto = info.url(valoreRaw.trim());
-                        conteggioContatti++;
-                        htmlContatti += `
-                            <a href="${linkCompleto}" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:14px;">
-                                <i class="${info.icon}" style="font-size:1.2rem; width:24px; text-align:center;"></i> 
-                                <span style="font-weight:500;">${info.label}</span>
-                            </a>`;
-                    }
-                });
-
-                if (datiUtenteLocal.modulo_vcf && datiUtenteLocal.modulo_vcf.trim() !== "") {
+    function apriSezione(sezione) {
+        const overlay = document.getElementById('overlaySezione');
+        const titolo = document.getElementById('titoloSezione');
+        const corpo = document.getElementById('corpoSezione');
+        if (!overlay || !titolo || !corpo) return;
+        overlay.classList.add('attiva');
+        window.location.hash = sezione; 
+        if (sezione === 'bio') {
+            titolo.textContent = "Biografia";
+            corpo.innerHTML = `<p style="white-space: pre-line; line-height: 1.6; color: #ccc;">${ottieniValore('bio')}</p>`;
+        } else if (sezione === 'social') {
+            titolo.textContent = "Canali Digitali";
+            let htmlSocial = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
+            const chiaviSocial = ['instagram', 'tiktok', 'facebook', 'linkedin', 'youtube', 'x', 'telegram', 'reddit', 'sito_web'];
+            let conteggioSocial = 0;
+            chiaviSocial.forEach(chiave => {
+                const valoreRaw = ottieniValore(chiave);
+                if (valoreRaw && valoreRaw.trim() !== "") {
+                    const info = mappingCanali[chiave];
+                    const linkCompleto = info.url(valoreRaw.trim());
+                    conteggioSocial++;
+                    htmlSocial += `<a href="${linkCompleto}" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:14px; transition: background 0.2s;"><i class="${info.icon}" style="font-size:1.2rem; width:24px; text-align:center; color:#fff;"></i> <span style="font-weight:500; font-size:0.95rem;">${info.label}</span></a>`;
+                }
+            });
+            htmlSocial += `</div>`;
+            corpo.innerHTML = conteggioSocial > 0 ? htmlSocial : "<p style='color:#666;'>Nessun canale configurato.</p>";
+        } else if (sezione === 'contatti') {
+            titolo.textContent = "Informazioni di Contatto";
+            let htmlContatti = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
+            const chiaviContatto = ['phone', 'email', 'whatsapp'];
+            let conteggioContatti = 0;
+            chiaviContatto.forEach(chiave => {
+                const valoreRaw = ottieniValore(chiave);
+                if (valoreRaw && valoreRaw.trim() !== "") {
+                    const info = mappingCanali[chiave];
+                    const linkCompleto = info.url(valoreRaw.trim());
                     conteggioContatti++;
-                    htmlContatti += `
-                        <a href="data:text/vcard;charset=utf-8,${encodeURIComponent(datiUtenteLocal.modulo_vcf)}" download="contatto.vcf" style="background:#fff; padding:16px; border-radius:14px; color:#000; text-decoration:none; display:flex; align-items:center; gap:14px; font-weight:600; margin-top:8px; justify-content:center;">
-                            <i class="fas fa-user-plus"></i> <span>Salva in Rubrica</span>
-                        </a>`;
+                    htmlContatti += `<a href="${linkCompleto}" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:14px;"><i class="${info.icon}" style="font-size:1.2rem; width:24px; text-align:center;"></i> <span style="font-weight:500;">${info.label}</span></a>`;
                 }
-
-                htmlContatti += `</div>`;
-                corpo.innerHTML = conteggioContatti > 0 ? htmlContatti : "<p style='color:#666;'>Nessun contatto configurato.</p>";
+            });
+            if (datiUtenteLocal.modulo_vcf && datiUtenteLocal.modulo_vcf.trim() !== "") {
+                conteggioContatti++;
+                htmlContatti += `<a href="data:text/vcard;charset=utf-8,${encodeURIComponent(datiUtenteLocal.modulo_vcf)}" download="contatto.vcf" style="background:#fff; padding:16px; border-radius:14px; color:#000; text-decoration:none; display:flex; align-items:center; gap:14px; font-weight:600; margin-top:8px; justify-content:center;"><i class="fas fa-user-plus"></i> <span>Salva in Rubrica</span></a>`;
             }
-            else if (sezione === 'cv') {
-                titolo.textContent = "Curriculum Vitae";
-                const cvValore = ottieniValore('cv');
-                if (cvValore && cvValore.trim() !== "") {
-                    corpo.innerHTML = `
-                        <div style="display:flex; flex-direction:column; gap:20px; align-items:center; width:100%; padding:10px 0;">
-                            <i class="fas fa-file-pdf" style="font-size:4rem; color:rgba(255,255,255,0.2);"></i>
-                            <p style="color:#aaa; text-align:center; font-size:0.9rem;">Il Curriculum Vitae è disponibile per la consultazione.</p>
-                            <a href="${cvValore.trim()}" target="_blank" rel="noopener noreferrer" style="background:#fff; color:#000; padding:14px 28px; border-radius:12px; text-decoration:none; font-weight:600; width:100%; text-align:center;">
-                                <i class="fas fa-external-link-alt"></i> Visualizza CV
-                            </a>
-                        </div>`;
-                } else {
-                    corpo.innerHTML = "<p style='color:#666;'>Nessun documento inserito.</p>";
-                }
+            htmlContatti += `</div>`;
+            corpo.innerHTML = conteggioContatti > 0 ? htmlContatti : "<p style='color:#666;'>Nessun contatto configurato.</p>";
+        } else if (sezione === 'cv') {
+            titolo.textContent = "Curriculum Vitae";
+            const cvValore = ottieniValore('cv');
+            if (cvValore && cvValore.trim() !== "") {
+                corpo.innerHTML = `<div style="display:flex; flex-direction:column; gap:20px; align-items:center; width:100%; padding:10px 0;"><i class="fas fa-file-pdf" style="font-size:4rem; color:rgba(255,255,255,0.2);"></i><p style="color:#aaa; text-align:center; font-size:0.9rem;">Il Curriculum Vitae è disponibile per la consultazione.</p><a href="${cvValore.trim()}" target="_blank" rel="noopener noreferrer" style="background:#fff; color:#000; padding:14px 28px; border-radius:12px; text-decoration:none; font-weight:600; width:100%; text-align:center;"><i class="fas fa-external-link-alt"></i> Visualizza CV</a></div>`;
+            } else {
+                corpo.innerHTML = "<p style='color:#666;'>Nessun documento inserito.</p>";
             }
-            else {
-                titolo.textContent = sezione.toUpperCase();
-                corpo.innerHTML = `<p style="color:#666; text-align:center; padding:20px 0;">In fase di sincronizzazione.</p>`;
-            }
+        } else {
+            titolo.textContent = sezione.toUpperCase();
+            corpo.innerHTML = `<p style="color:#666; text-align:center; padding:20px 0;">In fase di sincronizzazione.</p>`;
         }
+    }
 
-        function chiudiSezione() {
-            const overlay = document.getElementById('overlaySezione');
-            if (overlay) overlay.classList.remove('attiva');
-            history.replaceState(null, null, ' '); 
+    function chiudiSezione() {
+        const overlay = document.getElementById('overlaySezione');
+        if (overlay) overlay.classList.remove('attiva');
+        history.replaceState(null, null, ' '); 
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (identitaVerificata) {
+            mostraInstallatorePremium();
         }
+    });
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (identitaVerificata) {
-                mostraInstallatorePremium();
-            }
-        });
-
-        function mostraInstallatorePremium() {
-            if (localStorage.getItem('welcome_overlay_chiuso') === 'true') return;
-            if (!deferredPrompt || !identitaVerificata) return;
-            
-            const overlay = document.getElementById("tag-welcome-overlay");
-            if (overlay) {
-                overlay.style.display = "flex";
-                const profile = document.getElementById("profile-content");
-                if (profile) {
-                    profile.style.opacity = "0";
-                    profile.style.transform = "scale(0.98)";
-                }
-            }
-
-            const btnInstall = document.getElementById("trigger-pwa-install");
-            if (btnInstall) {
-                btnInstall.onclick = () => {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            chiudiWelcomeEMostraTag();
-                        }
-                        deferredPrompt = null;
-                    });
-                };
-            }
-        }
-
-        function chiudiWelcomeEMostraTag() {
-            localStorage.setItem('welcome_overlay_chiuso', 'true');
-            const overlay = document.getElementById("tag-welcome-overlay");
+    function mostraInstallatorePremium() {
+        if (localStorage.getItem('welcome_overlay_chiuso') === 'true') return;
+        if (!deferredPrompt || !identitaVerificata) return;
+        const overlay = document.getElementById("tag-welcome-overlay");
+        if (overlay) {
+            overlay.style.display = "flex";
             const profile = document.getElementById("profile-content");
-            
-            if (overlay) {
-                overlay.style.transition = "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
-                overlay.style.opacity = "0";
-                overlay.style.transform = "scale(0.95)";
-                
-                if (profile) {
-                    profile.style.opacity = "1";
-                    profile.style.transform = "scale(1)";
-                }
-                setTimeout(() => { overlay.style.display = "none"; }, 500);
+            if (profile) {
+                profile.style.opacity = "0";
+                profile.style.transform = "scale(0.98)";
             }
         }
-
-        async function condividiProfilo(event) {
-            if (event) event.stopPropagation();
-            const shareData = {
-                title: (document.getElementById("tag-username")?.innerText || 'MyQuickTag') + " | MyQuickTag",
-                text: "Scopri il mio spazio digitale:",
-                url: window.location.href
+        const btnInstall = document.getElementById("trigger-pwa-install");
+        if (btnInstall) {
+            btnInstall.onclick = () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        chiudiWelcomeEMostraTag();
+                    }
+                    deferredPrompt = null;
+                });
             };
-            eseguiCondivisione(shareData);
         }
+    }
 
-        async function eseguiCondivisione(data) {
-            try {
-                if (navigator.share) {
-                    await navigator.share(data);
-                } else {
-                    navigator.clipboard.writeText(data.url);
-                    mostraToast("Link copiato negli appunti!");
-                }
-            } catch (err) {
-                console.error("Errore durante la condivisione:", err);
+    function chiudiWelcomeEMostraTag() {
+        localStorage.setItem('welcome_overlay_chiuso', 'true');
+        const overlay = document.getElementById("tag-welcome-overlay");
+        const profile = document.getElementById("profile-content");
+        if (overlay) {
+            overlay.style.transition = "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
+            overlay.style.opacity = "0";
+            overlay.style.transform = "scale(0.95)";
+            if (profile) {
+                profile.style.opacity = "1";
+                profile.style.transform = "scale(1)";
             }
+            setTimeout(() => { overlay.style.display = "none"; }, 500);
         }
+    }
 
-        function mostraToast(messaggio) {
-            const toast = document.getElementById('toastNotifica');
-            if (toast) {
-                toast.textContent = messaggio;
-                toast.classList.add('mostra');
-                setTimeout(() => { toast.classList.remove('mostra'); }, 2500);
+    async function condividiProfilo(event) {
+        if (event) event.stopPropagation();
+        const shareData = {
+            title: (document.getElementById("tag-username")?.innerText || 'MyQuickTag') + " | MyQuickTag",
+            text: "Scopri il mio spazio digitale:",
+            url: window.location.href
+        };
+        eseguiCondivisione(shareData);
+    }
+
+    async function eseguiCondivisione(data) {
+        try {
+            if (navigator.share) {
+                await navigator.share(data);
+            } else {
+                navigator.clipboard.writeText(data.url);
+                mostraToast("Link copiato negli appunti!");
             }
+        } catch (err) {
+            console.error("Errore durante la condivisione:", err);
         }
-// 1. Gestione del tasto indietro (rinominato per evitare conflitti)
+    }
+
+    function mostraToast(messaggio) {
+        const toast = document.getElementById('toastNotifica');
+        if (toast) {
+            toast.textContent = messaggio;
+            toast.classList.add('mostra');
+            setTimeout(() => { toast.classList.remove('mostra'); }, 2500);
+        }
+    }
+
     const btnBackFondo = document.getElementById("back-to-config");
     if (btnBackFondo) {
         btnBackFondo.addEventListener("click", function(e) {
@@ -925,9 +882,8 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
             setTimeout(() => { window.location.href = targetUrl; }, 250);
         });
     } 
-}); // Chiude il DOMContentLoaded
+});
 
-// 2. Ascoltatore PWA (posizionato a livello globale, FUORI dal DOMContentLoaded)
 window.addEventListener('appinstalled', () => {
     if (typeof usernamePulito !== 'undefined' && usernamePulito) {
         localStorage.setItem(`myquicktag_pwa_${usernamePulito}_installata`, "true");
@@ -935,7 +891,6 @@ window.addEventListener('appinstalled', () => {
         localStorage.setItem("myquicktag_pwa_installata", "true");
     }
     console.log("PWA installata con successo.");
-    // Opzionale: qui potresti forzare un ricaricamento o chiusura del banner se necessario
 });
 </script>
 </body>
