@@ -909,17 +909,19 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
                 setTimeout(() => { toast.classList.remove('mostra'); }, 2500);
             }
         }
-// 1. Gestione del tasto indietro (rinominato in btnBackFondo per evitare conflitti)
-const btnBackFondo = document.getElementById("back-to-config");
-if (btnBackFondo) {
-    btnBackFondo.addEventListener("click", function(e) {
-        e.preventDefault();
-        const targetUrl = this.href;
-        setTimeout(() => { window.location.href = targetUrl; }, 250);
-    });
-}
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Gestione del tasto indietro (rinominato per evitare conflitti di dichiarazione)
+    const btnBackFondo = document.getElementById("back-to-config");
+    if (btnBackFondo) {
+        btnBackFondo.addEventListener("click", function(e) {
+            e.preventDefault();
+            const targetUrl = this.href;
+            setTimeout(() => { window.location.href = targetUrl; }, 250);
+        });
+    } // Chiude l'if (btnBackFondo)
+}); // Chiude il document.addEventListener
 
-// 2. Ascoltatore PWA
+// 2. Ascoltatore PWA (posizionato a livello globale)
 window.addEventListener('appinstalled', () => {
     if (typeof usernamePulito !== 'undefined' && usernamePulito) {
         localStorage.setItem(`myquicktag_pwa_${usernamePulito}_installata`, "true");
@@ -927,10 +929,6 @@ window.addEventListener('appinstalled', () => {
         localStorage.setItem("myquicktag_pwa_installata", "true");
     }
     console.log("PWA installata con successo per questo utente.");
-});
-
-// --- RIPRISTINO DELLE GRAFFE GLOBALI DEL FILE ---
-    }
 });
 </script>
 </body>
