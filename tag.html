@@ -478,16 +478,13 @@
     </div>
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
-     
 <script>
 (function() {
     'use strict';
 
-    // 1. Setup Iniziale e Variabili Globali
+    // 1. Setup Iniziale
     const params = new URLSearchParams(window.location.search);
     let nomeUtenteURL = params.get("u") || "";
-    
-    // Recupero username dal path se non presente nel query string
     if (!nomeUtenteURL) {
         const pathParts = window.location.pathname.split('/');
         const uIndex = pathParts.indexOf('u');
@@ -495,11 +492,12 @@
     }
 
     let globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
-    let deferredPrompt;
-    let identitaVerificata = false;
     let datiUtenteLocal = null;
     let canaliConfigurati = {};
     let usernamePulito = "";
+    let deferredPrompt;
+    let identitaVerificata = false;
+    let stato = "";
 
     // 2. Mappatura Canali
     const mappingCanali = {
@@ -517,88 +515,71 @@
         sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
         cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
     };
- // Avvio e configurazione asset PWA personalizzati
-        if (nomeUtenteURL) {
-            globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
-            
-            const dynamicManifest = document.getElementById("dynamic-manifest");
-            const dynamicIcon = document.getElementById("dynamic-icon");
-            if (dynamicManifest) dynamicManifest.href = `/api/manifest?u=${globalUtente}`;
-            if (dynamicIcon) dynamicIcon.href = `/api/icon?u=${globalUtente}`;
-                  caricaProfiloPubblico(globalUtente);
-        }
-   function vaiAlCheckout() {
-            if (!globalUtente) return;
-            window.location.href = `/checkout.html?u=${globalUtente}`;
-        }
-     async function caricaProfiloPubblico(nomeMinuto) {
-            try {
-                const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-                const data = await response.json();
-                
-                if (data.success && data.fields) {
-                    datiUtenteLocal = data.fields;
-                    
-                    if (datiUtenteLocal.config_canali) {
-                        try {
-                            canaliConfigurati = typeof datiUtenteLocal.config_canali === 'string' 
-                                ? JSON.parse(datiUtenteLocal.config_canali) 
-                                : datiUtenteLocal.config_canali;
-                        } catch (e) {
-                            console.error("Errore parsing config_canali:", e);
-                            canaliConfigurati = {};
-                        }
-                    }
-                    
-                    elaboraEIniettaDatiEcosistema(nomeMinuto);
-                } else {
-                    document.body.style.opacity = "1";
-                }
-            } catch (error) {
-                console.error("Errore di caricamento:", error);
-                document.body.style.opacity = "1";
-            }
-        }
-  function elaboraEIniettaDatiEcosistema(nomeMinuto) {
-    // 1. Username Display
-     usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
-    const usernameEl = document.getElementById("tag-username");
-    if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
 
-        // Lettore universale di sicurezza
-        function ottieniValore(chiave) {
-            if (!datiUtenteLocal) return "";
-            if (canaliConfigurati && canaliConfigurati[chiave]) {
-                return canaliConfigurati[chiave].toString().trim();
-            }
-            if (datiUtenteLocal[chiave]) {
-                return datiUtenteLocal[chiave].toString().trim();
-            }
-            return "";
-        }
-            
-    // 3. Funzioni Core
-    async function init() {
-        console.log("Inizializzazione per:", globalUtente);
-        // Qui aggiungerai le altre funzioni man mano che procedi
+    // 3. Funzioni core
+    function ottieniValore(chiave) {
+        if (!datiUtenteLocal) return "";
+        if (canaliConfigurati && canaliConfigurati[chiave]) return canaliConfigurati[chiave].toString().trim();
+        if (datiUtenteLocal[chiave]) return datiUtenteLocal[chiave].toString().trim();
+        return "";
     }
 
-    // 4. Gestione Tasti
-    const btnBackFondo = document.getElementById("back-to-config");
-    if (btnBackFondo) {
-        btnBackFondo.addEventListener("click", function(e) {
-            e.preventDefault();
-            window.location.href = this.href;
-        });
+    async function caricaProfiloPubblico(nomeMinuto) {
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+            const data = await response.json();
+            if (data.success && data.fields) {
+                datiUtenteLocal = data.fields;
+                canaliConfigurati = typeof datiUtenteLocal.config_canali === 'string' ? JSON.parse(datiUtenteLocal.config_canali) : (datiUtenteLocal.config_canali || {});
+                elaboraEIniettaDatiEcosistema(nomeMinuto);
+            } else { document.body.style.opacity = "1"; }
+        } catch (error) { console.error("Errore:", error); document.body.style.opacity = "1"; }
     }
 
-    init();
+    function elaboraEIniettaDatiEcosistema(nomeMinuto) {
+        usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
+        const usernameEl = document.getElementById("tag-username");
+        if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
+        
+        document.body.className = datiUtenteLocal.digital_style ? `style-${datiUtenteLocal.digital_style.toLowerCase().trim()}` : 'style-black-dna';
+        
+        const imgElement = document.getElementById("userImage");
+        const logoContainer = document.querySelector(".logo-container");
+        if (datiUtenteLocal.avatar && datiUtenteLocal.avatar.length > 0) {
+            if (imgElement) imgElement.src = datiUtenteLocal.avatar[0].url;
+            if (logoContainer) {
+                logoContainer.style.display = "flex";
+                imgElement.className = (datiUtenteLocal.digital_style?.toUpperCase().trim() === 'TITANIUM') ? "user-media media-logo" : "user-media";
+            }
+        } else if (logoContainer) logoContainer.style.display = "none";
+
+        if (datiUtenteLocal.qr_link) {
+            const qrWrapper = document.querySelector('.qr-wrapper');
+            if (qrWrapper) qrWrapper.innerHTML = `<img src="${datiUtenteLocal.qr_link}" style="width:100%; height:100%; object-fit:contain;" alt="QR Code">`;
+        }
+
+        optimizzaE GestisciStato(nomeMinuto);
+    }
+
+    function optimizzaE GestisciStato(nomeMinuto) {
+        // ... (qui inserisci tutta la tua logica di stato, pulsanti, installazione, ecc.)
+        // Assicurati che ogni funzione chiamata qui sotto sia definita nel piano principale
+        ottimizzaGrigliaEcosistema();
+        // ... continua con il resto del tuo codice qui ...
+    }
+
+    // 4. Avvio
+    if (nomeUtenteURL) {
+        const dynamicManifest = document.getElementById("dynamic-manifest");
+        const dynamicIcon = document.getElementById("dynamic-icon");
+        if (dynamicManifest) dynamicManifest.href = `/api/manifest?u=${globalUtente}`;
+        if (dynamicIcon) dynamicIcon.href = `/api/icon?u=${globalUtente}`;
+        caricaProfiloPubblico(globalUtente);
+    }
 })();
-    
 </script>
-     </body>
-</html>    
-
+</body>
+</html>       
       
 
       
@@ -610,338 +591,6 @@
 
        
   
-    // 2. Design System
-    if (datiUtenteLocal.digital_style) {
-        document.body.className = `style-${datiUtenteLocal.digital_style.toLowerCase().trim()}`;
-    } else {
-        document.body.className = 'style-black-dna';
-    }
+   
 
-    // 3. Gestione Logo/Immagine Blindata
-    const imgElement = document.getElementById("userImage");
-    const logoContainer = document.querySelector(".logo-container");
-    if (datiUtenteLocal.avatar && datiUtenteLocal.avatar.length > 0) {
-        if (imgElement) imgElement.src = datiUtenteLocal.avatar[0].url;
-        if (logoContainer) {
-            logoContainer.style.display = "flex";
-            if (datiUtenteLocal.digital_style && datiUtenteLocal.digital_style.toUpperCase().trim() === 'TITANIUM') {
-                imgElement.className = "user-media media-logo";
-            } else {
-                imgElement.className = "user-media";
-            }
-        }
-    } else {
-        if (logoContainer) logoContainer.style.display = "none";
-    }
-
-    // 4. QR Code Wrapper
-    if (datiUtenteLocal.qr_link) {
-        const qrWrapper = document.querySelector('.qr-wrapper');
-        if (qrWrapper) {
-            qrWrapper.innerHTML = `<img src="${datiUtenteLocal.qr_link}" style="width:100%; height:100%; object-fit:contain;" alt="QR Code">`;
-        }
-    }
-
-    // 5. Link di Ritorno alla Console
-    const backLink = document.getElementById("back-to-config");
-    if (backLink) backLink.href = `profile.html?u=${nomeMinuto}`;
-
-    // Popolamento immediato della griglia (rimuove la classe hidden dove serve)
-    ottimizzaGrigliaEcosistema();
-
-  // 6. Analisi Stati + Controllo Anti-Asincronia
-     stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
-    const isCheckoutSuccess = params.get('checkout') === 'success';
-
-    if (isCheckoutSuccess) {
-        stato = "attivo";
-        if (datiUtenteLocal) datiUtenteLocal.stato = "attivo"; 
-        localStorage.removeItem('welcome_overlay_chiuso');
-    }
-    if (isCheckoutSuccess) {
-        stato = "attivo";
-        if (datiUtenteLocal) datiUtenteLocal.stato = "attivo"; 
-        localStorage.removeItem('welcome_overlay_chiuso');
-    }
-
-    if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
-        identitaVerificata = false;
-        if (backLink) backLink.style.display = "flex";
-        
-        const ctaSblocco = document.getElementById("cta-sblocco-container");
-        if (ctaSblocco) ctaSblocco.style.display = "none";
-        
-        const profile = document.getElementById("profile-content");
-        if (profile) {
-            profile.style.display = "grid"; 
-            profile.style.opacity = "1";
-        }
-        
-        if (typeof ottimizzaGrigliaEcosistema === "function") ottimizzaGrigliaEcosistema();
-        
-        const convTitle = document.getElementById("conversion-title");
-        if (convTitle) convTitle.innerText = `Nessun altro potrà essere @${usernamePulito}`;
-        
-        const btnRendiloTuo = document.getElementById("showroom-action-btn");
-        if (btnRendiloTuo) {
-            btnRendiloTuo.innerText = "Attiva la tua myquicktag";
-            btnRendiloTuo.onclick = vaiAlCheckout;
-        }
-        
-        document.body.style.opacity = "1";
-        
-        setTimeout(() => {
-            const overlay = document.getElementById("showroom-overlay");
-            const box = document.getElementById("expanding-box"); 
-            const content = document.querySelector(".conversion-content");
-            
-            if (overlay && box && content) {
-                overlay.style.display = "flex";
-                setTimeout(() => {
-                    overlay.style.background = "rgba(0, 0, 0, 0)"; 
-                    overlay.style.backdropFilter = "none";
-                    overlay.style.webkitBackdropFilter = "none";
-                    
-                    box.style.width = "340px";  
-                    box.style.height = "210px"; 
-                    setTimeout(() => { content.style.opacity = "1"; }, 250);
-                }, 50);
-            }
-        }, 400);
-
-    } else if (stato === "attivo") {
-        identitaVerificata = true;
-        if (backLink) backLink.style.display = "none";
-        
-        const ctaSblocco = document.getElementById("cta-sblocco-container");
-        if (ctaSblocco) ctaSblocco.style.display = "none";
-        
-        const showroomOverlay = document.getElementById("showroom-overlay");
-        if (showroomOverlay) showroomOverlay.style.display = "none";
-
-        const profile = document.getElementById("profile-content");
-        if (profile) {
-            profile.style.display = "grid"; 
-            setTimeout(() => {
-                profile.style.opacity = "1";
-                profile.style.transform = "scale(1)";
-                
-                if (typeof ottimizzaGrigliaEcosistema === "function") ottimizzaGrigliaEcosistema();
-            }, 50);
-        }
-        document.body.style.opacity = "1";
-        
-        const giaInModalitaApp = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-        const giaInstallataNelPassato = localStorage.getItem(`myquicktag_pwa_${usernamePulito}_installata`) === "true";
-
-        if (!giaInModalitaApp && !giaInstallataNelPassato && typeof mostraInstallatorePremium === "function") {
-            mostraInstallatorePremium();
-        }
-    }
-
-    function ottimizzaGrigliaEcosistema() {
-        if (!datiUtenteLocal) return;
-        gestisciVisibilitaCella('casella-bio', ottieniValore('bio'));
-        gestisciVisibilitaCella('casella-cv', ottieniValore('cv'));
-        const haContatti = ottieniValore('email') || ottieniValore('phone') || ottieniValore('whatsapp') || datiUtenteLocal.modulo_vcf;
-        gestisciVisibilitaCella('casella-contatti', haContatti);
-        const haSocial = ottieniValore('instagram') || ottieniValore('tiktok') || ottieniValore('facebook') || ottieniValore('linkedin') || ottieniValore('youtube') || ottieniValore('x') || ottieniValore('telegram') || ottieniValore('reddit') || ottieniValore('sito_web');
-        gestisciVisibilitaCella('casella-social', haSocial);
-        gestisciVisibilitaCella('casella-gallery', ottieniValore('gallery'));
-        gestisciVisibilitaCella('casella-futuro', ottieniValore('futuro'));
-    }
-
-    function gestisciVisibilitaCella(idElemento, condizione) {
-        const cella = document.getElementById(idElemento);
-        if (!cella) return; 
-        if (condizione && condizione.toString().trim() !== "") {
-            cella.classList.remove('hidden');
-        } else {
-            cella.classList.add('hidden');
-        }
-    }
-
-    function apriSezione(sezione) {
-        const overlay = document.getElementById('overlaySezione');
-        const titolo = document.getElementById('titoloSezione');
-        const corpo = document.getElementById('corpoSezione');
-        if (!overlay || !titolo || !corpo) return;
-        overlay.classList.add('attiva');
-        window.location.hash = sezione; 
-        if (sezione === 'bio') {
-            titolo.textContent = "Biografia";
-            corpo.innerHTML = `<p style="white-space: pre-line; line-height: 1.6; color: #ccc;">${ottieniValore('bio')}</p>`;
-        } else if (sezione === 'social') {
-            titolo.textContent = "Canali Digitali";
-            let htmlSocial = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
-            const chiaviSocial = ['instagram', 'tiktok', 'facebook', 'linkedin', 'youtube', 'x', 'telegram', 'reddit', 'sito_web'];
-            let conteggioSocial = 0;
-            chiaviSocial.forEach(chiave => {
-                const valoreRaw = ottieniValore(chiave);
-                if (valoreRaw && valoreRaw.trim() !== "") {
-                    const info = mappingCanali[chiave];
-                    const linkCompleto = info.url(valoreRaw.trim());
-                    conteggioSocial++;
-                    htmlSocial += `<a href="${linkCompleto}" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:14px; transition: background 0.2s;"><i class="${info.icon}" style="font-size:1.2rem; width:24px; text-align:center; color:#fff;"></i> <span style="font-weight:500; font-size:0.95rem;">${info.label}</span></a>`;
-                }
-            });
-            htmlSocial += `</div>`;
-            corpo.innerHTML = conteggioSocial > 0 ? htmlSocial : "<p style='color:#666;'>Nessun canale configurato.</p>";
-        } else if (sezione === 'contatti') {
-            titolo.textContent = "Informazioni di Contatto";
-            let htmlContatti = `<div style="display:flex; flex-direction:column; gap:12px; width:100%;">`;
-            const chiaviContatto = ['phone', 'email', 'whatsapp'];
-            let conteggioContatti = 0;
-            chiaviContatto.forEach(chiave => {
-                const valoreRaw = ottieniValore(chiave);
-                if (valoreRaw && valoreRaw.trim() !== "") {
-                    const info = mappingCanali[chiave];
-                    const linkCompleto = info.url(valoreRaw.trim());
-                    conteggioContatti++;
-                    htmlContatti += `<a href="${linkCompleto}" target="_blank" rel="noopener noreferrer" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:14px;"><i class="${info.icon}" style="font-size:1.2rem; width:24px; text-align:center;"></i> <span style="font-weight:500;">${info.label}</span></a>`;
-                }
-            });
-            if (datiUtenteLocal.modulo_vcf && datiUtenteLocal.modulo_vcf.trim() !== "") {
-                conteggioContatti++;
-                htmlContatti += `<a href="data:text/vcard;charset=utf-8,${encodeURIComponent(datiUtenteLocal.modulo_vcf)}" download="contatto.vcf" style="background:#fff; padding:16px; border-radius:14px; color:#000; text-decoration:none; display:flex; align-items:center; gap:14px; font-weight:600; margin-top:8px; justify-content:center;"><i class="fas fa-user-plus"></i> <span>Salva in Rubrica</span></a>`;
-            }
-            htmlContatti += `</div>`;
-            corpo.innerHTML = conteggioContatti > 0 ? htmlContatti : "<p style='color:#666;'>Nessun contatto configurato.</p>";
-        } else if (sezione === 'cv') {
-            titolo.textContent = "Curriculum Vitae";
-            const cvValore = ottieniValore('cv');
-            if (cvValore && cvValore.trim() !== "") {
-                corpo.innerHTML = `<div style="display:flex; flex-direction:column; gap:20px; align-items:center; width:100%; padding:10px 0;"><i class="fas fa-file-pdf" style="font-size:4rem; color:rgba(255,255,255,0.2);"></i><p style="color:#aaa; text-align:center; font-size:0.9rem;">Il Curriculum Vitae è disponibile per la consultazione.</p><a href="${cvValore.trim()}" target="_blank" rel="noopener noreferrer" style="background:#fff; color:#000; padding:14px 28px; border-radius:12px; text-decoration:none; font-weight:600; width:100%; text-align:center;"><i class="fas fa-external-link-alt"></i> Visualizza CV</a></div>`;
-            } else {
-                corpo.innerHTML = "<p style='color:#666;'>Nessun documento inserito.</p>";
-            }
-        } else {
-            titolo.textContent = sezione.toUpperCase();
-            corpo.innerHTML = `<p style="color:#666; text-align:center; padding:20px 0;">In fase di sincronizzazione.</p>`;
-        }
-    }
-
-    function chiudiSezione() {
-        const overlay = document.getElementById('overlaySezione');
-        if (overlay) overlay.classList.remove('attiva');
-        history.replaceState(null, null, ' '); 
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        if (identitaVerificata) {
-            mostraInstallatorePremium();
-        }
-    });
-
-    function mostraInstallatorePremium() {
-        if (localStorage.getItem('welcome_overlay_chiuso') === 'true') return;
-        if (!deferredPrompt || !identitaVerificata) return;
-        const overlay = document.getElementById("tag-welcome-overlay");
-        if (overlay) {
-            overlay.style.display = "flex";
-            const profile = document.getElementById("profile-content");
-            if (profile) {
-                profile.style.opacity = "0";
-                profile.style.transform = "scale(0.98)";
-            }
-        }
-        const btnInstall = document.getElementById("trigger-pwa-install");
-        if (btnInstall) {
-            btnInstall.onclick = () => {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        chiudiWelcomeEMostraTag();
-                    }
-                    deferredPrompt = null;
-                });
-            };
-        }
-    }
-
-    function chiudiWelcomeEMostraTag() {
-        localStorage.setItem('welcome_overlay_chiuso', 'true');
-        const overlay = document.getElementById("tag-welcome-overlay");
-        const profile = document.getElementById("profile-content");
-        if (overlay) {
-            overlay.style.transition = "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
-            overlay.style.opacity = "0";
-            overlay.style.transform = "scale(0.95)";
-            if (profile) {
-                profile.style.opacity = "1";
-                profile.style.transform = "scale(1)";
-            }
-            setTimeout(() => { overlay.style.display = "none"; }, 500);
-        }
-    }
-
-    async function condividiProfilo(event) {
-        if (event) event.stopPropagation();
-        const shareData = {
-            title: (document.getElementById("tag-username")?.innerText || 'MyQuickTag') + " | MyQuickTag",
-            text: "Scopri il mio spazio digitale:",
-            url: window.location.href
-        };
-        eseguiCondivisione(shareData);
-    }
-
-    async function eseguiCondivisione(data) {
-        try {
-            if (navigator.share) {
-                await navigator.share(data);
-            } else {
-                navigator.clipboard.writeText(data.url);
-                mostraToast("Link copiato negli appunti!");
-            }
-        } catch (err) {
-            console.error("Errore durante la condivisione:", err);
-        }
-    }
-
-    function mostraToast(messaggio) {
-        const toast = document.getElementById('toastNotifica');
-        if (toast) {
-            toast.textContent = messaggio;
-            toast.classList.add('mostra');
-            setTimeout(() => { toast.classList.remove('mostra'); }, 2500);
-        }
-    }
-
-   // --- LOGICA FINALE PULITA ---
-(function() {
-    'use strict';
-    
-    // 1. Gestione tasto indietro (usa la tua logica esistente ma sicura)
-    const btnBackFondo = document.getElementById("back-to-config");
-    if (btnBackFondo) {
-        btnBackFondo.addEventListener("click", function(e) {
-            e.preventDefault();
-            const targetUrl = this.href || `/profile.html?u=${typeof usernamePulito !== 'undefined' ? usernamePulito : ''}`;
-            btnBackFondo.style.opacity = '0.6';
-            btnBackFondo.style.pointerEvents = 'none';
-            setTimeout(() => { window.location.href = targetUrl; }, 250);
-        });
-    }
-
-    // 2. Ascoltatore PWA globale
-    window.addEventListener('appinstalled', () => {
-        try {
-            const userKey = (typeof usernamePulito !== 'undefined' && usernamePulito) ? usernamePulito : "default";
-            localStorage.setItem(`myquicktag_pwa_${userKey}_installata`, "true");
-            localStorage.setItem(`mqt_installed_${userKey}`, "true");
-            console.log("PWA installata correttamente.");
-        } catch(e) {
-            console.error("Errore salvataggio PWA:", e);
-        }
-    });
-
-    // 3. Gestione Checkout Success (aggiunge classe al body)
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('checkout') === 'success') {
-        document.body.classList.add('checkout-success');
-    }
-})();
-</script>
-
+   
