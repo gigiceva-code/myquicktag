@@ -494,6 +494,23 @@
         let canaliConfigurati = {};
      let usernamePulito = "";
         } 
+     // Mappatura originale sanificata per icone, etichette e pulizia URL
+        const mappingCanali = {
+            email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
+            phone: { icon: "fas fa-phone", label: "Telefono", url: val => val.startsWith("tel:") ? val : `tel:${val}` },
+            whatsapp: { icon: "fab fa-whatsapp", label: "WhatsApp", url: val => val.startsWith("http") ? val : `https://wa.me/${val.replace(/\s+/g, '')}` },
+            instagram: { icon: "fab fa-instagram", label: "Instagram", url: val => val.startsWith("http") ? val : `https://instagram.com/${val.replace('@', '')}` },
+            tiktok: { icon: "fab fa-tiktok", label: "TikTok", url: val => val.startsWith("http") ? val : `https://tiktok.com/@${val.replace('@', '')}` },
+            facebook: { icon: "fab fa-facebook-f", label: "Facebook", url: val => val.startsWith("http") ? val : val },
+            linkedin: { icon: "fab fa-linkedin-in", label: "LinkedIn", url: val => val.startsWith("http") ? val : val },
+            youtube: { icon: "fab fa-youtube", label: "YouTube", url: val => val.startsWith("http") ? val : val },
+            x: { icon: "fab fa-x-twitter", label: "X", url: val => val.startsWith("http") ? val : `https://x.com/${val.replace('@', '')}` },
+            telegram: { icon: "fab fa-telegram-plane", label: "Telegram", url: val => val.startsWith("http") ? val : `https://t.me/${val.replace('@', '')}` },
+            reddit: { icon: "fab fa-reddit-alien", label: "Reddit", url: val => val.startsWith("http") ? val : `https://reddit.com/user/${val}` },
+            sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
+            cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
+        };
+
 (function() {
     'use strict';
     
@@ -532,23 +549,7 @@
       
 
       
-        // Mappatura originale sanificata per icone, etichette e pulizia URL
-        const mappingCanali = {
-            email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
-            phone: { icon: "fas fa-phone", label: "Telefono", url: val => val.startsWith("tel:") ? val : `tel:${val}` },
-            whatsapp: { icon: "fab fa-whatsapp", label: "WhatsApp", url: val => val.startsWith("http") ? val : `https://wa.me/${val.replace(/\s+/g, '')}` },
-            instagram: { icon: "fab fa-instagram", label: "Instagram", url: val => val.startsWith("http") ? val : `https://instagram.com/${val.replace('@', '')}` },
-            tiktok: { icon: "fab fa-tiktok", label: "TikTok", url: val => val.startsWith("http") ? val : `https://tiktok.com/@${val.replace('@', '')}` },
-            facebook: { icon: "fab fa-facebook-f", label: "Facebook", url: val => val.startsWith("http") ? val : val },
-            linkedin: { icon: "fab fa-linkedin-in", label: "LinkedIn", url: val => val.startsWith("http") ? val : val },
-            youtube: { icon: "fab fa-youtube", label: "YouTube", url: val => val.startsWith("http") ? val : val },
-            x: { icon: "fab fa-x-twitter", label: "X", url: val => val.startsWith("http") ? val : `https://x.com/${val.replace('@', '')}` },
-            telegram: { icon: "fab fa-telegram-plane", label: "Telegram", url: val => val.startsWith("http") ? val : `https://t.me/${val.replace('@', '')}` },
-            reddit: { icon: "fab fa-reddit-alien", label: "Reddit", url: val => val.startsWith("http") ? val : `https://reddit.com/user/${val}` },
-            sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
-            cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
-        };
-
+       
         // Avvio e configurazione asset PWA personalizzati
         if (nomeUtenteURL) {
             globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
