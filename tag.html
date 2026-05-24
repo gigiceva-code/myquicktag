@@ -875,6 +875,8 @@
         }
     }
 
+   (function() {
+    // 1. Gestione del tasto indietro - isolata
     const btnBackFondo = document.getElementById("back-to-config");
     if (btnBackFondo) {
         btnBackFondo.addEventListener("click", function(e) {
@@ -882,16 +884,19 @@
             const targetUrl = this.href;
             setTimeout(() => { window.location.href = targetUrl; }, 250);
         });
-    } 
-
-window.addEventListener('appinstalled', () => {
-    if (typeof usernamePulito !== 'undefined' && usernamePulito) {
-        localStorage.setItem(`myquicktag_pwa_${usernamePulito}_installata`, "true");
-    } else {
-        localStorage.setItem("myquicktag_pwa_installata", "true");
     }
-    console.log("PWA installata con successo.");
-});
+
+    // 2. Ascoltatore PWA - globale e protetto
+    window.addEventListener('appinstalled', () => {
+        try {
+            const userKey = (typeof usernamePulito !== 'undefined' && usernamePulito) ? usernamePulito : "default";
+            localStorage.setItem(`myquicktag_pwa_${userKey}_installata`, "true");
+            console.log("PWA installata correttamente.");
+        } catch(e) {
+            console.error("Errore salvataggio PWA:", e);
+        }
+    });
+})();
 </script>
 </body>
 </html>
