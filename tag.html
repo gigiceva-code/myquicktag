@@ -615,14 +615,15 @@
     // Popolamento immediato della griglia (rimuove la classe hidden dove serve)
     ottimizzaGrigliaEcosistema();
 
-   // 6. Analisi Stati + Controllo Anti-Asincronia
+  // 6. Analisi Stati + Controllo Anti-Asincronia
     let stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
     const isCheckoutSuccess = params.get('checkout') === 'success';
 
-  // 6. Analisi Stati + Controllo Anti-Asincronia
-    stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
-    const isCheckoutSuccess = params.get('checkout') === 'success';
-
+    if (isCheckoutSuccess) {
+        stato = "attivo";
+        if (datiUtenteLocal) datiUtenteLocal.stato = "attivo"; 
+        localStorage.removeItem('welcome_overlay_chiuso');
+    }
     if (isCheckoutSuccess) {
         stato = "attivo";
         if (datiUtenteLocal) datiUtenteLocal.stato = "attivo"; 
@@ -882,7 +883,6 @@
             setTimeout(() => { window.location.href = targetUrl; }, 250);
         });
     } 
-});
 
 window.addEventListener('appinstalled', () => {
     if (typeof usernamePulito !== 'undefined' && usernamePulito) {
