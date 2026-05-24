@@ -480,6 +480,14 @@
     <div id="toastNotifica" class="toast">Link copiato!</div> 
      
 <script>
+     // Estrazione del parametro utente
+        const params = new URLSearchParams(window.location.search);
+        let nomeUtenteURL = params.get("u") || ""; 
+        if (!nomeUtenteURL) {
+            const pathParts = window.location.pathname.split('/');
+            const uIndex = pathParts.indexOf('u');
+            if (uIndex !== -1 && pathParts[uIndex + 1]) nomeUtenteURL = pathParts[uIndex + 1];
+        } 
 (function() {
     'use strict';
     
@@ -514,19 +522,8 @@
 </script>
      </body>
 </html>    
-window.onerror = function(message, source, lineno, colno, error) {
-   alert('Errore alla riga ' + lineno + ': ' + message);
-   return true;
-};
 
-        // Estrazione del parametro utente
-        const params = new URLSearchParams(window.location.search);
-        let nomeUtenteURL = params.get("u") || ""; 
-        if (!nomeUtenteURL) {
-            const pathParts = window.location.pathname.split('/');
-            const uIndex = pathParts.indexOf('u');
-            if (uIndex !== -1 && pathParts[uIndex + 1]) nomeUtenteURL = pathParts[uIndex + 1];
-        }
+      
 
         let globalUtente = "";
         let deferredPrompt;
