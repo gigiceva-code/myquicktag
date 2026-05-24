@@ -487,6 +487,12 @@
             const pathParts = window.location.pathname.split('/');
             const uIndex = pathParts.indexOf('u');
             if (uIndex !== -1 && pathParts[uIndex + 1]) nomeUtenteURL = pathParts[uIndex + 1];
+             let globalUtente = "";
+        let deferredPrompt;
+        let identitaVerificata = false;
+        let datiUtenteLocal = null;
+        let canaliConfigurati = {};
+     let usernamePulito = "";
         } 
 (function() {
     'use strict';
@@ -525,13 +531,7 @@
 
       
 
-        let globalUtente = "";
-        let deferredPrompt;
-        let identitaVerificata = false;
-        let datiUtenteLocal = null;
-        let canaliConfigurati = {};
-     let usernamePulito = "";
-
+      
         // Mappatura originale sanificata per icone, etichette e pulizia URL
         const mappingCanali = {
             email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
