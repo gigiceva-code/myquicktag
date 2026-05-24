@@ -493,6 +493,7 @@
         let identitaVerificata = false;
         let datiUtenteLocal = null;
         let canaliConfigurati = {};
+     let usernamePulito = "";
 
         // Mappatura originale sanificata per icone, etichette e pulizia URL
         const mappingCanali = {
@@ -571,7 +572,7 @@
 
     function elaboraEIniettaDatiEcosistema(nomeMinuto) {
     // 1. Username Display
-    const usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
+     usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
     const usernameEl = document.getElementById("tag-username");
     if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
 
@@ -700,6 +701,7 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         if (!giaInModalitaApp && !giaInstallataNelPassato && typeof mostraInstallatorePremium === "function") {
             mostraInstallatorePremium();
         }
+    }
     }
         function ottimizzaGrigliaEcosistema() {
             if (!datiUtenteLocal) return;
