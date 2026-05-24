@@ -525,7 +525,39 @@
             const dynamicIcon = document.getElementById("dynamic-icon");
             if (dynamicManifest) dynamicManifest.href = `/api/manifest?u=${globalUtente}`;
             if (dynamicIcon) dynamicIcon.href = `/api/icon?u=${globalUtente}`;
-                 // caricaProfiloPubblico(globalUtente);
+                  caricaProfiloPubblico(globalUtente);
+        }
+   function vaiAlCheckout() {
+            if (!globalUtente) return;
+            window.location.href = `/checkout.html?u=${globalUtente}`;
+        }
+     async function caricaProfiloPubblico(nomeMinuto) {
+            try {
+                const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+                const data = await response.json();
+                
+                if (data.success && data.fields) {
+                    datiUtenteLocal = data.fields;
+                    
+                    if (datiUtenteLocal.config_canali) {
+                        try {
+                            canaliConfigurati = typeof datiUtenteLocal.config_canali === 'string' 
+                                ? JSON.parse(datiUtenteLocal.config_canali) 
+                                : datiUtenteLocal.config_canali;
+                        } catch (e) {
+                            console.error("Errore parsing config_canali:", e);
+                            canaliConfigurati = {};
+                        }
+                    }
+                    
+                    elaboraEIniettaDatiEcosistema(nomeMinuto);
+                } else {
+                    document.body.style.opacity = "1";
+                }
+            } catch (error) {
+                console.error("Errore di caricamento:", error);
+                document.body.style.opacity = "1";
+            }
         }
 
         // Lettore universale di sicurezza
@@ -569,40 +601,9 @@
        
       
 
-        function vaiAlCheckout() {
-            if (!globalUtente) return;
-            window.location.href = `/checkout.html?u=${globalUtente}`;
-        }
+     
 
-        async function caricaProfiloPubblico(nomeMinuto) {
-            try {
-                const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
-                const data = await response.json();
-                
-                if (data.success && data.fields) {
-                    datiUtenteLocal = data.fields;
-                    
-                    if (datiUtenteLocal.config_canali) {
-                        try {
-                            canaliConfigurati = typeof datiUtenteLocal.config_canali === 'string' 
-                                ? JSON.parse(datiUtenteLocal.config_canali) 
-                                : datiUtenteLocal.config_canali;
-                        } catch (e) {
-                            console.error("Errore parsing config_canali:", e);
-                            canaliConfigurati = {};
-                        }
-                    }
-                    
-                    elaboraEIniettaDatiEcosistema(nomeMinuto);
-                } else {
-                    document.body.style.opacity = "1";
-                }
-            } catch (error) {
-                console.error("Errore di caricamento:", error);
-                document.body.style.opacity = "1";
-            }
-        }
-
+       
     function elaboraEIniettaDatiEcosistema(nomeMinuto) {
     // 1. Username Display
      usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
