@@ -481,10 +481,39 @@
       <script>
     alert("TEST INIZIO SCRIPT");
     console.log("TEST INIZIO SCRIPT");
-</script> 
-      </body>
-</html> 
-     <script>
+<script>
+(function() {
+    'use strict';
+    
+    // 1. Setup Iniziale
+    const params = new URLSearchParams(window.location.search);
+    const nomeUtenteURL = params.get("u") || "";
+    
+    // 2. Funzioni Core (caricamento e gestione dati)
+    async function init() {
+        if (!nomeUtenteURL) {
+            console.warn("Nessun utente trovato");
+            return;
+        }
+        // Qui andrebbe la tua logica di caricamento (caricaProfiloPubblico, ecc.)
+        // Per ora teniamolo semplice per vedere se la pagina si sblocca
+        console.log("Inizializzazione per:", nomeUtenteURL);
+    }
+
+    // 3. Gestione Tasti e UI
+    const btnBackFondo = document.getElementById("back-to-config");
+    if (btnBackFondo) {
+        btnBackFondo.addEventListener("click", function(e) {
+            e.preventDefault();
+            window.location.href = this.href;
+        });
+    }
+
+    // Esegui
+    init();
+    console.log("Script eseguito correttamente");
+})();
+</script>
          
 window.onerror = function(message, source, lineno, colno, error) {
    alert('Errore alla riga ' + lineno + ': ' + message);
