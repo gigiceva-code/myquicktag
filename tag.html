@@ -911,7 +911,7 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         }
 
     document.addEventListener("DOMContentLoaded", () => {
-    // 1. Gestione del tasto indietro
+   // 1. Gestione del tasto indietro
     const backLink = document.getElementById("back-to-config");
     if (backLink) {
         backLink.addEventListener("click", function(e) {
@@ -921,7 +921,7 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         });
     }
 
-    // 2. Ascoltatore PWA
+    // 2. Ascoltatore PWA (riportato nel flusso corretto)
     window.addEventListener('appinstalled', () => {
         if (typeof usernamePulito !== 'undefined' && usernamePulito) {
             localStorage.setItem(`myquicktag_pwa_${usernamePulito}_installata`, "true");
@@ -930,9 +930,10 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         }
         console.log("PWA installata con successo per questo utente.");
     });
-});
 
-} // <--- Questa chiude finalmente l'if dello "stato attivo" che era rimasto aperto sopra!
+// Chiusura dell'if di stato e del blocco principale globale
+}
+});
 </script>
 </body>
-</html>
+</html> 
