@@ -615,14 +615,15 @@
     // Popolamento immediato della griglia (rimuove la classe hidden dove serve)
     ottimizzaGrigliaEcosistema();
 
-    // 6. Analisi Stati + Controllo Anti-Asincronia
+   // 6. Analisi Stati + Controllo Anti-Asincronia
     let stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
     const isCheckoutSuccess = params.get('checkout') === 'success';
 
     if (isCheckoutSuccess) {
         stato = "attivo";
+        // Reset chirurgico: l'utente ha acquistato, l'installazione PWA deve essere servita ora
+        localStorage.removeItem('welcome_overlay_chiuso');
     }
-
 if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
         identitaVerificata = false;
         if (backLink) backLink.style.display = "flex";
