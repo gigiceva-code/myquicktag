@@ -616,7 +616,7 @@
     ottimizzaGrigliaEcosistema();
 
   // 6. Analisi Stati + Controllo Anti-Asincronia
-    let stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
+     stato = (datiUtenteLocal.stato || "").toLowerCase().trim();
     const isCheckoutSuccess = params.get('checkout') === 'success';
 
     if (isCheckoutSuccess) {
@@ -876,7 +876,7 @@
     }
 
    (function() {
-    // 1. Gestione del tasto indietro - isolata
+    // Gestione tasto indietro
     const btnBackFondo = document.getElementById("back-to-config");
     if (btnBackFondo) {
         btnBackFondo.addEventListener("click", function(e) {
@@ -886,14 +886,13 @@
         });
     }
 
-    // 2. Ascoltatore PWA - globale e protetto
+    // Ascoltatore PWA
     window.addEventListener('appinstalled', () => {
         try {
             const userKey = (typeof usernamePulito !== 'undefined' && usernamePulito) ? usernamePulito : "default";
             localStorage.setItem(`myquicktag_pwa_${userKey}_installata`, "true");
-            console.log("PWA installata correttamente.");
         } catch(e) {
-            console.error("Errore salvataggio PWA:", e);
+            console.error("Errore PWA:", e);
         }
     });
 })();
