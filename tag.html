@@ -909,27 +909,26 @@ if (stato === "in attesa" || stato === "sospeso" || stato === "riservato") {
                 setTimeout(() => { toast.classList.remove('mostra'); }, 2500);
             }
         }
-
-// 1. Gestione del tasto indietro
-const backLink = document.getElementById("back-to-config");
-if (backLink) {
-    backLink.addEventListener("click", function(e) {
-        e.preventDefault();
-        const targetUrl = this.href;
-        setTimeout(() => { window.location.href = targetUrl; }, 250);
-    });
-}
-
-// 2. Ascoltatore PWA
-window.addEventListener('appinstalled', () => {
-    if (typeof usernamePulito !== 'undefined' && usernamePulito) {
-        localStorage.setItem(`myquicktag_pwa_${usernamePulito}_installata`, "true");
-    } else {
-        localStorage.setItem("myquicktag_pwa_installata", "true");
+{
+    // 1. Gestione del tasto indietro (protetta in questo blocco)
+    const backLink = document.getElementById("back-to-config");
+    if (backLink) {
+        backLink.addEventListener("click", function(e) {
+            e.preventDefault();
+            const targetUrl = this.href;
+            setTimeout(() => { window.location.href = targetUrl; }, 250);
+        });
     }
-    console.log("PWA installata con successo per questo utente.");
-});
 
+    // 2. Ascoltatore PWA
+    window.addEventListener('appinstalled', () => {
+        if (typeof usernamePulito !== 'undefined' && usernamePulito) {
+            localStorage.setItem(`myquicktag_pwa_${usernamePulito}_installata`, "true");
+        } else {
+            localStorage.setItem("myquicktag_pwa_installata", "true");
+        }
+        console.log("PWA installata con successo per questo utente.");
+    });
 }
 </script>
 </body>
