@@ -482,115 +482,109 @@
 (function() {
     'use strict';
 
-    // 1. Setup Iniziale
+    // Variabili Globali di Stato
     const params = new URLSearchParams(window.location.search);
-    let nomeUtenteURL = params.get("u") || "";
-    if (!nomeUtenteURL) {
-        const pathParts = window.location.pathname.split('/');
-        const uIndex = pathParts.indexOf('u');
-        if (uIndex !== -1 && pathParts[uIndex + 1]) nomeUtenteURL = pathParts[uIndex + 1];
-    }
-
-    let globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
+    let globalUtente = params.get("u") || window.location.pathname.split('/')[window.location.pathname.split('/').indexOf('u') + 1] || "";
+    globalUtente = globalUtente.replace('@', '').trim().toLowerCase();
+    
     let datiUtenteLocal = null;
-    let canaliConfigurati = {};
-    let usernamePulito = "";
     let deferredPrompt;
-    let identitaVerificata = false;
-    let stato = "";
 
-    // 2. Mappatura Canali
-    const mappingCanali = {
-        email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
-        phone: { icon: "fas fa-phone", label: "Telefono", url: val => val.startsWith("tel:") ? val : `tel:${val}` },
-        whatsapp: { icon: "fab fa-whatsapp", label: "WhatsApp", url: val => val.startsWith("http") ? val : `https://wa.me/${val.replace(/\s+/g, '')}` },
-        instagram: { icon: "fab fa-instagram", label: "Instagram", url: val => val.startsWith("http") ? val : `https://instagram.com/${val.replace('@', '')}` },
-        tiktok: { icon: "fab fa-tiktok", label: "TikTok", url: val => val.startsWith("http") ? val : `https://tiktok.com/@${val.replace('@', '')}` },
-        facebook: { icon: "fab fa-facebook-f", label: "Facebook", url: val => val.startsWith("http") ? val : val },
-        linkedin: { icon: "fab fa-linkedin-in", label: "LinkedIn", url: val => val.startsWith("http") ? val : val },
-        youtube: { icon: "fab fa-youtube", label: "YouTube", url: val => val.startsWith("http") ? val : val },
-        x: { icon: "fab fa-x-twitter", label: "X", url: val => val.startsWith("http") ? val : `https://x.com/${val.replace('@', '')}` },
-        telegram: { icon: "fab fa-telegram-plane", label: "Telegram", url: val => val.startsWith("http") ? val : `https://t.me/${val.replace('@', '')}` },
-        reddit: { icon: "fab fa-reddit-alien", label: "Reddit", url: val => val.startsWith("http") ? val : `https://reddit.com/user/${val}` },
-        sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
-        cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
-    };
+    // --- CARICAMENTO DATI (Core) ---
+    async function caricaProfilo() {
+        if (!globalUtente) return console.error("Nessun utente specificato");
 
-    // 3. Funzioni core
-    function ottieniValore(chiave) {
-        if (!datiUtenteLocal) return "";
-        if (canaliConfigurati && canaliConfigurati[chiave]) return canaliConfigurati[chiave].toString().trim();
-        if (datiUtenteLocal[chiave]) return datiUtenteLocal[chiave].toString().trim();
-        return "";
-    }
-
-    async function caricaProfiloPubblico(nomeMinuto) {
         try {
-            const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+            // Chiamata all'API di sistema
+            const response = await fetch(`/api/get-profile?u=${globalUtente}`);
             const data = await response.json();
+            
             if (data.success && data.fields) {
                 datiUtenteLocal = data.fields;
-                canaliConfigurati = typeof datiUtenteLocal.config_canali === 'string' ? JSON.parse(datiUtenteLocal.config_canali) : (datiUtenteLocal.config_canali || {});
-                elaboraEIniettaDatiEcosistema(nomeMinuto);
-            } else { document.body.style.opacity = "1"; }
-        } catch (error) { console.error("Errore:", error); document.body.style.opacity = "1"; }
+                renderizzaProfilo(datiUtenteLocal);
+            }
+        } catch (e) { console.error("Errore fatale caricamento:", e); }
     }
 
-    function elaboraEIniettaDatiEcosistema(nomeMinuto) {
-        usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
-        const usernameEl = document.getElementById("tag-username");
-        if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
+    function renderizzaProfilo(data) {
+        // Inserimento dati base
+        document.getElementById("tag-username").innerText = "@" + (data.username_username_display || data.username_system);
         
-        document.body.className = datiUtenteLocal.digital_style ? `style-${datiUtenteLocal.digital_style.toLowerCase().trim()}` : 'style-black-dna';
-        
-        const imgElement = document.getElementById("userImage");
-        const logoContainer = document.querySelector(".logo-container");
-        if (datiUtenteLocal.avatar && datiUtenteLocal.avatar.length > 0) {
-            if (imgElement) imgElement.src = datiUtenteLocal.avatar[0].url;
-            if (logoContainer) {
-                logoContainer.style.display = "flex";
-                imgElement.className = (datiUtenteLocal.digital_style?.toUpperCase().trim() === 'TITANIUM') ? "user-media media-logo" : "user-media";
+        // Verifica Stato per flusso (Attivo vs In attesa)
+        if (data.stato === "attivo" || data.stato === "Attivo") {
+            document.getElementById("profile-content").classList.add("ready");
+            // Se siamo reduci dal checkout (status=welcome), mostriamo il benvenuto
+            if (params.get("status") === "welcome") {
+                document.getElementById("tag-welcome-overlay").style.display = "flex";
             }
-        } else if (logoContainer) logoContainer.style.display = "none";
+        } else {
+            // Se NON è attivo, mostriamo lo showroom (bloccato)
+            mostraShowroom();
+        }
+    }
 
-        if (datiUtenteLocal.qr_link) {
-            const qrWrapper = document.querySelector('.qr-wrapper');
-            if (qrWrapper) qrWrapper.innerHTML = `<img src="${datiUtenteLocal.qr_link}" style="width:100%; height:100%; object-fit:contain;" alt="QR Code">`;
+    // --- LOGICA SHOWROOM (Overlay Pre-Checkout) ---
+    function mostraShowroom() {
+        const overlay = document.getElementById("showroom-overlay");
+        const box = document.getElementById("expanding-box");
+        const title = document.getElementById("conversion-title");
+        
+        title.innerText = `Nessun altro potrà essere @${globalUtente}`;
+        overlay.style.display = "flex";
+        
+        setTimeout(() => {
+            box.style.width = "90%";
+            box.style.height = "auto";
+            document.querySelector(".conversion-content").style.opacity = "1";
+        }, 100);
+    }
+
+    // Avvio del motore
+    caricaProfilo();
+})();
+    // --- GESTIONE CONTENUTI E JSON (Config_canali) ---
+    window.apriSezione = (chiave) => {
+        if (!datiUtenteLocal) return;
+
+        // 1. Definiamo i dati da mostrare
+        let contenutoDaMostrare = "";
+        let titoloDaMostrare = chiave.charAt(0).toUpperCase() + chiave.slice(1);
+
+        // 2. Controllo: il dato è nel campo diretto o nel JSON config_canali?
+        if (datiUtenteLocal[chiave] && chiave !== 'config_canali') {
+            contenutoDaMostrare = datiUtenteLocal[chiave];
+        } else if (datiUtenteLocal.config_canali) {
+            try {
+                const config = JSON.parse(datiUtenteLocal.config_canali);
+                contenutoDaMostrare = config[chiave] || "Contenuto non impostato.";
+            } catch (e) {
+                console.error("Errore parsing config_canali:", e);
+                contenutoDaMostrare = "Errore nel caricamento configurazione.";
+            }
+        } else {
+            contenutoDaMostrare = "Nessuna informazione disponibile per questa sezione.";
         }
 
-        optimizzaEGestisciStato(nomeMinuto);
-    }
+        // 3. Popolamento DOM e apertura
+        document.getElementById("titoloSezione").innerText = titoloDaMostrare;
+        document.getElementById("corpoSezione").innerText = contenutoDaMostrare;
+        document.getElementById("overlaySezione").classList.add("attiva");
+    };
 
-    function optimizzaEGestisciStato(nomeMinuto) {
-        // ... (qui inserisci tutta la tua logica di stato, pulsanti, installazione, ecc.)
-        // Assicurati che ogni funzione chiamata qui sotto sia definita nel piano principale
-        ottimizzaGrigliaEcosistema();
-        // ... continua con il resto del tuo codice qui ...
-    }
+    // --- CHIUSURA ---
+    window.chiudiSezione = () => {
+        document.getElementById("overlaySezione").classList.remove("attiva");
+    };
 
-    // 4. Avvio
-    if (nomeUtenteURL) {
-        const dynamicManifest = document.getElementById("dynamic-manifest");
-        const dynamicIcon = document.getElementById("dynamic-icon");
-        if (dynamicManifest) dynamicManifest.href = `/api/manifest?u=${globalUtente}`;
-        if (dynamicIcon) dynamicIcon.href = `/api/icon?u=${globalUtente}`;
-        caricaProfiloPubblico(globalUtente);
-    }
-})();
+    // --- CONDIVISIONE ---
+    window.condividiSezione = () => {
+        const testo = document.getElementById("corpoSezione").innerText;
+        const link = window.location.href;
+        if (navigator.share) {
+            navigator.share({ title: 'MyQuickTag', text: testo, url: link });
+        } else {
+            navigator.clipboard.writeText(link);
+            // Qui potresti triggerare il toast di notifica che avevi
+        }
+    };
 </script>
-</body>
-</html>       
-      
-
-      
-       
-       
-      
-
-     
-
-       
-  
-   
-
-   
