@@ -559,6 +559,11 @@
                 document.body.style.opacity = "1";
             }
         }
+  function elaboraEIniettaDatiEcosistema(nomeMinuto) {
+    // 1. Username Display
+     usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
+    const usernameEl = document.getElementById("tag-username");
+    if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
 
         // Lettore universale di sicurezza
         function ottieniValore(chiave) {
@@ -604,12 +609,7 @@
      
 
        
-    function elaboraEIniettaDatiEcosistema(nomeMinuto) {
-    // 1. Username Display
-     usernamePulito = (datiUtenteLocal.username_username_display || datiUtenteLocal.username_system || nomeMinuto).replace('@', '').toUpperCase();
-    const usernameEl = document.getElementById("tag-username");
-    if (usernameEl) usernameEl.innerText = "@" + usernamePulito;
-
+  
     // 2. Design System
     if (datiUtenteLocal.digital_style) {
         document.body.className = `style-${datiUtenteLocal.digital_style.toLowerCase().trim()}`;
