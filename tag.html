@@ -480,77 +480,44 @@
     <div id="toastNotifica" class="toast">Link copiato!</div> 
      
 <script>
-     // Estrazione del parametro utente
-        const params = new URLSearchParams(window.location.search);
-        let nomeUtenteURL = params.get("u") || ""; 
-        if (!nomeUtenteURL) {
-            const pathParts = window.location.pathname.split('/');
-            const uIndex = pathParts.indexOf('u');
-            if (uIndex !== -1 && pathParts[uIndex + 1]) nomeUtenteURL = pathParts[uIndex + 1];
-             let globalUtente = "";
-        let deferredPrompt;
-        let identitaVerificata = false;
-        let datiUtenteLocal = null;
-        let canaliConfigurati = {};
-     let usernamePulito = "";
-        } 
-     // Mappatura originale sanificata per icone, etichette e pulizia URL
-        const mappingCanali = {
-            email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
-            phone: { icon: "fas fa-phone", label: "Telefono", url: val => val.startsWith("tel:") ? val : `tel:${val}` },
-            whatsapp: { icon: "fab fa-whatsapp", label: "WhatsApp", url: val => val.startsWith("http") ? val : `https://wa.me/${val.replace(/\s+/g, '')}` },
-            instagram: { icon: "fab fa-instagram", label: "Instagram", url: val => val.startsWith("http") ? val : `https://instagram.com/${val.replace('@', '')}` },
-            tiktok: { icon: "fab fa-tiktok", label: "TikTok", url: val => val.startsWith("http") ? val : `https://tiktok.com/@${val.replace('@', '')}` },
-            facebook: { icon: "fab fa-facebook-f", label: "Facebook", url: val => val.startsWith("http") ? val : val },
-            linkedin: { icon: "fab fa-linkedin-in", label: "LinkedIn", url: val => val.startsWith("http") ? val : val },
-            youtube: { icon: "fab fa-youtube", label: "YouTube", url: val => val.startsWith("http") ? val : val },
-            x: { icon: "fab fa-x-twitter", label: "X", url: val => val.startsWith("http") ? val : `https://x.com/${val.replace('@', '')}` },
-            telegram: { icon: "fab fa-telegram-plane", label: "Telegram", url: val => val.startsWith("http") ? val : `https://t.me/${val.replace('@', '')}` },
-            reddit: { icon: "fab fa-reddit-alien", label: "Reddit", url: val => val.startsWith("http") ? val : `https://reddit.com/user/${val}` },
-            sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
-            cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
-        };
-
 (function() {
     'use strict';
-    
-    // 1. Setup Iniziale
+
+    // 1. Setup Iniziale e Variabili Globali
     const params = new URLSearchParams(window.location.search);
-    const nomeUtenteURL = params.get("u") || "";
+    let nomeUtenteURL = params.get("u") || "";
     
-    // 2. Funzioni Core (caricamento e gestione dati)
-    async function init() {
-        if (!nomeUtenteURL) {
-            console.warn("Nessun utente trovato");
-            return;
-        }
-        // Qui andrebbe la tua logica di caricamento (caricaProfiloPubblico, ecc.)
-        // Per ora teniamolo semplice per vedere se la pagina si sblocca
-        console.log("Inizializzazione per:", nomeUtenteURL);
+    // Recupero username dal path se non presente nel query string
+    if (!nomeUtenteURL) {
+        const pathParts = window.location.pathname.split('/');
+        const uIndex = pathParts.indexOf('u');
+        if (uIndex !== -1 && pathParts[uIndex + 1]) nomeUtenteURL = pathParts[uIndex + 1];
     }
 
-    // 3. Gestione Tasti e UI
-    const btnBackFondo = document.getElementById("back-to-config");
-    if (btnBackFondo) {
-        btnBackFondo.addEventListener("click", function(e) {
-            e.preventDefault();
-            window.location.href = this.href;
-        });
-    }
+    let globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
+    let deferredPrompt;
+    let identitaVerificata = false;
+    let datiUtenteLocal = null;
+    let canaliConfigurati = {};
+    let usernamePulito = "";
 
-    // Esegui
-    init();
-    console.log("Script eseguito correttamente");
-})();
-</script>
-     </body>
-</html>    
-
-      
-
-      
-       
-        // Avvio e configurazione asset PWA personalizzati
+    // 2. Mappatura Canali
+    const mappingCanali = {
+        email: { icon: "fas fa-envelope", label: "Email", url: val => val.startsWith("mailto:") ? val : `mailto:${val}` },
+        phone: { icon: "fas fa-phone", label: "Telefono", url: val => val.startsWith("tel:") ? val : `tel:${val}` },
+        whatsapp: { icon: "fab fa-whatsapp", label: "WhatsApp", url: val => val.startsWith("http") ? val : `https://wa.me/${val.replace(/\s+/g, '')}` },
+        instagram: { icon: "fab fa-instagram", label: "Instagram", url: val => val.startsWith("http") ? val : `https://instagram.com/${val.replace('@', '')}` },
+        tiktok: { icon: "fab fa-tiktok", label: "TikTok", url: val => val.startsWith("http") ? val : `https://tiktok.com/@${val.replace('@', '')}` },
+        facebook: { icon: "fab fa-facebook-f", label: "Facebook", url: val => val.startsWith("http") ? val : val },
+        linkedin: { icon: "fab fa-linkedin-in", label: "LinkedIn", url: val => val.startsWith("http") ? val : val },
+        youtube: { icon: "fab fa-youtube", label: "YouTube", url: val => val.startsWith("http") ? val : val },
+        x: { icon: "fab fa-x-twitter", label: "X", url: val => val.startsWith("http") ? val : `https://x.com/${val.replace('@', '')}` },
+        telegram: { icon: "fab fa-telegram-plane", label: "Telegram", url: val => val.startsWith("http") ? val : `https://t.me/${val.replace('@', '')}` },
+        reddit: { icon: "fab fa-reddit-alien", label: "Reddit", url: val => val.startsWith("http") ? val : `https://reddit.com/user/${val}` },
+        sito_web: { icon: "fas fa-globe", label: "Sito Web", url: val => val.startsWith("http") ? val : `https://${val}` },
+        cv: { icon: "fas fa-file-pdf", label: "Curriculum Vitae", url: val => val }
+    };
+ // Avvio e configurazione asset PWA personalizzati
         if (nomeUtenteURL) {
             globalUtente = nomeUtenteURL.replace('@', '').trim().toLowerCase();
             
@@ -558,8 +525,7 @@
             const dynamicIcon = document.getElementById("dynamic-icon");
             if (dynamicManifest) dynamicManifest.href = `/api/manifest?u=${globalUtente}`;
             if (dynamicIcon) dynamicIcon.href = `/api/icon?u=${globalUtente}`;
-            
-            caricaProfiloPubblico(globalUtente);
+                  caricaProfiloPubblico(globalUtente);
         }
 
         // Lettore universale di sicurezza
@@ -573,6 +539,35 @@
             }
             return "";
         }
+            
+    // 3. Funzioni Core
+    async function init() {
+        console.log("Inizializzazione per:", globalUtente);
+        // Qui aggiungerai le altre funzioni man mano che procedi
+    }
+
+    // 4. Gestione Tasti
+    const btnBackFondo = document.getElementById("back-to-config");
+    if (btnBackFondo) {
+        btnBackFondo.addEventListener("click", function(e) {
+            e.preventDefault();
+            window.location.href = this.href;
+        });
+    }
+
+    init();
+})();
+    
+</script>
+     </body>
+</html>    
+
+      
+
+      
+       
+       
+      
 
         function vaiAlCheckout() {
             if (!globalUtente) return;
