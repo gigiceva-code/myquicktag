@@ -20,7 +20,37 @@
         --card-bg: linear-gradient(145deg, #0f0f11, #16161a);
         --grid-bg: #111113;
     }
+/* 1. AGGIORNAMENTO CORNICE PERIMETRALE */
+/* Il perimetro deve essere sempre visibile, un rettangolo verde smeraldo */
+body::before {
+    content: "";
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 3px solid #10b981; /* Verde Smeraldo brillante */
+    border-radius: 28px;
+    pointer-events: none; /* Non blocca i click */
+    z-index: 99999; /* Sopra ogni cosa */
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); /* Leggero alone luminoso */
+}
 
+/* 2. ADEGUAMENTO CONTENITORE */
+.app-container {
+    /* Manteniamo il layout, ma assicuro che non venga tagliato dal bordo */
+    padding-top: 40px; 
+    padding-bottom: 40px;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+/* 3. MIGLIORIA ESTETICA SMART CARD */
+.smart-card {
+    /* ... (tutto come prima) ... */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Semplificato per non sporcare col bordo verde */
+}
     * {
         margin: 0;
         padding: 0;
@@ -204,6 +234,29 @@
         color: var(--accent-white);
         line-height: 1.4;
         letter-spacing: 0.3px;
+    }
+        /* --- STILE DINAMICO PER I BOTTONI SOCIAL --- */
+    #casella-social {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+        padding: 16px !important;
+        cursor: default !important; /* Non più cliccabile come casella singola */
+    }
+
+    .btn-social {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        text-align: center;
+    }
+
+    .btn-social:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #10b981; /* Verde smeraldo al passaggio */
     }
 
     /* --- OVERLAY PAGINE INTERNE --- */
@@ -478,4 +531,97 @@
     </div>
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
+<script>
+// 1. DIZIONARIO COMPLETO DELLE ICONE
+const socialIcons = {
+    "instagram": "fab fa-instagram",
+    "tiktok": "fab fa-tiktok",
+    "facebook": "fab fa-facebook-f",
+    "youtube": "fab fa-youtube",
+    "linkedin": "fab fa-linkedin-in",
+    "x": "fab fa-x-twitter",
+    "strava": "fab fa-strava",
+    "github": "fab fa-github",
+    "behance": "fab fa-behance",
+    "dribbble": "fab fa-dribbble",
+    "spotify": "fab fa-spotify",
+    "telegram": "fab fa-telegram-plane",
+    "whatsapp": "fab fa-whatsapp",
+    "twitch": "fab fa-twitch",
+    "pinterest": "fab fa-pinterest-p",
+    "default": "fas fa-share-alt"
+};
 
+// 2. INIZIALIZZAZIONE UNICA
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get("u") || "testuser"; 
+    avviaFlusso(username);
+});
+
+// 3. FLUSSO PRINCIPALE (Gestione Stato)
+async function avviaFlusso(username) {
+    try {
+        const response = await fetch(`/api/get-profile?u=${username}`);
+        const data = await response.json();
+
+        if (data.success && data.fields.stato === "attivo") {
+            renderizzaTag(data.fields);
+        } else {
+            mostraShowroom(username);
+        }
+    } catch (err) {
+        console.error("Errore critico:", err);
+        mostraShowroom(username);
+    }
+}
+
+// 4. MOTORE DI RENDER
+function renderizzaTag(fields) {
+    document.getElementById("profile-content").classList.add("ready");
+    document.getElementById("tag-username").innerText = "@" + (fields.username_display || fields.username_system);
+    
+    // Inseriamo i dati extra (Bio, Avatar)
+    if (fields.avatar && fields.avatar.length > 0) document.getElementById("userImage").src = fields.avatar[0].url;
+    if (fields.bio) document.getElementById("casella-bio").innerHTML = `<div class="casella-invito">${fields.bio}</div>`;
+    
+    renderizzaSocial(fields.config_canali);
+    console.log("Tag attivata per:", fields.username_system);
+}
+
+// 5. RENDERING SOCIAL (Parser JSON completo)
+function renderizzaSocial(configCanali) {
+    const container = document.getElementById("casella-social");
+    if (!configCanali) return;
+
+    try {
+        const canali = JSON.parse(configCanali); 
+        container.innerHTML = ""; 
+        canali.forEach(canale => {
+            const iconClass = socialIcons[canale.nome.toLowerCase()] || socialIcons["default"];
+            const btn = document.createElement("a");
+            btn.className = "btn-social"; 
+            btn.style.cssText = "text-decoration:none; color:inherit; display:flex; align-items:center; gap:8px;";
+            btn.innerHTML = `<i class="${iconClass}"></i> ${canale.nome}`;
+            btn.href = canale.url;
+            btn.target = "_blank";
+            container.appendChild(btn);
+        });
+    } catch (e) { console.error("Errore parsing social:", e); }
+}
+
+// 6. SHOWROOM
+function mostraShowroom(username) {
+    const overlay = document.getElementById("showroom-overlay");
+    const box = document.getElementById("expanding-box");
+    document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${username}`;
+    overlay.style.display = "flex";
+    setTimeout(() => {
+        box.style.width = "90%";
+        box.style.height = "auto";
+        document.querySelector(".conversion-content").style.opacity = "1";
+    }, 100);
+}
+</script>
+</body>
+</html>
