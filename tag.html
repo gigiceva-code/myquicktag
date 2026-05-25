@@ -531,6 +531,7 @@ body::before {
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
 <script>
+  let cacheDatiUtente = {};  
 // 1. DIZIONARIO COMPLETO DELLE ICONE
 const socialIcons = {
     "instagram": "fab fa-instagram",
@@ -575,19 +576,97 @@ async function avviaFlusso(username) {
     }
 }
 
-// 4. MOTORE DI RENDER
 function renderizzaTag(fields) {
-    document.getElementById("profile-content").classList.add("ready");
-    document.getElementById("tag-username").innerText = "@" + (fields.username_display || fields.username_system);
-    
-    // Inseriamo i dati extra (Bio, Avatar)
-    if (fields.avatar && fields.avatar.length > 0) document.getElementById("userImage").src = fields.avatar[0].url;
-    if (fields.bio) document.getElementById("casella-bio").innerHTML = `<div class="casella-invito">${fields.bio}</div>`;
-    
+    // 1. Salvataggio dati in cache per accesso rapido
+    cacheDatiUtente = fields;
+
+    // 2. Rendering elementi base
+    document.getElementById('tag-username').textContent = '@' + fields.username_system;
+    if (fields.avatar) document.getElementById('userImage').src = fields.avatar;
+
+    // 3. Rendering Social
     renderizzaSocial(fields.config_canali);
-    console.log("Tag attivata per:", fields.username_system);
+
+    // 4. Logica di visibilità automatica (nasconde le caselle vuote)
+    const mappa = {
+        'casella-bio': fields.bio,
+        'casella-cv': fields.cv,
+        'casella-contatti': fields.contatti,
+        'casella-gallery': fields.gallery
+    };
+
+    for (const [id, dato] of Object.entries(mappa)) {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+            if (!dato || dato.trim() === "") {
+                elemento.style.display = 'none';
+            } else {
+                elemento.style.display = 'flex';
+            }
+        }
+    }
+
+    // 5. Logica di attivazione visuale
+    document.querySelector('.app-container').classList.add('ready');
+}
+    function gestisciVisibilitaCaselle(fields) {
+    // Mappatura tra ID HTML e chiavi Airtable
+    const mappa = {
+        'casella-bio': fields.bio,
+        'casella-cv': fields.cv,
+        'casella-contatti': fields.contatti,
+        'casella-gallery': fields.gallery
+    };
+
+    // Cicla sulla mappa: se il dato manca, nasconde la casella
+    for (const [id, dato] of Object.entries(mappa)) {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+            if (!dato || dato.trim() === "") {
+                elemento.style.display = 'none';
+            } else {
+                elemento.style.display = 'flex';
+            }
+        }
+    }
 }
 
+// Funzione atomica per aprire le sezioni con i dati in cache
+function apriSezione(tipo) {
+    const overlay = document.getElementById('overlaySezione');
+    const titolo = document.getElementById('titoloSezione');
+    const corpo = document.getElementById('corpoSezione');
+
+    // Mappatura dinamica basata sulla cache
+    const contenuti = {
+        'bio': { t: 'Biografia', c: cacheDatiUtente.bio || 'Nessuna bio disponibile.' },
+        'cv': { t: 'Curriculum Vitae', c: cacheDatiUtente.cv || 'CV non ancora configurato.' },
+        'contatti': { t: 'Contatti', c: cacheDatiUtente.contatti || 'Nessun contatto disponibile.' }
+    };
+
+    if (contenuti[tipo]) {
+        titolo.textContent = contenuti[tipo].t;
+        corpo.textContent = contenuti[tipo].c;
+        overlay.classList.add('attiva');
+    }
+}
+function condividiSezione() {
+    const titolo = document.getElementById('titoloSezione').textContent;
+    const testo = document.getElementById('corpoSezione').textContent;
+    const urlCondivisione = window.location.href + "?sezione=" + titolo;
+
+    if (navigator.share) {
+        navigator.share({
+            title: 'MyQuickTag - ' + titolo,
+            text: testo,
+            url: urlCondivisione
+        }).catch(console.error);
+    } else {
+        // Fallback: copia negli appunti
+        navigator.clipboard.writeText(urlCondivisione);
+        alert("Link della sezione copiato!");
+    }
+}
 // 5. RENDERING SOCIAL (Parser JSON completo)
 function renderizzaSocial(configCanali) {
     const container = document.getElementById("casella-social");
