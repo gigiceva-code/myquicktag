@@ -20,20 +20,42 @@
         --card-bg: linear-gradient(145deg, #0f0f11, #16161a);
         --grid-bg: #111113;
     }
-/* 1. AGGIORNAMENTO CORNICE PERIMETRALE */
-/* Il perimetro deve essere sempre visibile, un rettangolo verde smeraldo */
-/* 1. CORNICE FISSA (Non tocca mai il contenuto) */
-body::before {
-    content: "";
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 3px solid #10b981;
-    border-radius: 28px;
-    pointer-events: none;
-    z-index: 99999;
+       * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    } 
+        html, body {
+        height: 100%;
+        width: 100%;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-y: auto; 
+        overscroll-behavior-y: contain;
+    }
+
+    /* E POI IL TUO BLOCO CHE ERI GIÀ ABITUATO A VEDERE: */
+    body::before {
+        /* ... il resto del tuo codice ... */
+    }
+/* 2. CORPO FISSO (Blocca il movimento) */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    width: 100%;
+    min-height: 100vh; /* Forza l'altezza minima al 100% */
+    display: flex;
+    justify-content: center; /* Centratura orizzontale */
+    align-items: center;     /* Centratura verticale */
+    overflow-y: auto;        /* Ripristina lo scroll per il refresh */
+    overscroll-behavior-y: contain; /* Gestisce correttamente il refresh mobile */
+    margin: 0;
+    padding: 0;
 }
 
 /* 3. CONTENITORE CENTRATO */
@@ -54,13 +76,7 @@ body::before {
     /* ... (tutto come prima) ... */
     border: 1px solid rgba(255, 255, 255, 0.1); /* Semplificato per non sporcare col bordo verde */
 }
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
-        -webkit-tap-highlight-color: transparent;
-    }
+    
 
 /* 2. CORPO FISSO (Blocca il movimento) */
 body {
