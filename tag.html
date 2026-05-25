@@ -59,7 +59,7 @@ body::before {
         -webkit-tap-highlight-color: transparent;
     }
 
-    body {
+  body {
         background-color: var(--bg-color);
         color: var(--text-main);
         display: flex;
@@ -69,8 +69,10 @@ body::before {
         min-height: 100vh;
         padding: 24px;
         -webkit-font-smoothing: antialiased;
-    }
-
+        /* Aggiunte per bloccare lo scavalcamento del bordo */
+        overflow: hidden; 
+        overscroll-behavior: none;
+    } 
    /* --- STRUTTURA DI CARICAMENTO DINAMICO (HOOK PER JAVASCRIPT) --- */
     .app-container {
         display: none; /* Gestito dal JS: diventa flex/block dopo il caricamento da Airtable */
