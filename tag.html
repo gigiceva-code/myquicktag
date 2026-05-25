@@ -57,25 +57,12 @@ body {
     background-color: var(--bg-color);
     color: var(--text-main);
     width: 100%;
-    min-height: 100vh; /* Forza l'altezza minima al 100% */
+    min-height: 100vh;
     display: flex;
-    justify-content: center; /* Centratura orizzontale */
-    align-items: center;     /* Centratura verticale */
-    overflow-y: auto;        /* Ripristina lo scroll per il refresh */
-    overscroll-behavior-y: contain; /* Gestisce correttamente il refresh mobile */
-    margin: 0;
-    padding: 0;
-}
-
-/* 3. CONTENITORE CENTRATO */
-.app-container {
-    display: none;
-    opacity: 0;
-    width: 90%;          /* Leggermente più stretto per stare dentro la cornice */
-    max-width: 400px;
-    flex-direction: column;
-    gap: 20px;
-    /* Rimuoviamo ogni margine che sposta il blocco */
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;          /* Abilita il refresh */
+    overscroll-behavior-y: auto; /* Permette al browser di gestire il pull-to-refresh */
     margin: 0;
     padding: 0;
 }
@@ -86,20 +73,6 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1); /* Semplificato per non sporcare col bordo verde */
 }
     
-
-/* 2. CORPO FISSO (Blocca il movimento) */
-body {
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    width: 100%;
-    height: 100vh; /* Forza l'altezza al 100% dello schermo */
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Centratura verticale perfetta */
-    overflow: hidden;    /* Blocca ogni movimento/scroll */
-    overscroll-behavior: none;
-}
-     
    /* --- STRUTTURA DI CARICAMENTO DINAMICO (HOOK PER JAVASCRIPT) --- */
     .app-container {
         display: none; /* Gestito dal JS: diventa flex/block dopo il caricamento da Airtable */
@@ -108,7 +81,7 @@ body {
         transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         width: 100%;
         max-width: 420px;
-        margin: auto auto; /* Centratura verticale automatica */
+        margin: 40px auto; /* Centratura verticale automatica */
         flex-direction: column;
         gap: 24px;
         padding-bottom: 0; /* Rimozione sbilanciamento */
