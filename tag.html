@@ -605,7 +605,39 @@ function renderizzaTag(fields) {
             }
         }
     }
+// --- LOGICA DI APERTURA E CONDIVISIONE SEZIONI ---
+function apriSezione(tipo) {
+    const overlay = document.getElementById('overlaySezione');
+    const titolo = document.getElementById('titoloSezione');
+    const corpo = document.getElementById('corpoSezione');
 
+    const contenuti = {
+        'bio': { t: 'Biografia', c: cacheDatiUtente.bio },
+        'cv': { t: 'Curriculum Vitae', c: cacheDatiUtente.cv },
+        'contatti': { t: 'Contatti', c: cacheDatiUtente.contatti },
+        'gallery': { t: 'Gallery', c: cacheDatiUtente.gallery }
+    };
+
+    if (contenuti[tipo]) {
+        titolo.textContent = contenuti[tipo].t;
+        corpo.textContent = contenuti[tipo].c;
+        overlay.classList.add('attiva');
+        // Salviamo il tipo di sezione corrente per la condivisione
+        window.sezioneCorrente = tipo;
+    }
+}
+
+function chiudiSezione() {
+    document.getElementById('overlaySezione').classList.remove('attiva');
+}
+
+function condividiSezione() {
+    const tipo = window.sezioneCorrente;
+    const testo = `Guarda la sezione ${tipo} di ${cacheDatiUtente.username_display}: ${window.location.href}`;
+    navigator.clipboard.writeText(testo).then(() => {
+        alert('Link sezione copiato!');
+    });
+}
     // 5. Logica di attivazione visuale
     document.querySelector('.app-container').classList.add('ready');
 }
