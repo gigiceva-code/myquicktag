@@ -534,20 +534,7 @@ body::before {
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
 
-    // ============================================================
-// TAG.HTML - BLOCCO 1: INIZIALIZZAZIONE, STATI E RENDERING BASE
-// ============================================================
-// Dipendenze esterne (da avere nel <head> di tag.html):
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-// ============================================================
 
-// --- VARIABILI GLOBALI DI SESSIONE ---
-let cacheDatiUtente = {};   // Dati profilo in memoria per tutta la sessione
-let usernameCorrente = "";  // Username letto dall'URL, usato da tutti i blocchi
-
-// ============================================================
-// ENTRY POINT — parte al caricamento del DOM
-// ============================================================
    <script> 
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
