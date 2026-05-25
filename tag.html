@@ -22,28 +22,31 @@
     }
 /* 1. AGGIORNAMENTO CORNICE PERIMETRALE */
 /* Il perimetro deve essere sempre visibile, un rettangolo verde smeraldo */
+/* 1. CORNICE FISSA (Non tocca mai il contenuto) */
 body::before {
     content: "";
     position: fixed;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    border: 3px solid #10b981; /* Verde Smeraldo brillante */
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 3px solid #10b981;
     border-radius: 28px;
-    pointer-events: none; /* Non blocca i click */
-    z-index: 99999; /* Sopra ogni cosa */
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); /* Leggero alone luminoso */
+    pointer-events: none;
+    z-index: 99999;
 }
 
-/* 2. ADEGUAMENTO CONTENITORE */
+/* 3. CONTENITORE CENTRATO */
 .app-container {
-    /* Manteniamo il layout, ma assicuro che non venga tagliato dal bordo */
-    padding-top: 40px; 
-    padding-bottom: 40px;
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
+    display: none;
+    opacity: 0;
+    width: 90%;          /* Leggermente più stretto per stare dentro la cornice */
+    max-width: 400px;
+    flex-direction: column;
+    gap: 20px;
+    /* Rimuoviamo ogni margine che sposta il blocco */
+    margin: 0;
+    padding: 0;
 }
 
 /* 3. MIGLIORIA ESTETICA SMART CARD */
@@ -59,19 +62,18 @@ body::before {
         -webkit-tap-highlight-color: transparent;
     }
 
-  body {
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 24px;
-        -webkit-font-smoothing: antialiased;
-        /* Aggiunte per bloccare lo scavalcamento del bordo */
-        overflow: hidden; 
-        overscroll-behavior: none;
+/* 2. CORPO FISSO (Blocca il movimento) */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    width: 100%;
+    height: 100vh; /* Forza l'altezza al 100% dello schermo */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centratura verticale perfetta */
+    overflow: hidden;    /* Blocca ogni movimento/scroll */
+    overscroll-behavior: none;
+}
     } 
    /* --- STRUTTURA DI CARICAMENTO DINAMICO (HOOK PER JAVASCRIPT) --- */
     .app-container {
