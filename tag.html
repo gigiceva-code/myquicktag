@@ -533,7 +533,7 @@ body::before {
     </div>
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
-<script>
+
     // ============================================================
 // TAG.HTML - BLOCCO 1: INIZIALIZZAZIONE, STATI E RENDERING BASE
 // ============================================================
@@ -548,6 +548,7 @@ let usernameCorrente = "";  // Username letto dall'URL, usato da tutti i blocchi
 // ============================================================
 // ENTRY POINT — parte al caricamento del DOM
 // ============================================================
+   <script> 
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     usernameCorrente = (urlParams.get("u") || "").toLowerCase().trim();
