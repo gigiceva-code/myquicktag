@@ -431,6 +431,7 @@ body::before {
         background: #eeeeee;
     } 
 </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
 
     <a href="#" id="back-to-config" style="display: none;">
@@ -471,7 +472,9 @@ body::before {
 <div class="casella" id="casella-social">
     <div class="casella-invito">Canali social</div>
 </div>
-
+<div class="casella" id="casella-sito">
+    <div class="casella-invito">🌐 Il mio sito</div>
+</div>
             <div class="casella" id="casella-cv" onclick="apriSezione('cv')">
                 <div class="casella-invito">Curriculum Vitae</div>
             </div>
@@ -531,8 +534,239 @@ body::before {
 
     <div id="toastNotifica" class="toast">Link copiato!</div> 
 <script>
-  let cacheDatiUtente = {};  
-// 1. DIZIONARIO COMPLETO DELLE ICONE
+    // ============================================================
+// TAG.HTML - BLOCCO 1: INIZIALIZZAZIONE, STATI E RENDERING BASE
+// ============================================================
+// Dipendenze esterne (da avere nel <head> di tag.html):
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+// ============================================================
+
+// --- VARIABILI GLOBALI DI SESSIONE ---
+let cacheDatiUtente = {};   // Dati profilo in memoria per tutta la sessione
+let usernameCorrente = "";  // Username letto dall'URL, usato da tutti i blocchi
+
+// ============================================================
+// ENTRY POINT — parte al caricamento del DOM
+// ============================================================
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    usernameCorrente = (urlParams.get("u") || "").toLowerCase().trim();
+
+    if (!usernameCorrente) {
+        // Nessun username nell'URL → mostra errore generico
+        mostraErrore("Nessun profilo specificato.");
+        return;
+    }
+
+    avviaFlusso(usernameCorrente);
+});
+
+// ============================================================
+// FLUSSO PRINCIPALE — determina lo stato e smista
+// ============================================================
+async function avviaFlusso(username) {
+    try {
+        const response = await fetch(`/api/get-profile?u=${username}`);
+        const data = await response.json();
+
+        if (!data.success || !data.fields) {
+            // Profilo non trovato → showroom (tag libera, acquistabile)
+            mostraShowroom(username);
+            return;
+        }
+
+        const fields = data.fields;
+        const stato = (fields.stato || "").toLowerCase().trim();
+
+        // Salviamo tutto in cache — gli altri blocchi leggeranno da qui
+        cacheDatiUtente = fields;
+        usernameCorrente = fields.username_system;
+
+        // --- SMISTAMENTO DEI 3 STATI ---
+        if (stato === "attivo") {
+            // Stato 1: tag attiva e pagata → rendering completo pulito
+            renderizzaTagCompleta(fields);
+
+        } else if (stato === "in attesa") {
+            // Stato 2: configurata ma non pagata → rendering + overlay acquisto
+            renderizzaTagCompleta(fields);
+            mostraOverlayAcquisto();
+
+        } else {
+            // Stato 3: sospeso, riservato o qualsiasi altro → showroom
+            mostraShowroom(username);
+        }
+
+    } catch (err) {
+        console.error("Errore critico avviaFlusso:", err);
+        mostraErrore("Errore di connessione. Riprova tra qualche istante.");
+    }
+}
+
+// ============================================================
+// RENDERING BASE — popola gli elementi visibili della tag
+// ============================================================
+function renderizzaTagCompleta(fields) {
+
+    // 1. USERNAME
+    const elUsername = document.getElementById('tag-username');
+    if (elUsername) {
+        elUsername.textContent = '@' + (fields.username_display || fields.username_system);
+    }
+
+    // 2. AVATAR — Airtable ritorna gli attachment come array di oggetti
+    const elAvatar = document.getElementById('userImage');
+    if (elAvatar && fields.avatar && Array.isArray(fields.avatar) && fields.avatar.length > 0) {
+        elAvatar.src = fields.avatar[0].url;
+        elAvatar.alt = fields.username_display || fields.username_system;
+    }
+
+    // 3. QR CODE — punta all'URL pubblico di questa tag
+    const urlPubblico = `${window.location.origin}/tag.html?u=${fields.username_system}`;
+    generaQR(urlPubblico);
+
+    // 4. SITO WEB — casella dedicata (se presente)
+    renderizzaSitoWeb(fields.sito_web);
+
+    // 5. Attiva visibilità container con animazione
+    const container = document.querySelector('.app-container');
+    if (container) {
+        container.classList.add('ready');
+    }
+}
+
+// ============================================================
+// QR CODE — generazione reale tramite qrcode.js
+// ============================================================
+function generaQR(url) {
+    const wrapper = document.querySelector('.qr-wrapper');
+    if (!wrapper) return;
+
+    // Pulisce il placeholder grafico esistente
+    wrapper.innerHTML = '';
+
+    new QRCode(wrapper, {
+        text: url,
+        width: 84,
+        height: 84,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+    });
+}
+
+// ============================================================
+// SITO WEB — casella dedicata nella griglia
+// ============================================================
+function renderizzaSitoWeb(url) {
+    const casella = document.getElementById('casella-sito');
+    if (!casella) return;
+
+    if (!url || url.trim() === "") {
+        casella.style.display = 'none';
+        return;
+    }
+
+    // Rende la casella cliccabile verso il sito
+    casella.style.display = 'flex';
+    casella.onclick = () => window.open(url, '_blank', 'noopener noreferrer');
+
+    // Mostra il dominio pulito come testo (es. "gigi.com" invece del link completo)
+    const labelEl = casella.querySelector('.casella-invito');
+    if (labelEl) {
+        try {
+            const dominio = new URL(url).hostname.replace('www.', '');
+            labelEl.textContent = '🌐 ' + dominio;
+        } catch {
+            labelEl.textContent = '🌐 Il mio sito';
+        }
+    }
+}
+
+// ============================================================
+// OVERLAY ACQUISTO — stato "in attesa" (tag visibile ma bloccata)
+// ============================================================
+function mostraOverlayAcquisto() {
+    // Questo overlay disturba la tag invitando all'acquisto
+    // Il contenuto visivo è gestito dall'HTML esistente (showroom-overlay)
+    // Qui lo attiviamo e personalizziamo il messaggio
+    const overlay = document.getElementById("showroom-overlay");
+    const box = document.getElementById("expanding-box");
+    const titolo = document.getElementById("conversion-title");
+    const btn = document.getElementById("showroom-action-btn");
+
+    if (!overlay) return;
+
+    if (titolo) {
+        titolo.innerText = `@${cacheDatiUtente.username_display || usernameCorrente} è quasi tua.\nCompleta l'acquisto per attivarla.`;
+    }
+
+    if (btn) {
+        btn.textContent = "Attiva ora la tua MyQuickTag";
+        btn.onclick = () => {
+            window.location.href = `/checkout.html?u=${usernameCorrente}`;
+        };
+    }
+
+    overlay.style.display = "flex";
+    setTimeout(() => {
+        if (box) {
+            box.style.width = "90%";
+            box.style.height = "auto";
+        }
+        const content = document.querySelector(".conversion-content");
+        if (content) content.style.opacity = "1";
+    }, 100);
+}
+
+// ============================================================
+// SHOWROOM — profilo non configurato (tag libera)
+// ============================================================
+function mostraShowroom(username) {
+    const overlay = document.getElementById("showroom-overlay");
+    const box = document.getElementById("expanding-box");
+    const titolo = document.getElementById("conversion-title");
+    const btn = document.getElementById("showroom-action-btn");
+
+    if (!overlay) return;
+
+    if (titolo) {
+        titolo.innerText = `Nessun altro potrà essere @${username}`;
+    }
+
+    if (btn) {
+        btn.textContent = "Attiva la tua MyQuickTag";
+        btn.onclick = () => {
+            window.location.href = `/index.html?u=${username}`;
+        };
+    }
+
+    overlay.style.display = "flex";
+    setTimeout(() => {
+        if (box) {
+            box.style.width = "90%";
+            box.style.height = "auto";
+        }
+        const content = document.querySelector(".conversion-content");
+        if (content) content.style.opacity = "1";
+    }, 100);
+}
+
+// ============================================================
+// ERRORE GENERICO
+// ============================================================
+function mostraErrore(messaggio) {
+    const container = document.querySelector('.app-container');
+    if (container) {
+        container.innerHTML = `<p style="color:#86868b; text-align:center; padding:40px;">${messaggio}</p>`;
+        container.classList.add('ready');
+    }
+}
+       // ============================================================
+// TAG.HTML - BLOCCO 2: SOCIAL E CASELLE CONTENUTO
+// ============================================================
+
+// --- DIZIONARIO ICONE SOCIAL ---
 const socialIcons = {
     "instagram": "fab fa-instagram",
     "tiktok": "fab fa-tiktok",
@@ -540,6 +774,7 @@ const socialIcons = {
     "youtube": "fab fa-youtube",
     "linkedin": "fab fa-linkedin-in",
     "x": "fab fa-x-twitter",
+    "twitter": "fab fa-x-twitter",
     "strava": "fab fa-strava",
     "github": "fab fa-github",
     "behance": "fab fa-behance",
@@ -552,186 +787,299 @@ const socialIcons = {
     "default": "fas fa-share-alt"
 };
 
-// 2. INIZIALIZZAZIONE UNICA
-document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get("u") || "testuser"; 
-    avviaFlusso(username);
-});
-
-// 3. FLUSSO PRINCIPALE (Gestione Stato)
-async function avviaFlusso(username) {
-    try {
-        const response = await fetch(`/api/get-profile?u=${username}`);
-        const data = await response.json();
-
-        if (data.success && data.fields.stato === "attivo") {
-            renderizzaTag(data.fields);
-        } else {
-            mostraShowroom(username);
-        }
-    } catch (err) {
-        console.error("Errore critico:", err);
-        mostraShowroom(username);
-    }
-}
-
-function renderizzaTag(fields) {
-    // 1. Salvataggio dati in cache per accesso rapido
-    cacheDatiUtente = fields;
-
-    // 2. Rendering elementi base
-    document.getElementById('tag-username').textContent = '@' + fields.username_system;
-    if (fields.avatar) document.getElementById('userImage').src = fields.avatar;
-
-    // 3. Rendering Social
-    renderizzaSocial(fields.config_canali);
-
-    // 4. Logica di visibilità automatica (nasconde le caselle vuote)
-    const mappa = {
-        'casella-bio': fields.bio,
-        'casella-cv': fields.cv,
-        'casella-contatti': fields.contatti,
-        'casella-gallery': fields.gallery
-    };
-
-    for (const [id, dato] of Object.entries(mappa)) {
-        const elemento = document.getElementById(id);
-        if (elemento) {
-            if (!dato || dato.trim() === "") {
-                elemento.style.display = 'none';
-            } else {
-                elemento.style.display = 'flex';
-            }
-        }
-    }
-// --- LOGICA DI APERTURA E CONDIVISIONE SEZIONI ---
-function apriSezione(tipo) {
-    const overlay = document.getElementById('overlaySezione');
-    const titolo = document.getElementById('titoloSezione');
-    const corpo = document.getElementById('corpoSezione');
-
-    const contenuti = {
-        'bio': { t: 'Biografia', c: cacheDatiUtente.bio },
-        'cv': { t: 'Curriculum Vitae', c: cacheDatiUtente.cv },
-        'contatti': { t: 'Contatti', c: cacheDatiUtente.contatti },
-        'gallery': { t: 'Gallery', c: cacheDatiUtente.gallery }
-    };
-
-    if (contenuti[tipo]) {
-        titolo.textContent = contenuti[tipo].t;
-        corpo.textContent = contenuti[tipo].c;
-        overlay.classList.add('attiva');
-        // Salviamo il tipo di sezione corrente per la condivisione
-        window.sezioneCorrente = tipo;
-    }
-}
-
-function chiudiSezione() {
-    document.getElementById('overlaySezione').classList.remove('attiva');
-}
-
-function condividiSezione() {
-    const tipo = window.sezioneCorrente;
-    const testo = `Guarda la sezione ${tipo} di ${cacheDatiUtente.username_display}: ${window.location.href}`;
-    navigator.clipboard.writeText(testo).then(() => {
-        alert('Link sezione copiato!');
-    });
-}
-    // 5. Logica di attivazione visuale
-    document.querySelector('.app-container').classList.add('ready');
-}
-    function gestisciVisibilitaCaselle(fields) {
-    // Mappatura tra ID HTML e chiavi Airtable
-    const mappa = {
-        'casella-bio': fields.bio,
-        'casella-cv': fields.cv,
-        'casella-contatti': fields.contatti,
-        'casella-gallery': fields.gallery
-    };
-
-    // Cicla sulla mappa: se il dato manca, nasconde la casella
-    for (const [id, dato] of Object.entries(mappa)) {
-        const elemento = document.getElementById(id);
-        if (elemento) {
-            if (!dato || dato.trim() === "") {
-                elemento.style.display = 'none';
-            } else {
-                elemento.style.display = 'flex';
-            }
-        }
-    }
-}
-
-// Funzione atomica per aprire le sezioni con i dati in cache
-function apriSezione(tipo) {
-    const overlay = document.getElementById('overlaySezione');
-    const titolo = document.getElementById('titoloSezione');
-    const corpo = document.getElementById('corpoSezione');
-
-    // Mappatura dinamica basata sulla cache
-    const contenuti = {
-        'bio': { t: 'Biografia', c: cacheDatiUtente.bio || 'Nessuna bio disponibile.' },
-        'cv': { t: 'Curriculum Vitae', c: cacheDatiUtente.cv || 'CV non ancora configurato.' },
-        'contatti': { t: 'Contatti', c: cacheDatiUtente.contatti || 'Nessun contatto disponibile.' }
-    };
-
-    if (contenuti[tipo]) {
-        titolo.textContent = contenuti[tipo].t;
-        corpo.textContent = contenuti[tipo].c;
-        overlay.classList.add('attiva');
-    }
-}
-function condividiSezione() {
-    const titolo = document.getElementById('titoloSezione').textContent;
-    const testo = document.getElementById('corpoSezione').textContent;
-    const urlCondivisione = window.location.href + "?sezione=" + titolo;
-
-    if (navigator.share) {
-        navigator.share({
-            title: 'MyQuickTag - ' + titolo,
-            text: testo,
-            url: urlCondivisione
-        }).catch(console.error);
-    } else {
-        // Fallback: copia negli appunti
-        navigator.clipboard.writeText(urlCondivisione);
-        alert("Link della sezione copiato!");
-    }
-}
-// 5. RENDERING SOCIAL (Parser JSON completo)
+// ============================================================
+// RENDERING SOCIAL
+// ============================================================
 function renderizzaSocial(configCanali) {
     const container = document.getElementById("casella-social");
-    if (!configCanali) return;
+    if (!container) return;
+
+    // Se non ci sono canali, nascondi la casella
+    if (!configCanali || configCanali.trim() === "") {
+        container.style.display = 'none';
+        return;
+    }
 
     try {
-        const canali = JSON.parse(configCanali); 
-        container.innerHTML = ""; 
+        const canali = JSON.parse(configCanali);
+
+        if (!canali || canali.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+
+        // Svuota il contenuto precedente
+        container.innerHTML = "";
+
         canali.forEach(canale => {
-            const iconClass = socialIcons[canale.nome.toLowerCase()] || socialIcons["default"];
+            const nomeLower = canale.nome.toLowerCase();
+            const iconClass = socialIcons[nomeLower] || socialIcons["default"];
+
             const btn = document.createElement("a");
-            btn.className = "btn-social"; 
-            btn.style.cssText = "text-decoration:none; color:inherit; display:flex; align-items:center; gap:8px;";
-            btn.innerHTML = `<i class="${iconClass}"></i> ${canale.nome}`;
+            btn.className = "btn-social";
             btn.href = canale.url;
             btn.target = "_blank";
+            btn.rel = "noopener noreferrer";
+            btn.style.cssText = "text-decoration:none; color:inherit; display:flex; align-items:center; gap:8px;";
+            btn.innerHTML = `<i class="${iconClass}"></i> ${canale.nome}`;
+
+            // Condivisione singolo social (tasto lungo)
+            btn.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                _condividi(canale.nome, canale.url);
+            });
+
             container.appendChild(btn);
         });
-    } catch (e) { console.error("Errore parsing social:", e); }
+
+        container.style.display = 'grid';
+
+    } catch (e) {
+        console.error("Errore parsing config_canali:", e);
+        container.style.display = 'none';
+    }
 }
 
-// 6. SHOWROOM
-function mostraShowroom(username) {
-    const overlay = document.getElementById("showroom-overlay");
-    const box = document.getElementById("expanding-box");
-    document.getElementById("conversion-title").innerText = `Nessun altro potrà essere @${username}`;
-    overlay.style.display = "flex";
-    setTimeout(() => {
-        box.style.width = "90%";
-        box.style.height = "auto";
-        document.querySelector(".conversion-content").style.opacity = "1";
-    }, 100);
+// ============================================================
+// VISIBILITÀ AUTOMATICA CASELLE
+// Nasconde le caselle senza contenuto
+// ============================================================
+function gestisciVisibilitaCaselle(fields) {
+    const mappa = {
+        'casella-bio':      fields.bio,
+        'casella-contatti': fields.contatti,
+        'casella-gallery':  fields.gallery,
+        'casella-cv':       fields.cv,
+        'casella-sito':     fields.sito_web
+    };
+
+    for (const [id, dato] of Object.entries(mappa)) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        el.style.display = (!dato || dato.toString().trim() === "") ? 'none' : 'flex';
+    }
+
+    // Social: gestita separatamente da renderizzaSocial()
+    renderizzaSocial(fields.config_canali);
 }
-</script>
+
+// ============================================================
+// APERTURA OVERLAY SEZIONE INTERNA
+// ============================================================
+function apriSezione(tipo) {
+    const overlay = document.getElementById('overlaySezione');
+    const titolo  = document.getElementById('titoloSezione');
+    const corpo   = document.getElementById('corpoSezione');
+
+    if (!overlay || !titolo || !corpo) return;
+
+    const contenuti = {
+        'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
+        'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' },
+        'contatti': { t: 'Contatti',         c: cacheDatiUtente.contatti || 'Nessun contatto disponibile.' },
+        'gallery':  { t: 'Gallery',          c: cacheDatiUtente.gallery  || 'Gallery non ancora configurata.' },
+        'futuro':   { t: 'Coming Soon',      c: 'Questo spazio sarà presto disponibile.' }
+    };
+
+    if (!contenuti[tipo]) return;
+
+    titolo.textContent = contenuti[tipo].t;
+    corpo.textContent  = contenuti[tipo].c;
+    overlay.classList.add('attiva');
+}
+
+// ============================================================
+// CHIUSURA OVERLAY SEZIONE
+// ============================================================
+function chiudiSezione() {
+    const overlay = document.getElementById('overlaySezione');
+    if (overlay) overlay.classList.remove('attiva');
+}
+       // ============================================================
+// TAG.HTML - BLOCCO 3: CONDIVISIONE E TOAST
+// ============================================================
+
+// ============================================================
+// CONDIVIDI PROFILO COMPLETO (bottone nella smart card)
+// ============================================================
+function condividiProfilo(event) {
+    if (event) event.stopPropagation();
+
+    const url = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
+    const nome = cacheDatiUtente.username_display || usernameCorrente;
+
+    _condividi('MyQuickTag di @' + nome, url);
+}
+
+// ============================================================
+// CONDIVIDI SEZIONE SINGOLA (bottone nell'overlay interno)
+// ============================================================
+function condividiSezione() {
+    const titolo = document.getElementById('titoloSezione').textContent;
+    const url = `${window.location.origin}/tag.html?u=${usernameCorrente}&sezione=${encodeURIComponent(titolo)}`;
+
+    _condividi('MyQuickTag - ' + titolo, url);
+}
+
+// ============================================================
+// HELPER CONDIVISIONE UNIVERSALE
+// Web Share API su mobile, clipboard su desktop
+// ============================================================
+function _condividi(titolo, url) {
+    if (navigator.share) {
+        navigator.share({
+            title: titolo,
+            url: url
+        }).catch(err => {
+            // L'utente ha annullato — non è un errore reale
+            if (err.name !== 'AbortError') console.error("Errore condivisione:", err);
+        });
+    } else {
+        // Fallback desktop: copia negli appunti
+        navigator.clipboard.writeText(url)
+            .then(() => mostraToast('🔗 Link copiato!'))
+            .catch(() => mostraToast('Errore nella copia del link'));
+    }
+}
+
+// ============================================================
+// TOAST NOTIFICATION
+// ============================================================
+function mostraToast(messaggio) {
+    const toast = document.getElementById('toastNotifica');
+    if (!toast) return;
+
+    toast.textContent = messaggio;
+    toast.classList.add('mostra');
+
+    setTimeout(() => toast.classList.remove('mostra'), 2800);
+}
+
+// ============================================================
+// VAI AL CHECKOUT
+// ============================================================
+function vaiAlCheckout() {
+    window.location.href = `/checkout.html?u=${usernameCorrente}`;
+}
+
+// ============================================================
+// CHIUDI WELCOME E MOSTRA TAG (post attivazione)
+// ============================================================
+function chiudiWelcomeEMostraTag() {
+    const welcome = document.getElementById('tag-welcome-overlay');
+    if (welcome) welcome.style.display = 'none';
+
+    const container = document.querySelector('.app-container');
+    if (container) container.classList.add('ready');
+}
+       // ============================================================
+// TAG.HTML - BLOCCO 4: INSTALLAZIONE PWA
+// ============================================================
+
+// --- VARIABILE GLOBALE per l'evento di installazione ---
+let pwaInstallEvent = null;
+
+// ============================================================
+// INTERCETTA L'EVENTO DI INSTALLAZIONE
+// Il browser lo lancia quando la PWA è installabile
+// ============================================================
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault(); // Blocca il banner automatico del browser
+    pwaInstallEvent = e; // Lo salviamo per usarlo quando vogliamo noi
+
+    // Mostra il bottone di installazione se presente nella pagina
+    const btnInstall = document.getElementById('trigger-pwa-install');
+    if (btnInstall) btnInstall.style.display = 'block';
+});
+
+// ============================================================
+// INSTALLAZIONE PWA — chiamata dal bottone nel welcome overlay
+// ============================================================
+async function installaPWA() {
+    if (!pwaInstallEvent) {
+        // Su iOS non esiste beforeinstallprompt — istruzioni manuali
+        mostraIstruzioniIOS();
+        return;
+    }
+
+    try {
+        pwaInstallEvent.prompt();
+        const { outcome } = await pwaInstallEvent.userChoice;
+
+        if (outcome === 'accepted') {
+            mostraToast('✅ App installata con successo!');
+            pwaInstallEvent = null;
+
+            // Nascondi il bottone dopo installazione
+            const btnInstall = document.getElementById('trigger-pwa-install');
+            if (btnInstall) btnInstall.style.display = 'none';
+
+        } else {
+            mostraToast('Installazione annullata');
+        }
+    } catch (err) {
+        console.error("Errore installazione PWA:", err);
+        mostraToast('Errore durante l\'installazione');
+    }
+}
+
+// ============================================================
+// ISTRUZIONI MANUALI PER iOS
+// Safari non supporta beforeinstallprompt
+// ============================================================
+function mostraIstruzioniIOS() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    if (isIOS) {
+        mostraToast('Su iPhone: tocca 📤 poi "Aggiungi a Home"');
+    } else {
+        // Desktop o browser non supportato
+        mostraToast('Apri dal browser per installare l\'app');
+    }
+}
+
+// ============================================================
+// REGISTRAZIONE SERVICE WORKER
+// Necessaria per il funzionamento offline della PWA
+// ============================================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => {
+                console.log('Service Worker registrato:', reg.scope);
+            })
+            .catch(err => {
+                console.error('Errore registrazione Service Worker:', err);
+            });
+    });
+}
+
+// ============================================================
+// GESTIONE BOTTONE INSTALLAZIONE NEL WELCOME OVERLAY
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    const btnInstall = document.getElementById('trigger-pwa-install');
+    if (btnInstall) {
+        // Nascosto di default — appare solo se il browser supporta l'installazione
+        btnInstall.style.display = 'none';
+
+        btnInstall.addEventListener('click', () => {
+            installaPWA();
+        });
+    }
+});
+
+// ============================================================
+// RILEVA SE L'APP È GIÀ INSTALLATA
+// Se l'utente ha già installato la PWA, nasconde il bottone
+// ============================================================
+window.addEventListener('appinstalled', () => {
+    mostraToast('✅ MyQuickTag installata!');
+    pwaInstallEvent = null;
+
+    const btnInstall = document.getElementById('trigger-pwa-install');
+    if (btnInstall) btnInstall.style.display = 'none';
+});
+   </script>      
 </body>
 </html>
