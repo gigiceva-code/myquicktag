@@ -38,11 +38,20 @@
         overflow-y: auto; 
         overscroll-behavior-y: contain;
     }
-
-    /* E POI IL TUO BLOCO CHE ERI GIÀ ABITUATO A VEDERE: */
+/* CORNICE VERDE FISSA */
     body::before {
-        /* ... il resto del tuo codice ... */
+        content: "";
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        border: 3px solid #10b981;
+        border-radius: 28px;
+        pointer-events: none;
+        z-index: 99999;
     }
+  
 /* 2. CORPO FISSO (Blocca il movimento) */
 body {
     background-color: var(--bg-color);
