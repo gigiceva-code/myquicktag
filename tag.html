@@ -1067,6 +1067,51 @@ window.addEventListener('appinstalled', () => {
     const btnInstall = document.getElementById('trigger-pwa-install');
     if (btnInstall) btnInstall.style.display = 'none';
 });
+      // ============================================================
+// TAG.HTML - BLOCCO 5: WELCOME OVERLAY POST-CHECKOUT
+// Si attiva solo quando si arriva da checkout con &welcome=1
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isWelcome = urlParams.get('welcome') === '1';
+
+    if (isWelcome) {
+        mostraWelcomeOverlay();
+    }
+});
+
+// ============================================================
+// MOSTRA WELCOME OVERLAY
+// ============================================================
+function mostraWelcomeOverlay() {
+    const overlay = document.getElementById('tag-welcome-overlay');
+    if (!overlay) return;
+
+    // Personalizza il messaggio con il nome utente
+    const nome = cacheDatiUtente.username_display || usernameCorrente;
+    const titoloEl = overlay.querySelector('.titolo-sezione');
+    if (titoloEl) titoloEl.textContent = '@' + nome + ' è attiva!';
+
+    // Mostra l'overlay
+    overlay.style.display = 'flex';
+
+    // Rimuove &welcome=1 dall'URL senza ricaricare la pagina
+    // Così se l'utente ricarica non rivede il welcome
+    const urlPulita = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
+    window.history.replaceState({}, '', urlPulita);
+}
+
+// ============================================================
+// CHIUDI WELCOME E MOSTRA TAG
+// ============================================================
+function chiudiWelcomeEMostraTag() {
+    const overlay = document.getElementById('tag-welcome-overlay');
+    if (overlay) overlay.style.display = 'none';
+
+    const container = document.querySelector('.app-container');
+    if (container) container.classList.add('ready');
+} 
    </script>      
 </body>
 </html>
