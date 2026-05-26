@@ -27,17 +27,16 @@
         font-family: 'Inter', sans-serif;
         -webkit-tap-highlight-color: transparent;
     } 
-        html, body {
-        height: 100%;
-        width: 100%;
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow-y: auto; 
-        overscroll-behavior-y: contain;
-    }
+      html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow-y: auto;          /* Mantiene il refresh */
+    overscroll-behavior-y: contain;
+    /* Rimuoviamo display: flex e align-items: center qui */
+} 
 /* CORNICE VERDE FISSA */
     body::before {
         content: "";
@@ -75,17 +74,15 @@ body {
     
    /* --- STRUTTURA DI CARICAMENTO DINAMICO (HOOK PER JAVASCRIPT) --- */
     .app-container {
-        display: none; /* Gestito dal JS: diventa flex/block dopo il caricamento da Airtable */
-        opacity: 0;
-        transform: scale(0.98);
-        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        width: 100%;
-        max-width: 420px;
-        margin: 40px auto; /* Centratura verticale automatica */
-        flex-direction: column;
-        gap: 24px;
-        padding-bottom: 0; /* Rimozione sbilanciamento */
-    }
+    display: none; 
+    opacity: 0;
+    width: 90%;
+    max-width: 400px;
+    margin: 80px auto;        /* 80px di spazio sopra per distanziarlo dal bordo */
+    flex-direction: column;
+    gap: 24px;
+    box-sizing: border-box;
+}
 
     /* Stato attivo iniettato dal JS a caricamento completato */
     .app-container.ready {
