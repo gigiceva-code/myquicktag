@@ -630,6 +630,11 @@ const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('welcome') === '1') {
     mostraWelcomeOverlay();
 }
+   // 7. Manifest e icona dinamici per PWA
+const manifestLink = document.getElementById('dynamic-manifest');
+const iconLink = document.getElementById('dynamic-icon');
+if (manifestLink) manifestLink.href = `/api/manifest?u=${fields.username_system}`;
+if (iconLink) iconLink.href = `/api/generate-icons?u=${fields.username_system}`; 
 }    
 // ============================================================
 // QR CODE — generazione reale tramite qrcode.js
