@@ -11,86 +11,78 @@
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
     <style>
-    /* --- VARIABILI E RESET --- */
-    :root {
-        --bg-color: #050505;
-        --accent-white: #ffffff;
-        --text-main: #f5f5f7;
-        --text-sec: #86868b;
-        --card-bg: linear-gradient(145deg, #0f0f11, #16161a);
-        --grid-bg: #111113;
-    }
-       * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
-        -webkit-tap-highlight-color: transparent;
-    } 
-  /* 1. Reset e Base */
-html, body {
-    width: 100%;
-    min-height: 100%;
+ 
+
+/* --- VARIABILI --- */
+:root {
+    --bg-color: #050505;
+    --accent-white: #ffffff;
+    --text-main: #f5f5f7;
+    --text-sec: #86868b;
+    --card-bg: linear-gradient(145deg, #0f0f11, #16161a);
+    --grid-bg: #111113;
+}
+
+/* --- RESET --- */
+* {
     margin: 0;
     padding: 0;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    overflow-y: auto;
-    overscroll-behavior-y: contain; /* Mantiene il refresh attivo */
-    display: block;                /* IMPORTANTE: deve essere block, non flex */
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
-/* CORNICE VERDE FISSA */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        right: 15px;
-        bottom: 15px;
-        border: 3px solid #10b981;
-        border-radius: 28px;
-        pointer-events: none;
-        z-index: 99999;
-    }
-  
-/* 2. CORPO FISSO (Blocca il movimento) */
+
+/* --- BODY: una sola definizione, pulita --- */
 body {
     background-color: var(--bg-color);
     color: var(--text-main);
-    width: 100%;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    overflow-y: auto;          /* Abilita il refresh */
-    overscroll-behavior-y: auto; /* Permette al browser di gestire il pull-to-refresh */
-    margin: 0;
-    padding: 0;
+    justify-content: flex-start;
+    padding: 24px;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* 3. MIGLIORIA ESTETICA SMART CARD */
-.smart-card {
-    /* ... (tutto come prima) ... */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Semplificato per non sporcare col bordo verde */
+/* --- CORNICE VERDE FISSA --- */
+body::before {
+    content: "";
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 3px solid #10b981;
+    border-radius: 28px;
+    pointer-events: none;
+    z-index: 99999;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
 }
-     
-/* 2. Container Centrato */
+
+/* --- APP CONTAINER --- */
 .app-container {
-    display: none; 
+    display: none;
     opacity: 0;
-    width: 85%;                     /* Larghezza ridotta per staccarsi dai bordi */
-    max-width: 400px;
-    margin: 40px auto;              /* Centratura orizzontale perfetta */
-    flex-direction: column;         /* Mantiene le card in colonna */
-    gap: 20px;
+    transform: scale(0.98);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     box-sizing: border-box;
 }
 
 .app-container.ready {
-    display: flex !important;       /* Qui il flex è giusto, serve a impilare le card */
+    display: flex !important;
     opacity: 1;
-    flex-direction: column;
-}
+    transform: scale(1);
+} 
     /* --- SMART BUSINESS CARD (TAVOLETTA PREMIUM CON QR) --- */
     .smart-card {
         background: var(--card-bg);
