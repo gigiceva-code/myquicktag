@@ -616,12 +616,16 @@ function renderizzaTagCompleta(fields) {
     renderizzaSitoWeb(fields.sito_web);
 
     // 5. Attiva visibilità container con animazione
-    const container = document.querySelector('.app-container');
-    if (container) {
-        container.classList.add('ready');
-    }
+const container = document.querySelector('.app-container');
+if (container) {
+    container.classList.add('ready');
 }
 
+// 6. Controlla se arriva da checkout
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('welcome') === '1') {
+    mostraWelcomeOverlay();
+}
 // ============================================================
 // QR CODE — generazione reale tramite qrcode.js
 // ============================================================
