@@ -1100,6 +1100,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // MOSTRA WELCOME OVERLAY
 // ============================================================
 function mostraWelcomeOverlay() {
+       // Rimuove &welcome=1 dall'URL senza ricaricare la pagina
+    // Così se l'utente ricarica non rivede il welcome
+    const urlPulita = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
+    window.history.replaceState({}, '', urlPulita);
+    
     const overlay = document.getElementById('tag-welcome-overlay');
     if (!overlay) return;
 
@@ -1111,10 +1116,7 @@ function mostraWelcomeOverlay() {
     // Mostra l'overlay
     overlay.style.display = 'flex';
 
-    // Rimuove &welcome=1 dall'URL senza ricaricare la pagina
-    // Così se l'utente ricarica non rivede il welcome
-    const urlPulita = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
-    window.history.replaceState({}, '', urlPulita);
+
 }
 
 // ============================================================
