@@ -27,16 +27,19 @@
         font-family: 'Inter', sans-serif;
         -webkit-tap-highlight-color: transparent;
     } 
-      html, body {
-    height: 100%;
+   /* 1. Body libero di scrollare per il refresh */
+html, body {
     width: 100%;
+    min-height: 100%;
     margin: 0;
+    padding: 0;
     background-color: var(--bg-color);
     color: var(--text-main);
-    overflow-y: auto;          /* Mantiene il refresh */
-    overscroll-behavior-y: contain;
-    /* Rimuoviamo display: flex e align-items: center qui */
-} 
+    overflow-y: auto;
+    overscroll-behavior-y: contain; /* Fondamentale per il refresh */
+    display: flex;
+    justify-content: center;
+}
 /* CORNICE VERDE FISSA */
     body::before {
         content: "";
@@ -72,23 +75,23 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1); /* Semplificato per non sporcare col bordo verde */
 }
     
-   /* --- STRUTTURA DI CARICAMENTO DINAMICO (HOOK PER JAVASCRIPT) --- */
-    .app-container {
+   * 2. Container con margini laterali per non toccare la linea verde */
+.app-container {
     display: none; 
     opacity: 0;
-    width: 90%;
+    width: 85%; /* Ridotto da 90% a 85% per dare aria ai lati */
     max-width: 400px;
-    margin: 80px auto;        /* 80px di spazio sopra per distanziarlo dal bordo */
+    margin-top: 40px;    /* Spazio dal bordo superiore */
+    margin-bottom: 40px; /* Spazio dal bordo inferiore */
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
     box-sizing: border-box;
+    transition: opacity 0.8s ease;
 }
 
-    /* Stato attivo iniettato dal JS a caricamento completato */
-    .app-container.ready {
-        display: flex !important;
-        opacity: 1;
-        transform: scale(1);
+.app-container.ready {
+    display: flex !important;
+    opacity: 1;
     }
 
     /* --- SMART BUSINESS CARD (TAVOLETTA PREMIUM CON QR) --- */
