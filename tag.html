@@ -542,7 +542,8 @@ body::before {
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     usernameCorrente = (urlParams.get("u") || "").toLowerCase().trim();
-
+ document.getElementById("dynamic-manifest").href = `/api/manifest?u=${usernameCorrente}`;
+    document.getElementById("dynamic-icon").href = `/api/generate-icons?u=${usernameCorrente}`;
     if (!usernameCorrente) {
         // Nessun username nell'URL → mostra errore generico
         mostraErrore("Nessun profilo specificato.");
