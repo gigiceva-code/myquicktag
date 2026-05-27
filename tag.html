@@ -1096,7 +1096,7 @@ function mostraWelcomeOverlay() {
     // Personalizza il messaggio con il nome utente
     const nome = cacheDatiUtente.username_display || usernameCorrente;
     const titoloEl = overlay.querySelector('.titolo-sezione');
-    if (titoloEl) titoloEl.textContent = '@' + nome + ' è attiva!';
+    if (titoloEl) titoloEl.textContent = '@' + nome.replace('@', '') + ' è attiva!';
 
     // Mostra l'overlay
     overlay.style.display = 'flex';
