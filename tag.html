@@ -1029,11 +1029,15 @@ function mostraIstruzioniIOS() {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const msg = isIOS 
         ? '📱 Tocca il tasto condividi 📤 in basso, poi "Aggiungi a schermata Home"'
-        : 'Apri dal browser per installare l\'app';
-    
+        : 'Apri dal browser Safari per installare l\'app';
+
     const overlay = document.getElementById('tag-welcome-overlay');
+    if (!overlay) return;
+
     const corpo = overlay.querySelector('.corpo-sezione');
     if (corpo) corpo.textContent = msg;
+
+    overlay.style.display = 'flex';
 }
 // ============================================================
 // REGISTRAZIONE SERVICE WORKER
