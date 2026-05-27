@@ -1027,15 +1027,14 @@ async function installaPWA() {
 // ============================================================
 function mostraIstruzioniIOS() {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-    if (isIOS) {
-        mostraToast('Su iPhone: tocca 📤 poi "Aggiungi a Home"');
-    } else {
-        // Desktop o browser non supportato
-        mostraToast('Apri dal browser per installare l\'app');
-    }
+    const msg = isIOS 
+        ? '📱 Tocca il tasto condividi 📤 in basso, poi "Aggiungi a schermata Home"'
+        : 'Apri dal browser per installare l\'app';
+    
+    const overlay = document.getElementById('tag-welcome-overlay');
+    const corpo = overlay.querySelector('.corpo-sezione');
+    if (corpo) corpo.textContent = msg;
 }
-
 // ============================================================
 // REGISTRAZIONE SERVICE WORKER
 // Necessaria per il funzionamento offline della PWA
@@ -1072,9 +1071,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Se l'utente ha già installato la PWA, nasconde il bottone
 // ============================================================
 window.addEventListener('appinstalled', () => {
-    mostraToast('✅ MyQuickTag installata!');
     pwaInstallEvent = null;
-
     const btnInstall = document.getElementById('trigger-pwa-install');
     if (btnInstall) btnInstall.style.display = 'none';
 });
