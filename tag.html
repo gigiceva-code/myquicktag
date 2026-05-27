@@ -603,7 +603,7 @@ function renderizzaTagCompleta(fields) {
     // 1. USERNAME
     const elUsername = document.getElementById('tag-username');
     if (elUsername) {
-        elUsername.textContent = '@' + (fields.username_display || fields.username_system);
+elUsername.textContent = '@' + (fields.username_display || fields.username_system).replace('@', '');
     }
 
     // 2. AVATAR — Airtable ritorna gli attachment come array di oggetti
