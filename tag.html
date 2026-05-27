@@ -1082,19 +1082,7 @@ window.addEventListener('appinstalled', () => {
     const btnInstall = document.getElementById('trigger-pwa-install');
     if (btnInstall) btnInstall.style.display = 'none';
 });
-      // ============================================================
-// TAG.HTML - BLOCCO 5: WELCOME OVERLAY POST-CHECKOUT
-// Si attiva solo quando si arriva da checkout con &welcome=1
-// ============================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const isWelcome = urlParams.get('welcome') === '1';
-
-    if (isWelcome) {
-        mostraWelcomeOverlay();
-    }
-});
+      
 
 // ============================================================
 // MOSTRA WELCOME OVERLAY
