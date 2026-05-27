@@ -700,7 +700,7 @@ function mostraOverlayAcquisto() {
     if (!overlay) return;
 
     if (titolo) {
-        titolo.innerText = `@${cacheDatiUtente.username_display || usernameCorrente} è quasi tua.\nCompleta l'acquisto per attivarla.`;
+        titolo.innerText = `@${(cacheDatiUtente.username_display || usernameCorrente).replace('@', '')} è quasi tua.\nCompleta l'acquisto per attivarla.`;
     }
 
     if (btn) {
@@ -733,7 +733,7 @@ function mostraShowroom(username) {
     if (!overlay) return;
 
     if (titolo) {
-        titolo.innerText = `Nessun altro potrà essere @${username}`;
+       titolo.innerText = `Nessun altro potrà essere @${username.replace('@', '')}`;
     }
 
     if (btn) {
