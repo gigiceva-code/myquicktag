@@ -1008,14 +1008,11 @@ async function installaPWA() {
         pwaInstallEvent.prompt();
         const { outcome } = await pwaInstallEvent.userChoice;
 
-        if (outcome === 'accepted') {
-            mostraToast('✅ App installata con successo!');
-            pwaInstallEvent = null;
-
-            // Nascondi il bottone dopo installazione
-            const btnInstall = document.getElementById('trigger-pwa-install');
-            if (btnInstall) btnInstall.style.display = 'none';
-
+   if (outcome === 'accepted') {
+    mostraToast('✅ App installata con successo!');
+    pwaInstallEvent = null;
+    chiudiWelcomeEMostraTag();
+} 
         } else {
             mostraToast('Installazione annullata');
         }
