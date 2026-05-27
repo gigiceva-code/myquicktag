@@ -1005,21 +1005,20 @@ async function installaPWA() {
     }
 
     try {
-        pwaInstallEvent.prompt();
-        const { outcome } = await pwaInstallEvent.userChoice;
+    pwaInstallEvent.prompt();
+    const { outcome } = await pwaInstallEvent.userChoice;
 
-   if (outcome === 'accepted') {
-    mostraToast('✅ App installata con successo!');
-    pwaInstallEvent = null;
-    chiudiWelcomeEMostraTag();
-} 
-        } else {
-            mostraToast('Installazione annullata');
-        }
-    } catch (err) {
-        console.error("Errore installazione PWA:", err);
-        mostraToast('Errore durante l\'installazione');
+    if (outcome === 'accepted') {
+        mostraToast('✅ App installata con successo!');
+        pwaInstallEvent = null;
+        chiudiWelcomeEMostraTag();
+    } else {
+        mostraToast('Installazione annullata');
     }
+} catch (err) {
+    console.error("Errore installazione PWA:", err);
+    mostraToast('Errore durante l\'installazione');
+}
 }
 
 // ============================================================
