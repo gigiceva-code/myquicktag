@@ -631,7 +631,7 @@ elUsername.textContent = '@' + (fields.username_display || fields.username_syste
 
     // 4. SITO WEB — casella dedicata (se presente)
     renderizzaSitoWeb(fields.sito_web);
-
+gestisciVisibilitaCaselle(fields);
     // 5. Attiva visibilità container con animazione
 const container = document.querySelector('.app-container');
 if (container) {
