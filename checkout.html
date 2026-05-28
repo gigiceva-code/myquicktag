@@ -376,8 +376,8 @@
                     }
 
                     // Se è corretto e in attesa, riempiamo i campi e accendiamo lo Step 1
-                    document.getElementById("display-username").innerText = `Registrazione @${usernameDisplay}`;
-                    document.getElementById("receipt-username").innerText = `@${usernameDisplay}`;
+                  document.getElementById("display-username").innerText = `Registrazione @${usernameDisplay.replace('@', '')}`;
+document.getElementById("receipt-username").innerText = `@${usernameDisplay.replace('@', '')}`;
                     
                     document.getElementById("loading-screen").style.display = "none";
                     document.getElementById("step-payment").style.display = "block";
