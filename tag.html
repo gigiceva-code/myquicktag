@@ -1073,14 +1073,7 @@ if ('serviceWorker' in navigator) {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     const btnInstall = document.getElementById('trigger-pwa-install');
-    if (btnInstall) {
-        // Nascosto di default — appare solo se il browser supporta l'installazione
-        btnInstall.style.display = 'none';
-
-        btnInstall.addEventListener('click', () => {
-            installaPWA();
-        });
-    }
+    if (btnInstall) btnInstall.style.display = 'none';
 });
 
 // ============================================================
