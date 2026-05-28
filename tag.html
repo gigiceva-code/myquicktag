@@ -545,6 +545,15 @@ body::before {
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     usernameCorrente = (urlParams.get("u") || "").toLowerCase().trim();
+
+// Fallback: legge username dal percorso /u/username
+if (!usernameCorrente) {
+    const pathParts = window.location.pathname.split('/');
+    const uIndex = pathParts.indexOf('u');
+    if (uIndex !== -1 && pathParts[uIndex + 1]) {
+        usernameCorrente = pathParts[uIndex + 1].toLowerCase().trim();
+    }
+}
  document.getElementById("dynamic-manifest").href = `/api/manifest?u=${usernameCorrente}`;
     document.getElementById("dynamic-icon").href = `/api/generate-icons?u=${usernameCorrente}`;
     if (!usernameCorrente) {
