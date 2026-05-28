@@ -25,7 +25,7 @@ export default function handler(req, res) {
       "short_name": displayUtente, // Questo mantiene il nome utente (es. @GIGI) SOTTO l'icona sul telefono!
       "description": "Luxury Digital Identity",
       // Lo start_url si apre sul percorso pulito
-      "start_url": `/u/${utenteMinuscolo}?pwa_mode=true`,
+      "start_url": `/u/${utenteMinuscolo}`,
       // Lo scope isolato blocca la sovrascrittura delle icone sulla home!
       "scope": `/u/${utenteMinuscolo}`,
       "display": "standalone",
