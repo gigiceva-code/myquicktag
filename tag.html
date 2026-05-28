@@ -455,13 +455,6 @@ body::before {
                 </div>
                 <div class="username-base" id="tag-username">@username_system</div>
             </div>
-            
-            <div class="card-right">
-                <div class="logo-container">
-                    <img id="userImage" class="user-media" src="" alt="User Media">
-                </div>
-                <button class="btn-condividi-profilo" onclick="condividiProfilo(event)">🔗 Condividi</button>
-            </div>
         </div>
 
         <div class="grid-ecosystem" id="mainGrid">
@@ -1120,6 +1113,25 @@ function chiudiWelcomeEMostraTag() {
     const container = document.querySelector('.app-container');
     if (container) container.classList.add('ready');
 } 
-   </script>      
+   </script> 
+       <button id="fab-condividi" onclick="condividiProfilo(event)" style="
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #10b981;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+">
+    <i class="fas fa-share-alt"></i>
+</button>
 </body>
 </html>
