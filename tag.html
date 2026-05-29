@@ -420,7 +420,10 @@ body::before {
         margin-bottom: 20px;
         letter-spacing: -0.02em;
     }
-
+#casella-quick-action {
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.1), 0 10px 25px rgba(0,0,0,0.5);
+}
     #showroom-action-btn {
         background: var(--accent-white);
         color: #000000;
@@ -775,6 +778,14 @@ function mostraErrore(messaggio) {
 // ============================================================
 
 // --- DIZIONARIO ICONE SOCIAL ---
+       const quickActionConfig = {
+    'appuntamento': { icon: '📅', label: 'Prenota appuntamento' },
+    'whatsapp':     { icon: '💬', label: 'Scrivimi su WhatsApp' },
+    'preventivo':   { icon: '📋', label: 'Richiedi preventivo' },
+    'chiamata':     { icon: '📞', label: 'Chiama ora' },
+    'maps':         { icon: '📍', label: 'Trovami su Maps' },
+    'demo':         { icon: '🎵', label: 'Ascolta demo' }
+};
 const socialIcons = {
     "instagram": "fab fa-instagram",
     "tiktok": "fab fa-tiktok",
@@ -798,6 +809,39 @@ const socialIcons = {
 // ============================================================
 // RENDERING SOCIAL
 // ============================================================
+       function renderizzaQuickAction(tipo, url) {
+    const casella = document.getElementById('casella-quick-action');
+    if (!casella) return;
+
+    const piano = (cacheDatiUtente.plan || '').toUpperCase();
+    if (!tipo || !url || piano === 'BASE') {
+        casella.style.display = 'none';
+        return;
+    }
+
+    const cfg = quickActionConfig[tipo.toLowerCase()] || { icon: '⚡', label: 'Azione rapida' };
+    document.getElementById('quick-action-icon').textContent = cfg.icon;
+    document.getElementById('quick-action-label').textContent = cfg.label;
+    casella.style.display = 'flex';
+}
+
+function eseguiQuickAction() {
+    const tipo = (cacheDatiUtente.quick_action_tipo || '').toLowerCase();
+    const url  = cacheDatiUtente.quick_action_url || '';
+    if (!url) return;
+
+    const mappaProtocollo = {
+        'whatsapp':  `https://wa.me/${url.replace(/\D/g,'')}`,
+        'chiamata':  `tel:${url}`,
+        'maps':      `https://maps.google.com/?q=${encodeURIComponent(url)}`,
+        'appuntamento': url,
+        'preventivo':   url,
+        'demo':         url
+    };
+
+    const destinazione = mappaProtocollo[tipo] || url;
+    window.open(destinazione, '_blank', 'noopener noreferrer');
+}
 function renderizzaSocial(configCanali) {
     const container = document.getElementById("casella-social");
     if (!container) return;
@@ -870,6 +914,9 @@ function gestisciVisibilitaCaselle(fields) {
 
     // Social: gestita separatamente da renderizzaSocial()
     renderizzaSocial(fields.config_canali);
+
+    // Quick Action: solo PREMIUM e GOLD
+    renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
 }
 
 // ============================================================
