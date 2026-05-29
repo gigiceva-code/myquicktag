@@ -950,11 +950,15 @@ function gestisciVisibilitaCaselle(fields) {
         'casella-social':   fields.config_canali
    };
 
-    for (const [id, dato] of Object.entries(mappa)) {
+   for (const [id, dato] of Object.entries(mappa)) {
         const el = document.getElementById(id);
         if (!el) continue;
         el.style.display = (!dato || dato.toString().trim() === "") ? 'none' : 'flex';
     }
+
+    // Nascondi casella-social prima di passarla a renderizzaSocial
+    const elSocial = document.getElementById('casella-social');
+    if (elSocial) elSocial.style.display = 'none';
 
     // Social: gestita separatamente da renderizzaSocial()
     renderizzaSocial(fields.config_canali);
