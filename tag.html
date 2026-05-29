@@ -896,12 +896,12 @@ function renderizzaSocial(configCanali) {
     }
 
     try {
-        const canali = JSON.parse(configCanali);
+      const canali = JSON.parse(configCanali);
 
-        if (!canali || canali.length === 0) {
+        if (!canali || !Array.isArray(canali) || canali.length === 0) {
             container.style.display = 'none';
             return;
-        }
+        } 
 
         // Svuota il contenuto precedente
         container.innerHTML = "";
