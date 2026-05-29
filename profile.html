@@ -501,34 +501,7 @@ determinaModalitaAnteprima(record, nomeMinuto);
         console.warn("Il sistema sta ripristinando la connessione con l'identità digitale.");
     }
 }
-function determinaModalitaAnteprima(record, nomeMinuto) {
-    const stato = (record.stato || "").toLowerCase().trim();
-    const haPassword = record.password && record.password.trim() !== "";
-    const haBozza = record.draft_json && record.draft_json.trim() !== "";
 
-    const linkView = document.getElementById("link-view");
-
-    // 1️⃣ NUOVO UTENTE (in attesa)
-    if (stato === "in attesa" || !haPassword) {
-        linkView.dataset.mode = "preview-new";
-        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=new`;
-        return;
-    }
-
-    // 2️⃣ UTENTE ATTIVO SENZA BOZZA
-    if (stato === "attivo" && !haBozza) {
-        linkView.dataset.mode = "preview-public";
-        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-        return;
-    }
-
-    // 3️⃣ UTENTE ATTIVO CON BOZZA
-    if (stato === "attivo" && haBozza) {
-        linkView.dataset.mode = "preview-draft";
-        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-        return;
-    }
-}
 // AGGIORNAMENTO BOTTONE MAGIC
 async function checkMagicButton(nomeMinuto) {
     try {
@@ -598,6 +571,34 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+    function determinaModalitaAnteprima(record, nomeMinuto) {
+    const stato = (record.stato || "").toLowerCase().trim();
+    const haPassword = record.password && record.password.trim() !== "";
+    const haBozza = record.draft_json && record.draft_json.trim() !== "";
+
+    const linkView = document.getElementById("link-view");
+
+    // 1️⃣ NUOVO UTENTE (in attesa)
+    if (stato === "in attesa" || !haPassword) {
+        linkView.dataset.mode = "preview-new";
+        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=new`;
+        return;
+    }
+
+    // 2️⃣ UTENTE ATTIVO SENZA BOZZA
+    if (stato === "attivo" && !haBozza) {
+        linkView.dataset.mode = "preview-public";
+        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        return;
+    }
+
+    // 3️⃣ UTENTE ATTIVO CON BOZZA
+    if (stato === "attivo" && haBozza) {
+        linkView.dataset.mode = "preview-draft";
+        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+        return;
+    }
+}
 </script>
    
 </body>
