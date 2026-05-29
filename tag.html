@@ -99,12 +99,15 @@ body::before {
     }
 
     .card-left {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        align-items: flex-start;
-        justify-content: space-between;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex: 1;
+    min-width: 0;
+    padding-right: 12px;
+}
 
     .qr-wrapper {
         background: #ffffff;
@@ -125,11 +128,13 @@ body::before {
     }
 
     .username-base {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--accent-white);
-        letter-spacing: -0.3px;
-    }
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-white);
+    letter-spacing: -0.3px;
+    word-break: break-all;
+    max-width: 100%;
+}
 
     /* LATO DESTRO: CORNICE GEOMETRICA PER LOGO/MEDIA (NO AVATAR TONDO) */
     .card-right {
