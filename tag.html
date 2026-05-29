@@ -929,9 +929,10 @@ function renderizzaSocial(configCanali) {
 
         container.style.display = 'grid';
 
-    } catch (e) {
+   } catch (e) {
         console.error("Errore parsing config_canali:", e);
         container.style.display = 'none';
+        return;
     }
 }
 
