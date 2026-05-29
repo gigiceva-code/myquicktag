@@ -480,10 +480,11 @@ body::before {
                 <div class="casella-invito">Curriculum Vitae</div>
             </div>
 
-            <div class="casella" id="casella-futuro" onclick="apriSezione('futuro')">
-                <div class="casella-invito">Spazio futuro</div>
-            </div>
-
+            
+<div class="casella" id="casella-quick-action" onclick="eseguiQuickAction()" style="display:none; grid-column: span 2;">
+    <div id="quick-action-icon" style="font-size: 2rem; margin-bottom: 8px;">⚡</div>
+    <div class="casella-invito" id="quick-action-label">Azione rapida</div>
+</div>
         </div>
 
         <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
