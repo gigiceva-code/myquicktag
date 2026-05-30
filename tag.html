@@ -671,11 +671,7 @@ elUsername.textContent = '@' + (fields.username_display || fields.username_syste
     // 3. QR CODE — punta all'URL pubblico di questa tag
     const urlPubblico = `${window.location.origin}/tag.html?u=${fields.username_system}`;
    try {
-        generaQR(urlPubblico);
-        console.log('QR generato ok');
-    } catch(e) {
-        console.error('Errore generaQR:', e);
-    }
+       generaQR(urlPubblico);
     // 4. SITO WEB — casella dedicata (se presente)
     renderizzaSitoWeb(fields.sito_web);
 gestisciVisibilitaCaselle(fields);
