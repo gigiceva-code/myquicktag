@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myquicktag-v4';
+const CACHE_NAME = 'myquicktag-v3';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -17,13 +17,7 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(
     fetch(event.request).catch(() => {
-      return caches.match(event.request).then(cached => {
-        if (cached) return cached;
-        return new Response('Offline - riprova tra qualche istante.', {
-          status: 503,
-          headers: { 'Content-Type': 'text/plain' }
-        });
-      });
+      return caches.match(event.request);
     })
   );
 });
