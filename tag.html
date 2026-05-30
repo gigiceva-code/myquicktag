@@ -678,8 +678,10 @@ elUsername.textContent = '@' + (fields.username_display || fields.username_syste
 gestisciVisibilitaCaselle(fields);
     // 5. Attiva visibilità container con animazione
 const container = document.querySelector('.app-container');
+console.log('Container:', container, 'Classes prima:', container ? container.className : 'non trovato');
 if (container) {
     container.classList.add('ready');
+    console.log('Classes dopo:', container.className);
 }
 // 6. Controlla se arriva da checkout
 const urlParams = new URLSearchParams(window.location.search);
