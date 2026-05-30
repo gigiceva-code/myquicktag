@@ -795,6 +795,8 @@ function mostraShowroom(username) {
     }
 
     overlay.style.display = "flex";
+    const container = document.querySelector('.app-container');
+    if (container) container.classList.add('ready');
     setTimeout(() => {
         if (box) {
             box.style.width = "90%";
