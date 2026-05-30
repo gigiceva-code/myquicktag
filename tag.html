@@ -613,8 +613,7 @@ if (!usernameCorrente) {
 // FLUSSO PRINCIPALE — determina lo stato e smista
 // ============================================================
 async function avviaFlusso(username) {
-    try {
-        console.log('avviaFlusso chiamato per:', username);
+    try {       
         const response = await fetch(`/api/get-profile?u=${username}`);
         const data = await response.json();
         console.log('Risposta API:', data);
