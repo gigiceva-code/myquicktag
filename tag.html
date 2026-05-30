@@ -616,7 +616,6 @@ async function avviaFlusso(username) {
     try {       
         const response = await fetch(`/api/get-profile?u=${username}`);
         const data = await response.json();
-        console.log('Risposta API:', data);
         if (!data.success || !data.fields) {
             // Profilo non trovato → showroom (tag libera, acquistabile)
             mostraShowroom(username);
