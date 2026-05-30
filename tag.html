@@ -84,7 +84,12 @@ body::before {
 .app-container {
     padding-top: 60px;
     padding-bottom: 60px;
-    } 
+}
+.app-container.ready {
+    display: flex !important;
+    opacity: 1;
+    transform: scale(1);
+}
     /* --- SMART BUSINESS CARD (TAVOLETTA PREMIUM CON QR) --- */
     .smart-card {
         background: var(--card-bg);
