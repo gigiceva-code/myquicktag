@@ -42,12 +42,9 @@ body {
     align-items: center;
     justify-content: flex-start;
     padding: 24px;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    overflow-y: auto;
-    overscroll-behavior-y: auto;
+    padding-top: 18px;
+    overflow: hidden;
     -webkit-font-smoothing: antialiased;
-    scroll-padding-top: 30px;
 }
 
 /* --- CORNICE VERDE FISSA --- */
@@ -79,6 +76,8 @@ body::before {
     padding-top: 40px;
     padding-bottom: 40px;
     box-sizing: border-box;
+     overflow-y: auto;
+    max-height: calc(100vh - 36px);
 }
   .app-container {
     padding-top: 40px;
