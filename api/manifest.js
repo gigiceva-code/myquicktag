@@ -28,7 +28,7 @@ export default function handler(req, res) {
       "start_url": `/u/${utenteMinuscolo}`,
       // Lo scope isolato blocca la sovrascrittura delle icone sulla home!
       "scope": `/u/${utenteMinuscolo}`,
-      "display": "standalone",
+      "display": "fullscreen",
       "background_color": "#000000",
       "theme_color": "#000000",
       "orientation": "portrait",
