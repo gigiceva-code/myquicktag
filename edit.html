@@ -350,9 +350,24 @@ async function salvaDati() {
             });
         }
     });
-
-    
-
-    </script>
+async function salvaBozza(nomeMinuto, bozza) {
+    try {
+        await fetch("/api/update-profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: nomeMinuto,
+                fields: {
+                    draft_json: JSON.stringify(bozza)
+                }
+            })
+        });
+        return true;
+    } catch (e) {
+        console.error("Errore salvataggio bozza:", e);
+        return false;
+    }
+}
+</script>
 </body>
 </html>
