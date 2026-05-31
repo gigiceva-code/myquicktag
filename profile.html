@@ -343,6 +343,13 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
         transform: scale(0.99) !important; /* Quasi impercettibile, molto elegante */
         background-color: rgba(255, 255, 255, 0.08) !important; /* Bagliore bianco soft, addio azzurro */
     }
+    .badge-text {
+    margin: 2px 0 0 0;
+    font-size: 0.7rem;
+    color: var(--accent-smeraldo);
+    opacity: 0.9;
+}
+
 </style>
     
 </head>
@@ -367,9 +374,11 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
                         <i class="fas fa-qrcode"></i>
                     </div>
                     <div class="hero-text-new">
-                        <h3 id="view-title">Digital Identity</h3>
-                        <p id="view-desc" class="slogan-text">Il tuo nome nel mondo.</p>
-                    </div>
+    <h3 id="view-title">Digital Identity</h3>
+    <p id="view-desc" class="slogan-text">Il tuo nome nel mondo.</p>
+    <p id="view-badge" class="badge-text"></p>
+</div>
+
                     <span class="action-trigger-corner">Vedi anteprima <i class="fas fa-chevron-right"></i></span>
                 </div>
             </a>
@@ -571,34 +580,59 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-    function determinaModalitaAnteprima(record, nomeMinuto) {
+  function determinaModalitaAnteprima(record, nomeMinuto) {
     const stato = (record.stato || "").toLowerCase().trim();
     const haPassword = record.password && record.password.trim() !== "";
     const haBozza = record.draft_json && record.draft_json.trim() !== "";
 
     const linkView = document.getElementById("link-view");
+    const titleEl = document.getElementById("view-title");
+    const descEl = document.getElementById("view-desc");
+    const badgeEl = document.getElementById("view-badge");
 
-    // 1️⃣ NUOVO UTENTE (in attesa)
+    // Reset base
+    if (badgeEl) badgeEl.innerText = "";
+    if (linkView) linkView.classList.remove("pulsing-effect");
+
+    // 1️⃣ NUOVO UTENTE (in attesa / senza password)
     if (stato === "in attesa" || !haPassword) {
         linkView.dataset.mode = "preview-new";
         linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=new`;
+
+        if (titleEl) titleEl.innerText = "Digital Identity";
+        if (descEl) descEl.innerText = "Il tuo nome nel mondo.";
+        if (badgeEl) badgeEl.innerText = "Identità in preparazione";
+
+        // Effetto pulsante in attesa
+        linkView.classList.add("pulsing-effect");
         return;
     }
 
-    // 2️⃣ UTENTE ATTIVO SENZA BOZZA
+    // 2️⃣ UTENTE ATTIVO SENZA BOZZA → versione pubblica
     if (stato === "attivo" && !haBozza) {
         linkView.dataset.mode = "preview-public";
         linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+
+        if (titleEl) titleEl.innerText = "Digital Identity";
+        if (descEl) descEl.innerText = "Versione pubblica attiva";
+        if (badgeEl) badgeEl.innerText = "Online";
+
         return;
     }
 
-    // 3️⃣ UTENTE ATTIVO CON BOZZA
+    // 3️⃣ UTENTE ATTIVO CON BOZZA → anteprima bozza
     if (stato === "attivo" && haBozza) {
         linkView.dataset.mode = "preview-draft";
         linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+
+        if (titleEl) titleEl.innerText = "Digital Identity";
+        if (descEl) descEl.innerText = "Anteprima bozza non pubblicata";
+        if (badgeEl) badgeEl.innerText = "Bozza salvata";
+
         return;
     }
 }
+
 </script>
    
 </body>
