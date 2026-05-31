@@ -412,6 +412,7 @@ body::before {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        position: relative;
         background: rgba(10, 10, 10, 0.85);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 24px;
@@ -565,9 +566,10 @@ body::before {
         </div>
     </div>
 
-   <div id="showroom-overlay" style="display: none;">
+  <div id="showroom-overlay" style="display: none;">
     <div id="expanding-box"> 
         <div class="conversion-content">
+            <button onclick="chiudiOverlayAcquisto()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.2rem; cursor: pointer; padding: 4px;">✕</button>
             <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
             <button class="btn-condividi-profilo" id="showroom-action-btn" style="margin-top: 15px;">Attiva la tua myquicktag</button>
         </div>
@@ -785,6 +787,13 @@ document.body.style.overflow = "hidden";
 // ============================================================
 // SHOWROOM — profilo non configurato (tag libera)
 // ============================================================
+      function chiudiOverlayAcquisto() {
+    const overlay = document.getElementById('showroom-overlay');
+    if (overlay) overlay.style.display = 'none';
+    if (history.state && history.state.overlay === 'acquisto') {
+        history.back();
+    }
+} 
 function mostraShowroom(username) {
     const overlay = document.getElementById("showroom-overlay");
     const box = document.getElementById("expanding-box");
@@ -1016,6 +1025,31 @@ function chiudiSezione() {
         history.back();
     }
 }
+       // ============================================================
+// GESTIONE TASTO BACK — intercetta popstate per chiudere overlay
+// ============================================================
+window.addEventListener('popstate', (e) => {
+    // Overlay sezione interno aperto → chiudilo
+    const overlaySezione = document.getElementById('overlaySezione');
+    if (overlaySezione && overlaySezione.classList.contains('attiva')) {
+        overlaySezione.classList.remove('attiva');
+        return;
+    }
+
+    // Overlay acquisto aperto → chiudilo
+    const overlayAcquisto = document.getElementById('showroom-overlay');
+    if (overlayAcquisto && overlayAcquisto.style.display === 'flex') {
+        overlayAcquisto.style.display = 'none';
+        return;
+    }
+
+    // Welcome overlay aperto → chiudilo
+    const welcomeOverlay = document.getElementById('tag-welcome-overlay');
+    if (welcomeOverlay && welcomeOverlay.style.display === 'flex') {
+        welcomeOverlay.style.display = 'none';
+        return;
+    }
+});
        // ============================================================
 // TAG.HTML - BLOCCO 3: CONDIVISIONE E TOAST
 // ============================================================
