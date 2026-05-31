@@ -612,17 +612,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 1️⃣ NUOVO UTENTE (in attesa / senza password)
     if (stato === "in attesa" || !haPassword) {
-        linkView.dataset.mode = "preview-new";
-        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=new`;
+    linkView.dataset.mode = "preview-new";
+    linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=new`;
 
-        if (titleEl) titleEl.innerText = "Digital Identity";
-        if (descEl) descEl.innerText = "Il tuo nome nel mondo.";
-        if (badgeEl) badgeEl.innerText = "Identità in preparazione";
+    if (titleEl) titleEl.innerText = "Digital Identity";
+    if (descEl) descEl.innerText = "Il tuo nome nel mondo.";
+    if (badgeEl) badgeEl.innerText = "";
 
-        // Effetto pulsante in attesa
-        linkView.classList.add("pulsing-effect");
-        return;
-    }
+    linkView.classList.add("pulsing-effect");
+    return;
+}
 
     // 2️⃣ UTENTE ATTIVO SENZA BOZZA → versione pubblica
     if (stato === "attivo" && !haBozza) {
