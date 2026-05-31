@@ -572,19 +572,17 @@ body::before {
 </div>
 
     <div id="tag-welcome-overlay" style="display: none;">
-    <div class="contenuto-card" style="background: #111; padding: 30px; border-radius: 24px; text-align: center; align-items: center;">
-        <div style="font-size: 3rem; color: #fff; margin-bottom: 15px;">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        <h2 class="titolo-sezione" style="margin-bottom: 10px;">La tua tag è attiva!</h2>
-        <p class="corpo-sezione" style="margin-bottom: 20px;">
-            Installa myquicktag sul tuo dispositivo per gestire la tua tag in qualsiasi momento.
+    <div class="contenuto-card" style="background: #111; padding: 32px; border-radius: 24px; text-align: center; align-items: center; border: 1px solid rgba(255,255,255,0.08);">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">⚡</div>
+        <h2 id="welcome-titolo" class="titolo-sezione" style="margin-bottom: 12px; font-size: 1.4rem;">@username. Da oggi, per sempre tua.</h2>
+        <p id="welcome-corpo" class="corpo-sezione" style="margin-bottom: 28px; color: var(--text-sec); font-size: 0.9rem;">
+            Installa myquicktag sulla tua schermata home per la migliore esperienza.
         </p>
-        <button id="trigger-pwa-install" onclick="installaPWA()" style="width: 100%; padding: 14px; margin-bottom: 16px; background: #10b981; border: none; border-radius: 12px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer;">
-            <i class="fas fa-download"></i> Installa app
+        <button id="trigger-pwa-install" onclick="installaPWA()" style="width: 100%; padding: 16px; margin-bottom: 14px; background: #10b981; border: none; border-radius: 12px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; letter-spacing: -0.2px;">
+            Installa myquicktag
         </button>
-        <button onclick="chiudiWelcomeEMostraTag()" style="background: none; border: none; color: var(--text-sec); font-size: 0.9rem; cursor: pointer;">
-            Continua senza installare
+        <button onclick="chiudiWelcomeEMostraTag()" style="background: none; border: none; color: var(--text-sec); font-size: 0.85rem; cursor: pointer; padding: 8px;">
+            Continua dal browser
         </button>
     </div>
 </div>
