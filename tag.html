@@ -574,7 +574,7 @@ body::before {
 <div id="tag-welcome-overlay" style="display: none;">
     <div class="contenuto-card" style="background: #111; padding: 32px; border-radius: 24px; text-align: center; align-items: center; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 0 30px rgba(255,255,255,0.1);">
         <div style="width: 40px; height: 3px; background: #10b981; border-radius: 2px; margin: 0 auto 24px auto;"></div>
-        <h2 id="welcome-titolo" class="titolo-sezione" style="margin-bottom: 12px; font-size: 1.3rem; color: #ffffff; text-shadow: 0 0 20px rgba(255,255,255,0.4); letter-spacing: -0.3px;">@username è attiva <span style="color: #10b981; font-size: 1rem;">⚡</span></h2>
+       <h2 id="welcome-titolo" class="titolo-sezione" style="margin-bottom: 12px; font-size: 1.3rem; color: #ffffff; text-shadow: 0 0 20px rgba(255,255,255,0.4); letter-spacing: -0.3px;">@username è attiva</h2>
         <p id="welcome-corpo" class="corpo-sezione" style="margin-bottom: 28px; color: #ffffff; text-shadow: 0 0 15px rgba(255,255,255,0.3); font-size: 0.88rem; line-height: 1.6;">
             Aggiungila alla schermata Home.<br>Sempre con te, sempre tua.
         </p>
@@ -1199,7 +1199,7 @@ function mostraWelcomeOverlay() {
     // Personalizza il messaggio con il nome utente
     const nome = cacheDatiUtente.username_display || usernameCorrente;
     const titoloEl = overlay.querySelector('.titolo-sezione');
-    if (titoloEl) titoloEl.innerHTML = '@' + nome.replace('@', '') + ' è attiva <span style="color: #10b981; font-size: 1rem;">⚡</span>';
+  if (titoloEl) titoloEl.textContent = '@' + nome.replace('@', '') + ' è attiva'; 
 
     // Mostra l'overlay
     overlay.style.display = 'flex';
