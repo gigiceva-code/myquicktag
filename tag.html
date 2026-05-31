@@ -1151,27 +1151,34 @@ window.addEventListener('beforeinstallprompt', (e) => {
 // INSTALLAZIONE PWA — chiamata dal bottone nel welcome overlay
 // ============================================================
 async function installaPWA() {
-    if (!pwaInstallEvent) {
-        // Su iOS non esiste beforeinstallprompt — istruzioni manuali
+    // iOS — nessun beforeinstallprompt, mostra istruzioni manuali
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
         mostraIstruzioniIOS();
         return;
     }
 
-    try {
-    pwaInstallEvent.prompt();
-    const { outcome } = await pwaInstallEvent.userChoice;
-
-    if (outcome === 'accepted') {
-        mostraToast('✅ App installata con successo!');
-        pwaInstallEvent = null;
-        chiudiWelcomeEMostraTag();
-    } else {
-        mostraToast('Installazione annullata');
+    // Android/Chrome — evento disponibile
+    if (pwaInstallEvent) {
+        try {
+            pwaInstallEvent.prompt();
+            const { outcome } = await pwaInstallEvent.userChoice;
+            if (outcome === 'accepted') {
+                mostraToast('App installata');
+                pwaInstallEvent = null;
+                chiudiWelcomeEMostraTag();
+            } else {
+                mostraToast('Installazione annullata');
+            }
+        } catch (err) {
+            console.error("Errore installazione PWA:", err);
+            mostraToast('Errore durante l\'installazione');
+        }
+        return;
     }
-} catch (err) {
-    console.error("Errore installazione PWA:", err);
-    mostraToast('Errore durante l\'installazione');
-}
+
+    // Android ma evento non disponibile — app già installata o browser non supportato
+    mostraToast('Apri dal browser Chrome per installare');
 }
 
 // ============================================================
