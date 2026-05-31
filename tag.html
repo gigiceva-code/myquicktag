@@ -569,7 +569,7 @@ body::before {
   <div id="showroom-overlay" style="display: none;">
     <div id="expanding-box"> 
         <div class="conversion-content">
-            <button onclick="chiudiOverlayAcquisto()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.2rem; cursor: pointer; padding: 4px;">✕</button>
+        <button onclick="chiudiOverlayAcquisto()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 0.75rem; font-weight: 500; cursor: pointer; padding: 4px; letter-spacing: 0.3px;">← Dashboard</button> 
             <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
             <button class="btn-condividi-profilo" id="showroom-action-btn" style="margin-top: 15px;">Attiva la tua myquicktag</button>
         </div>
@@ -765,13 +765,17 @@ function mostraOverlayAcquisto() {
         titolo.innerText = `@${(cacheDatiUtente.username_display || usernameCorrente).replace('@', '')} è quasi tua.\nCompleta l'acquisto per attivarla.`;
     }
 
+   if (titolo) {
+        const nome = (cacheDatiUtente.username_display || usernameCorrente).replace('@', '');
+        titolo.innerText = `@${nome} è riservata.\nSolo tu puoi attivarla — gratis per 3 mesi.`;
+    }
     if (btn) {
-        btn.textContent = "Attiva ora la tua MyQuickTag";
+        const nome = (cacheDatiUtente.username_display || usernameCorrente).replace('@', '');
+        btn.textContent = `Attiva @${nome}`;
         btn.onclick = () => {
             window.location.href = `/checkout.html?u=${usernameCorrente}`;
         };
     }
-
    overlay.style.display = "flex";
 document.body.style.overflow = "hidden";
     setTimeout(() => {
@@ -787,13 +791,9 @@ document.body.style.overflow = "hidden";
 // ============================================================
 // SHOWROOM — profilo non configurato (tag libera)
 // ============================================================
-      function chiudiOverlayAcquisto() {
-    const overlay = document.getElementById('showroom-overlay');
-    if (overlay) overlay.style.display = 'none';
-    if (history.state && history.state.overlay === 'acquisto') {
-        history.back();
-    }
-} 
+     function chiudiOverlayAcquisto() {
+    window.location.href = `/profile.html?u=${usernameCorrente}`;
+}
 function mostraShowroom(username) {
     const overlay = document.getElementById("showroom-overlay");
     const box = document.getElementById("expanding-box");
