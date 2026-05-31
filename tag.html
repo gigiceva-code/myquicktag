@@ -1001,14 +1001,20 @@ function apriSezione(tipo) {
     titolo.textContent = contenuti[tipo].t;
     corpo.textContent  = contenuti[tipo].c;
     overlay.classList.add('attiva');
-}
 
+    // Aggiunge stato alla history per intercettare il back
+    history.pushState({ overlay: 'sezione', tipo: tipo }, '');
+}
 // ============================================================
 // CHIUSURA OVERLAY SEZIONE
 // ============================================================
 function chiudiSezione() {
     const overlay = document.getElementById('overlaySezione');
     if (overlay) overlay.classList.remove('attiva');
+    // Rimuove lo stato dalla history se presente
+    if (history.state && history.state.overlay === 'sezione') {
+        history.back();
+    }
 }
        // ============================================================
 // TAG.HTML - BLOCCO 3: CONDIVISIONE E TOAST
