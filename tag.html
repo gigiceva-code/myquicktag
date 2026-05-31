@@ -1209,14 +1209,6 @@ if ('serviceWorker' in navigator) {
 }
 
 // ============================================================
-// GESTIONE BOTTONE INSTALLAZIONE NEL WELCOME OVERLAY
-// ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-    const btnInstall = document.getElementById('trigger-pwa-install');
-    if (btnInstall) btnInstall.style.display = 'none';
-});
-
-// ============================================================
 // RILEVA SE L'APP È GIÀ INSTALLATA
 // Se l'utente ha già installato la PWA, nasconde il bottone
 // ============================================================
