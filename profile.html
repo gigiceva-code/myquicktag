@@ -507,8 +507,24 @@ determinaModalitaAnteprima(record, nomeMinuto);
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
         }
     } catch (error) {
-        console.warn("Il sistema sta ripristinando la connessione con l'identità digitale.");
+    console.warn("Airtable non risponde, attivo modalità offline.");
+
+    // Fallback UX premium
+    document.getElementById("view-title").innerText = "Digital Identity";
+    document.getElementById("view-desc").innerText = "Connessione temporaneamente non disponibile";
+    document.getElementById("view-badge").innerText = "Offline";
+
+    // Evita click verso pagine incomplete
+    const linkView = document.getElementById("link-view");
+    if (linkView) {
+        linkView.dataset.url = "#";
+        linkView.classList.remove("pulsing-effect");
     }
+
+    // Mostra valori neutri
+    document.getElementById("days-left").innerText = "--";
+    document.getElementById("count-visits").innerText = "--";
+}
 }
 
 // AGGIORNAMENTO BOTTONE MAGIC
