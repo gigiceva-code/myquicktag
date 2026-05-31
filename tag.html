@@ -69,16 +69,19 @@ body::before {
     opacity: 0;
     transform: scale(0.98);
     transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    width: 100%;
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.98);
+    width: calc(100% - 48px);
     max-width: 420px;
-    margin: 0 auto;
     flex-direction: column;
     gap: 24px;
-    padding-top: 18px;
+    padding-top: 8px;
     padding-bottom: 40px;
     box-sizing: border-box;
-  max-height: calc(100vh - 30px);
-    overflow-y: hidden;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
 }
   .app-container {
     padding-top: 40px;
