@@ -1186,16 +1186,14 @@ async function installaPWA() {
 // Safari non supporta beforeinstallprompt
 // ============================================================
 function mostraIstruzioniIOS() {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const msg = isIOS 
-        ? '📱 Tocca il tasto condividi 📤 in basso, poi "Aggiungi a schermata Home"'
-        : 'Apri dal browser Safari per installare l\'app';
-
     const overlay = document.getElementById('tag-welcome-overlay');
     if (!overlay) return;
 
-    const corpo = overlay.querySelector('.corpo-sezione');
-    if (corpo) corpo.textContent = msg;
+    const corpo = document.getElementById('welcome-corpo');
+    if (corpo) corpo.innerHTML = 'Tocca <strong>Condividi</strong> in basso nel browser,<br>poi <strong>"Aggiungi a schermata Home"</strong>.';
+
+    const btn = document.getElementById('trigger-pwa-install');
+    if (btn) btn.style.display = 'none';
 
     overlay.style.display = 'flex';
 }
