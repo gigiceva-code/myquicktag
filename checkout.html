@@ -439,8 +439,9 @@ document.getElementById("receipt-username").innerText = `@${usernameDisplay.repl
      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
 function vaiAllaTag() {
     if (!targetUserClean) return;
-   window.location.href = `/tag.html?u=${targetUserClean}&welcome=1`;
-}
-    </script>
+    localStorage.setItem('loggedUser', targetUserClean);
+    window.location.href = `/tag.html?u=${targetUserClean}&welcome=1`;
+}   
+</script>
 </body>
 </html>
