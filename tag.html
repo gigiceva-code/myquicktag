@@ -1164,9 +1164,9 @@ async function installaPWA() {
             pwaInstallEvent.prompt();
             const { outcome } = await pwaInstallEvent.userChoice;
             if (outcome === 'accepted') {
-                mostraToast('App installata');
-                pwaInstallEvent = null;
-                chiudiWelcomeEMostraTag();
+        pwaInstallEvent = null;
+        chiudiWelcomeEMostraTag();
+    }
             } else {
                 mostraToast('Installazione annullata');
             }
@@ -1219,8 +1219,7 @@ if ('serviceWorker' in navigator) {
 // ============================================================
 window.addEventListener('appinstalled', () => {
     pwaInstallEvent = null;
-    const btnInstall = document.getElementById('trigger-pwa-install');
-    if (btnInstall) btnInstall.style.display = 'none';
+    mostraToast('myquicktag installata');
 });
       
 
