@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#050505">
-    <title>MyQuickTag</title>
+    <title>myquicktag</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -550,7 +550,7 @@ body::before {
 
         <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
             <button class="btn-condividi-profilo" onclick="vaiAlCheckout()" style="width: 100%; padding: 18px; font-size: 1rem;">
-                <i class="fas fa-unlock-alt"></i> Sblocca la tua MyQuickTag
+                <i class="fas fa-unlock-alt"></i> Sblocca la tua myquicktag
             </button>
         </div>
     </div>
@@ -565,7 +565,11 @@ body::before {
             <div id="corpoSezione" class="corpo-sezione"></div>
         </div>
     </div>
-
+<div id="back-to-dashboard" style="display:none; position:fixed; top:24px; left:24px; z-index:10000;">
+    <button onclick="chiudiOverlayAcquisto()" style="background:none; border:none; color:rgba(255,255,255,0.6); font-size:0.85rem; font-weight:500; cursor:pointer; padding:8px; letter-spacing:0.3px;">
+        ← Dashboard
+    </button>
+</div>
   <div id="showroom-overlay" style="display: none;">
     <div id="expanding-box"> 
         <div class="conversion-content">
@@ -776,8 +780,10 @@ function mostraOverlayAcquisto() {
             window.location.href = `/checkout.html?u=${usernameCorrente}`;
         };
     }
-   overlay.style.display = "flex";
-document.body.style.overflow = "hidden";
+  overlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    const backBtn = document.getElementById('back-to-dashboard');
+    if (backBtn) backBtn.style.display = 'block';
     setTimeout(() => {
         if (box) {
             box.style.width = "90%";
@@ -791,9 +797,11 @@ document.body.style.overflow = "hidden";
 // ============================================================
 // SHOWROOM — profilo non configurato (tag libera)
 // ============================================================
-     function chiudiOverlayAcquisto() {
+  function chiudiOverlayAcquisto() {
+    const backBtn = document.getElementById('back-to-dashboard');
+    if (backBtn) backBtn.style.display = 'none';
     window.location.href = `/profile.html?u=${usernameCorrente}`;
-}
+} 
 function mostraShowroom(username) {
     const overlay = document.getElementById("showroom-overlay");
     const box = document.getElementById("expanding-box");
@@ -807,7 +815,7 @@ function mostraShowroom(username) {
     }
 
     if (btn) {
-        btn.textContent = "Attiva la tua MyQuickTag";
+        btn.textContent = "Attiva la tua myquicktag";
         btn.onclick = () => {
             window.location.href = `/index.html?u=${username}`;
         };
@@ -1063,7 +1071,7 @@ function condividiProfilo(event) {
     const url = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
     const nome = cacheDatiUtente.username_display || usernameCorrente;
 
-    _condividi('MyQuickTag di @' + nome, url);
+    _condividi('myquicktag di @' + nome, url);
 }
 
 // ============================================================
