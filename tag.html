@@ -1164,9 +1164,8 @@ async function installaPWA() {
             pwaInstallEvent.prompt();
             const { outcome } = await pwaInstallEvent.userChoice;
             if (outcome === 'accepted') {
-        pwaInstallEvent = null;
-        chiudiWelcomeEMostraTag();
-    }
+                pwaInstallEvent = null;
+                chiudiWelcomeEMostraTag();
             } else {
                 mostraToast('Installazione annullata');
             }
@@ -1176,7 +1175,6 @@ async function installaPWA() {
         }
         return;
     }
-
     // Android ma evento non disponibile — app già installata o browser non supportato
     mostraToast('Apri dal browser Chrome per installare');
 }
