@@ -765,10 +765,6 @@ function mostraOverlayAcquisto() {
 
     if (!overlay) return;
 
-    if (titolo) {
-        titolo.innerText = `@${(cacheDatiUtente.username_display || usernameCorrente).replace('@', '')} è quasi tua.\nCompleta l'acquisto per attivarla.`;
-    }
-
    if (titolo) {
         const nome = (cacheDatiUtente.username_display || usernameCorrente).replace('@', '');
         titolo.innerText = `@${nome} è riservata.\nSolo tu puoi attivarla — gratis per 3 mesi.`;
