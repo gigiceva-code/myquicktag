@@ -553,8 +553,14 @@ body::before {
                 <i class="fas fa-unlock-alt"></i> Sblocca la tua myquicktag
             </button>
         </div>
+<div id="cta-pubblica-container" style="display: none; width: 100%;">
+        <button onclick="pubblicaBozza()" style="width: 100%; padding: 16px; background: #10b981; border: none; border-radius: 12px; color: #000000; font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: -0.2px;">
+            Pubblica la tua tag
+        </button>
+        <p style="text-align: center; color: var(--text-sec); font-size: 0.8rem; margin-top: 10px;">
+            La tua tag diventerà visibile a tutti
+        </p>
     </div>
-
     <div id="overlaySezione" class="pagine-overlay">
         <div class="contenuto-card">
             <div class="overlay-nav">
@@ -625,7 +631,20 @@ if (!usernameCorrente) {
 // FLUSSO PRINCIPALE — determina lo stato e smista
 // ============================================================
 async function avviaFlusso(username) {
-    try {       
+    try {
+        // Controlla se siamo in modalità bozza
+        const urlParams = new URLSearchParams(window.location.search);
+        const modeDraft = urlParams.get('mode') === 'draft';
+
+        // Sicurezza: solo il proprietario può vedere la bozza
+        if (modeDraft) {
+            const loggedUser = localStorage.getItem('loggedUser');
+            if (!loggedUser || loggedUser.toLowerCase() !== username.toLowerCase()) {
+                window.location.href = `/profile.html?u=${username}`;
+                return;
+            }
+        }
+
         const response = await fetch(`/api/get-profile?u=${username}`);
         const data = await response.json();
         if (!data.success || !data.fields) {
@@ -634,13 +653,23 @@ async function avviaFlusso(username) {
             return;
         }
 
-        const fields = data.fields;
+        let fields = data.fields;
         const stato = (fields.stato || "").toLowerCase().trim();
+
+        // Se mode=draft, usiamo draft_json invece dei campi reali
+        if (modeDraft && fields.draft_json) {
+            try {
+                const bozza = JSON.parse(fields.draft_json);
+                // Manteniamo username_system e stato dai campi reali
+                fields = { ...bozza, username_system: fields.username_system, stato: fields.stato };
+            } catch (e) {
+                console.error("Errore parsing draft_json:", e);
+            }
+        }
 
         // Salviamo tutto in cache — gli altri blocchi leggeranno da qui
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
-
         // --- SMISTAMENTO DEI 3 STATI ---
         if (stato === "attivo") {
             // Stato 1: tag attiva e pagata → rendering completo pulito
