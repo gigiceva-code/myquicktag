@@ -720,10 +720,14 @@ const container = document.querySelector('.app-container');
 if (container) {
     container.classList.add('ready');
 }
-// 6. Controlla se arriva da checkout
+// 6. Controlla se arriva da checkout o è in modalità draft
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('welcome') === '1') {
     mostraWelcomeOverlay();
+}
+if (urlParams.get('mode') === 'draft') {
+    const ctaPubblica = document.getElementById('cta-pubblica-container');
+    if (ctaPubblica) ctaPubblica.style.display = 'block';
 }
    // 7. Manifest e icona dinamici per PWA
 const manifestLink = document.getElementById('dynamic-manifest');
@@ -1147,6 +1151,37 @@ function mostraToast(messaggio) {
 // ============================================================
 function vaiAlCheckout() {
     window.location.href = `/checkout.html?u=${usernameCorrente}`;
+}
+async function pubblicaBozza() {
+    try {
+        const bozza = JSON.parse(cacheDatiUtente.draft_json || '{}');
+        
+        // Copia i campi della bozza nei campi reali e svuota draft_json
+        const response = await fetch('/api/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username_system: usernameCorrente,
+                ...bozza,
+                draft_json: ""
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            mostraToast('Tag pubblicata');
+            // Torna alla tag in modalità pubblica
+            setTimeout(() => {
+                window.location.href = `/tag.html?u=${usernameCorrente}`;
+            }, 1500);
+        } else {
+            mostraToast('Errore durante la pubblicazione');
+        }
+    } catch (err) {
+        console.error("Errore pubblicaBozza:", err);
+        mostraToast('Errore durante la pubblicazione');
+    }
 }
 
 // ============================================================
