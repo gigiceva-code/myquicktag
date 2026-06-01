@@ -654,7 +654,8 @@ async function vaiAllaVerifica() {
         });
         const data = await response.json();
         if (data.success) {
-            localStorage.setItem('myquicktag_pending', nomeScelto);
+           localStorage.setItem('myquicktag_pending', nomeScelto);
+            localStorage.setItem('loggedUser', nomeScelto);
             window.location.href = `edit.html?u=${nomeScelto}`;
         } else {
             alert(data.message || "Occupato!");
