@@ -584,15 +584,18 @@ function toggleMenu() {
     const menu = document.getElementById('menu-overlay');
     const dots = document.querySelector('.nav-dots');
     const menuIcon = document.getElementById('menu-icon');
-    if (menu.style.display === 'flex') {
-        menu.style.display = 'none';
-        if(dots) dots.style.display = 'flex';
-        if(menuIcon) menuIcon.style.opacity = '1';
-    } else {
-        menu.style.display = 'flex';
-        if(dots) dots.style.display = 'none';
-        if(menuIcon) menuIcon.style.opacity = '0';
-    }
+        const isOpen = menu.style.display === 'flex';
+  if (isOpen) {
+    menu.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    if (dots) dots.style.display = 'flex';
+    if (menuIcon) menuIcon.style.opacity = '1';
+} else {
+    menu.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    if (dots) dots.style.display = 'none';
+    if (menuIcon) menuIcon.style.opacity = '0';
+} 
 }
 
 // 5. MEMORIA SCROLL E SESSIONE PENDING
