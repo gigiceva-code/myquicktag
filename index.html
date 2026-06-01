@@ -245,7 +245,7 @@
             
             <span id="at-symbol" style="font-size: 26px; font-weight: 700; color: rgba(255,255,255,0.15); transition: all 0.3s ease; display: inline-block; flex-shrink: 0;">@</span>
             
-         <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" autocorrect="off" autocapitalize="none"
+         <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="none"
     onfocus="activateInput()" onblur="deactivateInput()"
     style="background: transparent; border: none; color: #fff; font-size: 26px; font-weight: 700; outline: none; flex-grow: 1; min-width: 0; padding: 0; margin-left: 1px; letter-spacing: -1px; width: 100%;"> 
         </div>
@@ -622,9 +622,10 @@ async function vaiAllaVerifica() {
     }
     const tagInCorso = localStorage.getItem('myquicktag_pending');
     if (tagInCorso && nomeScelto === tagInCorso.toLowerCase().trim().replace('@', '')) {
-        window.location.href = `edit.html?u=${nomeScelto}`;
-        return;
-    }
+    btn.disabled = true;
+    window.location.href = `edit.html?u=${nomeScelto}`;
+    return;
+}
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
     try {
