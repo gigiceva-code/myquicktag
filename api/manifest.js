@@ -21,7 +21,7 @@ export default function handler(req, res) {
     const manifest = {
       // L'ID ora punta al percorso pulito
       "id": `/u/${utenteMinuscolo}`,
-      "name": `MyQuickTag ${displayUtente}`,
+     "name": `myquicktag ${displayUtente}`,
       "short_name": displayUtente, // Questo mantiene il nome utente (es. @GIGI) SOTTO l'icona sul telefono!
       "description": "Luxury Digital Identity",
       // Lo start_url si apre sul percorso pulito
