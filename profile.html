@@ -608,8 +608,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const stato = (record.stato || "").toLowerCase().trim();
     const haPassword = record.password && record.password.trim() !== "";
     const haBozza = record.draft_json && record.draft_json.trim() !== "";
-
-    const linkView = document.getElementById("link-view");
+// Se la bozza è stata pubblicata, non considerarla più
+    if (!record.draft_json || record.draft_json.trim() === "") {
+        localStorage.removeItem("haVistoAnteprima");
+    }
+       const linkView = document.getElementById("link-view");
+      linkView.dataset.url = ""; // reset di sicurezza
     const titleEl = document.getElementById("view-title");
     const descEl = document.getElementById("view-desc");
     const badgeEl = document.getElementById("view-badge");
