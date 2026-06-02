@@ -729,6 +729,7 @@ if (urlParams.get('welcome') === '1') {
 if (urlParams.get('mode') === 'draft') {
     const ctaPubblica = document.getElementById('cta-pubblica-container');
     if (ctaPubblica) ctaPubblica.style.display = 'block';
+    mostraOverlayAcquisto();
 }
    // 7. Manifest e icona dinamici per PWA
 const manifestLink = document.getElementById('dynamic-manifest');
