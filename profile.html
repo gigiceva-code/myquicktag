@@ -621,6 +621,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const titleEl = document.getElementById("view-title");
     const descEl = document.getElementById("view-desc");
     const badgeEl = document.getElementById("view-badge");
+      if (titleEl) titleEl.innerText = "";
+if (descEl) descEl.innerText = "";
 if (badgeEl) badgeEl.innerText = ""; // reset badge
     // Reset base
     if (badgeEl) badgeEl.innerText = "";
