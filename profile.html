@@ -714,7 +714,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("days-left").innerText = "--";
             document.getElementById("count-visits").innerText = "--";
         }
-    
+     
    // 🔥 AVVIO DASHBOARD
     caricaDatiDashboard(nomeMinuto); 
     });
@@ -775,9 +775,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const linkAccount = document.getElementById('link-account');
     if (linkAccount) {
         linkAccount.addEventListener('click', function(e) {
-            luxuryNavigate(e, `account.html?u=${nomeMinutoLocale}`);
-        });
-    }
+      luxuryNavigate(e, `account.html?u=${nomeMinutoLocale}`);
+ }
 });
 </script>   
 </body>
