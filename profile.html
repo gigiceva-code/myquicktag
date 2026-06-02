@@ -646,7 +646,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
         return;
     }
-
+// Se esiste una bozza ma l'utente non è loggato, forziamo la versione pubblica
+if (haBozza && localStorage.getItem("loggedUser") !== nomeMinuto) {
+    linkView.dataset.mode = "preview-public";
+    linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+    return;
+}
     // 3️⃣ UTENTE ATTIVO CON BOZZA → anteprima bozza
     if (stato === "attivo" && haBozza) {
         linkView.dataset.mode = "preview-draft";
