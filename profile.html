@@ -579,7 +579,8 @@ document.addEventListener("DOMContentLoaded", function() {
 if (stato === "in attesa" || !haPassword) {
     linkView.dataset.mode = "preview-draft";
     linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-
+    linkView.style.pointerEvents = "auto";   // ⭐ AGGIUNTA
+    linkView.style.opacity = "1";            // ⭐ AGGIUNTA
     aggiornaCard("Digital Identity", "Anteprima iniziale", "Bozza");
     aggiornaBadge("bozza");
 
@@ -592,7 +593,8 @@ if (stato === "in attesa" || !haPassword) {
         if (stato === "attivo" && !haBozza) {
             linkView.dataset.mode = "preview-public";
             linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-
+             linkView.style.pointerEvents = "auto";   // ⭐ AGGIUNTA
+    linkView.style.opacity = "1";            // ⭐ AGGIUNTA   
             aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
             aggiornaBadge("online");
             return;
@@ -602,6 +604,8 @@ if (stato === "in attesa" || !haPassword) {
         if (haBozza && localStorage.getItem("loggedUser") !== nomeMinuto) {
             linkView.dataset.mode = "preview-public";
             linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+            linkView.style.pointerEvents = "auto";   // ⭐ AGGIUNTA
+    linkView.style.opacity = "1";            // ⭐ AGGIUNTA  
             return;
         }
 
@@ -609,6 +613,8 @@ if (stato === "in attesa" || !haPassword) {
         if (stato === "attivo" && haBozza) {
             linkView.dataset.mode = "preview-draft";
             linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+            linkView.style.pointerEvents = "auto";   // ⭐ AGGIUNTA
+    linkView.style.opacity = "1";            // ⭐ AGGIUNTA
 
             aggiornaCard("Digital Identity", "Anteprima bozza non pubblicata", "Bozza salvata");
             aggiornaBadge("bozza");
