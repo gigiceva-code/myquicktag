@@ -445,6 +445,10 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
 <script>
 const params = new URLSearchParams(window.location.search);
 const nomeUtenteURL = params.get("u") || ""; 
+    // Normalizza il loggedUser in minuscolo per evitare mismatch
+if (localStorage.getItem("loggedUser")) {
+    localStorage.setItem("loggedUser", localStorage.getItem("loggedUser").toLowerCase());
+}
 // Se arrivo dalla pubblicazione, resetto il flag
 const justPublished = params.get("published") === "1";
 if (justPublished) {
