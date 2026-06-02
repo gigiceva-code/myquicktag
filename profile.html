@@ -464,6 +464,8 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     </div>      
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    
 const params = new URLSearchParams(window.location.search);
 const nomeUtenteURL = params.get("u") || ""; 
     // Normalizza il loggedUser in minuscolo per evitare mismatch
@@ -758,6 +760,7 @@ aggiornaBadge("bozza");
             break;
     }
     }
+});
 
 </script>
    
