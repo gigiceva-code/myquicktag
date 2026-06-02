@@ -621,7 +621,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const titleEl = document.getElementById("view-title");
     const descEl = document.getElementById("view-desc");
     const badgeEl = document.getElementById("view-badge");
-
+if (badgeEl) badgeEl.innerText = ""; // reset badge
     // Reset base
     if (badgeEl) badgeEl.innerText = "";
     if (linkView) linkView.classList.remove("pulsing-effect");
