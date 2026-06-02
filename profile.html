@@ -577,12 +577,19 @@ document.addEventListener("DOMContentLoaded", function() {
     const nomeMinutoLocale = uParam.replace('@', '').trim().toLowerCase();
     
     // 1. Tasto Vedi Anteprima (La Card in alto)
-    const linkView = document.getElementById('link-view');
-    if (linkView) {
-        linkView.addEventListener('click', function(e) {
-    luxuryNavigate(e, linkView.dataset.url);
-        });
-    }
+const linkView = document.getElementById('link-view');
+if (linkView) {
+    linkView.addEventListener('click', function(e) {
+
+        // 🚫 Protezione finale: se l'URL non è pronto, blocca il click
+        if (!linkView.dataset.url || linkView.dataset.url.trim() === "") {
+            e.preventDefault();
+            return;
+        }
+
+        luxuryNavigate(e, linkView.dataset.url);
+    });
+}
 
     // 2. Tasto Configure
     const linkEdit = document.getElementById('link-edit');
