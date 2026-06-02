@@ -349,6 +349,27 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     color: var(--accent-smeraldo);
     opacity: 0.9;
 }
+    .badge {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.badge-online {
+    background: #00c85320;
+    color: #00c853;
+}
+
+.badge-draft {
+    background: #ffab0020;
+    color: #ffab00;
+}
+
+.badge-offline {
+    background: #ff525220;
+    color: #ff5252;
+}
 
 </style>
     
@@ -477,6 +498,15 @@ if (nomeUtenteURL) {
 }
 
 async function caricaDatiDashboard(nomeMinuto) {
+    // 🧼 Pulizia iniziale della card (evita glitch visivi)
+aggiornaCard("", "", "");
+
+const linkView = document.getElementById("link-view");
+if (linkView) {
+    linkView.dataset.url = "";
+    linkView.dataset.mode = "";
+    linkView.classList.remove("pulsing-effect");
+}
 
     // 🔒 Disattiva il pulsante finché i dati non sono pronti
     const btnView = document.getElementById("link-view");
@@ -702,6 +732,37 @@ if (haBozza && localStorage.getItem("loggedUser") !== nomeMinuto) {
         return;
     }
 }
+    function aggiornaBadge(stato) {
+    const badgeEl = document.getElementById("view-badge");
+    if (!badgeEl) return;
+
+    badgeEl.className = "badge"; // reset classi
+
+    switch (stato) {
+        case "online":
+            badgeEl.innerText = "Online";
+            badgeEl.classList.add("badge-online");
+            break;
+
+        case "bozza":
+            badgeEl.innerText = "Bozza salvata";
+            badgeEl.classList.add("badge-draft");
+            break;
+
+        case "nuovo":
+            badgeEl.innerText = "";
+            break;
+
+        case "offline":
+            badgeEl.innerText = "Offline";
+            badgeEl.classList.add("badge-offline");
+            break;
+
+        default:
+            badgeEl.innerText = "";
+            break;
+    }
+    }
 
 </script>
    
