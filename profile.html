@@ -478,29 +478,54 @@ if (nomeUtenteURL) {
 
 async function caricaDatiDashboard(nomeMinuto) {
 
+    // 🔒 Disattiva il pulsante finché i dati non sono pronti
+    const btnView = document.getElementById("link-view");
+    if (btnView) {
+        btnView.style.pointerEvents = "none";
+        btnView.style.opacity = "0.5";
+    }
+
     // 🔥 Reset del flag se arrivo dalla pubblicazione
     localStorage.removeItem("haVistoAnteprima");
 
+    // 🟢 Se arrivo dalla pubblicazione, forza subito la versione pubblica
+    if (localStorage.getItem("justPublished")) {
+        localStorage.removeItem("justPublished");
+
+        aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
+
+        const linkView = document.getElementById("link-view");
+        if (linkView) {
+            linkView.dataset.mode = "preview-public";
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+            linkView.style.pointerEvents = "auto";
+            linkView.style.opacity = "1";
+        }
+    }
+
     // Il timestamp forza il browser a non usare la cache e prendere dati freschi da Airtable
     const timestamp = new Date().getTime();
+
     try {
         const response = await fetch(`/api/get-profile?u=${nomeMinuto}&t=${timestamp}`);
         const data = await response.json();
 
         if (data.success && data.fields) {
             const record = data.fields;
+
             // Imposta la modalità del pulsante "Vedi anteprima"
-determinaModalitaAnteprima(record, nomeMinuto);
+            determinaModalitaAnteprima(record, nomeMinuto);
 
             // Logica Magic Button con Copy Boutique Aggiornato
             const stato = (record.stato || "").toLowerCase().trim();
             const btnView = document.getElementById("link-view");
+
             if (stato === "in attesa") {
                 document.getElementById("view-title").innerText = "Digital Identity";
                 document.getElementById("view-desc").innerText = "Il tuo nome nel mondo.";
                 btnView.classList.add("pulsing-effect");
             }
- 
+
             if (record.username_display) {
                 const displayPulito = record.username_display.replace('@', '').trim();
                 document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
@@ -518,26 +543,27 @@ determinaModalitaAnteprima(record, nomeMinuto);
 
             document.getElementById("count-visits").innerText = record.views || record.visits || "0";
         }
+
     } catch (error) {
-    console.warn("Airtable non risponde, attivo modalità offline.");
+        console.warn("Airtable non risponde, attivo modalità offline.");
 
-    // Fallback UX premium
-    document.getElementById("view-title").innerText = "Digital Identity";
-    document.getElementById("view-desc").innerText = "Connessione temporaneamente non disponibile";
-    document.getElementById("view-badge").innerText = "Offline";
+        // Fallback UX premium
+        document.getElementById("view-title").innerText = "Digital Identity";
+        document.getElementById("view-desc").innerText = "Connessione temporaneamente non disponibile";
+        document.getElementById("view-badge").innerText = "Offline";
 
-    // Evita click verso pagine incomplete
-    const linkView = document.getElementById("link-view");
-    if (linkView) {
-        linkView.dataset.url = "#";
-        linkView.classList.remove("pulsing-effect");
+        // Evita click verso pagine incomplete
+        const linkView = document.getElementById("link-view");
+        if (linkView) {
+            linkView.dataset.url = "#";
+            linkView.classList.remove("pulsing-effect");
+        }
+
+        // Mostra valori neutri
+        document.getElementById("days-left").innerText = "--";
+        document.getElementById("count-visits").innerText = "--";
     }
-
-    // Mostra valori neutri
-    document.getElementById("days-left").innerText = "--";
-    document.getElementById("count-visits").innerText = "--";
-}
-}
+                }
 
 // AGGIORNAMENTO BOTTONE MAGIC
 async function checkMagicButton(nomeMinuto) {
