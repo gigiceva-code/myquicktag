@@ -498,15 +498,6 @@ if (nomeUtenteURL) {
 }
 
 async function caricaDatiDashboard(nomeMinuto) {
-    // 🧼 Pulizia iniziale della card (evita glitch visivi)
-aggiornaCard("", "", "");
-
-const linkView = document.getElementById("link-view");
-if (linkView) {
-    linkView.dataset.url = "";
-    linkView.dataset.mode = "";
-    linkView.classList.remove("pulsing-effect");
-}
 
     // 🔒 Disattiva il pulsante finché i dati non sono pronti
     const btnView = document.getElementById("link-view");
@@ -532,6 +523,17 @@ if (linkView) {
             linkView.style.opacity = "1";
         }
     }
+
+    // 🧼 Pulizia iniziale della card (evita glitch visivi)
+    aggiornaCard("", "", "");
+
+    const linkView = document.getElementById("link-view");
+    if (linkView) {
+        linkView.dataset.url = "";
+        linkView.dataset.mode = "";
+        linkView.classList.remove("pulsing-effect");
+    }
+}
 
     // Il timestamp forza il browser a non usare la cache e prendere dati freschi da Airtable
     const timestamp = new Date().getTime();
