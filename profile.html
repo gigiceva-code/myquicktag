@@ -575,16 +575,18 @@ document.addEventListener("DOMContentLoaded", function() {
         // Reset base
         if (linkView) linkView.classList.remove("pulsing-effect");
 
-        // 1️⃣ NUOVO UTENTE (in attesa / senza password)
-        if (stato === "in attesa" || !haPassword) {
-            linkView.dataset.mode = "preview-new";
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=new`;
+       // 1️⃣ NUOVO UTENTE (in attesa / senza password)
+if (stato === "in attesa" || !haPassword) {
+    linkView.dataset.mode = "preview-draft";
+    linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
 
-            aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
-            aggiornaBadge("online");
-            linkView.classList.add("pulsing-effect");
-            return;
-        }
+    aggiornaCard("Digital Identity", "Anteprima iniziale", "Bozza");
+    aggiornaBadge("bozza");
+
+    linkView.classList.add("pulsing-effect");
+    return;
+}
+
 
         // 2️⃣ UTENTE ATTIVO SENZA BOZZA → versione pubblica
         if (stato === "attivo" && !haBozza) {
