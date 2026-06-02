@@ -498,6 +498,15 @@ if (nomeUtenteURL) {
 } else {
     document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif; color:#6c6c70; font-size:0.9rem; letter-spacing:1px;'>ACCESS DENIED. PARAMETER MISSING.</div>";
 }
+function aggiornaCard(title, desc, badge) {
+    const titleEl = document.getElementById("view-title");
+    const descEl = document.getElementById("view-desc");
+    const badgeEl = document.getElementById("view-badge");
+
+    if (titleEl) titleEl.innerText = title || "";
+    if (descEl) descEl.innerText = desc || "";
+    if (badgeEl) badgeEl.innerText = badge || "";
+}
 
 async function caricaDatiDashboard(nomeMinuto) {
 
