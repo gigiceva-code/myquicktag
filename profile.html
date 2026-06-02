@@ -445,7 +445,11 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
 <script>
 const params = new URLSearchParams(window.location.search);
 const nomeUtenteURL = params.get("u") || ""; 
-
+// Se arrivo dalla pubblicazione, resetto il flag
+const justPublished = params.get("published") === "1";
+if (justPublished) {
+    localStorage.removeItem("haVistoAnteprima");
+}
 if (nomeUtenteURL) {
     const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
     const nomeMinuto = nomeIniziale.toLowerCase();
@@ -469,6 +473,10 @@ if (nomeUtenteURL) {
 }
 
 async function caricaDatiDashboard(nomeMinuto) {
+
+    // 🔥 Reset del flag se arrivo dalla pubblicazione
+    localStorage.removeItem("haVistoAnteprima");
+
     // Il timestamp forza il browser a non usare la cache e prendere dati freschi da Airtable
     const timestamp = new Date().getTime();
     try {
