@@ -533,9 +533,8 @@ async function caricaDatiDashboard(nomeMinuto) {
         linkView.dataset.mode = "";
         linkView.classList.remove("pulsing-effect");
     }
-}
 
-    // Il timestamp forza il browser a non usare la cache e prendere dati freschi da Airtable
+    // ⏳ Il timestamp forza il browser a non usare la cache
     const timestamp = new Date().getTime();
 
     try {
@@ -595,7 +594,7 @@ async function caricaDatiDashboard(nomeMinuto) {
         document.getElementById("days-left").innerText = "--";
         document.getElementById("count-visits").innerText = "--";
     }
-                }
+}
 
 // AGGIORNAMENTO BOTTONE MAGIC
 async function checkMagicButton(nomeMinuto) {
