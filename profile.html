@@ -695,10 +695,8 @@ if (badgeEl) badgeEl.innerText = ""; // reset badge
     linkView.dataset.mode = "preview-new";
     linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=new`;
 
-    if (titleEl) titleEl.innerText = "Digital Identity";
-    if (descEl) descEl.innerText = "Il tuo nome nel mondo.";
-    if (badgeEl) badgeEl.innerText = "";
-
+    aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
+aggiornaBadge("online");
     linkView.classList.add("pulsing-effect");
     return;
 }
@@ -708,10 +706,8 @@ if (badgeEl) badgeEl.innerText = ""; // reset badge
         linkView.dataset.mode = "preview-public";
         linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
 
-        if (titleEl) titleEl.innerText = "Digital Identity";
-        if (descEl) descEl.innerText = "Versione pubblica attiva";
-        if (badgeEl) badgeEl.innerText = "Online";
-
+        aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
+aggiornaBadge("online");
         return;
     }
 // Se esiste una bozza ma l'utente non è loggato, forziamo la versione pubblica
@@ -725,10 +721,8 @@ if (haBozza && localStorage.getItem("loggedUser") !== nomeMinuto) {
         linkView.dataset.mode = "preview-draft";
         linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
 
-        if (titleEl) titleEl.innerText = "Digital Identity";
-        if (descEl) descEl.innerText = "Anteprima bozza non pubblicata";
-        if (badgeEl) badgeEl.innerText = "Bozza salvata";
-
+        aggiornaCard("Digital Identity", "Anteprima bozza non pubblicata", "Bozza salvata");
+aggiornaBadge("bozza");
         return;
     }
 }
