@@ -815,17 +815,8 @@ function mostraOverlayAcquisto() {
     if (appContainer) appContainer.style.overflow = 'hidden';
     const backBtn = document.getElementById('back-to-dashboard');
     if (backBtn) backBtn.style.display = 'block';
-    requestAnimationFrame(() => {
-        setTimeout(() => {
-            if (box) {
-                box.style.width = "90%";
-                box.style.height = "auto";
-            }
-            const content = document.querySelector(".conversion-content");
-            if (content) content.style.opacity = "1";
-        }, 50);
-    });
-}
+ const content = document.querySelector(".conversion-content");
+if (content) content.style.opacity = "1"; 
 
 // ============================================================
 // SHOWROOM — profilo non configurato (tag libera)
@@ -857,19 +848,12 @@ function mostraShowroom(username) {
         };
     }
 
-    overlay.style.display = "flex";
+  overlay.style.display = "flex";
     const container = document.querySelector('.app-container');
     if (container) container.classList.add('ready');
-    setTimeout(() => {
-        if (box) {
-            box.style.width = "90%";
-            box.style.height = "auto";
-        }
-        const content = document.querySelector(".conversion-content");
-        if (content) content.style.opacity = "1";
-    }, 100);
-}
-
+    const content = document.querySelector(".conversion-content");
+    if (content) content.style.opacity = "1";
+} 
 // ============================================================
 // ERRORE GENERICO
 // ============================================================
