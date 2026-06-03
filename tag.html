@@ -726,9 +726,12 @@ if (urlParams.get('welcome') === '1') {
     mostraWelcomeOverlay();
 }
 if (urlParams.get('mode') === 'draft') {
-    const ctaPubblica = document.getElementById('cta-pubblica-container');
-    if (ctaPubblica) ctaPubblica.style.display = 'block';
-    mostraOverlayAcquisto();
+    if (fields.stato === 'attivo') {
+        const ctaPubblica = document.getElementById('cta-pubblica-container');
+        if (ctaPubblica) ctaPubblica.style.display = 'block';
+    } else {
+        mostraOverlayAcquisto();
+    }
 }
    // 7. Manifest e icona dinamici per PWA
 const manifestLink = document.getElementById('dynamic-manifest');
