@@ -428,11 +428,13 @@ body::before {
      pointer-events: auto; 
 }  
 
-  .conversion-content {
+ .conversion-content {
     opacity: 1;
     text-align: center;
     width: 100%;
-}  
+    min-height: 150px;
+    padding: 20px;
+} 
 
     #conversion-title {
         color: var(--accent-white);
@@ -573,7 +575,7 @@ body::before {
             <div id="corpoSezione" class="corpo-sezione"></div>
         </div>
     </div>
-<div id="back-to-dashboard" style="display:none; position:fixed; bottom:32px; left:32px; z-index:10000;">
+<div id="back-to-dashboard" style="display:none; position:fixed; bottom:80px; left:32px; z-index:10000;">
     <button onclick="chiudiOverlayAcquisto()" style="background:none; border:none; color:#10b981; font-size:0.85rem; font-weight:600; cursor:pointer; padding:8px; letter-spacing:0.3px;">
         ← Dashboard
     </button>
