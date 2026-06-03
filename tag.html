@@ -677,7 +677,7 @@ async function avviaFlusso(username) {
         } else if (stato === "in attesa") {
             // Stato 2: configurata ma non pagata → rendering + overlay acquisto
             renderizzaTagCompleta(fields);
-            mostraOverlayAcquisto();
+            
 
         } else {
             // Stato 3: sospeso, riservato o qualsiasi altro → showroom
