@@ -689,37 +689,41 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Aggiorna lo stile del badge (online, bozza, offline…)
-    function aggiornaBadge(stato) {
-        const badgeEl = document.getElementById("view-badge");
-        if (!badgeEl) return;
+  function aggiornaBadge(stato) {
+    const badgeEl = document.getElementById("view-badge");
+    if (!badgeEl) return;
 
-        badgeEl.className = "badge"; // reset classi
+    badgeEl.className = "badge"; // Reset classi
+    badgeEl.style.display = "";  // 🟢 RIPRISTINA LA VISIBILITÀ DI BASE A OGNI CARICAMENTO
 
-        switch (stato) {
-            case "online":
-                badgeEl.innerText = "Online";
-                badgeEl.classList.add("badge-online");
-                break;
+    switch (stato) {
+        case "online":
+            badgeEl.innerText = "Online";
+            badgeEl.classList.add("badge-online");
+            break;
 
-            case "bozza":
-                badgeEl.innerText = "";
-                badgeEl.classList.add("badge-draft");
-                break;
+        case "bozza":
+            badgeEl.innerText = "";
+            badgeEl.classList.add("badge-draft");
+            badgeEl.style.display = "none"; // Nasconde la striscia vuota
+            break;
 
-            case "nuovo":
-                badgeEl.innerText = "";
-                break;
+        case "nuovo":
+            badgeEl.innerText = "";
+            badgeEl.style.display = "none"; // Nasconde la striscia vuota anche qui per sicurezza
+            break;
 
-            case "offline":
-                badgeEl.innerText = "Offline";
-                badgeEl.classList.add("badge-offline");
-                break;
+        case "offline":
+            badgeEl.innerText = "Offline";
+            badgeEl.classList.add("badge-offline");
+            break;
 
-            default:
-                badgeEl.innerText = "";
-                break;
-        }
+        default:
+            badgeEl.innerText = "";
+            badgeEl.style.display = "none";
+            break;
     }
+} 
   // ----------------------------------------------------
     // 🟧 BLOCCO 3 — FUNZIONI DI LOGICA
     // ----------------------------------------------------
