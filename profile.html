@@ -835,18 +835,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
     }
-  // ========================================================
-    // LOGICA DINAMICA CAMPANELLA NOTIFICHE (MYQUICKTAG)
-    // ========================================================
-    const bellIcon = document.getElementById('btn-notifications');
-    const notifDraftItem = document.getElementById('notif-draft-item');
-    const notifEmptyState = document.getElementById('notif-empty-state');
-
-    // 1. Reset iniziale (pulisce lo stato a ogni ricarica dati)
-    if (bellIcon) bellIcon.classList.remove('has-notifications');
-    if (notifDraftItem) notifDraftItem.style.display = 'none';
-    if (notifEmptyState) notifEmptyState.style.display = 'flex';
-
+  
    
     // ----------------------------------------------------
     // 🟥 BLOCCO 4 — FUNZIONE PRINCIPALE
