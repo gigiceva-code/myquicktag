@@ -847,27 +847,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (notifDraftItem) notifDraftItem.style.display = 'none';
     if (notifEmptyState) notifEmptyState.style.display = 'flex';
 
-    // 2. Se esiste una bozza (usiamo la variabile 'haBozza' già calcolata dalla tua funzione)
-    if (haBozza) {
-        // Accendi il pallino verde smeraldo sulla campanella
-        if (bellIcon) bellIcon.classList.add('has-notifications');
-        
-        // Mostra la notifica della bozza e nascondi la scritta "Nessuna notifica"
-        if (notifDraftItem) {
-            notifDraftItem.style.display = 'flex';
-            // Impostiamo il link diretto all'anteprima della bozza
-            notifDraftItem.href = `tag.html?u=${nomeMinuto}&mode=draft`;
-        }
-        if (notifEmptyState) notifEmptyState.style.display = 'none';
-    }
-
-    // 3. Applica l'effetto Luxury Navigate al click sulla notifica
-    if (notifDraftItem) {
-        notifDraftItem.onclick = function(e) {
-            luxuryNavigate(e, this.href);
-        };
-    }  
-}
+   
     // ----------------------------------------------------
     // 🟥 BLOCCO 4 — FUNZIONE PRINCIPALE
     // ----------------------------------------------------
