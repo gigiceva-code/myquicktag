@@ -702,7 +702,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 break;
 
             case "bozza":
-                badgeEl.innerText = "Bozza salvata";
+                badgeEl.innerText = "";
                 badgeEl.classList.add("badge-draft");
                 break;
 
@@ -793,7 +793,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 linkView.style.opacity = "1";            
                 linkView.classList.add("pulsing-effect");
             }
-            aggiornaCard("Digital Identity", "Anteprima iniziale", "");
+            aggiornaCard("Digital Identity", "Anteprima iniziale", "in attesa");
             aggiornaBadge("bozza");
             return;
         }
@@ -830,7 +830,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 linkView.style.pointerEvents = "auto";   
                 linkView.style.opacity = "1";            
             }
-            aggiornaCard("Digital Identity", "Anteprima bozza non pubblicata", "");
+            aggiornaCard("Digital Identity", "Anteprima bozza non pubblicata", "modifiche salvate");
             aggiornaBadge("bozza");
             return;
         }
