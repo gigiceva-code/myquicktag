@@ -370,6 +370,143 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     background: #ff525220;
     color: #ff5252;
 }
+   /* =========================================
+   NOTIFICHE E CAMPANELLA (LUXURY MINIMAL)
+   ========================================= */
+
+.btn-bell {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-bell:active {
+    transform: scale(0.9);
+    opacity: 0.7;
+}
+
+/* Il pallino verde per le notifiche non lette */
+.notif-dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-smeraldo);
+    border-radius: 50%;
+    border: 2px solid var(--bg-color); /* Crea un margine nero attorno al dot */
+    display: none; /* Nascosto di default */
+}
+
+/* Mostra il pallino se la campanella ha la classe attiva */
+.btn-bell.has-notifications .notif-dot {
+    display: block;
+}
+
+/* Il pannello a tendina */
+.notification-dropdown {
+    position: absolute;
+    top: 130%;
+    right: -10px; /* Allineato verso il bordo destro */
+    width: 280px;
+    background: #0a0a0a; /* Sfondo scuro premium */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    
+    /* Animazione di entrata */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.notification-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.notif-header {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.notif-list {
+    display: flex;
+    flex-direction: column;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.notif-item {
+    padding: 16px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.notif-item:last-child {
+    border-bottom: none;
+}
+
+.notif-item:active {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* Stili specifici per i tipi di notifica */
+.notif-icon.draft {
+    color: #ffab00; /* Giallo bozza */
+    background: rgba(255, 171, 0, 0.1);
+}
+
+.notif-icon.system {
+    color: var(--accent-smeraldo);
+    background: rgba(80, 200, 120, 0.1);
+}
+
+.notif-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.notif-content strong {
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.notif-content span {
+    color: #888888;
+    font-size: 0.75rem;
+} 
 
 </style>
     
@@ -377,16 +514,52 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
 <body>
 
 <div class="user-welcome">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h1>Identity Console</h1>
-                    <p id="dash-user">@UTENTE</p>
-                </div>
-                <div onclick="location.reload();" style="cursor:pointer; color: var(--accent-smeraldo); padding: 10px;">
-                    <i class="fas fa-sync-alt"></i>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>Identity Console</h1>
+            <p id="dash-user">@UTENTE</p>
+        </div>
+        
+        <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
+            
+            <div class="notification-wrapper" style="position: relative;">
+                <button id="btn-notifications" class="btn-bell" aria-label="Notifiche">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-dot"></span>
+                </button>
+                
+                <div id="notif-dropdown" class="notification-dropdown">
+                    <div class="notif-header">
+                        Notifiche
+                    </div>
+                    <div class="notif-list" id="notif-list-container">
+                        
+                        <a href="#" class="notif-item" id="notif-draft-item" style="display: none;">
+                            <div class="notif-icon draft">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="notif-content">
+                                <strong>Hai una bozza in sospeso</strong>
+                                <span>Tocca per completare la pubblicazione</span>
+                            </div>
+                        </a>
+
+                        <div class="notif-item" id="notif-empty-state" style="justify-content: center; opacity: 0.5;">
+                            <div class="notif-content" style="text-align: center;">
+                                <span>Nessuna nuova notifica</span>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
+
+            <div onclick="location.reload();" style="cursor:pointer; color: var(--accent-smeraldo); padding: 5px;">
+                <i class="fas fa-sync-alt"></i>
+            </div>
         </div>
+    </div>
+</div>
 
           <section id="block-identity-system" style="width: 100%;">
             <a href="#" id="link-view" class="hero-activation-card-new">
@@ -621,6 +794,71 @@ if (stato === "in attesa" || !haPassword) {
             return;
         }
     }
+    // Aggiungi questo alla fine della funzione determinaModalitaAnteprima(record, nomeMinuto)
+
+const bellIcon = document.getElementById('btn-notifications');
+const notifDraftItem = document.getElementById('notif-draft-item');
+const notifEmptyState = document.getElementById('notif-empty-state');
+
+// Reset di base
+if (bellIcon) bellIcon.classList.remove('has-notifications');
+if (notifDraftItem) notifDraftItem.style.display = 'none';
+if (notifEmptyState) notifEmptyState.style.display = 'flex';
+
+// Se siamo in uno scenario dove esiste una bozza (Punto 1 o Punto 3)
+if (haBozza && localStorage.getItem("loggedUser") === nomeMinuto || (!haPassword && haBozza)) {
+    // 1. Accendi il pallino sulla campanella
+    if (bellIcon) bellIcon.classList.add('has-notifications');
+    
+    // 2. Mostra la notifica della bozza e nascondi l'empty state
+    if (notifDraftItem) {
+        notifDraftItem.style.display = 'flex';
+        // Assegna l'URL di anteprima alla notifica in modo che funga da "Deep Link"
+        notifDraftItem.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+    }
+    if (notifEmptyState) notifEmptyState.style.display = 'none';
+}
+
+// Associa la navigazione "Luxury" al click sulla notifica
+if (notifDraftItem) {
+    notifDraftItem.addEventListener('click', function(e) {
+        if (this.dataset.url) {
+            luxuryNavigate(e, this.dataset.url);
+        }
+    });
+  // ========================================================
+    // LOGICA DINAMICA CAMPANELLA NOTIFICHE (MYQUICKTAG)
+    // ========================================================
+    const bellIcon = document.getElementById('btn-notifications');
+    const notifDraftItem = document.getElementById('notif-draft-item');
+    const notifEmptyState = document.getElementById('notif-empty-state');
+
+    // 1. Reset iniziale (pulisce lo stato a ogni ricarica dati)
+    if (bellIcon) bellIcon.classList.remove('has-notifications');
+    if (notifDraftItem) notifDraftItem.style.display = 'none';
+    if (notifEmptyState) notifEmptyState.style.display = 'flex';
+
+    // 2. Se esiste una bozza (usiamo la variabile 'haBozza' già calcolata dalla tua funzione)
+    if (haBozza) {
+        // Accendi il pallino verde smeraldo sulla campanella
+        if (bellIcon) bellIcon.classList.add('has-notifications');
+        
+        // Mostra la notifica della bozza e nascondi la scritta "Nessuna notifica"
+        if (notifDraftItem) {
+            notifDraftItem.style.display = 'flex';
+            // Impostiamo il link diretto all'anteprima della bozza
+            notifDraftItem.href = `tag.html?u=${nomeMinuto}&mode=draft`;
+        }
+        if (notifEmptyState) notifEmptyState.style.display = 'none';
+    }
+
+    // 3. Applica l'effetto Luxury Navigate al click sulla notifica
+    if (notifDraftItem) {
+        notifDraftItem.onclick = function(e) {
+            luxuryNavigate(e, this.href);
+        };
+    }  
+}
     // ----------------------------------------------------
     // 🟥 BLOCCO 4 — FUNZIONE PRINCIPALE
     // ----------------------------------------------------
@@ -786,8 +1024,26 @@ if (linkAccount) {
         luxuryNavigate(e, `account.html?u=${nomeMinutoLocale}`);
     });
 }
+// --- GESTIONE MENU NOTIFICHE (DENTRO BLOCCO 5) ---
+    const btnNotif = document.getElementById('btn-notifications');
+    const dropNotif = document.getElementById('notif-dropdown');
 
+    if (btnNotif && dropNotif) {
+        // Apri/Chiudi al click della campanella
+        btnNotif.addEventListener('click', function(e) {
+            e.stopPropagation(); // Evita che il click si chiuda subito
+            dropNotif.classList.toggle('active');
+        });
+
+        // Chiudi la tendina se l'utente tocca fuori dal pannello
+        document.addEventListener('click', function(e) {
+            if (!dropNotif.contains(e.target) && e.target !== btnNotif) {
+                dropNotif.classList.remove('active');
+            }
+        });
+    }
 }); 
+   
 </script>
 </body>
 </html>
