@@ -720,7 +720,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 break;
         }
     }
-    // ----------------------------------------------------
+  // ----------------------------------------------------
     // 🟧 BLOCCO 3 — FUNZIONI DI LOGICA
     // ----------------------------------------------------
 
@@ -735,7 +735,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         const linkView = document.getElementById("link-view");
-        linkView.dataset.url = ""; // reset di sicurezza
+        if (linkView) linkView.dataset.url = ""; // reset di sicurezza
 
         const titleEl = document.getElementById("view-title");
         const descEl = document.getElementById("view-desc");
@@ -745,29 +745,67 @@ document.addEventListener("DOMContentLoaded", function() {
         if (descEl) descEl.innerText = "";
         if (badgeEl) badgeEl.innerText = ""; // reset badge
 
-        // Reset base
+        // Reset base effetto pulsing
         if (linkView) linkView.classList.remove("pulsing-effect");
 
-       // 1️⃣ NUOVO UTENTE (in attesa / senza password)
-if (stato === "in attesa" || !haPassword) {
-    linkView.dataset.mode = "preview-draft";
-    linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-    linkView.style.pointerEvents = "auto";   // ⭐ AGGIUNTA
-    linkView.style.opacity = "1";            // ⭐ AGGIUNTA
-    aggiornaCard("Digital Identity", "Anteprima iniziale", "Bozza");
-    aggiornaBadge("bozza");
+        // ========================================================
+        // 🔔 LOGICA DINAMICA CAMPANELLA NOTIFICHE (Messa in alto)
+        // ========================================================
+        const bellIcon = document.getElementById('btn-notifications');
+        const notifDraftItem = document.getElementById('notif-draft-item');
+        const notifEmptyState = document.getElementById('notif-empty-state');
 
-    linkView.classList.add("pulsing-effect");
-    return;
-}
+        // Reset iniziale dello stato della campanella
+        if (bellIcon) bellIcon.classList.remove('has-notifications');
+        if (notifDraftItem) notifDraftItem.style.display = 'none';
+        if (notifEmptyState) notifEmptyState.style.display = 'flex';
 
+        // Se siamo nello scenario dove l'utente loggato ha una bozza, o è un nuovo utente con bozza
+        if ((haBozza && localStorage.getItem("loggedUser") === nomeMinuto) || (!haPassword && haBozza)) {
+            // 1. Accendi il pallino verde smeraldo
+            if (bellIcon) bellIcon.classList.add('has-notifications');
+            
+            // 2. Mostra la notifica della bozza e nascondi il messaggio "Nessuna notifica"
+            if (notifDraftItem) {
+                notifDraftItem.style.display = 'flex';
+                notifDraftItem.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+            }
+            if (notifEmptyState) notifEmptyState.style.display = 'none';
+        }
+
+        // Associa l'evento click alla notifica della bozza (se non già associato)
+        if (notifDraftItem && !notifDraftItem.dataset.hasListener) {
+            notifDraftItem.addEventListener('click', function(e) {
+                if (this.dataset.url) {
+                    luxuryNavigate(e, this.dataset.url);
+                }
+            });
+            notifDraftItem.dataset.hasListener = "true"; // Evita duplicati di listener
+        }
+        // ========================================================
+
+        // 1️⃣ NUOVO UTENTE (in attesa / senza password)
+        if (stato === "in attesa" || !haPassword) {
+            if (linkView) {
+                linkView.dataset.mode = "preview-draft";
+                linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+                linkView.style.pointerEvents = "auto";   
+                linkView.style.opacity = "1";            
+                linkView.classList.add("pulsing-effect");
+            }
+            aggiornaCard("Digital Identity", "Anteprima iniziale", "Bozza");
+            aggiornaBadge("bozza");
+            return;
+        }
 
         // 2️⃣ UTENTE ATTIVO SENZA BOZZA → versione pubblica
         if (stato === "attivo" && !haBozza) {
-            linkView.dataset.mode = "preview-public";
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-             linkView.style.pointerEvents = "auto";   // ⭐ AGGIUNTA
-    linkView.style.opacity = "1";            // ⭐ AGGIUNTA   
+            if (linkView) {
+                linkView.dataset.mode = "preview-public";
+                linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+                linkView.style.pointerEvents = "auto";   
+                linkView.style.opacity = "1";            
+            }
             aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
             aggiornaBadge("online");
             return;
@@ -775,57 +813,28 @@ if (stato === "in attesa" || !haPassword) {
 
         // Se esiste una bozza ma l'utente non è loggato → forziamo la versione pubblica
         if (haBozza && localStorage.getItem("loggedUser") !== nomeMinuto) {
-            linkView.dataset.mode = "preview-public";
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-            linkView.style.pointerEvents = "auto";   // ⭐ AGGIUNTA
-    linkView.style.opacity = "1";            // ⭐ AGGIUNTA  
+            if (linkView) {
+                linkView.dataset.mode = "preview-public";
+                linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+                linkView.style.pointerEvents = "auto";   
+                linkView.style.opacity = "1";  
+            }
             return;
         }
 
         // 3️⃣ UTENTE ATTIVO CON BOZZA → anteprima bozza
         if (stato === "attivo" && haBozza) {
-            linkView.dataset.mode = "preview-draft";
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-            linkView.style.pointerEvents = "auto";   // ⭐ AGGIUNTA
-    linkView.style.opacity = "1";            // ⭐ AGGIUNTA
-
+            if (linkView) {
+                linkView.dataset.mode = "preview-draft";
+                linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+                linkView.style.pointerEvents = "auto";   
+                linkView.style.opacity = "1";            
+            }
             aggiornaCard("Digital Identity", "Anteprima bozza non pubblicata", "Bozza salvata");
             aggiornaBadge("bozza");
             return;
         }
     }
-    // Aggiungi questo alla fine della funzione determinaModalitaAnteprima(record, nomeMinuto)
-
-const bellIcon = document.getElementById('btn-notifications');
-const notifDraftItem = document.getElementById('notif-draft-item');
-const notifEmptyState = document.getElementById('notif-empty-state');
-
-// Reset di base
-if (bellIcon) bellIcon.classList.remove('has-notifications');
-if (notifDraftItem) notifDraftItem.style.display = 'none';
-if (notifEmptyState) notifEmptyState.style.display = 'flex';
-
-// Se siamo in uno scenario dove esiste una bozza (Punto 1 o Punto 3)
-if (haBozza && localStorage.getItem("loggedUser") === nomeMinuto || (!haPassword && haBozza)) {
-    // 1. Accendi il pallino sulla campanella
-    if (bellIcon) bellIcon.classList.add('has-notifications');
-    
-    // 2. Mostra la notifica della bozza e nascondi l'empty state
-    if (notifDraftItem) {
-        notifDraftItem.style.display = 'flex';
-        // Assegna l'URL di anteprima alla notifica in modo che funga da "Deep Link"
-        notifDraftItem.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-    }
-    if (notifEmptyState) notifEmptyState.style.display = 'none';
-}
-
-// Associa la navigazione "Luxury" al click sulla notifica
-if (notifDraftItem) {
-    notifDraftItem.addEventListener('click', function(e) {
-        if (this.dataset.url) {
-            luxuryNavigate(e, this.dataset.url);
-        }
-    });
   // ========================================================
     // LOGICA DINAMICA CAMPANELLA NOTIFICHE (MYQUICKTAG)
     // ========================================================
