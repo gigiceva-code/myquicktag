@@ -767,15 +767,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 🟧 BLOCCO 3 — FUNZIONI DI LOGICA
     // ----------------------------------------------------
 
-    function determinaModalitaAnteprima(record, nomeMinuto) {
-        const stato = (record.stato || "").toLowerCase().trim();
-        const haPassword = record.password && record.password.trim() !== "";
-        const haBozza = record.draft_json && record.draft_json.trim() !== "";
-
-        // Se la bozza è stata pubblicata, non considerarla più
-        if (!record.draft_json || record.draft_json.trim() === "") {
-            localStorage.removeItem("haVistoAnteprima");
-        }
+   
 
         const linkView = document.getElementById("link-view");
         if (linkView) linkView.dataset.url = ""; // reset di sicurezza
@@ -892,6 +884,15 @@ if (stato === "attivo" && haBozza) {
         if (btnView) {
             btnView.style.pointerEvents = "none";
             btnView.style.opacity = "0.5";
+        }
+         function determinaModalitaAnteprima(record, nomeMinuto) {
+        const stato = (record.stato || "").toLowerCase().trim();
+        const haPassword = record.password && record.password.trim() !== "";
+        const haBozza = record.draft_json && record.draft_json.trim() !== "";
+
+        // Se la bozza è stata pubblicata, non considerarla più
+        if (!record.draft_json || record.draft_json.trim() === "") {
+            localStorage.removeItem("haVistoAnteprima");
         }
 
         // 🔥 Reset del flag se arrivo dalla pubblicazione
