@@ -1114,6 +1114,58 @@ if (linkAccount) {
             }
         });
     }
+    // Gestione Click Tasto QR Identity
+const linkQr = document.getElementById("link-qr");
+const qrModal = document.getElementById("qr-modal");
+const closeQrModal = document.getElementById("close-qr-modal");
+const qrWrapActive = document.getElementById("qr-wrap-active");
+const qrWrapPending = document.getElementById("qr-wrap-pending");
+const qrCodeImage = document.getElementById("qr-code-image");
+const qrUsername = document.getElementById("qr-username");
+
+if (linkQr && qrModal) {
+    linkQr.addEventListener("click", function(e) {
+        e.preventDefault(); // Blocca il salto della pagina del link #
+
+        // Resetta la visibilità dei due blocchi interni
+        qrWrapActive.style.display = "none";
+        qrWrapPending.style.display = "none";
+
+        if (isUserPending) {
+            // 🔒 UTENTE IN ATTESA: Mostra il messaggio strategico
+            qrWrapPending.style.display = "block";
+        } else {
+            // 🟢 UTENTE ATTIVO: Genera il QR reale con nomeMinuto
+            // Se nomeMinuto è definito globalmente sotto, userà quello, altrimenti kumo/loggedUser
+            const utenteCorrente = localStorage.getItem("loggedUser") || nomeMinuto || nomeUtenteURL;
+            
+            if (utenteCorrente) {
+                const urlPwa = `${window.location.origin}/tag.html?u=${utenteCorrente}`;
+                qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(urlPwa)}&ecc=M`;
+                if (qrUsername) qrUsername.innerText = `@${utenteCorrente}`;
+                
+                qrWrapActive.style.display = "block";
+            }
+        }
+
+        // Mostra il modal a schermo appiccicato sopra a tutto
+        qrModal.style.display = "flex";
+    });
+}
+
+// Chiusura del Modal cliccando sulla X
+if (closeQrModal && qrModal) {
+    closeQrModal.addEventListener("click", function() {
+        qrModal.style.display = "none";
+    });
+}
+
+// Chiusura del Modal cliccando fuori dal riquadro nero (sull'overlay scuro)
+window.addEventListener("click", function(e) {
+    if (e.target === qrModal) {
+        qrModal.style.display = "none";
+    }
+});
 }); 
    
 </script>
