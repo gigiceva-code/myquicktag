@@ -725,310 +725,30 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
 
     </div>      
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+// ====================================================
+// 🟩 BLOCCO 1 — FUNZIONI DI SUPPORTO & LUXURY NAVIGATE
+// ====================================================
 
-    // 📌 Lettura parametri URL
-    const params = new URLSearchParams(window.location.search);
-    const nomeUtenteURL = params.get("u") || ""; 
-    let isUserPending = false;
-    // 📌 Normalizza loggedUser
-    if (localStorage.getItem("loggedUser")) {
-        localStorage.setItem("loggedUser", localStorage.getItem("loggedUser").toLowerCase());
-    }
+// 1. Aggiorna dinamicamente i testi della card principale
+function aggiornaCard(title, desc, badge) {
+    const titleEl = document.getElementById("view-title");
+    const descEl = document.getElementById("view-desc");
+    const badgeEl = document.getElementById("view-badge");
 
-    // 📌 Reset flag se arrivo dalla pubblicazione
-    const justPublished = params.get("published") === "1";
-    if (justPublished) {
-        localStorage.removeItem("haVistoAnteprima");
-    }
-
-    // 📌 Se manca il parametro → ACCESS DENIED
-    if (!nomeUtenteURL) {
-        document.body.innerHTML = "<div style='padding:50px; text-align:center; font-family:sans-serif; color:#6c6c70; font-size:0.9rem; letter-spacing:1px;'>ACCESS DENIED. PARAMETER MISSING.</div>";
-        return;
-    }
-
-    // 📌 Normalizzazione nome
-    const nomeIniziale = nomeUtenteURL.replace('@', '').trim();
-    const nomeMinuto = nomeIniziale.toLowerCase();
-
-    // 📌 Attivazione manifest dinamico
-    document.getElementById("dynamic-manifest").href = `/api/manifest?u=${nomeMinuto}`;
-    document.getElementById("dynamic-icon").href = `/api/icon?u=${nomeMinuto}`;
-
-    // 📌 Header
-    document.getElementById("dash-user").innerText = "@" + nomeIniziale.toUpperCase();
-
-    // 📌 Link statici
-    document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
-    document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
-   
-  // ----------------------------------------------------
-    // 🟧 BLOCCO 3 — FUNZIONI DI LOGICA
-    // ----------------------------------------------------
-
-   
-
-        const linkView = document.getElementById("link-view");
-        if (linkView) linkView.dataset.url = ""; // reset di sicurezza
-
-        const titleEl = document.getElementById("view-title");
-        const descEl = document.getElementById("view-desc");
-        const badgeEl = document.getElementById("view-badge");
-
-        if (titleEl) titleEl.innerText = "";
-        if (descEl) descEl.innerText = "";
-        if (badgeEl) badgeEl.innerText = ""; // reset badge
-
-        // Reset base effetto pulsing
-        if (linkView) linkView.classList.remove("pulsing-effect");
-
-        // ========================================================
-        // 🔔 LOGICA DINAMICA CAMPANELLA NOTIFICHE (Messa in alto)
-        // ========================================================
-        const bellIcon = document.getElementById('btn-notifications');
-        const notifDraftItem = document.getElementById('notif-draft-item');
-        const notifEmptyState = document.getElementById('notif-empty-state');
-
-        // Reset iniziale dello stato della campanella
-        if (bellIcon) bellIcon.classList.remove('has-notifications');
-        if (notifDraftItem) notifDraftItem.style.display = 'none';
-        if (notifEmptyState) notifEmptyState.style.display = 'flex';
-
-        // Se siamo nello scenario dove l'utente loggato ha una bozza, o è un nuovo utente con bozza
-        if ((haBozza && localStorage.getItem("loggedUser") === nomeMinuto) || (!haPassword && haBozza)) {
-            // 1. Accendi il pallino verde smeraldo
-            if (bellIcon) bellIcon.classList.add('has-notifications');
-            
-            // 2. Mostra la notifica della bozza e nascondi il messaggio "Nessuna notifica"
-            if (notifDraftItem) {
-                notifDraftItem.style.display = 'flex';
-                notifDraftItem.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-            }
-            if (notifEmptyState) notifEmptyState.style.display = 'none';
-        }
-
-        // Associa l'evento click alla notifica della bozza (se non già associato)
-        if (notifDraftItem && !notifDraftItem.dataset.hasListener) {
-            notifDraftItem.addEventListener('click', function(e) {
-                if (this.dataset.url) {
-                    luxuryNavigate(e, this.dataset.url);
-                }
-            });
-            notifDraftItem.dataset.hasListener = "true"; // Evita duplicati di listener
-        }
-        // ========================================================
-
-       // 🟢 1. Stile comune ed eliminazione preventiva del pulsing
-if (linkView) {
-    linkView.style.pointerEvents = "auto";   
-    linkView.style.opacity = "1";   
-    linkView.classList.remove("pulsing-effect"); 
+    if (titleEl) titleEl.innerText = title || "";
+    if (descEl) descEl.innerText = desc || "";
+    if (badgeEl) badgeEl.innerText = badge || "";
 }
 
-// 🔴 2. CONTROLLO OSPITE: Se l'utente visualizzato non è l'utente loggato, forza il pubblico
-if (localStorage.getItem("loggedUser") !== nomeMinuto) {
-    if (linkView) {
-        linkView.dataset.mode = "preview-public";
-        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-    }
-    aggiornaCard("Digital Identity", "Versione pubblica", "Online");
-    aggiornaBadge("online");
-    return;
-}
-
-// 🆕 3. NUOVO UTENTE (In attesa / Senza password)
-if (stato === "in attesa" || !haPassword) {
-    isUserPending = true; 
-    if (linkView) {
-        linkView.dataset.mode = "preview-draft";
-        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-        linkView.classList.add("pulsing-effect");
-    }
-    aggiornaCard("Digital Identity", "Anteprima iniziale", "in attesa");
-    aggiornaBadge("bozza");
-    return;
-}
-
-// 🟢 4. UTENTE ATTIVO SENZA BOZZA → Versione pubblica
-if (stato === "attivo" && !haBozza) {
-    if (linkView) {
-        linkView.dataset.mode = "preview-public";
-        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-    }
-    aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
-    aggiornaBadge("online");
-    return;
-}
-
-// 🟡 5. UTENTE ATTIVO CON BOZZA → Anteprima bozza personale
-if (stato === "attivo" && haBozza) {
-    if (linkView) {
-        linkView.dataset.mode = "preview-draft";
-        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-    }
-    aggiornaCard("Digital Identity", "Anteprima bozza non pubblicata", "modifiche salvate");
-    aggiornaBadge("bozza");
-    return;
-} // <--- Questa chiude l'IF numero 5
- }    // <--- Chiude il blocco esterno padre
- 
-    // ----------------------------------------------------
-    // 🟥 BLOCCO 4 — FUNZIONE PRINCIPALE
-    // ----------------------------------------------------
-
-    async function caricaDatiDashboard(nomeMinuto) {
-
-        // 🔒 Disattiva il pulsante finché i dati non sono pronti
-        const btnView = document.getElementById("link-view");
-        if (btnView) {
-            btnView.style.pointerEvents = "none";
-            btnView.style.opacity = "0.5";
-        }
-         function determinaModalitaAnteprima(record, nomeMinuto) {
-        const stato = (record.stato || "").toLowerCase().trim();
-        const haPassword = record.password && record.password.trim() !== "";
-        const haBozza = record.draft_json && record.draft_json.trim() !== "";
-
-        // Se la bozza è stata pubblicata, non considerarla più
-        if (!record.draft_json || record.draft_json.trim() === "") {
-            localStorage.removeItem("haVistoAnteprima");
-        }
-
-        // 🔥 Reset del flag se arrivo dalla pubblicazione
-        localStorage.removeItem("haVistoAnteprima");
-
-        // 🟢 Se arrivo dalla pubblicazione, forza subito la versione pubblica
-        if (localStorage.getItem("justPublished")) {
-            localStorage.removeItem("justPublished");
-
-            aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
-
-            const linkView = document.getElementById("link-view");
-            if (linkView) {
-                linkView.dataset.mode = "preview-public";
-                linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-                linkView.style.pointerEvents = "auto";
-                linkView.style.opacity = "1";
-            }
-        }
-
-        // 🧼 Pulizia iniziale della card (evita glitch visivi)
-        aggiornaCard("", "", "");
-
-        const linkView = document.getElementById("link-view");
-        if (linkView) {
-            linkView.dataset.url = "";
-            linkView.dataset.mode = "";
-            linkView.classList.remove("pulsing-effect");
-        }
-
-        // ⏳ Il timestamp forza il browser a non usare la cache
-        const timestamp = new Date().getTime();
-
-        try {
-            const response = await fetch(`/api/get-profile?u=${nomeMinuto}&t=${timestamp}`);
-            const data = await response.json();
-
-            if (data.success && data.fields) {
-                const record = data.fields;
-                const statoUtente = (record.stato || "").toLowerCase();
-
-                // Imposta la modalità del pulsante "Vedi anteprima"
-                determinaModalitaAnteprima(record, nomeMinuto);
-
-                // Logica Magic Button con Copy Boutique Aggiornato
-                const stato = (record.stato || "").toLowerCase().trim();
-                const btnView = document.getElementById("link-view");
-
-                if (stato === "in attesa") {
-                    document.getElementById("view-title").innerText = "Digital Identity";
-                    document.getElementById("view-desc").innerText = "Il tuo nome nel mondo.";
-                    btnView.classList.add("pulsing-effect");
-                }
-
-                if (record.username_display) {
-                    const displayPulito = record.username_display.replace('@', '').trim();
-                    document.getElementById("dash-user").innerText = "@" + displayPulito.toUpperCase();
-                }
-
-                if (record.data_scadenza) {
-                    const oggi = new Date();
-                    const scadenza = new Date(record.data_scadenza);
-                    const diffTime = scadenza - oggi;
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    document.getElementById("days-left").innerText = diffDays > 0 ? diffDays + " GG" : "0 GG";
-                } else {
-                    document.getElementById("days-left").innerText = "90 GG";
-                }
-
-                document.getElementById("count-visits").innerText = record.views || record.visits || "0";
-            }
-
-        } catch (error) {
-           console.error("ERRORE REALE IN DASHBOARD:", error); 
-            console.warn("Airtable non risponde, attivo modalità offline.");
-
-            // Fallback UX premium
-            document.getElementById("view-title").innerText = "Digital Identity";
-            document.getElementById("view-desc").innerText = "Connessione temporaneamente non disponibile";
-            document.getElementById("view-badge").innerText = "Offline";
-
-            // Evita click verso pagine incomplete
-            const linkView = document.getElementById("link-view");
-            if (linkView) {
-                linkView.dataset.url = "#";
-                linkView.classList.remove("pulsing-effect");
-            }
-
-            // Mostra valori neutri
-            document.getElementById("days-left").innerText = "--";
-            document.getElementById("count-visits").innerText = "--";
-        }
-         } 
-  // 🔥 AVVIO DASHBOARD
-const urlParams = new URLSearchParams(window.location.search);
-const nomeMinuto = urlParams.get('u');
-
-caricaDatiDashboard(nomeMinuto);
-    
-// ----------------------------------------------------
-// 🟦 BLOCCO 5 — EVENTI CLICK + LUXURY NAVIGATE
-// ----------------------------------------------------
-
-// Navigazione con effetto luxury
-function luxuryNavigate(event, url) {
-    event.preventDefault(); // Blocca il salto immediato
-    
-    // Il cambio pagina si prende un attimo di respiro (250ms)
-    setTimeout(function() {
-        window.location.href = url; 
-    }, 250); 
-}
- // ----------------------------------------------------
-    // 🟩 BLOCCO 2 — FUNZIONI DI SUPPORTO
-    // ----------------------------------------------------
-
-    // Aggiorna titolo, descrizione e badge della card
-    function aggiornaCard(title, desc, badge) {
-        const titleEl = document.getElementById("view-title");
-        const descEl = document.getElementById("view-desc");
-        const badgeEl = document.getElementById("view-badge");
-
-        if (titleEl) titleEl.innerText = title || "";
-        if (descEl) descEl.innerText = desc || "";
-        if (badgeEl) badgeEl.innerText = badge || "";
-    }
-
-    // Aggiorna lo stile del badge (online, bozza, offline…)
-  function aggiornaBadge(stato) {
+// 2. Gestisce gli stili e la visibilità del badge di stato
+function aggiornaBadge(stato) {
     const badgeEl = document.getElementById("view-badge");
     if (!badgeEl) return;
 
-    badgeEl.className = "badge"; // Reset classi
-    badgeEl.style.display = "";  // 🟢 RIPRISTINA LA VISIBILITÀ DI BASE A OGNI CARICAMENTO
+    badgeEl.className = "badge"; // Reset totale delle classi precedenti
+    badgeEl.style.display = "";  // Ripristina la visibilità di base
 
-    switch (stato) {
+    switch (stato.toLowerCase().trim()) {
         case "online":
             badgeEl.innerText = "Online";
             badgeEl.classList.add("badge-online");
@@ -1037,12 +757,12 @@ function luxuryNavigate(event, url) {
         case "bozza":
             badgeEl.innerText = "";
             badgeEl.classList.add("badge-draft");
-            badgeEl.style.display = "none"; // Nasconde la striscia vuota
+            badgeEl.style.display = "none"; // Nasconde lo spazio vuoto se è una bozza
             break;
 
         case "nuovo":
             badgeEl.innerText = "";
-            badgeEl.style.display = "none"; // Nasconde la striscia vuota anche qui per sicurezza
+            badgeEl.style.display = "none";
             break;
 
         case "offline":
@@ -1056,124 +776,269 @@ function luxuryNavigate(event, url) {
             break;
     }
 } 
-// Applichiamo la transizione ai tasti principali
-document.addEventListener("DOMContentLoaded", function() {
 
-    // Recuperiamo il parametro u direttamente qui
-    const urlParams = new URLSearchParams(window.location.search);
-    const uParam = urlParams.get("u") || "";
-    const nomeMinutoLocale = uParam.replace('@', '').trim().toLowerCase();
+// 3. Transizione fluida premium per il cambio pagina (250ms)
+function luxuryNavigate(event, url) {
+    if (event) event.preventDefault(); // Blocca il salto immediato del browser
     
-    // 1. Tasto Vedi Anteprima (La Card in alto)
-    const linkView = document.getElementById('link-view');
-    if (linkView) {
-        linkView.addEventListener('click', function(e) {
-
-            // 🚫 Protezione finale: se l'URL non è pronto, blocca il click
-            if (!linkView.dataset.url || linkView.dataset.url.trim() === "") {
-                e.preventDefault();
-                return;
-            }
-
-            luxuryNavigate(e, linkView.dataset.url);
-        });
-    }
-
-    // 2. Tasto Configure
-    const linkEdit = document.getElementById('link-edit');
-    if (linkEdit) {
-        linkEdit.addEventListener('click', function(e) {
-            luxuryNavigate(e, `edit.html?u=${nomeMinutoLocale}`);
-        });
-    }
-
-    // 3. Tasto QR
-    const linkQR = document.getElementById('link-qr');
-    if (linkQR) {
-        linkQR.addEventListener('click', function(e) {
-            luxuryNavigate(e, `qr.html?u=${nomeMinutoLocale}`);
-        });
-    }
-
-  // 4. Tasto Account
-const linkAccount = document.getElementById('link-account');
-if (linkAccount) {
-    linkAccount.addEventListener('click', function(e) {
-        luxuryNavigate(e, `account.html?u=${nomeMinutoLocale}`);
-    });
+    setTimeout(function() {
+        window.location.href = url; 
+    }, 250); 
 }
-// --- GESTIONE MENU NOTIFICHE (DENTRO BLOCCO 5) ---
-    const btnNotif = document.getElementById('btn-notifications');
-    const dropNotif = document.getElementById('notif-dropdown');
+    // ====================================================
+// 🟦 BLOCCO 2 — LOGICA DI DECISIONE (ANTIPRIMA & NOTIFICHE)
+// ====================================================
 
-    if (btnNotif && dropNotif) {
-        // Apri/Chiudi al click della campanella
-        btnNotif.addEventListener('click', function(e) {
-            e.stopPropagation(); // Evita che il click si chiuda subito
-            dropNotif.classList.toggle('active');
-        });
+// Flag globale per coordinare lo stato dell'utente con il modal del QR Code
+var isUserPending = false;
 
-        // Chiudi la tendina se l'utente tocca fuori dal pannello
-        document.addEventListener('click', function(e) {
-            if (!dropNotif.contains(e.target) && e.target !== btnNotif) {
-                dropNotif.classList.remove('active');
-            }
-        });
+function determinaModalitaAnteprima(record, nomeMinuto) {
+    const stato = (record.stato || "").toLowerCase().trim();
+    const haPassword = record.password && record.password.trim() !== "";
+    const haBozza = record.draft_json && record.draft_json.trim() !== "";
+    const linkView = document.getElementById("link-view");
+
+    // 🧼 1. Pulizia iniziale e reset di sicurezza della card e degli effetti pulsing
+    aggiornaCard("", "", "");
+    if (linkView) {
+        linkView.dataset.url = "";
+        linkView.dataset.mode = "";
+        linkView.style.pointerEvents = "auto";   
+        linkView.style.opacity = "1";   
+        linkView.classList.remove("pulsing-effect");
     }
-    // Gestione Click Tasto QR Identity
-const linkQr = document.getElementById("link-qr");
-const qrModal = document.getElementById("qr-modal");
-const closeQrModal = document.getElementById("close-qr-modal");
-const qrWrapActive = document.getElementById("qr-wrap-active");
-const qrWrapPending = document.getElementById("qr-wrap-pending");
-const qrCodeImage = document.getElementById("qr-code-image");
-const qrUsername = document.getElementById("qr-username");
 
-if (linkQr && qrModal) {
-    linkQr.addEventListener("click", function(e) {
-        e.preventDefault(); // Blocca il salto della pagina del link #
+    // Gestione pulizia flag di sosta per l'anteprima
+    if (!record.draft_json || record.draft_json.trim() === "") {
+        localStorage.removeItem("haVistoAnteprima");
+    }
+    localStorage.removeItem("haVistoAnteprima"); 
 
-        // Resetta la visibilità dei due blocchi interni
-        qrWrapActive.style.display = "none";
-        qrWrapPending.style.display = "none";
+    // ========================================================
+    // 🔔 SOTTO-LOGICA: GESTIONE CAMPANELLA NOTIFICHE
+    // ========================================================
+    const bellIcon = document.getElementById('btn-notifications');
+    const notifDraftItem = document.getElementById('notif-draft-item');
+    const notifEmptyState = document.getElementById('notif-empty-state');
 
-        if (isUserPending) {
-            // 🔒 UTENTE IN ATTESA: Mostra il messaggio strategico
-            qrWrapPending.style.display = "block";
-        } else {
-            // 🟢 UTENTE ATTIVO: Genera il QR reale con nomeMinuto
-            // Se nomeMinuto è definito globalmente sotto, userà quello, altrimenti kumo/loggedUser
-            const utenteCorrente = localStorage.getItem("loggedUser") || nomeMinuto || nomeUtenteURL;
-            
-            if (utenteCorrente) {
-                const urlPwa = `${window.location.origin}/tag.html?u=${utenteCorrente}`;
-                qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(urlPwa)}&ecc=M`;
-                if (qrUsername) qrUsername.innerText = `@${utenteCorrente}`;
-                
-                qrWrapActive.style.display = "block";
+    // Reset visivo di partenza
+    if (bellIcon) bellIcon.classList.remove('has-notifications');
+    if (notifDraftItem) notifDraftItem.style.display = 'none';
+    if (notifEmptyState) notifEmptyState.style.display = 'flex';
+
+    // Accendi il pallino smeraldo se c'è una bozza propria o se è un nuovo utente con bozza iniziale
+    if ((haBozza && localStorage.getItem("loggedUser") === nomeMinuto) || (!haPassword && haBozza)) {
+        if (bellIcon) bellIcon.classList.add('has-notifications');
+        if (notifDraftItem) {
+            notifDraftItem.style.display = 'flex';
+            notifDraftItem.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+        }
+        if (notifEmptyState) notifEmptyState.style.display = 'none';
+    }
+
+    // Associa l'evento click alla riga di notifica (evitando listener duplicati)
+    if (notifDraftItem && !notifDraftItem.dataset.hasListener) {
+        notifDraftItem.addEventListener('click', function(e) {
+            if (this.dataset.url) {
+                luxuryNavigate(e, this.dataset.url);
             }
+        });
+        notifDraftItem.dataset.hasListener = "true";
+    }
+
+    // ========================================================
+    // 🚀 ALGORITMO DI ASSEGNAZIONE DEL "MAGIC BUTTON"
+    // ========================================================
+
+    // 🟢 CASE 0: Ritorno immediato da pubblicazione (Forzatura UX)
+    if (localStorage.getItem("justPublished")) {
+        localStorage.removeItem("justPublished");
+        aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
+        aggiornaBadge("online");
+        if (linkView) {
+            linkView.dataset.mode = "preview-public";
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        }
+        return;
+    }
+
+    // 🔴 CASE 1: CONTROLLO OSPITE (Se chi guarda non è il proprietario del Tag)
+    if (localStorage.getItem("loggedUser") !== nomeMinuto) {
+        if (linkView) {
+            linkView.dataset.mode = "preview-public";
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        }
+        aggiornaCard("Digital Identity", "Versione pubblica", "Online");
+        aggiornaBadge("online");
+        return;
+    }
+
+    // 🆕 CASE 2: NUOVO UTENTE (In attesa di attivazione o senza password)
+    if (stato === "in attesa" || !haPassword) {
+        isUserPending = true; // Sblocca il blocco strategico del QR Code
+        if (linkView) {
+            linkView.dataset.mode = "preview-draft";
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+            linkView.classList.add("pulsing-effect"); // Attira il click
+        }
+        aggiornaCard("Digital Identity", "Anteprima iniziale", "in attesa");
+        aggiornaBadge("bozza");
+        return;
+    }
+
+    // 🟢 CASE 3: UTENTE ATTIVO SENZA BOZZA (Tutto pubblicato correttamente)
+    if (stato === "attivo" && !haBozza) {
+        if (linkView) {
+            linkView.dataset.mode = "preview-public";
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        }
+        aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
+        aggiornaBadge("online");
+        return;
+    }
+
+    // 🟡 CASE 4: UTENTE ATTIVO CON BOZZA (Modifiche salvate pronte da testare)
+    if (stato === "attivo" && haBozza) {
+        if (linkView) {
+            linkView.dataset.mode = "preview-draft";
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+        }
+        aggiornaCard("Digital Identity", "Anteprima bozza non pubblicata", "modifiche salvate");
+        aggiornaBadge("bozza");
+        return;
+    }
+}
+    // ====================================================
+// 🟨 BLOCCO 3 — CARICAMENTO DATI DA DATABASE (API)
+// ====================================================
+
+async function caricaDatiDashboard(nomeMinuto) {
+    if (!nomeMinuto) {
+        console.error("[myquicktag] Errore: nomeMinuto non definito.");
+        return;
+    }
+
+    try {
+        // Chiamata all'endpoint per recuperare i dati del profilo
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const data = await response.json();
+
+        if (data && data.success) {
+            console.log("[myquicktag] Dati ricevuti con successo:", data.fields);
+            
+            // Passiamo il record al cervello decisionale del Blocco 2
+            determinaModalitaAnteprima(data.fields, nomeMinuto);
+            
+            // Nota per i blocchi successivi: qui si innescherà la logica del QR Code
+            if (typeof gestisciLogicaQRCode === "function") {
+                gestisciLogicaQRCode(nomeMinuto);
+            }
+        } else {
+            console.error("[myquicktag] Profilo non trovato o errore lato server:", data.error);
+            // Fallback grafico di sicurezza in caso di record mancante
+            aggiornaCard("Digital Identity", "Profilo non configurato", "Offline");
+            aggiornaBadge("offline");
+        }
+    } catch (err) {
+        console.error("[myquicktag] Errore critico di rete durante il fetch:", err);
+        // Fallback in caso di totale assenza di connessione
+        aggiornaCard("Errore Connessione", "Impossibile contattare il server", "Offline");
+        aggiornaBadge("offline");
+    }
+}
+    // ====================================================
+// 🟪 BLOCCO 4 — GESTIONE LOGICA MODAL QR CODE
+// ====================================================
+
+function gestisciLogicaQRCode(nomeMinuto) {
+    const qrWrapActive = document.getElementById("qr-wrap-active");
+    const qrWrapPending = document.getElementById("qr-wrap-pending");
+
+    if (!qrWrapActive || !qrWrapPending) {
+        console.warn("[myquicktag] Attenzione: Elementi HTML qr-wrap-active o qr-wrap-pending non trovati nella pagina.");
+        return;
+    }
+
+    // 🛑 SCENARIO 1: Utente "IN ATTESA" -> Nasconde il QR reale e mostra l'invito strategico
+    if (isUserPending) {
+        qrWrapActive.style.display = "none";
+        qrWrapPending.style.display = "block";
+        console.log("[myquicktag] QR Code: Profilo 'In Attesa'. Mostrato blocco di attivazione.");
+    } 
+    // 🟢 SCENARIO 2: Utente "ATTIVO" -> Mostra il QR Code reale della versione pubblica
+    else {
+        qrWrapPending.style.display = "none";
+        qrWrapActive.style.display = "block";
+        console.log("[myquicktag] QR Code: Profilo 'Attivo'. QR sbloccato.");
+
+        // Generazione dell'URL pulito per la PWA pubblica
+        const publicUrl = `${window.location.origin}/tag.html?u=${nomeMinuto}&mode=public`;
+
+        // Gancio di sicurezza: Se usi un'immagine predefinita per il QR
+        const qrImg = document.getElementById("qr-image-element");
+        if (qrImg) {
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(publicUrl)}`;
         }
 
-        // Mostra il modal a schermo appiccicato sopra a tutto
-        qrModal.style.display = "flex";
-    });
-}
-
-// Chiusura del Modal cliccando sulla X
-if (closeQrModal && qrModal) {
-    closeQrModal.addEventListener("click", function() {
-        qrModal.style.display = "none";
-    });
-}
-
-// Chiusura del Modal cliccando fuori dal riquadro nero (sull'overlay scuro)
-window.addEventListener("click", function(e) {
-    if (e.target === qrModal) {
-        qrModal.style.display = "none";
+        // Gancio di sicurezza: Se invece usi la libreria QRCode.js su un container div
+        const qrContainer = document.getElementById("qrcode");
+        if (qrContainer && typeof QRCode !== "undefined") {
+            qrContainer.innerHTML = ""; // Svuota vecchi rendering per evitare sdoppiamenti
+            new QRCode(qrContainer, {
+                text: publicUrl,
+                width: 180,
+                height: 180,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
     }
-});
+}
+   // ====================================================
+// 🟧 BLOCCO 5 — INIZIALIZZAZIONE & EVENT LISTENERS
+// ====================================================
+
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Estrazione del nome utente dall'URL (?u=nomeutente)
+    const urlParams = new URLSearchParams(window.location.search);
+    let nomeMinuto = urlParams.get("u") || urlParams.get("user");
+
+    // Fallback: se manca nell'URL, verifica se c'è un utente loggato in sessione
+    if (!nomeMinuto) {
+        nomeMinuto = localStorage.getItem("loggedUser");
+    }
+
+    // Se non viene trovato alcun utente, evita il crash e mostra un avviso pulito
+    if (!nomeMinuto) {
+        console.warn("[myquicktag] Attenzione: Nessun utente specificato nell'URL o nel localStorage.");
+        aggiornaCard("Digital Identity", "Nessun account selezionato", "Offline");
+        aggiornaBadge("offline");
+        return;
+    }
+
+    nomeMinuto = nomeMinuto.trim();
+    console.log("[myquicktag] Avvio flusso dashboard per l'utente:", nomeMinuto);
+
+    // 2. Avvio del recupero dati (Innesca Blocco 3 -> Blocco 2 -> Blocco 4)
+    caricaDatiDashboard(nomeMinuto);
+
+    // 3. Gestione del click sul "Magic Button" (Card Principale)
+    const linkView = document.getElementById("link-view");
+    if (linkView) {
+        linkView.addEventListener("click", function(e) {
+            e.preventDefault(); // Blocca l'azione nativa immediata del browser
+            
+            const targetUrl = this.dataset.url;
+            if (targetUrl && targetUrl.trim() !== "") {
+                console.log("[myquicktag] Navigazione premium in corso verso:", targetUrl);
+                luxuryNavigate(e, targetUrl);
+            } else {
+                console.warn("[myquicktag] Click registrato, ma l'URL di destinazione della card non è ancora pronto.");
+            }
+        });
+    }
 }); 
-   
 </script>
 </body>
 </html>
