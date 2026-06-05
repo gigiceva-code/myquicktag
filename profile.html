@@ -965,6 +965,7 @@ if (stato === "attivo" && haBozza) {
             }
 
         } catch (error) {
+           console.error("ERRORE REALE IN DASHBOARD:", error); 
             console.warn("Airtable non risponde, attivo modalità offline.");
 
             // Fallback UX premium
