@@ -1033,8 +1033,11 @@ if (stato === "attivo" && haBozza) {
             document.getElementById("count-visits").innerText = "--";
         }
          } 
-   // 🔥 AVVIO DASHBOARD
-    caricaDatiDashboard(nomeMinuto); 
+  // 🔥 AVVIO DASHBOARD
+const urlParams = new URLSearchParams(window.location.search);
+const nomeMinuto = urlParams.get('u');
+
+caricaDatiDashboard(nomeMinuto);
     
 // ----------------------------------------------------
 // 🟦 BLOCCO 5 — EVENTI CLICK + LUXURY NAVIGATE
