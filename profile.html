@@ -908,7 +908,7 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
         return;
     }
 }
-    // ====================================================
+   // ====================================================
 // 🟨 BLOCCO 3 — CARICAMENTO DATI DA DATABASE (API)
 // ====================================================
 
@@ -919,29 +919,31 @@ async function caricaDatiDashboard(nomeMinuto) {
     }
 
     try {
-        // Chiamata all'endpoint per recuperare i dati del profilo
         const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
         const data = await response.json();
 
         if (data && data.success) {
             console.log("[myquicktag] Dati ricevuti con successo:", data.fields);
             
-            // Passiamo il record al cervello decisionale del Blocco 2
+            // 1. Attiva il cervello decisionale della card principale
             determinaModalitaAnteprima(data.fields, nomeMinuto);
             
-            // Nota per i blocchi successivi: qui si innescherà la logica del QR Code
+            // 2. 🎯 ATTIVAZIONE SATELLITE: Forza l'aggiornamento di visite e trial
+            if (typeof aggiornaContatoriDashboard === "function") {
+                aggiornaContatoriDashboard(data.fields);
+            }
+            
+            // 3. Gestisce lo sblocco/blocco del QR Code
             if (typeof gestisciLogicaQRCode === "function") {
                 gestisciLogicaQRCode(nomeMinuto);
             }
         } else {
             console.error("[myquicktag] Profilo non trovato o errore lato server:", data.error);
-            // Fallback grafico di sicurezza in caso di record mancante
             aggiornaCard("Digital Identity", "Profilo non configurato", "Offline");
             aggiornaBadge("offline");
         }
     } catch (err) {
         console.error("[myquicktag] Errore critico di rete durante il fetch:", err);
-        // Fallback in caso di totale assenza di connessione
         aggiornaCard("Errore Connessione", "Impossibile contattare il server", "Offline");
         aggiornaBadge("offline");
     }
