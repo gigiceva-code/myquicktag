@@ -401,6 +401,14 @@ document.getElementById("receipt-username").innerText = `@${usernameDisplay.repl
         }
 
         // 3. CHIAMATA fetch AL DATABASE PER SALVARE LA PASSWORD ED ATTIVARE IL PROFILO
+        async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
         async function salvaCredenzialiEAttiva() {
             const passwordSelezionata = document.getElementById("checkout-pwd").value;
             
@@ -416,7 +424,7 @@ document.getElementById("receipt-username").innerText = `@${usernameDisplay.repl
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         username_system: targetUserClean,
-                        password: passwordSelezionata,
+                        password: await hashPassword(passwordSelezionata),
                         stato: "attivo" // Cambiamo definitivamente lo stato sul database
                     })
                 });
