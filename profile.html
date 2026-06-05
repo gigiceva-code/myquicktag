@@ -762,57 +762,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 📌 Link statici
     document.getElementById("link-qr").href = `qr.html?u=${nomeMinuto}`;
     document.getElementById("link-account").href = `account.html?u=${nomeMinuto}`;
-    // ----------------------------------------------------
-    // 🟩 BLOCCO 2 — FUNZIONI DI SUPPORTO
-    // ----------------------------------------------------
-
-    // Aggiorna titolo, descrizione e badge della card
-    function aggiornaCard(title, desc, badge) {
-        const titleEl = document.getElementById("view-title");
-        const descEl = document.getElementById("view-desc");
-        const badgeEl = document.getElementById("view-badge");
-
-        if (titleEl) titleEl.innerText = title || "";
-        if (descEl) descEl.innerText = desc || "";
-        if (badgeEl) badgeEl.innerText = badge || "";
-    }
-
-    // Aggiorna lo stile del badge (online, bozza, offline…)
-  function aggiornaBadge(stato) {
-    const badgeEl = document.getElementById("view-badge");
-    if (!badgeEl) return;
-
-    badgeEl.className = "badge"; // Reset classi
-    badgeEl.style.display = "";  // 🟢 RIPRISTINA LA VISIBILITÀ DI BASE A OGNI CARICAMENTO
-
-    switch (stato) {
-        case "online":
-            badgeEl.innerText = "Online";
-            badgeEl.classList.add("badge-online");
-            break;
-
-        case "bozza":
-            badgeEl.innerText = "";
-            badgeEl.classList.add("badge-draft");
-            badgeEl.style.display = "none"; // Nasconde la striscia vuota
-            break;
-
-        case "nuovo":
-            badgeEl.innerText = "";
-            badgeEl.style.display = "none"; // Nasconde la striscia vuota anche qui per sicurezza
-            break;
-
-        case "offline":
-            badgeEl.innerText = "Offline";
-            badgeEl.classList.add("badge-offline");
-            break;
-
-        default:
-            badgeEl.innerText = "";
-            badgeEl.style.display = "none";
-            break;
-    }
-} 
+   
   // ----------------------------------------------------
     // 🟧 BLOCCO 3 — FUNZIONI DI LOGICA
     // ----------------------------------------------------
@@ -1052,7 +1002,57 @@ function luxuryNavigate(event, url) {
         window.location.href = url; 
     }, 250); 
 }
+ // ----------------------------------------------------
+    // 🟩 BLOCCO 2 — FUNZIONI DI SUPPORTO
+    // ----------------------------------------------------
 
+    // Aggiorna titolo, descrizione e badge della card
+    function aggiornaCard(title, desc, badge) {
+        const titleEl = document.getElementById("view-title");
+        const descEl = document.getElementById("view-desc");
+        const badgeEl = document.getElementById("view-badge");
+
+        if (titleEl) titleEl.innerText = title || "";
+        if (descEl) descEl.innerText = desc || "";
+        if (badgeEl) badgeEl.innerText = badge || "";
+    }
+
+    // Aggiorna lo stile del badge (online, bozza, offline…)
+  function aggiornaBadge(stato) {
+    const badgeEl = document.getElementById("view-badge");
+    if (!badgeEl) return;
+
+    badgeEl.className = "badge"; // Reset classi
+    badgeEl.style.display = "";  // 🟢 RIPRISTINA LA VISIBILITÀ DI BASE A OGNI CARICAMENTO
+
+    switch (stato) {
+        case "online":
+            badgeEl.innerText = "Online";
+            badgeEl.classList.add("badge-online");
+            break;
+
+        case "bozza":
+            badgeEl.innerText = "";
+            badgeEl.classList.add("badge-draft");
+            badgeEl.style.display = "none"; // Nasconde la striscia vuota
+            break;
+
+        case "nuovo":
+            badgeEl.innerText = "";
+            badgeEl.style.display = "none"; // Nasconde la striscia vuota anche qui per sicurezza
+            break;
+
+        case "offline":
+            badgeEl.innerText = "Offline";
+            badgeEl.classList.add("badge-offline");
+            break;
+
+        default:
+            badgeEl.innerText = "";
+            badgeEl.style.display = "none";
+            break;
+    }
+} 
 // Applichiamo la transizione ai tasti principali
 document.addEventListener("DOMContentLoaded", function() {
 
