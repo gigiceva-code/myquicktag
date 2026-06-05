@@ -730,7 +730,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 📌 Lettura parametri URL
     const params = new URLSearchParams(window.location.search);
     const nomeUtenteURL = params.get("u") || ""; 
-
+    let isUserPending = false;
     // 📌 Normalizza loggedUser
     if (localStorage.getItem("loggedUser")) {
         localStorage.setItem("loggedUser", localStorage.getItem("loggedUser").toLowerCase());
@@ -879,6 +879,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // 1️⃣ NUOVO UTENTE (in attesa / senza password)
         if (stato === "in attesa" || !haPassword) {
+            isUserPending = true; // 🟢 Segnamo che è in attesa
             if (linkView) {
                 linkView.dataset.mode = "preview-draft";
                 linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
@@ -928,7 +929,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
     }
-  
+  } 
    
     // ----------------------------------------------------
     // 🟥 BLOCCO 4 — FUNZIONE PRINCIPALE
