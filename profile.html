@@ -947,6 +947,38 @@ async function caricaDatiDashboard(nomeMinuto) {
     }
 }
     // ====================================================
+// 📊 FUNZIONE SATELLITE — AGGIORNAMENTO CONTATORI & TRIAL
+// ====================================================
+function aggiornaContatoriDashboard(record) {
+    // 1. Aggiornamento Scansioni reali (ID: count-visits)
+    const scansEl = document.getElementById("count-visits");
+    if (scansEl) {
+        // Prende il valore 'views' dal DB (o 'scans'). Fallback a 0.
+        const totaleScansioni = record.views || record.scans || 0;
+        scansEl.innerText = totaleScansioni;
+        console.log("[myquicktag] Contatore visite aggiornato su DOM:", totaleScansioni);
+    }
+
+    // 2. Aggiornamento Giorni di Trial Rimanenti (ID: days-left)
+    const trialEl = document.getElementById("days-left");
+    if (trialEl) {
+        let giorniRimanenti = 90; // Fallback di sicurezza standard a 90 giorni
+
+        if (record.data_scadenza) {
+            const dataScadenza = new Date(record.data_scadenza);
+            const oggi = new Date();
+            
+            const diffTempo = dataScadenza - oggi;
+            giorniRimanenti = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+            
+            if (giorniRimanenti < 0) giorniRimanenti = 0;
+        }
+        
+        trialEl.innerText = giorniRimanenti + " gg";
+        console.log("[myquicktag] Giorni trial aggiornati su DOM:", giorniRimanenti);
+    }
+}
+    // ====================================================
 // 🟪 BLOCCO 4 — GESTIONE LOGICA MODAL QR CODE
 // ====================================================
 
@@ -974,24 +1006,16 @@ function gestisciLogicaQRCode(nomeMinuto) {
         // Generazione dell'URL pulito per la PWA pubblica
         const publicUrl = `${window.location.origin}/tag.html?u=${nomeMinuto}&mode=public`;
 
-        // Gancio di sicurezza: Se usi un'immagine predefinita per il QR
-        const qrImg = document.getElementById("qr-image-element");
+        // 🎯 Aggancio sul tuo ID reale dell'immagine QR
+        const qrImg = document.getElementById("qr-code-image");
         if (qrImg) {
             qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(publicUrl)}`;
         }
 
-        // Gancio di sicurezza: Se invece usi la libreria QRCode.js su un container div
-        const qrContainer = document.getElementById("qrcode");
-        if (qrContainer && typeof QRCode !== "undefined") {
-            qrContainer.innerHTML = ""; // Svuota vecchi rendering per evitare sdoppiamenti
-            new QRCode(qrContainer, {
-                text: publicUrl,
-                width: 180,
-                height: 180,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
+        // 🎯 Iniezione dinamica dello username sotto al QR nel modal
+        const qrUsernameLabel = document.getElementById("qr-username");
+        if (qrUsernameLabel) {
+            qrUsernameLabel.innerText = `@${nomeMinuto}`;
         }
     }
 }
