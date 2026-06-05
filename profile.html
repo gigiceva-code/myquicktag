@@ -931,7 +931,7 @@ if (stato === "attivo" && haBozza) {
 
             if (data.success && data.fields) {
                 const record = data.fields;
-                const stato = (record.stato || "").toLowerCase();
+                const statoUtente = (record.stato || "").toLowerCase();
 
                 // Imposta la modalità del pulsante "Vedi anteprima"
                 determinaModalitaAnteprima(record, nomeMinuto);
