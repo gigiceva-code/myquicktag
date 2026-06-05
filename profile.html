@@ -1021,46 +1021,105 @@ function gestisciLogicaQRCode(nomeMinuto) {
         }
     }
 }
-   // ====================================================
-// 🟧 BLOCCO 5 — INIZIALIZZAZIONE & EVENT LISTENERS
+  // ====================================================
+// 🟧 BLOCCO 5 — INIZIALIZZAZIONE & TELEMETRIA DIAGNOSTICA
 // ====================================================
 
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Estrazione del nome utente dall'URL (?u=nomeutente)
     const urlParams = new URLSearchParams(window.location.search);
     let nomeMinuto = urlParams.get("u") || urlParams.get("user");
 
-    // Fallback: se manca nell'URL, verifica se c'è un utente loggato in sessione
     if (!nomeMinuto) {
         nomeMinuto = localStorage.getItem("loggedUser");
     }
 
-    // Se non viene trovato alcun utente, evita il crash e mostra un avviso pulito
     if (!nomeMinuto) {
-        console.warn("[myquicktag] Attenzione: Nessun utente specificato nell'URL o nel localStorage.");
-        aggiornaCard("Digital Identity", "Nessun account selezionato", "Offline");
-        aggiornaBadge("offline");
+        console.warn("[myquicktag] Attenzione: Nessun utente specificato.");
         return;
     }
 
     nomeMinuto = nomeMinuto.trim();
-    console.log("[myquicktag] Avvio flusso dashboard per l'utente:", nomeMinuto);
+    console.log("[myquicktag] Avvio flusso dashboard per:", nomeMinuto);
 
-    // 2. Avvio del recupero dati (Innesca Blocco 3 -> Blocco 2 -> Blocco 4)
+    // Avvio recupero dati database
     caricaDatiDashboard(nomeMinuto);
 
-    // 3. Gestione del click sul "Magic Button" (Card Principale)
+    // 🕵️‍♂️ TELEMETRIA: Verifichiamo cosa vede il browser nel DOM
+    console.log("[myquicktag] DIAGNOSTICA ELEMENTI:");
+    console.log(" -> Tasto Configure (link-edit):", document.getElementById("link-edit"));
+    console.log(" -> Tasto QR Identity (link-qr):", document.getElementById("link-qr"));
+    console.log(" -> Il Modal QR (qr-modal):", document.getElementById("qr-modal"));
+
+    // 1. Tasto Anteprima
     const linkView = document.getElementById("link-view");
     if (linkView) {
         linkView.addEventListener("click", function(e) {
-            e.preventDefault(); // Blocca l'azione nativa immediata del browser
-            
+            e.preventDefault();
             const targetUrl = this.dataset.url;
-            if (targetUrl && targetUrl.trim() !== "") {
-                console.log("[myquicktag] Navigazione premium in corso verso:", targetUrl);
-                luxuryNavigate(e, targetUrl);
+            if (targetUrl) luxuryNavigate(e, targetUrl);
+        });
+    }
+
+    // 2. Tasto Configure
+    const linkEdit = document.getElementById("link-edit");
+    if (linkEdit) {
+        linkEdit.addEventListener("click", function(e) {
+            e.preventDefault();
+            console.log("[myquicktag] 💥 CLICK INTERCETTATO su Configure!");
+            luxuryNavigate(e, `edit.html?u=${nomeMinuto}`);
+        });
+    } else {
+        console.error("[myquicktag] Errore critico: Pulsante #link-edit NON trovato nel DOM!");
+    }
+
+    // 3. Tasto Account
+    const linkAccount = document.getElementById("link-account");
+    if (linkAccount) {
+        linkAccount.addEventListener("click", function(e) {
+            e.preventDefault();
+            luxuryNavigate(e, `account.html?u=${nomeMinuto}`);
+        });
+    }
+
+    // 4. Tasto Upgrade
+    const linkUpgrade = document.getElementById("link-upgrade");
+    if (linkUpgrade) {
+        linkUpgrade.addEventListener("click", function(e) {
+            e.preventDefault();
+            luxuryNavigate(e, `checkout.html?u=${nomeMinuto}`);
+        });
+    }
+
+    // --- GESTIONE POPUP MODAL QR ---
+    const qrModal = document.getElementById("qr-modal");
+    const linkQR = document.getElementById("link-qr");
+    const closeQRModal = document.getElementById("close-qr-modal");
+
+    if (linkQR) {
+        linkQR.addEventListener("click", function(e) {
+            e.preventDefault();
+            console.log("[myquicktag] 💥 CLICK INTERCETTATO su QR Identity!");
+            if (qrModal) {
+                qrModal.style.display = "flex";
+                console.log("[myquicktag] Modal impostato su display: flex");
             } else {
-                console.warn("[myquicktag] Click registrato, ma l'URL di destinazione della card non è ancora pronto.");
+                console.error("[myquicktag] Errore: Il modal #qr-modal non esiste.");
+            }
+        });
+    } else {
+        console.error("[myquicktag] Errore critico: Pulsante #link-qr NON trovato nel DOM!");
+    }
+
+    if (closeQRModal && qrModal) {
+        closeQRModal.addEventListener("click", function() {
+            qrModal.style.display = "none";
+        });
+    }
+
+    if (qrModal) {
+        qrModal.addEventListener("click", function(e) {
+            if (e.target === qrModal) {
+                qrModal.style.display = "none";
             }
         });
     }
