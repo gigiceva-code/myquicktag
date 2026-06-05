@@ -4,7 +4,12 @@ export default async function handler(req, res) {
     const { tag, pwd } = req.body;
     
     // Step di sicurezza: offuschiamo la password ricevuta per confrontarla con quella su Airtable
-    const pwdProtetta = Buffer.from(pwd).toString('base64'); 
+    const crypto = await import('crypto');
+
+const pwdProtetta = crypto
+    .createHash('sha256')
+    .update(pwd)
+    .digest('hex');
 
     const baseId = process.env.AIRTABLE_BASE_ID;
     const tableId = process.env.AIRTABLE_TABLE_ID;
