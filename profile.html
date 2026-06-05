@@ -507,7 +507,11 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     color: #888888;
     font-size: 0.75rem;
 } 
-    /* Stile Modal QR Identity */
+/* ====================================================
+ * 💎 MYQUICKTAG — STYLE OVERLAY QR LUXURY MINIMAL
+ * ==================================================== */
+
+/* Sfondo oscurato totale con sfocatura premium */
 .qr-modal-overlay {
     position: fixed;
     top: 0;
@@ -515,62 +519,118 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    backdrop-filter: blur(5px);
+    padding: 20px;
+    transition: opacity 0.3s ease;
 }
 
+/* Il box centrale: Matte Black con micro-bordo smeraldo */
 .qr-modal-content {
-    background-color: #111111;
-    border: 1px solid #50C878;
-    padding: 35px 25px;
-    border-radius: 16px;
+    background: #121212;
+    border: 1px solid rgba(80, 200, 120, 0.2); /* Sottile alone verde smeraldo */
+    border-radius: 24px;
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 380px;
     text-align: center;
     position: relative;
-    max-width: 320px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    animation: modalEntrata 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Tasto di chiusura minimale */
 .close-modal-btn {
     position: absolute;
-    top: 10px;
-    right: 15px;
+    top: 18px;
+    right: 20px;
     background: none;
     border: none;
-    color: #ffffff;
+    color: #666666;
     font-size: 28px;
     cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.2s;
+    line-height: 1;
+    transition: color 0.2s ease;
 }
-.close-modal-btn:hover { opacity: 1; color: #50C878; }
+.close-modal-btn:hover {
+    color: #ffffff;
+}
 
-.modal-title { color: #ffffff; margin-bottom: 5px; font-size: 1.25rem; font-weight: 600; }
-.modal-subtitle { color: #888888; font-size: 0.85rem; margin-bottom: 20px; }
-.modal-icon-lock { font-size: 2.5rem; margin-bottom: 15px; }
-.modal-text-pending { color: #ffffff; font-size: 0.95rem; line-height: 1.5; margin-top: 10px; }
+/* Tipografia Luxury */
+.modal-title {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+}
 
+.modal-subtitle {
+    color: #888888;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+/* Cornice QR: bianca per massima leggibilità del sensore */
 .qr-frame {
     background: #ffffff;
-    padding: 12px;
-    border-radius: 12px;
+    padding: 16px;
+    border-radius: 18px;
     display: inline-block;
-    border: 2px solid #50C878;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     margin-bottom: 15px;
 }
-.qr-frame img { width: 180px; height: 180px; display: block; }
-
-.qr-username-label {
+#qr-code-image {
     display: block;
-    color: #50C878;
-    font-weight: 500;
-    font-size: 0.95rem;
-    letter-spacing: 0.5px;
+    width: 180px;
+    height: 180px;
 }
 
+/* Label utente sotto il QR */
+.qr-username-label {
+    display: block;
+    color: var(--accent-smeraldo, #50C878);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+/* SCENARIO PENDING: Stile Lucchetto e Scarsità commerciale */
+.modal-icon-lock {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: inline-block;
+    animation: pulseLock 2s infinite ease-in-out;
+}
+
+.modal-text-pending {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 15px 0;
+}
+
+/* ANIMAZIONI PREMIUM */
+@keyframes modalEntrata {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes pulseLock {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 10px rgba(80, 200, 120, 0.4)); }
+}
 
 </style>
     
