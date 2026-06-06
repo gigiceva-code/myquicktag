@@ -1096,12 +1096,18 @@ window.addEventListener('popstate', (e) => {
 function condividiProfilo(event) {
     if (event) event.stopPropagation();
 
+    // Se la tag non è attiva, blocca la condivisione
+    const stato = (cacheDatiUtente.stato || '').toLowerCase().trim();
+    if (stato === 'in attesa') {
+        mostraToast('Attiva la tua tag per condividerla');
+        return;
+    }
+
     const url = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
     const nome = cacheDatiUtente.username_display || usernameCorrente;
 
     _condividi('myquicktag di @' + nome, url);
 }
-
 // ============================================================
 // CONDIVIDI SEZIONE SINGOLA (bottone nell'overlay interno)
 // ============================================================
