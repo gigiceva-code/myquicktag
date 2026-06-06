@@ -48,23 +48,10 @@ nativeFields.forEach(f => {
   }
 });
 
-// 3. Logica config_canali — solo social puri
-const socialKeys = [
-  "instagram", "tiktok", "whatsapp", "linkedin", 
-  "facebook", "youtube", "x", "telegram", "reddit", "phone", "cv"
-];
-
-const canaliArray = [];
-socialKeys.forEach(key => {
-  if (body[key] !== undefined && typeof body[key] === 'string') {
-    const valClean = body[key].trim();
-    if (valClean !== "") {
-      canaliArray.push({ nome: key, url: valClean });
-    }
-  }
-});
-
-fieldsToSave.config_canali = JSON.stringify(canaliArray);
+// 3. config_canali — usa quello inviato dal client se presente
+if (body.config_canali !== undefined) {
+  fieldsToSave.config_canali = body.config_canali;
+}
     if (data.records && data.records.length > 0) {
       // --- LOGICA UPDATE ---
       const recordId = data.records[0].id;
