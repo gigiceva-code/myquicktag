@@ -631,6 +631,10 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
     0%, 100% { transform: scale(1); opacity: 0.9; }
     50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 10px rgba(80, 200, 120, 0.4)); }
 }
+/* 🚫 Rimozione definitiva del badge Online/Offline dalla card principale */
+#view-badge {
+    display: none !important;
+}
 
 </style>
     
@@ -1099,8 +1103,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     nomeMinuto = nomeMinuto.trim();
-    console.log("[myquicktag] Avvio flusso dashboard per:", nomeMinuto);
-
+ console.log("[myquicktag] Avvio flusso dashboard per:", nomeMinuto);
+// 🎯 MICRO-AGGIUNTA: Stampa lo username dinamico corretto sotto il titolo della Console
+    const dashUserEl = document.getElementById("dash-user");
+    if (dashUserEl) {
+        dashUserEl.innerText = `@${nomeMinuto}`;
+    }
     // Avvio recupero dati database
     caricaDatiDashboard(nomeMinuto);
 
