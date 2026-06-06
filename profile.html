@@ -849,8 +849,9 @@ function luxuryNavigate(event, url) {
         window.location.href = url; 
     }, 250); 
 }
-    // ====================================================
-// 🟦 BLOCCO 2 — LOGICA DI DECISIONE (ANTIPRIMA & NOTIFICHE)
+
+// ====================================================
+// 🟦 BLOCCO 2 — LOGICA DI DECISIONE (ANTEPRIMA & NOTIFICHE)
 // ====================================================
 
 // Flag globale per coordinare lo stato dell'utente con il modal del QR Code
@@ -861,6 +862,9 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     const haPassword = record.password && record.password.trim() !== "";
     const haBozza = record.draft_json && record.draft_json.trim() !== "";
     const linkView = document.getElementById("link-view");
+
+    // 🎯 AGGIORNAMENTO REGOLA: Settiamo il flag globale in base allo stato reale di Airtable
+    isUserPending = (stato === "in attesa");
 
     // 🧼 1. Pulizia iniziale e reset di sicurezza della card e degli effetti pulsing
     aggiornaCard("", "", "");
@@ -909,6 +913,29 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
         });
         notifDraftItem.dataset.hasListener = "true";
     }
+
+    // ========================================================
+    // 🎯 LOGICA REVISIONATA: INDIRIZZAMENTO CARD CON CLAIM FISSO
+    // ========================================================
+    const claimLuxury = "Il tuo nome nel mondo";
+    
+    // Scriviamo il titolo e il claim fisso sulla card
+    aggiornaCard("Digital Identity", claimLuxury);
+
+    if (isUserPending) {
+        // 🛑 UTENTE IN ATTESA: Punta alla modalità Bozza (draft) senza cambiare testo visivo
+        if (linkView) {
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+        }
+        console.log("[myquicktag] Router Card: Utente 'In Attesa'. Link impostato su DRAFT.");
+    } else {
+        // 🟢 UTENTE ATTIVO: Punta alla PWA pubblica senza cambiare testo visivo
+        if (linkView) {
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        }
+        console.log("[myquicktag] Router Card: Utente 'Attivo'. Link impostato su PUBLIC.");
+    }
+}
 
     // ========================================================
     // 🚀 ALGORITMO DI ASSEGNAZIONE DEL "MAGIC BUTTON"
