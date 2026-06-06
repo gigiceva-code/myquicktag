@@ -208,16 +208,15 @@
         <div class="form-group"><label>Sito Web</label><input type="text" id="field-sito_web"></div>
         <div class="form-group"><label>Link CV (URL)</label><input type="text" id="field-cv"></div>
 
-        <div class="section-title">Social Network</div>
-        <div class="form-group"><label>WhatsApp</label><input type="text" id="field-whatsapp"></div>
-        <div class="form-group"><label>Instagram</label><input type="text" id="field-instagram"></div>
-        <div class="form-group"><label>TikTok</label><input type="text" id="field-tiktok"></div>
-        <div class="form-group"><label>LinkedIn</label><input type="text" id="field-linkedin"></div>
-        <div class="form-group"><label>YouTube</label><input type="text" id="field-youtube"></div>
-        <div class="form-group"><label>X (Twitter)</label><input type="text" id="field-x"></div>
-        <div class="form-group"><label>Telegram</label><input type="text" id="field-telegram"></div>
-        <div class="form-group"><label>Facebook</label><input type="text" id="field-facebook"></div>
-        <div class="form-group"><label>Reddit</label><input type="text" id="field-reddit"></div>
+      <div class="section-title">Social Network</div>
+
+<div class="form-group" style="display:flex; gap:8px; align-items:center;">
+    <input type="text" id="input-nuovo-canale" placeholder="Incolla il link del tuo canale..." style="flex:1;">
+    <button onclick="aggiungiCanale()" style="padding:12px 16px; background:white; color:black; border:none; border-radius:10px; font-weight:600; font-size:0.85rem; cursor:pointer; white-space:nowrap; flex-shrink:0;">+ Aggiungi</button>
+</div>
+
+<div id="lista-canali" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
+<input type="hidden" id="field-config_canali" value="[]">
 
         <div class="sticky-footer">
     <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
@@ -251,13 +250,24 @@ async function inizializzaPagina() {
         if (f) {
             if(f.plan) selectPlan(f.plan);
             
-            // Popolamento dinamico di tutti i campi
-            const campi = ['bio', 'instagram', 'tiktok', 'whatsapp', 'linkedin', 'email', 'phone', 'facebook', 'youtube', 'x', 'telegram', 'reddit', 'sito_web', 'cv'];
-            campi.forEach(c => {
-                const el = document.getElementById(`field-${c}`);
-                if (el && f[c]) el.value = f[c];
-            });
+         // Popolamento dinamico di tutti i campi
+const campi = ['bio', 'email', 'sito_web', 'cv'];
+campi.forEach(c => {
+    const el = document.getElementById(`field-${c}`);
+    if (el && f[c]) el.value = f[c];
+});
 
+// Carica canali social esistenti
+if (f.config_canali) {
+    try {
+        const parsed = JSON.parse(f.config_canali);
+        if (Array.isArray(parsed)) {
+            canaliCorrenti = parsed;
+            aggiornaListaCanali();
+            aggiornaHiddenField();
+        }
+    } catch(e) {}
+} 
             // Caricamento dello stile radio button
             if (f.digital_style) {
                 const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
@@ -266,7 +276,110 @@ async function inizializzaPagina() {
         }
     } catch (e) { console.error("Errore inizializzazione:", e); }
 }
+// --- DIZIONARIO RICONOSCIMENTO SOCIAL DAL DOMINIO ---
+const socialDizionario = [
+    { chiave: "instagram",  domini: ["instagram.com"],           icona: "fab fa-instagram" },
+    { chiave: "tiktok",     domini: ["tiktok.com"],              icona: "fab fa-tiktok" },
+    { chiave: "facebook",   domini: ["facebook.com","fb.com"],   icona: "fab fa-facebook-f" },
+    { chiave: "youtube",    domini: ["youtube.com","youtu.be"],  icona: "fab fa-youtube" },
+    { chiave: "linkedin",   domini: ["linkedin.com"],            icona: "fab fa-linkedin-in" },
+    { chiave: "x",          domini: ["x.com","twitter.com"],     icona: "fab fa-x-twitter" },
+    { chiave: "whatsapp",   domini: ["wa.me","whatsapp.com"],    icona: "fab fa-whatsapp" },
+    { chiave: "telegram",   domini: ["t.me","telegram.me"],      icona: "fab fa-telegram-plane" },
+    { chiave: "github",     domini: ["github.com"],              icona: "fab fa-github" },
+    { chiave: "spotify",    domini: ["spotify.com","open.spotify.com"], icona: "fab fa-spotify" },
+    { chiave: "twitch",     domini: ["twitch.tv"],               icona: "fab fa-twitch" },
+    { chiave: "pinterest",  domini: ["pinterest.com"],           icona: "fab fa-pinterest-p" },
+    { chiave: "reddit",     domini: ["reddit.com"],              icona: "fab fa-reddit" },
+    { chiave: "behance",    domini: ["behance.net"],             icona: "fab fa-behance" },
+    { chiave: "dribbble",   domini: ["dribbble.com"],            icona: "fab fa-dribbble" },
+    { chiave: "strava",     domini: ["strava.com"],              icona: "fab fa-strava" },
+];
 
+function normalizzaUrl(val) {
+    if (!val) return "";
+    val = val.trim();
+    if (!val.startsWith("http://") && !val.startsWith("https://")) {
+        val = "https://" + val;
+    }
+    return val;
+}
+
+function riconosciSocial(url) {
+    try {
+        const hostname = new URL(url).hostname.replace("www.", "");
+        for (const social of socialDizionario) {
+            if (social.domini.some(d => hostname === d || hostname.endsWith("." + d))) {
+                return { nome: social.chiave, icona: social.icona };
+            }
+        }
+    } catch(e) {}
+    return { nome: "link", icona: "fas fa-share-alt" };
+}
+
+let canaliCorrenti = [];
+
+function aggiungiCanale() {
+    const input = document.getElementById("input-nuovo-canale");
+    let url = input.value.trim();
+    if (!url) return;
+
+    url = normalizzaUrl(url);
+
+    // Evita duplicati
+    if (canaliCorrenti.find(c => c.url === url)) {
+        input.value = "";
+        return;
+    }
+
+    const { nome, icona } = riconosciSocial(url);
+    canaliCorrenti.push({ nome, url });
+    aggiornaListaCanali();
+    aggiornaHiddenField();
+    input.value = "";
+}
+
+function rimuoviCanale(index) {
+    canaliCorrenti.splice(index, 1);
+    aggiornaListaCanali();
+    aggiornaHiddenField();
+}
+
+function aggiornaListaCanali() {
+    const lista = document.getElementById("lista-canali");
+    lista.innerHTML = "";
+
+    canaliCorrenti.forEach((canale, i) => {
+        const { icona } = riconosciSocial(canale.url);
+        const dominio = (() => {
+            try { return new URL(canale.url).hostname.replace("www.", ""); }
+            catch(e) { return canale.url; }
+        })();
+
+        const card = document.createElement("div");
+        card.style.cssText = "display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px 14px;";
+        card.innerHTML = `
+            <i class="${icona}" style="font-size:1.1rem; color:#ffffff; flex-shrink:0; width:20px; text-align:center;"></i>
+            <span style="flex:1; font-size:0.85rem; color:#a0a0a0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${dominio}</span>
+            <button onclick="rimuoviCanale(${i})" style="background:none; border:none; color:#a0a0a0; font-size:1rem; cursor:pointer; padding:0; flex-shrink:0; line-height:1;">✕</button>
+        `;
+        lista.appendChild(card);
+    });
+}
+
+function aggiornaHiddenField() {
+    document.getElementById("field-config_canali").value = JSON.stringify(canaliCorrenti);
+}
+
+// Aggiungere invio con tasto Enter nel campo input
+document.addEventListener("DOMContentLoaded", function() {
+    const inputCanale = document.getElementById("input-nuovo-canale");
+    if (inputCanale) {
+        inputCanale.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") { e.preventDefault(); aggiungiCanale(); }
+        });
+    }
+});
     
 async function salvaDati() {
     const btn = document.querySelector(".save-btn");
@@ -281,27 +394,17 @@ async function salvaDati() {
         return el ? el.value.trim() : "";
     };
 
-    const datiDaInviare = {
+  const datiDaInviare = {
     username_system: nomePerSistema,
     username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
     plan: getVal("field-plan") || "BASE",
     digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
     bio: getVal("field-bio"),
     email: getVal("field-email"),
-    phone: getVal("field-phone"),
-    whatsapp: getVal("field-whatsapp"),
-    instagram: getVal("field-instagram"),
-    tiktok: getVal("field-tiktok"),
-    facebook: getVal("field-facebook"),
-    linkedin: getVal("field-linkedin"),
-    youtube: getVal("field-youtube"),
-    x: getVal("field-x"),
-    telegram: getVal("field-telegram"),
-    reddit: getVal("field-reddit"),
-    sito_web: getVal("field-sito_web"),
-    cv: getVal("field-cv")
+    sito_web: normalizzaUrl(getVal("field-sito_web")),
+    cv: normalizzaUrl(getVal("field-cv")),
+    config_canali: document.getElementById("field-config_canali").value
 };
-
     try {
         // CAMBIATO: Puntiamo a update-profile.js che hai nella cartella
         const response = await fetch('/api/update-profile', { 
