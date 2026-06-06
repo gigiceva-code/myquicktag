@@ -914,92 +914,14 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     }
 
     // ========================================================
-    // 🎯 LOGICA REVISIONATA: INDIRIZZAMENTO CARD CON CLAIM FISSO
+    // 🚀 ALGORITMO DI ASSEGNAZIONE DEL "MAGIC BUTTON" (INTEGRATO)
     // ========================================================
     const claimLuxury = "Il tuo nome nel mondo.";
-    
-    // Scriviamo il titolo e il claim fisso sulla card usando i 3 parametri richiesti dalla funzione
-    aggiornaCard("Digital Identity", claimLuxury, "");
-
-    if (isUserPending) {
-        // 🛑 UTENTE IN ATTESA: Punta alla modalità Bozza (draft) senza cambiare testo visivo
-        if (linkView) {
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-        }
-        console.log("[myquicktag] Router Card: Utente 'In Attesa'. Link impostato su DRAFT.");
-    } else {
-        // 🟢 UTENTE ATTIVO: Punta alla PWA pubblica senza cambiare testo visivo
-        if (linkView) {
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-        }
-        console.log("[myquicktag] Router Card: Utente 'Attivo'. Link impostato su PUBLIC.");
-    }
-}
-
-
-    // ========================================================
-    // 🔔 SOTTO-LOGICA: GESTIONE CAMPANELLA NOTIFICHE
-    // ========================================================
-    const bellIcon = document.getElementById('btn-notifications');
-    const notifDraftItem = document.getElementById('notif-draft-item');
-    const notifEmptyState = document.getElementById('notif-empty-state');
-
-    // Reset visivo di partenza
-    if (bellIcon) bellIcon.classList.remove('has-notifications');
-    if (notifDraftItem) notifDraftItem.style.display = 'none';
-    if (notifEmptyState) notifEmptyState.style.display = 'flex';
-
-    // Accendi il pallino smeraldo se c'è una bozza propria o se è un nuovo utente con bozza iniziale
-    if ((haBozza && localStorage.getItem("loggedUser") === nomeMinuto) || (!haPassword && haBozza)) {
-        if (bellIcon) bellIcon.classList.add('has-notifications');
-        if (notifDraftItem) {
-            notifDraftItem.style.display = 'flex';
-            notifDraftItem.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-        }
-        if (notifEmptyState) notifEmptyState.style.display = 'none';
-    }
-
-    // Associa l'evento click alla riga di notifica (evitando listener duplicati)
-    if (notifDraftItem && !notifDraftItem.dataset.hasListener) {
-        notifDraftItem.addEventListener('click', function(e) {
-            if (this.dataset.url) {
-                luxuryNavigate(e, this.dataset.url);
-            }
-        });
-        notifDraftItem.dataset.hasListener = "true";
-    }
-
-    // ========================================================
-    // 🎯 LOGICA REVISIONATA: INDIRIZZAMENTO CARD CON CLAIM FISSO
-    // ========================================================
-    const claimLuxury = "Il tuo nome nel mondo";
-    
-    // Scriviamo il titolo e il claim fisso sulla card
-    aggiornaCard("Digital Identity", claimLuxury);
-
-    if (isUserPending) {
-        // 🛑 UTENTE IN ATTESA: Punta alla modalità Bozza (draft) senza cambiare testo visivo
-        if (linkView) {
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-        }
-        console.log("[myquicktag] Router Card: Utente 'In Attesa'. Link impostato su DRAFT.");
-    } else {
-        // 🟢 UTENTE ATTIVO: Punta alla PWA pubblica senza cambiare testo visivo
-        if (linkView) {
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
-        }
-        console.log("[myquicktag] Router Card: Utente 'Attivo'. Link impostato su PUBLIC.");
-    }
-
-
-    // ========================================================
-    // 🚀 ALGORITMO DI ASSEGNAZIONE DEL "MAGIC BUTTON"
-    // ========================================================
 
     // 🟢 CASE 0: Ritorno immediato da pubblicazione (Forzatura UX)
     if (localStorage.getItem("justPublished")) {
         localStorage.removeItem("justPublished");
-        aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
+        aggiornaCard("Digital Identity", claimLuxury, "Online");
         aggiornaBadge("online");
         if (linkView) {
             linkView.dataset.mode = "preview-public";
@@ -1014,20 +936,20 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
             linkView.dataset.mode = "preview-public";
             linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
         }
-        aggiornaCard("Digital Identity", "Versione pubblica", "Online");
+        aggiornaCard("Digital Identity", claimLuxury, "Online");
         aggiornaBadge("online");
         return;
     }
 
-    // 🆕 CASE 2: NUOVO UTENTE (In attesa di attivazione o senza password)
+    // 🔏 CASE 2: NUOVO UTENTE / IN ATTESA (In attesa di attivazione o senza password)
     if (stato === "in attesa" || !haPassword) {
-        isUserPending = true; // Sblocca il blocco strategico del QR Code
+        isUserPending = true; // Blocca il blocco strategico del QR Code
         if (linkView) {
             linkView.dataset.mode = "preview-draft";
             linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
             linkView.classList.add("pulsing-effect"); // Attira il click
         }
-        aggiornaCard("Digital Identity", "Anteprima iniziale", "in attesa");
+        aggiornaCard("Digital Identity", claimLuxury, "in attesa");
         aggiornaBadge("bozza");
         return;
     }
@@ -1038,21 +960,19 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
             linkView.dataset.mode = "preview-public";
             linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
         }
-        aggiornaCard("Digital Identity", "Versione pubblica attiva", "Online");
+        aggiornaCard("Digital Identity", claimLuxury, "Online");
         aggiornaBadge("online");
         return;
     }
 
-    // 🟡 CASE 4: UTENTE ATTIVO CON BOZZA (Modifiche salvate pronte da testare)
-    if (stato === "attivo" && haBozza) {
-        if (linkView) {
-            linkView.dataset.mode = "preview-draft";
-            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
-        }
-        aggiornaCard("Digital Identity", "Anteprima bozza non pubblicata", "modifiche salvate");
-        aggiornaBadge("bozza");
-        return;
+    // 🟡 CASE 4 / DEFAULT: UTENTE ATTIVO CON MODIFICHE IN BOZZA DA PUBBLICARE
+    if (linkView) {
+        linkView.dataset.mode = "preview-draft";
+        linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
     }
+    aggiornaCard("Digital Identity", claimLuxury, "modifiche salvate");
+    aggiornaBadge("bozza");
+    return;
 }
    // ====================================================
 // 🟨 BLOCCO 3 — CARICAMENTO DATI DA DATABASE (API)
