@@ -849,7 +849,6 @@ function luxuryNavigate(event, url) {
         window.location.href = url; 
     }, 250); 
 }
-
 // ====================================================
 // 🟦 BLOCCO 2 — LOGICA DI DECISIONE (ANTEPRIMA & NOTIFICHE)
 // ====================================================
@@ -881,6 +880,62 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
         localStorage.removeItem("haVistoAnteprima");
     }
     localStorage.removeItem("haVistoAnteprima"); 
+
+    // ========================================================
+    // 🔔 SOTTO-LOGICA: GESTIONE CAMPANELLA NOTIFICHE
+    // ========================================================
+    const bellIcon = document.getElementById('btn-notifications');
+    const notifDraftItem = document.getElementById('notif-draft-item');
+    const notifEmptyState = document.getElementById('notif-empty-state');
+
+    // Reset visivo di partenza
+    if (bellIcon) bellIcon.classList.remove('has-notifications');
+    if (notifDraftItem) notifDraftItem.style.display = 'none';
+    if (notifEmptyState) notifEmptyState.style.display = 'flex';
+
+    // Accendi il pallino smeraldo se c'è una bozza propria o se è un nuovo utente con bozza iniziale
+    if ((haBozza && localStorage.getItem("loggedUser") === nomeMinuto) || (!haPassword && haBozza)) {
+        if (bellIcon) bellIcon.classList.add('has-notifications');
+        if (notifDraftItem) {
+            notifDraftItem.style.display = 'flex';
+            notifDraftItem.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+        }
+        if (notifEmptyState) notifEmptyState.style.display = 'none';
+    }
+
+    // Associa l'evento click alla riga di notifica (evitando listener duplicati)
+    if (notifDraftItem && !notifDraftItem.dataset.hasListener) {
+        notifDraftItem.addEventListener('click', function(e) {
+            if (this.dataset.url) {
+                luxuryNavigate(e, this.dataset.url);
+            }
+        });
+        notifDraftItem.dataset.hasListener = "true";
+    }
+
+    // ========================================================
+    // 🎯 LOGICA REVISIONATA: INDIRIZZAMENTO CARD CON CLAIM FISSO
+    // ========================================================
+    const claimLuxury = "Il tuo nome nel mondo.";
+    
+    // Scriviamo il titolo e il claim fisso sulla card usando i 3 parametri richiesti dalla funzione
+    aggiornaCard("Digital Identity", claimLuxury, "");
+
+    if (isUserPending) {
+        // 🛑 UTENTE IN ATTESA: Punta alla modalità Bozza (draft) senza cambiare testo visivo
+        if (linkView) {
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+        }
+        console.log("[myquicktag] Router Card: Utente 'In Attesa'. Link impostato su DRAFT.");
+    } else {
+        // 🟢 UTENTE ATTIVO: Punta alla PWA pubblica senza cambiare testo visivo
+        if (linkView) {
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        }
+        console.log("[myquicktag] Router Card: Utente 'Attivo'. Link impostato su PUBLIC.");
+    }
+}
+
 
     // ========================================================
     // 🔔 SOTTO-LOGICA: GESTIONE CAMPANELLA NOTIFICHE
