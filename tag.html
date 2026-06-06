@@ -680,11 +680,16 @@ async function avviaFlusso(username) {
             // Stato 1: tag attiva e pagata → rendering completo pulito
             renderizzaTagCompleta(fields);
 
-        } else if (stato === "in attesa") {
-            // Stato 2: configurata ma non pagata → rendering + overlay acquisto
-            renderizzaTagCompleta(fields);
-            
-
+      } else if (stato === "in attesa") {
+            const mode = urlParams.get('mode');
+            if (mode === 'new' || mode === 'draft') {
+                // Utente loggato che vede anteprima → rendering + overlay acquisto
+                renderizzaTagCompleta(fields);
+                mostraOverlayAcquisto();
+            } else {
+                // Chiunque altro scansiona il QR → messaggio neutro
+                mostraErrore("Questa tag non è ancora disponibile.");
+            }
         } else {
             // Stato 3: sospeso, riservato o qualsiasi altro → showroom
             mostraShowroom(username);
