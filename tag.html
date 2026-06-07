@@ -535,7 +535,7 @@ body::before {
             <div class="casella" id="casella-contatti" onclick="apriSezione('contatti')">
                 <div class="casella-invito">I miei contatti</div>
             </div>
-<div class="casella" id="casella-social">
+            <div class="casella" id="casella-social" onclick="apriSezione('social')">
     <div class="casella-invito">Canali social</div>
 </div>
 <div class="casella" id="casella-sito">
@@ -1008,26 +1008,24 @@ function gestisciVisibilitaCaselle(fields) {
         'casella-gallery':  fields.gallery,
         'casella-cv':       fields.cv,
         'casella-sito':     fields.sito_web,
-        'casella-social':   null,
-   };
+    };
 
-   for (const [id, dato] of Object.entries(mappa)) {
+    for (const [id, dato] of Object.entries(mappa)) {
         const el = document.getElementById(id);
         if (!el) continue;
         el.style.display = (!dato || dato.toString().trim() === "") ? 'none' : 'flex';
     }
 
-    // Nascondi casella-social prima di passarla a renderizzaSocial
+    // Social: mostra casella solo se ci sono canali configurati
     const elSocial = document.getElementById('casella-social');
-    if (elSocial) elSocial.style.display = 'none';
+    if (elSocial) {
+        let canali = [];
+        try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
+        elSocial.style.display = canali.length > 0 ? 'flex' : 'none';
+    }
 
-    // Social: gestita separatamente da renderizzaSocial()
-    renderizzaSocial(fields.config_canali);
-
-    // Quick Action: solo PREMIUM e GOLD
     renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
 }
-
 // ============================================================
 // APERTURA OVERLAY SEZIONE INTERNA
 // ============================================================
@@ -1037,6 +1035,54 @@ function apriSezione(tipo) {
     const corpo   = document.getElementById('corpoSezione');
 
     if (!overlay || !titolo || !corpo) return;
+
+    if (tipo === 'social') {
+        titolo.textContent = 'Canali social';
+        corpo.innerHTML = '';
+
+        let canali = [];
+        try { canali = JSON.parse(cacheDatiUtente.config_canali || '[]'); } catch(e) {}
+
+        if (canali.length === 0) {
+            corpo.textContent = 'Nessun canale configurato.';
+        } else {
+            canali.forEach(canale => {
+                const nomeLower = canale.nome.toLowerCase();
+                const iconClass = socialIcons[nomeLower] || socialIcons["default"];
+
+                const riga = document.createElement('div');
+                riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
+
+                const link = document.createElement('a');
+                link.href = canale.url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.style.cssText = 'display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;';
+                link.innerHTML = `<i class="${iconClass}" style="font-size:1.2rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; font-weight:500;">${canale.nome}</span>`;
+
+                const btnCondividi = document.createElement('button');
+                btnCondividi.style.cssText = 'background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff; padding:7px 10px; border-radius:8px; cursor:pointer; flex-shrink:0;';
+                btnCondividi.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+                btnCondividi.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    _condividi(canale.nome, canale.url);
+                };
+
+                riga.appendChild(link);
+                riga.appendChild(btnCondividi);
+                corpo.appendChild(riga);
+            });
+        }
+
+        // Nascondi il bottone "Condividi sezione" per i social
+        const btnCondividiSezione = document.getElementById('btnCondividiLink');
+        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+        overlay.classList.add('attiva');
+        history.pushState({ overlay: 'sezione', tipo: 'social' }, '');
+        return;
+    }
 
     const contenuti = {
         'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
@@ -1050,9 +1096,14 @@ function apriSezione(tipo) {
 
     titolo.textContent = contenuti[tipo].t;
     corpo.textContent  = contenuti[tipo].c;
-    overlay.classList.add('attiva');
 
-    // Aggiunge stato alla history per intercettare il back
+    // Nascondi condividi sezione anche per bio
+    const btnCondividiSezione = document.getElementById('btnCondividiLink');
+    if (btnCondividiSezione) {
+        btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
+    }
+
+    overlay.classList.add('attiva');
     history.pushState({ overlay: 'sezione', tipo: tipo }, '');
 }
 // ============================================================
