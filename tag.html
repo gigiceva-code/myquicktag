@@ -788,15 +788,9 @@ function renderizzaSitoWeb(url) {
     // Mostra il dominio pulito come testo (es. "gigi.com" invece del link completo)
     const labelEl = casella.querySelector('.casella-invito');
     if (labelEl) {
-        try {
-            const dominio = new URL(url).hostname.replace('www.', '');
-            labelEl.textContent = '🌐 ' + dominio;
-        } catch {
-            labelEl.textContent = '🌐 Il mio sito';
-        }
+       labelEl.textContent = 'Il mio sito web';
     }
 }
-
 // ============================================================
 // OVERLAY ACQUISTO — stato "in attesa" (tag visibile ma bloccata)
 // ============================================================
