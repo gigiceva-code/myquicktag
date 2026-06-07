@@ -217,11 +217,38 @@
 
 <div id="lista-canali" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
 <input type="hidden" id="field-config_canali" value="[]">
-
+  <div class="section-title">Quick Action</div>
+<div id="quick-action-section" onclick="verificaPianoQuickAction(event)">
+    <div class="form-group">
+        <label>Tipo di azione</label>
+        <select id="field-quick_action_tipo" style="width:100%; padding:12px 15px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; font-family:'Inter',sans-serif; font-size:0.9rem; box-sizing:border-box; outline:none; appearance:none;">
+            <option value="">Seleziona...</option>
+            <option value="appuntamento">Prenota appuntamento</option>
+            <option value="whatsapp">Scrivimi su WhatsApp</option>
+            <option value="preventivo">Richiedi preventivo</option>
+            <option value="chiamata">Chiama ora</option>
+            <option value="maps">Trovami su Maps</option>
+            <option value="demo">Ascolta demo</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>URL o numero</label>
+        <input type="text" id="field-quick_action_url" placeholder="Es. https://calendly.com/... oppure +39...">
+    </div>
+    <div id="quick-action-lock" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%;"></div>
+</div> 
         <div class="sticky-footer">
     <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
     <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
 </div>
+       <div id="modal-piano" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:999; justify-content:center; align-items:center; padding:24px; box-sizing:border-box;">
+    <div style="background:#111; border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:32px 24px; max-width:340px; width:100%; text-align:center;">
+        <div style="width:36px; height:3px; background:#10b981; border-radius:2px; margin:0 auto 24px;"></div>
+        <h3 style="margin:0 0 12px; font-size:1.1rem; font-weight:600; color:#ffffff;">Funzione Premium</h3>
+        <p style="margin:0 0 24px; font-size:0.88rem; color:#a0a0a0; line-height:1.6;">La Quick Action è disponibile per i piani <strong style="color:#ffffff;">PREMIUM</strong> e <strong style="color:#ffffff;">GOLD</strong>.</p>
+        <button onclick="chiudiModalPiano()" style="width:100%; padding:14px; background:white; color:black; border:none; border-radius:12px; font-weight:600; font-size:0.95rem; cursor:pointer;">Ho capito</button>
+    </div>
+</div> 
 
     <script>
     const params = new URLSearchParams(window.location.search);
@@ -256,7 +283,14 @@ campi.forEach(c => {
     const el = document.getElementById(`field-${c}`);
     if (el && f[c]) el.value = f[c];
 });
-
+if (f.quick_action_tipo) {
+    const sel = document.getElementById('field-quick_action_tipo');
+    if (sel) sel.value = f.quick_action_tipo;
+}
+if (f.quick_action_url) {
+    const el = document.getElementById('field-quick_action_url');
+    if (el) el.value = f.quick_action_url;
+}
 // Carica canali social esistenti
 if (f.config_canali) {
     try {
@@ -380,7 +414,35 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-    
+   function verificaPianoQuickAction(event) {
+    const piano = document.getElementById('field-plan').value.toUpperCase();
+    if (piano === 'BASE') {
+        event.preventDefault();
+        event.stopPropagation();
+        // Blocca interazione con i campi interni
+        const target = event.target;
+        if (target.tagName === 'SELECT' || target.tagName === 'INPUT') {
+            target.blur();
+        }
+        apriModalPiano();
+    }
+}
+
+function apriModalPiano() {
+    const modal = document.getElementById('modal-piano');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function chiudiModalPiano() {
+    const modal = document.getElementById('modal-piano');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+} 
 async function salvaDati() {
     const btn = document.querySelector(".save-btn");
     btn.innerText = "SALVATAGGIO...";
@@ -404,6 +466,8 @@ async function salvaDati() {
     sito_web: normalizzaUrl(getVal("field-sito_web")),
     cv: normalizzaUrl(getVal("field-cv")),
     config_canali: document.getElementById("field-config_canali").value
+    quick_action_tipo: getVal("field-quick_action_tipo"),
+quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),  
 };
     try {
         // CAMBIATO: Puntiamo a update-profile.js che hai nella cartella
