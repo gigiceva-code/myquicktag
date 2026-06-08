@@ -237,6 +237,43 @@
     </div>
     <div id="quick-action-lock" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%;"></div>
 </div> 
+       <div class="section-title">Contatti & VCF</div>
+
+<div class="form-group">
+    <label>Nome / Ragione sociale</label>
+    <input type="text" id="vcf-nome" placeholder="Es. Mario Rossi oppure Azienda Srl">
+</div>
+<div class="form-group">
+    <label>Telefono principale</label>
+    <input type="text" id="vcf-telefono1" placeholder="+39 0123 456789">
+</div>
+<div class="form-group">
+    <label>Email principale</label>
+    <input type="text" id="vcf-email1" placeholder="info@esempio.it">
+</div>
+<div class="form-group">
+    <label>Sito web</label>
+    <input type="text" id="vcf-sito" placeholder="https://esempio.it">
+</div>
+
+<div id="vcf-premium-section" onclick="verificaPianoVcf(event)">
+    <div class="form-group">
+        <label>Telefono secondario</label>
+        <input type="text" id="vcf-telefono2" placeholder="+39 0987 654321">
+    </div>
+    <div class="form-group">
+        <label>Email secondaria</label>
+        <input type="text" id="vcf-email2" placeholder="altro@esempio.it">
+    </div>
+    <div class="form-group">
+        <label>Indirizzo</label>
+        <input type="text" id="vcf-indirizzo" placeholder="Via Roma 1, Milano">
+    </div>
+    <div class="form-group">
+        <label>P.IVA</label>
+        <input type="text" id="vcf-piva" placeholder="12345678901">
+    </div>
+</div> 
      <div class="sticky-footer">
     <button class="save-btn" onclick="salvaDati(false)">SALVA BOZZA</button>
     <button onclick="salvaDati(true)" style="width:100%; max-width:400px; padding:18px; background:transparent; color:white; border:1px solid rgba(255,255,255,0.2); border-radius:14px; font-weight:600; font-size:1rem; cursor:pointer; margin-top:10px;">
@@ -302,6 +339,16 @@ if (f.quick_action_url) {
     const el = document.getElementById('field-quick_action_url');
     if (el) el.value = f.quick_action_url;
 }
+if (f.modulo_vcf) {
+    try {
+        const vcf = JSON.parse(f.modulo_vcf);
+        const campiVcf = ['nome', 'telefono1', 'telefono2', 'email1', 'email2', 'sito', 'indirizzo', 'piva'];
+        campiVcf.forEach(c => {
+            const el = document.getElementById(`vcf-${c}`);
+            if (el && vcf[c]) el.value = vcf[c];
+        });
+    } catch(e) {}
+}       
 // Carica canali social esistenti
 if (f.config_canali) {
     try {
@@ -454,6 +501,16 @@ function chiudiModalPiano() {
         document.body.style.overflow = 'auto';
     }
 } 
+   function verificaPianoVcf(event) {
+    const piano = document.getElementById('field-plan').value.toUpperCase();
+    if (piano === 'BASE') {
+        event.preventDefault();
+        event.stopPropagation();
+        const target = event.target;
+        if (target.tagName === 'INPUT') target.blur();
+        apriModalPiano();
+    }
+}     
 async function salvaDati(mostraAnteprima = false) {
     const btn = document.querySelector(".save-btn");
     btn.innerText = "SALVATAGGIO...";
@@ -479,6 +536,16 @@ async function salvaDati(mostraAnteprima = false) {
         config_canali: document.getElementById("field-config_canali").value,
         quick_action_tipo: getVal("field-quick_action_tipo"),
         quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),
+        modulo_vcf: JSON.stringify({
+    nome: getVal("vcf-nome"),
+    telefono1: getVal("vcf-telefono1"),
+    telefono2: getVal("vcf-telefono2"),
+    email1: getVal("vcf-email1"),
+    email2: getVal("vcf-email2"),
+    sito: normalizzaUrl(getVal("vcf-sito")),
+    indirizzo: getVal("vcf-indirizzo"),
+    piva: getVal("vcf-piva")
+}),
     };
 
     const datiDaInviare = {
