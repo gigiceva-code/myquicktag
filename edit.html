@@ -515,44 +515,7 @@ async function salvaDati(mostraAnteprima = false) {
     }
 }
 
-  const datiDaInviare = {
-    username_system: nomePerSistema,
-    username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
-    plan: getVal("field-plan") || "BASE",
-    digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
-    bio: getVal("field-bio"),
-    email: getVal("field-email"),
-    sito_web: normalizzaUrl(getVal("field-sito_web")),
-    cv: normalizzaUrl(getVal("field-cv")),
-    config_canali: document.getElementById("field-config_canali").value,
-    quick_action_tipo: getVal("field-quick_action_tipo"),
-quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),  
-};
-    try {
-        // CAMBIATO: Puntiamo a update-profile.js che hai nella cartella
-        const response = await fetch('/api/update-profile', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datiDaInviare)
-        });
-
-        const result = await response.json();
-        
-        if (response.ok || result.success) {
-    window.location.href = `profile.html?u=${nomePerSistema}`;
-} else {
-    console.error("Errore API:", result.error);
-    alert("Impossibile salvare le modifiche. Si prega di riprovare tra pochi istanti.");
-}
-
-    } catch (error) {
-        console.error("Errore di rete:", error);
-        alert("Il cantiere non comunica con l'ufficio. Verifica il file api/update-profile.js");
-    } finally {
-        btn.innerText = "SALVA MODIFICHE";
-        btn.disabled = false;
-    }
-}
+ 
       
     function luxuryNavigate(event, url) {
         event.preventDefault();
@@ -576,24 +539,7 @@ quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),
             });
         }
     });
-async function salvaBozza(nomeMinuto, bozza) {
-    try {
-        await fetch("/api/update-profile", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username: nomeMinuto,
-                fields: {
-                    draft_json: JSON.stringify(bozza)
-                }
-            })
-        });
-        return true;
-    } catch (e) {
-        console.error("Errore salvataggio bozza:", e);
-        return false;
-    }
-}
+
 </script>
 </body>
 </html>
