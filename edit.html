@@ -237,8 +237,11 @@
     </div>
     <div id="quick-action-lock" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%;"></div>
 </div> 
-        <div class="sticky-footer">
-    <button class="save-btn" onclick="salvaDati()">SALVA MODIFICHE</button>
+     <div class="sticky-footer">
+    <button class="save-btn" onclick="salvaDati(false)">SALVA BOZZA</button>
+    <button onclick="salvaDati(true)" style="width:100%; max-width:400px; padding:18px; background:transparent; color:white; border:1px solid rgba(255,255,255,0.2); border-radius:14px; font-weight:600; font-size:1rem; cursor:pointer; margin-top:10px;">
+        Salva e vedi anteprima
+    </button>
     <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
 </div>
        <div id="modal-piano" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:999; justify-content:center; align-items:center; padding:24px; box-sizing:border-box;">
@@ -272,7 +275,15 @@ async function inizializzaPagina() {
     try {
         const response = await fetch(`/api/get-profile?u=${nomePulito}`);
         const data = await response.json();
-        const f = data.fields || data;
+       const f = (() => {
+    if (data.fields?.draft_json) {
+        try {
+            const bozza = JSON.parse(data.fields.draft_json);
+            return { ...bozza, stato: data.fields.stato, plan: data.fields.plan };
+        } catch(e) {}
+    }
+    return data.fields || data;
+})();
         
         if (f) {
             if(f.plan) selectPlan(f.plan);
@@ -443,7 +454,7 @@ function chiudiModalPiano() {
         document.body.style.overflow = 'auto';
     }
 } 
-async function salvaDati() {
+async function salvaDati(mostraAnteprima = false) {
     const btn = document.querySelector(".save-btn");
     btn.innerText = "SALVATAGGIO...";
     btn.disabled = true;
@@ -455,6 +466,54 @@ async function salvaDati() {
         const el = document.getElementById(id);
         return el ? el.value.trim() : "";
     };
+
+    const bozza = {
+        username_system: nomePerSistema,
+        username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
+        plan: getVal("field-plan") || "BASE",
+        digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
+        bio: getVal("field-bio"),
+        email: getVal("field-email"),
+        sito_web: normalizzaUrl(getVal("field-sito_web")),
+        cv: normalizzaUrl(getVal("field-cv")),
+        config_canali: document.getElementById("field-config_canali").value,
+        quick_action_tipo: getVal("field-quick_action_tipo"),
+        quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),
+    };
+
+    const datiDaInviare = {
+        username_system: nomePerSistema,
+        draft_json: JSON.stringify(bozza)
+    };
+
+    try {
+        const response = await fetch('/api/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datiDaInviare)
+        });
+
+        const result = await response.json();
+
+        if (response.ok || result.success) {
+            if (mostraAnteprima) {
+                window.location.href = `tag.html?u=${nomePerSistema}&mode=draft`;
+            } else {
+                window.location.href = `profile.html?u=${nomePerSistema}`;
+            }
+        } else {
+            console.error("Errore API:", result.error);
+            alert("Impossibile salvare le modifiche. Si prega di riprovare tra pochi istanti.");
+        }
+
+    } catch (error) {
+        console.error("Errore di rete:", error);
+        alert("Il cantiere non comunica con l'ufficio. Verifica il file api/update-profile.js");
+    } finally {
+        btn.innerText = "SALVA BOZZA";
+        btn.disabled = false;
+    }
+}
 
   const datiDaInviare = {
     username_system: nomePerSistema,
