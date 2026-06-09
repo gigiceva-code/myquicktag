@@ -1056,7 +1056,6 @@ function gestisciVisibilitaCaselle(fields) {
 // APERTURA OVERLAY SEZIONE INTERNA
 // ============================================================
 function apriSezione(tipo) {
-     console.log('apriSezione chiamata con:', tipo);
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
@@ -1069,7 +1068,8 @@ function apriSezione(tipo) {
        if (tipo === 'contatti') {
     titolo.textContent = 'Contatti';
     corpo.innerHTML = '';
-
+  console.log('piano:', piano);
+    console.log('vcf:', vcf);
     const piano = (cacheDatiUtente.plan || '').toUpperCase();
     let vcf = {};
     try { 
