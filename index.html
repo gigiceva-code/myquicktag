@@ -454,6 +454,48 @@
             <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
     </div>
+    <div id="welcome-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+    
+    <div style="width: 100%; max-width: 360px; text-align: center; border: 1px solid rgba(80, 200, 120, 0.2); background: #0a0a0a; padding: 45px 25px; border-radius: 16px; box-sizing: border-box; position: relative; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);">
+        
+        <h2 id="welcome-tag-title" style="color: #50C878; font-size: 24px; font-weight: 800; margin-top: 0; margin-bottom: 8px; letter-spacing: -0.5px;">@nome è disponibile.</h2>
+        <p style="color: #ffffff; font-size: 15px; font-weight: 300; margin-bottom: 35px; opacity: 0.9; letter-spacing: 0.2px;">Tutto è pronto per prendere forma.</p>
+
+        <div style="text-align: left; display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; padding: 0 5px;">
+            
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <span style="font-size: 18px; line-height: 1; filter: grayscale(100%) brightness(1.2);">✨</span>
+                <div>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Il tuo design</strong>
+                    <span style="color: #a0a0a0; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Entra, gioca con i dettagli e guarda il tuo ecosistema nascere in tempo reale.</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <span style="font-size: 18px; line-height: 1; filter: grayscale(100%) brightness(1.2);">📱</span>
+                <div>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Oltre il semplice link</strong>
+                    <span style="color: #a0a0a0; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Scopri come il tuo Tag si trasforma in una vera App (PWA) sul telefono di chi incontri.</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <span style="font-size: 18px; line-height: 1; filter: grayscale(100%) brightness(1.2);">🕊️</span>
+                <div>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Zero pensieri</strong>
+                    <span style="color: #a0a0a0; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Esplora l'editor in totale libertà. Sarai tu a decidere se e quando attivarlo.</span>
+                </div>
+            </div>
+
+        </div>
+
+        <button id="btn-entra-spazio" style="width: 100%; padding: 20px; background: #50C878; color: #000; border: none; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s ease-in-out;">
+            ENTRA NEL TUO SPAZIO
+        </button>
+
+    </div>
+</div>
+
 
     <div style="width: 100%; max-width: 300px; text-align: center;">
         <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px;">Identity Portal</p>
@@ -608,7 +650,7 @@ localStorage.setItem('loggedUser', data.username);
     }
 }
 
-// 6. VERIFICA DISPONIBILITÀ TAG (S2)
+// 6. VERIFICA DISPONIBILITÀ TAG (S2) CON OVERLAY PERSUASIVO
 async function vaiAllaVerifica() {
     const input = document.getElementById("tag-input");
     if (!input) return;
@@ -646,9 +688,39 @@ async function vaiAllaVerifica() {
         const data = await response.json();
         
         if (data.success) {
+            // Salvataggio stati in locale
             localStorage.setItem('myquicktag_pending', nomeScelto);
             localStorage.setItem('loggedUser', nomeScelto);
-            window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`; 
+            
+            // Inietta il nome reale nel titolo dell'overlay
+            const welcomeTitle = document.getElementById('welcome-tag-title');
+            if (welcomeTitle) {
+                welcomeTitle.innerText = `${nomeScelto} è disponibile.`;
+            }
+
+            // Mostra l'overlay persuasivo con effetto flex
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            if (welcomeOverlay) {
+                welcomeOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // Blocca lo scroll sotto
+            }
+
+            // Cabla l'azione del bottone interno all'overlay per la transizione finale
+            const btnEntra = document.getElementById('btn-entra-spazio');
+            if (btnEntra) {
+                btnEntra.addEventListener('click', function() {
+                    btnEntra.innerText = "ACCESSO IN CORSO...";
+                    btnEntra.disabled = true;
+                    btnEntra.style.opacity = "0.7";
+                    window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
+                });
+            }
+
+            // Ripristina lo stato del bottone principale in background per sicurezza
+            btn.innerText = "VERIFICA DISPONIBILITÀ";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+
         } else {
             alert(data.message || "Tag già occupato! Scegline un altro.");
             btn.innerText = "VERIFICA DISPONIBILITÀ";
@@ -663,6 +735,7 @@ async function vaiAllaVerifica() {
         btn.style.opacity = "1";
     }
 }
+
 
 // 7. MEMORIA SCROLL, SESSIONE PENDING E LISTENER TASTIERA
 window.addEventListener('beforeunload', () => {
