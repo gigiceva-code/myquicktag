@@ -588,6 +588,8 @@ async function checkAccess() {
             btn.innerText = "IDENTITÀ CONFERMATA";
             btn.style.opacity = "1";
             localStorage.removeItem('myquicktag_pending');
+localStorage.setItem('loggedUser', data.username);
+            localStorage.removeItem('myquicktag_pending');
             setTimeout(() => {
                 window.location.href = `profile.html?u=${data.username}`;
             }, 800);
