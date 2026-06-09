@@ -536,7 +536,7 @@ async function salvaDati(mostraAnteprima = false) {
         config_canali: document.getElementById("field-config_canali").value,
         quick_action_tipo: getVal("field-quick_action_tipo"),
         quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),
-      modulo_vcf: {
+    modulo_vcf: {
             nome: getVal("vcf-nome"),
             telefono1: getVal("vcf-telefono1"),
             telefono2: getVal("vcf-telefono2"),
@@ -545,9 +545,8 @@ async function salvaDati(mostraAnteprima = false) {
             sito: normalizzaUrl(getVal("vcf-sito")),
             indirizzo: getVal("vcf-indirizzo"),
             piva: getVal("vcf-piva")
-        }
+        },
     }; 
-
     const datiDaInviare = {
         username_system: nomePerSistema,
         draft_json: JSON.stringify(bozza)
