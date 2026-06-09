@@ -1156,7 +1156,25 @@ document.addEventListener("DOMContentLoaded", function() {
             luxuryNavigate(e, `checkout.html?u=${nomeMinuto}`);
         });
     }
+    // 5. Gestione Pannello Notifiche (Campanellina)
+    const btnNotifications = document.getElementById("btn-notifications");
+    const notifDropdown = document.getElementById("notif-dropdown");
 
+    if (btnNotifications && notifDropdown) {
+        // Apri/Chiudi al click sulla campanella
+        btnNotifications.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // Evita che il click chiuda subito il pannello
+            notifDropdown.classList.toggle("active");
+        });
+
+        // Chiudi il pannello in modo fluido se l'utente clicca fuori
+        document.addEventListener("click", function(e) {
+            if (!notifDropdown.contains(e.target) && !btnNotifications.contains(e.target)) {
+                notifDropdown.classList.remove("active");
+            }
+        });
+    }
     // --- GESTIONE POPUP MODAL QR ---
     const qrModal = document.getElementById("qr-modal");
     const linkQR = document.getElementById("link-qr");
