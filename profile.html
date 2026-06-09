@@ -860,6 +860,8 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     const stato = (record.stato || "").toLowerCase().trim();
     const haPassword = record.password && record.password.trim() !== "";
     const haBozza = record.draft_json && record.draft_json.trim() !== "";
+    console.log("draft_json:", record.draft_json);
+console.log("haBozza:", haBozza);
     const linkView = document.getElementById("link-view");
 
     // 🎯 AGGIORNAMENTO REGOLA: Settiamo il flag globale in base allo stato reale di Airtable
