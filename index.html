@@ -471,65 +471,7 @@
         </button>
     </div>
 </div>
-  <script>
-// 6. GESTIONE IDENTITY PORTAL (LOGIN)
-function openLogin() {
-    const loginOverlay = document.getElementById('login-overlay');
-    if (loginOverlay) {
-        loginOverlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function closeLogin() {
-    const loginOverlay = document.getElementById('login-overlay');
-    if (loginOverlay) {
-        loginOverlay.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-}
-
-async function checkAccess() {
-    const tagInput = document.getElementById('login-tag').value.toLowerCase().trim();
-    const passwordInput = document.getElementById('login-password').value;
-    const btn = document.querySelector('#login-overlay button');
-
-    if (!tagInput || !passwordInput) {
-        alert("Inserisci credenziali valide.");
-        return;
-    }
-
-    const cleanTag = tagInput.replace('@', '');
-    btn.innerText = "VERIFICA IDENTITY...";
-    btn.disabled = true;
-
-    try {
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: cleanTag, pwd: passwordInput })
-        });
-        const data = await response.json();
-        if (data.success) {
-            btn.style.background = "#ffffff";
-            btn.innerText = "IDENTITÀ CONFERMATA";
-            localStorage.removeItem('myquicktag_pending');
-            setTimeout(() => {
-                window.location.href = `profile.html?u=${data.username}`;
-            }, 1000);
-        } else {
-            alert(data.message || "Accesso negato.");
-            btn.innerText = "ACCEDI";
-            btn.disabled = false;
-        }
-    } catch (error) {
-        console.error("Errore Portale:", error);
-        alert("Sistema momentaneamente non raggiungibile.");
-        btn.innerText = "ACCEDI";
-        btn.disabled = false;
-    }
-}
-
+<script>
 // 1. NAVIGAZIONE UNIFICATA
 function scrollToSection(id) {
     const target = document.getElementById(id);
@@ -583,75 +525,185 @@ function toggleMenu() {
     const menu = document.getElementById('menu-overlay');
     const dots = document.querySelector('.nav-dots');
     const menuIcon = document.getElementById('menu-icon');
-        const isOpen = menu.style.display === 'flex';
-  if (isOpen) {
-    menu.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    if (dots) dots.style.display = 'flex';
-    if (menuIcon) menuIcon.style.opacity = '1';
-} else {
-    menu.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    if (dots) dots.style.display = 'none';
-    if (menuIcon) menuIcon.style.opacity = '0';
-} 
+    const isOpen = menu.style.display === 'flex';
+    
+    if (isOpen) {
+        menu.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        if (dots) dots.style.display = 'flex';
+        if (menuIcon) menuIcon.style.opacity = '1';
+    } else {
+        menu.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        if (dots) dots.style.display = 'none';
+        if (menuIcon) menuIcon.style.opacity = '0';
+    } 
 }
 
-// 5. MEMORIA SCROLL E SESSIONE PENDING
+// 5. GESTIONE IDENTITY PORTAL (LOGIN)
+function openLogin() {
+    const loginOverlay = document.getElementById('login-overlay');
+    if (loginOverlay) {
+        loginOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeLogin() {
+    const loginOverlay = document.getElementById('login-overlay');
+    if (loginOverlay) {
+        loginOverlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+async function checkAccess() {
+    const tagInput = document.getElementById('login-tag').value;
+    const passwordInput = document.getElementById('login-password').value;
+    const btn = document.querySelector('#login-overlay button');
+
+    if (!tagInput || !passwordInput) {
+        alert("Inserisci credenziali valide.");
+        return;
+    }
+
+    // Pulisce l'input e formatta rigorosamente con la @ per il DB
+    const rawTag = tagInput.toLowerCase().trim().replace(/\s+/g, '').replace(/@/g, '');
+    const formattedTag = '@' + rawTag;
+
+    btn.innerText = "VERIFICA IDENTITY...";
+    btn.disabled = true;
+    btn.style.opacity = "0.7";
+
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: formattedTag, pwd: passwordInput })
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            btn.style.background = "#ffffff";
+            btn.innerText = "IDENTITÀ CONFERMATA";
+            btn.style.opacity = "1";
+            localStorage.removeItem('myquicktag_pending');
+            setTimeout(() => {
+                window.location.href = `profile.html?u=${data.username}`;
+            }, 800);
+        } else {
+            alert(data.message || "Accesso negato. Riprova.");
+            btn.innerText = "ACCEDI";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        }
+    } catch (error) {
+        console.error("Errore Portale:", error);
+        alert("Sistema momentaneamente non raggiungibile.");
+        btn.innerText = "ACCEDI";
+        btn.disabled = false;
+        btn.style.opacity = "1";
+    }
+}
+
+// 6. VERIFICA DISPONIBILITÀ TAG (S2)
+async function vaiAllaVerifica() {
+    const input = document.getElementById("tag-input");
+    if (!input) return;
+    
+    // Rimuove spazi vuoti, chiocciole inserite a mano e mette tutto minuscolo
+    let rawNome = input.value.toLowerCase().trim().replace(/\s+/g, '').replace(/@/g, '');
+    
+    if (!rawNome) {
+        alert("Inserisci un nome per verificare il Tag!");
+        input.focus();
+        return;
+    }
+
+    // Formatta la stringa per l'infrastruttura
+    const nomeScelto = '@' + rawNome;
+    const btn = document.querySelector('.btn-verifica');
+    
+    const tagInCorso = localStorage.getItem('myquicktag_pending');
+    if (tagInCorso && nomeScelto === tagInCorso) {
+        btn.disabled = true;
+        window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`; 
+        return;
+    }
+
+    btn.innerText = "VERIFICA IN CORSO...";
+    btn.disabled = true;
+    btn.style.opacity = "0.7";
+
+    try {
+        const response = await fetch('/api/check-and-create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: nomeScelto }) 
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            localStorage.setItem('myquicktag_pending', nomeScelto);
+            localStorage.setItem('loggedUser', nomeScelto);
+            window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`; 
+        } else {
+            alert(data.message || "Tag già occupato! Scegline un altro.");
+            btn.innerText = "VERIFICA DISPONIBILITÀ";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            input.focus();
+        }
+    } catch (error) {
+        alert("Errore di connessione. Riprova tra poco.");
+        btn.innerText = "VERIFICA DISPONIBILITÀ";
+        btn.disabled = false;
+        btn.style.opacity = "1";
+    }
+}
+
+// 7. MEMORIA SCROLL, SESSIONE PENDING E LISTENER TASTIERA
 window.addEventListener('beforeunload', () => {
     const container = document.querySelector('.container');
     if(container) localStorage.setItem('scrollPos', container.scrollTop);
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+    // Ripristino Scroll
     const scrollPos = localStorage.getItem('scrollPos');
     const container = document.querySelector('.container');
     if (scrollPos && container) {
-    setTimeout(() => {
-        container.scrollTop = parseInt(scrollPos);
-    }, 50);
-}
-});
+        setTimeout(() => {
+            container.scrollTop = parseInt(scrollPos);
+        }, 50);
+    }
 
-async function vaiAllaVerifica() {
-    const input = document.getElementById("tag-input");
-    if (!input) return;
-    const nomeScelto = input.value.toLowerCase().trim().replace('@', '');
-    const btn = document.querySelector('.btn-verifica');
-    if (!nomeScelto) {
-        alert("Inserisci un @tag per verificare!");
-        return;
-    }
-    const tagInCorso = localStorage.getItem('myquicktag_pending');
-    if (tagInCorso && nomeScelto === tagInCorso.toLowerCase().trim().replace('@', '')) {
-    btn.disabled = true;
-    window.location.href = `edit.html?u=${nomeScelto}`;
-    return;
-}
-    btn.innerText = "VERIFICA IN CORSO...";
-    btn.disabled = true;
-    try {
-        const response = await fetch('/api/check-and-create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: nomeScelto })
+    // Listener "Enter" per input Tag (S2)
+    const tagInput = document.getElementById('tag-input');
+    if (tagInput) {
+        tagInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                vaiAllaVerifica();
+            }
         });
-        const data = await response.json();
-        if (data.success) {
-           localStorage.setItem('myquicktag_pending', nomeScelto);
-            localStorage.setItem('loggedUser', nomeScelto);
-            window.location.href = `edit.html?u=${nomeScelto}`;
-        } else {
-            alert(data.message || "Occupato!");
-            btn.innerText = "VERIFICA DISPONIBILITÀ";
-            btn.disabled = false;
-        }
-    } catch (error) {
-        btn.innerText = "VERIFICA DISPONIBILITÀ";
-        btn.disabled = false;
     }
-}
-</script>  
+
+    // Listener "Enter" per Identity Portal (Login)
+    const loginPassword = document.getElementById('login-password');
+    const loginTag = document.getElementById('login-tag');
+    
+    function triggerLoginOnEnter(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            checkAccess();
+        }
+    }
+
+    if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
+    if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
+});
+</script>
     
 </body>
 </html>    
