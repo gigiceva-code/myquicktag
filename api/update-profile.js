@@ -28,8 +28,10 @@ const nativeFields = [
 
 nativeFields.forEach(f => {
   if (body[f] !== undefined) {
-    if (typeof body[f] === 'string') {
-      let valueClean = body[f].replace(/['"]+/g, '').trim();
+   if (typeof body[f] === 'string') {
+    let valueClean = f === 'draft_json' || f === 'modulo_vcf' 
+        ? body[f].trim() 
+        : body[f].replace(/['"]+/g, '').trim();
       if (valueClean !== "") {
         if (f === "digital_style") {
           const upper = valueClean.toUpperCase();
