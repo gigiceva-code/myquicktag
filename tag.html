@@ -1030,7 +1030,7 @@ function renderizzaSocial(configCanali) {
 function gestisciVisibilitaCaselle(fields) {
     const mappa = {
         'casella-bio':      fields.bio,
-        'casella-contatti': fields.email || (fields.modulo_vcf && fields.modulo_vcf !== "{}"),
+        'casella-contatti': fields.email || fields.modulo_vcf,
         'casella-gallery':  fields.gallery,
         'casella-cv':       fields.cv,
         'casella-sito':     fields.sito_web,
