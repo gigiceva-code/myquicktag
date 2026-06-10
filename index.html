@@ -9,7 +9,7 @@
     <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <style>
+ <style>
     /* RESET & BASE LUXURY */
     body {
         background-color: #000000;
@@ -25,6 +25,7 @@
         overflow-x: hidden;
     }
 
+    /* SCROLL ENGINE: FLUIDO E SENZA EFFETTO MOLLA */
     .container {
         width: 100%;
         max-width: 600px;
@@ -32,30 +33,33 @@
         display: flex;
         flex-direction: column;
         margin: 0 auto;
-        overflow-y: scroll; 
+        overflow-y: auto; 
         scroll-snap-type: y mandatory;
         scroll-behavior: smooth;
         -ms-overflow-style: none;
         scrollbar-width: none;
+        overscroll-behavior-y: none; /* Uccide il rimbalzo elastico su mobile */
     }
 
     .container::-webkit-scrollbar { display: none; }
 
     section {
         scroll-snap-align: start;
-        scroll-snap-stop: always; /* Fix effetto catapulta */
+        scroll-snap-stop: always; 
         flex-shrink: 0;
         width: 100%;
-        height: 100vh;
+        height: 100dvh; /* 100dvh assicura che ignori la barra di navigazione dinamica del browser */
         position: relative;
+        box-sizing: border-box;
+        overflow: hidden; /* Evita doppi scroll interni */
     }
 
-    /* BOTTONI ELITE (Squadrati, no glow) */
+    /* BOTTONI ELITE (Squadrati, no glow eccessivo) */
     button, .btn-cyber, .btn-verifica {
         transition: all 0.2s ease-in-out !important;
         cursor: pointer;
-        border-radius: 4px !important; /* Bordi poco smussati come richiesto */
-        box-shadow: none !important; /* Rimosso effetto game */
+        border-radius: 4px !important; 
+        box-shadow: none !important; 
         border: none;
     }
 
@@ -64,9 +68,33 @@
         filter: brightness(0.9);
     }
 
-    /* CARD COERENTI (Bordi definiti come S2) */
+    /* =========================================================
+       DETOX VISIVO: DARK GLASSMORPHISM (Sovrascrive i bordi inline)
+       ========================================================= */
+    
+    /* Disintegra i bordi bianchi delle card in S2, S3 e S4 e li trasforma in vetro nero */
+    .section-2 div[style*="border: 1px solid rgba(255, 255, 255, 0.8)"],
+    .section-3 div[style*="border: 1px solid rgba(255, 255, 255, 0.85)"],
+    #s4 div[style*="border: 1px solid rgba(255, 255, 255, 0.85)"] {
+        border: 1px solid rgba(255, 255, 255, 0.04) !important; /* Bordo quasi invisibile */
+        background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 100%) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255,255,255,0.03) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        transition: all 0.4s ease !important;
+    }
+
+    /* Micro-interazione al tocco/hover: si accende un leggero alone smeraldo */
+    .section-3 div[style*="border: 1px solid rgba(255, 255, 255, 0.85)"]:active,
+    #s4 div[style*="border: 1px solid rgba(255, 255, 255, 0.85)"]:active {
+        border-color: rgba(80, 200, 120, 0.2) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(80, 200, 120, 0.05), inset 0 1px 0 0 rgba(255,255,255,0.05) !important;
+        transform: scale(0.98);
+    }
+
+    /* CARD IDENTITY ORIGINALI */
     .identity-card, .profile-badge {
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
         border-radius: 8px !important;
         background: rgba(255, 255, 255, 0.02);
         backdrop-filter: blur(10px);
@@ -85,7 +113,7 @@
         cursor: pointer;
     }
     .line { width: 24px; height: 1px; background: #fff; transition: 0.3s; }
-    .line-short { width: 14px; align-self: center; } /* Linea centrale corta */
+    .line-short { width: 14px; align-self: center; } 
 
     /* NAV DOTS */
     .nav-dots {
@@ -109,6 +137,7 @@
     .dot.active {
         background: #50C878;
         transform: scale(1.5);
+        box-shadow: 0 0 10px rgba(80,200,120,0.4); /* Glow sul dot attivo */
     }
 
     /* EMOJI MONOCROMATICHE (Luxury Treatment) */
@@ -119,8 +148,7 @@
     .emoji-green {
         filter: grayscale(100%) sepia(100%) hue-rotate(90deg) saturate(500%);
     }
-</style> 
-
+</style>
 <body>
 
   <div class="nav-dots">
