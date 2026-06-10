@@ -820,40 +820,34 @@ window.addEventListener('DOMContentLoaded', () => {
     if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
     if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
 });
-    // 8. REVEAL ENGINE (Animazioni allo scroll)
+ // 8. REVEAL ENGINE (Animazioni allo scroll - Elite Version)
 window.addEventListener('DOMContentLoaded', () => {
-    // 1. Diciamo al sistema quali elementi vogliamo animare
     const elementiDaAnimare = document.querySelectorAll('.container h2, .container p, .container .btn-cyber, .container .btn-verifica, .section-3 > div > div, #s4 > div > div, #s4 button');
 
-    // 2. Aggiungiamo la classe invisibile di partenza
     elementiDaAnimare.forEach((el, index) => {
         el.classList.add('reveal-item');
-        
-        // Creiamo un effetto a cascata sfalsato (il secondo elemento appare dopo il primo, ecc.)
         if (index % 3 === 1) el.classList.add('delay-1');
         if (index % 3 === 2) el.classList.add('delay-2');
     });
 
-    // 3. Creiamo l'osservatore che guarda quando entrano nello schermo
     const observerOptions = {
-        root: document.querySelector('.container'), // Osserva lo scroll dentro il tuo contenitore
-        rootMargin: '0px',
-        threshold: 0.15 // Scatta quando il 15% dell'elemento è visibile
+        root: document.querySelector('.container'),
+        rootMargin: '0px 0px -10% 0px', // Scatta leggermente prima per non farlo apparire in ritardo
+        threshold: 0.1
     };
 
-    const revealObserver = new IntersectionObserver((entries) => {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('active'); // Fa apparire
-            } else {
-                entry.target.classList.remove('active'); // Li nasconde di nuovo quando scorri via
+                entry.target.classList.add('active');
+                // Sgancia l'osservatore: l'animazione avviene UNA SOLA VOLTA
+                observer.unobserve(entry.target); 
             }
         });
     }, observerOptions);
 
-    // Facciamo partire l'osservazione
     elementiDaAnimare.forEach(el => revealObserver.observe(el));
-});
+}); 
 </script>
     
 </body>
