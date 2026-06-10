@@ -175,6 +175,22 @@
     40% {transform: translateY(-5px);}
     60% {transform: translateY(-3px);}
 }
+    /* =========================================================
+       FASE 3: MOTORE CINEMATOGRAFICO (REVEAL ENGINE)
+       ========================================================= */
+    .reveal-item {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-item.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    /* Ritardi per far apparire gli elementi a cascata (uno dopo l'altro) */
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
 </style>
 <section id="s1" class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px 60px 20px; box-sizing: border-box;">
 
@@ -803,6 +819,40 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
     if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
+});
+    // 8. REVEAL ENGINE (Animazioni allo scroll)
+window.addEventListener('DOMContentLoaded', () => {
+    // 1. Diciamo al sistema quali elementi vogliamo animare
+    const elementiDaAnimare = document.querySelectorAll('.container h2, .container p, .container .btn-cyber, .container .btn-verifica, .section-3 > div > div, #s4 > div > div, #s4 button');
+
+    // 2. Aggiungiamo la classe invisibile di partenza
+    elementiDaAnimare.forEach((el, index) => {
+        el.classList.add('reveal-item');
+        
+        // Creiamo un effetto a cascata sfalsato (il secondo elemento appare dopo il primo, ecc.)
+        if (index % 3 === 1) el.classList.add('delay-1');
+        if (index % 3 === 2) el.classList.add('delay-2');
+    });
+
+    // 3. Creiamo l'osservatore che guarda quando entrano nello schermo
+    const observerOptions = {
+        root: document.querySelector('.container'), // Osserva lo scroll dentro il tuo contenitore
+        rootMargin: '0px',
+        threshold: 0.15 // Scatta quando il 15% dell'elemento è visibile
+    };
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active'); // Fa apparire
+            } else {
+                entry.target.classList.remove('active'); // Li nasconde di nuovo quando scorri via
+            }
+        });
+    }, observerOptions);
+
+    // Facciamo partire l'osservazione
+    elementiDaAnimare.forEach(el => revealObserver.observe(el));
 });
 </script>
     
