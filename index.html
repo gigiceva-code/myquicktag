@@ -649,12 +649,12 @@ localStorage.setItem('loggedUser', data.username);
     }
 }
 
-// 6. VERIFICA DISPONIBILITÀ TAG (S2) CON OVERLAY PERSUASIVO
+// VERIFICA DISPONIBILITÀ TAG - VERSIONE INDISTRUTTIBILE E AUTONOMA
 async function vaiAllaVerifica() {
     const input = document.getElementById("tag-input");
     if (!input) return;
     
-    // Rimuove spazi vuoti, chiocciole inserite a mano e mette tutto minuscolo
+    // Pulizia input
     let rawNome = input.value.toLowerCase().trim().replace(/\s+/g, '').replace(/@/g, '');
     
     if (!rawNome) {
@@ -663,21 +663,53 @@ async function vaiAllaVerifica() {
         return;
     }
 
-    // Formatta la stringa per l'infrastruttura
     const nomeScelto = '@' + rawNome;
     const btn = document.querySelector('.btn-verifica');
     
-    const tagInCorso = localStorage.getItem('myquicktag_pending');
-    if (tagInCorso && nomeScelto === tagInCorso) {
-        btn.disabled = true;
-        window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`; 
-        return;
-    }
-
     btn.innerText = "VERIFICA IN CORSO...";
     btn.disabled = true;
     btn.style.opacity = "0.7";
 
+    // Funzione interna rapida per riaccendere il bottone
+    function resetBottone() {
+        if (btn) {
+            btn.innerText = "VERIFICA DISPONIBILITÀ";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        }
+    }
+
+    // CONTROLLO MEMORIA LOCALE (Se l'utente ha già questo nome in pending)
+    const tagInCorso = localStorage.getItem('myquicktag_pending');
+    if (tagInCorso && nomeScelto === tagInCorso) {
+        setTimeout(() => {
+            resetBottone();
+            
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeTitle = document.getElementById('welcome-tag-title');
+            const btnEntra = document.getElementById('btn-entra-spazio');
+
+            if (welcomeOverlay) {
+                if (welcomeTitle) welcomeTitle.innerText = `${nomeScelto} è disponibile.`;
+                welcomeOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+
+                if (btnEntra) {
+                    btnEntra.onclick = function() {
+                        btnEntra.innerText = "ACCESSO IN CORSO...";
+                        btnEntra.style.opacity = "0.7";
+                        window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
+                    };
+                }
+            } else {
+                // Se l'HTML dell'overlay non viene trovato, vai in edit come prima (sicurezza)
+                window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
+            }
+        }, 400);
+        return;
+    }
+
+    // CHIAMATA API REALE AD AIRTABLE
     try {
         const response = await fetch('/api/check-and-create', {
             method: 'POST',
@@ -687,53 +719,45 @@ async function vaiAllaVerifica() {
         const data = await response.json();
         
         if (data.success) {
-            // Salvataggio stati in locale
             localStorage.setItem('myquicktag_pending', nomeScelto);
             localStorage.setItem('loggedUser', nomeScelto);
             
-            // Inietta il nome reale nel titolo dell'overlay
-            const welcomeTitle = document.getElementById('welcome-tag-title');
-            if (welcomeTitle) {
-                welcomeTitle.innerText = `${nomeScelto} è disponibile.`;
-            }
+            resetBottone();
 
-            // Mostra l'overlay persuasivo con effetto flex
             const welcomeOverlay = document.getElementById('welcome-overlay');
-            if (welcomeOverlay) {
-                welcomeOverlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden'; // Blocca lo scroll sotto
-            }
-
-            // Cabla l'azione del bottone interno all'overlay per la transizione finale
+            const welcomeTitle = document.getElementById('welcome-tag-title');
             const btnEntra = document.getElementById('btn-entra-spazio');
-            if (btnEntra) {
-                btnEntra.addEventListener('click', function() {
-                    btnEntra.innerText = "ACCESSO IN CORSO...";
-                    btnEntra.disabled = true;
-                    btnEntra.style.opacity = "0.7";
-                    window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
-                });
+
+            if (welcomeOverlay) {
+                if (welcomeTitle) welcomeTitle.innerText = `${nomeScelto} è disponibile.`;
+                welcomeOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+
+                if (btnEntra) {
+                    btnEntra.onclick = function() {
+                        btnEntra.innerText = "ACCESSO IN CORSO...";
+                        btnEntra.style.opacity = "0.7";
+                        window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
+                    };
+                }
+            } else {
+                window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
             }
-
-            // Ripristina lo stato del bottone principale in background per sicurezza
-            btn.innerText = "VERIFICA DISPONIBILITÀ";
-            btn.disabled = false;
-            btn.style.opacity = "1";
-
         } else {
-            alert(data.message || "Tag già occupato! Scegline un altro.");
-            btn.innerText = "VERIFICA DISPONIBILITÀ";
-            btn.disabled = false;
-            btn.style.opacity = "1";
+            // SE IL NOME È OCCUPATO: l'alert originale si attiva correttamente qui
+            alert(data.message || "Nome non disponibile! Questo Tag è già stato scelto.");
+            resetBottone();
             input.focus();
         }
     } catch (error) {
-        alert("Errore di connessione. Riprova tra poco.");
-        btn.innerText = "VERIFICA DISPONIBILITÀ";
-        btn.disabled = false;
-        btn.style.opacity = "1";
+        console.error("Errore di rete:", error);
+        alert("Errore di connessione al database. Riprova tra poco.");
+        resetBottone();
     }
 }
+
+
+
 
 
 // 7. MEMORIA SCROLL, SESSIONE PENDING E LISTENER TASTIERA
