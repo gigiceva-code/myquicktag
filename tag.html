@@ -1057,10 +1057,11 @@ function gestisciVisibilitaCaselle(fields) {
 // ============================================================
 function apriSezione(tipo) {
     console.log('apriSezione:', tipo);
+     console.log('overlay:', overlay, 'titolo:', titolo, 'corpo:', corpo); 
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
-
+   
     if (!overlay || !titolo || !corpo) return;
      
     if (tipo === 'social') {
