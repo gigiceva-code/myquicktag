@@ -178,19 +178,40 @@
     /* =========================================================
        FASE 3: MOTORE CINEMATOGRAFICO (REVEAL ENGINE)
        ========================================================= */
+    /* =========================================================
+       FASE 3: MOTORE CINEMATOGRAFICO (REVEAL ENGINE) RALLENTATO
+       ========================================================= */
     .reveal-item {
         opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateY(50px); /* Parte da un po' più in basso */
+        transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .reveal-item.active {
         opacity: 1;
         transform: translateY(0);
     }
-    /* Ritardi per far apparire gli elementi a cascata (uno dopo l'altro) */
-    .delay-1 { transition-delay: 0.1s; }
-    .delay-2 { transition-delay: 0.2s; }
-    .delay-3 { transition-delay: 0.3s; }
+    .delay-1 { transition-delay: 0.15s; }
+    .delay-2 { transition-delay: 0.3s; }
+    /* =========================================================
+       DESKTOP LUXURY FRAMING (Effetto Device Mobile su PC)
+       ========================================================= */
+    @media (min-width: 768px) {
+        body {
+            /* Crea un bagliore smeraldo sul fondo del monitor per staccare il telefono */
+            background-color: #050505; 
+            background-image: radial-gradient(circle at 50% 50%, rgba(80, 200, 120, 0.08), transparent 60%);
+        }
+        .container {
+            height: 90vh; /* Stacca la visuale dai bordi del monitor */
+            margin-top: 5vh;
+            border-radius: 40px; /* Simula i bordi smussati di un iPhone */
+            border: 1px solid rgba(255,255,255,0.1); /* Bordo di metallo */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 50px rgba(80,200,120,0.05); /* Ombra premium */
+            background-color: #000;
+        }
+        /* Nasconde i pallini laterali su desktop per pulizia */
+        .nav-dots { display: none !important; } 
+    }
 </style>
 <section id="s1" class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px 60px 20px; box-sizing: border-box;">
 
