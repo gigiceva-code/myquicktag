@@ -289,8 +289,8 @@
     }
 
 </style>
-<section id="s1" class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 25px 20px 40px 20px; box-sizing: border-box; min-height: 100dvh; background: #000000; overflow: hidden;">
-
+<section id="s1" class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100dvh; scroll-snap-align: start; position: relative; padding: 15px 20px 40px 20px; box-sizing: border-box; background: #000000; overflow: hidden;">
+    
     <div style="position: absolute; top: 30px; width: 100%; max-width: 600px; display: flex; justify-content: space-between; padding: 0 25px; box-sizing: border-box; align-items: center; z-index: 10;">
         <div style="width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -304,59 +304,53 @@
         </div>
     </div>
 
-    <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 20px;">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; width: 100%; max-width: 350px; margin-top: 5px;">
         
-        <div style="position: relative; width: 52px; height: 52px; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(80, 200, 120, 0.2));">
-            <div style="width: 100%; height: 100%; border: 4.5px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
-            <div style="position: absolute; width: 4.5px; height: 16px; background: #50C878; bottom: -2px; right: -2px; transform: rotate(-45deg); border-radius: 3px;"></div>
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-family: sans-serif; font-size: 26px; font-weight: bold; text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);">@</div>
+        <div style="position: relative; margin-bottom: 12px; filter: drop-shadow(0 0 15px rgba(80, 200, 120, 0.2));">
+            <h1 style="color: #ffffff; font-size: 65px; font-weight: 900; line-height: 1; margin: 0; position: relative;">
+                Q
+                <div style="position: absolute; top: 12.5px; left: 12.5px; width: 40px; height: 40px; background-color: #50C878; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #ffffff; font-size: 24px; font-weight: bold;">@</span>
+                </div>
+            </h1>
         </div>
         
-        <h1 style="font-size: 31px; font-weight: 900; letter-spacing: 2px; margin: 0 0 29px 0; color: #ffffff; line-height: 1; text-transform: lowercase;">myquicktag</h1>
+        <h2 style="color: #ffffff; font-size: 28px; font-weight: 800; letter-spacing: 1px; margin: 0; text-transform: lowercase;">myquicktag</h2>
         
-        <p style="color: #ffffff; font-size: 12px; font-weight: 800; letter-spacing: 4px; margin: 0; text-transform: uppercase;">PREMIUM DIGITAL TAG</p>
-    </div>
+        <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 4px; margin: 5px 0 0 0; text-transform: uppercase;">PREMIUM DIGITAL TAG</p>
+        <div style="margin-bottom: 40px;"></div>
 
-    <div style="flex-grow: 1;"></div>
+        <div style="text-align: center; margin-bottom: 35px; width: 100%;">
+            <h1 style="color: #ffffff; font-size: 26px; font-weight: 800; line-height: 1.3; margin: 0; letter-spacing: -0.5px;">
+                Il tuo Tag. Il tuo spazio digitale.<br>
+                <span style="font-weight: 900;">Tutto in un unico <span style="color: #ffffff;">@nome.</span></span>
+            </h1>
+        </div>
 
-    <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center;">
-        
-        <h2 style="font-size: 26px; font-weight: 300; line-height: 1.3; color: #ffffff; margin-bottom: 30px; text-align: center; width: 100%; letter-spacing: -0.5px;">
-            Il tuo Tag. Il tuo spazio digitale.<br>
-            <span style="font-weight: 800;">Tutto in un unico @nome.</span>
-        </h2>
-
-        <div style="width: 100%; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 22px 20px; box-sizing: border-box; margin-bottom: 35px;">
-            
-            <div style="display: flex; align-items: center; margin-bottom: 18px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px; min-width: 20px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                <p style="margin: 0; font-size: 14px; color: #ffffff; font-weight: 400; letter-spacing: 0.3px;">Riserva la tua Tag in un istante.</p>
+        <div style="width: 100%; max-width: 340px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 25px 22px; box-sizing: border-box; backdrop-filter: blur(20px); margin-bottom: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                <p style="color: #e0e0e0; font-size: 14px; margin: 0; font-weight: 500; letter-spacing: 0.2px;">Riserva il tuo Tag in un istante.</p>
             </div>
-            
-            <div style="display: flex; align-items: center; margin-bottom: 18px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px; min-width: 20px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                <p style="margin: 0; font-size: 14px; color: #ffffff; font-weight: 600; letter-spacing: 0.2px;">
-                    Gratuita i primi 3 mesi, <span style="font-weight: 300; color: #cccccc;">senza vincoli.</span>
-                </p>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                <p style="color: #ffffff; font-size: 14px; margin: 0; font-weight: 700; letter-spacing: 0.2px;">Gratuito i primi 3 mesi<span style="color: #888888; font-weight: 400;">, senza vincoli.</span></p>
             </div>
-            
-            <div style="display: flex; align-items: center;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px; min-width: 20px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-                <p style="margin: 0; font-size: 14px; color: #ffffff; font-weight: 600; letter-spacing: 0.2px; line-height: 1.3;">
-                    Nessuna carta richiesta, <span style="font-weight: 300; color: #cccccc;">disdici quando vuoi.</span>
-                </p>
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                <p style="color: #ffffff; font-size: 14px; margin: 0; font-weight: 700; letter-spacing: 0.2px;">Nessuna carta richiesta<span style="color: #888888; font-weight: 400;">, disdici quando vuoi.</span></p>
             </div>
         </div>
 
-        <button onclick="scrollToSection('s2')" class="btn-cyber" style="width: 100%; padding: 20px; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 8px 20px rgba(80, 200, 120, 0.3); cursor: pointer;">
-            SCEGLI LA TUA @TAG
-        </button>
-
-        <p style="margin-top: 18px; font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;">
-            Provalo ora. Decidi dopo.
-        </p>
-
+        <div style="width: 100%; max-width: 340px; text-align: center;">
+            <button onclick="scrollToSection('s2')" style="background: #50C878; color: #000; border: none; padding: 18px 0; font-weight: 900; font-size: 15px; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 14px; width: 100%; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(80, 200, 120, 0.3); cursor: pointer;">
+                SCEGLI IL TUO @TAG
+            </button>
+            <p style="color: #444444; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-top: 15px; margin-bottom: 0;">Provalo ora. Decidi dopo.</p>
+        </div>
+        
     </div>
+
 </section>
 <section id="s2" class="section-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; box-sizing: border-box; position: relative; height: 100vh; scroll-snap-align: start;">
    <div style="text-align: center; margin-top: 10px;">
