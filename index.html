@@ -205,6 +205,69 @@
         animation: luxuryBreathe 2.5s ease-in-out infinite;
         background: #50C878 !important;
     }
+    /* =========================================================
+       DESKTOP VETRINA ELITE (Media Queries per PC/Tablet)
+       ========================================================= */
+    @media (min-width: 1024px) {
+        .container {
+            max-width: 1100px !important; /* Allarga la vetrina */
+            padding: 0 40px !important;
+            box-sizing: border-box;
+        }
+
+        /* S1: Da colonna a Griglia (Logo/Testo a sx, Bottone a dx) */
+        #s1 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            align-content: center;
+            align-items: center;
+            gap: 60px;
+            padding-top: 0 !important;
+        }
+        #s1 > div:nth-child(1) { align-items: flex-start !important; text-align: left !important; }
+        #s1 > div:nth-child(2) { align-items: flex-start !important; }
+        #s1 > div:nth-child(3) { grid-column: 1; align-items: flex-start !important; margin-top: 0 !important; }
+
+        /* S2: Testo a sx, Input Tag a dx */
+        #s2 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            align-content: center;
+            align-items: center;
+            gap: 80px;
+        }
+        #s2 > div:nth-child(1) { text-align: left !important; margin-top: 0 !important; }
+        #s2 > div:nth-child(1) h2 { margin: 0 !important; max-width: 100% !important; }
+        #s2 > div:nth-child(2) { width: 100% !important; max-width: 450px !important; margin: 0 auto !important; }
+        #s2 > div:nth-child(3) { grid-column: 1 / span 2; margin-top: 80px !important; } /* Freccia giù centrata */
+
+        /* S3: Le 3 card si allineano in orizzontale, niente scroll */
+        #s3 { justify-content: center !important; }
+        #s3 > div:nth-child(2) {
+            padding: 0 !important;
+            justify-content: center !important;
+            overflow: hidden !important; /* Spegne lo scroll orizzontale */
+            gap: 40px !important;
+            width: 100% !important;
+        }
+        /* Spegne gli spaziatori usati nel mobile per centrare le card */
+        #s3 > div:nth-child(2) > div:first-child,
+        #s3 > div:nth-child(2) > div:last-child {
+            display: none !important;
+        }
+
+        /* S4: Testo a sx, Call to Action a dx */
+        #s4 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            align-content: center;
+            align-items: center;
+            gap: 60px;
+        }
+        #s4 > div:nth-child(1) { text-align: left !important; margin-bottom: 0 !important; max-width: 100% !important; }
+        #s4 > div:nth-child(1) div { margin: 0 0 20px 0 !important; } /* Sposta l'icona a sinistra */
+        #s4 > div:nth-child(2) { align-items: flex-end !important; }
+    }
 
 </style>
 <section id="s1" class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px 60px 20px; box-sizing: border-box;">
