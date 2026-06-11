@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-  // 2. Definizione Campi Nativi
+// 2. Definizione Campi Nativi
 const fieldsToSave = {};
 const nativeFields = [
   "username_display", "bio", "plan", "digital_style", "stato", 
@@ -28,11 +28,11 @@ const nativeFields = [
 
 nativeFields.forEach(f => {
   if (body[f] !== undefined) {
-   if (typeof body[f] === 'string') {
-    let valueClean = f === 'draft_json' || f === 'modulo_vcf' 
-        ? body[f].trim() 
-        : body[f].replace(/['"]+/g, '').trim();
-      if (valueClean !== "") {
+    if (typeof body[f] === 'string') {
+      let valueClean = f === 'draft_json' || f === 'modulo_vcf' 
+          ? body[f].trim() 
+          : body[f].replace(/['"]+/g, '').trim();
+      if (f === 'draft_json' || valueClean !== "") {
         if (f === "digital_style") {
           const upper = valueClean.toUpperCase();
           if (upper === "BLACK" || upper === "BLACK DNA") valueClean = "BLACK DNA";
@@ -45,7 +45,11 @@ nativeFields.forEach(f => {
         fieldsToSave[f] = valueClean;
       }
     } else {
-      fieldsToSave[f] = body[f];
+      if (f === 'modulo_vcf' && typeof body[f] === 'object') {
+        fieldsToSave[f] = JSON.stringify(body[f]);
+      } else {
+        fieldsToSave[f] = body[f];
+      }
     }
   }
 });
