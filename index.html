@@ -530,7 +530,8 @@
 
     </div>
 </div>
-<script>
+
+    <script>
 // 1. NAVIGAZIONE UNIFICATA
 function scrollToSection(id) {
     const target = document.getElementById(id);
@@ -555,41 +556,7 @@ if (containerElement) {
     });
 }
 
-// 3. LOGICA INPUT S2 (Effetti visivi Elite)
-function activateInput() {
-    const at = document.getElementById('at-symbol');
-    const line = document.getElementById('input-line');
-    
-    if(at) {
-        at.style.color = '#ffffff';
-        at.style.textShadow = '0 0 15px rgba(80, 200, 120, 0.4)'; /* Glow leggermente smeraldo anche sulla @ */
-        at.style.transform = 'scale(1.05)';
-    }
-    if(line) {
-        line.classList.add('input-line-active');
-    }
-}
-
-function deactivateInput() {
-    const input = document.getElementById('tag-input');
-    const at = document.getElementById('at-symbol');
-    const line = document.getElementById('input-line');
-    
-    if (input && input.value === "") {
-        if(at) {
-            at.style.color = 'rgba(255,255,255,0.15)';
-            at.style.textShadow = 'none';
-            at.style.transform = 'scale(1)';
-        }
-        if(line) {
-            line.classList.remove('input-line-active');
-            line.style.width = '0%';
-        }
-    }
-}
-
-
-// 4. MENU OVERLAY
+// 3. MENU OVERLAY
 function toggleMenu() {
     const menu = document.getElementById('menu-overlay');
     const dots = document.querySelector('.nav-dots');
@@ -609,7 +576,7 @@ function toggleMenu() {
     } 
 }
 
-// 5. GESTIONE IDENTITY PORTAL (LOGIN)
+// 4. GESTIONE IDENTITY PORTAL (LOGIN)
 function openLogin() {
     const loginOverlay = document.getElementById('login-overlay');
     if (loginOverlay) {
@@ -636,7 +603,6 @@ async function checkAccess() {
         return;
     }
 
-    // Pulisce l'input e formatta rigorosamente con la @ per il DB
     const rawTag = tagInput.toLowerCase().trim().replace(/\s+/g, '').replace(/@/g, '');
     const formattedTag = '@' + rawTag;
 
@@ -656,8 +622,7 @@ async function checkAccess() {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
             btn.style.opacity = "1";
-            localStorage.removeItem('myquicktag_pending');
-localStorage.setItem('loggedUser', data.username);
+            localStorage.setItem('loggedUser', data.username);
             localStorage.removeItem('myquicktag_pending');
             setTimeout(() => {
                 window.location.href = `profile.html?u=${data.username}`;
@@ -677,16 +642,15 @@ localStorage.setItem('loggedUser', data.username);
     }
 }
 
-// VERIFICA DISPONIBILITÀ TAG - VERSIONE INDISTRUTTIBILE E AUTONOMA
+// 5. VERIFICA DISPONIBILITÀ TAG (Nuovo Motore per Section 1)
 async function vaiAllaVerifica() {
     const input = document.getElementById("tag-input");
     if (!input) return;
     
-    // Pulizia input
     let rawNome = input.value.toLowerCase().trim().replace(/\s+/g, '').replace(/@/g, '');
     
     if (!rawNome) {
-        alert("Inserisci un nome per verificare il Tag!");
+        alert("Inserisci un nome per verificare la disponibilità!");
         input.focus();
         return;
     }
@@ -694,11 +658,12 @@ async function vaiAllaVerifica() {
     const nomeScelto = '@' + rawNome;
     const btn = document.querySelector('.btn-verifica');
     
-    btn.innerText = "VERIFICA IN CORSO...";
-    btn.disabled = true;
-    btn.style.opacity = "0.7";
+    if(btn) {
+        btn.innerText = "VERIFICA IN CORSO...";
+        btn.disabled = true;
+        btn.style.opacity = "0.7";
+    }
 
-    // Funzione interna rapida per riaccendere il bottone
     function resetBottone() {
         if (btn) {
             btn.innerText = "VERIFICA DISPONIBILITÀ";
@@ -707,37 +672,15 @@ async function vaiAllaVerifica() {
         }
     }
 
-    // CONTROLLO MEMORIA LOCALE (Se l'utente ha già questo nome in pending)
     const tagInCorso = localStorage.getItem('myquicktag_pending');
     if (tagInCorso && nomeScelto === tagInCorso) {
         setTimeout(() => {
             resetBottone();
-            
-            const welcomeOverlay = document.getElementById('welcome-overlay');
-            const welcomeTitle = document.getElementById('welcome-tag-title');
-            const btnEntra = document.getElementById('btn-entra-spazio');
-
-            if (welcomeOverlay) {
-                if (welcomeTitle) welcomeTitle.innerText = `${nomeScelto} è disponibile.`;
-                welcomeOverlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-
-                if (btnEntra) {
-                    btnEntra.onclick = function() {
-                        btnEntra.innerText = "ACCESSO IN CORSO...";
-                        btnEntra.style.opacity = "0.7";
-                        window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
-                    };
-                }
-            } else {
-                // Se l'HTML dell'overlay non viene trovato, vai in edit come prima (sicurezza)
-                window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
-            }
+            mostraOverlaySuccesso(nomeScelto);
         }, 400);
         return;
     }
 
-    // CHIAMATA API REALE AD AIRTABLE
     try {
         const response = await fetch('/api/check-and-create', {
             method: 'POST',
@@ -749,30 +692,9 @@ async function vaiAllaVerifica() {
         if (data.success) {
             localStorage.setItem('myquicktag_pending', nomeScelto);
             localStorage.setItem('loggedUser', nomeScelto);
-            
             resetBottone();
-
-            const welcomeOverlay = document.getElementById('welcome-overlay');
-            const welcomeTitle = document.getElementById('welcome-tag-title');
-            const btnEntra = document.getElementById('btn-entra-spazio');
-
-            if (welcomeOverlay) {
-                if (welcomeTitle) welcomeTitle.innerText = `${nomeScelto} è disponibile.`;
-                welcomeOverlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-
-                if (btnEntra) {
-                    btnEntra.onclick = function() {
-                        btnEntra.innerText = "ACCESSO IN CORSO...";
-                        btnEntra.style.opacity = "0.7";
-                        window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
-                    };
-                }
-            } else {
-                window.location.href = `edit.html?u=${nomeScelto.replace('@', '')}`;
-            }
+            mostraOverlaySuccesso(nomeScelto);
         } else {
-            // SE IL NOME È OCCUPATO: l'alert originale si attiva correttamente qui
             alert(data.message || "Nome non disponibile! Questo Tag è già stato scelto.");
             resetBottone();
             input.focus();
@@ -784,27 +706,41 @@ async function vaiAllaVerifica() {
     }
 }
 
+function mostraOverlaySuccesso(nome) {
+    const welcomeOverlay = document.getElementById('welcome-overlay');
+    const welcomeTitle = document.getElementById('welcome-tag-title');
+    const btnEntra = document.getElementById('btn-entra-spazio');
 
+    if (welcomeOverlay) {
+        if (welcomeTitle) welcomeTitle.innerText = `${nome} è disponibile.`;
+        welcomeOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
 
+        if (btnEntra) {
+            btnEntra.onclick = function() {
+                btnEntra.innerText = "ACCESSO IN CORSO...";
+                btnEntra.style.opacity = "0.7";
+                window.location.href = `edit.html?u=${nome.replace('@', '')}`;
+            };
+        }
+    } else {
+        window.location.href = `edit.html?u=${nome.replace('@', '')}`;
+    }
+}
 
-
-// 7. MEMORIA SCROLL, SESSIONE PENDING E LISTENER TASTIERA
+// 6. MEMORIA SCROLL E LISTENER TASTIERA
 window.addEventListener('beforeunload', () => {
     const container = document.querySelector('.container');
     if(container) localStorage.setItem('scrollPos', container.scrollTop);
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-    // Ripristino Scroll
     const scrollPos = localStorage.getItem('scrollPos');
     const container = document.querySelector('.container');
     if (scrollPos && container) {
-        setTimeout(() => {
-            container.scrollTop = parseInt(scrollPos);
-        }, 50);
+        setTimeout(() => { container.scrollTop = parseInt(scrollPos); }, 50);
     }
 
-    // Listener "Enter" per input Tag (S2)
     const tagInput = document.getElementById('tag-input');
     if (tagInput) {
         tagInput.addEventListener('keypress', function (e) {
@@ -815,34 +751,31 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Listener "Enter" per Identity Portal (Login)
     const loginPassword = document.getElementById('login-password');
     const loginTag = document.getElementById('login-tag');
-    
     function triggerLoginOnEnter(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             checkAccess();
         }
     }
-
     if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
     if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
 });
- // 8. REVEAL ENGINE (Animazioni allo scroll - Versione Indistruttibile)
+
+// 7. REVEAL ENGINE (Animazioni - Versione Infallibile)
 window.addEventListener('DOMContentLoaded', () => {
-    
-    // 1. Accendiamo SUBITO la Section 1 (Non ha senso aspettare lo scroll)
+    // Accensione immediata per la Section 1
     setTimeout(() => {
         const elementiS1 = document.querySelectorAll('#s1 .reveal-item');
         elementiS1.forEach(el => el.classList.add('active'));
-    }, 150); // Ritardo di 150ms per un effetto entrata elegantissimo
+    }, 50);
 
-    // 2. Sensore di scroll per il resto della pagina (S2, S3, S4)
+    // Sensore di scroll per il resto
     const observerOptions = {
-        root: null, // Usare "null" prende lo schermo intero, è infallibile sui cellulari
+        root: null,
         rootMargin: '0px',
-        threshold: 0.15 // Scatta quando il 15% dell'elemento entra nello schermo
+        threshold: 0.15
     };
 
     const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -854,7 +787,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
-    // Diamo in pasto al sensore solo gli elementi dalla Section 2 in giù
     const tuttiGliElementi = document.querySelectorAll('.reveal-item');
     tuttiGliElementi.forEach(el => {
         if (!el.closest('#s1')) {
@@ -863,6 +795,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
-    
+
 </body>
 </html>    
