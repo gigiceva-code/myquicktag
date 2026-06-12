@@ -831,17 +831,12 @@ window.addEventListener('DOMContentLoaded', () => {
 });
  // 8. REVEAL ENGINE (Animazioni allo scroll - Elite Version)
 window.addEventListener('DOMContentLoaded', () => {
-    const elementiDaAnimare = document.querySelectorAll('.container h2, .container p, .container .btn-cyber, .container .btn-verifica, .section-3 > div > div, #s4 > div > div, #s4 button');
-
-    elementiDaAnimare.forEach((el, index) => {
-        el.classList.add('reveal-item');
-        if (index % 3 === 1) el.classList.add('delay-1');
-        if (index % 3 === 2) el.classList.add('delay-2');
-    });
+    // Ora lo script accende automaticamente TUTTI gli elementi a cui abbiamo dato la classe nel nuovo HTML
+    const elementiDaAnimare = document.querySelectorAll('.reveal-item');
 
     const observerOptions = {
         root: document.querySelector('.container'),
-        rootMargin: '0px 0px -10% 0px', // Scatta leggermente prima per non farlo apparire in ritardo
+        rootMargin: '0px 0px -10% 0px', // Scatta leggermente prima
         threshold: 0.1
     };
 
@@ -856,8 +851,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }, observerOptions);
 
     elementiDaAnimare.forEach(el => revealObserver.observe(el));
-}); 
-</script>
+});
+
     
 </body>
 </html>    
