@@ -829,28 +829,38 @@ window.addEventListener('DOMContentLoaded', () => {
     if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
     if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
 });
- // 8. REVEAL ENGINE (Animazioni allo scroll - Elite Version)
+ // 8. REVEAL ENGINE (Animazioni allo scroll - Versione Indistruttibile)
 window.addEventListener('DOMContentLoaded', () => {
-    // Ora lo script accende automaticamente TUTTI gli elementi a cui abbiamo dato la classe nel nuovo HTML
-    const elementiDaAnimare = document.querySelectorAll('.reveal-item');
+    
+    // 1. Accendiamo SUBITO la Section 1 (Non ha senso aspettare lo scroll)
+    setTimeout(() => {
+        const elementiS1 = document.querySelectorAll('#s1 .reveal-item');
+        elementiS1.forEach(el => el.classList.add('active'));
+    }, 150); // Ritardo di 150ms per un effetto entrata elegantissimo
 
+    // 2. Sensore di scroll per il resto della pagina (S2, S3, S4)
     const observerOptions = {
-        root: document.querySelector('.container'),
-        rootMargin: '0px 0px -10% 0px', // Scatta leggermente prima
-        threshold: 0.1
+        root: null, // Usare "null" prende lo schermo intero, è infallibile sui cellulari
+        rootMargin: '0px',
+        threshold: 0.15 // Scatta quando il 15% dell'elemento entra nello schermo
     };
 
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
-                // Sgancia l'osservatore: l'animazione avviene UNA SOLA VOLTA
                 observer.unobserve(entry.target); 
             }
         });
     }, observerOptions);
 
-    elementiDaAnimare.forEach(el => revealObserver.observe(el));
+    // Diamo in pasto al sensore solo gli elementi dalla Section 2 in giù
+    const tuttiGliElementi = document.querySelectorAll('.reveal-item');
+    tuttiGliElementi.forEach(el => {
+        if (!el.closest('#s1')) {
+            revealObserver.observe(el);
+        }
+    });
 });
 
     
