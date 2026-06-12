@@ -195,12 +195,12 @@
 
     <div class="container" style="background: #000; font-family: 'Inter', sans-serif;">
         
-       <!-- SECTION 1: L'Ingresso -->
+      <!-- SECTION 1: L'Ingresso -->
         <section id="s1" class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 15px 20px 40px 20px; box-sizing: border-box; min-height: 100dvh; background: #000000; overflow: hidden; scroll-snap-align: start; position: relative;">
 
-            <!-- Blocco Superiore: Logo e Titolo vicini alla barra di stato -->
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 2vh; z-index: 2;">
-                <!-- Logo Originale Ripristinato -->
+            <!-- Blocco Superiore: Logo e Titolo -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 2vh; z-index: 2;">
+                <!-- Logo Originale -->
                 <div class="reveal-item" style="position: relative; width: 44px; height: 44px; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(80, 200, 120, 0.3));">
                     <div style="width: 100%; height: 100%; border: 4px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
                     <div style="position: absolute; width: 4px; height: 18px; background: #50C878; bottom: -1px; right: 1px; transform: rotate(-45deg); border-radius: 2px;"></div>
@@ -211,8 +211,8 @@
                 <div class="reveal-item delay-1" style="font-size: 31px; font-weight: 900; letter-spacing: 2px; margin: 0; color: #ffffff; line-height: 1; text-transform: lowercase;">myquicktag</div>
             </div>
 
-            <!-- Contenitore Centrale: Il Motore di Conversione (Widget di Ricerca) -->
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 340px; text-align: center; margin: auto 0; z-index: 2;">
+            <!-- Contenitore Centrale: Il Motore di Conversione (Distanziamento ottimizzato) -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 340px; text-align: center; margin-top: 6vh; margin-bottom: auto; z-index: 2;">
                 
                 <!-- Headline -->
                 <h1 class="reveal-item delay-1" style="font-size: 26px; font-weight: 300; line-height: 1.3; color: #ffffff; margin: 0 0 20px 0; letter-spacing: -0.5px;">
@@ -226,7 +226,7 @@
                     potrai personalizzarlo e renderlo tuo.
                 </p>
 
-                <!-- WIDGET MOTORE DI RICERCA (Input + Bottone fusi) -->
+                <!-- WIDGET MOTORE DI RICERCA (Glow Neutro, nessuna competizione visiva) -->
                 <div class="reveal-item delay-2" id="search-widget" style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 6px; display: flex; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: all 0.3s ease; margin-bottom: 25px;">
                     
                     <!-- Riga Input -->
@@ -237,14 +237,14 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                         
-                        <!-- Blocco @ + Testo saldati insieme -->
+                        <!-- Blocco @ + Testo saldati insieme (Tono neutro) -->
                         <div style="display: flex; align-items: center; flex-grow: 1;">
-                            <span style="color: #50C878; font-size: 18px; font-weight: 700; line-height: 1;">@</span>
-                            <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 0; margin: 0; background: transparent; border: none; color: #ffffff; font-size: 18px; font-weight: 600; outline: none; line-height: 1;" onfocus="document.getElementById('search-widget').style.borderColor='#50C878'; document.getElementById('search-widget').style.boxShadow='0 0 20px rgba(80, 200, 120, 0.2), 0 15px 35px rgba(0,0,0,0.4)';" onblur="document.getElementById('search-widget').style.borderColor='rgba(255, 255, 255, 0.1)'; document.getElementById('search-widget').style.boxShadow='0 15px 35px rgba(0,0,0,0.4)';">
+                            <span style="color: #ffffff; font-size: 18px; font-weight: 400; line-height: 1; opacity: 0.8;">@</span>
+                            <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 0; margin: 0; background: transparent; border: none; color: #ffffff; font-size: 18px; font-weight: 400; outline: none; line-height: 1;" onfocus="document.getElementById('search-widget').style.borderColor='rgba(255, 255, 255, 0.3)'; document.getElementById('search-widget').style.boxShadow='0 0 20px rgba(255, 255, 255, 0.05), 0 15px 35px rgba(0,0,0,0.6)';" onblur="document.getElementById('search-widget').style.borderColor='rgba(255, 255, 255, 0.1)'; document.getElementById('search-widget').style.boxShadow='0 15px 35px rgba(0,0,0,0.4)';">
                         </div>
                     </div>
 
-                    <!-- Bottone Integrato -->
+                    <!-- Bottone Integrato (L'unico vero eroe verde) -->
                     <button onclick="vaiAllaVerifica()" class="btn-verifica" style="width: 100%; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.2s ease;">
                         VERIFICA DISPONIBILITÀ
                     </button>
@@ -266,7 +266,7 @@
                 </svg>
             </div>
 
-        </section> 
+        </section>
    <!-- SECTION 2: La Prova (Mockup) -->
         <section id="s2" class="section-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; box-sizing: border-box; min-height: 100dvh; background: #000000; overflow: hidden; scroll-snap-align: start; position: relative;">
             
