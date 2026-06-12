@@ -28,7 +28,7 @@
     <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
- <style>
+<style>
     /* RESET & BASE LUXURY */
     body {
         background-color: #000000;
@@ -57,7 +57,7 @@
         scroll-behavior: smooth;
         -ms-overflow-style: none;
         scrollbar-width: none;
-        }
+    }
 
     .container::-webkit-scrollbar { display: none; }
 
@@ -66,13 +66,13 @@
         scroll-snap-stop: always; 
         flex-shrink: 0;
         width: 100%;
-        height: 100dvh; /* 100dvh assicura che ignori la barra di navigazione dinamica del browser */
+        height: 100dvh;
         position: relative;
         box-sizing: border-box;
-        overflow: hidden; /* Evita doppi scroll interni */
+        overflow: hidden;
     }
 
-    /* BOTTONI ELITE (Squadrati, no glow eccessivo) */
+    /* BOTTONI ELITE */
     button, .btn-cyber, .btn-verifica {
         transition: all 0.2s ease-in-out !important;
         cursor: pointer;
@@ -86,15 +86,15 @@
         filter: brightness(0.9);
     }
 
-    /* =========================================================
-       DETOX VISIVO: DARK GLASSMORPHISM (Sovrascrive i bordi inline)
-       ========================================================= */
-    
-    /* Disintegra i bordi bianchi delle card in S2, S3 e S4 e li trasforma in vetro nero */
-    .section-2 div[style*="border: 1px solid rgba(255, 255, 255, 0.8)"],
-    .section-3 div[style*="border: 1px solid rgba(255, 255, 255, 0.85)"],
-    #s4 div[style*="border: 1px solid rgba(255, 255, 255, 0.85)"] {
-        border: 1px solid rgba(255, 255, 255, 0.04) !important; /* Bordo quasi invisibile */
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-5px);}
+        60% {transform: translateY(-3px);}
+    }
+
+    /* DETOX VISIVO: DARK GLASSMORPHISM */
+    .glass-panel {
+        border: 1px solid rgba(255, 255, 255, 0.04) !important;
         background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 100%) !important;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255,255,255,0.03) !important;
         backdrop-filter: blur(15px) !important;
@@ -102,38 +102,13 @@
         transition: all 0.4s ease !important;
     }
 
-    /* Micro-interazione al tocco/hover: si accende un leggero alone smeraldo */
-    .section-3 div[style*="border: 1px solid rgba(255, 255, 255, 0.85)"]:active,
-    #s4 div[style*="border: 1px solid rgba(255, 255, 255, 0.85)"]:active {
+    .glass-panel:active {
         border-color: rgba(80, 200, 120, 0.2) !important;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(80, 200, 120, 0.05), inset 0 1px 0 0 rgba(255,255,255,0.05) !important;
         transform: scale(0.98);
     }
 
-    /* CARD IDENTITY ORIGINALI */
-    .identity-card, .profile-badge {
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-radius: 8px !important;
-        background: rgba(255, 255, 255, 0.02);
-        backdrop-filter: blur(10px);
-        transition: border 0.3s ease;
-    }
-
-    /* MENU HAMBURGER (Linea centrale corta) */
-    .menu-hamburger {
-        position: fixed;
-        top: 30px;
-        left: 25px;
-        z-index: 2000;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        cursor: pointer;
-    }
-    .line { width: 24px; height: 1px; background: #fff; transition: 0.3s; }
-    .line-short { width: 14px; align-self: center; } 
-
-    /* NAV DOTS */
+    /* MENU HAMBURGER & NAV DOTS */
     .nav-dots {
         position: fixed;
         right: 20px;
@@ -155,54 +130,22 @@
     .dot.active {
         background: #50C878;
         transform: scale(1.5);
-        box-shadow: 0 0 10px rgba(80,200,120,0.4); /* Glow sul dot attivo */
+        box-shadow: 0 0 10px rgba(80,200,120,0.4);
     }
 
-    /* EMOJI MONOCROMATICHE (Luxury Treatment) */
-    .emoji-luxury {
-        filter: grayscale(100%) brightness(200%);
-        opacity: 0.8;
-    }
-    .emoji-green {
-        filter: grayscale(100%) sepia(100%) hue-rotate(90deg) saturate(500%);
-    }
-</style>
-<body>
-
-  <div class="nav-dots">
-    <div class="dot active" onclick="scrollToSection('s1')"></div>
-    <div class="dot" onclick="scrollToSection('s2')"></div>
-    <div class="dot" onclick="scrollToSection('s3')"></div>
-    <div class="dot" onclick="scrollToSection('s4')"></div>
-</div>
-
-<div class="container" style="background: #000; font-family: 'Inter', sans-serif;">
-        
-
-<style>
-    /* TRATTAMENTO MONOCROMATICO VERDE LUXURY */
+    /* EMOJI MONOCROMATICHE E TRATTAMENTO VERDE */
     .emoji-luxury {
         filter: grayscale(100%) brightness(1.2) sepia(100%) hue-rotate(90deg) saturate(350%);
         display: inline-block;
         vertical-align: middle;
     }
-  
-    .btn-cyber { transition: all 0.3s ease; }
-    .btn-cyber:active { transform: scale(0.96); }
-    @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-    40% {transform: translateY(-5px);}
-    60% {transform: translateY(-3px);}
-}
-    
-   /* =========================================================
-       FASE 3: MOTORE CINEMATOGRAFICO (REVEAL ENGINE) ELITE
-       ========================================================= */
+
+    /* REVEAL ENGINE */
     .reveal-item {
         opacity: 0;
-        transform: translateY(15px); /* Movimento minimo, quasi impercettibile */
+        transform: translateY(15px);
         transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        will-change: opacity, transform; /* Attiva l'acceleratore grafico del telefono */
+        will-change: opacity, transform;
     }
     .reveal-item.active {
         opacity: 1;
@@ -210,247 +153,250 @@
     }
     .delay-1 { transition-delay: 0.15s; }
     .delay-2 { transition-delay: 0.3s; }
-        /* =========================================================
-       MICRO-INTERAZIONI: RESPIRO SMERALDO SULL'INPUT
-       ========================================================= */
-    @keyframes luxuryBreathe {
-        0% { box-shadow: 0 0 5px rgba(80, 200, 120, 0.1); }
-        50% { box-shadow: 0 -2px 15px rgba(80, 200, 120, 0.5), 0 2px 15px rgba(80, 200, 120, 0.5); }
-        100% { box-shadow: 0 0 5px rgba(80, 200, 120, 0.1); }
-    }
-    
-    .input-line-active {
-        width: 100% !important;
-        animation: luxuryBreathe 2.5s ease-in-out infinite;
-        background: #50C878 !important;
-    }
-    /* =========================================================
-       DESKTOP VETRINA ELITE (Media Queries per PC/Tablet)
-       ========================================================= */
+
+    /* DESKTOP VETRINA ELITE */
     @media (min-width: 1024px) {
         .container {
-            max-width: 1100px !important; /* Allarga la vetrina */
+            max-width: 1100px !important;
             padding: 0 40px !important;
             box-sizing: border-box;
         }
 
-        /* S1: Da colonna a Griglia (Logo/Testo a sx, Bottone a dx) */
-        #s1 {
+        #s1, #s2, #s4 {
             display: grid !important;
             grid-template-columns: 1fr 1fr;
             align-content: center;
             align-items: center;
             gap: 60px;
-            padding-top: 0 !important;
         }
+
         #s1 > div:nth-child(1) { align-items: flex-start !important; text-align: left !important; }
-        #s1 > div:nth-child(2) { align-items: flex-start !important; }
-        #s1 > div:nth-child(3) { grid-column: 1; align-items: flex-start !important; margin-top: 0 !important; }
-
-        /* S2: Testo a sx, Input Tag a dx */
-        #s2 {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr;
-            align-content: center;
-            align-items: center;
-            gap: 80px;
-        }
-        #s2 > div:nth-child(1) { text-align: left !important; margin-top: 0 !important; }
-        #s2 > div:nth-child(1) h2 { margin: 0 !important; max-width: 100% !important; }
-        #s2 > div:nth-child(2) { width: 100% !important; max-width: 450px !important; margin: 0 auto !important; }
-        #s2 > div:nth-child(3) { grid-column: 1 / span 2; margin-top: 80px !important; } /* Freccia giù centrata */
-
-        /* S3: Le 3 card si allineano in orizzontale, niente scroll */
+        
+        /* S3: Allineamento orizzontale card */
         #s3 { justify-content: center !important; }
-        #s3 > div:nth-child(2) {
+        .s3-scroll-container {
             padding: 0 !important;
             justify-content: center !important;
-            overflow: hidden !important; /* Spegne lo scroll orizzontale */
+            overflow: hidden !important; 
             gap: 40px !important;
             width: 100% !important;
         }
-        /* Spegne gli spaziatori usati nel mobile per centrare le card */
-        #s3 > div:nth-child(2) > div:first-child,
-        #s3 > div:nth-child(2) > div:last-child {
-            display: none !important;
-        }
-
-        /* S4: Testo a sx, Call to Action a dx */
-        #s4 {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr;
-            align-content: center;
-            align-items: center;
-            gap: 60px;
-        }
-        #s4 > div:nth-child(1) { text-align: left !important; margin-bottom: 0 !important; max-width: 100% !important; }
-        #s4 > div:nth-child(1) div { margin: 0 0 20px 0 !important; } /* Sposta l'icona a sinistra */
-        #s4 > div:nth-child(2) { align-items: flex-end !important; }
     }
-
 </style>
-<section id="s1" class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 15px 20px 40px 20px; box-sizing: border-box; min-height: 100dvh; background: #000000; overflow: hidden; scroll-snap-align: start;">
+<body>
 
-    <div style="position: absolute; top: 15px; width: 100%; max-width: 600px; display: flex; justify-content: flex-end; padding: 0 25px; box-sizing: border-box; align-items: center; z-index: 10;">
-        <div style="width: 40px; height: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; cursor: pointer;">
-            <div style="width: 22px; height: 2px; background: #50C878; border-radius: 2px;"></div>
-            <div style="width: 22px; height: 2px; background: #50C878; border-radius: 2px;"></div>
-        </div>
+    <!-- NAV DOTS (Invariati) -->
+    <div class="nav-dots">
+        <div class="dot active" onclick="scrollToSection('s1')"></div>
+        <div class="dot" onclick="scrollToSection('s2')"></div>
+        <div class="dot" onclick="scrollToSection('s3')"></div>
+        <div class="dot" onclick="scrollToSection('s4')"></div>
     </div>
 
-    <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 15px;">
+    <div class="container" style="background: #000; font-family: 'Inter', sans-serif;">
         
-        <div style="position: relative; width: 44px; height: 44px; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(80, 200, 120, 0.3));">
-            <div style="width: 100%; height: 100%; border: 4px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
-            <div style="position: absolute; width: 4px; height: 18px; background: #50C878; bottom: -1px; right: 1px; transform: rotate(-45deg); border-radius: 2px;"></div>
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-family: sans-serif; font-size: 28px; font-weight: bold; text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);">@</div>
-        </div>
-        
-        <h1 style="font-size: 31px; font-weight: 900; letter-spacing: 2px; margin: 0 0 35px 0; color: #ffffff; line-height: 1; text-transform: lowercase;">myquicktag</h1>
-        
-        <p style="color: #ffffff; font-size: 12px; font-weight: 800; letter-spacing: 4px; margin: 0; text-transform: uppercase;">PREMIUM DIGITAL TAG</p>
-    </div>
+        <!-- SECTION 1: L'Ingresso -->
+        <section id="s1" class="section-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; min-height: 100dvh; background: #000000; overflow: hidden; scroll-snap-align: start; position: relative;">
 
-    <div style="height: 6vh; min-height: 30px;"></div>
+            <!-- Contenitore Centrale: Il Motore di Conversione -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 340px; text-align: center; margin-top: -5vh;">
+                
+                <!-- Logo Ridimensionato e Minimal -->
+                <div class="reveal-item" style="position: relative; width: 36px; height: 36px; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(80, 200, 120, 0.2));">
+                    <div style="width: 100%; height: 100%; border: 3px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
+                    <div style="position: absolute; width: 3px; height: 14px; background: #50C878; bottom: -2px; right: 0px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-family: sans-serif; font-size: 20px; font-weight: bold;">@</div>
+                </div>
+                
+                <p class="reveal-item delay-1" style="color: #ffffff; font-size: 10px; font-weight: 800; letter-spacing: 4px; margin: 0 0 35px 0; text-transform: uppercase; opacity: 0.8;">MYQUICKTAG</p>
+                
+                <!-- Headline e Subheadline -->
+                <h1 class="reveal-item delay-1" style="font-size: 28px; font-weight: 300; line-height: 1.2; color: #ffffff; margin: 0 0 15px 0; letter-spacing: -0.5px;">
+                    Il tuo @nome.<br>
+                    <span style="font-weight: 800;">Il centro del tuo ecosistema digitale.</span>
+                </h1>
+                
+                <p class="reveal-item delay-2" style="color: #A0A0A0; font-size: 14px; font-weight: 300; line-height: 1.5; margin: 0 0 30px 0;">
+                    Scopri se è disponibile. Se lo è, potrai personalizzarlo e renderlo tuo.
+                </p>
 
-    <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center;">
-        
-        <h2 style="font-size: 22px; font-weight: 300; line-height: 1.3; color: #ffffff; margin-bottom: 25px; text-align: center; width: 100%; letter-spacing: -0.5px;">
-            Il tuo nuovo ecosistema digitale.<br>
-            <span style="font-weight: 800;">Un solo @nome. Infinite possibilità.</span>
-        </h2>
+                <!-- Campo Input Dominante -->
+                <div class="reveal-item delay-2" style="position: relative; width: 100%; margin-bottom: 15px;">
+                    <span style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #50C878; font-size: 20px; font-weight: 700; font-family: sans-serif; pointer-events: none;">@</span>
+                    
+                    <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 20px 20px 20px 48px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: 0.5px; box-sizing: border-box; outline: none; transition: all 0.3s ease; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);" onfocus="this.style.border='1px solid #50C878'; this.style.boxShadow='0 0 15px rgba(80, 200, 120, 0.2), inset 0 2px 5px rgba(0,0,0,0.5)';" onblur="this.style.border='1px solid rgba(255, 255, 255, 0.1)'; this.style.boxShadow='inset 0 2px 5px rgba(0,0,0,0.5)';">
+                </div>
 
-        <button onclick="scrollToSection('s2')" class="btn-cyber" style="width: 260px; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 10px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; box-shadow: 0 6px 15px rgba(80, 200, 120, 0.25); cursor: pointer; margin-bottom: 12px;">
-            SCEGLI LA TUA @TAG
-        </button>
+                <!-- Call to Action di Conversione (Richiama vaiAllaVerifica) -->
+                <button onclick="vaiAllaVerifica()" class="btn-verifica reveal-item delay-2" style="width: 100%; padding: 18px 0; background: #50C878; color: #000; border: none; border-radius: 10px; font-weight: 900; font-size: 15px; letter-spacing: 1.5px; text-transform: uppercase; box-shadow: 0 6px 15px rgba(80, 200, 120, 0.25); cursor: pointer; margin-bottom: 20px;">
+                    VERIFICA DISPONIBILITÀ
+                </button>
 
-        <p style="margin: 0 0 25px 0; font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;">
-            Provalo ora. Decidi dopo.
-        </p>
+                <!-- Trust Badge Elegante -->
+                <div class="reveal-item delay-2" style="display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.7;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <p style="margin: 0; font-size: 11px; color: #ffffff; font-weight: 500; letter-spacing: 0.5px;">Nessuna carta richiesta</p>
+                </div>
 
-        <div style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 10px 20px rgba(0,0,0,0.3); text-align: center;">
-            <p style="margin: 0 0 8px 0; font-size: 13px; color: #ffffff; font-weight: 400; letter-spacing: 0.3px;">Riserva la tua Tag in un istante.</p>
-            <p style="margin: 0 0 8px 0; font-size: 13px; color: #ffffff; font-weight: 600; letter-spacing: 0.2px;">Gratuita i primi 3 mesi.</p>
-            <p style="margin: 0; font-size: 13px; color: #888888; font-weight: 600; letter-spacing: 0.2px;">Nessuna carta richiesta.</p>
-        </div>
+            </div>
 
-    </div>
+            <!-- Invito allo Scroll Discreto -->
+            <div style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); cursor: pointer; animation: bounce 2s infinite; display: flex; flex-direction: column; align-items: center; gap: 5px;" onclick="scrollToSection('s2')">
+                <span style="color: #666666; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">Scopri l'Ecosistema</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                </svg>
+            </div>
+
+        </section>    
+
 </section>
-    <section id="s2" class="section-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; box-sizing: border-box; min-height: 100dvh; background: #000000; overflow: hidden; scroll-snap-align: start;">
-    
-    <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-        
-        <p style="color: #50C878; font-size: 11px; font-weight: 800; letter-spacing: 3px; margin: 0 0 15px 0; text-transform: uppercase;">
-            INSTANT DIGITAL IDENTITY
-        </p>
-
-        <h2 style="font-size: 26px; font-weight: 300; line-height: 1.2; color: #ffffff; margin-bottom: 0; letter-spacing: -0.5px;">
-            Il tuo nome nel mondo.
-        </h2>
-        <h3 style="font-size: 26px; font-weight: 800; line-height: 1.2; color: #ffffff; margin-bottom: 35px; letter-spacing: -0.5px; margin-top: 5px;">
-            Il mondo nel tuo nome.
-        </h3>
-
-        <div style="position: relative; width: 100%; margin-bottom: 20px;">
+   <!-- SECTION 2: La Prova (Mockup) -->
+        <section id="s2" class="section-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; box-sizing: border-box; min-height: 100dvh; background: #000000; overflow: hidden; scroll-snap-align: start; position: relative;">
             
-            <span style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #50C878; font-size: 20px; font-weight: 700; font-family: sans-serif; pointer-events: none;">@</span>
+            <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                
+                <div class="reveal-item" style="margin-bottom: 35px;">
+                    <h2 style="font-size: 26px; font-weight: 300; line-height: 1.2; color: #ffffff; margin-bottom: 5px; letter-spacing: -0.5px;">
+                        Più di un link.
+                    </h2>
+                    <h3 style="font-size: 26px; font-weight: 800; line-height: 1.2; color: #ffffff; margin-top: 0; letter-spacing: -0.5px;">
+                        Molto più di un biglietto.
+                    </h3>
+                </div>
+
+                <!-- Mockup Smartphone Minimal (CSS Puro) -->
+                <div class="reveal-item delay-1 glass-panel" style="width: 220px; height: 420px; border-radius: 35px; border: 2px solid rgba(255, 255, 255, 0.1) !important; display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; position: relative; overflow: hidden; margin-bottom: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.8) !important;">
+                    
+                    <!-- Dynamic Island / Notch -->
+                    <div style="width: 70px; height: 16px; background: #000000; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(255,255,255,0.05); z-index: 2;"></div>
+                    
+                    <!-- Simulazione Profilo -->
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, rgba(80, 200, 120, 0.2), rgba(80, 200, 120, 0.05)); border: 1px solid rgba(80,200,120,0.3); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #50C878; font-weight: bold;">@</div>
+                    <div style="width: 100px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-bottom: 8px;"></div>
+                    <div style="width: 60px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 30px;"></div>
+                    
+                    <!-- Simulazione Pulsanti Link -->
+                    <div style="width: 100%; height: 38px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03);"></div>
+                    <div style="width: 100%; height: 38px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03);"></div>
+                    <div style="width: 100%; height: 38px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03);"></div>
+                    
+                    <!-- Sfumatura per dare profondità alla fine dello schermo finto -->
+                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); z-index: 2;"></div>
+                </div>
+
+                <p class="reveal-item delay-2" style="color: #A0A0A0; font-size: 14px; font-weight: 300; line-height: 1.5; margin: 0;">
+                    Nessun download. Il tuo spazio si apre in un istante, su ogni schermo.
+                </p>
+
+            </div>
             
-            <input type="text" id="username-input" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 18px 20px 18px 45px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; color: #ffffff; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; box-sizing: border-box; outline: none; transition: all 0.3s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);" onfocus="this.style.border='1px solid #50C878'; this.style.boxShadow='0 0 15px rgba(80, 200, 120, 0.15), inset 0 2px 4px rgba(0,0,0,0.5)';" onblur="this.style.border='1px solid rgba(255, 255, 255, 0.08)'; this.style.boxShadow='inset 0 2px 4px rgba(0,0,0,0.5)';">
-        </div>
+            <!-- Invito allo Scroll -->
+            <div style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); cursor: pointer; animation: bounce 2s infinite; opacity: 0.5;" onclick="scrollToSection('s3')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                </svg>
+            </div>
 
-        <button onclick="checkTagAvailability()" style="width: 100%; padding: 16px 0; background: transparent; color: #50C878; border: 2px solid #50C878; border-radius: 10px; font-weight: 700; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(80, 200, 120, 0.1);" onmouseover="this.style.background='rgba(80, 200, 120, 0.05)';" onmouseout="this.style.background='transparent';">
-            VERIFICA DISPONIBILITÀ
-        </button>
+        </section>
+<!-- SECTION 3: I Benefici (Niente Gergo Tecnico) -->
+        <section id="s3" class="section-3" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 70px 0 50px 0; box-sizing: border-box; position: relative; height: 100dvh; scroll-snap-align: start; background: #000;">
 
-    </div>
-</section>
-<section id="s3" class="section-3" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 70px 0 50px 0; box-sizing: border-box; position: relative; height: 100dvh; scroll-snap-align: start; background: #000;">
+            <div class="reveal-item" style="text-align: center; padding: 0 20px;">
+                <p style="color: #50C878; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px;">
+                    POTENZA ILLIMITATA
+                </p>
+                <h2 style="font-size: 24px; font-weight: 300; line-height: 1.3; color: #ffffff; max-width: 320px; margin: 0 auto; letter-spacing: 0.5px;">
+                    Un ecosistema d'élite in<br>
+                    <span style="font-weight: 800;">un singolo tocco.</span>
+                </h2>
+            </div>
+              
+            <!-- Scroll orizzontale Mobile / Griglia Automatica su Desktop -->
+            <div class="s3-scroll-container reveal-item delay-1" style="width: 100%; display: flex; align-items: center; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; margin: 20px 0; gap: 20px; padding: 0 50vw; box-sizing: border-box;">
+                
+                <!-- Spaziatore Iniziale Mobile -->
+                <div style="min-width: calc(50vw - 160px); flex-shrink: 0;"></div>
 
-    <div style="text-align: center; padding: 0 20px;">
-        <p style="color: #50C878; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px;">
-            POTENZA ILLIMITATA
-        </p>
-        <h2 style="font-size: 24px; font-weight: 300; line-height: 1.3; color: #ffffff; max-width: 320px; margin: 0 auto; letter-spacing: 0.5px;">
-            Un ecosistema d'élite in<br>
-            <span style="font-weight: 800;">un singolo tocco.</span>
-        </h2>
-    </div>
-      
-    <div style="width: 100%; display: flex; align-items: center; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; margin: 20px 0; gap: 20px; padding: 0 50vw; box-sizing: border-box;">
-        
-        <div style="min-width: calc(50vw - 160px); flex-shrink: 0;"></div>
+                <!-- CARD 1 -->
+                <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
+                    <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">✨</div>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Presence</h3>
+                    <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Espandi la tua presenza.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Sincronizza social, contatti e siti web in un unico link perfetto.</p>
+                </div>
 
-        <div style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
-            <div style="color: #50C878; margin-bottom: 25px; font-size: 32px;">🔗</div>
-            <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Omnichannel Hub</h3>
-            <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
-            <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300;">Sincronizza social, contatti e siti web. L'intero tuo mondo digitale accessibile da un unico link perfetto.</p>
-        </div>
+                <!-- CARD 2 -->
+                <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
+                    <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">📱</div>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Showcase</h3>
+                    <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Presenta il meglio di te.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Mostra servizi e catalogo ai tuoi clienti con un'eleganza assoluta.</p>
+                </div>
 
-        <div style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
-            <div style="color: #50C878; margin-bottom: 25px; font-size: 32px;">📱</div>
-            <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Smart Showroom</h3>
-            <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
-            <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300;">Mostra i tuoi servizi e il tuo catalogo ai clienti con un'eleganza assoluta, senza che debbano scaricare nulla.</p>
-        </div>
+                <!-- CARD 3 -->
+                <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
+                    <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">⭐</div>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Reputation</h3>
+                    <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Consolida la tua autorità.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Raccogli feedback reali e aumenta la tua credibilità in tempo reale.</p>
+                </div>
 
-        <div style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
-            <div style="color: #50C878; margin-bottom: 25px; font-size: 32px;">⭐</div>
-            <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Reputation</h3>
-            <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
-            <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300;">Raccogli feedback reali in tempo reale e consolida la tua autorità online e offline istantaneamente.</p>
-        </div>
+                <!-- Spaziatore Finale Mobile -->
+                <div style="min-width: calc(50vw - 160px); flex-shrink: 0;"></div>
+            </div>
 
-        <div style="min-width: calc(50vw - 160px); flex-shrink: 0;"></div>
-    </div>
+            <div style="text-align: center; padding: 0 20px; padding-bottom: 20px;">
+                <div onclick="scrollToSection('s4')" style="cursor: pointer; animation: bounce 2s infinite; display: flex; justify-content: center; opacity: 0.5;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+<!-- SECTION 4: La Chiusura (Connessione Reale) -->
+        <section id="s4" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; height: 100dvh; box-sizing: border-box; background: #000; scroll-snap-align: start; position: relative;">
 
-    <div style="text-align: center; padding: 0 20px; padding-bottom: 20px;">
-        <div onclick="scrollToSection('s4')" style="cursor: pointer; opacity: 1; animation: bounce 2s infinite; display: flex; justify-content: center;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
-            </svg>
-        </div>
-    </div>
-</section>
+            <div class="reveal-item" style="text-align: center; margin-bottom: 50px; width: 100%; max-width: 340px;">
+                <div style="width: 60px; height: 60px; margin: 0 auto 20px auto; background: rgba(80, 200, 120, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(80, 200, 120, 0.3);">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <rect x="7" y="7" width="3" height="3"></rect>
+                        <rect x="14" y="7" width="3" height="3"></rect>
+                        <rect x="7" y="14" width="3" height="3"></rect>
+                        <rect x="14" y="14" width="3" height="3"></rect>
+                    </svg>
+                </div>
+                
+                <p style="color: #50C878; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">
+                    CONNESSIONE REALE
+                </p>
+                <h2 style="color: #ffffff; font-size: 26px; font-weight: 300; margin: 0 auto 15px auto; line-height: 1.2; letter-spacing: -0.5px;">
+                    Fatti trovare, ricordare e<br><span style="font-weight: 800;">contattare in un istante.</span>
+                </h2>
+                <p style="color: #A0A0A0; font-size: 15px; line-height: 1.5; font-weight: 300;">
+                    Il tuo QR dinamico integrato è la chiave per condividere il tuo @nome ovunque: su carta, su schermo o tramite NFC.
+                </p>
+            </div>
 
-<section id="s4" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; height: 100dvh; box-sizing: border-box; background: #000; scroll-snap-align: start; position: relative;">
+            <div class="reveal-item delay-1" style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                
+                <div class="glass-panel" style="text-align: center; width: 100%; padding: 20px; border-radius: 12px;">
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 5px 0;">Senza vincoli. Nessuna carta.</p>
+                    <p style="color: #A0A0A0; font-size: 12px; margin: 0; font-weight: 300;">Decidi tu se continuare dopo i 3 mesi di prova.</p>
+                </div>
 
-    <div style="text-align: center; margin-bottom: 50px; width: 100%; max-width: 340px;">
-        <div style="width: 60px; height: 60px; margin: 0 auto 20px auto; background: rgba(80, 200, 120, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(80, 200, 120, 0.3);">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <rect x="7" y="7" width="3" height="3"></rect>
-                <rect x="14" y="7" width="3" height="3"></rect>
-                <rect x="7" y="14" width="3" height="3"></rect>
-                <rect x="14" y="14" width="3" height="3"></rect>
-            </svg>
-        </div>
-        
-        <p style="color: #50C878; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">
-            UNIVERSAL SCAN
-        </p>
-        <h2 style="color: #ffffff; font-size: 26px; font-weight: 300; margin: 0 auto 15px auto; line-height: 1.2; letter-spacing: -0.5px;">
-            La tua identità,<br><span style="font-weight: 800;">senza confini.</span>
-        </h2>
-        <p style="color: #A0A0A0; font-size: 15px; line-height: 1.5; font-weight: 300;">
-            Stampa, schermi o biglietti da visita NFC. Porta il tuo Tag ovunque tramite codice QR dinamico integrato.
-        </p>
-    </div>
-
-    <div style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
-        
-        <div style="text-align: center; width: 100%; padding: 20px; border-radius: 12px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
-            <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 5px 0;">Senza vincoli. Nessuna carta.</p>
-            <p style="color: #888888; font-size: 12px; margin: 0;">Decidi tu se continuare dopo i 3 mesi di prova.</p>
-        </div>
-
-        <button onclick="scrollToSection('s2')" style="background: #50C878; color: #000; border: none; padding: 22px; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; width: 100%; transition: all 0.2s ease;">
-            BLOCCA IL TUO NOME ORA
-        </button>
-        
-        <p style="color: #555555; font-size: 10px; letter-spacing: 2px; margin-top: 10px;">MYQUICKTAG © 2026</p>
-    </div>
-</section>
+                <!-- Questo bottone ora riporta su, in S1, alla ricerca del nome -->
+                <button onclick="scrollToSection('s1')" class="btn-cyber" style="background: #50C878; color: #000; border: none; padding: 22px; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-radius: 10px; width: 100%; transition: all 0.2s ease; box-shadow: 0 6px 15px rgba(80, 200, 120, 0.25);">
+                    BLOCCA IL TUO NOME ORA
+                </button>
+                
+                <p style="color: #555555; font-size: 10px; letter-spacing: 2px; margin-top: 10px;">MYQUICKTAG © 2026</p>
+            </div>
+        </section>
 <div id="menu-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 999; display: none; flex-direction: column; padding: 60px 40px; box-sizing: border-box; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
     
 <div onclick="toggleMenu()" style="position: absolute; top: 25px; right: 25px; cursor: pointer; background: rgba(0,0,0,0.6); padding: 12px 10px; border-radius: 4px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 6px; z-index: 3000;">
@@ -548,30 +494,30 @@
     <div style="width: 100%; max-width: 360px; text-align: center; border: 1px solid rgba(80, 200, 120, 0.2); background: #0a0a0a; padding: 45px 25px; border-radius: 16px; box-sizing: border-box; position: relative; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);">
         
         <h2 id="welcome-tag-title" style="color: #50C878; font-size: 24px; font-weight: 800; margin-top: 0; margin-bottom: 8px; letter-spacing: -0.5px;">@nome è disponibile.</h2>
-        <p style="color: #ffffff; font-size: 15px; font-weight: 300; margin-bottom: 35px; opacity: 0.9; letter-spacing: 0.2px;">Tutto è pronto per prendere forma.</p>
+        <p style="color: #ffffff; font-size: 15px; font-weight: 300; margin-bottom: 35px; opacity: 0.9; line-height: 1.4; letter-spacing: 0.2px;">Ora puoi creare il tuo spazio digitale, vedere l'anteprima e decidere con calma.</p>
 
         <div style="text-align: left; display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; padding: 0 5px;">
             
             <div style="display: flex; gap: 15px; align-items: flex-start;">
-                <span style="font-size: 18px; line-height: 1; filter: grayscale(100%) brightness(1.2);">✨</span>
+                <span class="emoji-luxury" style="font-size: 18px; line-height: 1;">✨</span>
                 <div>
-                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Il tuo design</strong>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Crea la tua tag</strong>
                     <span style="color: #a0a0a0; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Entra, gioca con i dettagli e guarda il tuo ecosistema nascere in tempo reale.</span>
                 </div>
             </div>
 
             <div style="display: flex; gap: 15px; align-items: flex-start;">
-                <span style="font-size: 18px; line-height: 1; filter: grayscale(100%) brightness(1.2);">📱</span>
+                <span class="emoji-luxury" style="font-size: 18px; line-height: 1;">📱</span>
                 <div>
-                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Oltre il semplice link</strong>
-                    <span style="color: #a0a0a0; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Scopri come il tuo Tag si trasforma in una vera App (PWA) sul telefono di chi incontri.</span>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Guarda l'anteprima</strong>
+                    <span style="color: #a0a0a0; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Scopri come la tua identità si trasforma in una vera App (PWA) sul telefono di chi incontri.</span>
                 </div>
             </div>
 
             <div style="display: flex; gap: 15px; align-items: flex-start;">
-                <span style="font-size: 18px; line-height: 1; filter: grayscale(100%) brightness(1.2);">🕊️</span>
+                <span class="emoji-luxury" style="font-size: 18px; line-height: 1;">🔒</span>
                 <div>
-                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Zero pensieri</strong>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; letter-spacing: 0.3px;">Nessun impegno</strong>
                     <span style="color: #a0a0a0; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Esplora l'editor in totale libertà. Sarai tu a decidere se e quando attivarlo.</span>
                 </div>
             </div>
