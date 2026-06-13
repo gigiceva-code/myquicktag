@@ -666,7 +666,7 @@ async function avviaFlusso(username) {
             try {
                 const bozza = JSON.parse(fields.draft_json);
                 // Manteniamo username_system e stato dai campi reali
-                fields = { ...bozza, username_system: fields.username_system, stato: fields.stato };
+                fields = { ...bozza, username_system: fields.username_system, stato: fields.stato, draft_json: fields.draft_json };
             } catch (e) {
                 console.error("Errore parsing draft_json:", e);
             }
