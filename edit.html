@@ -513,6 +513,7 @@ function chiudiModalPiano() {
     }
 }     
 async function salvaDati(mostraAnteprima = false) {
+     console.log('salvaDati chiamata, mostraAnteprima:', mostraAnteprima);
     const btn = document.querySelector(".save-btn");
     btn.innerText = "SALVATAGGIO...";
     btn.disabled = true;
