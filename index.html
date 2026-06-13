@@ -673,7 +673,7 @@ async function checkAccess() {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
             btn.style.opacity = "1";
-            localStorage.setItem('loggedUser', data.username);
+            localStorage.setItem('loggedUser', data.username.replace('@', ''));
             localStorage.removeItem('myquicktag_pending');
             setTimeout(() => {
                 window.location.href = `profile.html?u=${data.username}`;
