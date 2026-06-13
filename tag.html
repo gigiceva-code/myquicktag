@@ -1321,6 +1321,8 @@ function vaiAlCheckout() {
     window.location.href = `/checkout.html?u=${usernameCorrente}`;
 }
 async function pubblicaBozza() {
+    console.log('pubblicaBozza chiamata');
+    console.log('cacheDatiUtente.draft_json:', cacheDatiUtente.draft_json); 
     try {
         const bozza = JSON.parse(cacheDatiUtente.draft_json || '{}');
         
