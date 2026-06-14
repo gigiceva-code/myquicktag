@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>myquicktag - Istant Digital Identity</title>
+    <title>myquicktag - Instant Digital Identity</title>
         <meta name="description" content="Il tuo Tag. Il tuo spazio digitale. Sincronizza social, contatti e servizi in un unico @nome con la tecnologia NFC e QR dinamica di myquicktag.">
     <meta name="keywords" content="digital identity, biglietto da visita digitale, NFC, QR code dinamico, link in bio, smart tag, ecosistema digitale">
     <meta name="author" content="myquicktag">
@@ -219,9 +219,10 @@
                                 <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 0; margin: 0; background: transparent; border: none; color: #ffffff; font-size: 18px; font-weight: 400; outline: none; line-height: 1;">
                             </div>
                         </div>
-                        <button onclick="vaiAllaVerifica()" class="btn-verifica" style="width: 100%; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;">
-                            VERIFICA DISPONIBILITÀ
-                        </button>
+                        <button id="btn-verifica-principale" onclick="vaiAllaVerifica()" class="btn-verifica" style="width: 100%; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease;">
+    VERIFICA DISPONIBILITÀ
+</button>
+
                     </div>
 
                     <div class="reveal-item delay-2" style="display: flex; align-items: center; gap: 8px; opacity: 0.7;">
@@ -622,67 +623,45 @@ async function checkAccess() {
 }
 
 // 5. VERIFICA DISPONIBILITÀ TAG (Nuovo Motore per Section 1)
-async function vaiAllaVerifica() {
-    const input = document.getElementById("tag-input");
-    if (!input) return;
-    
-    let rawNome = input.value.toLowerCase().trim().replace(/\s+/g, '').replace(/@/g, '');
-    
-    if (!rawNome) {
-        alert("Inserisci un nome per verificare la disponibilità!");
-        input.focus();
+
+function vaiAllaVerifica() {
+    const input = document.getElementById('tag-input');
+    const bottone = document.getElementById('btn-verifica-principale');
+    const nome = input.value.trim();
+
+    if (nome === "") {
+        // Se l'utente non ha scritto nulla, l'input fa un piccolo "lampo" rosso di avvertimento
+        input.style.borderBottom = "1px solid rgba(255, 60, 60, 0.8)";
+        setTimeout(() => input.style.borderBottom = "none", 1000);
         return;
     }
 
-    const nomeScelto = '@' + rawNome;
-    const btn = document.querySelector('.btn-verifica');
-    
-    if(btn) {
-        btn.innerText = "VERIFICA IN CORSO...";
-        btn.disabled = true;
-        btn.style.opacity = "0.7";
-    }
+    // FASE 1: Feedback visivo (Il bottone cambia stato)
+    bottone.innerText = "VERIFICA IN CORSO...";
+    bottone.style.opacity = "0.7";
+    bottone.style.cursor = "wait";
+    bottone.disabled = true;
 
-    function resetBottone() {
-        if (btn) {
-            btn.innerText = "VERIFICA DISPONIBILITÀ";
-            btn.disabled = false;
-            btn.style.opacity = "1";
+    // FASE 2: Simulazione caricamento Airtable (1.5 secondi)
+    setTimeout(() => {
+        // Ripristina il bottone
+        bottone.innerText = "VERIFICA DISPONIBILITÀ";
+        bottone.style.opacity = "1";
+        bottone.style.cursor = "pointer";
+        bottone.disabled = false;
+
+        // Inserisce il nome nel titolo del popup
+        const welcomeTitle = document.getElementById('welcome-tag-title');
+        if (welcomeTitle) {
+            welcomeTitle.innerHTML = `@${nome} è disponibile.`;
         }
-    }
 
-    const tagInCorso = localStorage.getItem('myquicktag_pending');
-    if (tagInCorso && nomeScelto === tagInCorso) {
-        setTimeout(() => {
-            resetBottone();
-            mostraOverlaySuccesso(nomeScelto);
-        }, 400);
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/check-and-create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: nomeScelto }) 
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            localStorage.setItem('myquicktag_pending', nomeScelto);
-            localStorage.setItem('loggedUser', nomeScelto);
-            resetBottone();
-            mostraOverlaySuccesso(nomeScelto);
-        } else {
-            alert(data.message || "Nome non disponibile! Questo Tag è già stato scelto.");
-            resetBottone();
-            input.focus();
+        // Apre l'overlay di benvenuto
+        const welcomeOverlay = document.getElementById('welcome-overlay');
+        if (welcomeOverlay) {
+            welcomeOverlay.style.display = 'flex';
         }
-    } catch (error) {
-        console.error("Errore di rete:", error);
-        alert("Errore di connessione al database. Riprova tra poco.");
-        resetBottone();
-    }
+    }, 1500); 
 }
 
 function mostraOverlaySuccesso(nome) {
@@ -707,7 +686,6 @@ function mostraOverlaySuccesso(nome) {
     }
 }
 
-// 6. MEMORIA SCROLL E LISTENER TASTIERA
 // 6. MEMORIA SCROLL E LISTENER TASTIERA
 window.addEventListener('beforeunload', () => {
     localStorage.setItem('scrollPos', window.scrollY);
