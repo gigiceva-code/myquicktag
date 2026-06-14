@@ -8,7 +8,7 @@
     <title>myquicktag - Instant Digital Identity</title>
     
   <!-- FAVICON UFFICIALE (Q e @ fuse assieme) -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='45' cy='45' r='36' stroke='%2350C878' stroke-width='9' fill='none'/%3E%3Cline x1='68' y1='68' x2='92' y2='92' stroke='%2350C878' stroke-width='10' stroke-linecap='round'/%3E%3Ctext x='45' y='47' font-family='sans-serif' font-size='50' font-weight='bold' fill='%23ffffff' text-anchor='middle' dominant-baseline='central'%3E@%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23000000'/%3E%3Ccircle cx='50' cy='50' r='35' stroke='%2350C878' stroke-width='8' fill='none'/%3E%3Cline x1='72' y1='72' x2='90' y2='90' stroke='%2350C878' stroke-width='8' stroke-linecap='round'/%3E%3Ctext x='50' y='53' font-family='sans-serif' font-size='42' font-weight='bold' fill='%23ffffff' text-anchor='middle' dominant-baseline='central'%3E@%3C/text%3E%3C/svg%3E">
 
 
     <meta name="description" content="Il tuo Tag. Il tuo spazio digitale. Sincronizza social, contatti e servizi in un unico @nome con la tecnologia NFC e QR dinamica di myquicktag.">
@@ -154,7 +154,18 @@
             width: 100% !important;
         }
     }
-
+/* CSS PER I PALLINI DI SCORRIMENTO */
+.s3-dot {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    width: 8px;
+    transition: all 0.3s ease;
+}
+.s3-dot.active {
+    background: rgba(80, 200, 120, 0.8);
+    width: 18px;
+}
     
 </style>
 <body>
@@ -346,13 +357,13 @@
                 <!-- Spaziatore Finale Mobile -->
                 <div style="min-width: calc(50vw - 160px); flex-shrink: 0;"></div>
             </div>
-           <div class="reveal-item delay-2" style="display: flex; justify-content: center; width: 100%; margin-top: 15px; z-index: 10;">
-                <div style="display: flex; gap: 6px;">
-                    <div id="dot-1" style="width: 18px; height: 3px; background: rgba(80, 200, 120, 0.8); border-radius: 2px; transition: all 0.3s ease;"></div>
-                    <div id="dot-2" style="width: 8px; height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px; transition: all 0.3s ease;"></div>
-                    <div id="dot-3" style="width: 8px; height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px; transition: all 0.3s ease;"></div>
-                </div>
-            </div>
+         <div class="reveal-item delay-2" style="display: flex; justify-content: center; width: 100%; margin-top: 15px; z-index: 10;">
+    <div style="display: flex; gap: 6px;" id="s3-dots-container">
+        <div class="s3-dot active" id="dot-1"></div>
+        <div class="s3-dot" id="dot-2"></div>
+        <div class="s3-dot" id="dot-3"></div>
+    </div>
+</div> 
               
             
         </section>
@@ -767,8 +778,35 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-     
-   
+// MOTORE PALLINI SECTION 3
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollContainer = document.querySelector('.s3-scroll-container');
+    const dots = [
+        document.getElementById('dot-1'),
+        document.getElementById('dot-2'),
+        document.getElementById('dot-3')
+    ];
+
+    if (scrollContainer && dots[0]) {
+        scrollContainer.addEventListener('scroll', () => {
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            const scrollLeft = scrollContainer.scrollLeft;
+            const percent = scrollLeft / maxScroll;
+
+            // Rimuove la classe active da tutti
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            // Aggiunge la classe active a quello giusto
+            if (percent < 0.3) {
+                dots[0].classList.add('active');
+            } else if (percent > 0.7) {
+                dots[2].classList.add('active');
+            } else {
+                dots[1].classList.add('active');
+            }
+        });
+    }
+});
 </script>
 
 </body>
