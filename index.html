@@ -772,6 +772,20 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+     // FUNZIONE PER IL PULSANTE FINALE (Torna su e apre tastiera)
+function tornaAllaRicerca() {
+    // 1. Riporta l'utente alla Vetrina (Section 1)
+    scrollToSection('s1');
+    
+    // 2. Attende la fine dello scroll (600ms) e mette il focus sull'input
+    setTimeout(() => {
+        const barraDiRicerca = document.getElementById('tag-input'); 
+        if(barraDiRicerca) {
+            barraDiRicerca.focus();
+        }
+    }, 600);
+}
+   
 </script>
 
 </body>
