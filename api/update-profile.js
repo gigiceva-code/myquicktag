@@ -23,13 +23,12 @@ const fieldsToSave = {};
 const nativeFields = [
   "username_display", "bio", "plan", "digital_style", "stato", 
   "password", "email", "modulo_vcf", "sito_web", 
-  "quick_action_tipo", "quick_action_url", "draft_json"
+  "quick_action_tipo", "quick_action_url", "draft_json", "sedi_json" 
 ];
-
 nativeFields.forEach(f => {
   if (body[f] !== undefined) {
     if (typeof body[f] === 'string') {
-    let valueClean = f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali'
+    let valueClean = f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' 
     ? body[f].trim() 
     : body[f].replace(/['"]+/g, '').trim(); 
       if (f === 'draft_json' || valueClean !== "") {
