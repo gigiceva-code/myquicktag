@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Modifica Profilo - MyQuickTag</title>
+    <title>Modifica Profilo - myquicktag</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -276,6 +276,26 @@
         <input type="text" id="vcf-piva" placeholder="12345678901">
     </div>
 </div> 
+    <!-- 🏢 NUOVA SEZIONE: MULTI-SEDE (RISERVATA PIANO GOLD) -->
+<div class="section-title">Sedi Aziendali (Piano Gold)</div>
+<div id="multisede-section" onclick="if(document.getElementById('field-plan').value.toUpperCase() !== 'GOLD') { event.preventDefault(); event.stopPropagation(); apriModalPiano(); }">
+    <div class="form-group">
+        <label>Nome Sede / Filiale</label>
+        <input type="text" id="ms-nome" placeholder="Es. Sede Principale, Showroom Milano...">
+    </div>
+    <div class="form-group">
+        <label>Indirizzo Sede</label>
+        <input type="text" id="ms-indirizzo" placeholder="Via Roma 10, Milano">
+    </div>
+    <div class="form-group">
+        <label>Telefono Sede</label>
+        <input type="text" id="ms-telefono" placeholder="+39 02 ...">
+    </div>
+    <div class="form-group">
+        <label>Informazioni Aggiuntive</label>
+        <input type="text" id="ms-info" placeholder="Es. Orario continuato, secondo piano...">
+    </div>
+</div>    
 </div>  
      <div class="sticky-footer">
     <button class="save-btn" onclick="salvaDati(false)">SALVA BOZZA</button>
@@ -363,6 +383,23 @@ if (f.config_canali) {
         }
     } catch(e) {}
 } 
+            // 🏢 NUOVO INNESTO: Ripopola i campi della Multi-Sede all'avvio
+        if (f.sedi_json) {
+            try {
+                const sedi = typeof f.sedi_json === 'string' ? JSON.parse(f.sedi_json) : f.sedi_json;
+                if (Array.isArray(sedi) && sedi.length > 0) {
+                    const sede = sedi[0];
+                    if (sede.nome) document.getElementById("ms-nome").value = sede.nome;
+                    if (sede.indirizzo) document.getElementById("ms-indirizzo").value = sede.indirizzo;
+                    if (sede.telefono) document.getElementById("ms-telefono").value = sede.telefono;
+                    if (sede.info) document.getElementById("ms-info").value = sede.info;
+                }
+            } catch(e) {
+                console.error("Errore nel recupero della sede:", e);
+            }
+        }     
+        // Caricamento dello stile radio button
+        if (f.digital_style) {
             // Caricamento dello stile radio button
             if (f.digital_style) {
                 const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
@@ -415,6 +452,18 @@ function riconosciSocial(url) {
 let canaliCorrenti = [];
 
 function aggiungiCanale() {
+    const pianoAttuale = document.getElementById('field-plan').value.toUpperCase();
+    
+    // 🛑 CONTROLLO LIMITI COMMERCIALI SOCIAL
+    if (pianoAttuale === "BASE" && canaliCorrenti.length >= 3) {
+        apriModalPiano();
+        return;
+    }
+    if (pianoAttuale === "PREMIUM" && canaliCorrenti.length >= 8) {
+        apriModalPiano();
+        return;
+    }
+
     const input = document.getElementById("input-nuovo-canale");
     let url = input.value.trim();
     if (!url) return;
@@ -433,7 +482,6 @@ function aggiungiCanale() {
     aggiornaHiddenField();
     input.value = "";
 }
-
 function rimuoviCanale(index) {
     canaliCorrenti.splice(index, 1);
     aggiornaListaCanali();
@@ -540,6 +588,17 @@ async function salvaDati(mostraAnteprima = false) {
         config_canali: document.getElementById("field-config_canali").value,
         quick_action_tipo: getVal("field-quick_action_tipo"),
         quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),
+       // 🎯 INTERVENTO CHIRURGICO: Pacchetto Multi-Sede per Airtable
+        sedi_json: (() => {
+            const msNome = getVal("ms-nome");
+            if (!msNome) return "";
+            return JSON.stringify([{
+                nome: msNome,
+                indirizzo: getVal("ms-indirizzo"),
+                telefono: getVal("ms-telefono"),
+                info: getVal("ms-info")
+            }]);
+        })(), 
     modulo_vcf: {
             nome: getVal("vcf-nome"),
             telefono1: getVal("vcf-telefono1"),
