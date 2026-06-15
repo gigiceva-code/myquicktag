@@ -398,16 +398,15 @@ if (f.config_canali) {
                 console.error("Errore nel recupero della sede:", e);
             }
         }     
+        
         // Caricamento dello stile radio button
         if (f.digital_style) {
-            // Caricamento dello stile radio button
-            if (f.digital_style) {
-                const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
-                if (radio) radio.checked = true;
-            }
+            const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
+            if (radio) radio.checked = true;
         }
-    } catch (e) { console.error("Errore inizializzazione:", e); }
-}
+    } // Chiude il blocco if (f)
+} catch (e) { console.error("Errore inizializzazione:", e); } // Chiude il try principale
+} // Chiude la funzione inizializzaPagina
 // --- DIZIONARIO RICONOSCIMENTO SOCIAL DAL DOMINIO ---
 const socialDizionario = [
     { chiave: "instagram",  domini: ["instagram.com"],           icona: "fab fa-instagram" },
