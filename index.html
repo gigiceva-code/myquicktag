@@ -540,8 +540,7 @@
     </div>
 </div>
 
-    <script>
-// 1. NAVIGAZIONE UNIFICATA
+ // 1. NAVIGAZIONE UNIFICATA
 function scrollToSection(id) {
     const target = document.getElementById(id);
     if (target) {
@@ -549,55 +548,9 @@ function scrollToSection(id) {
     }
 }
 
-// 2. GESTIONE PUNTINI (Dots laterali)
-const containerElement = document.querySelector('.container');
-if (containerElement) {
-    containerElement.addEventListener('scroll', () => {
-        const sections = document.querySelectorAll('section');
-        const dots = document.querySelectorAll('.dot');
-        sections.forEach((section, i) => {
-            const rect = section.getBoundingClientRect();
-            if (rect.top >= -window.innerHeight / 2 && rect.top <= window.innerHeight / 2) {
-                dots.forEach(d => d.classList.remove('active'));
-                if(dots[i]) dots[i].classList.add('active');
-            }
-        });
-    });
-}
-
-// 3. MENU OVERLAY
-function toggleMenu() {
-    const menu = document.getElementById('menu-overlay');
-    const menuIcon = document.getElementById('menu-icon');
-    const isOpen = menu.style.display === 'flex';
-    
-    if (isOpen) {
-        menu.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        if (menuIcon) menuIcon.style.opacity = '1';
-    } else {
-        menu.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        if (menuIcon) menuIcon.style.opacity = '0';
-    } 
-}
-
-// 4. GESTIONE IDENTITY PORTAL (LOGIN)
-function openLogin() {
-    const loginOverlay = document.getElementById('login-overlay');
-    if (loginOverlay) {
-        loginOverlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function closeLogin() {
-    const loginOverlay = document.getElementById('login-overlay');
-    if (loginOverlay) {
-        loginOverlay.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-}
+// 2. GESTIONE IDENTITY PORTAL (LOGIN)
+function openLogin() { apriOverlay('login-overlay'); }
+function closeLogin() { chiudiOverlay('login-overlay'); }
 
 async function checkAccess() {
     const tagInput = document.getElementById('login-tag').value;
@@ -623,7 +576,7 @@ async function checkAccess() {
             body: JSON.stringify({ tag: formattedTag, pwd: passwordInput })
         });
         const data = await response.json();
-        
+
         if (data.success) {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
@@ -648,157 +601,92 @@ async function checkAccess() {
     }
 }
 
-// 5. VERIFICA DISPONIBILITÀ TAG (Nuovo Motore per Section 1)
+// 3. VERIFICA DISPONIBILITÀ TAG (Connessione corretta alla tua API Vercel)
 async function vaiAllaVerifica() {
     const inputField = document.getElementById('tag-input');
     const tagValue = inputField.value.trim().toLowerCase();
     const btn = document.getElementById('btn-verifica-principale');
 
-    // 1. Controllo Campo Vuoto (Rimesso a posto)
     if (tagValue === "") {
         alert("Inserisci un nome prima di verificare la disponibilità.");
         return;
     }
 
-    // Effetto visivo di caricamento
+    const rawTag = tagValue.replace(/\s+/g, '').replace(/@/g, '');
+    const formattedTag = '@' + rawTag;
+
     const originalText = btn.innerHTML;
     btn.innerHTML = "VERIFICA IN CORSO...";
     btn.style.opacity = "0.7";
 
     try {
-        // 2. Connessione ad Airtable (ATTENZIONE: rimetti il tuo Base ID e il tuo Token qui)
-        const baseId = 'IL_TUO_BASE_ID'; 
-        const token = 'IL_TUO_TOKEN_API';
-        const tableName = 'LA_TUA_TABELLA';
-
-        // La chiamata filtra esattamente per la tua colonna di sistema
-        const url = `https://api.airtable.com/v0/${baseId}/${tableName}?filterByFormula=({username_system}='${tagValue}')`;
-        
-        const response = await fetch(url, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        // Ripristinato il tuo endpoint serverless
+        const response = await fetch('/api/check-and-create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: formattedTag })
         });
         
         const data = await response.json();
 
-        // 3. Logica di controllo
-        if (data.records && data.records.length > 0) {
-            // Il nome esiste già (Occupato o In attesa)
-            alert("Nome non disponibile. Scegli un altro tag."); 
-            // N.B: Successivamente potremo fare un overlay rosso fighissimo al posto dell'alert
+        if (data.success) {
+            document.getElementById('welcome-tag-title').innerText = `${formattedTag} è disponibile.`;
+            apriOverlay('welcome-overlay'); 
         } else {
-            // Il nome è libero -> Apriamo l'overlay di benvenuto
-            document.getElementById('welcome-tag-title').innerText = `@${tagValue} è disponibile.`;
-            apriOverlayConStoria('welcome-overlay'); // Nuova logica PWA (vedi Problema 2)
+            alert(data.message || "Nome non disponibile. Scegli un altro tag."); 
         }
     } catch (error) {
-        console.error("Errore di connessione:", error);
+        console.error("Errore di connessione API Vercel:", error);
         alert("Errore di connessione al server. Riprova tra poco.");
     } finally {
-        // Ripristino del bottone
         btn.innerHTML = originalText;
         btn.style.opacity = "1";
     }
 }
 
-// RIPRISTINO DEL TASTO NELL'OVERLAY
-// Assicurati che nel tuo HTML, il bottone dell'overlay abbia questo evento:
-// <button id="btn-entra-spazio" onclick="procediAllaRegistrazione()">ENTRA NEL TUO SPAZIO</button>
-
+// 4. REGISTRAZIONE DA OVERLAY
 function procediAllaRegistrazione() {
     const inputField = document.getElementById('tag-input');
-    const tagScelto = inputField.value.trim().toLowerCase();
-    // Ti reindirizza alla pagina successiva portandosi dietro il nome scelto
-    window.location.href = `registrazione.html?tag=${tagScelto}`; 
+    const rawTag = inputField.value.trim().toLowerCase().replace(/\s+/g, '').replace(/@/g, '');
+    const tagScelto = '@' + rawTag;
+    window.location.href = `registrazione.html?tag=${encodeURIComponent(tagScelto)}`; 
 }
 
+// 5. LOGICA PWA - TASTO INDIETRO E OVERLAY
+window.addEventListener('popstate', function(event) {
+    document.getElementById('welcome-overlay').style.display = 'none';
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('menu-overlay').style.display = 'none';
+    document.body.style.overflow = 'auto';
+});
 
-function mostraOverlaySuccesso(nome) {
-    const welcomeOverlay = document.getElementById('welcome-overlay');
-    const welcomeTitle = document.getElementById('welcome-tag-title');
-    const btnEntra = document.getElementById('btn-entra-spazio');
+function apriOverlay(id) {
+    history.pushState({ overlay: id }, null, "");
+    document.getElementById(id).style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
 
-    if (welcomeOverlay) {
-        if (welcomeTitle) welcomeTitle.innerText = `${nome} è disponibile.`;
-        welcomeOverlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+function chiudiOverlay(id) {
+    document.getElementById(id).style.display = 'none';
+    document.body.style.overflow = 'auto';
+    if (history.state && history.state.overlay) {
+        history.back();
+    }
+}
 
-        if (btnEntra) {
-            btnEntra.onclick = function() {
-                btnEntra.innerText = "ACCESSO IN CORSO...";
-                btnEntra.style.opacity = "0.7";
-                window.location.href = `edit.html?u=${nome.replace('@', '')}`;
-            };
-        }
+function toggleMenu() {
+    const menu = document.getElementById('menu-overlay');
+    const icon = document.getElementById('menu-icon');
+    if (menu.style.display === 'flex') {
+        chiudiOverlay('menu-overlay');
+        if (icon) icon.style.opacity = '1';
     } else {
-        window.location.href = `edit.html?u=${nome.replace('@', '')}`;
+        apriOverlay('menu-overlay');
+        if (icon) icon.style.opacity = '0';
     }
 }
 
-// 6. MEMORIA SCROLL E LISTENER TASTIERA
-window.addEventListener('beforeunload', () => {
-    localStorage.setItem('scrollPos', window.scrollY);
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-    const scrollPos = localStorage.getItem('scrollPos');
-    if (scrollPos) {
-        setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
-    }
-
-    const tagInput = document.getElementById('tag-input');
-    if (tagInput) {
-        tagInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); 
-                vaiAllaVerifica();
-            }
-        });
-    }
-
-    const loginPassword = document.getElementById('login-password');
-    const loginTag = document.getElementById('login-tag');
-    function triggerLoginOnEnter(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            checkAccess();
-        }
-    }
-    if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
-    if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
-});
-
-// 7. REVEAL ENGINE (Animazioni - Versione Infallibile)
-window.addEventListener('DOMContentLoaded', () => {
-    // Accensione immediata per la Section 1
-    setTimeout(() => {
-        const elementiS1 = document.querySelectorAll('#s1 .reveal-item');
-        elementiS1.forEach(el => el.classList.add('active'));
-    }, 50);
-
-    // Sensore di scroll per il resto
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.15
-    };
-
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target); 
-            }
-        });
-    }, observerOptions);
-
-    const tuttiGliElementi = document.querySelectorAll('.reveal-item');
-    tuttiGliElementi.forEach(el => {
-        if (!el.closest('#s1')) {
-            revealObserver.observe(el);
-        }
-    });
-});
-// MOTORE PALLINI SECTION 3
+// 6. MOTORE PALLINI SECTION 3
 document.addEventListener('DOMContentLoaded', () => {
     const scrollContainer = document.querySelector('.s3-scroll-container');
     const dots = [
@@ -813,45 +701,55 @@ document.addEventListener('DOMContentLoaded', () => {
             const scrollLeft = scrollContainer.scrollLeft;
             const percent = scrollLeft / maxScroll;
 
-            // Rimuove la classe active da tutti
             dots.forEach(dot => dot.classList.remove('active'));
 
-            // Aggiunge la classe active a quello giusto
-            if (percent < 0.3) {
-                dots[0].classList.add('active');
-            } else if (percent > 0.7) {
-                dots[2].classList.add('active');
-            } else {
-                dots[1].classList.add('active');
-            }
+            if (percent < 0.3) dots[0].classList.add('active');
+            else if (percent > 0.7) dots[2].classList.add('active');
+            else dots[1].classList.add('active');
         });
     }
 });
-// MOTORE PROFESSIONALE TASTO INDIETRO (PWA)
-window.addEventListener('popstate', function(event) {
-    // Se l'utente preme "indietro", chiudiamo tutto senza fargli abbandonare il sito
-    document.getElementById('welcome-overlay').style.display = 'none';
-    document.getElementById('login-overlay').style.display = 'none';
-    document.getElementById('menu-overlay').style.display = 'none';
-});
 
-// Usa questa funzione per APRIRE qualsiasi overlay (Login, Menu, Welcome)
-function apriOverlayConStoria(idOverlay) {
-    // 1. Diciamo al browser di registrare un "falso" passo in avanti nella cronologia
-    history.pushState({ overlay: idOverlay }, null, "");
-    // 2. Apriamo fisicamente l'overlay
-    document.getElementById(idOverlay).style.display = 'flex';
-}
+// 7. REVEAL ENGINE E MEMORIA SCROLL
+window.addEventListener('beforeunload', () => localStorage.setItem('scrollPos', window.scrollY));
 
-// Usa questa funzione per CHIUDERE manualmente qualsiasi overlay (es. premendo la 'X')
-function chiudiOverlayConStoria(idOverlay) {
-    document.getElementById(idOverlay).style.display = 'none';
-    // Se stavamo guardando un overlay, torniamo indietro fittiziamente per riallineare il browser
-    if (history.state && history.state.overlay) {
-        history.back();
+window.addEventListener('DOMContentLoaded', () => {
+    const scrollPos = localStorage.getItem('scrollPos');
+    if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
+
+    const tagInput = document.getElementById('tag-input');
+    if (tagInput) {
+        tagInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); vaiAllaVerifica(); }
+        });
     }
-}        
-</script>
+
+    const loginPassword = document.getElementById('login-password');
+    const loginTag = document.getElementById('login-tag');
+    function triggerLoginOnEnter(e) {
+        if (e.key === 'Enter') { e.preventDefault(); checkAccess(); }
+    }
+    if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
+    if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
+
+    setTimeout(() => {
+        const elementiS1 = document.querySelectorAll('#s1 .reveal-item');
+        elementiS1.forEach(el => el.classList.add('active'));
+    }, 50);
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target); 
+            }
+        });
+    }, { root: null, rootMargin: '0px', threshold: 0.15 });
+
+    document.querySelectorAll('.reveal-item').forEach(el => {
+        if (!el.closest('#s1')) revealObserver.observe(el);
+    });
+});
 
 </body>
 </html>    
