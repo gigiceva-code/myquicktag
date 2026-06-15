@@ -643,12 +643,21 @@ async function vaiAllaVerifica() {
     }
 }
 
-// 4. REGISTRAZIONE DA OVERLAY
+// 4. REGISTRAZIONE DA OVERLAY (Corretto per puntare a edit.html)
 function procediAllaRegistrazione() {
     const inputField = document.getElementById('tag-input');
+    // Prende il nome e toglie spazi e chiocciole
     const rawTag = inputField.value.trim().toLowerCase().replace(/\s+/g, '').replace(/@/g, '');
-    const tagScelto = '@' + rawTag;
-    window.location.href = `registrazione.html?tag=${encodeURIComponent(tagScelto)}`; 
+    
+    // Effetto caricamento sul bottone (come avevi nel tuo codice originale)
+    const btn = document.getElementById('btn-entra-spazio');
+    if (btn) {
+        btn.innerText = "ACCESSO IN CORSO...";
+        btn.style.opacity = "0.7";
+    }
+
+    // Ti manda esattamente nella tua pagina edit.html con la sintassi corretta
+    window.location.href = `edit.html?u=${encodeURIComponent(rawTag)}`; 
 }
 
 // 5. LOGICA PWA - TASTO INDIETRO E OVERLAY
