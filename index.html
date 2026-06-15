@@ -649,46 +649,68 @@ async function checkAccess() {
 }
 
 // 5. VERIFICA DISPONIBILITÀ TAG (Nuovo Motore per Section 1)
+async function vaiAllaVerifica() {
+    const inputField = document.getElementById('tag-input');
+    const tagValue = inputField.value.trim().toLowerCase();
+    const btn = document.getElementById('btn-verifica-principale');
 
-function vaiAllaVerifica() {
-    const input = document.getElementById('tag-input');
-    const bottone = document.getElementById('btn-verifica-principale');
-    const nome = input.value.trim();
-
-    if (nome === "") {
-        // Se l'utente non ha scritto nulla, l'input fa un piccolo "lampo" rosso di avvertimento
-        input.style.borderBottom = "1px solid rgba(255, 60, 60, 0.8)";
-        setTimeout(() => input.style.borderBottom = "none", 1000);
+    // 1. Controllo Campo Vuoto (Rimesso a posto)
+    if (tagValue === "") {
+        alert("Inserisci un nome prima di verificare la disponibilità.");
         return;
     }
 
-    // FASE 1: Feedback visivo (Il bottone cambia stato)
-    bottone.innerText = "VERIFICA IN CORSO...";
-    bottone.style.opacity = "0.7";
-    bottone.style.cursor = "wait";
-    bottone.disabled = true;
+    // Effetto visivo di caricamento
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "VERIFICA IN CORSO...";
+    btn.style.opacity = "0.7";
 
-    // FASE 2: Simulazione caricamento Airtable (1.5 secondi)
-    setTimeout(() => {
-        // Ripristina il bottone
-        bottone.innerText = "VERIFICA DISPONIBILITÀ";
-        bottone.style.opacity = "1";
-        bottone.style.cursor = "pointer";
-        bottone.disabled = false;
+    try {
+        // 2. Connessione ad Airtable (ATTENZIONE: rimetti il tuo Base ID e il tuo Token qui)
+        const baseId = 'IL_TUO_BASE_ID'; 
+        const token = 'IL_TUO_TOKEN_API';
+        const tableName = 'LA_TUA_TABELLA';
 
-        // Inserisce il nome nel titolo del popup
-        const welcomeTitle = document.getElementById('welcome-tag-title');
-        if (welcomeTitle) {
-            welcomeTitle.innerHTML = `@${nome} è disponibile.`;
+        // La chiamata filtra esattamente per la tua colonna di sistema
+        const url = `https://api.airtable.com/v0/${baseId}/${tableName}?filterByFormula=({username_system}='${tagValue}')`;
+        
+        const response = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        const data = await response.json();
+
+        // 3. Logica di controllo
+        if (data.records && data.records.length > 0) {
+            // Il nome esiste già (Occupato o In attesa)
+            alert("Nome non disponibile. Scegli un altro tag."); 
+            // N.B: Successivamente potremo fare un overlay rosso fighissimo al posto dell'alert
+        } else {
+            // Il nome è libero -> Apriamo l'overlay di benvenuto
+            document.getElementById('welcome-tag-title').innerText = `@${tagValue} è disponibile.`;
+            apriOverlayConStoria('welcome-overlay'); // Nuova logica PWA (vedi Problema 2)
         }
-
-        // Apre l'overlay di benvenuto
-        const welcomeOverlay = document.getElementById('welcome-overlay');
-        if (welcomeOverlay) {
-            welcomeOverlay.style.display = 'flex';
-        }
-    }, 1500); 
+    } catch (error) {
+        console.error("Errore di connessione:", error);
+        alert("Errore di connessione al server. Riprova tra poco.");
+    } finally {
+        // Ripristino del bottone
+        btn.innerHTML = originalText;
+        btn.style.opacity = "1";
+    }
 }
+
+// RIPRISTINO DEL TASTO NELL'OVERLAY
+// Assicurati che nel tuo HTML, il bottone dell'overlay abbia questo evento:
+// <button id="btn-entra-spazio" onclick="procediAllaRegistrazione()">ENTRA NEL TUO SPAZIO</button>
+
+function procediAllaRegistrazione() {
+    const inputField = document.getElementById('tag-input');
+    const tagScelto = inputField.value.trim().toLowerCase();
+    // Ti reindirizza alla pagina successiva portandosi dietro il nome scelto
+    window.location.href = `registrazione.html?tag=${tagScelto}`; 
+}
+
 
 function mostraOverlaySuccesso(nome) {
     const welcomeOverlay = document.getElementById('welcome-overlay');
@@ -805,6 +827,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// MOTORE PROFESSIONALE TASTO INDIETRO (PWA)
+window.addEventListener('popstate', function(event) {
+    // Se l'utente preme "indietro", chiudiamo tutto senza fargli abbandonare il sito
+    document.getElementById('welcome-overlay').style.display = 'none';
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('menu-overlay').style.display = 'none';
+});
+
+// Usa questa funzione per APRIRE qualsiasi overlay (Login, Menu, Welcome)
+function apriOverlayConStoria(idOverlay) {
+    // 1. Diciamo al browser di registrare un "falso" passo in avanti nella cronologia
+    history.pushState({ overlay: idOverlay }, null, "");
+    // 2. Apriamo fisicamente l'overlay
+    document.getElementById(idOverlay).style.display = 'flex';
+}
+
+// Usa questa funzione per CHIUDERE manualmente qualsiasi overlay (es. premendo la 'X')
+function chiudiOverlayConStoria(idOverlay) {
+    document.getElementById(idOverlay).style.display = 'none';
+    // Se stavamo guardando un overlay, torniamo indietro fittiziamente per riallineare il browser
+    if (history.state && history.state.overlay) {
+        history.back();
+    }
+}        
 </script>
 
 </body>
