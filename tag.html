@@ -638,11 +638,11 @@ if (!usernameCorrente) {
 // ============================================================
 async function avviaFlusso(username) {
     try {
-        // Controlla se siamo in modalità bozza dall'URL
         const urlParams = new URLSearchParams(window.location.search);
-        const modeDraft = urlParams.get('mode') === 'draft';
+        const mode = (urlParams.get('mode') || '').toLowerCase().trim();
+        const modeDraft = mode === 'draft';
 
-        // Sicurezza: solo il proprietario può vedere la bozza esplicita
+        // Sicurezza: solo il proprietario può vedere la bozza esplicita da edit
         if (modeDraft) {
             const loggedUser = localStorage.getItem('loggedUser');
             if (!loggedUser || loggedUser.toLowerCase() !== username.toLowerCase()) {
@@ -662,16 +662,13 @@ async function avviaFlusso(username) {
         let fields = data.fields;
         const stato = (fields.stato || "").toLowerCase().trim();
         
-        // 🎯 IDENTIFICAZIONE DEL CAPOCANTIERE: Verifica se chi guarda è il proprietario loggato
         const loggedUser = localStorage.getItem('loggedUser');
         const isOwner = loggedUser && loggedUser.toLowerCase() === username.toLowerCase();
 
-        // Se è il proprietario ed è in anteprima o il profilo è ancora in attesa,
-        // carichiamo i dati reali dalla bozza (draft_json) altrimenti vedrebbe la pagina vuota
-        if ((modeDraft || (isOwner && stato === "in attesa")) && fields.draft_json) {
+        // 🎯 FIX: Se siamo in modalità anteprima (draft, new, o public dal profilo), carichiamo i dati da draft_json
+        if ((modeDraft || mode === 'new' || mode === 'public' || isOwner) && fields.draft_json) {
             try {
                 const bozza = JSON.parse(fields.draft_json);
-                // Manteniamo username_system e stato dai campi reali
                 fields = { ...bozza, username_system: fields.username_system, stato: fields.stato, draft_json: fields.draft_json };
             } catch (e) {
                 console.error("Errore parsing draft_json:", e);
@@ -682,25 +679,23 @@ async function avviaFlusso(username) {
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
 
-        // --- SMISTAMENTO DEI 3 STATI CORRETTO ---
+        // --- SMISTAMENTO DEI STATI ---
         if (stato === "attivo") {
-            // Stato 1: tag attiva e pagata → rendering completo pulito
+            // Stato 1: tag attiva e pagata → rendering completo pulito pubblico
             renderizzaTagCompleta(fields);
 
-        } else if (stato === "in attesa") {
-            const mode = urlParams.get('mode');
-            
-            // 🎯 FIX: Se l'utente è l'owner loggato (isOwner), gli diamo SEMPRE il pass per l'anteprima
-            if (mode === 'new' || mode === 'draft' || isOwner) {
-                // Utente loggato che vede anteprima → rendering + overlay acquisto dedicato
+      } else if (stato === "in attesa") {
+            // 🎯 FIX: Sblocchiamo la visione se la richiesta arriva con mode=public dal pannello
+            if (mode === 'new' || mode === 'draft' || mode === 'public' || isOwner) {
+                // Utente che vede anteprima → rendering + overlay acquisto dedicato
                 renderizzaTagCompleta(fields);
                 mostraOverlayAcquisto();
             } else {
-                // Chiunque altro scansiona il QR prima del pagamento → messaggio neutro difensivo
+                // Chiunque altro scansiona il QR prima del pagamento → messaggio neutro
                 mostraErrore("Questa tag non è ancora disponibile.");
             }
         } else {
-            // Stato 3: sospeso, riservato o qualsiasi altro → showroom
+            // Stato 3: showroom
             mostraShowroom(username);
         }
 
