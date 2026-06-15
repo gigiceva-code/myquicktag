@@ -638,11 +638,11 @@ if (!usernameCorrente) {
 // ============================================================
 async function avviaFlusso(username) {
     try {
-        // Controlla se siamo in modalità bozza
+        // Controlla se siamo in modalità bozza dall'URL
         const urlParams = new URLSearchParams(window.location.search);
         const modeDraft = urlParams.get('mode') === 'draft';
 
-        // Sicurezza: solo il proprietario può vedere la bozza
+        // Sicurezza: solo il proprietario può vedere la bozza esplicita
         if (modeDraft) {
             const loggedUser = localStorage.getItem('loggedUser');
             if (!loggedUser || loggedUser.toLowerCase() !== username.toLowerCase()) {
@@ -661,9 +661,14 @@ async function avviaFlusso(username) {
 
         let fields = data.fields;
         const stato = (fields.stato || "").toLowerCase().trim();
+        
+        // 🎯 IDENTIFICAZIONE DEL CAPOCANTIERE: Verifica se chi guarda è il proprietario loggato
+        const loggedUser = localStorage.getItem('loggedUser');
+        const isOwner = loggedUser && loggedUser.toLowerCase() === username.toLowerCase();
 
-        // Se mode=draft, usiamo draft_json invece dei campi reali
-        if (modeDraft && fields.draft_json) {
+        // Se è il proprietario ed è in anteprima o il profilo è ancora in attesa,
+        // carichiamo i dati reali dalla bozza (draft_json) altrimenti vedrebbe la pagina vuota
+        if ((modeDraft || (isOwner && stato === "in attesa")) && fields.draft_json) {
             try {
                 const bozza = JSON.parse(fields.draft_json);
                 // Manteniamo username_system e stato dai campi reali
@@ -673,22 +678,25 @@ async function avviaFlusso(username) {
             }
         }
 
-        // Salviamo tutto in cache — gli altri blocchi leggeranno da qui
+        // Salviamo tutto in cache per gli altri blocchi
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
-        // --- SMISTAMENTO DEI 3 STATI ---
+
+        // --- SMISTAMENTO DEI 3 STATI CORRETTO ---
         if (stato === "attivo") {
             // Stato 1: tag attiva e pagata → rendering completo pulito
             renderizzaTagCompleta(fields);
 
-      } else if (stato === "in attesa") {
+        } else if (stato === "in attesa") {
             const mode = urlParams.get('mode');
-            if (mode === 'new' || mode === 'draft') {
-                // Utente loggato che vede anteprima → rendering + overlay acquisto
+            
+            // 🎯 FIX: Se l'utente è l'owner loggato (isOwner), gli diamo SEMPRE il pass per l'anteprima
+            if (mode === 'new' || mode === 'draft' || isOwner) {
+                // Utente loggato che vede anteprima → rendering + overlay acquisto dedicato
                 renderizzaTagCompleta(fields);
                 mostraOverlayAcquisto();
             } else {
-                // Chiunque altro scansiona il QR → messaggio neutro
+                // Chiunque altro scansiona il QR prima del pagamento → messaggio neutro difensivo
                 mostraErrore("Questa tag non è ancora disponibile.");
             }
         } else {
@@ -701,7 +709,6 @@ async function avviaFlusso(username) {
         mostraErrore("Errore di connessione. Riprova tra qualche istante.");
     }
 }
-
 // ============================================================
 // RENDERING BASE — popola gli elementi visibili della tag
 // ============================================================
