@@ -33,17 +33,21 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- IL VIEWPORT ESTERNO --- */
+/* --- IL VIEWPORT ESTERNO CON REFRESH SBLOCCATO --- */
+html {
+    overscroll-behavior-y: auto !important; /* Dice al browser di attivare il pull-to-refresh di fabbrica */
+}
+
 body {
     background-color: var(--bg-esterno);
     color: var(--text-main);
     min-height: 100vh;
+    min-height: -webkit-fill-available; /* Forza la dimensione reale della schermata dello smartphone */
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
-    overflow-y: auto;            /* 🎯 REINTEGRATO: Permette al browser di sentire il movimento */
-    overscroll-behavior-y: auto; /* 🎯 REINTEGRATO: Sblocca il Pull-To-Refresh nativo */
+    overflow-y: auto !important;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -55,7 +59,7 @@ body::before {
     left: 16px;
     right: 16px;
     bottom: 16px;
-    border: 1px solid rgba(212, 175, 55, 0.15); /* Filo laser in Oro Liquido */
+    border: 1px solid rgba(212, 175, 55, 0.5); /* Filo laser in Oro Liquido */
     border-radius: 28px;
     pointer-events: none;
     z-index: 99999;
@@ -107,49 +111,13 @@ body::before {
     opacity: 1;
     transform: scale(1);
 }
-   /* ============================================================
-   🏛️ BLOCCO 3: TRASFORMAZIONE HEADER (NO CHASSIS IN ALTO)
+  /* ============================================================
+   🏛️ BLOCCO 3: APPARATO ESTETICO LOGO E QR (MONOLITO VERTICALE)
    ============================================================ */
-.smart-card {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    border-radius: 0 !important;
-    
-    display: grid !important;
-    grid-template-columns: auto 1fr auto auto !important;
-    align-items: center !important;
-    gap: 10px !important; /* Ridotto a 10px per recuperare spazio prezioso al centro */
-    width: 100% !important;
-    margin-bottom: 24px;
-}
 
-/* 🎯 RETTIFICA FIRMA: MASSIMO SPAZIO IN LINEA */
-.username-base {
-    grid-column: 2;
-    grid-row: 1;
-    font-size: 1.1rem !important; /* Ridotto millimetricamente per non far scattare i tre puntini */
-    font-weight: 300 !important;
-    letter-spacing: 0.5px !important;
-    text-transform: uppercase !important;
-    color: #ffffff !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    word-break: keep-all !important;
-}
-/* Sgancia i vecchi contenitori div left/right per muovere i figli liberamente */
-.card-left, .card-right {
-    display: contents !important;
-}
-
-/* 🎯 L'AVATAR ADATTIVO (PASSEPAROUT EX LOGO-CONTAINER) */
-.logo-container {
-    grid-column: 1;
-    grid-row: 1;
-    display: flex !important; /* Forza l'accensione scalzando il display:none di fabbrica */
+/* 🎯 L'AVATAR ADATTIVO - Ripulito dalla griglia orizzontale */
+.avatar-block {
+    display: flex !important; 
     width: 52px !important;
     height: 52px !important;
     
@@ -159,29 +127,11 @@ body::before {
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    margin-bottom: 5px;
 }
 
-/* 🎯 IL NOME UTENTE CON LA @ STRUCTURALE */
-/* 🎯 RETTIFICA FIRMA: TOLLERANZA ZERO SULL'ANDATA A CAPO */
-.username-base {
-    grid-column: 2;
-    grid-row: 1;
-    font-size: 1.35rem !important; /* Calibrato per stare perfettamente in asse */
-    font-weight: 200 !important;
-    letter-spacing: 1.5px !important;
-    text-transform: uppercase !important;
-    color: #ffffff !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important; /* Impedisce tassativamente la rottura della stringa */
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    word-break: keep-all !important; /* Cancella il vecchio spezzamento automatico */
-}
-
-/* 🎯 IL QR CODE D'AUTORE METALLICO CHROMATICO */
+/* 🎯 IL QR CODE D'AUTORE METALLICO CHROMATICO - Svincolato dalla griglia */
 .qr-wrapper {
-    grid-column: 3;
-    grid-row: 1;
     width: 44px !important;
     height: 44px !important;
     background: #ffffff !important; /* Sfondo bianco nativo necessario al filtro per riflettere l'oro */
@@ -204,8 +154,6 @@ body::before {
 }
 /* 🎯 IL TASTO CONDIVIDI PROFILO REINTERPRETATO */
 .btn-share-card {
-    grid-column: 4;
-    grid-row: 1;
     background: rgba(255, 255, 255, 0.02) !important;
     border: 1px solid rgba(255, 255, 255, 0.06) !important;
     color: #86868b !important;
@@ -369,7 +317,11 @@ body::before {
     box-sizing: border-box;
 } 
 
-  #expanding-box {
+ /* ============================================================
+   📦 : AUTOMAZIONI PWA, SHOWROOM E TASTI SPECIALI
+   ============================================================ */
+
+#expanding-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -385,10 +337,10 @@ body::before {
     height: auto;
     overflow: visible;
     box-sizing: border-box;
-     pointer-events: auto; 
+    pointer-events: auto; 
 }  
 
- .conversion-content {
+.conversion-content {
     opacity: 1;
     text-align: center;
     width: 100%;
@@ -396,59 +348,63 @@ body::before {
     padding: 20px;
 } 
 
-    #conversion-title {
-        color: var(--accent-white);
-        font-size: 1.1rem;
-        font-weight: 500;
-        margin-bottom: 20px;
-        letter-spacing: -0.02em;
-    }
+#conversion-title {
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+}
+
 #casella-quick-action {
     border-color: rgba(16, 185, 129, 0.5);
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.1), 0 10px 25px rgba(0,0,0,0.5);
 }
+
 #trigger-pwa-install {
     border-radius: 12px !important;
 }        
+
+/* 🎯 IL TASTO CONDIVIDI UNIFICATO (Fissato a 40px, perfetto per il dito) */
 .btn-share-card {
-    background: #050505;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
-    color: #10b981;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #86868b !important; /* 💡 Lascialo così per l'icona grigia luxury della foto, oppure metti #10b981 se la preferisci verde smeraldo */
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     cursor: pointer;
     transition: all 0.2s ease;
-    margin-top: auto;
     flex-shrink: 0;
 }
 
 .btn-share-card:active {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.9);
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
-    #showroom-action-btn {
-        background: var(--accent-white);
-        color: #000000;
-        border: none;
-        padding: 14px 24px;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        cursor: pointer;
-        width: 100%;
-        transition: transform 0.2s ease, background 0.2s ease;
-    }
 
-    #showroom-action-btn:active {
-        transform: scale(0.98);
-        background: #eeeeee;
-    } 
-     /* ============================================================
+#showroom-action-btn {
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+#showroom-action-btn:active {
+    transform: scale(0.98);
+    background: #eeeeee;
+}
+    /* ============================================================
    🎭 BLOCCO 4: TRASFORMAZIONE GRIGLIA IN TASTIERA ASIMMETRICA
    ============================================================ */
 #mainGrid {
@@ -641,7 +597,7 @@ body::before {
 /* Annulla l'iniezione dei testi automatici della tastiera solo per questo blocco */
 #casella-quick-action #quick-action-label::after {
     display: none !important;
-}        
+}         
 </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
