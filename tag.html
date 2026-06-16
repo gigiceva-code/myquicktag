@@ -117,15 +117,28 @@ body::before {
     padding: 0 !important;
     border-radius: 0 !important;
     
-    /* Configurazione a griglia meccanica per riallineare i pezzi */
     display: grid !important;
     grid-template-columns: auto 1fr auto auto !important;
     align-items: center !important;
-    gap: 16px !important;
+    gap: 10px !important; /* Ridotto a 10px per recuperare spazio prezioso al centro */
     width: 100% !important;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
+.username-base {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 1.25rem !important; /* Portato a 1.25rem: massima ux visiva senza strozzature */
+    font-weight: 200 !important;
+    letter-spacing: 1px !important; /* Passo della lettera ottimizzato */
+    text-transform: uppercase !important;
+    color: #ffffff !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-break: keep-all !important;
+}
 /* Sgancia i vecchi contenitori div left/right per muovere i figli liberamente */
 .card-left, .card-right {
     display: contents !important;
@@ -170,24 +183,24 @@ body::before {
     grid-row: 1;
     width: 44px !important;
     height: 44px !important;
-    background: rgba(212, 175, 55, 0.02) !important;
-    border: 1px solid rgba(212, 175, 55, 0.2) !important; /* Sincronizzato con l'oro */
+    background: #ffffff !important; /* Sfondo bianco nativo necessario al filtro per riflettere l'oro */
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
     border-radius: 10px !important;
-    padding: 6px !important;
+    padding: 4px !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     overflow: hidden;
     transition: all 0.3s ease;
 }
-
-/* 🔮 IL TRICK: Converte chimicamente il QR nero iniettato da JS in ORO LIQUIDO */
+/* Forzatura geometrica e cromatica del QR iniettato da qrcode.js */
 .qr-wrapper canvas, .qr-wrapper img {
     width: 100% !important;
     height: 100% !important;
+    display: block !important;
+    object-fit: contain !important; /* Impedisce deformazioni dei pixel */
     filter: invert(1) sepia(1) saturate(6) hue-rotate(12deg) brightness(0.95);
 }
-
 /* 🎯 IL TASTO CONDIVIDI PROFILO REINTERPRETATO */
 .btn-share-card {
     grid-column: 4;
