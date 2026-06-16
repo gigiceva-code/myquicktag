@@ -14,17 +14,17 @@
     <style>
  
 
-/* --- VARIABILI --- */
+/* --- CONFIGURAZIONE MONOLITO: TOLLERANZE REALI --- */
 :root {
-    --bg-color: #050505;
-    --accent-white: #ffffff;
+    --bg-esterno: #0d0d0f;       /* Grigio grafite opaco esterno */
+    --bg-chassis: #000000;       /* Nero assoluto vellutato interno */
+    --accent-gold: #d4af37;      /* Pigmento Oro Liquido per piano GOLD */
     --text-main: #f5f5f7;
-    --text-sec: #86868b;
-    --card-bg: linear-gradient(145deg, #0f0f11, #16161a);
-    --grid-bg: #111113;
+    --text-sec: #48484a;         /* Grigio spento d'ordinanza per lo Stato Zero */
+    --text-disattivato: #2c2c2e;
 }
 
-/* --- RESET --- */
+/* --- RESET AEROSPAZIALE --- */
 * {
     margin: 0;
     padding: 0;
@@ -33,174 +33,179 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- BODY: una sola definizione, pulita --- */
+/* --- IL VIEWPORT ESTERNO --- */
 body {
-    background-color: var(--bg-color);
+    background-color: var(--bg-esterno);
     color: var(--text-main);
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 24px;
-    padding-top: 18px;
-    overflow-y: auto;
-    overscroll-behavior-y: none;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden; /* Blocca tassativamente lo scroll del browser */
+    overscroll-behavior: none;
     -webkit-font-smoothing: antialiased;
 }
 
-/* --- CORNICE VERDE FISSA --- */
+/* --- LA CORNICE LUXURY (EX BORDO VERDE) --- */
 body::before {
     content: "";
     position: fixed;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 3px solid #10b981;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    border: 1px solid rgba(212, 175, 55, 0.15); /* Filo laser in Oro Liquido */
     border-radius: 28px;
     pointer-events: none;
     z-index: 99999;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.02);
 }
 
-/* --- APP CONTAINER --- */
+/* --- ALONE CROMATICO REATTIVO --- */
+.orbita-glow {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(50px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* --- APP CONTAINER CONVERTITO IN CHASSIS MONOLITICO --- */
 .app-container {
     display: none;
     opacity: 0;
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    position: fixed;
-    top: 24px;
-    left: 0;
-    right: 0;
-    width: calc(100% - 48px);
-    max-width: 420px;
+    transform: scale(0.99);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* Occupa millimetricamente l'altezza interna alla cornice */
+    width: calc(100% - 32px);
+    max-width: 410px;
+    height: calc(100vh - 32px);
+    max-height: 840px;
+    padding: 40px 24px 32px 24px;
     margin: 0 auto;
+    
+    background-color: var(--bg-chassis);
+    border-radius: 28px;
+    
     flex-direction: column;
-    gap: 24px;
-    padding-top: 8px;
-    padding-bottom: 40px;
-    box-sizing: border-box;
-    max-height: calc(100vh - 36px);
-    overflow-y: auto;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.9);
 }
-  .app-container {
-    padding-top: 40px;
-    padding-bottom: 40px;
-}
-.app-container {
-    padding-top: 8px;
-    padding-bottom: 60px;
-}
+
 .app-container.ready {
     display: flex !important;
     opacity: 1;
     transform: scale(1);
-     z-index: 1;
 }
-    /* --- SMART BUSINESS CARD (TAVOLETTA PREMIUM CON QR) --- */
-    .smart-card {
-        background: var(--card-bg);
-        border: 1px solid rgba(255, 255, 255, 0.8); /* Bordo luminoso lineare */
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.15), 0 20px 40px rgba(0,0,0,0.6);
-        border-radius: 20px;
-        padding: 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: stretch;
-    }
-
-    .card-left {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex: 1;
-    min-width: 0;
-    padding-right: 12px;
-}
-
-    .qr-wrapper {
-        background: #ffffff;
-        padding: 8px;
-        border-radius: 12px;
-        width: 100px;
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .qr-placeholder {
-        width: 100%;
-        height: 100%;
-        background: repeating-linear-gradient(45deg, #000, #000 4px, #fff 4px, #fff 8px);
-        opacity: 0.85;
-    }
-
-    .username-base {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--accent-white);
-    letter-spacing: -0.3px;
-    word-break: break-all;
-    max-width: 100%;
-}
-
-    /* LATO DESTRO: CORNICE GEOMETRICA PER LOGO/MEDIA (NO AVATAR TONDO) */
+   /* ============================================================
+   🏛️ BLOCCO 3: TRASFORMAZIONE HEADER (NO CHASSIS IN ALTO)
+   ============================================================ */
+.smart-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
     
-.card-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 14px;
-    flex-shrink: 0;
-    align-self: stretch;
+    /* Configurazione a griglia meccanica per riallineare i pezzi */
+    display: grid !important;
+    grid-template-columns: auto 1fr auto auto !important;
+    align-items: center !important;
+    gap: 16px !important;
+    width: 100% !important;
+    margin-bottom: 20px;
 }
-    .logo-container {
-        width: 80px;
-        height: 80px;
-        border-radius: 14px; /* Taglio geometrico pulito, coerente con il brand */
-        overflow: hidden;
-        background: rgba(255, 255, 255, 0.03);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
 
-    .user-media {
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: cover; 
-    }
+/* Sgancia i vecchi contenitori div left/right per muovere i figli liberamente */
+.card-left, .card-right {
+    display: contents !important;
+}
 
-    .media-logo {
-        object-fit: contain;
-        padding: 6px; /* Protegge i bordi del logo aziendale */
-    }
+/* 🎯 L'AVATAR ADATTIVO (PASSEPAROUT EX LOGO-CONTAINER) */
+.logo-container {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex !important; /* Forza l'accensione scalzando il display:none di fabbrica */
+    width: 52px !important;
+    height: 52px !important;
+    
+    /* Taglio a Rounded-Square Executive: perfetto sia per volti che per loghi aziendali */
+    border-radius: 12px !important; 
+    background: #070708 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
 
-    .btn-condividi-profilo {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: var(--accent-white);
-        padding: 8px 12px;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
+/* 🎯 IL NOME UTENTE CON LA @ STRUCTURALE */
+.username-base {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 1.65rem !important;
+    font-weight: 200 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    color: #ffffff !important;
+    line-height: 1.1 !important;
+    word-break: break-all;
+}
 
-    .btn-condividi-profilo:active {
-        background: var(--accent-white);
-        color: var(--bg-color);
-        box-shadow: 0 0 10px var(--accent-white);
-    }
+/* 🎯 IL QR CODE D'AUTORE METALLICO CHROMATICO */
+.qr-wrapper {
+    grid-column: 3;
+    grid-row: 1;
+    width: 44px !important;
+    height: 44px !important;
+    background: rgba(212, 175, 55, 0.02) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important; /* Sincronizzato con l'oro */
+    border-radius: 10px !important;
+    padding: 6px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
 
+/* 🔮 IL TRICK: Converte chimicamente il QR nero iniettato da JS in ORO LIQUIDO */
+.qr-wrapper canvas, .qr-wrapper img {
+    width: 100% !important;
+    height: 100% !important;
+    filter: invert(1) sepia(1) saturate(6) hue-rotate(12deg) brightness(0.95);
+}
+
+/* 🎯 IL TASTO CONDIVIDI PROFILO REINTERPRETATO */
+.btn-share-card {
+    grid-column: 4;
+    grid-row: 1;
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    color: #86868b !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    transition: all 0.2s;
+}
+
+.btn-share-card:active {
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
     /* --- GRIGLIA ECOSYSTEM (AUTO-ADATTANTE) --- */
     .grid-ecosystem {
         display: grid;
@@ -208,46 +213,6 @@ body::before {
         gap: 14px;
     }
 
-   .casella {
-    background: var(--grid-bg);
-    /* Bordo lineare netto per tagliare l'oscurità */
-    border: 1px solid rgba(255, 255, 255, 0.4); 
-    /* Doppio effetto: il primo crea l'alone di luce bianca, il secondo dà profondità allo sfondo */
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), 0 10px 25px rgba(0, 0, 0, 0.5);
-    border-radius: 16px;
-    padding: 24px 16px;
-    min-height: 110px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-    .casella.hidden {
-        display: none !important;
-    }
-
-    /* Se una casella rimane dispari, occupa tutta la larghezza con eleganza */
-    .casella:last-child:nth-child(odd) {
-        grid-column: span 2;
-    }
-
-    .casella:active {
-        transform: scale(0.97);
-        background: #18181c;
-        border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .casella-invito {
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--accent-white);
-        line-height: 1.4;
-        letter-spacing: 0.3px;
-    }
         /* --- STILE DINAMICO PER I BOTTONI SOCIAL --- */
     #casella-social {
     display: none;
@@ -270,29 +235,6 @@ body::before {
     .btn-social:hover {
         background: rgba(255, 255, 255, 0.1);
         border-color: #10b981; /* Verde smeraldo al passaggio */
-    }
-
-    /* --- OVERLAY PAGINE INTERNE --- */
-    .pagine-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: var(--bg-color);
-        z-index: 100;
-        display: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 24px;
-        overflow-y: auto;
-    }
-
-    .pagine-overlay.attiva {
-        display: flex;
-        opacity: 1;
     }
 
     .contenuto-card {
@@ -488,7 +430,156 @@ body::before {
         transform: scale(0.98);
         background: #eeeeee;
     } 
-       
+     /* ============================================================
+   🎭 BLOCCO 4: TRASFORMAZIONE GRIGLIA IN TASTIERA ASIMMETRICA
+   ============================================================ */
+#mainGrid {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-top: auto !important; /* Spinge la tastiera sul fondo dello chassis */
+    border-top: 0.5px solid rgba(212, 175, 55, 0.08) !important;
+    padding-top: 16px !important;
+}
+
+/* Smantella la geometria delle vecchie caselle e le trasforma in link filiformi */
+#mainGrid .casella {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    min-height: auto !important;
+    padding: 6px 1px !important;
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 🎯 IL TRICK: Azzeriamo il font nativo per sovrascrivere il testo senza toccare l'HTML */
+#mainGrid .casella-invito {
+    font-size: 0 !important; 
+    line-height: 0 !important;
+}
+
+/* Iniezione delle parole editoriali premium del piano GOLD */
+#casella-bio .casella-invito::after { content: 'INFO'; font-size: 0.65rem !important; letter-spacing: 1.2px; color: var(--text-sec); transition: color 0.3s; }
+#casella-gallery .casella-invito::after { content: 'GALLERY'; font-size: 0.65rem !important; letter-spacing: 1.2px; color: var(--text-sec); transition: color 0.3s; }
+#casella-contatti .casella-invito::after { content: 'CONTATTI'; font-size: 0.65rem !important; letter-spacing: 1.2px; color: var(--text-sec); transition: color 0.3s; }
+#casella-social .casella-invito::after { content: 'SOCIAL'; font-size: 0.65rem !important; letter-spacing: 1.2px; color: var(--text-sec); transition: color 0.3s; }
+#casella-sito .casella-invito::after { content: 'SITO'; font-size: 0.65rem !important; letter-spacing: 1.2px; color: var(--text-sec); transition: color 0.3s; }
+#casella-cv .casella-invito::after { content: 'CV'; font-size: 0.65rem !important; letter-spacing: 1.2px; color: var(--text-sec); transition: color 0.3s; }
+
+/* Feedback luminoso al tocco del pollice */
+#mainGrid .casella:active .casella-invito::after {
+    color: #ffffff !important;
+}
+
+/* ============================================================
+   🧘 STATO ZERO: CONFIGURAZIONE CENTRALE DI ATTESA (ECLISSE)
+   ============================================================ */
+.app-container::after {
+    content: 'myquicktag';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.7rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #1c1c1e;
+    font-weight: 300;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ============================================================
+   🎨 IL TEATRO LIQUIDO (OVERLAY CONVERTITO IN CELLA INTERNA)
+   ============================================================ */
+#overlaySezione {
+    position: fixed !important;
+    /* Incastona l'overlay esattamente nello spazio centrale tra l'header e la tastiera */
+    top: calc(24px + 85px) !important; 
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 48px) !important;
+    max-width: 410px !important;
+    height: calc(100vh - 32px - 85px - 75px) !important;
+    
+    background-color: var(--bg-chassis) !important; /* Nero assoluto che copre lo Stato Zero */
+    padding: 10px 24px !important;
+    z-index: 100 !important;
+    overflow-y: auto !important;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#overlaySezione.attiva {
+    display: flex !important;
+    opacity: 1 !important;
+}
+
+/* Pulizia dei componenti interni all'overlay per look minimale */
+.contenuto-card {
+    margin-top: 0 !important;
+    gap: 20px !important;
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.overlay-nav {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 5px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+.btn-chiudi {
+    font-size: 0.72rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    color: var(--accent-gold) !important; /* Il tasto torna indietro diventa [ CHIUDI ] in oro */
+    font-weight: 500 !important;
+    transition: color 0.2s;
+}
+
+.btn-chiudi:active { color: #ffffff !important; }
+
+.btn-condividi {
+    background: transparent !important;
+    border: none !important;
+    font-size: 0.72rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    color: #636366 !important;
+    padding: 0 !important;
+}
+
+#titoloSezione {
+    font-size: 0.82rem !important;
+    font-weight: 300 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    color: #636366 !important;
+    margin-bottom: 4px !important;
+}
+
+#corpoSezione {
+    font-size: 1.05rem !important;
+    line-height: 1.7 !important;
+    font-weight: 200 !important;
+    color: #d1d1d6 !important;
+}  
 </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
