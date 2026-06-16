@@ -148,16 +148,20 @@ body::before {
 }
 
 /* 🎯 IL NOME UTENTE CON LA @ STRUCTURALE */
+/* 🎯 RETTIFICA FIRMA: TOLLERANZA ZERO SULL'ANDATA A CAPO */
 .username-base {
     grid-column: 2;
     grid-row: 1;
-    font-size: 1.65rem !important;
+    font-size: 1.35rem !important; /* Calibrato per stare perfettamente in asse */
     font-weight: 200 !important;
-    letter-spacing: 2px !important;
+    letter-spacing: 1.5px !important;
     text-transform: uppercase !important;
     color: #ffffff !important;
-    line-height: 1.1 !important;
-    word-break: break-all;
+    line-height: 1.2 !important;
+    white-space: nowrap !important; /* Impedisce tassativamente la rottura della stringa */
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-break: keep-all !important; /* Cancella il vecchio spezzamento automatico */
 }
 
 /* 🎯 IL QR CODE D'AUTORE METALLICO CHROMATICO */
@@ -579,7 +583,51 @@ body::before {
     line-height: 1.7 !important;
     font-weight: 200 !important;
     color: #d1d1d6 !important;
-}  
+} 
+/* ============================================================
+   🚀 RETTIFICA QUICK ACTION: LA BARRA FLUTTUANTE PREMIUM
+   ============================================================ */
+#casella-quick-action {
+    position: absolute !important;
+    bottom: 70px !important; /* Solleva il calendario sopra la linea dei menu */
+    left: 24px !important;
+    right: 24px !important;
+    width: calc(100% - 48px) !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    
+    /* Stile Luxury coordinato */
+    background: rgba(212, 175, 55, 0.03) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    border-radius: 10px !important;
+    
+    display: flex !important;
+    flex-direction: row !important; /* Icona e scritta affiancate, pulite */
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 0 16px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+
+/* Ripristina l'identità dell'icona e del testo interni alla Quick Action */
+#casella-quick-action #quick-action-icon {
+    font-size: 1.1rem !important;
+    margin-bottom: 0 !important; /* Elimina il vecchio sbalzo verticale */
+}
+
+#casella-quick-action #quick-action-label {
+    font-size: 0.72rem !important; /* Riapre il font per questa specifica funzione */
+    line-height: 1 !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    color: #d4af37 !important; /* Testo stampato in oro liquido */
+}
+
+/* Annulla l'iniezione dei testi automatici della tastiera solo per questo blocco */
+#casella-quick-action #quick-action-label::after {
+    display: none !important;
+}        
 </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
