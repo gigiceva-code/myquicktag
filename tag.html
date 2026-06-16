@@ -51,20 +51,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* --- LA CORNICE LUXURY (EX BORDO VERDE) --- */
-body::before {
-    content: "";
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-    border: 1px solid rgba(212, 175, 55, 0.5); /* Filo laser in Oro Liquido */
-    border-radius: 28px;
-    pointer-events: none;
-    z-index: 99999;
-    box-shadow: inset 0 1px 2px rgba(255,255,255,0.02);
-}
+
 
 /* --- ALONE CROMATICO REATTIVO --- */
 .orbita-glow {
@@ -81,22 +68,24 @@ body::before {
     z-index: 1;
     transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
-/* --- APP CONTAINER CONVERTITO IN CHASSIS MONOLITICO --- */
+/* --- APP CONTAINER: CHASSIS MONOLITICO CON CORNICE INTEGRATA --- */
 .app-container {
     display: none;
     opacity: 0;
     transform: scale(0.99);
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* Occupa millimetricamente l'altezza interna alla cornice */
     width: calc(100% - 32px);
     max-width: 410px;
     height: calc(100vh - 32px);
     max-height: 840px;
     padding: 40px 24px 32px 24px;
-    margin: 0 auto;
+    margin: 16px auto; /* Centra lo chassis nello schermo lasciando i 16px di spazio */
     
     background-color: var(--bg-chassis);
+    
+    /* 🎯 LA CORNICE SALDATA QUI: Ora è un pezzo unico con lo chassis */
+    border: 1px solid rgba(212, 175, 55, 0.5); 
     border-radius: 28px;
     
     flex-direction: column;
@@ -104,8 +93,10 @@ body::before {
     position: relative;
     z-index: 2;
     box-shadow: 0 30px 70px rgba(0,0,0,0.9);
+    
+    /* 🎯 BLOCCO SCROLL INTERNO: Impedisce alla struttura di spaccarsi */
+    overflow: hidden; 
 }
-
 .app-container.ready {
     display: flex !important;
     opacity: 1;
