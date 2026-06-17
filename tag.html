@@ -643,30 +643,30 @@ body {
         </div>
     </div>
 
-    <div id="mainGrid">
+   <div id="mainGrid">
         <div class="casella" id="casella-qr" onclick="apriQR()">
             <span class="casella-invito">ACCESS TAG</span>
         </div>
-        
-        <div class="casella" id="casella-bio">
+
+        <div class="casella" id="casella-bio" onclick="apriSezione('bio')">
             <span class="casella-invito"></span>
         </div>
-        <div class="casella" id="casella-gallery">
+        <div class="casella" id="casella-gallery" onclick="apriSezione('gallery')">
             <span class="casella-invito"></span>
         </div>
-        <div class="casella" id="casella-contatti">
+        <div class="casella" id="casella-contatti" onclick="apriSezione('contatti')">
             <span class="casella-invito"></span>
         </div>
-        <div class="casella" id="casella-social">
+        <div class="casella" id="casella-social" onclick="apriSezione('social')">
             <span class="casella-invito"></span>
         </div>
-        <div class="casella" id="casella-sito">
+        <div class="casella" id="casella-sito" onclick="apriSezione('sito')">
             <span class="casella-invito"></span>
         </div>
-        <div class="casella" id="casella-cv">
+        <div class="casella" id="casella-cv" onclick="apriSezione('cv')">
             <span class="casella-invito"></span>
         </div>
-    </div> 
+    </div>
             
 <div class="casella" id="casella-quick-action" onclick="eseguiQuickAction()" style="display:none; grid-column: span 2;">
     <div id="quick-action-icon" style="font-size: 2rem; margin-bottom: 8px;">⚡</div>
@@ -905,15 +905,7 @@ function renderizzaSitoWeb(url) {
         return;
     }
 
-    // Rende la casella cliccabile verso il sito
     casella.style.display = 'flex';
-    casella.onclick = () => window.open(url, '_blank', 'noopener noreferrer');
-
-    // Mostra il dominio pulito come testo (es. "gigi.com" invece del link completo)
-    const labelEl = casella.querySelector('.casella-invito');
-    if (labelEl) {
-       labelEl.textContent = 'Il mio sito web';
-    }
 }
 // ============================================================
 // OVERLAY ACQUISTO — stato "in attesa" (tag visibile ma bloccata)
@@ -1181,64 +1173,35 @@ function gestisciVisibilitaCaselle(fields) {
 // ============================================================
 function apriSezione(tipo) {
     console.log('apriSezione:', tipo);
-     
+
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
+    
     console.log('overlay:', overlay, 'titolo:', titolo, 'corpo:', corpo);
     if (!overlay || !titolo || !corpo) return;
-     
-    if (tipo === 'social') {
-        titolo.textContent = 'Canali social';
+
+    // --- SEZIONE SITO WEB ---
+    if (tipo === 'sito') {
+        titolo.textContent = 'Sito Web';
         corpo.innerHTML = '';
-       if (tipo === 'contatti') {
-    titolo.textContent = 'Contatti';
-    corpo.innerHTML = '';
-  console.log('piano:', piano);
-    console.log('vcf:', vcf);
-    const piano = (cacheDatiUtente.plan || '').toUpperCase();
-    let vcf = {};
-    try { 
-        const raw = cacheDatiUtente.modulo_vcf;
-        vcf = typeof raw === 'object' ? raw : JSON.parse(raw || '{}');
-    } catch(e) {}
 
-    const email = cacheDatiUtente.email || vcf.email1 || '';
-    const tel1 = vcf.telefono1 || '';
-    const tel2 = vcf.telefono2 || '';
-    const email2 = vcf.email2 || '';
-    const indirizzo = vcf.indirizzo || '';
-    const piva = vcf.piva || '';
+        const urlSito = cacheDatiUtente.sito_web || '';
+        // Estrae il dominio pulito senza protocollo per l'estetica luxury (es. google.com)
+        const dominioPulito = urlSito.replace(/https?:\/\/(www\.)?/, '').split('/')[0];
 
-    // Campi BASE — tutti i piani
-    const campiBase = [];
-    if (tel1) campiBase.push({ icona: 'fas fa-phone', label: tel1, azione: `tel:${tel1}`, copia: tel1 });
-    if (email) campiBase.push({ icona: 'fas fa-envelope', label: email, azione: `mailto:${email}`, copia: email });
-
-    // Campi PREMIUM/GOLD
-    const campiPremium = [];
-    if (tel2) campiPremium.push({ icona: 'fas fa-phone', label: tel2, azione: `tel:${tel2}`, copia: tel2 });
-    if (email2) campiPremium.push({ icona: 'fas fa-envelope', label: email2, azione: `mailto:${email2}`, copia: email2 });
-    if (indirizzo) campiPremium.push({ icona: 'fas fa-map-marker-alt', label: indirizzo, azione: `https://maps.google.com/?q=${encodeURIComponent(indirizzo)}`, copia: indirizzo });
-    if (piva) campiPremium.push({ icona: 'fas fa-file-invoice', label: 'P.IVA: ' + piva, azione: null, copia: piva });
-
-    const tuttiCampi = piano === 'BASE' ? campiBase : [...campiBase, ...campiPremium];
-
-    if (tuttiCampi.length === 0) {
-        corpo.textContent = 'Nessun contatto configurato.';
-    } else {
-        tuttiCampi.forEach(campo => {
+        if (!urlSito) {
+            corpo.textContent = 'Nessun sito web configurato.';
+        } else {
             const riga = document.createElement('div');
             riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
 
-            const sinistro = document.createElement(campo.azione ? 'a' : 'div');
-            if (campo.azione) {
-                sinistro.href = campo.azione;
-                if (campo.azione.startsWith('http')) sinistro.target = '_blank';
-                sinistro.rel = 'noopener noreferrer';
-            }
-            sinistro.style.cssText = 'display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;';
-            sinistro.innerHTML = `<i class="${campo.icona}" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.9rem; color:#f5f5f7;">${campo.label}</span>`;
+            const link = document.createElement('a');
+            link.href = urlSito;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.style.cssText = 'display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;';
+            link.innerHTML = `<i class="fas fa-globe" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; color:#f5f5f7; font-weight:500;">${dominioPulito || urlSito}</span>`;
 
             const btnCopia = document.createElement('button');
             btnCopia.style.cssText = 'background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff; padding:7px 10px; border-radius:8px; cursor:pointer; flex-shrink:0;';
@@ -1246,31 +1209,110 @@ function apriSezione(tipo) {
             btnCopia.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                _condividi(campo.label, campo.copia);
+                _condividi(dominioPulito || urlSito, urlSito);
             };
 
-            riga.appendChild(sinistro);
+            riga.appendChild(link);
             riga.appendChild(btnCopia);
             corpo.appendChild(riga);
-        });
-
-        // Tasto VCF — solo PREMIUM e GOLD
-        if (piano !== 'BASE') {
-            const btnVcf = document.createElement('button');
-            btnVcf.style.cssText = 'width:100%; margin-top:20px; padding:14px; background:#10b981; border:none; border-radius:12px; color:#000000; font-size:0.9rem; font-weight:700; cursor:pointer;';
-            btnVcf.textContent = 'Salva in rubrica';
-            btnVcf.onclick = () => scaricaVCF(vcf, cacheDatiUtente);
-            corpo.appendChild(btnVcf);
         }
+
+        const btnCondividiSezione = document.getElementById('btnCondividiLink');
+        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+        overlay.classList.add('attiva');
+        history.pushState({ overlay: 'sezione', tipo: 'sito' }, '');
+        return;
     }
 
-    const btnCondividiSezione = document.getElementById('btnCondividiLink');
-    if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+    // --- SEZIONE CONTATTI ---
+    if (tipo === 'contatti') {
+        titolo.textContent = 'Contatti';
+        corpo.innerHTML = '';
 
-    overlay.classList.add('attiva');
-    history.pushState({ overlay: 'sezione', tipo: 'contatti' }, '');
-    return;
-}
+        const piano = (cacheDatiUtente.plan || '').toUpperCase();
+        let vcf = {};
+        try { 
+            const raw = cacheDatiUtente.modulo_vcf;
+            vcf = typeof raw === 'object' ? raw : JSON.parse(raw || '{}');
+        } catch(e) {}
+
+        console.log('piano:', piano);
+        console.log('vcf:', vcf);
+
+        const email = cacheDatiUtente.email || vcf.email1 || '';
+        const tel1 = vcf.telefono1 || '';
+        const tel2 = vcf.telefono2 || '';
+        const email2 = vcf.email2 || '';
+        const indirizzo = vcf.indirizzo || '';
+        const piva = vcf.piva || '';
+
+        // Campi BASE — tutti i piani
+        const campiBase = [];
+        if (tel1) campiBase.push({ icona: 'fas fa-phone', label: tel1, azione: `tel:${tel1}`, copia: tel1 });
+        if (email) campiBase.push({ icona: 'fas fa-envelope', label: email, azione: `mailto:${email}`, copia: email });
+
+        // Campi PREMIUM/GOLD
+        const campiPremium = [];
+        if (tel2) campiPremium.push({ icona: 'fas fa-phone', label: tel2, azione: `tel:${tel2}`, copia: tel2 });
+        if (email2) campiPremium.push({ icona: 'fas fa-envelope', label: email2, azione: `mailto:${email2}`, copia: email2 });
+        if (indirizzo) campiPremium.push({ icona: 'fas fa-map-marker-alt', label: indirizzo, azione: `https://maps.google.com/?q=${encodeURIComponent(indirizzo)}`, copia: indirizzo });
+        if (piva) campiPremium.push({ icona: 'fas fa-file-invoice', label: 'P.IVA: ' + piva, azione: null, copia: piva });
+
+        const tuttiCampi = piano === 'BASE' ? campiBase : [...campiBase, ...campiPremium];
+
+        if (tuttiCampi.length === 0) {
+            corpo.textContent = 'Nessun contatto configurato.';
+        } else {
+            tuttiCampi.forEach(campo => {
+                const riga = document.createElement('div');
+                riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
+
+                const sinistro = document.createElement(campo.azione ? 'a' : 'div');
+                if (campo.azione) {
+                    sinistro.href = campo.azione;
+                    if (campo.azione.startsWith('http')) sinistro.target = '_blank';
+                    sinistro.rel = 'noopener noreferrer';
+                }
+                sinistro.style.cssText = 'display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;';
+                sinistro.innerHTML = `<i class="${campo.icona}" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.9rem; color:#f5f5f7;">${campo.label}</span>`;
+
+                const btnCopia = document.createElement('button');
+                btnCopia.style.cssText = 'background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff; padding:7px 10px; border-radius:8px; cursor:pointer; flex-shrink:0;';
+                btnCopia.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+                btnCopia.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    _condividi(campo.label, campo.copia);
+                };
+
+                riga.appendChild(sinistro);
+                riga.appendChild(btnCopia);
+                corpo.appendChild(riga);
+            });
+
+            if (piano !== 'BASE') {
+                const btnVcf = document.createElement('button');
+                btnVcf.style.cssText = 'width:100%; margin-top:20px; padding:14px; background:#10b981; border:none; border-radius:12px; color:#000000; font-size:0.9rem; font-weight:700; cursor:pointer;';
+                btnVcf.textContent = 'Salva in rubrica';
+                btnVcf.onclick = () => scaricaVCF(vcf, cacheDatiUtente);
+                corpo.appendChild(btnVcf);
+            }
+        }
+
+        const btnCondividiSezione = document.getElementById('btnCondividiLink');
+        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+        overlay.classList.add('attiva');
+        history.pushState({ overlay: 'sezione', tipo: 'contatti' }, '');
+        return;
+    }
+
+    // --- SEZIONE SOCIAL ---
+    if (tipo === 'social') {
+        titolo.textContent = 'Canali social';
+        corpo.innerHTML = '';
+        
         let canali = [];
         try { canali = JSON.parse(cacheDatiUtente.config_canali || '[]'); } catch(e) {}
 
@@ -1306,7 +1348,6 @@ function apriSezione(tipo) {
             });
         }
 
-        // Nascondi il bottone "Condividi sezione" per i social
         const btnCondividiSezione = document.getElementById('btnCondividiLink');
         if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
 
@@ -1315,6 +1356,7 @@ function apriSezione(tipo) {
         return;
     }
 
+    // --- ALTRE SEZIONI TESTUALI (BIO, GALLERY, CV) ---
     const contenuti = {
         'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
         'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' },
@@ -1327,7 +1369,6 @@ function apriSezione(tipo) {
     titolo.textContent = contenuti[tipo].t;
     corpo.textContent  = contenuti[tipo].c;
 
-    // Nascondi condividi sezione anche per bio
     const btnCondividiSezione = document.getElementById('btnCondividiLink');
     if (btnCondividiSezione) {
         btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
