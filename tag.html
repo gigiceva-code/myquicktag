@@ -564,24 +564,25 @@ body {
     display: flex !important;
     flex-direction: column !important;
     
-    /* 🎯 CENTRATURA ASSOLUTA: Il blocco fluttua sempre nel mezzo */
+    /* Mantiene il Totem compatto al centro del suo spazio */
     justify-content: center !important; 
     align-items: center !important;
     
-    /* 🎯 IL PASSO FISSO: Distanza immutabile tra i tasti (sia con 3 che con 7 funzioni) */
+    /* Passo costante che protegge il layout sia con 3 che con 7 funzioni */
     gap: 24px !important; 
     
     flex: 1 !important; 
     width: 100% !important;
-    
     background: transparent !important;
     border: none !important;
     box-sizing: border-box !important;
     box-shadow: none !important;
     margin: 0 !important;
     
-    /* 🛡️ CUSCINETTO DI SICUREZZA: Impedisce alle scritte di urtare l'Azione Rapida in basso */
-    padding: 20px 0 40px 0 !important; 
+    /* 🎯 LA CORREZIONE: Portiamo il padding inferiore a 130px. 
+       Questo azzera l'interferenza del tasto assoluto, sposta il baricentro 
+       verso l'alto e centra il blocco nello spazio vuoto reale. */
+    padding: 10px 0 130px 0 !important; 
 }
 
 /* Link filiformi ed eleganti */
