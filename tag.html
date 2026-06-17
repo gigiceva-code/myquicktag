@@ -80,39 +80,43 @@ body {
     z-index: 1;
     transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
-/* --- APP CONTAINER: CHASSIS MONOLITICO CON CORNICE INTEGRATA --- */
+/* --- APP CONTAINER: CHASSIS INCHIODATO AL CENTRO (MONOLITO ASSOLUTO) --- */
 .app-container {
     display: none;
     opacity: 0;
-    transform: scale(0.99);
+    
+    /* 🎯 IL FISSAGGIO: Diventa fisso rispetto allo schermo, smette di camminare */
+    position: fixed !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.99);
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     
+    /* Quote geometriche reali */
     width: calc(100% - 32px);
     max-width: 410px;
     height: calc(100vh - 32px);
     max-height: 840px;
     padding: 40px 24px 32px 24px;
-    margin: 16px auto; /* Centra lo chassis nello schermo lasciando i 16px di spazio */
     
     background-color: var(--bg-chassis);
     
-    /* 🎯 LA CORNICE SALDATA QUI: Ora è un pezzo unico con lo chassis */
+    /* La cornice d'oro saldata sul bordo dello chassis */
     border: 1px solid rgba(212, 175, 55, 0.5); 
     border-radius: 28px;
     
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
     z-index: 2;
     box-shadow: 0 30px 70px rgba(0,0,0,0.9);
-    
-    /* 🎯 BLOCCO SCROLL INTERNO: Impedisce alla struttura di spaccarsi */
     overflow: hidden; 
 }
+
+/* 🎯 INTERRUTTORE ACCENSIONE: Mantiene la centratura assoluta e applica la scala */
 .app-container.ready {
     display: flex !important;
     opacity: 1;
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1) !important;
 }
   /* ============================================================
    🏛️ BLOCCO 3: APPARATO ESTETICO LOGO E QR (MONOLITO VERTICALE)
