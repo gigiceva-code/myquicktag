@@ -688,6 +688,70 @@ body {
 #mainGrid .casella:active .casella-invito::after {
     color: #ffffff !important;
 }
+/* ============================================================
+   🏆 LA FISARMONICA DEFINITIVA (DISTRIBUZIONE SU TRE LINEE)
+   ============================================================ */
+
+/* Usiamo un selettore ultra-specifico per distruggere i vecchi blocchi */
+.app-container #mainGrid {
+    display: flex !important;
+    flex-direction: column !important;
+    
+    /* 🎯 SPAZIATURA IDENTICA: Mette la stessa aria sopra, sotto e tra i tasti */
+    justify-content: space-evenly !important; 
+    align-items: center !important;
+    
+    /* 🎯 L'ELASTICO: Pianta i piedi in cima e in fondo e si prende tutto lo spazio nero */
+    flex: 1 !important; 
+    height: auto !important;
+    width: 100% !important;
+    
+    /* Pulizia totale da vecchi blocchi */
+    background: transparent !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    margin: 0 !important; /* 💡 Rimosso l'auto che stringeva la gabbia */
+    padding: 20px 0 !important; 
+}
+
+/* Link filiformi ed eleganti */
+.app-container #mainGrid .casella {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    min-height: auto !important;
+    padding: 10px 0 !important; /* Più area cliccabile per il pollice */
+    width: auto !important;
+}
+
+.app-container #mainGrid .casella-invito {
+    font-size: 0 !important; 
+    line-height: 0 !important;
+}
+
+/* Font stile cronografo svizzero */
+.app-container #mainGrid .casella-invito::after {
+    font-size: 0.75rem !important; 
+    letter-spacing: 3px !important; 
+    font-weight: 300 !important;
+    transition: color 0.2s ease;
+}
+
+/* CONTROLLO DELLE SCRITTE (ACCESS TAG d'oro, le altre grigie) */
+#casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
+#casella-bio .casella-invito::after { content: 'INFO'; color: var(--text-sec) !important; }
+#casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec) !important; }
+#casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec) !important; }
+#casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec) !important; }
+#casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec) !important; }
+#casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec) !important; }
+
+/* Feedback visivo premium al tocco */
+.app-container #mainGrid .casella:active .casella-invito::after {
+    color: #ffffff !important;
+}
+
 </style>       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
