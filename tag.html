@@ -400,56 +400,67 @@ body {
     /* ============================================================
    🎭 BLOCCO 4: TRASFORMAZIONE GRIGLIA IN TASTIERA ASIMMETRICA
    ============================================================ */
+/* ============================================================
+   ⌨️ IL TOTEM APERTO A FISARMONICA (DISTRIBUZIONE ASSOLUTA)
+   ============================================================ */
 #mainGrid {
     display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
+    flex-direction: column !important;
+    
+    /* 🎯 LA SVOLTA: Spazia le voci in modo automatico dal top al bottom come i tuoi schizzi */
+    justify-content: space-between !important; 
     align-items: center !important;
-    gap: 6px !important;
+    
+    /* Forza la griglia a prendersi tutto lo spazio verticale rimasto libero nello chassis */
+    flex: 1 !important; 
     width: 100% !important;
     background: transparent !important;
     border: none !important;
     box-sizing: border-box !important;
     box-shadow: none !important;
-    padding: 0 !important;
-    margin-top: auto !important; /* Spinge la tastiera sul fondo dello chassis */
-    border-top: 0.5px solid rgba(212, 175, 55, 0.08) !important;
-    padding-top: 16px !important;
+    
+    /* Aria di sicurezza per non far sbattere la prima e l'ultima voce contro il nome o l'azione rapida */
+    padding: 30px 0 50px 0 !important; 
+    margin: 0 !important;
 }
 
-/* Smantella la geometria delle vecchie caselle e le trasforma in link filiformi */
+/* Link filiformi puliti */
 #mainGrid .casella {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     min-height: auto !important;
-    padding: 6px 1px !important;
-    flex: 1 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    padding: 5px 0 !important;
+    width: auto !important;
 }
 
-/* 🎯 IL TRICK: Azzeriamo il font nativo per sovrascrivere il testo senza toccare l'HTML */
 #mainGrid .casella-invito {
     font-size: 0 !important; 
     line-height: 0 !important;
 }
 
-/* Iniezione delle parole editoriali con colorazione ad alta leggibilità */
-#casella-bio .casella-invito::after { content: 'INFO'; font-size: 0.68rem !important; letter-spacing: 1px; color: var(--text-sec) !important; }
-#casella-gallery .casella-invito::after { content: 'GALLERY'; font-size: 0.68rem !important; letter-spacing: 1px; color: var(--text-sec) !important; }
-#casella-contatti .casella-invito::after { content: 'CONTATTI'; font-size: 0.68rem !important; letter-spacing: 1px; color: var(--text-sec) !important; }
-#casella-social .casella-invito::after { content: 'SOCIAL'; font-size: 0.68rem !important; letter-spacing: 1px; color: var(--text-sec) !important; }
-#casella-sito .casella-invito::after { content: 'SITO'; font-size: 0.68rem !important; letter-spacing: 1px; color: var(--text-sec) !important; }
-#casella-cv .casella-invito::after { content: 'CV'; font-size: 0.68rem !important; letter-spacing: 1px; color: var(--text-sec) !important; }
+/* Stile del testo stile cronografo svizzero */
+#mainGrid .casella-invito::after {
+    font-size: 0.72rem !important; 
+    letter-spacing: 3px !important; 
+    font-weight: 300 !important;
+    transition: color 0.2s ease;
+}
 
-/* Evidenzia il testo in bianco puro quando viene premuto col pollice */
+/* 🎯 INIEZIONE DELLE PAROLE (Con l'ACCESS TAG in cima colorato in oro) */
+#casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
+#casella-bio .casella-invito::after { content: 'INFO'; color: var(--text-sec) !important; }
+#casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec) !important; }
+#casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec) !important; }
+#casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec) !important; }
+#casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec) !important; }
+#casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec) !important; }
+
+/* Evidenzia la voce in bianco quando il pollice preme */
 #mainGrid .casella:active .casella-invito::after {
     color: #ffffff !important;
 }
-
-/* ============================================================
+ ============================================================
    🧘 STATO ZERO: CONFIGURAZIONE CENTRALE DI ATTESA (ECLISSE)
    ============================================================ */
 .app-container::after {
