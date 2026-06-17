@@ -688,31 +688,34 @@ body {
 #mainGrid .casella:active .casella-invito::after {
     color: #ffffff !important;
 }
+
+
 /* ============================================================
-   🏆 LA FISARMONICA DEFINITIVA (DISTRIBUZIONE SU TRE LINEE)
+   🏆 IL TOTEM DINAMICO A PASSO COSTANTE (ANTI-SOVRAPPOSIZIONE)
    ============================================================ */
 
-/* Usiamo un selettore ultra-specifico per distruggere i vecchi blocchi */
 .app-container #mainGrid {
     display: flex !important;
     flex-direction: column !important;
     
-    /* 🎯 SPAZIATURA IDENTICA: Mette la stessa aria sopra, sotto e tra i tasti */
-    justify-content: space-evenly !important; 
+    /* 🎯 CENTRATURA ASSOLUTA: Il blocco fluttua sempre nel mezzo */
+    justify-content: center !important; 
     align-items: center !important;
     
-    /* 🎯 L'ELASTICO: Pianta i piedi in cima e in fondo e si prende tutto lo spazio nero */
+    /* 🎯 IL PASSO FISSO: Distanza immutabile tra i tasti (sia con 3 che con 7 funzioni) */
+    gap: 24px !important; 
+    
     flex: 1 !important; 
-    height: auto !important;
     width: 100% !important;
     
-    /* Pulizia totale da vecchi blocchi */
     background: transparent !important;
     border: none !important;
     box-sizing: border-box !important;
     box-shadow: none !important;
-    margin: 0 !important; /* 💡 Rimosso l'auto che stringeva la gabbia */
-    padding: 20px 0 !important; 
+    margin: 0 !important;
+    
+    /* 🛡️ CUSCINETTO DI SICUREZZA: Impedisce alle scritte di urtare l'Azione Rapida in basso */
+    padding: 20px 0 40px 0 !important; 
 }
 
 /* Link filiformi ed eleganti */
@@ -721,7 +724,7 @@ body {
     border: none !important;
     box-shadow: none !important;
     min-height: auto !important;
-    padding: 10px 0 !important; /* Più area cliccabile per il pollice */
+    padding: 4px 0 !important; 
     width: auto !important;
 }
 
@@ -747,10 +750,11 @@ body {
 #casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec) !important; }
 #casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec) !important; }
 
-/* Feedback visivo premium al tocco */
+/* Feedback al tocco */
 .app-container #mainGrid .casella:active .casella-invito::after {
     color: #ffffff !important;
 }
+
 
 </style>       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
