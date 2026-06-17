@@ -33,26 +33,28 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- IL VIEWPORT ESTERNO CON REFRESH SBLOCCATO --- */
+/* --- IL VIEWPORT ESTERNO CON REFRESH REATTIVO --- */
 html {
-    overscroll-behavior-y: auto !important; /* Dice al browser di attivare il pull-to-refresh di fabbrica */
+    height: 100%;
+    overscroll-behavior-y: auto !important; /* Autorizza il browser al bounce del refresh */
 }
 
 body {
     background-color: var(--bg-esterno);
     color: var(--text-main);
-    height: 100vh;
-    height: -webkit-fill-available; 
+    min-height: 100vh;
+    min-height: -webkit-fill-available; 
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
     margin: 0;
     
-    /* 🎯 BLOCCO ASSOLUTO: Lo chassis non può più nuotare fuori dal display */
-    overflow: hidden !important; 
-    position: fixed;
-    width: 100%;
+    /* 🎯 REFRESH SBLOCCATO: Eliminati position:fixed e overflow:hidden */
+    overflow-y: auto !important; 
+    overscroll-behavior-y: auto !important; 
+    -webkit-overflow-scrolling: touch; /* Rende lo scorrimento fluido su iOS */
+    
     -webkit-font-smoothing: antialiased;
 }
 
