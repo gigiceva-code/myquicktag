@@ -405,17 +405,20 @@ body {
    🎨 IL TEATRO LIQUIDO (OVERLAY CONVERTITO IN CELLA INTERNA)
    ============================================================ */
 #overlaySezione {
-    position: fixed !important;
-    /* Incastona l'overlay esattamente nello spazio centrale tra l'header e la tastiera */
-    top: calc(24px + 85px) !important; 
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: calc(100% - 48px) !important;
-    max-width: 410px !important;
-    height: calc(100vh - 32px - 85px - 75px) !important;
+    /* 🎯 LA SVOLTA: Diventa assoluto rispetto allo chassis e parte da zero */
+    position: absolute !important;
+    top: 0 !important; 
+    left: 0 !important;
     
-    background-color: var(--bg-chassis) !important; /* Nero assoluto che copre lo Stato Zero */
-    padding: 10px 24px !important;
+    /* Prende l'intera superficie della tessera */
+    width: 100% !important;
+    height: 100% !important;
+    
+    background-color: var(--bg-chassis) !important; /* Nero assoluto che cancella lo sfondo */
+    
+    /* Allineamento simmetrico interno */
+    padding: 40px 24px 32px 24px !important;
+    
     z-index: 100 !important;
     overflow-y: auto !important;
     display: none;
