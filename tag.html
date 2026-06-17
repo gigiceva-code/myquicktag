@@ -401,89 +401,212 @@ body {
     z-index: 1;
 }
 
-/* ============================================================
-   🎨 IL TEATRO LIQUIDO (OVERLAY CONVERTITO IN CELLA INTERNA)
-   ============================================================ */
-#overlaySezione {
-    /* 🎯 LA SVOLTA: Diventa assoluto rispetto allo chassis e parte da zero */
-    position: absolute !important;
-    top: 0 !important; 
-    left: 0 !important;
+// ============================================================
+// APERTURA OVERLAY SEZIONE INTERNA
+// ============================================================
+function apriSezione(tipo) {
+    console.log('apriSezione:', tipo);
+
+    const overlay = document.getElementById('overlaySezione');
+    const titolo = document.getElementById('titoloSezione');
+    const corpo = document.getElementById('corpoSezione');
     
-    /* Prende l'intera superficie della tessera */
-    width: 100% !important;
-    height: 100% !important;
-    
-    background-color: var(--bg-chassis) !important; /* Nero assoluto che cancella lo sfondo */
-    
-    /* Allineamento simmetrico interno */
-    padding: 40px 24px 32px 24px !important;
-    
-    z-index: 100 !important;
-    overflow-y: auto !important;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    console.log('overlay:', overlay, 'titolo:', titolo, 'corpo:', corpo);
+    if (!overlay || !titolo || !corpo) return;
+
+    // --- SEZIONE SITO WEB ---
+    if (tipo === 'sito') {
+        titolo.textContent = 'Sito Web';
+        corpo.innerHTML = '';
+
+        const urlSito = cacheDatiUtente.sito_web || '';
+        const dominioPulito = urlSito.replace(/https?:\/\/(www\.)?/, '').split('/')[0];
+
+        if (!urlSito) {
+            corpo.textContent = 'Nessun sito web configurato.';
+        } else {
+            const riga = document.createElement('div');
+            riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
+
+            const link = document.createElement('a');
+            link.href = urlSito;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.style.cssText = 'display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;';
+            link.innerHTML = `<i class="fas fa-globe" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; color:#f5f5f7; font-weight:500;">${dominioPulito || urlSito}</span>`;
+
+            const btnCopia = document.createElement('button');
+            btnCopia.style.cssText = 'background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff; padding:7px 10px; border-radius:8px; cursor:pointer; flex-shrink:0;';
+            btnCopia.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+            btnCopia.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                _condividi(dominioPulito || urlSito, urlSito);
+            };
+
+            riga.appendChild(link);
+            riga.appendChild(btnCopia);
+            corpo.appendChild(riga);
+        }
+
+        const btnCondividiSezione = document.getElementById('btnCondividiLink');
+        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+        overlay.classList.add('attiva');
+        history.pushState({ overlay: 'sezione', tipo: 'sito' }, '');
+        return;
+    }
+
+    // --- SEZIONE CONTATTI ---
+    if (tipo === 'contatti') {
+        titolo.textContent = 'Contatti';
+        corpo.innerHTML = '';
+
+        const piano = (cacheDatiUtente.plan || '').toUpperCase();
+        let vcf = {};
+        try { 
+            const raw = cacheDatiUtente.modulo_vcf;
+            vcf = typeof raw === 'object' ? raw : JSON.parse(raw || '{}');
+        } catch(e) {}
+
+        console.log('piano:', piano);
+        console.log('vcf:', vcf);
+
+        const email = cacheDatiUtente.email || vcf.email1 || '';
+        const tel1 = vcf.telefono1 || '';
+        const tel2 = vcf.telefono2 || '';
+        const email2 = vcf.email2 || '';
+        const indirizzo = vcf.indirizzo || '';
+        const piva = vcf.piva || '';
+
+        const campiBase = [];
+        if (tel1) campiBase.push({ icona: 'fas fa-phone', label: tel1, azione: `tel:${tel1}`, copia: tel1 });
+        if (email) campiBase.push({ icona: 'fas fa-envelope', label: email, azione: `mailto:${email}`, copia: email });
+
+        const campiPremium = [];
+        if (tel2) campiPremium.push({ icona: 'fas fa-phone', label: tel2, azione: `tel:${tel2}`, copia: tel2 });
+        if (email2) campiPremium.push({ icona: 'fas fa-envelope', label: email2, azione: `mailto:${email2}`, copia: email2 });
+        if (indirizzo) campiPremium.push({ icona: 'fas fa-map-marker-alt', label: indirizzo, azione: `https://maps.google.com/?q=${encodeURIComponent(indirizzo)}`, copia: indirizzo });
+        if (piva) campiPremium.push({ icona: 'fas fa-file-invoice', label: 'P.IVA: ' + piva, azione: null, copia: piva });
+
+        const tuttiCampi = piano === 'BASE' ? campiBase : [...campiBase, ...campiPremium];
+
+        if (tuttiCampi.length === 0) {
+            corpo.textContent = 'Nessun contatto configurato.';
+        } else {
+            tuttiCampi.forEach(campo => {
+                const riga = document.createElement('div');
+                riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
+
+                const sinistro = document.createElement(campo.azione ? 'a' : 'div');
+                if (campo.azione) {
+                    sinistro.href = campo.azione;
+                    if (campo.azione.startsWith('http')) sinistro.target = '_blank';
+                    sinistro.rel = 'noopener noreferrer';
+                }
+                sinistro.style.cssText = 'display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;';
+                sinistro.innerHTML = `<i class="${campo.icona}" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.9rem; color:#f5f5f7;">${campo.label}</span>`;
+
+                const btnCopia = document.createElement('button');
+                btnCopia.style.cssText = 'background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff; padding:7px 10px; border-radius:8px; cursor:pointer; flex-shrink:0;';
+                btnCopia.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+                btnCopia.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    _condividi(campo.label, campo.copia);
+                };
+
+                riga.appendChild(sinistro);
+                riga.appendChild(btnCopia);
+                corpo.appendChild(riga);
+            });
+
+            if (piano !== 'BASE') {
+                const btnVcf = document.createElement('button');
+                btnVcf.style.cssText = 'width:100%; margin-top:20px; padding:14px; background:#10b981; border:none; border-radius:12px; color:#000000; font-size:0.9rem; font-weight:700; cursor:pointer;';
+                btnVcf.textContent = 'Salva in rubrica';
+                btnVcf.onclick = () => scaricaVCF(vcf, cacheDatiUtente);
+                corpo.appendChild(btnVcf);
+            }
+        }
+
+        const btnCondividiSezione = document.getElementById('btnCondividiLink');
+        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+        overlay.classList.add('attiva');
+        history.pushState({ overlay: 'sezione', tipo: 'contatti' }, '');
+        return;
+    }
+
+    // --- SEZIONE SOCIAL ---
+    if (tipo === 'social') {
+        titolo.textContent = 'Canali social';
+        corpo.innerHTML = '';
+        
+        let canali = [];
+        try { canali = JSON.parse(cacheDatiUtente.config_canali || '[]'); } catch(e) {}
+
+        if (canali.length === 0) {
+            corpo.textContent = 'Nessun canale configurato.';
+        } else {
+            canali.forEach(canale => {
+                const nomeLower = canale.nome.toLowerCase();
+                const iconClass = socialIcons[nomeLower] || socialIcons["default"];
+
+                const riga = document.createElement('div');
+                riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
+
+                const link = document.createElement('a');
+                link.href = canale.url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.style.cssText = 'display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;';
+                link.innerHTML = `<i class="${iconClass}" style="font-size:1.2rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; font-weight:500;">${canale.nome}</span>`;
+
+                const btnCondividi = document.createElement('button');
+                btnCondividi.style.cssText = 'background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff; padding:7px 10px; border-radius:8px; cursor:pointer; flex-shrink:0;';
+                btnCondividi.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+                btnCondividi.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    _condividi(canale.nome, canale.url);
+                };
+
+                riga.appendChild(link);
+                riga.appendChild(btnCondividi);
+                corpo.appendChild(riga);
+            });
+        }
+
+        const btnCondividiSezione = document.getElementById('btnCondividiLink');
+        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+        overlay.classList.add('attiva');
+        history.pushState({ overlay: 'sezione', tipo: 'social' }, '');
+        return;
+    }
+
+    // --- ALTRE SEZIONI TESTUALI (BIO, GALLERY, CV) ---
+    const contenuti = {
+        'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
+        'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' },
+        'gallery':  { t: 'Gallery',          c: cacheDatiUtente.gallery  || 'Gallery non ancora configurata.' },
+        'futuro':   { t: 'Coming Soon',      c: 'Questo spazio sarà presto disponibile.' }
+    };
+
+    if (!contenuti[tipo]) return;
+
+    titolo.textContent = contenuti[tipo].t;
+    corpo.textContent  = contenuti[tipo].c;
+
+    const btnCondividiSezione = document.getElementById('btnCondividiLink');
+    if (btnCondividiSezione) {
+        btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
+    }
+
+    overlay.classList.add('attiva');
+    history.pushState({ overlay: 'sezione', tipo: tipo }, '');
 }
-
-#overlaySezione.attiva {
-    display: flex !important;
-    opacity: 1 !important;
-}
-
-/* Pulizia dei componenti interni all'overlay per look minimale */
-.contenuto-card {
-    margin-top: 0 !important;
-    gap: 20px !important;
-    height: 100% !important;
-    width: 100% !important;
-}
-
-.overlay-nav {
-    border-bottom: none !important;
-    padding-bottom: 0 !important;
-    margin-bottom: 5px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-}
-
-.btn-chiudi {
-    font-size: 0.72rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
-    color: var(--accent-gold) !important; /* Il tasto torna indietro diventa [ CHIUDI ] in oro */
-    font-weight: 500 !important;
-    transition: color 0.2s;
-}
-
-.btn-chiudi:active { color: #ffffff !important; }
-
-.btn-condividi {
-    background: transparent !important;
-    border: none !important;
-    font-size: 0.72rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
-    color: #636366 !important;
-    padding: 0 !important;
-}
-
-#titoloSezione {
-    font-size: 0.82rem !important;
-    font-weight: 300 !important;
-    letter-spacing: 2px !important;
-    text-transform: uppercase !important;
-    color: #636366 !important;
-    margin-bottom: 4px !important;
-}
-
-#corpoSezione {
-    font-size: 1.05rem !important;
-    line-height: 1.7 !important;
-    font-weight: 200 !important;
-    color: #d1d1d6 !important;
-} 
 /* ============================================================
    🚀 RETTIFICA QUICK ACTION: LA BARRA FLUTTUANTE PREMIUM
    ============================================================ */
