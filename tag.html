@@ -38,20 +38,6 @@ html {
     height: 100%;
     overscroll-behavior-y: auto !important; /* Autorizza il browser al bounce del refresh */
 }
-
-/* --- IL VIEWPORT ESTERNO CON TRUCCO DEL PIXEL PER REFRESH --- */
-html {
-    height: 100%;
-    overscroll-behavior-y: auto !important;
-}
-
-
-/* --- IL VIEWPORT ESTERNO CON QUOTA DINAMICA --- */
-html {
-    height: 100%;
-    overscroll-behavior-y: auto !important;
-}
-
 body {
     background-color: var(--bg-esterno);
     color: var(--text-main);
@@ -397,74 +383,7 @@ body {
     transform: scale(0.98);
     background: #eeeeee;
 }
-    
-
-/* ============================================================
-   ⌨️ IL TOTEM APERTO A FISARMONICA (SPAZIATURA MATEMATICA)
-   ============================================================ */
-#mainGrid {
-    display: flex !important;
-    flex-direction: column !important;
-    
-    /* 🎯 APRE LA FISARMONICA: Spazia le voci in modo perfettamente uguale */
-    justify-content: space-between !important; 
-    align-items: center !important;
-    
-    /* 🎯 LA SVOLTA: Forziamo l'altezza al 45% dello schermo per scavalcare ogni blocco 
-       e costringere il browser a distribuire i tasti nello spazio vuoto */
-    height: 45svh !important; 
-    width: 100% !important;
-    
-    background: transparent !important;
-    border: none !important;
-    box-sizing: border-box !important;
-    box-shadow: none !important;
-    
-    /* Padding leggero per non schiacciare le scritte */
-    padding: 10px 0 !important; 
-    
-    /* Centra matematicamente l'intero blocco tra l'header e l'azione rapida */
-    margin: auto 0 !important; 
-}
-
-/* Link filiformi puliti */
-#mainGrid .casella {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    min-height: auto !important;
-    padding: 5px 0 !important;
-    width: auto !important;
-}
-
-#mainGrid .casella-invito {
-    font-size: 0 !important; 
-    line-height: 0 !important;
-}
-
-/* Stile del testo stile cronografo svizzero */
-#mainGrid .casella-invito::after {
-    font-size: 0.72rem !important; 
-    letter-spacing: 3px !important; 
-    font-weight: 300 !important;
-    transition: color 0.2s ease;
-}
-
-/* INIEZIONE DELLE PAROLE (ACCESS TAG in oro, le altre in grigio) */
-#casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
-#casella-bio .casella-invito::after { content: 'INFO'; color: var(--text-sec) !important; }
-#casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec) !important; }
-#casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec) !important; }
-#casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec) !important; }
-#casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec) !important; }
-#casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec) !important; }
-
-/* Evidenzia la voce in bianco quando il pollice preme */
-#mainGrid .casella:active .casella-invito::after {
-    color: #ffffff !important;
-}
-
- ============================================================
+/*============================================================
    🧘 STATO ZERO: CONFIGURAZIONE CENTRALE DI ATTESA (ECLISSE)
    ============================================================ */
 .app-container::after {
@@ -606,90 +525,6 @@ body {
 #casella-quick-action #quick-action-label::after {
     display: none !important;
 }
- /* ============================================================
-   🏆 DESIGN PREMIUM: RETROILLUMINAZIONE E TOTEM CENTRALE
-   ============================================================ */
-
-/* 1. La Targa dell'Olimpo con Aura Dorata Retroilluminata */
-.username-capsule {
-    display: inline-flex;    
-    align-items: center;
-    justify-content: center;
-    
-    background: rgba(212, 175, 55, 0.01) !important; 
-    border: 1px solid rgba(212, 175, 55, 0.25) !important; 
-    border-radius: 8px !important; 
-    padding: 6px 18px;             
-    margin: 10px auto;             
-    max-width: 90%;          
-    box-sizing: border-box;
-    
-    /* 🎯 L'AURA: Doppio alone per creare l'effetto cruscotto luxury */
-    box-shadow: 0 0 35px rgba(212, 175, 55, 0.15), 0 4px 15px rgba(0, 0, 0, 0.5);
-}
-
-.username-display {
-    font-size: 1.05rem !important; 
-    font-weight: 400 !important;
-    letter-spacing: 2px !important; 
-    text-transform: uppercase !important;
-    color: #ffffff !important; 
-    text-align: center;
-    margin: 0 !important;
-    padding: 0 !important;
-    word-break: break-all;   
-}
-
-/* 2. Trasformazione totale di #mainGrid in un Totem Verticale */
-#mainGrid {
-    display: flex !important;
-    flex-direction: column !important; /* 🎯 Diventa una colonna d'élite */
-    justify-content: center !important;
-    align-items: center !important;
-    
-    /* Spaziatura "orologiaia": ampio respiro verticale tra le funzioni */
-    gap: 28px !important; 
-    
-    width: 100% !important;
-    background: transparent !important;
-    border: none !important;
-    box-sizing: border-box !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    
-    /* Si posiziona perfettamente al centro dello spazio nero */
-    margin: auto 0 !important; 
-}
-
-/* Rallineamento dei link filiformi */
-#mainGrid .casella {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    min-height: auto !important;
-    padding: 2px 0 !important;
-    width: auto !important;
-}
-
-#mainGrid .casella-invito {
-    font-size: 0 !important; 
-    line-height: 0 !important;
-}
-
-/* Font stile cronografo: piccolo, largo, elegantissimo */
-#mainGrid .casella-invito::after {
-    font-size: 0.72rem !important; 
-    letter-spacing: 3px !important; /* Più aria tra le lettere */
-    font-weight: 300 !important;
-    transition: color 0.2s ease, transform 0.2s ease;
-}
-
-/* Effetto al tocco del pollice */
-#mainGrid .casella:active .casella-invito::after {
-    color: #ffffff !important;
-}
-
-
 /* ============================================================
    🏆 IL TOTEM DINAMICO A PASSO COSTANTE (ANTI-SOVRAPPOSIZIONE)
    ============================================================ */
