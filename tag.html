@@ -592,42 +592,31 @@ body {
     display: none !important;
 }
  /* ============================================================
-   🏆 LA TARGA D'ORO DELL'OLIMPO (CENTRATA E DINAMICA)
+   🏆 DESIGN PREMIUM: RETROILLUMINAZIONE E TOTEM CENTRALE
    ============================================================ */
 
-/* Forza la centratura e stringe le distanze per non sforare l'altezza */
-.header-monolith {
-    display: flex;
-    flex-direction: column;
-    align-items: center;    
-    width: 100%;
-    padding: 5px 0; /* Ridotto per recuperare altezza */
-    box-sizing: border-box;
-}
-
-/* 🎯 LA NUOVA TARGA DELL'OLIMPO: Geometria allineata al brand */
+/* 1. La Targa dell'Olimpo con Aura Dorata Retroilluminata */
 .username-capsule {
     display: inline-flex;    
     align-items: center;
     justify-content: center;
     
-    background: rgba(212, 175, 55, 0.02) !important; 
-    border: 1px solid rgba(212, 175, 55, 0.22) !important; 
-    
-    border-radius: 8px !important; /* Angolo squadrato executive */
-    padding: 6px 18px;             /* Più sottile ed elegante */
-    margin: 10px auto;             /* Ridotto il margine verticale */
-    
+    background: rgba(212, 175, 55, 0.01) !important; 
+    border: 1px solid rgba(212, 175, 55, 0.25) !important; 
+    border-radius: 8px !important; 
+    padding: 6px 18px;             
+    margin: 10px auto;             
     max-width: 90%;          
     box-sizing: border-box;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    
+    /* 🎯 L'AURA: Doppio alone per creare l'effetto cruscotto luxury */
+    box-shadow: 0 0 35px rgba(212, 175, 55, 0.15), 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
-/* Il testo dentro la targa */
 .username-display {
-    font-size: 1.1rem !important; /* Leggermente più micro e rifinito */
+    font-size: 1.05rem !important; 
     font-weight: 400 !important;
-    letter-spacing: 2px !important; /* Più respiro tra le lettere stile luxury */
+    letter-spacing: 2px !important; 
     text-transform: uppercase !important;
     color: #ffffff !important; 
     text-align: center;
@@ -636,6 +625,54 @@ body {
     word-break: break-all;   
 }
 
+/* 2. Trasformazione totale di #mainGrid in un Totem Verticale */
+#mainGrid {
+    display: flex !important;
+    flex-direction: column !important; /* 🎯 Diventa una colonna d'élite */
+    justify-content: center !important;
+    align-items: center !important;
+    
+    /* Spaziatura "orologiaia": ampio respiro verticale tra le funzioni */
+    gap: 28px !important; 
+    
+    width: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    
+    /* Si posiziona perfettamente al centro dello spazio nero */
+    margin: auto 0 !important; 
+}
+
+/* Rallineamento dei link filiformi */
+#mainGrid .casella {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    min-height: auto !important;
+    padding: 2px 0 !important;
+    width: auto !important;
+}
+
+#mainGrid .casella-invito {
+    font-size: 0 !important; 
+    line-height: 0 !important;
+}
+
+/* Font stile cronografo: piccolo, largo, elegantissimo */
+#mainGrid .casella-invito::after {
+    font-size: 0.72rem !important; 
+    letter-spacing: 3px !important; /* Più aria tra le lettere */
+    font-weight: 300 !important;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Effetto al tocco del pollice */
+#mainGrid .casella:active .casella-invito::after {
+    color: #ffffff !important;
+}
 </style>       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
@@ -645,8 +682,7 @@ body {
     </a>
 
     <div id="profile-content" class="app-container">
-        <div class="header-monolith">
-        
+       <div class="header-monolith">
         <div class="avatar-block" id="avatar-container" style="display:none;">
             <img id="userImage" class="user-media" src="" alt="Logo">
         </div>
@@ -654,49 +690,32 @@ body {
         <div class="username-capsule">
             <h1 class="username-display" id="tag-username">@username_system</h1>
         </div>
+    </div>
 
-        <div class="qr-block">
-            <div class="qr-wrapper">
-                <div class="qr-placeholder"></div>
-            </div>
+    <div id="mainGrid">
+        <div class="casella" id="casella-qr" onclick="apriQR()">
+            <span class="casella-invito">ACCESS TAG</span>
         </div>
-
-        <div class="share-block">
-            <button class="btn-share-card" onclick="condividiProfilo(event)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                </svg>
-            </button>
-        </div>
-
-    </div>  
-
         
-        <div class="grid-ecosystem" id="mainGrid">
-            
-            <div class="casella" id="casella-bio" onclick="apriSezione('bio')">
-                <div class="casella-invito">Guarda la mia bio</div>
-            </div>
-
-            <div class="casella" id="casella-gallery" onclick="apriSezione('gallery')">
-                <div class="casella-invito">Esplora la mia gallery</div>
-            </div>
-
-            <div class="casella" id="casella-contatti" onclick="apriSezione('contatti')">
-                <div class="casella-invito">I miei contatti</div>
-            </div>
-            <div class="casella" id="casella-social" onclick="apriSezione('social')">
-    <div class="casella-invito">Canali social</div>
-</div>
-<div class="casella" id="casella-sito">
-    <div class="casella-invito">🌐 Il mio sito</div>
-</div>
-            <div class="casella" id="casella-cv" onclick="apriSezione('cv')">
-                <div class="casella-invito">Curriculum Vitae</div>
-            </div>
-
+        <div class="casella" id="casella-bio">
+            <span class="casella-invito"></span>
+        </div>
+        <div class="casella" id="casella-gallery">
+            <span class="casella-invito"></span>
+        </div>
+        <div class="casella" id="casella-contatti">
+            <span class="casella-invito"></span>
+        </div>
+        <div class="casella" id="casella-social">
+            <span class="casella-invito"></span>
+        </div>
+        <div class="casella" id="casella-sito">
+            <span class="casella-invito"></span>
+        </div>
+        <div class="casella" id="casella-cv">
+            <span class="casella-invito"></span>
+        </div>
+    </div> 
             
 <div class="casella" id="casella-quick-action" onclick="eseguiQuickAction()" style="display:none; grid-column: span 2;">
     <div id="quick-action-icon" style="font-size: 2rem; margin-bottom: 8px;">⚡</div>
