@@ -619,7 +619,10 @@ body {
 .app-container #mainGrid .casella:active .casella-invito::after {
     color: #ffffff !important;
 }
-
+/* 🎯 CORREZIONE: Spegne la scritta di sfondo dello Stato Zero appena lo chassis è pronto */
+.app-container.ready::after {
+    display: none !important;
+}
 
 </style>       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
