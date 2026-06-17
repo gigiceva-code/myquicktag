@@ -45,66 +45,52 @@ html {
     overscroll-behavior-y: auto !important;
 }
 
+
+/* --- IL VIEWPORT ESTERNO CON QUOTA DINAMICA --- */
+html {
+    height: 100%;
+    overscroll-behavior-y: auto !important;
+}
+
 body {
     background-color: var(--bg-esterno);
     color: var(--text-main);
     
-    /* 🎯 IL TRUCCO: 1 pixel in più sblocca la molla del refresh su iOS e Android */
-    min-height: calc(100vh + 1px) !important; 
+    /* 🎯 Sincronizzato in dvh + pixel fantasma per la molla del refresh */
+    min-height: calc(100dvh + 1px) !important; 
     
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
     margin: 0;
-    
-    /* Permette il micro-molleggio nativo */
     overflow-y: auto !important; 
     -webkit-overflow-scrolling: touch;
-    
     -webkit-font-smoothing: antialiased;
 }
 
-/* --- ALONE CROMATICO REATTIVO --- */
-.orbita-glow {
-    position: absolute;
-    width: 340px;
-    height: 340px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, rgba(0,0,0,0) 70%);
-    filter: blur(50px);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 1;
-    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-/* --- APP CONTAINER: CHASSIS INCHIODATO AL CENTRO (MONOLITO ASSOLUTO) --- */
+/* --- APP CONTAINER: CHASSIS DINAMICO BLINDATO --- */
 .app-container {
     display: none;
     opacity: 0;
-    
-    /* 🎯 IL FISSAGGIO: Diventa fisso rispetto allo schermo, smette di camminare */
     position: fixed !important;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.99);
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* Quote geometriche reali */
     width: calc(100% - 32px);
     max-width: 410px;
-    height: calc(100vh - 32px);
+    
+    /* 🎯 LA SVOLTA: Usiamo dvh al posto di vh. Lo chassis si rimpicciolisce 
+       da solo se esce la barra di Chrome, tenendo il menu sempre visibile */
+    height: calc(100dvh - 32px); 
     max-height: 840px;
     padding: 40px 24px 32px 24px;
     
     background-color: var(--bg-chassis);
-    
-    /* La cornice d'oro saldata sul bordo dello chassis */
     border: 1px solid rgba(212, 175, 55, 0.5); 
     border-radius: 28px;
-    
     flex-direction: column;
     justify-content: space-between;
     z-index: 2;
