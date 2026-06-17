@@ -397,31 +397,34 @@ body {
     transform: scale(0.98);
     background: #eeeeee;
 }
-    /* ============================================================
-   🎭 BLOCCO 4: TRASFORMAZIONE GRIGLIA IN TASTIERA ASIMMETRICA
-   ============================================================ */
+    
+
 /* ============================================================
-   ⌨️ IL TOTEM APERTO A FISARMONICA (DISTRIBUZIONE ASSOLUTA)
+   ⌨️ IL TOTEM APERTO A FISARMONICA (SPAZIATURA MATEMATICA)
    ============================================================ */
 #mainGrid {
     display: flex !important;
     flex-direction: column !important;
     
-    /* 🎯 LA SVOLTA: Spazia le voci in modo automatico dal top al bottom come i tuoi schizzi */
+    /* 🎯 APRE LA FISARMONICA: Spazia le voci in modo perfettamente uguale */
     justify-content: space-between !important; 
     align-items: center !important;
     
-    /* Forza la griglia a prendersi tutto lo spazio verticale rimasto libero nello chassis */
-    flex: 1 !important; 
+    /* 🎯 LA SVOLTA: Forziamo l'altezza al 45% dello schermo per scavalcare ogni blocco 
+       e costringere il browser a distribuire i tasti nello spazio vuoto */
+    height: 45svh !important; 
     width: 100% !important;
+    
     background: transparent !important;
     border: none !important;
     box-sizing: border-box !important;
     box-shadow: none !important;
     
-    /* Aria di sicurezza per non far sbattere la prima e l'ultima voce contro il nome o l'azione rapida */
-    padding: 30px 0 50px 0 !important; 
-    margin: 0 !important;
+    /* Padding leggero per non schiacciare le scritte */
+    padding: 10px 0 !important; 
+    
+    /* Centra matematicamente l'intero blocco tra l'header e l'azione rapida */
+    margin: auto 0 !important; 
 }
 
 /* Link filiformi puliti */
@@ -447,7 +450,7 @@ body {
     transition: color 0.2s ease;
 }
 
-/* 🎯 INIEZIONE DELLE PAROLE (Con l'ACCESS TAG in cima colorato in oro) */
+/* INIEZIONE DELLE PAROLE (ACCESS TAG in oro, le altre in grigio) */
 #casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
 #casella-bio .casella-invito::after { content: 'INFO'; color: var(--text-sec) !important; }
 #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec) !important; }
@@ -460,6 +463,7 @@ body {
 #mainGrid .casella:active .casella-invito::after {
     color: #ffffff !important;
 }
+
  ============================================================
    🧘 STATO ZERO: CONFIGURAZIONE CENTRALE DI ATTESA (ECLISSE)
    ============================================================ */
