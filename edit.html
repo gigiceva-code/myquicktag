@@ -774,6 +774,115 @@ async function salvaDati(mostraAnteprima = false) {
         }
     });
 
+// ============================================================
+// ⚡ IL MOTORE REATTIVO: AGGIORNAMENTO DELLA TAG IN TEMPO REALE
+// ============================================================
+
+// Questa funzione legge i tuoi input in tempo reale e modella il mock-up della Tag
+function aggiornaTagLive() {
+    const previewContainer = document.querySelector('.preview-column #profile-content');
+    if (!previewContainer) return;
+
+    // 1. Aggiornamento Dinamico del Tema
+    const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
+    // Rimuove i vecchi temi e applica quello attivo
+    previewContainer.className = 'app-container ready'; 
+    previewContainer.classList.add('tema-' + stileSelezionato);
+
+    // 2. Sincronizzazione Username della Targa
+    const elUsernameDisplay = document.getElementById('tag-username');
+    if (elUsernameDisplay) {
+        const inputUser = document.getElementById('user-display').innerText;
+        elUsernameDisplay.textContent = inputUser;
+    }
+
+    // 3. Gestione Accensione/Spegnimento dei Tasti del Totem
+    const mappaCaselle = {
+        'casella-bio':      document.getElementById('field-bio')?.value,
+        'casella-contatti': document.getElementById('field-email')?.value || document.getElementById('vcf-telefono1')?.value,
+        'casella-sito':     document.getElementById('field-sito_web')?.value,
+        'casella-cv':       document.getElementById('field-cv')?.value,
+    };
+
+    // Se il campo è vuoto il tasto filiforme svanisce, se scrivi si accende all'istante
+    for (const [id, valore] of Object.entries(mappaCaselle)) {
+        const elCasella = previewContainer.querySelector('#' + id);
+        if (elCasella) {
+            elCasella.style.display = (!valore || valore.trim() === "") ? 'none' : 'flex';
+        }
+    }
+
+    // Gestione reattiva dei Social (mostra il tasto se ci sono canali nella lista)
+    const elSocial = previewContainer.querySelector('#casella-social');
+    if (elSocial) {
+        elSocial.style.display = (canaliCorrenti && canaliCorrenti.length > 0) ? 'flex' : 'none';
+    }
+
+    // 4. Configurazione Istantanea della Quick Action in basso
+    const qaTipo = document.getElementById('field-quick_action_tipo')?.value;
+    const qaUrl = document.getElementById('field-quick_action_url')?.value;
+    const elQA = previewContainer.querySelector('#casella-quick-action');
+    const pianoAttuale = document.getElementById('field-plan')?.value.toUpperCase();
+
+    if (elQA) {
+        // Si accende solo se c'è un valore impostato e se il piano non è BASE
+        if (qaTipo && qaUrl && pianoAttuale !== 'BASE') {
+            elQA.style.display = 'flex';
+            const labelQA = elQA.querySelector('#quick-action-label');
+            const iconelQA = elQA.querySelector('#quick-action-icon');
+            
+            // Aggiorna la scritta e l'icona nel mock-up in base alla scelta
+            if (labelQA) {
+                const configNomi = { appuntamento: 'PRENOTA APPUNTAMENTO', whatsapp: 'SCRIVIMI SU WHATSAPP', preventivo: 'RICHIEDI PREVENTIVO', chiamata: 'CHIAMA ORA', maps: 'TROVAMI SU MAPS', demo: 'ASCOLTA DEMO' };
+                labelQA.textContent = configNomi[qaTipo] || 'AZIONE RAPIDA';
+            }
+            if (iconelQA) {
+                const configIcone = { appuntamento: '📅', whatsapp: '💬', preventivo: '📋', chiamata: '📞', maps: '📍', demo: '🎵' };
+                iconelQA.textContent = configIcone[qaTipo] || '⚡';
+            }
+        } else {
+            elQA.style.display = 'none';
+        }
+    }
+}
+
+// Aggancia gli ascoltatori su tutti i tuoi campi per intercettare ogni singola digitazione
+function attivaAscoltatoriLive() {
+    const selettori = [
+        '#field-bio', '#field-email', '#field-sito_web', '#field-cv', 
+        '#field-quick_action_tipo', '#field-quick_action_url',
+        '#vcf-telefono1', '#vcf-nome'
+    ];
+
+    selettori.forEach(sel => {
+        const input = document.getElementById(sel.replace('#', ''));
+        if (input) {
+            input.addEventListener('input', aggiornaTagLive);
+            input.addEventListener('change', aggiornaTagLive);
+        }
+    });
+
+    // Ascolta il cambio dei Radio Button dei 4 Temi (compreso il Satin Rose)
+    document.querySelectorAll('input[name="digital_style"]').forEach(radio => {
+        radio.addEventListener('change', aggiornaTagLive);
+    });
+}
+
+// Inietta l'avvio del motore reattivo subito dopo il caricamento dei dati di Airtable
+const vecchioInizializza = inizializzaPagina;
+inizializzaPagina = async function() {
+    await vecchioInizializza();
+    attivaAscoltatoriLive();
+    aggiornaTagLive(); // Primo colpo di rendering per allineare la Tag all'avvio
+};
+
+// Forza l'aggiornamento anche quando aggiungi o rimuovi un canale social dalla lista
+const vecchioAggiornaCanali = aggiornaListaCanali;
+aggiornaListaCanali = function() {
+    vecchioAggiornaCanali();
+    aggiornaTagLive();
+};
+
 </script>
 </body>
 </html>
