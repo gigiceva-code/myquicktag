@@ -11,8 +11,8 @@
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
 <style>
-/* =======
-=====================================================
+
+/* ============================================================
    🏛️ BLOCCO 1: CONFIGURAZIONE CONFIGURATORE & LOGICA LUXURY
    ============================================================ */
 :root {
@@ -28,7 +28,6 @@
     --text-main: #f5f5f7;
 }
 
-/* Reset Strutturale */
 * {
     margin: 0; padding: 0;
     box-sizing: border-box;
@@ -40,43 +39,43 @@ body {
     background-color: var(--bg-color);
     color: white;
     min-height: 100vh;
-    padding: 30px 20px;
-    opacity: 1;
-    transition: opacity 0.6s ease-out;
+    padding: 20px;
+}
+
+/* 🎯 I DUE TASTI DI SCAMBIO RAPIDO LUXURY PER MOBILE */
+.mobile-switcher {
+    display: none; /* Nascosti su PC */
+    position: sticky;
+    top: 0;
+    background: #0a0a0a;
+    padding: 15px 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+    justify-content: space-around;
+    width: 100%;
+}
+.switch-tab-btn {
+    background: none; border: none;
+    color: var(--text-sec); font-size: 0.75rem;
+    letter-spacing: 2px; font-weight: 600;
+    text-transform: uppercase; cursor: pointer;
+    padding: 8px 16px; transition: color 0.2s;
+}
+.switch-tab-btn.active {
+    color: #ffffff;
+    border-bottom: 2px solid #ffffff;
 }
 
 /* ============================================================
    📐 BLOCCO 2: GABBIA LAYOUT SDOPPIATA (SPLIT CONFIGURATION)
    ============================================================ */
 .split-configuration {
-    display: flex;
-    width: 100%;
-    max-width: 1100px;
-    gap: 50px;
-    margin: 0 auto;
+    display: flex; width: 100%; max-width: 1100px; gap: 50px; margin: 0 auto;
 }
-
-/* Colonna di Sinistra: I tuoi comandi di input */
-.controls-column {
-    flex: 12;
-    max-width: 550px;
-    padding-bottom: 140px; /* Spazio protettivo per il footer */
-}
-
-/* Colonna di Destra: Lo Chassis Live fisso in posizione */
-.preview-column {
-    flex: 10;
-    max-width: 410px;
-    position: relative;
-}
-
-.sticky-preview-wrapper {
-    position: sticky;
-    top: 40px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
+.controls-column { flex: 12; max-width: 550px; padding-bottom: 140px; }
+.preview-column { flex: 10; max-width: 410px; position: relative; }
+.sticky-preview-wrapper { position: sticky; top: 40px; width: 100%; display: flex; justify-content: center; }
 
 /* ============================================================
    ⚙️ BLOCCO 3: INTERFACCIA COMPILAZIONE (CABINA DI REGIA)
@@ -86,109 +85,53 @@ body {
 .header p { color: var(--text-sec); font-size: 0.9rem; margin-top: 5px; }
 
 .section-title { 
-    font-size: 0.75rem; color: var(--accent); 
-    text-transform: uppercase; letter-spacing: 2px;
-    margin: 35px 0 15px 0; border-bottom: 1px solid var(--border-color);
-    padding-bottom: 6px;
-    font-weight: 600;
+    font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px;
+    margin: 35px 0 15px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; font-weight: 600;
 }
-
 .form-group { margin-bottom: 18px; text-align: left; }
-.form-group label { 
-    display: block; font-size: 0.68rem; color: var(--text-sec); 
-    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; margin-left: 2px;
-}
+.form-group label { display: block; font-size: 0.68rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
 
 input, textarea, select {
-    width: 100%; padding: 13px 15px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px; color: white;
-    font-size: 0.9rem; outline: none;
-    transition: border-color 0.2s;
+    width: 100%; padding: 13px 15px; background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 10px; color: white; font-size: 0.9rem; outline: none;
 }
-input:focus, textarea:focus, select:focus { border-color: rgba(255,255,255,0.25); }
 textarea { height: 80px; resize: none; }
 
-/* Selettore Piani & Temi */
 .plan-selector { display: grid; grid-template-columns: 1fr; gap: 10px; }
-.plan-card {
-    background: var(--card-bg); border: 1px solid var(--border-color);
-    border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: center;
-}
+.plan-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: center; }
 .plan-card.selected { border-color: #ffffff; background: rgba(255, 255, 255, 0.08); }
 .plan-card i { font-size: 1.1rem; margin-right: 15px; color: var(--text-sec); width: 20px; text-align: center; }
-.plan-card.selected i { color: #ffffff; }
 .plan-info h3 { margin: 0; font-size: 0.88rem; font-weight: 600; }
 .plan-info p { margin: 2px 0 0; font-size: 0.75rem; color: var(--text-sec); }
 
 .style-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .style-card input { display: none; }
-.style-preview {
-    padding: 12px 4px; border-radius: 8px; border: 1px solid #222;
-    font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer;
-}
+.style-preview { padding: 12px 4px; border-radius: 8px; border: 1px solid #222; font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer; }
 .style-card input:checked + .style-preview { border-color: #ffffff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.15); }
 
-/* Colori dei Tasti di Scelta Stile */
 .black { background: #000; color: #fff; }
 .titanium { background: #1c1c1e; color: #f5f5f7; border-color: #3a3a3c; }
 .gold { background: #000; color: #d4af37; border-color: #44361c; }
-.pearl { background: #1a1518; color: #e8c5c8; border-color: #4a3b40; } /* Tasto Rosa */
-
-.btn-add {
-    padding: 13px 16px; background: white; color: black; border: none;
-    border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer;
-}
+.pearl { background: #1a1518; color: #e8c5c8; border-color: #4a3b40; }
 
 /* ============================================================
    🏆 BLOCCO 4: MOTORE GRAFICO MOCK-UP LIVE (IL TUO CAPOLAVORO)
    ============================================================ */
 .app-container {
-    width: 100%;
-    height: calc(100svh - 80px); 
-    max-height: 780px;
-    padding: 40px 24px 32px 24px;
-    background-color: var(--bg-chassis);
-    border: 1px solid rgba(212, 175, 55, 0.3); 
-    border-radius: 28px;
-    display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    overflow: hidden; position: relative;
+    width: 100%; height: calc(100svh - 80px); max-height: 780px; padding: 40px 24px 32px 24px;
+    background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 28px;
+    display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 20px 50px rgba(0,0,0,0.8); overflow: hidden; position: relative;
 }
-
-/* Gli Elementi Interni */
 .header-monolith { text-align: center; }
-.avatar-block {
-    display: flex; width: 52px; height: 52px; border-radius: 12px;
-    background: #070708; border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden; margin: 0 auto 5px auto;
-}
+.avatar-block { display: flex; width: 52px; height: 52px; border-radius: 12px; background: #070708; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; margin: 0 auto 5px auto; }
 .user-media { width: 100%; height: 100%; object-fit: cover; }
+.username-capsule { display: inline-flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.01); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 6px 16px; margin: 5px auto; max-width: 90%; box-shadow: 0 0 25px rgba(212, 175, 55, 0.1), 0 4px 10px rgba(0, 0, 0, 0.4); }
+.username-display { font-size: 0.95rem; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff; text-align: center; }
 
-.username-capsule {
-    display: inline-flex; align-items: center; justify-content: center;
-    background: rgba(212, 175, 55, 0.01); border: 1px solid rgba(212, 175, 55, 0.2); 
-    border-radius: 8px; padding: 6px 16px; margin: 5px auto; max-width: 90%;
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.1), 0 4px 10px rgba(0, 0, 0, 0.4);
-}
-.username-display {
-    font-size: 0.95rem; font-weight: 400; letter-spacing: 1.5px;
-    text-transform: uppercase; color: #ffffff; text-align: center;
-}
+.app-container #mainGrid { display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-items: center !important; flex: 1 !important; width: 100% !important; padding: 25px 0 95px 0 !important; }
+.app-container #mainGrid .casella { padding: 4px 0 !important; }
+.app-container #mainGrid .casella-invito::after { font-size: 0.72rem !important; letter-spacing: 2.5px !important; font-weight: 300 !important; }
 
-/* Il Totem Centrale Generato */
-.app-container #mainGrid {
-    display: flex !important; flex-direction: column !important;
-    justify-content: space-between !important; align-items: center !important;
-    flex: 1 !important; width: 100% !important; padding: 25px 0 95px 0 !important; 
-}
-.app-container #mainGrid .casella { padding: 4px 0 !important; cursor: pointer; }
-.app-container #mainGrid .casella-invito::after {
-    font-size: 0.72rem !important; letter-spacing: 2.5px !important; font-weight: 300 !important;
-}
-
-/* Assegnazione Testi Cronografo */
 #casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
 #casella-bio .casella-invito::after { content: 'INFO'; color: var(--text-sec) !important; }
 #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec) !important; }
@@ -197,62 +140,52 @@ textarea { height: 80px; resize: none; }
 #casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec) !important; }
 #casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec) !important; }
 
-/* La Quick Action Monolitica */
-#casella-quick-action {
-    position: absolute !important; bottom: 45px !important; left: 24px !important; right: 24px !important;
-    height: 44px !important; background: rgba(212, 175, 55, 0.02) !important;
-    border: 1px solid rgba(212, 175, 55, 0.18) !important; border-radius: 10px !important;
-    display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 8px !important;
-}
+#casella-quick-action { position: absolute !important; bottom: 45px !important; left: 24px !important; right: 24px !important; height: 44px !important; background: rgba(212, 175, 55, 0.02) !important; border: 1px solid rgba(212, 175, 55, 0.18) !important; border-radius: 10px !important; display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 8px !important; }
 #quick-action-icon { font-size: 1rem !important; }
 #quick-action-label { font-size: 0.7rem !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; color: var(--accent-gold) !important; }
 
-/* ============================================================
-   🌸 BLOCCO 5: ANATOMIA CROMATICA DEI 4 TEMI LIVE
-   ============================================================ */
-/* 1. Black DNA */
+/* --- TEMI CROMATICI --- */
 .app-container.tema-black { --bg-chassis: #000000; --accent-gold: #ffffff; border-color: rgba(255,255,255,0.15); }
 .app-container.tema-black .username-capsule { border-color: rgba(255,255,255,0.2); box-shadow: none; }
 .app-container.tema-black #casella-qr .casella-invito::after { color: #ffffff !important; }
 
-/* 2. Titanium */
 .app-container.tema-titanium { --bg-chassis: #151517; --accent-gold: #f5f5f7; border-color: #3a3a3c; }
 .app-container.tema-titanium .username-capsule { border-color: #48484a; box-shadow: none; }
 .app-container.tema-titanium #casella-qr .casella-invito::after { color: #f5f5f7 !important; }
 
-/* 3. Obsidian Gold */
 .app-container.tema-obsidian_gold { --bg-chassis: #000000; --accent-gold: #d4af37; border-color: rgba(212, 175, 55, 0.35); }
 
-/* 4. Satin Rose Pearl (Tema Femminile Luxury) */
 .app-container.tema-rose_pearl { --bg-chassis: #0d0a0b; --accent-gold: #e8c5c8; border-color: rgba(232, 197, 200, 0.3); }
 .app-container.tema-rose_pearl .username-capsule { border-color: rgba(232, 197, 200, 0.25); box-shadow: 0 0 25px rgba(232, 197, 200, 0.08); }
 .app-container.tema-rose_pearl #casella-qr .casella-invito::after { color: #e8c5c8 !important; }
 .app-container.tema-rose_pearl #quick-action-label { color: #e8c5c8 !important; }
 
 /* ============================================================
-   🔒 BLOCCO 6: STICKY FOOTER & ANIMAZIONI REATTIVE
+   🔒 BLOCCO 6: STICKY FOOTER & INTERRUTTORI MOBILE
    ============================================================ */
 .sticky-footer {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: linear-gradient(to top, #0a0a0a 75%, rgba(10,10,10,0) 100%);
     padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100;
 }
-.save-btn {
-    width: 100%; max-width: 450px; padding: 16px; background: white; color: black;
-    border: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-}
+.save-btn { width: 100%; max-width: 450px; padding: 16px; background: white; color: black; border: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
 .back-link { display: block; text-align: center; margin-top: 14px; color: var(--text-sec); text-decoration: none; font-size: 0.85rem; }
 
-/* Dispositivi Mobile: La tag scivola sotto in modo fluido */
+/* ⚡ LA SVOLTA MOBILE: ELIMINA LO SCROLL INFINITO */
 @media (max-width: 900px) {
-    .split-configuration { flex-direction: column; gap: 30px; }
-    .controls-column { max-width: 100%; padding-bottom: 20px; }
-    .preview-column { max-width: 100%; width: 100%; display: flex; justify-content: center; margin-bottom: 120px; }
-    .app-container { max-height: 580px; }
+    .mobile-switcher { display: flex; } /* Attiva la plancia tasti in cima */
+    .split-configuration { display: block; }
+    
+    /* Gestione degli stati via classe sul body */
+    body.show-preview-mode .controls-column { display: none; }
+    body.show-preview-mode .preview-column { display: flex; justify-content: center; width: 100%; max-width: 100%; }
+    
+    body:not(.show-preview-mode) .preview-column { display: none; }
+    body:not(.show-preview-mode) .controls-column { display: block; width: 100%; }
+    
+    .app-container { max-height: 540px; margin-bottom: 120px; }
 }
 
-/* Effetti di Pressione */
 .plan-card, .style-preview, .save-btn, .back-link { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
 .plan-card:active, .style-preview:active { transform: scale(0.97); }
 .save-btn:active { transform: scale(0.98); background-color: #e5e5e5; }
@@ -260,6 +193,11 @@ textarea { height: 80px; resize: none; }
   </style>  
 </head>
 <body>
+        <div class="mobile-switcher">
+        <button id="btn-tab-edit" class="switch-tab-btn active" onclick="cambiaTabMobile('edit')">📝 Configura</button>
+        <button id="btn-tab-preview" class="switch-tab-btn" onclick="cambiaTabMobile('preview')">👁️ Vedi Tag</button>
+    </div>
+
     <div class="split-configuration">
         
         <div class="controls-column">
@@ -414,10 +352,11 @@ textarea { height: 80px; resize: none; }
         <div style="background:#111; border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:32px 24px; max-width:340px; width:100%; text-align:center;">
             <div style="width:36px; height:3px; background:#10b981; border-radius:2px; margin:0 auto 24px;"></div>
             <h3 style="margin:0 0 12px; font-size:1.1rem; font-weight:600; color:#ffffff;">Funzione Premium</h3>
-            <p style="margin:0 0 24px; font-size:0.88rem; color:#a0a0a0; line-height:1.6;">La Quick Action è disponibile per i piani <strong style="color:#ffffff;">PREMIUM</strong> e <strong style="color:#ffffff;">GOLD</strong>.</p>
+            <p style="margin:0 0 24px; font-size:0.88rem; color:#a0a0a0; line-height:1.6;">La Quick Action è disponibile per i pianos <strong style="color:#ffffff;">PREMIUM</strong> e <strong style="color:#ffffff;">GOLD</strong>.</p>
             <button onclick="chiudiModalPiano()" style="width:100%; padding:14px; background:white; color:black; border:none; border-radius:12px; font-weight:600; font-size:0.95rem; cursor:pointer;">Ho capito</button>
         </div>
     </div>
+
 
     <script>
     const params = new URLSearchParams(window.location.search);
@@ -773,6 +712,24 @@ async function salvaDati(mostraAnteprima = false) {
             });
         }
     });
+// ============================================================
+// INTERRUTTORE TABS MOBILE (ELIMINA-LABIRINTO)
+// ============================================================
+function cambiaTabMobile(target) {
+    const btnEdit = document.getElementById('btn-tab-edit');
+    const btnPreview = document.getElementById('btn-tab-preview');
+    
+    if (target === 'preview') {
+        document.body.classList.add('show-preview-mode');
+        if(btnPreview) btnPreview.classList.add('active');
+        if(btnEdit) btnEdit.classList.remove('active');
+    } else {
+        document.body.classList.remove('show-preview-mode');
+        if(btnEdit) btnEdit.classList.add('active');
+        if(btnPreview) btnPreview.classList.remove('active');
+    }
+}
+
 
 // ============================================================
 // ⚡ IL MOTORE REATTIVO: AGGIORNAMENTO DELLA TAG IN TEMPO REALE
