@@ -25,64 +25,92 @@
     --accent-gold: #d4af37;
     --text-main: #f5f5f7;
 }
-/* 🗺️ NAV BAR SUPERIORE GUIDATA (FORZATURA ORIZZONTALE) */
-.top-guidance-nav {
+/* ============================================================
+   🗺️ PREMIUM CAPSULE NAV BAR (ANTI-STATUS BAR CLICK)
+   ============================================================ */
+.top-navigation-container {
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    /* Spinge giù l'intera barra di 40px isolandola nettamente dall'area di stato del telefono */
+    padding: 40px 20px 15px 20px !important; 
+    background-color: #000000;
+}
+
+.luxury-nav-bar {
     display: flex !important;
-    flex-direction: row !important;
+    background: #121214 !important; /* Grigio scuro solido per staccarsi dal fondo nero */
+    border: 1px solid #232326 !important;
+    border-radius: 16px !important;
+    padding: 6px !important;
     justify-content: space-between !important;
     align-items: center !important;
     width: 100% !important;
-    max-width: 430px !important;
-    margin: 0 auto 20px auto !important;
-    padding: 15px 10px !important;
-    border-bottom: 1px solid #1c1c1e !important;
 }
 
-.nav-step {
+.nav-pill-step {
     flex: 1 !important;
-    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 10px 2px !important;
+    border-radius: 12px !important;
     cursor: pointer !important;
-    padding-bottom: 8px !important;
+    transition: all 0.2s ease-in-out !important;
     position: relative !important;
 }
 
-/* Le righette guida sotto i passaggi */
-.nav-step::after {
-    content: '' !important;
-    position: absolute !important;
-    bottom: -1px !important;
-    left: 6px !important;
-    right: 6px !important;
-    height: 2px !important;
+/* ⚡ STATO ATTIVO: Diventa un selettore fisico in rilievo */
+.nav-pill-step.active {
     background: #1c1c1e !important;
-    transition: background 0.3s ease !important;
+    border: 1px solid #2c2c2e !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6) !important;
 }
 
-.nav-step.active::after {
-    background: #ffffff !important; /* Accende la riga sullo step attivo */
-}
-
-.nav-step label {
-    display: block !important;
-    font-size: 0.65rem !important;
+/* Micro testo superiore (Fase) */
+.nav-pill-step .step-number {
+    font-size: 0.55rem !important;
+    font-weight: 700 !important;
+    color: #48484a !important; /* Molto discreto se spento */
     letter-spacing: 1px !important;
-    color: #8e8e93 !important;
+    margin-bottom: 3px !important;
     text-transform: uppercase !important;
+}
+
+.nav-pill-step.active .step-number {
+    color: #d4af37 !important; /* Oro sul blocco attivo */
+}
+
+/* Testo principale dell'azione */
+.nav-pill-step .step-label {
+    font-size: 0.72rem !important;
     font-weight: 600 !important;
-    cursor: pointer !important;
+    color: #8e8e93 !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
 }
 
-.nav-step.active label {
-    color: #ffffff !important;
+.nav-pill-step.active .step-label {
+    color: #ffffff !important; /* Bianco acceso leggibile sul passaggio corrente */
 }
 
-* { 
-    margin: 0; padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Inter', sans-serif; 
-    -webkit-tap-highlight-color: transparent !important; 
+/* Il punto di luce filiforme sotto la capsula attiva */
+.nav-pill-step::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: #ffffff;
+    transition: width 0.2s ease;
 }
 
+.nav-pill-step.active::after {
+    width: 16px; /* Linea di conferma visiva */
+}
 body { 
     background-color: var(--bg-color); 
     color: #ffffff; 
