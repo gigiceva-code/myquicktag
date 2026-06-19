@@ -175,13 +175,24 @@ textarea { height: 70px; resize: none; }
   </style>  
 </head>
 <body>
+       <div class="top-guidance-nav">
+        <div class="nav-step active" id="step-piano" onclick="attivaStep('piano', 'drawer-piano')">
+            <label>1. Scegli Piano</label>
+        </div>
+        <div class="nav-step" id="step-tema" onclick="attivaStep('tema', 'drawer-identita')">
+            <label>2. Scegli Tema</label>
+        </div>
+        <div class="nav-step" id="step-tag" onclick="attivaStep('tag', null)">
+            <label>3. Personalizza</label>
+        </div>
+    </div>
+
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiTuttiIDrawer()"></div>
 
     <div class="configurator-wrapper">
-
-           <div id="profile-content" class="app-container ready">
+        <div id="profile-content" class="app-container ready">
             
-            <div class="header-monolith" onclick="apriDrawer('drawer-identita')">
+            <div class="header-monolith" onclick="attivaStep('tema', 'drawer-identita')">
                 <div class="avatar-block" id="avatar-container" style="display:none;">
                     <img id="userImage" class="user-media" src="" alt="Logo">
                 </div>
@@ -190,53 +201,18 @@ textarea { height: 70px; resize: none; }
                 </div>
             </div>
 
-                        <div id="mainGrid">
-                <div class="casella" id="casella-qr" onclick="apriDrawer('drawer-piano')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-identita')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-social" onclick="apriDrawer('drawer-social')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-sito" onclick="apriDrawer('drawer-diretti')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-contatti" onclick="apriDrawer('drawer-vcf')"><span class="casella-invito"></span></div>
+            <div id="mainGrid">
+                <div class="casella" id="casella-qr" onclick="attivaStep('piano', 'drawer-piano')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-bio" onclick="attivaStep('tag', 'drawer-bio-solo')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-social" onclick="attivaStep('tag', 'drawer-social')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-sito" onclick="attivaStep('tag', 'drawer-diretti')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-contatti" onclick="attivaStep('tag', 'drawer-vcf')"><span class="casella-invito"></span></div>
                 <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')"><span class="casella-invito"></span></div>
             </div>
 
-
-            <div class="casella-qa-tasto" id="casella-quick-action" onclick="apriDrawer('drawer-quick')">
-                <span id="quick-action-icon">⚡</span>
-                <span id="quick-action-label">CONFIGURA QUICK ACTION</span>
-            </div>
-        </div>
- </div>
-
-    <div class="drawer-overlay" id="drawer-identita">
-        <div class="drawer-header">
-            <div class="drawer-title">Identity & Style</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Biografia Profilo</label>
-            <textarea id="field-bio" placeholder="Racconta chi sei o il tuo brand..."></textarea>
-        </div>
-        <div class="form-group">
-            <label>Seleziona Stile Visivo</label>
-            <div class="style-selector">
-                <div class="style-options">
-                    <label class="style-card">
-                        <input type="radio" name="digital_style" value="black" checked>
-                        <div class="style-preview black">Black DNA</div>
-                    </label>
-                    <label class="style-card">
-                        <input type="radio" name="digital_style" value="titanium">
-                        <div class="style-preview titanium">Titanium</div>
-                    </label>
-                    <label class="style-card">
-                        <input type="radio" name="digital_style" value="obsidian_gold">
-                        <div class="style-preview gold">Obsidian Gold</div>
-                    </label>
-                    <label class="style-card">
-                        <input type="radio" name="digital_style" value="rose_pearl">
-                        <div class="style-preview pearl">Satin Rose</div>
-                    </label>
-                </div>
+            <div class="casella" id="casella-quick-action" onclick="attivaStep('tag', 'drawer-quick')">
+                <div id="quick-action-icon">⚡</div>
+                <div class="casella-invito" id="quick-action-label"></div>
             </div>
         </div>
     </div>
@@ -263,6 +239,47 @@ textarea { height: 70px; resize: none; }
         <input type="hidden" id="field-plan" value="BASE">
     </div>
 
+    <div class="drawer-overlay" id="drawer-identita">
+        <div class="drawer-header">
+            <div class="drawer-title">Scegli lo Stile Visivo</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Seleziona Stile</label>
+            <div class="style-selector">
+                <div class="style-options">
+                    <label class="style-card">
+                        <input type="radio" name="digital_style" value="black" checked>
+                        <div class="style-preview black">Black DNA</div>
+                    </label>
+                    <label class="style-card">
+                        <input type="radio" name="digital_style" value="titanium">
+                        <div class="style-preview titanium">Titanium</div>
+                    </label>
+                    <label class="style-card">
+                        <input type="radio" name="digital_style" value="obsidian_gold">
+                        <div class="style-preview gold">Obsidian Gold</div>
+                    </label>
+                    <label class="style-card">
+                        <input type="radio" name="digital_style" value="rose_pearl">
+                        <div class="style-preview pearl">Satin Rose</div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="drawer-overlay" id="drawer-bio-solo">
+        <div class="drawer-header">
+            <div class="drawer-title">Biografia Breve</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Scrivi la tua bio</label>
+            <textarea id="field-bio" placeholder="Racconta chi sei..."></textarea>
+        </div>
+    </div>
+
     <div class="drawer-overlay" id="drawer-diretti">
         <div class="drawer-header">
             <div class="drawer-title">Contatti & Link Diretti</div>
@@ -287,7 +304,7 @@ textarea { height: 70px; resize: none; }
         <input type="hidden" id="field-config_canali" value="[]">
     </div>
 
-    <div class="drawer-overlay" id="drawer-quick" onclick="verificaPianoQuickAction(event)">
+    <div class="drawer-overlay" id="drawer-quick">
         <div class="drawer-header">
             <div class="drawer-title">Configurazione Quick Action</div>
             <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
@@ -327,7 +344,7 @@ textarea { height: 70px; resize: none; }
         </div>
     </div>
 
-    <div class="drawer-overlay" id="drawer-gallery" onclick="if(document.getElementById('field-plan').value.toUpperCase() === 'BASE') { event.preventDefault(); event.stopPropagation(); apriModalPiano(); }">
+    <div class="drawer-overlay" id="drawer-gallery">
         <div class="drawer-header">
             <div class="drawer-title">Media & Gallery Showcase</div>
             <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
@@ -347,6 +364,7 @@ textarea { height: 70px; resize: none; }
             <button type="button" onclick="chiudiModalPiano()" style="width:100%; padding:14px; background:white; color:black; border:none; border-radius:12px; font-weight:600; cursor:pointer;">Ho capito</button>
         </div>
     </div>
+
     <script>
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
@@ -936,6 +954,25 @@ window.addEventListener('load', () => {
         aggiornaTagLive();
     }
 });
+// ============================================================
+// 🗺️ GESTORE NAV BAR GUIDATA & RIGETTE
+// ============================================================
+function attivaStep(stepId, idDrawer) {
+    // Spegne tutte le righette visive
+    document.querySelectorAll('.nav-step').forEach(el => el.classList.remove('active'));
+    
+    // Accende la righetta del passaggio corrente
+    const stepAttivo = document.getElementById('step-' + stepId);
+    if (stepAttivo) stepAttivo.classList.add('active');
+    
+    // Se c'è un cassetto associato lo apre, altrimenti chiude tutto
+    if (idDrawer) {
+        apriDrawer(idDrawer);
+    } else {
+        chiudiTuttiIDrawer();
+    }
+}
+
 </script>
 </body>
 </html>
