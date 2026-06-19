@@ -253,6 +253,26 @@ textarea { height: 70px; resize: none; }
   </style>  
 </head>
 <body>
+    <div class="top-navigation-container">
+        <div class="luxury-nav-bar">
+            
+            <div class="nav-pill-step active" id="step-piano" onclick="attivaStep('piano', 'drawer-piano')">
+                <span class="step-number">Step 01</span>
+                <span class="step-label">Piano</span>
+            </div>
+            
+            <div class="nav-pill-step" id="step-tema" onclick="attivaStep('tema', 'drawer-identita')">
+                <span class="step-number">Step 02</span>
+                <span class="step-label">Tema</span>
+            </div>
+            
+            <div class="nav-pill-step" id="step-tag" onclick="attivaStep('tag', null)">
+                <span class="step-number">Step 03</span>
+                <span class="step-label">Tag Live</span>
+            </div>
+            
+        </div>
+    </div>
        <div class="top-guidance-nav">
         <div class="nav-step active" id="step-piano" onclick="attivaStep('piano', 'drawer-piano')">
             <label>1. Scegli Piano</label>
