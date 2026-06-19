@@ -881,7 +881,27 @@ aggiornaListaCanali = function() {
     renderingSocialOriginale();
     aggiornaTagLive();
 };        
+// ============================================================
+// 🎯 CORREZIONE TIMING: FORZATURA USERNAME E RENDER IMMEDIATO
+// ============================================================
+(function eseguiInizializzazioneImmediata() {
+    if (typeof nomeUtente !== 'undefined' && nomeUtente) {
+        const elUsernameDisplay = document.getElementById('tag-username');
+        if (elUsernameDisplay) {
+            elUsernameDisplay.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
+        }
+    }
+    if (typeof aggiornaTagLive === 'function') {
+        aggiornaTagLive();
+    }
+})();
 
+// Forza l'allineamento non appena tutti i dati di Airtable sono nel DOM
+window.addEventListener('load', () => {
+    if (typeof aggiornaTagLive === 'function') {
+        aggiornaTagLive();
+    }
+});
 </script>
 </body>
 </html>
