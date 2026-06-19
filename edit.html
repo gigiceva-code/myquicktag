@@ -11,158 +11,97 @@
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
 <style>
-
-/* ============================================================
-   🏛️ 1. GEOMETRIA CRUSCOTTO (STANDARD SAAS)
-   ============================================================ */
 :root {
-    --bg-color: #050505;
+    --bg-color: #000000;
     --card-bg: #121214;
     --card-border: #1c1c1e;
     --input-bg: #1a1a1e;
     --input-border: #2c2c2e;
     --accent-white: #ffffff;
     --text-sec: #8e8e93;
-    
-    /* Variabili Dinamiche della Tag Preview */
+    /* Variabili Tag Preview */
     --bg-chassis: #000000;
     --accent-gold: #d4af37;
     --text-main: #f5f5f7;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent !important; }
-body { background-color: var(--bg-color); color: #ffffff; min-height: 100vh; padding: 20px; -webkit-font-smoothing: antialiased; }
+body { background-color: var(--bg-color); color: #ffffff; min-height: 100vh; overflow-x: hidden; }
 
-/* Mobile Switcher Superiore */
-.mobile-switcher {
-    display: none; position: sticky; top: 0; background: var(--bg-color);
-    padding: 15px 0; z-index: 1000; border-bottom: 1px solid var(--card-border);
-    margin-bottom: 25px; justify-content: space-around; width: 100%;
-}
-.switch-tab-btn {
-    background: none; border: none; color: var(--text-sec); font-size: 0.75rem;
-    letter-spacing: 2px; font-weight: 600; text-transform: uppercase; cursor: pointer;
-    padding: 10px 20px; transition: color 0.2s;
-}
-.switch-tab-btn.active { color: var(--accent-white); border-bottom: 2px solid var(--accent-white); }
-
-/* Layout Principale */
-.split-configuration { display: flex; width: 100%; max-width: 1100px; gap: 40px; margin: 0 auto; }
-.controls-column { flex: 12; max-width: 550px; padding-bottom: 160px; }
-.preview-column { flex: 10; max-width: 410px; position: relative; }
-.sticky-preview-wrapper { position: sticky; top: 40px; width: 100%; display: flex; justify-content: center; }
-
-/* Header Profilo */
-.header { margin-bottom: 30px; }
-.header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.5px; }
-.header p { color: var(--text-sec); font-size: 0.85rem; margin-top: 4px; }
-
-/* ============================================================
-   📦 2. LE SCHEDE DI CONFIGURAZIONE (COMPONENTI CHIUSI)
-   ============================================================ */
-.config-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
-.card-header-title {
-    font-size: 0.8rem; color: var(--accent-white); font-weight: 600;
-    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px;
-    display: flex; align-items: center; gap: 10px;
-}
-.card-header-title i { color: var(--text-sec); font-size: 0.9rem; }
-
-/* Struttura dei Campi */
-.form-group { margin-bottom: 16px; }
-.form-group:last-child { margin-bottom: 0; }
-.form-group label { 
-    display: block; font-size: 0.68rem; color: var(--text-sec); 
-    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; font-weight: 500;
+/* 📱 CONTENITORE CENTRALE TAG FOCUS */
+.configurator-wrapper {
+    display: flex; justify-content: center; align-items: center;
+    width: 100%; max-width: 430px; margin: 0 auto; padding: 20px 20px 100px 20px;
 }
 
-/* Input, Textarea e Select Uniformati alla perfezione */
-input, textarea, select {
-    width: 100%; padding: 12px 14px; background: var(--input-bg); 
-    border: 1px solid var(--input-border); border-radius: 10px; 
-    color: #ffffff; font-size: 0.9rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
-}
-input:focus, textarea:focus, select:focus { 
-    border-color: rgba(255,255,255,0.2); 
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.03); 
-}
-textarea { height: 75px; resize: none; }
-
-/* Pulsante Aggiungi Social Allineato */
-.social-input-group { display: flex; gap: 10px; align-items: center; }
-.btn-add-social {
-    padding: 12px 18px; background: #ffffff; color: #000000; border: none;
-    border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap;
-}
-
-/* Lista dei Social Inseriti */
-.social-list-item {
-    display: flex; align-items: center; gap: 12px; background: var(--input-bg);
-    border: 1px solid var(--input-border); border-radius: 10px; padding: 12px 14px; margin-top: 10px;
-}
-.social-list-item span { flex: 1; font-size: 0.85rem; color: var(--text-sec); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.social-list-item button { background: none; border: none; color: var(--text-sec); font-size: 0.9rem; cursor: pointer; }
-
-/* Selettori Griglia Stili */
-.style-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.style-card input { display: none; }
-.style-preview { padding: 12px 4px; border-radius: 8px; border: 1px solid var(--input-border); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s; }
-.style-card input:checked + .style-preview { border-color: #ffffff; background: rgba(255,255,255,0.05); }
-
-.black { background: #000; color: #fff; }
-.titanium { background: #1c1c1e; color: #f5f5f7; }
-.gold { background: #000; color: #d4af37; }
-.pearl { background: #1a1518; color: #e8c5c8; }
-
-/* Selettori Piani Avanzati */
-.plan-card {
-    background: var(--input-bg); border: 1px solid var(--input-border);
-    border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: center; margin-bottom: 10px;
-}
-.plan-card:last-child { margin-bottom: 0; }
-.plan-card.selected { border-color: #ffffff; background: rgba(255,255,255,0.04); }
-.plan-card i { font-size: 1.1rem; margin-right: 14px; color: var(--text-sec); width: 20px; text-align: center; }
-.plan-info h3 { margin: 0; font-size: 0.85rem; font-weight: 600; }
-.plan-info p { margin: 2px 0 0; font-size: 0.72rem; color: var(--text-sec); }
-
-/* ============================================================
-   🏆 3. MOCK-UP LIVE APP SCREEN
-   ============================================================ */
+/* CHASSIS TAG REALE (TUTTO CLICCABILE) */
 .app-container {
-    width: 100%; height: calc(100svh - 80px); max-height: 760px; padding: 40px 24px 32px 24px;
+    width: 100%; height: calc(100svh - 120px); max-height: 760px; padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 28px;
     display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 20px 50px rgba(0,0,0,0.7); overflow: hidden; position: relative;
 }
-.header-monolith { text-align: center; }
+.header-monolith { text-align: center; cursor: pointer; padding: 10px; border-radius: 12px; transition: background 0.2s; }
+.header-monolith:hover { background: rgba(255,255,255,0.03); }
 .avatar-block { display: flex; width: 52px; height: 52px; border-radius: 12px; background: #070708; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; margin: 0 auto 5px auto; }
 .user-media { width: 100%; height: 100%; object-fit: cover; }
 .username-capsule { display: inline-flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.01); border: 1px solid rgba(212, 175, 55, 0.18); border-radius: 8px; padding: 6px 16px; margin: 5px auto; max-width: 90%; }
 .username-display { font-size: 0.95rem; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff; }
 
 .app-container #mainGrid { display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-items: center !important; flex: 1 !important; width: 100% !important; padding: 25px 0 95px 0 !important; }
-.app-container #mainGrid .casella { padding: 4px 0 !important; }
+.app-container #mainGrid .casella { padding: 12px 0 !important; width: 100%; text-align: center; cursor: pointer; border-radius: 10px; transition: background 0.2s; }
+.app-container #mainGrid .casella:hover { background: rgba(255,255,255,0.03); }
 .app-container #mainGrid .casella-invito::after { font-size: 0.72rem !important; letter-spacing: 2.5px !important; font-weight: 300 !important; }
 
 #casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
-#casella-bio .casella-invito::after { content: 'INFO'; color: var(--text-sec) !important; }
+#casella-bio .casella-invito::after { content: 'INFO / BIO'; color: var(--text-sec) !important; }
 #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec) !important; }
-#casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec) !important; }
-#casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec) !important; }
-#casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec) !important; }
-#casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec) !important; }
+#casella-contatti .casella-invito::after { content: 'RUBRICA VCF'; color: var(--text-sec) !important; }
+#casella-social .casella-invito::after { content: 'SOCIAL NETWORKS'; color: var(--text-sec) !important; }
+#casella-sito .casella-invito::after { content: 'CONTATTI DIRETTI'; color: var(--text-sec) !important; }
+#casella-cv .casella-invito::after { content: 'CURRICULUM'; color: var(--text-sec) !important; }
 
-#casella-quick-action { position: absolute !important; bottom: 45px !important; left: 24px !important; right: 24px !important; height: 44px !important; background: rgba(212, 175, 55, 0.02) !important; border: 1px solid rgba(212, 175, 55, 0.15) !important; border-radius: 10px !important; display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 8px !important; }
+#casella-quick-action { position: absolute !important; bottom: 45px !important; left: 24px !important; right: 24px !important; height: 44px !important; background: rgba(212, 175, 55, 0.02) !important; border: 1px solid rgba(212, 175, 55, 0.15) !important; border-radius: 10px !important; display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 8px !important; cursor: pointer; }
 #quick-action-icon { font-size: 1rem !important; }
 #quick-action-label { font-size: 0.7rem !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; color: var(--accent-gold) !important; }
 
-/* Temi Dinamici */
+/* 🏗️ SYSTEM DRAWERS (OVERLAYS CONTESTUALI) */
+.drawer-overlay {
+    position: fixed; bottom: -100%; left: 0; width: 100%; height: 85vh;
+    background: var(--card-bg); border-top: 1px solid var(--card-border);
+    border-radius: 24px 24px 0 0; padding: 30px 24px; z-index: 2000;
+    transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.8); overflow-y: auto;
+}
+.drawer-overlay.open { bottom: 0; }
+.drawer-backdrop { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1900; display:none; }
+
+.drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px; }
+.drawer-title { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-white); }
+.drawer-close { background: none; border: none; color: var(--text-sec); font-size: 1.2rem; cursor: pointer; }
+
+/* Form Elements */
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 0.68rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+input, textarea, select { width: 100%; padding: 13px 15px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: #ffffff; font-size: 0.9rem; outline: none; }
+textarea { height: 80px; resize: none; }
+
+/* Componenti Interni Custom */
+.style-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.style-card input { display: none; }
+.style-preview { padding: 12px 4px; border-radius: 8px; border: 1px solid var(--input-border); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer; }
+.style-card input:checked + .style-preview { border-color: #ffffff; background: rgba(255,255,255,0.05); }
+.black { background: #000; color: #fff; } .titanium { background: #1c1c1e; color: #f5f5f7; } .gold { background: #000; color: #d4af37; } .pearl { background: #1a1518; color: #e8c5c8; }
+
+.plan-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: center; margin-bottom: 10px; }
+.plan-card.selected { border-color: #ffffff; background: rgba(255,255,255,0.04); }
+.plan-card i { font-size: 1.1rem; margin-right: 14px; color: var(--text-sec); width: 20px; text-align: center; }
+.plan-info h3 { margin: 0; font-size: 0.85rem; font-weight: 600; }
+.plan-info p { margin: 2px 0 0; font-size: 0.72rem; color: var(--text-sec); }
+
+.social-input-group { display: flex; gap: 10px; align-items: center; }
+.btn-add-social { padding: 13px 18px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+
+/* Temi Dinamici Tag */
 .app-container.tema-black { --bg-chassis: #000000; --accent-gold: #ffffff; border-color: rgba(255,255,255,0.15); }
 .app-container.tema-black #casella-qr .casella-invito::after { color: #ffffff !important; }
 .app-container.tema-titanium { --bg-chassis: #151517; --accent-gold: #f5f5f7; border-color: #3a3a3c; }
@@ -172,206 +111,185 @@ textarea { height: 75px; resize: none; }
 .app-container.tema-rose_pearl #casella-qr .casella-invito::after { color: #e8c5c8 !important; }
 .app-container.tema-rose_pearl #quick-action-label { color: #e8c5c8 !important; }
 
-/* ============================================================
-   🔒 4. FOOTER FISSO & RESPONSIVE
-   ============================================================ */
-.sticky-footer {
-    position: fixed; bottom: 0; left: 0; width: 100%;
-    background: linear-gradient(to top, #050505 80%, rgba(5,5,0,0) 100%);
-    padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 1100;
-}
-.save-btn { width: 100%; max-width: 450px; padding: 15px; background: #ffffff; color: #000000; border: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+/* 🔒 STICKY FOOTER INTERFACCIA */
+.sticky-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000 80%, rgba(0,0,0,0) 100%); padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100; }
+.save-btn { width: 100%; max-width: 390px; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.5px; }
 
-@media (max-width: 900px) {
-    .mobile-switcher { display: flex; }
-    .split-configuration { display: block; }
-    body.show-preview-mode .controls-column { display: none; }
-    body.show-preview-mode .preview-column { display: flex; justify-content: center; width: 100%; }
-    body.show-preview-mode .sticky-footer { display: none; } /* Nasconde i tasti salvataggio nella preview mobile */
-    body:not(.show-preview-mode) .preview-column { display: none; }
-    body:not(.show-preview-mode) .controls-column { display: block; width: 100%; }
-    .app-container { max-height: 540px; }
-}
-
-.plan-card, .style-preview, .save-btn, .back-link { transition: transform 0.2s ease; }
-.plan-card:active, .style-preview:active, .save-btn:active { transform: scale(0.98); }
   </style>  
 </head>
 <body>
-     <div class="mobile-switcher">
-        <button id="btn-tab-edit" class="switch-tab-btn active" onclick="cambiaTabMobile('edit')">📝 Configura</button>
-        <button id="btn-tab-preview" class="switch-tab-btn" onclick="cambiaTabMobile('preview')">👁️ Vedi Tag</button>
+    <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiTuttiIDrawer()"></div>
+
+    <div class="configurator-wrapper">
+        <div id="profile-content" class="app-container ready">
+            
+            <div class="header-monolith" onclick="apriDrawer('drawer-identita')">
+                <div class="avatar-block" id="avatar-container" style="display:none;">
+                    <img id="userImage" class="user-media" src="" alt="Logo">
+                </div>
+                <div class="username-capsule">
+                    <h1 class="username-display" id="tag-username">@username_system</h1>
+                </div>
+            </div>
+
+            <div id="mainGrid">
+                <div class="casella" id="casella-qr" onclick="apriDrawer('drawer-piano')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-identita')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-gallery" onclick="apriDrawer('drawer-gallery')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-contatti" onclick="apriDrawer('drawer-vcf')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-social" onclick="apriDrawer('drawer-social')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-sito" onclick="apriDrawer('drawer-diretti')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-cv" onclick="apriDrawer('drawer-diretti')"><span class="casella-invito"></span></div>
+            </div>
+
+            <div class="casella" id="casella-quick-action" onclick="apriDrawer('drawer-quick')">
+                <div id="quick-action-icon">⚡</div>
+                <div class="casella-invito" id="quick-action-label">Azione rapida</div>
+            </div>
+        </div>
     </div>
 
-    <div class="split-configuration">
-        
-        <div class="controls-column">
-            
-            <div class="header">
-                <h1 id="user-display">@CARICAMENTO...</h1>
-                <p>Gestisci i tuoi collegamenti</p>
-            </div>
-
-            <div class="config-card">
-                <div class="card-header-title"><i class="fas fa-palette"></i> Identity Styles</div>
-                <div class="style-selector">
-                    <div class="style-options">
-                        <label class="style-card">
-                            <input type="radio" name="digital_style" value="black" checked>
-                            <div class="style-preview black">Black DNA</div>
-                        </label>
-                        <label class="style-card">
-                            <input type="radio" name="digital_style" value="titanium">
-                            <div class="style-preview titanium">Titanium</div>
-                        </label>
-                        <label class="style-card">
-                            <input type="radio" name="digital_style" value="obsidian_gold">
-                            <div class="style-preview gold">Obsidian Gold</div>
-                        </label>
-                        <label class="style-card">
-                            <input type="radio" name="digital_style" value="rose_pearl">
-                            <div class="style-preview pearl">Satin Rose</div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="config-card">
-                <div class="card-header-title"><i class="fas fa-user"></i> Informazioni Profilo</div>
-                <div class="form-group">
-                    <label>Biografia Breve</label>
-                    <textarea id="field-bio" placeholder="Racconta chi sei o descrivi il tuo brand..."></textarea>
-                </div>
-            </div>
-
-            <div class="config-card">
-                <div class="card-header-title"><i class="fas fa-layer-group"></i> Livello Account</div>
-                <div class="plan-selector">
-                    <div class="plan-card selected" id="plan-BASE" onclick="selectPlan('BASE')">
-                        <i class="fas fa-seedling"></i>
-                        <div class="plan-info"><h3>BASE</h3><p>Profilo essenziale gratuito</p></div>
-                    </div>
-                    <div class="plan-card" id="plan-PREMIUM" onclick="selectPlan('PREMIUM')">
-                        <i class="fas fa-crown"></i>
-                        <div class="plan-info"><h3>PREMIUM</h3><p>Link illimitati e funzioni extra</p></div>
-                    </div>
-                    <div class="plan-card" id="plan-GOLD" onclick="selectPlan('GOLD')">
-                        <i class="fas fa-gem"></i>
-                        <div class="plan-info"><h3>GOLD</h3><p>Business Showroom e NFC</p></div>
-                    </div>
-                </div>
-                <input type="hidden" id="field-plan" value="BASE">
-            </div>
-
-            <div class="config-card">
-                <div class="card-header-title"><i class="fas fa-link"></i> Contatti Rapidi</div>
-                <div class="form-group"><label>Sito Web</label><input type="text" id="field-sito_web" placeholder="https://tuosito.com"></div>
-                <div class="form-group"><label>Email canale</label><input type="text" id="field-email" placeholder="nome@esempio.com"></div>
-                <div class="form-group"><label>Telefono</label><input type="text" id="field-phone" placeholder="+39..."></div>
-                <div class="form-group"><label>Link Curriculum Vitae (URL)</label><input type="text" id="field-cv" placeholder="https://link-al-tuo-cv.com"></div>
-            </div>
-
-            <div class="config-card">
-                <div class="card-header-title"><i class="fas fa-share-nodes"></i> Canali Social Ecosystem</div>
-                <div class="form-group social-input-group">
-                    <input type="text" id="input-nuovo-canale" placeholder="Incolla qui il link del profilo (Instagram, Facebook...)">
-                    <button type="button" onclick="aggiungiCanale()" class="btn-add-social">+ Aggiungi</button>
-                </div>
-                <div id="lista-canali"></div>
-                <input type="hidden" id="field-config_canali" value="[]">
-            </div>
-
-            <div class="config-card" id="quick-action-section" onclick="verificaPianoQuickAction(event)">
-                <div class="card-header-title"><i class="fas fa-bolt"></i> Bottone Quick Action</div>
-                <div class="form-group">
-                    <label>Tipo di azione primaria</label>
-                    <select id="field-quick_action_tipo">
-                        <option value="">Nessuna azione selezionata</option>
-                        <option value="appuntamento">Prenota appuntamento</option>
-                        <option value="whatsapp">Scrivimi su WhatsApp</option>
-                        <option value="preventivo">Richiedi preventivo</option>
-                        <option value="chiamata">Chiama ora</option>
-                        <option value="maps">Trovami su Maps</option>
-                        <option value="demo">Ascolta demo</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Destinazione (Link o recapito telefonico)</label>
-                    <input type="text" id="field-quick_action_url" placeholder="Es. url calendly o numero di telefono">
-                </div>
-            </div>
-
-            <div class="config-card">
-                <div class="card-header-title"><i class="fas fa-address-card"></i> Configurazione VCF (Scarica in Rubrica)</div>
-                <div class="form-group"><label>Nome o Ragione Sociale scheda</label><input type="text" id="vcf-nome"></div>
-                <div class="form-group"><label>Telefono principale</label><input type="text" id="vcf-telefono1"></div>
-                <div class="form-group"><label>Email principale</label><input type="text" id="vcf-email1"></div>
-                <div class="form-group"><label>Sito web aziendale</label><input type="text" id="vcf-sito"></div>
-
-                <div id="vcf-premium-section" onclick="verificaPianoVcf(event)">
-                    <div class="form-group"><label>Telefono secondario</label><input type="text" id="vcf-telefono2"></div>
-                    <div class="form-group"><label>Email secondaria</label><input type="text" id="vcf-email2"></div>
-                    <div class="form-group"><label>Indirizzo sede</label><input type="text" id="vcf-indirizzo"></div>
-                    <div class="form-group"><label>Partita IVA</label><input type="text" id="vcf-piva"></div>
-                </div>
-            </div>
-
-            <div class="config-card" id="multisede-section" onclick="if(document.getElementById('field-plan').value.toUpperCase() !== 'GOLD') { event.preventDefault(); event.stopPropagation(); apriModalPiano(); }">
-                <div class="card-header-title"><i class="fas fa-building"></i> Gestione Sedi Filiali (Gold)</div>
-                <div class="form-group"><label>Nome della sede filiale</label><input type="text" id="ms-nome"></div>
-                <div class="form-group"><label>Indirizzo della filiale</label><input type="text" id="ms-indirizzo"></div>
-                <div class="form-group"><label>Telefono dedicato sede</label><input type="text" id="ms-telefono"></div>
-                <div class="form-group"><label>Dettagli orari o informazioni extra</label><input type="text" id="ms-info"></div>
-            </div>
-
+    <div class="drawer-overlay" id="drawer-identita">
+        <div class="drawer-header">
+            <div class="drawer-title">Identity & Style</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
         </div>
-
-        <div class="preview-column">
-            <div class="sticky-preview-wrapper">
-                <div id="profile-content" class="app-container ready">
-                    <div class="header-monolith">
-                        <div class="avatar-block" id="avatar-container" style="display:none;">
-                            <img id="userImage" class="user-media" src="" alt="Logo">
-                        </div>
-                        <div class="username-capsule">
-                            <h1 class="username-display" id="tag-username">@username_system</h1>
-                        </div>
-                    </div>
-
-                    <div id="mainGrid">
-                        <div class="casella" id="casella-qr"><span class="casella-invito"></span></div>
-                        <div class="casella" id="casella-bio"><span class="casella-invito"></span></div>
-                        <div class="casella" id="casella-gallery"><span class="casella-invito"></span></div>
-                        <div class="casella" id="casella-contatti"><span class="casella-invito"></span></div>
-                        <div class="casella" id="casella-social"><span class="casella-invito"></span></div>
-                        <div class="casella" id="casella-sito"><span class="casella-invito"></span></div>
-                        <div class="casella" id="casella-cv"><span class="casella-invito"></span></div>
-                    </div>
-
-                    <div class="casella" id="casella-quick-action" style="display:none;">
-                        <div id="quick-action-icon">⚡</div>
-                        <div class="casella-invito" id="quick-action-label">Azione rapida</div>
-                    </div>
+        <div class="form-group">
+            <label>Biografia Profilo</label>
+            <textarea id="field-bio" placeholder="Racconta chi sei o il tuo brand..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Seleziona Stile Visivo</label>
+            <div class="style-selector">
+                <div class="style-options">
+                    <label class="style-card">
+                        <input type="radio" name="digital_style" value="black" checked>
+                        <div class="style-preview black">Black DNA</div>
+                    </label>
+                    <label class="style-card">
+                        <input type="radio" name="digital_style" value="titanium">
+                        <div class="style-preview titanium">Titanium</div>
+                    </label>
+                    <label class="style-card">
+                        <input type="radio" name="digital_style" value="obsidian_gold">
+                        <div class="style-preview gold">Obsidian Gold</div>
+                    </label>
+                    <label class="style-card">
+                        <input type="radio" name="digital_style" value="rose_pearl">
+                        <div class="style-preview pearl">Satin Rose</div>
+                    </label>
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="drawer-overlay" id="drawer-piano">
+        <div class="drawer-header">
+            <div class="drawer-title">Livello Account</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <div class="plan-selector">
+            <div class="plan-card selected" id="plan-BASE" onclick="selectPlan('BASE')">
+                <i class="fas fa-seedling"></i>
+                <div class="plan-info"><h3>BASE</h3><p>Presenza digitale essenziale gratuita</p></div>
+            </div>
+            <div class="plan-card" id="plan-PREMIUM" onclick="selectPlan('PREMIUM')">
+                <i class="fas fa-crown"></i>
+                <div class="plan-info"><h3>PREMIUM</h3><p>Professionisti (Link estesi e VCF)</p></div>
+            </div>
+            <div class="plan-card" id="plan-GOLD" onclick="selectPlan('GOLD')">
+                <i class="fas fa-gem"></i>
+                <div class="plan-info"><h3>GOLD</h3><p>Aziende ed Ecosistema (Multi-Sede)</p></div>
+            </div>
+        </div>
+        <input type="hidden" id="field-plan" value="BASE">
+    </div>
+
+    <div class="drawer-overlay" id="drawer-diretti">
+        <div class="drawer-header">
+            <div class="drawer-title">Contatti & Link Diretti</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <div class="form-group"><label>Sito Web Principale</label><input type="text" id="field-sito_web" placeholder="https://tuosito.com"></div>
+        <div class="form-group"><label>Email Canale</label><input type="text" id="field-email" placeholder="nome@esempio.com"></div>
+        <div class="form-group"><label>Telefono Diretto</label><input type="text" id="field-phone" placeholder="+39..."></div>
+        <div class="form-group"><label>Link Curriculum Vitae (URL)</label><input type="text" id="field-cv" placeholder="https://link-al-tuo-cv.com"></div>
+    </div>
+
+    <div class="drawer-overlay" id="drawer-social">
+        <div class="drawer-header">
+            <div class="drawer-title">Social Ecosystem Network</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <div class="form-group social-input-group">
+            <input type="text" id="input-nuovo-canale" placeholder="Incolla link del profilo social...">
+            <button type="button" onclick="aggiungiCanale()" class="btn-add-social">+ Aggiungi</button>
+        </div>
+        <div id="lista-canali" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
+        <input type="hidden" id="field-config_canali" value="[]">
+    </div>
+
+    <div class="drawer-overlay" id="drawer-quick" onclick="verificaPianoQuickAction(event)">
+        <div class="drawer-header">
+            <div class="drawer-title">Configurazione Quick Action</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Tipo di azione primaria</label>
+            <select id="field-quick_action_tipo">
+                <option value="">Nessuna azione</option>
+                <option value="appuntamento">Prenota appuntamento</option>
+                <option value="whatsapp">Scrivimi su WhatsApp</option>
+                <option value="preventivo">Richiedi preventivo</option>
+                <option value="chiamata">Chiama ora</option>
+                <option value="maps">Trovami su Maps</option>
+                <option value="demo">Ascolta demo</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Destinazione URL o Numero</label>
+            <input type="text" id="field-quick_action_url" placeholder="Inserisci link o recapito">
+        </div>
+    </div>
+
+    <div class="drawer-overlay" id="drawer-vcf">
+        <div class="drawer-header">
+            <div class="drawer-title">Scheda Rubrica VCF</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <div class="form-group"><label>Nome / Ragione Sociale</label><input type="text" id="vcf-nome"></div>
+        <div class="form-group"><label>Telefono Principale</label><input type="text" id="vcf-telefono1"></div>
+        <div class="form-group"><label>Email Principale</label><input type="text" id="vcf-email1"></div>
+        <div class="form-group"><label>Sito Web Azienda</label><input type="text" id="vcf-sito"></div>
+        <div id="vcf-premium-section" onclick="verificaPianoVcf(event)">
+            <div class="form-group"><label>Telefono Secondario</label><input type="text" id="vcf-telefono2"></div>
+            <div class="form-group"><label>Email Secondaria</label><input type="text" id="vcf-email2"></div>
+            <div class="form-group"><label>Indirizzo Completo</label><input type="text" id="vcf-indirizzo"></div>
+            <div class="form-group"><label>Partita IVA</label><input type="text" id="vcf-piva"></div>
+        </div>
+    </div>
+
+    <div class="drawer-overlay" id="drawer-gallery" onclick="if(document.getElementById('field-plan').value.toUpperCase() === 'BASE') { event.preventDefault(); event.stopPropagation(); apriModalPiano(); }">
+        <div class="drawer-header">
+            <div class="drawer-title">Media & Gallery Showcase</div>
+            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <p style="color:var(--text-sec); font-size:0.85rem; line-height:1.6;">Gestione avanzata file e portfolio in caricamento JSON.</p>
     </div>
 
     <div class="sticky-footer">
-        <button class="save-btn" onclick="salvaDati(false)">SALVA BOZZA</button>
+        <button class="save-btn" onclick="salvaDati(false)">SALVA LE MODIFICHE</button>
         <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
     </div>
 
-    <div id="modal-piano" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:9999; justify-content:center; align-items:center; padding:24px; box-sizing:border-box;">
-        <div style="background:#111; border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:32px 24px; max-width:340px; width:100%; text-align:center;">
-            <div style="width:36px; height:3px; background:#10b981; border-radius:2px; margin:0 auto 24px;"></div>
-            <h3 style="margin:0 0 12px; font-size:1.1rem; font-weight:600; color:#ffffff;">Funzione Premium</h3>
-            <p style="margin:0 0 24px; font-size:0.88rem; color:#a0a0a0; line-height:1.6;">Questa opzione richiede l'attivazione di un piano avanzato.</p>
-            <button type="button" onclick="chiudiModalPiano()" style="width:100%; padding:14px; background:white; color:black; border:none; border-radius:12px; font-weight:600; font-size:0.95rem; cursor:pointer;">Ho capito</button>
+    <div id="modal-piano" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; padding:24px;">
+        <div style="background:#121214; border:1px solid #1c1c1e; border-radius:20px; padding:32px 24px; max-width:340px; width:100%; text-align:center;">
+            <h3 style="margin:0 0 12px; font-size:1.1rem; color:#fff;">Funzione Avanzata</h3>
+            <p style="margin:0 0 24px; font-size:0.85rem; color:#8e8e93; line-height:1.5;">Questo blocco richiede l'attivazione di un account Premium o Gold.</p>
+            <button type="button" onclick="chiudiModalPiano()" style="width:100%; padding:14px; background:white; color:black; border:none; border-radius:12px; font-weight:600; cursor:pointer;">Ho capito</button>
         </div>
-    </div> 
+    </div>
     <script>
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
@@ -853,6 +771,98 @@ aggiornaListaCanali = function() {
     vecchioAggiornaCanali();
     aggiornaTagLive();
 };
+// ============================================================
+// ⚡ CORE CONFIGURATORE VISIVO: GESTIONE OVERLAYS & LIVE LIVE
+// ============================================================
+
+function apriDrawer(idDrawer) {
+    chiudiTuttiIDrawer();
+    const drawer = document.getElementById(idDrawer);
+    const backdrop = document.getElementById('drawer-backdrop');
+    if (drawer) drawer.classList.add('open');
+    if (backdrop) backdrop.style.display = 'block';
+}
+
+function chiudiTuttiIDrawer() {
+    document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open'));
+    const backdrop = document.getElementById('drawer-backdrop');
+    if (backdrop) backdrop.style.display = 'none';
+}
+
+function aggiornaTagLive() {
+    const previewContainer = document.getElementById('profile-content');
+    if (!previewContainer) return;
+
+    // Sincronizzazione Tema Dinamico
+    const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
+    previewContainer.className = 'app-container ready tema-' + stileSelezionato;
+
+    // Sincronizzazione Elementi a specchio
+    const mappaCaselle = {
+        'casella-bio':      document.getElementById('field-bio')?.value,
+        'casella-sito':     document.getElementById('field-sito_web')?.value || document.getElementById('field-email')?.value,
+        'casella-cv':       document.getElementById('field-cv')?.value,
+        'casella-contatti': document.getElementById('vcf-telefono1')?.value
+    };
+
+    for (const [id, valore] of Object.entries(mappaCaselle)) {
+        const el = previewContainer.querySelector('#' + id);
+        if (el) el.style.display = (!valore || valore.trim() === "") ? 'none' : 'flex';
+    }
+
+    // Gestione Visualizzazione Social
+    const elSocial = previewContainer.querySelector('#casella-social');
+    if (elSocial) elSocial.style.display = (canaliCorrenti && canaliCorrenti.length > 0) ? 'flex' : 'none';
+
+    // Gestione Quick Action Interna
+    const qaTipo = document.getElementById('field-quick_action_tipo')?.value;
+    const qaUrl = document.getElementById('field-quick_action_url')?.value;
+    const elQA = previewContainer.querySelector('#casella-quick-action');
+    const piano = document.getElementById('field-plan')?.value.toUpperCase();
+
+    if (elQA) {
+        if (qaTipo && qaUrl && piano !== 'BASE') {
+            elQA.style.display = 'flex';
+            const label = elQA.querySelector('#quick-action-label');
+            if (label) {
+                const nomi = { appuntamento:'PRENOTA APPUNTAMENTO', whatsapp:'WHATSAPP LIVE', preventivo:'RICHIESTA PREVENTIVO', chiamata:'CHIAMA ORA', maps:'TROVAMI SU MAPS', demo:'ASCOLTA DEMO' };
+                label.textContent = nomi[qaTipo] || 'AZIONE RAPIDA';
+            }
+        } else {
+            elQA.style.display = 'none';
+        }
+    }
+}
+
+// Iniezione Eventi di ascolto sugli input originari
+function agganciaAscoltatoriConfiguratore() {
+    const ids = ['field-bio', 'field-sito_web', 'field-email', 'field-cv', 'vcf-telefono1', 'field-quick_action_tipo', 'field-quick_action_url'];
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', aggiornaTagLive);
+            el.addEventListener('change', aggiornaTagLive);
+        }
+    });
+
+    document.querySelectorAll('input[name="digital_style"]').forEach(r => {
+        r.addEventListener('change', aggiornaTagLive);
+    });
+}
+
+// Intercettazione del caricamento Airtable originale per sincronizzare l'avvio
+const avvioOriginale = inizializzaPagina;
+inizializzaPagina = async function() {
+    await avvioOriginale();
+    agganciaAscoltatoriConfiguratore();
+    aggiornaTagLive();
+};
+
+const renderingSocialOriginale = aggiornaListaCanali;
+aggiornaListaCanali = function() {
+    renderingSocialOriginale();
+    aggiornaTagLive();
+};        
 
 </script>
 </body>
