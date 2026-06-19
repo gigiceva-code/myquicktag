@@ -73,6 +73,44 @@ body {
 #casella-quick-action { position: absolute !important; bottom: 45px !important; left: 24px !important; right: 24px !important; height: 44px !important; background: rgba(212, 175, 55, 0.02) !important; border: 1px solid rgba(212, 175, 55, 0.15) !important; border-radius: 10px !important; display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 8px !important; cursor: pointer; }
 #quick-action-icon { font-size: 1rem !important; }
 #quick-action-label { font-size: 0.7rem !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; color: var(--accent-gold) !important; }
+/* ============================================================
+   🏛️ IL TUO ASSETTO GRAFICO ORIGINALE RIPRISTINATO
+   ============================================================ */
+.app-container #mainGrid { 
+    display: flex !important; 
+    flex-direction: column !important; 
+    justify-content: space-between !important; 
+    align-items: center !important; 
+    flex: 1 !important; 
+    width: 100% !important; 
+    padding: 25px 0 95px 0 !important; 
+}
+
+.app-container #mainGrid .casella { 
+    padding: 12px 0 !important; 
+    width: 100%; 
+    text-align: center; 
+    cursor: pointer; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02); 
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    transition: opacity 0.2s ease;
+}
+
+.app-container #mainGrid .casella-invito::after { 
+    font-size: 0.72rem !important; 
+    letter-spacing: 2.5px !important; 
+    font-weight: 300 !important; 
+}
+
+/* Assegnazione Testi Rigidi per i Pseudo-Elementi */
+#casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
+#casella-bio .casella-invito::after { content: 'INFO / BIO'; color: #ffffff !important; }
+#casella-social .casella-invito::after { content: 'SOCIAL NETWORKS'; color: #ffffff !important; }
+#casella-sito .casella-invito::after { content: 'CONTATTI DIRETTI'; color: #ffffff !important; }
+#casella-contatti .casella-invito::after { content: 'RUBRICA VCF'; color: #ffffff !important; }
+#casella-gallery .casella-invito::after { content: 'GALLERY SHOWCASE'; color: #ffffff !important; }
 
 /* ⚡ EFFETTO DI PRESSIONE RIGIDAMENTE LUXURY SUI BLOCCHI */
 .header-monolith:active, 
@@ -140,7 +178,8 @@ textarea { height: 70px; resize: none; }
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiTuttiIDrawer()"></div>
 
     <div class="configurator-wrapper">
-       <div id="profile-content" class="app-container ready">
+
+           <div id="profile-content" class="app-container ready">
             
             <div class="header-monolith" onclick="apriDrawer('drawer-identita')">
                 <div class="avatar-block" id="avatar-container" style="display:none;">
@@ -152,21 +191,20 @@ textarea { height: 70px; resize: none; }
             </div>
 
             <div id="mainGrid">
-                <div class="casella" id="casella-qr" onclick="apriDrawer('drawer-piano')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-identita')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-contatti" onclick="apriDrawer('drawer-vcf')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-social" onclick="apriDrawer('drawer-social')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-sito" onclick="apriDrawer('drawer-diretti')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-cv" onclick="apriDrawer('drawer-diretti')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-qr" onclick="apriDrawer('drawer-piano')">📊 PIANO / LIVELLO</div>
+                <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-identita')">📝 BIO / IDENTITY</div>
+                <div class="casella" id="casella-social" onclick="apriDrawer('drawer-social')">📱 SOCIAL NETWORKS</div>
+                <div class="casella" id="casella-sito" onclick="apriDrawer('drawer-diretti')">🌐 CONTATTI DIRETTI</div>
+                <div class="casella" id="casella-contatti" onclick="apriDrawer('drawer-vcf')">📇 RUBRICA VCF</div>
+                <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')">🖼️ GALLERY SHOWCASE</div>
             </div>
 
-            <div class="casella" id="casella-quick-action" onclick="apriDrawer('drawer-quick')">
-                <div id="quick-action-icon">⚡</div>
-                <div class="casella-invito" id="quick-action-label">Azione rapida</div>
+            <div class="casella-qa-tasto" id="casella-quick-action" onclick="apriDrawer('drawer-quick')">
+                <span id="quick-action-icon">⚡</span>
+                <span id="quick-action-label">CONFIGURA QUICK ACTION</span>
             </div>
-        </div> 
-    </div>
+        </div>
+ </div>
 
     <div class="drawer-overlay" id="drawer-identita">
         <div class="drawer-header">
@@ -689,41 +727,40 @@ function aggiornaTagLive() {
     const previewContainer = document.getElementById('profile-content');
     if (!previewContainer) return;
 
-    // Sincronizzazione Username Real-Time
+    // 1. Allineamento immediato Username reale da Index
     const elUsernameDisplay = document.getElementById('tag-username');
-    if (elUsernameDisplay && nomeUtente) {
+    if (elUsernameDisplay && typeof nomeUtente !== 'undefined' && nomeUtente) {
         elUsernameDisplay.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
     }
 
-    // Sincronizzazione Tema Dinamico
+    // 2. Sincronizzazione Tema Dinamico
     const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
     previewContainer.className = 'app-container ready tema-' + stileSelezionato;
 
-    // Mappa dei blocchi interattivi
-    const mappaCaselle = {
+    // 3. Controllo Stati (Sempre visibili. Opacità 1 se pieno, 0.4 se vuoto)
+    const controlli = {
         'casella-bio':      document.getElementById('field-bio')?.value,
         'casella-sito':     document.getElementById('field-sito_web')?.value || document.getElementById('field-email')?.value,
         'casella-cv':       document.getElementById('field-cv')?.value,
         'casella-contatti': document.getElementById('vcf-telefono1')?.value
     };
 
-    // 🎯 CORREZIONE: Sempre in flex (cliccabili). Se vuoti, cala l'opacità a specchio.
-    for (const [id, valore] of Object.entries(mappaCaselle)) {
+    for (const [id, valore] of Object.entries(controlli)) {
         const el = previewContainer.querySelector('#' + id);
         if (el) {
-            el.style.display = 'flex'; 
-            el.style.opacity = (!valore || valore.trim() === "") ? '0.25' : '1';
+            el.style.display = 'flex'; // Forza la presenza visiva
+            el.style.opacity = (valore && valore.trim() !== "") ? '1' : '0.4';
         }
     }
 
-    // Gestione Blocco Social
+    // Controllo Social
     const elSocial = previewContainer.querySelector('#casella-social');
     if (elSocial) {
         elSocial.style.display = 'flex';
-        elSocial.style.opacity = (canaliCorrenti && canaliCorrenti.length > 0) ? '1' : '0.25';
+        elSocial.style.opacity = (typeof canaliCorrenti !== 'undefined' && canaliCorrenti.length > 0) ? '1' : '0.4';
     }
 
-    // Logica Quick Action Interna (Gestione Base vs Premium)
+    // Controllo Quick Action
     const qaTipo = document.getElementById('field-quick_action_tipo')?.value;
     const qaUrl = document.getElementById('field-quick_action_url')?.value;
     const elQA = previewContainer.querySelector('#casella-quick-action');
@@ -731,17 +768,20 @@ function aggiornaTagLive() {
 
     if (elQA) {
         elQA.style.display = 'flex';
+        const label = elQA.querySelector('#quick-action-label');
+        
         if (piano === 'BASE') {
-            elQA.style.opacity = '0.15'; // Effetto spento/ombra per spingere l'upgrade
+            elQA.style.opacity = '0.15';
+            if (label) label.textContent = 'QUICK ACTION (PREMIUM)';
         } else if (qaTipo && qaUrl) {
             elQA.style.opacity = '1';
-            const label = elQA.querySelector('#quick-action-label');
             if (label) {
                 const nomi = { appuntamento:'PRENOTA APPUNTAMENTO', whatsapp:'WHATSAPP LIVE', preventivo:'RICHIESTA PREVENTIVO', chiamata:'CHIAMA ORA', maps:'TROVAMI SU MAPS', demo:'ASCOLTA DEMO' };
                 label.textContent = nomi[qaTipo] || 'AZIONE RAPIDA';
             }
         } else {
-            elQA.style.opacity = '0.25';
+            elQA.style.opacity = '0.4';
+            if (label) label.textContent = 'CONFIGURA QUICK ACTION';
         }
     }
 }
