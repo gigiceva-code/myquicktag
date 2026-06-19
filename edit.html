@@ -684,71 +684,63 @@ function cambiaTabMobile(target) {
 // ============================================================
 // ⚡ IL MOTORE REATTIVO: AGGIORNAMENTO DELLA TAG IN TEMPO REALE
 // ============================================================
-
-// Questa funzione legge i tuoi input in tempo reale e modella il mock-up della Tag
 function aggiornaTagLive() {
-    const previewContainer = document.querySelector('.preview-column #profile-content');
+    const previewContainer = document.getElementById('profile-content');
     if (!previewContainer) return;
 
-    // 1. Aggiornamento Dinamico del Tema
-    const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
-    // Rimuove i vecchi temi e applica quello attivo
-    previewContainer.className = 'app-container ready'; 
-    previewContainer.classList.add('tema-' + stileSelezionato);
-
-    // 2. Sincronizzazione Username della Targa
+    // Sincronizzazione Username Real-Time
     const elUsernameDisplay = document.getElementById('tag-username');
-    if (elUsernameDisplay) {
-        const inputUser = document.getElementById('user-display').innerText;
-        elUsernameDisplay.textContent = inputUser;
+    if (elUsernameDisplay && nomeUtente) {
+        elUsernameDisplay.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
     }
 
-    // 3. Gestione Accensione/Spegnimento dei Tasti del Totem
+    // Sincronizzazione Tema Dinamico
+    const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
+    previewContainer.className = 'app-container ready tema-' + stileSelezionato;
+
+    // Mappa dei blocchi interattivi
     const mappaCaselle = {
         'casella-bio':      document.getElementById('field-bio')?.value,
-        'casella-contatti': document.getElementById('field-email')?.value || document.getElementById('vcf-telefono1')?.value,
-        'casella-sito':     document.getElementById('field-sito_web')?.value,
+        'casella-sito':     document.getElementById('field-sito_web')?.value || document.getElementById('field-email')?.value,
         'casella-cv':       document.getElementById('field-cv')?.value,
+        'casella-contatti': document.getElementById('vcf-telefono1')?.value
     };
 
-    // Se il campo è vuoto il tasto filiforme svanisce, se scrivi si accende all'istante
+    // 🎯 CORREZIONE: Sempre in flex (cliccabili). Se vuoti, cala l'opacità a specchio.
     for (const [id, valore] of Object.entries(mappaCaselle)) {
-        const elCasella = previewContainer.querySelector('#' + id);
-        if (elCasella) {
-            elCasella.style.display = (!valore || valore.trim() === "") ? 'none' : 'flex';
+        const el = previewContainer.querySelector('#' + id);
+        if (el) {
+            el.style.display = 'flex'; 
+            el.style.opacity = (!valore || valore.trim() === "") ? '0.25' : '1';
         }
     }
 
-    // Gestione reattiva dei Social (mostra il tasto se ci sono canali nella lista)
+    // Gestione Blocco Social
     const elSocial = previewContainer.querySelector('#casella-social');
     if (elSocial) {
-        elSocial.style.display = (canaliCorrenti && canaliCorrenti.length > 0) ? 'flex' : 'none';
+        elSocial.style.display = 'flex';
+        elSocial.style.opacity = (canaliCorrenti && canaliCorrenti.length > 0) ? '1' : '0.25';
     }
 
-    // 4. Configurazione Istantanea della Quick Action in basso
+    // Logica Quick Action Interna (Gestione Base vs Premium)
     const qaTipo = document.getElementById('field-quick_action_tipo')?.value;
     const qaUrl = document.getElementById('field-quick_action_url')?.value;
     const elQA = previewContainer.querySelector('#casella-quick-action');
-    const pianoAttuale = document.getElementById('field-plan')?.value.toUpperCase();
+    const piano = document.getElementById('field-plan')?.value.toUpperCase();
 
     if (elQA) {
-        // Si accende solo se c'è un valore impostato e se il piano non è BASE
-        if (qaTipo && qaUrl && pianoAttuale !== 'BASE') {
-            elQA.style.display = 'flex';
-            const labelQA = elQA.querySelector('#quick-action-label');
-            const iconelQA = elQA.querySelector('#quick-action-icon');
-            
-            // Aggiorna la scritta e l'icona nel mock-up in base alla scelta
-            if (labelQA) {
-                const configNomi = { appuntamento: 'PRENOTA APPUNTAMENTO', whatsapp: 'SCRIVIMI SU WHATSAPP', preventivo: 'RICHIEDI PREVENTIVO', chiamata: 'CHIAMA ORA', maps: 'TROVAMI SU MAPS', demo: 'ASCOLTA DEMO' };
-                labelQA.textContent = configNomi[qaTipo] || 'AZIONE RAPIDA';
-            }
-            if (iconelQA) {
-                const configIcone = { appuntamento: '📅', whatsapp: '💬', preventivo: '📋', chiamata: '📞', maps: '📍', demo: '🎵' };
-                iconelQA.textContent = configIcone[qaTipo] || '⚡';
+        elQA.style.display = 'flex';
+        if (piano === 'BASE') {
+            elQA.style.opacity = '0.15'; // Effetto spento/ombra per spingere l'upgrade
+        } else if (qaTipo && qaUrl) {
+            elQA.style.opacity = '1';
+            const label = elQA.querySelector('#quick-action-label');
+            if (label) {
+                const nomi = { appuntamento:'PRENOTA APPUNTAMENTO', whatsapp:'WHATSAPP LIVE', preventivo:'RICHIESTA PREVENTIVO', chiamata:'CHIAMA ORA', maps:'TROVAMI SU MAPS', demo:'ASCOLTA DEMO' };
+                label.textContent = nomi[qaTipo] || 'AZIONE RAPIDA';
             }
         } else {
-            elQA.style.display = 'none';
+            elQA.style.opacity = '0.25';
         }
     }
 }
