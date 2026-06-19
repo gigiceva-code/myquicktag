@@ -13,43 +13,53 @@
 <style>
 :root {
     --bg-color: #000000;
-    --card-bg: #121214;
-    --card-border: #1c1c1e;
-    --input-bg: #1a1a1e;
+    --card-bg: #141416;
+    --card-border: #232326;
+    --input-bg: #1d1d20;
     --input-border: #2c2c2e;
     --accent-white: #ffffff;
     --text-sec: #8e8e93;
+    
     /* Variabili Tag Preview */
     --bg-chassis: #000000;
     --accent-gold: #d4af37;
     --text-main: #f5f5f7;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent !important; }
-body { background-color: var(--bg-color); color: #ffffff; min-height: 100vh; overflow-x: hidden; }
-
-/* 📱 CONTENITORE CENTRALE TAG FOCUS */
-.configurator-wrapper {
-    display: flex; justify-content: center; align-items: center;
-    width: 100%; max-width: 430px; margin: 0 auto; padding: 20px 20px 100px 20px;
+* { 
+    margin: 0; padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Inter', sans-serif; 
+    -webkit-tap-highlight-color: transparent !important; 
 }
 
-/* CHASSIS TAG REALE (TUTTO CLICCABILE) */
+body { 
+    background-color: var(--bg-color); 
+    color: #ffffff; 
+    min-height: 100vh; 
+    overflow-x: hidden; 
+}
+
+/* 📱 INCASTRO PREVIEW TAG CENTRALE */
+.configurator-wrapper {
+    display: flex; justify-content: center; align-items: center;
+    width: 100%; max-width: 430px; margin: 0 auto; padding: 20px 20px 120px 20px;
+}
+
 .app-container {
-    width: 100%; height: calc(100svh - 120px); max-height: 760px; padding: 40px 24px 32px 24px;
+    width: 100%; height: calc(100svh - 140px); max-height: 740px; padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 28px;
     display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 20px 50px rgba(0,0,0,0.7); overflow: hidden; position: relative;
 }
-.header-monolith { text-align: center; cursor: pointer; padding: 10px; border-radius: 12px; transition: background 0.2s; }
-.header-monolith:hover { background: rgba(255,255,255,0.03); }
+
+.header-monolith { text-align: center; cursor: pointer; padding: 10px; border-radius: 12px; }
 .avatar-block { display: flex; width: 52px; height: 52px; border-radius: 12px; background: #070708; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; margin: 0 auto 5px auto; }
 .user-media { width: 100%; height: 100%; object-fit: cover; }
 .username-capsule { display: inline-flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.01); border: 1px solid rgba(212, 175, 55, 0.18); border-radius: 8px; padding: 6px 16px; margin: 5px auto; max-width: 90%; }
 .username-display { font-size: 0.95rem; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff; }
 
 .app-container #mainGrid { display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-items: center !important; flex: 1 !important; width: 100% !important; padding: 25px 0 95px 0 !important; }
-.app-container #mainGrid .casella { padding: 12px 0 !important; width: 100%; text-align: center; cursor: pointer; border-radius: 10px; transition: background 0.2s; }
-.app-container #mainGrid .casella:hover { background: rgba(255,255,255,0.03); }
+.app-container #mainGrid .casella { padding: 12px 0 !important; width: 100%; text-align: center; cursor: pointer; border-bottom: 1px solid rgba(255, 255, 255, 0.02); }
 .app-container #mainGrid .casella-invito::after { font-size: 0.72rem !important; letter-spacing: 2.5px !important; font-weight: 300 !important; }
 
 #casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
@@ -64,44 +74,53 @@ body { background-color: var(--bg-color); color: #ffffff; min-height: 100vh; ove
 #quick-action-icon { font-size: 1rem !important; }
 #quick-action-label { font-size: 0.7rem !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; color: var(--accent-gold) !important; }
 
-/* 🏗️ SYSTEM DRAWERS (OVERLAYS CONTESTUALI) */
+/* ⚡ EFFETTO DI PRESSIONE RIGIDAMENTE LUXURY SUI BLOCCHI */
+.header-monolith:active, 
+.app-container #mainGrid .casella:active, 
+#casella-quick-action:active {
+    background: rgba(255, 255, 255, 0.05) !important;
+    transform: scale(0.99);
+}
+
+/* 🏛️ LA SVOLTA HALF-DRAWER (COPRE SOLO IL 50% IN BASSO) */
 .drawer-overlay {
-    position: fixed; bottom: -100%; left: 0; width: 100%; height: 85vh;
+    position: fixed; bottom: -100%; left: 0; width: 100%; height: 50vh;
     background: var(--card-bg); border-top: 1px solid var(--card-border);
-    border-radius: 24px 24px 0 0; padding: 30px 24px; z-index: 2000;
-    transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.8); overflow-y: auto;
+    border-radius: 24px 24px 0 0; padding: 24px; z-index: 2000;
+    transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.9); overflow-y: auto;
 }
 .drawer-overlay.open { bottom: 0; }
-.drawer-backdrop { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1900; display:none; }
+.drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1900; display: none; }
 
-.drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px; }
-.drawer-title { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-white); }
+.drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
+.drawer-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-white); }
 .drawer-close { background: none; border: none; color: var(--text-sec); font-size: 1.2rem; cursor: pointer; }
 
-/* Form Elements */
-.form-group { margin-bottom: 18px; }
-.form-group label { display: block; font-size: 0.68rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-input, textarea, select { width: 100%; padding: 13px 15px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: #ffffff; font-size: 0.9rem; outline: none; }
-textarea { height: 80px; resize: none; }
+/* Elementi Form Interni */
+.form-group { margin-bottom: 16px; text-align: left; }
+.form-group label { display: block; font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+input, textarea, select { width: 100%; padding: 12px 14px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: #ffffff; font-size: 0.9rem; outline: none; }
+textarea { height: 70px; resize: none; }
 
-/* Componenti Interni Custom */
+/* Griglia Stili & Temi */
 .style-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .style-card input { display: none; }
-.style-preview { padding: 12px 4px; border-radius: 8px; border: 1px solid var(--input-border); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer; }
+.style-preview { padding: 12px 2px; border-radius: 8px; border: 1px solid var(--input-border); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer; }
 .style-card input:checked + .style-preview { border-color: #ffffff; background: rgba(255,255,255,0.05); }
 .black { background: #000; color: #fff; } .titanium { background: #1c1c1e; color: #f5f5f7; } .gold { background: #000; color: #d4af37; } .pearl { background: #1a1518; color: #e8c5c8; }
 
-.plan-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: center; margin-bottom: 10px; }
+/* Piani */
+.plan-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 12px; cursor: pointer; display: flex; align-items: center; margin-bottom: 8px; }
 .plan-card.selected { border-color: #ffffff; background: rgba(255,255,255,0.04); }
-.plan-card i { font-size: 1.1rem; margin-right: 14px; color: var(--text-sec); width: 20px; text-align: center; }
+.plan-card i { font-size: 1rem; margin-right: 12px; color: var(--text-sec); width: 20px; text-align: center; }
 .plan-info h3 { margin: 0; font-size: 0.85rem; font-weight: 600; }
-.plan-info p { margin: 2px 0 0; font-size: 0.72rem; color: var(--text-sec); }
+.plan-info p { margin: 1px 0 0; font-size: 0.7rem; color: var(--text-sec); }
 
-.social-input-group { display: flex; gap: 10px; align-items: center; }
-.btn-add-social { padding: 13px 18px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+.social-input-group { display: flex; gap: 8px; align-items: center; }
+.btn-add-social { padding: 12px 16px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
 
-/* Temi Dinamici Tag */
+/* Temi Dinamici Real-Time */
 .app-container.tema-black { --bg-chassis: #000000; --accent-gold: #ffffff; border-color: rgba(255,255,255,0.15); }
 .app-container.tema-black #casella-qr .casella-invito::after { color: #ffffff !important; }
 .app-container.tema-titanium { --bg-chassis: #151517; --accent-gold: #f5f5f7; border-color: #3a3a3c; }
@@ -111,32 +130,31 @@ textarea { height: 80px; resize: none; }
 .app-container.tema-rose_pearl #casella-qr .casella-invito::after { color: #e8c5c8 !important; }
 .app-container.tema-rose_pearl #quick-action-label { color: #e8c5c8 !important; }
 
-/* 🔒 STICKY FOOTER INTERFACCIA */
-.sticky-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000 80%, rgba(0,0,0,0) 100%); padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100; }
+/* 🔒 BARRA DI SALVATAGGIO INFERIORE CORRENTE */
+.sticky-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000 75%, rgba(0,0,0,0) 100%); padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100; }
 .save-btn { width: 100%; max-width: 390px; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.5px; }
-
+.back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; }
   </style>  
 </head>
 <body>
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiTuttiIDrawer()"></div>
 
     <div class="configurator-wrapper">
-        <div id="profile-content" class="app-container ready">
+       <div id="profile-content" class="app-container ready">
             
             <div class="header-monolith" onclick="apriDrawer('drawer-identita')">
                 <div class="avatar-block" id="avatar-container" style="display:none;">
                     <img id="userImage" class="user-media" src="" alt="Logo">
                 </div>
                 <div class="username-capsule">
-                    <h1 class="username-display" id="tag-username">@username_system</h1>
+                    <h1 class="username-display" id="tag-username">@...</h1>
                 </div>
             </div>
 
             <div id="mainGrid">
                 <div class="casella" id="casella-qr" onclick="apriDrawer('drawer-piano')"><span class="casella-invito"></span></div>
                 <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-identita')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-gallery" onclick="apriDrawer('drawer-gallery')"><span class="casella-invito"></span></div>
+                <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')"><span class="casella-invito"></span></div>
                 <div class="casella" id="casella-contatti" onclick="apriDrawer('drawer-vcf')"><span class="casella-invito"></span></div>
                 <div class="casella" id="casella-social" onclick="apriDrawer('drawer-social')"><span class="casella-invito"></span></div>
                 <div class="casella" id="casella-sito" onclick="apriDrawer('drawer-diretti')"><span class="casella-invito"></span></div>
@@ -147,7 +165,7 @@ textarea { height: 80px; resize: none; }
                 <div id="quick-action-icon">⚡</div>
                 <div class="casella-invito" id="quick-action-label">Azione rapida</div>
             </div>
-        </div>
+        </div> 
     </div>
 
     <div class="drawer-overlay" id="drawer-identita">
