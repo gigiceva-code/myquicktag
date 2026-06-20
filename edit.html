@@ -35,28 +35,35 @@
 body { 
     background-color: var(--bg-color); 
     color: #ffffff; 
-    height: 100vh; /* Fissato allo schermo */
-    overflow: hidden; /* Niente più scroll indesiderato sulla pagina principale */
+    min-height: 100vh; /* Torna a min-height */
+    /* overflow: hidden; RIMOSSO per riattivare il pull-to-refresh */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
 
 /* 📱 INCASTRO PREVIEW TAG CENTRALE */
 .configurator-wrapper {
     display: flex; justify-content: center; align-items: flex-start;
     width: 100%; max-width: 430px; margin: 0 auto; 
-    padding: 40px 20px 120px 20px; /* Ridotto per adattarsi allo schermo */
-    height: 100%;
-    overflow-y: auto; /* Se aggiungi 20 moduli, scrollerà solo questa area pulita */
+    padding: 40px 20px 140px 20px; /* 140px lascia spazio esatto per il bottone in basso */
+    /* height: 100%; RIMOSSO */
+    /* overflow-y: auto; RIMOSSO */
 }
-
-
 
 .app-container {
-    width: 100%; height: calc(100svh - 140px); max-height: 740px; padding: 40px 24px 32px 24px;
-    background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.0); /* Bordo rimosso per il void */
+    width: 100%; 
+    min-height: 60vh; /* Altezza minima elegante, cresce da sola se aggiungi moduli */
+    /* height: calc(100svh - 140px); RIMOSSO: era questo che causava il vuoto nero in basso! */
+    padding: 40px 24px 32px 24px;
+    background-color: var(--bg-chassis); 
+    border: 1px solid rgba(212, 175, 55, 0.0);
     border-radius: 28px;
-    display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; position: relative;
+    display: flex; flex-direction: column; justify-content: flex-start; position: relative;
 }
+
+
+
+
 
 .header-monolith { text-align: center; cursor: pointer; padding: 10px; border-radius: 12px; margin-bottom: 20px; }
 .avatar-block { display: flex; width: 52px; height: 52px; border-radius: 12px; background: #070708; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; margin: 0 auto 5px auto; }
