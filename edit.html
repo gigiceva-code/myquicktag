@@ -49,23 +49,28 @@ body {
     /* height: 100%; RIMOSSO */
     /* overflow-y: auto; RIMOSSO */
 }
-
 .app-container {
     width: 100%; 
-    min-height: 60vh; /* Altezza minima elegante, cresce da sola se aggiungi moduli */
-    /* height: calc(100svh - 140px); RIMOSSO: era questo che causava il vuoto nero in basso! */
-    padding: 40px 24px 32px 24px;
+    min-height: 60vh; 
+    padding: 0 0 32px 0; /* ⬅️ MODIFICATO: rimosso il padding alto e laterale */
     background-color: var(--bg-chassis); 
     border: 1px solid rgba(212, 175, 55, 0.0);
     border-radius: 28px;
     display: flex; flex-direction: column; justify-content: flex-start; position: relative;
 }
 
+.header-monolith { 
+    position: sticky; 
+    top: 0; 
+    z-index: 80; 
+    background-color: var(--bg-chassis); 
+    padding: 40px 24px 20px 24px; 
+    border-radius: 28px 28px 0 0; 
+    margin-bottom: 10px; 
+    text-align: center; 
+    cursor: pointer; 
+}
 
-
-
-
-.header-monolith { text-align: center; cursor: pointer; padding: 10px; border-radius: 12px; margin-bottom: 20px; }
 .avatar-block { display: flex; width: 52px; height: 52px; border-radius: 12px; background: #070708; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; margin: 0 auto 5px auto; }
 .user-media { width: 100%; height: 100%; object-fit: cover; }
 .username-capsule { display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 6px 16px; margin: 5px auto; max-width: 90%; }
@@ -81,7 +86,7 @@ body {
     align-items: center !important; 
     flex: 1 !important; 
     width: 100% !important; 
-    padding: 0 !important; 
+    padding: 0 24px !important; /* ⬅️ MODIFICATO: Mantiene i testi impaginati al centro */
     gap: 15px;
 }
 
