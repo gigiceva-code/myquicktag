@@ -719,12 +719,62 @@ textarea { height: 70px; resize: none; }
         }
     } 
 
-        // Aggiunto il parametro "salvataggioSilenzioso" (di default è false per non rompere altro)
-        // 💾 MOTORE DI SALVATAGGIO (CON GATEKEEPER)
+     // ============================================================
+    // 🗺️ MOTORE CASSETTI E TASTO INDIETRO (ANTI-USCITA)
+    // ============================================================
+    function apriDrawer(idDrawer) {
+        document.querySelectorAll('.drawer-overlay.open').forEach(d => {
+            if(d.id !== idDrawer) d.classList.remove('open');
+        });
+        
+        // Crea la finta pagina per bloccare il tasto indietro del telefono
+        if (window.location.hash !== '#menu') {
+            window.history.pushState(null, null, '#menu');
+        }
+        
+        const drawer = document.getElementById(idDrawer);
+        const backdrop = document.getElementById('drawer-backdrop');
+        if (backdrop) backdrop.style.display = 'block';
+        
+        setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
+    }
+
+    function chiudiTuttiIDrawer() {
+        if (window.location.hash === '#menu') {
+            window.history.back(); 
+        } else {
+            eseguiChiusuraCassetti();
+        }
+    }
+
+    window.addEventListener('hashchange', () => {
+        if (window.location.hash !== '#menu') eseguiChiusuraCassetti();
+    });
+
+    function eseguiChiusuraCassetti() {
+        document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open'));
+        const backdrop = document.getElementById('drawer-backdrop');
+        if (backdrop) backdrop.style.display = 'none';
+        
+        aggiornaTagLive();
+        
+        // SALVATAGGIO FANTASMA ALLA CHIUSURA
+        setTimeout(() => {
+            if(typeof salvaDati === 'function') salvaDati(false, true);
+        }, 500); 
+    }
+
+    function attivaStep(azioneIgnorata, idDrawer) {
+        if (idDrawer) apriDrawer(idDrawer);
+        else chiudiTuttiIDrawer();
+    }
+
+    // ============================================================
+    // 💾 MOTORE DI SALVATAGGIO (CON BLOCCO DEL SALTO)
+    // ============================================================
     async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
         const btn = document.getElementById("btn-salva-dati");
         
-        // Cambia il testo del bottone SOLO se non stiamo salvando di nascosto
         if(btn && !salvataggioSilenzioso) {
             btn.innerText = "SALVATAGGIO...";
             btn.disabled = true;
@@ -732,11 +782,7 @@ textarea { height: 70px; resize: none; }
 
         const tagDallUrl = params.get("u") || "";
         const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
-
-        const getVal = (id) => {
-            const el = document.getElementById(id);
-            return el ? el.value.trim() : "";
-        };
+        const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
 
         const bozza = {
             username_system: nomePerSistema,
@@ -753,60 +799,35 @@ textarea { height: 70px; resize: none; }
             sedi_json: (() => {
                 const msNome = getVal("ms-nome");
                 if (!msNome) return "";
-                return JSON.stringify([{
-                    nome: msNome,
-                    indirizzo: getVal("ms-indirizzo"),
-                    telefono: getVal("ms-telefono"),
-                    info: getVal("ms-info")
-                }]);
+                return JSON.stringify([{ nome: msNome, indirizzo: getVal("ms-indirizzo"), telefono: getVal("ms-telefono"), info: getVal("ms-info") }]);
             })(), 
             modulo_vcf: {
-                nome: getVal("vcf-nome"),
-                telefono1: getVal("vcf-telefono1"),
-                telefono2: getVal("vcf-telefono2"),
-                email1: getVal("vcf-email1"),
-                email2: getVal("vcf-email2"),
-                sito: normalizzaUrl(getVal("vcf-sito")),
-                indirizzo: getVal("vcf-indirizzo"),
-                piva: getVal("vcf-piva")
+                nome: getVal("vcf-nome"), telefono1: getVal("vcf-telefono1"), telefono2: getVal("vcf-telefono2"),
+                email1: getVal("vcf-email1"), email2: getVal("vcf-email2"), sito: normalizzaUrl(getVal("vcf-sito")),
+                indirizzo: getVal("vcf-indirizzo"), piva: getVal("vcf-piva")
             }
         }; 
         
-        const datiDaInviare = {
-            username_system: nomePerSistema,
-            draft_json: JSON.stringify(bozza)
-        };
-
         try {
             const response = await fetch('/api/update-profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datiDaInviare)
+                body: JSON.stringify({ username_system: nomePerSistema, draft_json: JSON.stringify(bozza) })
             });
 
             const result = await response.json();
 
             if (response.ok || result.success) {
-                // 🔥 IL GATEKEEPER: Se è un salvataggio silenzioso, si ferma qui!
+                // IL SEGRETO È QUI: Se è silenzioso, il codice si ferma e NON ti sbatte fuori
                 if (!salvataggioSilenzioso) {
-                    if (mostraAnteprima) {
-                        window.location.href = `tag.html?u=${nomePerSistema}&mode=draft`;
-                    } else {
-                        window.location.href = `profile.html?u=${nomePerSistema}`;
-                    }
+                    if (mostraAnteprima) window.location.replace(`tag.html?u=${nomePerSistema}&mode=draft`);
+                    else window.location.replace(`profile.html?u=${nomePerSistema}`);
                 }
             } else {
-                if (!salvataggioSilenzioso) {
-                    console.error("Errore API:", result.error);
-                    alert("Impossibile salvare le modifiche. Si prega di riprovare.");
-                }
+                if (!salvataggioSilenzioso) alert("Impossibile salvare le modifiche. Riprova.");
             }
-
         } catch (error) {
-            if (!salvataggioSilenzioso) {
-                console.error("Errore di rete:", error);
-                alert("Il cantiere non comunica con l'ufficio.");
-            }
+            if (!salvataggioSilenzioso) alert("Errore di connessione al server.");
         } finally {
             if(btn && !salvataggioSilenzioso) {
                 btn.innerText = "SALVA LE MODIFICHE";
@@ -814,7 +835,6 @@ textarea { height: 70px; resize: none; }
             }
         }
     }
-
     function luxuryNavigate(event, url) {
         event.preventDefault();
         setTimeout(function() {
@@ -953,60 +973,6 @@ textarea { height: 70px; resize: none; }
             aggiornaTagLive();
         }
     });
-// ============================================================
-    // 🗺️ GESTIONE DRAWER, FLUSSO D'ONBOARDING E TASTO INDIETRO (MOTORE HASH)
-    // ============================================================
-
-    function apriDrawer(idDrawer) {
-        // Chiude gli altri fluidamente
-        document.querySelectorAll('.drawer-overlay.open').forEach(d => {
-            if(d.id !== idDrawer) d.classList.remove('open');
-        });
-        
-        // TRUCCO INFALLIBILE: Aggiunge un pezzo finto all'URL per ingannare Android
-        if (window.location.hash !== '#menu') {
-            window.history.pushState(null, null, '#menu');
-        }
-        
-        const drawer = document.getElementById(idDrawer);
-        const backdrop = document.getElementById('drawer-backdrop');
-        
-        if (backdrop) backdrop.style.display = 'block';
-        
-        setTimeout(() => {
-            if (drawer) drawer.classList.add('open');
-        }, 10);
-    }
-
-    // Questa scatta quando tocchi la X o il fondale
-    function chiudiTuttiIDrawer() {
-        if (window.location.hash === '#menu') {
-            window.history.back(); // Fa finta che tu abbia premuto il tasto Android
-        } else {
-            eseguiChiusuraCassetti();
-        }
-    }
-
-    // Il sensore che ascolta il tasto fisico del telefono
-    window.addEventListener('hashchange', () => {
-        if (window.location.hash !== '#menu') {
-            eseguiChiusuraCassetti();
-        }
-    });
-
-    // La vera azione di chiusura e salvataggio
-    function eseguiChiusuraCassetti() {
-        document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open'));
-        const backdrop = document.getElementById('drawer-backdrop');
-        if (backdrop) backdrop.style.display = 'none';
-        
-        aggiornaTagLive();
-
-        // Salvataggio invisibile
-        setTimeout(() => {
-            if(typeof salvaDati === 'function') salvaDati(false, true);
-        }, 500); 
-    }
 
     // Usata dai bottoni del menu funzioni
     function attivaStep(azioneIgnorata, idDrawer) {
