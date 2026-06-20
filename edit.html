@@ -239,14 +239,32 @@ textarea { height: 70px; resize: none; }
 .save-btn { width: 100%; max-width: 390px; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.2s ease;}
 .save-btn:active { transform: scale(0.98); }
 .back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; }
-   /* --- STRUTTURA TEMI --- */
+   /* --- STRUTTURA TEMI COMPLETA --- */
 .app-container {
     transition: all 0.3s ease;
     background-color: var(--bg-color);
     min-height: 100vh;
 }
 
-/* Tema Obsidian Gold */
+/* 1. Tema Black DNA */
+.tema-black-dna {
+    --bg-color: #000000;
+    --card-bg: rgba(25, 25, 25, 0.9);
+    --border-color: #333333;
+    --text-main: #ffffff;
+    --card-radius: 12px;
+}
+
+/* 2. Tema Titanium */
+.tema-titanium {
+    --bg-color: #1a1a24;
+    --card-bg: rgba(40, 40, 55, 0.8);
+    --border-color: #5a5a75;
+    --text-main: #e0e0e0;
+    --card-radius: 8px;
+}
+
+/* 3. Tema Obsidian Gold */
 .tema-obsidian-gold {
     --bg-color: #0a0a0a;
     --card-bg: rgba(20, 20, 20, 0.8);
@@ -255,14 +273,14 @@ textarea { height: 70px; resize: none; }
     --card-radius: 12px;
 }
 
-/* Tema Satin Rose (quello dedicato alle donne che avevamo ricordato) */
+/* 4. Tema Satin Rose */
 .tema-satin-rose {
     --bg-color: #fffafb;
     --card-bg: #ffffff;
     --border-color: #e5b4b4;
     --text-main: #5d4a4a;
     --card-radius: 24px;
-} 
+}
   </style>  
 </head>
 <body>
@@ -1055,32 +1073,39 @@ textarea { height: 70px; resize: none; }
         // Inseriamo il tasto in fondo al contenuto
         cassetto.appendChild(btn);
     }
-        // Funzione per applicare il tema scelto
-function applicaTema(nomeTema) {
+      // MOTORE SCAMBIO TEMI IN TEMPO REALE
+function applicaTema(valoreRadio) {
     const container = document.querySelector('.app-container');
     
-    // Rimuove tutti i temi precedenti
-    container.classList.remove('tema-obsidian-gold', 'tema-satin-rose', 'tema-black-dna');
+    // 1. Facciamo piazza pulita di tutti i temi precedenti per evitare accavallamenti
+    container.classList.remove('tema-black-dna', 'tema-titanium', 'tema-obsidian-gold', 'tema-rose-pearl');
     
-    // Aggiunge il nuovo tema
-    container.classList.add('tema-' + nomeTema);
+    // 2. Il Traduttore: associa il valore del bottone HTML alla classe CSS esatta
+    let classeTema = '';
+    if (valoreRadio === 'black') classeTema = 'tema-black-dna';
+    if (valoreRadio === 'titanium') classeTema = 'tema-titanium';
+    if (valoreRadio === 'obsidian_gold') classeTema = 'tema-obsidian-gold';
+    if (valoreRadio === 'rose_pearl') classeTema = 'tema-rose-pearl';
     
-    // Salva la preferenza nella bozza (per il salvataggio futuro)
-    // Assicurati di avere un input nascosto o una variabile che tiene il valore attuale
-    console.log("Tema applicato:", nomeTema);
+    // 3. Applichiamo il nuovo tema
+    if (classeTema !== '') {
+        container.classList.add(classeTema);
+    }
     
-    // Aggiorna l'anteprima (la tua funzione di rendering live)
+    console.log("Stile Visivo applicato:", classeTema);
+    
+    // 4. Aggiorniamo i moduli in tempo reale
     if(typeof aggiornaTagLive === 'function') {
         aggiornaTagLive();
     }
 }
 
-// Collegamento ai tuoi radio button (esempio)
+// 5. Mettiamo in ascolto i tuoi bottoni
 document.querySelectorAll('input[name="digital_style"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
         applicaTema(e.target.value);
     });
-});
+}); 
     </script>
 </body>
 </html>
