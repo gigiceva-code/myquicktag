@@ -603,7 +603,7 @@ async function checkAccess() {
     }
 }
 
-// 3. VERIFICA DISPONIBILITÀ TAG
+// 3. VERIFICA DISPONIBILITÀ TAG (POTENZIATA CON INTERCETTORE)
 async function vaiAllaVerifica() {
     const inputField = document.getElementById('tag-input');
     const tagValue = inputField.value.trim().toLowerCase();
@@ -616,6 +616,20 @@ async function vaiAllaVerifica() {
 
     const rawTag = tagValue.replace(/\s+/g, '').replace(/@/g, '');
     const formattedTag = '@' + rawTag;
+
+    // 🔥 L'INTERCETTORE: Se l'utente ha già prenotato questo nome, lo facciamo passare senza chiamare l'API!
+    const reservedDataStr = localStorage.getItem('myquicktag_reserved');
+    if (reservedDataStr) {
+        try {
+            const reservedData = JSON.parse(reservedDataStr);
+            const now = new Date().getTime();
+            if (now < reservedData.expire && reservedData.tag === rawTag) {
+                document.getElementById('welcome-tag-title').innerText = `${formattedTag} ti sta aspettando.`;
+                apriOverlay('welcome-overlay');
+                return; 
+            }
+        } catch(e) {}
+    }
 
     const originalText = btn.innerHTML;
     btn.innerHTML = "VERIFICA IN CORSO...";
@@ -631,13 +645,17 @@ async function vaiAllaVerifica() {
         const data = await response.json();
 
         if (data.success) {
+            // 🔥 IL SALVATAGGIO: Diamo il gettone SUBITO, appena il server dice OK
+            const scadenza = new Date().getTime() + 900000; // 15 minuti di tempo
+            localStorage.setItem('myquicktag_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
+
             document.getElementById('welcome-tag-title').innerText = `${formattedTag} è disponibile.`;
-            apriOverlay('welcome-overlay'); 
+            apriOverlay('welcome-overlay');
         } else {
-            alert(data.message || "Nome non disponibile. Scegli un altro tag."); 
+            alert(data.message || "Nome non disponibile. Scegli un altro tag.");
         }
     } catch (error) {
-        console.error("Errore di connessione API Vercel:", error);
+        console.error("Errore API:", error);
         alert("Errore di connessione al server. Riprova tra poco.");
     } finally {
         btn.innerHTML = originalText;
@@ -656,14 +674,9 @@ function procediAllaRegistrazione() {
         btn.style.opacity = "0.7";
     }
 
-    // MEMORIA DI PROPRIETÀ: Salviamo il tag in sospeso per 15 minuti (900.000 ms)
-    const scadenza = new Date().getTime() + 900000; 
-    localStorage.setItem('myquicktag_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
-
-    // SCUDO: Sostituiamo la cronologia, così il tasto "indietro" non torna qui
+    // SCUDO: Sostituiamo la cronologia per impedire il ritorno all'overlay
     window.location.replace(`edit.html?u=${encodeURIComponent(rawTag)}`); 
 }
-
 // 5. LOGICA PWA E OVERLAY
 window.addEventListener('popstate', function(event) {
     document.getElementById('welcome-overlay').style.display = 'none';
@@ -725,11 +738,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // 7. REVEAL ENGINE E MEMORIA SCROLL
 window.addEventListener('beforeunload', () => localStorage.setItem('scrollPos', window.scrollY));
 
-window.addEventListener('DOMContentLoaded', () => {
-    const scrollPos = localStorage.getItem('scrollPos');
-    if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
-
-    // CONTROLLO MEMORIA PROPRIETÀ
+function controllaMemoriaProprieta() {
     const reservedDataStr = localStorage.getItem('myquicktag_reserved');
     if (reservedDataStr) {
         try {
@@ -737,14 +746,13 @@ window.addEventListener('DOMContentLoaded', () => {
             const now = new Date().getTime();
             
             if (now < reservedData.expire) {
-                // Il tag è ancora in sospeso e valido: trasformiamo il widget di ricerca
                 const searchWidget = document.getElementById('search-widget');
                 if (searchWidget) {
                     searchWidget.innerHTML = `
                         <div style="padding: 10px; text-align: center;">
                             <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 2px; margin: 0 0 8px 0; text-transform: uppercase;">Configurazione in sospeso</p>
                             <p style="color: #fff; font-size: 20px; font-weight: 300; margin: 0 0 15px 0; letter-spacing: 1px;">@${reservedData.tag.toUpperCase()}</p>
-                            <button onclick="window.location.replace('edit.html?u=${reservedData.tag}')" style="width: 100%; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 15px rgba(80, 200, 120, 0.2);">
+                            <button onclick="window.location.href='edit.html?u=${reservedData.tag}'" style="width: 100%; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 15px rgba(80, 200, 120, 0.2);">
                                 RIPRENDI E COMPLETA
                             </button>
                             <button onclick="localStorage.removeItem('myquicktag_reserved'); location.reload();" style="width: 100%; padding: 10px 0; background: transparent; color: #888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline;">
@@ -754,13 +762,25 @@ window.addEventListener('DOMContentLoaded', () => {
                     `;
                 }
             } else {
-                // Il tempo è scaduto, puliamo la memoria
                 localStorage.removeItem('myquicktag_reserved');
             }
         } catch(e) {
             localStorage.removeItem('myquicktag_reserved');
         }
     }
+}
+
+// Scongela la pagina se l'utente preme "Indietro" dal browser
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) controllaMemoriaProprieta();
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    const scrollPos = localStorage.getItem('scrollPos');
+    if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
+
+    // Eseguiamo il controllo principale all'avvio
+    controllaMemoriaProprieta();
 
     const tagInput = document.getElementById('tag-input');
     if (tagInput) {
