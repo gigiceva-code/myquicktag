@@ -720,11 +720,11 @@ textarea { height: 70px; resize: none; }
     } 
 
         // Aggiunto il parametro "salvataggioSilenzioso" (di default è false per non rompere altro)
-        async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
-        console.log('Salvataggio. Anteprima:', mostraAnteprima, 'Silenzioso:', salvataggioSilenzioso);
-        
+        // 💾 MOTORE DI SALVATAGGIO (CON GATEKEEPER)
+    async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
         const btn = document.getElementById("btn-salva-dati");
-        // Cambia il testo del bottone solo se non è un salvataggio silenzioso
+        
+        // Cambia il testo del bottone SOLO se non stiamo salvando di nascosto
         if(btn && !salvataggioSilenzioso) {
             btn.innerText = "SALVATAGGIO...";
             btn.disabled = true;
@@ -769,8 +769,9 @@ textarea { height: 70px; resize: none; }
                 sito: normalizzaUrl(getVal("vcf-sito")),
                 indirizzo: getVal("vcf-indirizzo"),
                 piva: getVal("vcf-piva")
-            },
+            }
         }; 
+        
         const datiDaInviare = {
             username_system: nomePerSistema,
             draft_json: JSON.stringify(bozza)
@@ -786,27 +787,25 @@ textarea { height: 70px; resize: none; }
             const result = await response.json();
 
             if (response.ok || result.success) {
-                // IL CUORE DELLA MODIFICA: Se è in background, fermati qui e non reindirizzare!
+                // 🔥 IL GATEKEEPER: Se è un salvataggio silenzioso, si ferma qui!
                 if (!salvataggioSilenzioso) {
                     if (mostraAnteprima) {
                         window.location.href = `tag.html?u=${nomePerSistema}&mode=draft`;
                     } else {
                         window.location.href = `profile.html?u=${nomePerSistema}`;
                     }
-                } else {
-                    console.log("Salvataggio invisibile completato con successo.");
                 }
             } else {
                 if (!salvataggioSilenzioso) {
                     console.error("Errore API:", result.error);
-                    alert("Impossibile salvare le modifiche. Si prega di riprovare tra pochi istanti.");
+                    alert("Impossibile salvare le modifiche. Si prega di riprovare.");
                 }
             }
 
         } catch (error) {
             if (!salvataggioSilenzioso) {
                 console.error("Errore di rete:", error);
-                alert("Il cantiere non comunica con l'ufficio. Verifica il file api/update-profile.js");
+                alert("Il cantiere non comunica con l'ufficio.");
             }
         } finally {
             if(btn && !salvataggioSilenzioso) {
@@ -815,7 +814,6 @@ textarea { height: 70px; resize: none; }
             }
         }
     }
-
 
     function luxuryNavigate(event, url) {
         event.preventDefault();
