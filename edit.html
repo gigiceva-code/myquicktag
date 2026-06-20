@@ -911,29 +911,59 @@ textarea { height: 70px; resize: none; }
         }
     });
 
+        // ============================================================
+    // 🗺️ GESTIONE DRAWER, FLUSSO D'ONBOARDING E TASTO INDIETRO
     // ============================================================
-    // 🗺️ GESTIONE DRAWER E FLUSSO D'ONBOARDING
-    // ============================================================
-        function apriDrawer(idDrawer) {
-        // Rimuove la classe 'open' dagli altri cassetti fluidamente, senza toccare il fondale
+    
+    // Variabile che dice al telefono se stiamo guardando un cassetto
+    let statoCassettoAperto = false;
+
+    function apriDrawer(idDrawer) {
+        // Rimuove la classe 'open' dagli altri cassetti fluidamente
         document.querySelectorAll('.drawer-overlay.open').forEach(d => {
             if(d.id !== idDrawer) {
                 d.classList.remove('open');
             }
         });
         
+        // IL TRUCCO: Se nessun cassetto era aperto, creiamo uno stato fantasma nella cronologia
+        if (!statoCassettoAperto) {
+            window.history.pushState({ cassettoAperto: true }, "");
+            statoCassettoAperto = true;
+        }
+        
         const drawer = document.getElementById(idDrawer);
         const backdrop = document.getElementById('drawer-backdrop');
         
         if (backdrop) backdrop.style.display = 'block';
         
-        // Un micro-ritardo assicura che l'animazione CSS faccia in tempo a innescarsi
         setTimeout(() => {
             if (drawer) drawer.classList.add('open');
         }, 10);
     }
 
+    // Questa funzione viene chiamata dalla (X) o cliccando sul fondale scuro
     function chiudiTuttiIDrawer() {
+        if (statoCassettoAperto) {
+            // Se clicchi la X, inganniamo il telefono facendogli premere "indietro" da solo,
+            // così manteniamo la cronologia pulita!
+            window.history.back(); 
+        } else {
+            // Fallback di sicurezza
+            eseguiChiusuraCassetti();
+        }
+    }
+
+    // IL MOTORE DI INTERCETTAZIONE: Ascolta il tasto "Indietro" di Android
+    window.addEventListener('popstate', (event) => {
+        if (statoCassettoAperto) {
+            statoCassettoAperto = false; // Resettiamo la variabile
+            eseguiChiusuraCassetti();    // Chiudiamo i cassetti
+        }
+    });
+
+    // La vera azione che chiude l'interfaccia e salva in silenzio
+    function eseguiChiusuraCassetti() {
         document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open'));
         const backdrop = document.getElementById('drawer-backdrop');
         if (backdrop) backdrop.style.display = 'none';
@@ -941,13 +971,12 @@ textarea { height: 70px; resize: none; }
         // Rende effettivo l'effetto WOW non appena il cassetto viene chiuso
         aggiornaTagLive();
 
-        // IL SALVATAGGIO INVISIBILE: Aggiunto il "true" per bloccare il redirect
+        // IL SALVATAGGIO INVISIBILE
         setTimeout(() => {
             if(typeof salvaDati === 'function') salvaDati(false, true);
         }, 500); 
     }
 
-        
     // Usata dai bottoni del menu funzioni
     function attivaStep(azioneIgnorata, idDrawer) {
         if (idDrawer) {
@@ -956,6 +985,7 @@ textarea { height: 70px; resize: none; }
             chiudiTuttiIDrawer();
         }
     }
+
 
 
     // 🚀 L'ALGORITMO DELL'ONBOARDING (LA GUIDA)
