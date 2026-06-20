@@ -539,7 +539,7 @@
     </div>
 </div>
 <script>
- // 1. NAVIGAZIONE UNIFICATA
+// 1. NAVIGAZIONE UNIFICATA
 function scrollToSection(id) {
     const target = document.getElementById(id);
     if (target) {
@@ -581,7 +581,10 @@ async function checkAccess() {
             btn.innerText = "IDENTITÀ CONFERMATA";
             btn.style.opacity = "1";
             localStorage.setItem('loggedUser', data.username.replace('@', ''));
-            localStorage.removeItem('myquicktag_pending');
+            
+            // L'utente è ufficiale, puliamo eventuali bozze in sospeso
+            localStorage.removeItem('myquicktag_reserved'); 
+            
             setTimeout(() => {
                 window.location.href = `profile.html?u=${data.username}`;
             }, 800);
@@ -600,7 +603,7 @@ async function checkAccess() {
     }
 }
 
-// 3. VERIFICA DISPONIBILITÀ TAG (Connessione corretta alla tua API Vercel)
+// 3. VERIFICA DISPONIBILITÀ TAG
 async function vaiAllaVerifica() {
     const inputField = document.getElementById('tag-input');
     const tagValue = inputField.value.trim().toLowerCase();
@@ -619,13 +622,12 @@ async function vaiAllaVerifica() {
     btn.style.opacity = "0.7";
 
     try {
-        // Ripristinato il tuo endpoint serverless
         const response = await fetch('/api/check-and-create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: formattedTag })
         });
-        
+
         const data = await response.json();
 
         if (data.success) {
@@ -643,24 +645,26 @@ async function vaiAllaVerifica() {
     }
 }
 
-// 4. REGISTRAZIONE DA OVERLAY (Corretto per puntare a edit.html)
+// 4. REGISTRAZIONE & SCUDO ANTI-RITORNO
 function procediAllaRegistrazione() {
     const inputField = document.getElementById('tag-input');
-    // Prende il nome e toglie spazi e chiocciole
     const rawTag = inputField.value.trim().toLowerCase().replace(/\s+/g, '').replace(/@/g, '');
-    
-    // Effetto caricamento sul bottone (come avevi nel tuo codice originale)
+
     const btn = document.getElementById('btn-entra-spazio');
     if (btn) {
         btn.innerText = "ACCESSO IN CORSO...";
         btn.style.opacity = "0.7";
     }
 
-    // Ti manda esattamente nella tua pagina edit.html con la sintassi corretta
-    window.location.href = `edit.html?u=${encodeURIComponent(rawTag)}`; 
+    // MEMORIA DI PROPRIETÀ: Salviamo il tag in sospeso per 15 minuti (900.000 ms)
+    const scadenza = new Date().getTime() + 900000; 
+    localStorage.setItem('myquicktag_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
+
+    // SCUDO: Sostituiamo la cronologia, così il tasto "indietro" non torna qui
+    window.location.replace(`edit.html?u=${encodeURIComponent(rawTag)}`); 
 }
 
-// 5. LOGICA PWA - TASTO INDIETRO E OVERLAY
+// 5. LOGICA PWA E OVERLAY
 window.addEventListener('popstate', function(event) {
     document.getElementById('welcome-overlay').style.display = 'none';
     document.getElementById('login-overlay').style.display = 'none';
@@ -724,6 +728,39 @@ window.addEventListener('beforeunload', () => localStorage.setItem('scrollPos', 
 window.addEventListener('DOMContentLoaded', () => {
     const scrollPos = localStorage.getItem('scrollPos');
     if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
+
+    // CONTROLLO MEMORIA PROPRIETÀ
+    const reservedDataStr = localStorage.getItem('myquicktag_reserved');
+    if (reservedDataStr) {
+        try {
+            const reservedData = JSON.parse(reservedDataStr);
+            const now = new Date().getTime();
+            
+            if (now < reservedData.expire) {
+                // Il tag è ancora in sospeso e valido: trasformiamo il widget di ricerca
+                const searchWidget = document.getElementById('search-widget');
+                if (searchWidget) {
+                    searchWidget.innerHTML = `
+                        <div style="padding: 10px; text-align: center;">
+                            <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 2px; margin: 0 0 8px 0; text-transform: uppercase;">Configurazione in sospeso</p>
+                            <p style="color: #fff; font-size: 20px; font-weight: 300; margin: 0 0 15px 0; letter-spacing: 1px;">@${reservedData.tag.toUpperCase()}</p>
+                            <button onclick="window.location.replace('edit.html?u=${reservedData.tag}')" style="width: 100%; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 15px rgba(80, 200, 120, 0.2);">
+                                RIPRENDI E COMPLETA
+                            </button>
+                            <button onclick="localStorage.removeItem('myquicktag_reserved'); location.reload();" style="width: 100%; padding: 10px 0; background: transparent; color: #888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline;">
+                                Annulla e cerca un nuovo nome
+                            </button>
+                        </div>
+                    `;
+                }
+            } else {
+                // Il tempo è scaduto, puliamo la memoria
+                localStorage.removeItem('myquicktag_reserved');
+            }
+        } catch(e) {
+            localStorage.removeItem('myquicktag_reserved');
+        }
+    }
 
     const tagInput = document.getElementById('tag-input');
     if (tagInput) {
