@@ -31,24 +31,23 @@
     padding: 0;
     -webkit-tap-highlight-color: transparent;
 }
- 
 body { 
     background-color: var(--bg-color); 
     color: #ffffff; 
-    min-height: 100vh; /* Torna a min-height */
-    /* overflow: hidden; RIMOSSO per riattivare il pull-to-refresh */
+    height: 100dvh; /* L'altezza dinamica ignora la barra degli indirizzi del browser */
+    overflow: hidden; /* Uccidiamo il rimbalzo e lo scorrimento del browser */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
-
 
 /* 📱 INCASTRO PREVIEW TAG CENTRALE */
 .configurator-wrapper {
     display: flex; justify-content: center; align-items: flex-start;
     width: 100%; max-width: 430px; margin: 0 auto; 
-    padding: 40px 20px 140px 20px; /* 140px lascia spazio esatto per il bottone in basso */
-    /* height: 100%; RIMOSSO */
-    /* overflow-y: auto; RIMOSSO */
-}
+    padding: 20px 20px 140px 20px; 
+    height: 100%;
+    overflow-y: auto; /* Solo i moduli potranno scorrere, il telaio nero resta FERMO */
+} 
+
 .app-container {
     width: 100%; 
     min-height: 60vh; 
