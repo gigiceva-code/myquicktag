@@ -674,14 +674,8 @@ textarea { height: 70px; resize: none; }
         }
     } 
 
-    async function salvaDati(mostraAnteprima = false) {
-        console.log('mostraAnteprima:', mostraAnteprima);
-        const btn = document.getElementById("btn-salva-dati");
-        if(btn) {
-            btn.innerText = "SALVATAGGIO...";
-            btn.disabled = true;
-        }
-
+        // Aggiunto il parametro "salvataggioSilenzioso" (di default è false per non rompere altro)
+    async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
         const tagDallUrl = params.get("u") || "";
         const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
 
@@ -738,26 +732,29 @@ textarea { height: 70px; resize: none; }
             const result = await response.json();
 
             if (response.ok || result.success) {
-                if (mostraAnteprima) {
-                    window.location.href = `tag.html?u=${nomePerSistema}&mode=draft`;
-                } else {
-                    window.location.href = `profile.html?u=${nomePerSistema}`;
+                // IL CUORE DELLA MODIFICA: Se è in background, fermati qui e non reindirizzare!
+                if (!salvataggioSilenzioso) {
+                    if (mostraAnteprima) {
+                        window.location.href = `tag.html?u=${nomePerSistema}&mode=draft`;
+                    } else {
+                        window.location.href = `profile.html?u=${nomePerSistema}`;
+                    }
                 }
             } else {
-                console.error("Errore API:", result.error);
-                alert("Impossibile salvare le modifiche. Si prega di riprovare tra pochi istanti.");
+                if (!salvataggioSilenzioso) {
+                    console.error("Errore API:", result.error);
+                    alert("Impossibile salvare le modifiche. Si prega di riprovare tra pochi istanti.");
+                }
             }
 
         } catch (error) {
-            console.error("Errore di rete:", error);
-            alert("Il cantiere non comunica con l'ufficio. Verifica il file api/update-profile.js");
-        } finally {
-            if(btn) {
-                btn.innerText = "SALVA LE MODIFICHE";
-                btn.disabled = false;
+            if (!salvataggioSilenzioso) {
+                console.error("Errore di rete:", error);
+                alert("Il cantiere non comunica con l'ufficio. Verifica il file api/update-profile.js");
             }
         }
     }
+
 
     function luxuryNavigate(event, url) {
         event.preventDefault();
