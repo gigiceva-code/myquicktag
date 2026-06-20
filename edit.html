@@ -675,7 +675,16 @@ textarea { height: 70px; resize: none; }
     } 
 
         // Aggiunto il parametro "salvataggioSilenzioso" (di default è false per non rompere altro)
-    async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
+        async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
+        console.log('Salvataggio. Anteprima:', mostraAnteprima, 'Silenzioso:', salvataggioSilenzioso);
+        
+        const btn = document.getElementById("btn-salva-dati");
+        // Cambia il testo del bottone solo se non è un salvataggio silenzioso
+        if(btn && !salvataggioSilenzioso) {
+            btn.innerText = "SALVATAGGIO...";
+            btn.disabled = true;
+        }
+
         const tagDallUrl = params.get("u") || "";
         const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
 
@@ -739,6 +748,8 @@ textarea { height: 70px; resize: none; }
                     } else {
                         window.location.href = `profile.html?u=${nomePerSistema}`;
                     }
+                } else {
+                    console.log("Salvataggio invisibile completato con successo.");
                 }
             } else {
                 if (!salvataggioSilenzioso) {
@@ -751,6 +762,11 @@ textarea { height: 70px; resize: none; }
             if (!salvataggioSilenzioso) {
                 console.error("Errore di rete:", error);
                 alert("Il cantiere non comunica con l'ufficio. Verifica il file api/update-profile.js");
+            }
+        } finally {
+            if(btn && !salvataggioSilenzioso) {
+                btn.innerText = "SALVA LE MODIFICHE";
+                btn.disabled = false;
             }
         }
     }
@@ -917,8 +933,7 @@ textarea { height: 70px; resize: none; }
         }, 10);
     }
 
-
-        function chiudiTuttiIDrawer() {
+    function chiudiTuttiIDrawer() {
         document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open'));
         const backdrop = document.getElementById('drawer-backdrop');
         if (backdrop) backdrop.style.display = 'none';
@@ -926,12 +941,13 @@ textarea { height: 70px; resize: none; }
         // Rende effettivo l'effetto WOW non appena il cassetto viene chiuso
         aggiornaTagLive();
 
-        // IL SALVATAGGIO INVISIBILE: Salva i dati in background senza disturbare l'utente
+        // IL SALVATAGGIO INVISIBILE: Aggiunto il "true" per bloccare il redirect
         setTimeout(() => {
-            if(typeof salvaDati === 'function') salvaDati(false);
-        }, 500); // Attende che il cassetto sia chiuso per una transizione fluida
+            if(typeof salvaDati === 'function') salvaDati(false, true);
+        }, 500); 
     }
 
+        
     // Usata dai bottoni del menu funzioni
     function attivaStep(azioneIgnorata, idDrawer) {
         if (idDrawer) {
