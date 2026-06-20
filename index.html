@@ -663,7 +663,7 @@ async function vaiAllaVerifica() {
     }
 }
 
-// 4. REGISTRAZIONE & SCUDO ANTI-RITORNO
+// 4. REGISTRAZIONE & SCUDO ANTI-RITORNO PERFETTO
 function procediAllaRegistrazione() {
     const inputField = document.getElementById('tag-input');
     const rawTag = inputField.value.trim().toLowerCase().replace(/\s+/g, '').replace(/@/g, '');
@@ -674,8 +674,15 @@ function procediAllaRegistrazione() {
         btn.style.opacity = "0.7";
     }
 
-    // SCUDO: Sostituiamo la cronologia per impedire il ritorno all'overlay
-    window.location.replace(`edit.html?u=${encodeURIComponent(rawTag)}`); 
+    // Ci mettiamo in ascolto del "passo indietro"
+    window.addEventListener('popstate', function onPop() {
+        window.removeEventListener('popstate', onPop);
+        // Appena l'overlay è stato bruciato dalla cronologia, polverizziamo la index!
+        window.location.replace(`edit.html?u=${encodeURIComponent(rawTag)}`);
+    });
+
+    // Inneschiamo il passo indietro invisibile per eliminare l'overlay
+    history.back();
 }
 // 5. LOGICA PWA E OVERLAY
 window.addEventListener('popstate', function(event) {
