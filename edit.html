@@ -387,11 +387,11 @@ textarea { height: 70px; resize: none; }
         <p style="color:var(--text-sec); font-size:0.85rem; line-height:1.6;">Gestione avanzata file e portfolio in caricamento JSON.</p>
     </div>
 
-    <div class="sticky-footer" id="footer-actions">
+       <div class="sticky-footer" id="footer-actions">
         <button class="save-btn" id="btn-azione-principale" onclick="avviaFlussoEcosistema()" style="margin-bottom: 10px;">CONFIGURA IL TUO ECOSISTEMA</button>
-        <button class="save-btn" id="btn-salva-dati" onclick="salvaDati(false)" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; display: none;">SALVA LE MODIFICHE</button>
         <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
     </div>
+
 
     <div id="modal-piano" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; padding:24px;">
         <div style="background:#121214; border:1px solid #1c1c1e; border-radius:20px; padding:32px 24px; max-width:340px; width:100%; text-align:center;">
@@ -901,21 +901,38 @@ textarea { height: 70px; resize: none; }
     // ============================================================
     // 🗺️ GESTIONE DRAWER E FLUSSO D'ONBOARDING
     // ============================================================
-    function apriDrawer(idDrawer) {
-        chiudiTuttiIDrawer();
+        function apriDrawer(idDrawer) {
+        // Rimuove la classe 'open' dagli altri cassetti fluidamente, senza toccare il fondale
+        document.querySelectorAll('.drawer-overlay.open').forEach(d => {
+            if(d.id !== idDrawer) {
+                d.classList.remove('open');
+            }
+        });
+        
         const drawer = document.getElementById(idDrawer);
         const backdrop = document.getElementById('drawer-backdrop');
-        if (drawer) drawer.classList.add('open');
+        
         if (backdrop) backdrop.style.display = 'block';
+        
+        // Un micro-ritardo assicura che l'animazione CSS faccia in tempo a innescarsi
+        setTimeout(() => {
+            if (drawer) drawer.classList.add('open');
+        }, 10);
     }
 
-    function chiudiTuttiIDrawer() {
+
+        function chiudiTuttiIDrawer() {
         document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open'));
         const backdrop = document.getElementById('drawer-backdrop');
         if (backdrop) backdrop.style.display = 'none';
         
         // Rende effettivo l'effetto WOW non appena il cassetto viene chiuso
         aggiornaTagLive();
+
+        // IL SALVATAGGIO INVISIBILE: Salva i dati in background senza disturbare l'utente
+        setTimeout(() => {
+            if(typeof salvaDati === 'function') salvaDati(false);
+        }, 500); // Attende che il cassetto sia chiuso per una transizione fluida
     }
 
     // Usata dai bottoni del menu funzioni
@@ -926,6 +943,7 @@ textarea { height: 70px; resize: none; }
             chiudiTuttiIDrawer();
         }
     }
+
 
     // 🚀 L'ALGORITMO DELL'ONBOARDING (LA GUIDA)
     function avviaFlussoEcosistema() {
@@ -947,9 +965,7 @@ textarea { height: 70px; resize: none; }
                     btnPrincipale.innerText = "AGGIUNGI FUNZIONE";
                     btnPrincipale.setAttribute('onclick', 'apriDrawer("drawer-funzioni")');
                 }
-                if(btnSalva) {
-                    btnSalva.style.display = 'block'; // Mostriamo il tasto salva
-                }
+                
                 
                 // Apriamo subito il cassetto delle funzioni per invitarlo alla prima configurazione
                 setTimeout(() => apriDrawer('drawer-funzioni'), 350);
