@@ -289,6 +289,40 @@ textarea { height: 70px; resize: none; }
     --text-main: #5d4a4a;
     --card-radius: 24px;
 }
+
+/* ============================================================
+   TELAIO ANTEPRIMA (Stato Primordiale Editor)
+   ============================================================ */
+#live-tag-preview {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    margin: 20px auto;
+    min-height: 500px !important;
+    height: auto !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    
+    /* Questo è il bordo di default, verrà sovrascritto dai temi sotto */
+    border: 1px solid rgba(212, 175, 55, 0.5); 
+}
+
+/* Override dei bordi della Tag Primordiale in base al tema scelto */
+.tema-black-dna { border-color: var(--accent-smeraldo, #50C878) !important; } /* Smeraldo come richiesto */
+.tema-titanium { border-color: rgba(134, 134, 139, 0.6) !important; } /* Un grigio titanio metallico */
+.tema-obsidian-gold { border-color: var(--accent-gold, #d4af37) !important; } /* L'oro originale */
+.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8) !important; } /* Rosa perlato */
+
+/* Testi personalizzati per le caselle primordiali dell'editor */
+#live-tag-preview #casella-bio .casella-invito::after { content: '+ AGGIUNGI INFO'; color: var(--text-sec) !important;}
+#live-tag-preview #casella-gallery .casella-invito::after { content: '+ AGGIUNGI GALLERY'; color: var(--text-sec) !important;}
+#live-tag-preview #casella-contatti .casella-invito::after { content: '+ AGGIUNGI CONTATTI'; color: var(--text-sec) !important;}
+#live-tag-preview #casella-social .casella-invito::after { content: '+ AGGIUNGI SOCIAL'; color: var(--text-sec) !important;}
+#live-tag-preview #casella-sito .casella-invito::after { content: '+ AGGIUNGI SITO'; color: var(--text-sec) !important;}
+
+/* Fix Sdoppiamento scritte: Annulla i vecchi content rigidi del tuo CSS originale in edit.html */
+.app-container #mainGrid .casella-invito::after { content: none; }
+
   </style>  
 </head>
 <body>
