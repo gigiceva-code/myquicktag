@@ -18,236 +18,32 @@
     --input-border: #2c2c2e;
     --accent-white: #ffffff;
     --text-sec: #8e8e93;
-    /* --- IL TELAIO ORIGINALE (Preso da tag.html) --- */
-:root {
-    --bg-esterno: #0d0d0f;       
-    --bg-chassis: #000000;       
-    --accent-gold: #d4af37;      
-    --text-main: #f5f5f7;
-    --text-sec: #86868b;
-}
- 
-    /* Variabili Tag Preview */
     --bg-chassis: #000000;
     --accent-gold: #d4af37;
     --accent-smeraldo: #50C878;
     --text-main: #f5f5f7;
 }
-   * {
+
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
 }
-body { 
-    background-color: var(--bg-color); 
-    color: #ffffff; 
-    height: 100dvh; /* L'altezza dinamica ignora la barra degli indirizzi del browser */
-    overflow: hidden; /* Uccidiamo il rimbalzo e lo scorrimento del browser */
+
+body {
+    background-color: var(--bg-color);
+    color: #ffffff;
+    min-height: 100dvh;
+    overflow-y: auto;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* 📱 INCASTRO PREVIEW TAG CENTRALE */
-.configurator-wrapper {
-    display: flex; justify-content: center; align-items: flex-start;
-    width: 100%; max-width: 430px; margin: 0 auto; 
-    padding: 20px 20px 140px 20px; 
-    height: 100%;
-    overflow-y: auto; /* Solo i moduli potranno scorrere, il telaio nero resta FERMO */
-} 
-
-.app-container {
-    width: 100%; 
-    min-height: 60vh; 
-    padding: 0 0 32px 0; /* ⬅️ MODIFICATO: rimosso il padding alto e laterale */
-    background-color: var(--bg-chassis); 
-    border: 1px solid rgba(212, 175, 55, 0.0);
-    border-radius: 28px;
-    display: flex; flex-direction: column; justify-content: flex-start; position: relative;
-}
-
-.header-monolith { 
-    position: sticky; 
-    top: 0; 
-    z-index: 80; 
-    background-color: var(--bg-chassis); 
-    padding: 40px 24px 20px 24px; 
-    border-radius: 28px 28px 0 0; 
-    margin-bottom: 10px; 
-    text-align: center; 
-    cursor: pointer; 
-}
-
-.avatar-block { display: flex; width: 52px; height: 52px; border-radius: 12px; background: #070708; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; margin: 0 auto 5px auto; }
-.user-media { width: 100%; height: 100%; object-fit: cover; }
-.username-capsule { display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 6px 16px; margin: 5px auto; max-width: 90%; }
-.username-display { font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; }
-
 /* ============================================================
-   🏛️ ASSETTO GRAFICO FLUTTUANTE (TELA DESERTA)
+   MONOLITO LIVE — la tag vera, identica a tag.html, in-flow
    ============================================================ */
-.app-container #mainGrid { 
-    display: flex !important; 
-    flex-direction: column !important; 
-    justify-content: flex-start !important; 
-    align-items: center !important; 
-    flex: 1 !important; 
-    width: 100% !important; 
-    padding: 0 24px !important; /* ⬅️ MODIFICATO: Mantiene i testi impaginati al centro */
-    gap: 15px;
-}
-
-.app-container #mainGrid .casella { 
-    padding: 16px 0 !important; 
-    width: 100%; 
-    text-align: center; 
-    cursor: pointer; 
-    border: none !important; 
-    background: transparent !important; 
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    transition: opacity 0.3s ease, transform 0.2s ease;
-}
-
-.app-container #mainGrid .casella-invito::after { 
-    font-size: 0.75rem !important; 
-    letter-spacing: 4px !important; 
-    font-weight: 300 !important; 
-}
-
-/* Assegnazione Testi Rigidi per i Pseudo-Elementi */
-#casella-qr .casella-invito::after { content: 'ACCESS TAG'; color: var(--accent-gold) !important; font-weight: 400; }
-#casella-bio .casella-invito::after { content: 'INFO / BIO'; color: #ffffff !important; }
-#casella-social .casella-invito::after { content: 'SOCIAL NETWORKS'; color: #ffffff !important; }
-#casella-sito .casella-invito::after { content: 'CONTATTI DIRETTI'; color: #ffffff !important; }
-#casella-contatti .casella-invito::after { content: 'RUBRICA VCF'; color: #ffffff !important; }
-#casella-gallery .casella-invito::after { content: 'GALLERY SHOWCASE'; color: #ffffff !important; }
-
-#casella-quick-action { 
-    position: absolute !important; 
-    bottom: 45px !important; 
-    left: 24px !important; 
-    right: 24px !important; 
-    height: 44px !important; 
-    background: transparent !important; 
-    border: none !important; 
-    display: flex !important; 
-    flex-direction: row !important; 
-    justify-content: center !important; 
-    align-items: center !important; 
-    gap: 8px !important; 
-    cursor: pointer; 
-}
-#quick-action-icon { font-size: 1rem !important; }
-#quick-action-label { font-size: 0.7rem !important; letter-spacing: 2px !important; text-transform: uppercase !important; color: var(--accent-gold) !important; }
-
-.header-monolith:active, 
-.app-container #mainGrid .casella:active, 
-#casella-quick-action:active {
-    transform: scale(0.96);
-    opacity: 0.6;
-}
-
-/* 🏛️ LA SVOLTA HALF-DRAWER */
-.drawer-overlay {
-    position: fixed; bottom: -100%; left: 0; width: 100%; height: 55vh;
-    background: var(--card-bg); border-top: 1px solid var(--card-border);
-    border-radius: 24px 24px 0 0; padding: 24px; z-index: 2000;
-    transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.9); overflow-y: auto;
-    box-sizing: border-box;
-}
-
-.drawer-overlay.open { bottom: 0; }
-.drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1900; display: none; }
-
-.drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
-.drawer-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-white); }
-.drawer-close { 
-    background: rgba(255, 255, 255, 0.06); 
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: #ffffff; 
-    width: 34px;
-    height: 34px;
-    border-radius: 50%; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.85rem; 
-    cursor: pointer; 
-    transition: all 0.2s ease;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-}
-
-.drawer-close:active {
-    transform: scale(0.9);
-    background: rgba(255, 255, 255, 0.15);
-}
-
-
-/* Menu Console Operativa Interna */
-.funzione-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--card-border);
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-}
-.funzione-row:active { opacity: 0.7; }
-.funzione-nome { font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; color: #fff; }
-.lock-icon { color: var(--accent-smeraldo); font-size: 0.75rem; }
-
-/* Bottoni Onboarding */
-.btn-nav-onboarding {
-    width: 100%; padding: 16px; margin-top: 20px;
-    background: #ffffff; color: #000000;
-    border: none; border-radius: 12px;
-    font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
-    cursor: pointer; transition: transform 0.2s ease;
-}
-.btn-nav-onboarding:active { transform: scale(0.98); }
-
-/* Form Interni */
-.form-group { margin-bottom: 16px; text-align: left; }
-.form-group label { display: block; font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-input, textarea, select { width: 100%; padding: 12px 14px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: #ffffff; font-size: 0.9rem; outline: none; }
-textarea { height: 70px; resize: none; }
-
-/* Griglia Stili & Temi */
-.style-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.style-card input { display: none; }
-.style-preview { padding: 12px 2px; border-radius: 8px; border: 1px solid var(--input-border); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s ease; }
-.style-card input:checked + .style-preview { border-color: #ffffff; background: rgba(255,255,255,0.05); }
-.black { background: #000; color: #fff; } .titanium { background: #1c1c1e; color: #f5f5f7; } .gold { background: #000; color: #d4af37; } .pearl { background: #1a1518; color: #e8c5c8; }
-
-/* Piani */
-.plan-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 12px; cursor: pointer; display: flex; align-items: center; margin-bottom: 8px; transition: all 0.2s ease; }
-.plan-card.selected { border-color: #ffffff; background: rgba(255,255,255,0.04); }
-.plan-card i { font-size: 1rem; margin-right: 12px; color: var(--text-sec); width: 20px; text-align: center; }
-.plan-info h3 { margin: 0; font-size: 0.85rem; font-weight: 600; }
-.plan-info p { margin: 1px 0 0; font-size: 0.7rem; color: var(--text-sec); }
-
-.social-input-group { display: flex; gap: 8px; align-items: center; }
-.btn-add-social { padding: 12px 16px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
-    .app-container.tema-black { --bg-chassis: #000000; --accent-gold: #ffffff; }
-    
-/* ============================================================
-   MONOLITO LIVE — variabili e chassis (in-flow, non fixed)
-   ============================================================ */
-:root {
-    --bg-chassis: #000000;
-    --accent-gold: #d4af37;
-    --text-main-tag: #f5f5f7;
-    --text-sec-tag: #86868b;
-}
-
 #profile-content.app-container {
     position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
     display: flex;
     opacity: 1;
     width: 100%;
@@ -263,6 +59,11 @@ textarea { height: 70px; resize: none; }
     justify-content: space-between;
     box-shadow: 0 30px 70px rgba(0,0,0,0.6);
     overflow: hidden;
+}
+
+#profile-content .header-monolith {
+    text-align: center;
+    cursor: pointer;
 }
 
 #profile-content .avatar-block {
@@ -303,11 +104,6 @@ textarea { height: 70px; resize: none; }
     word-break: break-all;
 }
 
-#profile-content .header-monolith {
-    text-align: center;
-    cursor: pointer;
-}
-
 #profile-content #mainGrid {
     display: flex;
     flex-direction: column;
@@ -331,6 +127,7 @@ textarea { height: 70px; resize: none; }
     padding: 8px 0;
     width: auto;
     cursor: pointer;
+    transition: opacity 0.2s ease;
 }
 
 #profile-content #mainGrid .casella-invito {
@@ -345,17 +142,18 @@ textarea { height: 70px; resize: none; }
 }
 
 #profile-content #casella-qr .casella-invito::after { content: 'DIGITAL PASS'; color: var(--accent-gold); font-weight: 400; }
-#profile-content #casella-bio .casella-invito::after { content: 'BIO'; color: var(--text-sec-tag); }
-#profile-content #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec-tag); }
-#profile-content #casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec-tag); }
-#profile-content #casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec-tag); }
-#profile-content #casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec-tag); }
-#profile-content #casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec-tag); }
+#profile-content #casella-bio .casella-invito::after { content: 'BIO'; color: var(--text-sec); }
+#profile-content #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec); }
+#profile-content #casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec); }
+#profile-content #casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec); }
+#profile-content #casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec); }
+#profile-content #casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec); }
 
+#profile-content #mainGrid .casella:active { opacity: 0.6; }
 #profile-content #mainGrid .casella:active .casella-invito::after { color: #ffffff; }
 
 #profile-content #casella-quick-action {
-    width: calc(100% - 0px);
+    width: 100%;
     height: 46px;
     min-height: 46px;
     background: rgba(212, 175, 55, 0.03);
@@ -379,104 +177,93 @@ textarea { height: 70px; resize: none; }
     text-transform: uppercase;
     color: #d4af37;
 }
+#profile-content #casella-quick-action:active { opacity: 0.6; }
 
-/* Temi — riusano le stesse classi di tag.html */
+/* Temi — bordo dello chassis cambia colore in base al tema scelto */
 #profile-content.tema-black-dna { border-color: rgba(80, 200, 120, 0.5); }
 #profile-content.tema-titanium { border-color: rgba(134, 134, 139, 0.6); }
 #profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.5); }
 #profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8); }
-/* Temi Dinamici Real-Time */
-.app-container.tema-black { --bg-chassis: #000000; --accent-gold: #ffffff; }
-.app-container.tema-black #casella-qr .casella-invito::after { color: #ffffff !important; }
-.app-container.tema-titanium { --bg-chassis: #151517; --accent-gold: #f5f5f7; }
-.app-container.tema-titanium #casella-qr .casella-invito::after { color: #f5f5f7 !important; }
-.app-container.tema-obsidian_gold { --bg-chassis: #000000; --accent-gold: #d4af37; }
-.app-container.tema-rose_pearl { --bg-chassis: #0d0a0b; --accent-gold: #e8c5c8; }
-.app-container.tema-rose_pearl #casella-qr .casella-invito::after { color: #e8c5c8 !important; }
-.app-container.tema-rose_pearl #quick-action-label { color: #e8c5c8 !important; }
 
-/* 🔒 BARRA DI SALVATAGGIO INFERIORE CORRENTE */
+/* ============================================================
+   DRAWER SYSTEM (Gemini) — invariato
+   ============================================================ */
+.drawer-overlay {
+    position: fixed; bottom: -100%; left: 0; width: 100%; height: 55vh;
+    background: var(--card-bg); border-top: 1px solid var(--card-border);
+    border-radius: 24px 24px 0 0; padding: 24px; z-index: 2000;
+    transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.9); overflow-y: auto;
+    box-sizing: border-box;
+}
+.drawer-overlay.open { bottom: 0; }
+.drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1900; display: none; }
+
+.drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
+.drawer-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-white); }
+.drawer-close {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+.drawer-close:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.15); }
+
+.funzione-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--card-border);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.funzione-row:active { opacity: 0.7; }
+.funzione-nome { font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; color: #fff; }
+.lock-icon { color: var(--accent-smeraldo); font-size: 0.75rem; }
+
+.btn-nav-onboarding {
+    width: 100%; padding: 16px; margin-top: 20px;
+    background: #ffffff; color: #000000;
+    border: none; border-radius: 12px;
+    font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; transition: transform 0.2s ease;
+}
+.btn-nav-onboarding:active { transform: scale(0.98); }
+
+.form-group { margin-bottom: 16px; text-align: left; }
+.form-group label { display: block; font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+input, textarea, select { width: 100%; padding: 12px 14px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: #ffffff; font-size: 0.9rem; outline: none; }
+textarea { height: 70px; resize: none; }
+
+.style-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.style-card input { display: none; }
+.style-preview { padding: 12px 2px; border-radius: 8px; border: 1px solid var(--input-border); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+.style-card input:checked + .style-preview { border-color: #ffffff; background: rgba(255,255,255,0.05); }
+.black { background: #000; color: #fff; } .titanium { background: #1c1c1e; color: #f5f5f7; } .gold { background: #000; color: #d4af37; } .pearl { background: #1a1518; color: #e8c5c8; }
+
+.plan-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 12px; cursor: pointer; display: flex; align-items: center; margin-bottom: 8px; transition: all 0.2s ease; }
+.plan-card.selected { border-color: #ffffff; background: rgba(255,255,255,0.04); }
+.plan-card i { font-size: 1rem; margin-right: 12px; color: var(--text-sec); width: 20px; text-align: center; }
+.plan-info h3 { margin: 0; font-size: 0.85rem; font-weight: 600; }
+.plan-info p { margin: 1px 0 0; font-size: 0.7rem; color: var(--text-sec); }
+
+.social-input-group { display: flex; gap: 8px; align-items: center; }
+.btn-add-social { padding: 12px 16px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+
 .sticky-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000 75%, rgba(0,0,0,0) 100%); padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100; }
 .save-btn { width: 100%; max-width: 390px; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.2s ease;}
 .save-btn:active { transform: scale(0.98); }
 .back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; }
-   /* --- STRUTTURA TEMI COMPLETA --- */
-.app-container {
-    transition: all 0.3s ease;
-    background-color: var(--bg-color);
-    min-height: 100vh;
-}
-
-/* 1. Tema Black DNA */
-.tema-black-dna {
-    --bg-color: #000000;
-    --card-bg: rgba(25, 25, 25, 0.9);
-    --border-color: #333333;
-    --text-main: #ffffff;
-    --card-radius: 12px;
-}
-
-/* 2. Tema Titanium */
-.tema-titanium {
-    --bg-color: #1a1a24;
-    --card-bg: rgba(40, 40, 55, 0.8);
-    --border-color: #5a5a75;
-    --text-main: #e0e0e0;
-    --card-radius: 8px;
-}
-
-/* 3. Tema Obsidian Gold */
-.tema-obsidian-gold {
-    --bg-color: #0a0a0a;
-    --card-bg: rgba(20, 20, 20, 0.8);
-    --border-color: #d4af37;
-    --text-main: #ffffff;
-    --card-radius: 12px;
-}
-
-/* 4. Tema Satin Rose */
-.tema-satin-rose {
-    --bg-color: #fffafb;
-    --card-bg: #ffffff;
-    --border-color: #e5b4b4;
-    --text-main: #5d4a4a;
-    --card-radius: 24px;
-}
-
-/* ============================================================
-   TELAIO ANTEPRIMA (Stato Primordiale Editor)
-   ============================================================ */
-#live-tag-preview {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    transform: none !important;
-    margin: 20px auto;
-    min-height: 500px !important;
-    height: auto !important;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-    
-    /* Questo è il bordo di default, verrà sovrascritto dai temi sotto */
-    border: 1px solid rgba(212, 175, 55, 0.5); 
-}
-
-/* Override dei bordi della Tag Primordiale in base al tema scelto */
-.tema-black-dna { border-color: var(--accent-smeraldo, #50C878) !important; } /* Smeraldo come richiesto */
-.tema-titanium { border-color: rgba(134, 134, 139, 0.6) !important; } /* Un grigio titanio metallico */
-.tema-obsidian-gold { border-color: var(--accent-gold, #d4af37) !important; } /* L'oro originale */
-.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8) !important; } /* Rosa perlato */
-
-/* Testi personalizzati per le caselle primordiali dell'editor */
-#live-tag-preview #casella-bio .casella-invito::after { content: '+ AGGIUNGI INFO'; color: var(--text-sec) !important;}
-#live-tag-preview #casella-gallery .casella-invito::after { content: '+ AGGIUNGI GALLERY'; color: var(--text-sec) !important;}
-#live-tag-preview #casella-contatti .casella-invito::after { content: '+ AGGIUNGI CONTATTI'; color: var(--text-sec) !important;}
-#live-tag-preview #casella-social .casella-invito::after { content: '+ AGGIUNGI SOCIAL'; color: var(--text-sec) !important;}
-#live-tag-preview #casella-sito .casella-invito::after { content: '+ AGGIUNGI SITO'; color: var(--text-sec) !important;}
-
-/* Fix Sdoppiamento scritte: Annulla i vecchi content rigidi del tuo CSS originale in edit.html */
-.app-container #mainGrid .casella-invito::after { content: none; }
-
-  </style>  
+</style>
 </head>
 <body>
 
