@@ -282,7 +282,7 @@ textarea { height: 70px; resize: none; }
     </div>
 
     <div id="mainGrid">
-        <div class="casella" id="casella-qr" onclick="apriDrawer('drawer-identita')">
+        <div class="casella" id="casella-qr" onclick="apriDrawerQR()">
             <span class="casella-invito"></span>
         </div>
         <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-bio-solo')">
@@ -362,6 +362,16 @@ textarea { height: 70px; resize: none; }
         <div class="drawer-header">
             <div class="drawer-title">Scegli lo Stile Visivo</div>
             <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        </div>
+        <div class="drawer-overlay" id="drawer-qr-preview">
+    <div class="drawer-header">
+        <div class="drawer-title">Il tuo Digital Pass</div>
+        <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; padding:20px 0;">
+        <div id="qr-preview-wrapper" style="background:#ffffff; padding:16px; border-radius:16px; width:212px; height:212px; display:flex; align-items:center; justify-content:center;"></div>
+        <p style="color:var(--text-sec); font-size:0.8rem; text-align:center; margin-top:20px; line-height:1.5;">Questa è un'anteprima. Il QR sarà attivo e scansionabile solo dopo la pubblicazione.</p>
+    </div>
         </div>
         <div class="form-group">
             <label>Seleziona Stile</label>
@@ -895,73 +905,122 @@ textarea { height: 70px; resize: none; }
     });
 
     // ============================================================
-    // ⚡ IL MOTORE REATTIVO (LA TELA DESERTA E LE FUNZIONI)
-    // ============================================================
-    function aggiornaTagLive() {
-        const previewContainer = document.getElementById('profile-content');
-        if (!previewContainer) return;
+// QR CODE — generazione reale tramite qrcode.js (anteprima, non funzionale)
+// ============================================================
+function generaQRPreview(url) {
+    const wrapper = document.getElementById('qr-preview-wrapper');
+    if (!wrapper) return;
+    wrapper.innerHTML = '';
+    new QRCode(wrapper, {
+        text: url,
+        width: 180,
+        height: 180,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+    });
+}
 
-        const elUsernameDisplay = document.getElementById('tag-username');
-        if (elUsernameDisplay && typeof nomeUtente !== 'undefined' && nomeUtente) {
-            elUsernameDisplay.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
-        }
+function apriDrawerQR() {
+    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+    const urlAnteprima = `${window.location.origin}/tag.html?u=${nomePulito}`;
+    apriDrawer('drawer-qr-preview');
+    setTimeout(() => generaQRPreview(urlAnteprima), 50);
+}
 
-        const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
-        previewContainer.className = 'app-container ready tema-' + stileSelezionato;
+// ============================================================
+// SOCIAL ICONS — stesso dizionario di tag.html, per il rendering live
+// ============================================================
+const socialIconsLive = {
+    "instagram": "fab fa-instagram", "tiktok": "fab fa-tiktok", "facebook": "fab fa-facebook-f",
+    "youtube": "fab fa-youtube", "linkedin": "fab fa-linkedin-in", "x": "fab fa-x-twitter",
+    "twitter": "fab fa-x-twitter", "strava": "fab fa-strava", "github": "fab fa-github",
+    "behance": "fab fa-behance", "dribbble": "fab fa-dribbble", "spotify": "fab fa-spotify",
+    "telegram": "fab fa-telegram-plane", "whatsapp": "fab fa-whatsapp", "twitch": "fab fa-twitch",
+    "pinterest": "fab fa-pinterest-p", "default": "fas fa-share-alt"
+};
 
-        const mappaCaselle = {
-            'casella-bio':      document.getElementById('field-bio')?.value,
-            'casella-sito':     document.getElementById('field-sito_web')?.value || document.getElementById('field-email')?.value,
-            'casella-cv':       document.getElementById('field-cv')?.value,
-            'casella-contatti': document.getElementById('vcf-telefono1')?.value
-        };
+const quickActionConfigLive = {
+    'appuntamento': 'PRENOTA APPUNTAMENTO',
+    'whatsapp':     'WHATSAPP LIVE',
+    'preventivo':   'RICHIESTA PREVENTIVO',
+    'chiamata':     'CHIAMA ORA',
+    'maps':         'TROVAMI SU MAPS',
+    'demo':         'ASCOLTA DEMO'
+};
 
-        // Regola 1: The Void. Se la casella è vuota, scompare.
-        for (const [id, valore] of Object.entries(mappaCaselle)) {
-            const el = previewContainer.querySelector('#' + id);
-            if (el) {
-                if (!valore || valore.trim() === "") {
-                    el.style.setProperty('display', 'none', 'important');
-                } else {
-                    el.style.setProperty('display', 'flex', 'important');
-                    el.style.opacity = '1';
-                }
-            }
-        }
+// ============================================================
+// MOTORE REATTIVO — aggiorna il monolito vero in tempo reale
+// ============================================================
+function aggiornaTagLive() {
+    const container = document.getElementById('profile-content');
+    if (!container) return;
 
-        const elSocial = previewContainer.querySelector('#casella-social');
-        if (elSocial) {
-            if (typeof canaliCorrenti !== 'undefined' && canaliCorrenti.length > 0) {
-                elSocial.style.setProperty('display', 'flex', 'important');
-                elSocial.style.opacity = '1';
-            } else {
-                elSocial.style.setProperty('display', 'none', 'important');
-            }
-        }
-
-        const qaTipo = document.getElementById('field-quick_action_tipo')?.value;
-        const qaUrl = document.getElementById('field-quick_action_url')?.value;
-        const elQA = previewContainer.querySelector('#casella-quick-action');
-
-        if (elQA) {
-            if (qaTipo && qaUrl) {
-                elQA.style.setProperty('display', 'flex', 'important');
-                elQA.style.opacity = '1';
-                const label = elQA.querySelector('#quick-action-label');
-                if (label) {
-                    const nomi = { appuntamento:'PRENOTA APPUNTAMENTO', whatsapp:'WHATSAPP LIVE', preventivo:'RICHIESTA PREVENTIVO', chiamata:'CHIAMA ORA', maps:'TROVAMI SU MAPS', demo:'ASCOLTA DEMO' };
-                    label.textContent = nomi[qaTipo] || 'AZIONE RAPIDA';
-                }
-            } else {
-                elQA.style.setProperty('display', 'none', 'important');
-            }
-        }
-        
-        // QR Code non è un campo dati configurabile dall'utente nello spazio edit fluttuante
-        const elQr = previewContainer.querySelector('#casella-qr');
-        if (elQr) elQr.style.setProperty('display', 'none', 'important');
+    // Username
+    const elUsername = document.getElementById('tag-username');
+    if (elUsername && nomeUtente) {
+        elUsername.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
     }
 
+    // Avatar — predisposto, si attiverà da solo quando Airtable avrà il campo popolato
+    const elAvatar = document.getElementById('userImage');
+    const avatarContainer = document.getElementById('avatar-container');
+    if (elAvatar && avatarContainer) {
+        if (window.datiAvatarCorrente && Array.isArray(window.datiAvatarCorrente) && window.datiAvatarCorrente.length > 0) {
+            elAvatar.src = window.datiAvatarCorrente[0].url;
+            avatarContainer.style.display = 'flex';
+        } else {
+            avatarContainer.style.display = 'none';
+        }
+    }
+
+    // Tema — applica la classe corretta allo chassis
+    const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
+    container.classList.remove('tema-black-dna', 'tema-titanium', 'tema-obsidian-gold', 'tema-rose-pearl');
+    const mappaTemi = { black: 'tema-black-dna', titanium: 'tema-titanium', obsidian_gold: 'tema-obsidian-gold', rose_pearl: 'tema-rose-pearl' };
+    container.classList.add(mappaTemi[stileSelezionato] || 'tema-black-dna');
+
+    // Stato vuoto / popolato per ogni casella
+    const getVal = (id) => document.getElementById(id)?.value?.trim() || '';
+
+    const mappaCaselle = {
+        'casella-bio':      getVal('field-bio'),
+        'casella-sito':     getVal('field-sito_web'),
+        'casella-cv':       getVal('field-cv'),
+        'casella-contatti': getVal('vcf-telefono1') || getVal('vcf-email1') || getVal('field-email'),
+    };
+
+    for (const [id, valore] of Object.entries(mappaCaselle)) {
+        const el = container.querySelector('#' + id);
+        if (el) el.style.display = valore ? 'flex' : 'none';
+    }
+
+    // Social
+    const elSocial = container.querySelector('#casella-social');
+    if (elSocial) {
+        elSocial.style.display = (typeof canaliCorrenti !== 'undefined' && canaliCorrenti.length > 0) ? 'flex' : 'none';
+    }
+
+    // Gallery — predisposto, sempre nascosto finché non implementiamo l'upload
+    const elGallery = container.querySelector('#casella-gallery');
+    if (elGallery) {
+        elGallery.style.display = (window.datiGalleryCorrente && window.datiGalleryCorrente.length > 0) ? 'flex' : 'none';
+    }
+
+    // Quick Action
+    const qaTipo = getVal('field-quick_action_tipo');
+    const qaUrl = getVal('field-quick_action_url');
+    const elQA = container.querySelector('#casella-quick-action');
+    if (elQA) {
+        if (qaTipo && qaUrl) {
+            elQA.style.display = 'flex';
+            const label = elQA.querySelector('#quick-action-label');
+            if (label) label.textContent = quickActionConfigLive[qaTipo] || 'AZIONE RAPIDA';
+        } else {
+            elQA.style.display = 'none';
+        }
+    }
+        }
     function attivaAscoltatoriLive() {
         const selettori = [
             '#field-bio', '#field-email', '#field-sito_web', '#field-cv', 
@@ -1070,39 +1129,7 @@ textarea { height: 70px; resize: none; }
         // Inseriamo il tasto in fondo al contenuto
         cassetto.appendChild(btn);
     }
-      // MOTORE SCAMBIO TEMI IN TEMPO REALE
-function applicaTema(valoreRadio) {
-    const container = document.querySelector('.app-container');
-    
-    // 1. Facciamo piazza pulita di tutti i temi precedenti per evitare accavallamenti
-    container.classList.remove('tema-black-dna', 'tema-titanium', 'tema-obsidian-gold', 'tema-rose-pearl');
-    
-    // 2. Il Traduttore: associa il valore del bottone HTML alla classe CSS esatta
-    let classeTema = '';
-    if (valoreRadio === 'black') classeTema = 'tema-black-dna';
-    if (valoreRadio === 'titanium') classeTema = 'tema-titanium';
-    if (valoreRadio === 'obsidian_gold') classeTema = 'tema-obsidian-gold';
-    if (valoreRadio === 'rose_pearl') classeTema = 'tema-rose-pearl';
-    
-    // 3. Applichiamo il nuovo tema
-    if (classeTema !== '') {
-        container.classList.add(classeTema);
-    }
-    
-    console.log("Stile Visivo applicato:", classeTema);
-    
-    // 4. Aggiorniamo i moduli in tempo reale
-    if(typeof aggiornaTagLive === 'function') {
-        aggiornaTagLive();
-    }
-}
-
-// 5. Mettiamo in ascolto i tuoi bottoni
-document.querySelectorAll('input[name="digital_style"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-        applicaTema(e.target.value);
-    });
-}); 
+      
     </script>
 </body>
 </html>
