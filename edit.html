@@ -296,32 +296,39 @@ textarea { height: 70px; resize: none; }
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiTuttiIDrawer()"></div>
 
     <div class="configurator-wrapper">
-        <div id="profile-content" class="app-container ready">
-            
-            <div class="header-monolith" onclick="attivaStep('tema', 'drawer-identita')">
-                <div class="avatar-block" id="avatar-container" style="display:none;">
-                    <img id="userImage" class="user-media" src="" alt="Logo">
-                </div>
-                <div class="username-capsule">
-                    <h1 class="username-display" id="tag-username">@...</h1>
-                </div>
-            </div>
-
-            <div id="mainGrid">
-                <div class="casella" id="casella-qr" onclick="apriDrawer('drawer-piano')" style="display:none !important;"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-bio" onclick="attivaStep('tag', 'drawer-bio-solo')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-social" onclick="attivaStep('tag', 'drawer-social')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-sito" onclick="attivaStep('tag', 'drawer-diretti')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-contatti" onclick="attivaStep('tag', 'drawer-vcf')"><span class="casella-invito"></span></div>
-                <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')" style="display:none !important;"><span class="casella-invito"></span></div>
-            </div>
-
-            <div class="casella" id="casella-quick-action" onclick="attivaStep('tag', 'drawer-quick')">
-                <div id="quick-action-icon">⚡</div>
-                <div class="casella-invito" id="quick-action-label"></div>
-            </div>
+        <!-- L'ANTEPRIMA IDENTICA A TAG.HTML (Stato Primordiale) -->
+<div id="live-tag-preview" class="tema-black-dna"> <!-- Parte col DNA nero di base -->
+    
+    <!-- L'Aura e l'Username originale -->
+    <div class="header-monolith" onclick="attivaStep('tema', 'drawer-identita')">
+        <div class="avatar-block" id="avatar-container" style="display:none;">
+            <img id="userImage" class="user-media" src="" alt="Logo">
+        </div>
+        <div class="username-capsule">
+            <h1 class="username-display" id="tag-username">@...</h1>
         </div>
     </div>
+
+    <!-- La Griglia a Fisarmonica, con le scritte "Aggiungi" -->
+    <div id="mainGrid">
+        <div class="casella" id="casella-bio" onclick="attivaStep('tag', 'drawer-bio-solo')">
+            <span class="casella-invito">+ AGGIUNGI INFO</span>
+        </div>
+        <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')">
+            <span class="casella-invito">+ AGGIUNGI GALLERY</span>
+        </div>
+        <div class="casella" id="casella-contatti" onclick="attivaStep('tag', 'drawer-vcf')">
+            <span class="casella-invito">+ AGGIUNGI CONTATTI</span>
+        </div>
+        <div class="casella" id="casella-social" onclick="attivaStep('tag', 'drawer-social')">
+            <span class="casella-invito">+ AGGIUNGI SOCIAL</span>
+        </div>
+        <div class="casella" id="casella-sito" onclick="attivaStep('tag', 'drawer-diretti')">
+            <span class="casella-invito">+ AGGIUNGI SITO</span>
+        </div>
+    </div>
+</div>
+
 
     <div class="drawer-overlay" id="drawer-funzioni">
         <div class="drawer-header">
