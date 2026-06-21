@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Configurazione Ecosistema - myquicktag</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link id="dynamic-manifest" rel="manifest" href="">
@@ -40,6 +40,36 @@ body {
 }
 
 /* ============================================================
+   🎯 TOP NAVIGATION BAR (VIRGIN STATE GUIDANCE)
+   ============================================================ */
+.top-edit-nav {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    padding: 24px 24px 0 24px;
+    position: relative;
+    z-index: 10;
+}
+.nav-pill {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-main);
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+.nav-pill:active { background: rgba(255,255,255,0.08); transform: scale(0.97); }
+.nav-pill i { font-size: 0.8rem; color: var(--text-sec); }
+
+/* ============================================================
    🏛️ MONOLITO LIVE: PERFETTA SIMMETRIA CON TAG.HTML
    ============================================================ */
 #profile-content.app-container {
@@ -48,12 +78,9 @@ body {
     opacity: 1;
     width: calc(100% - 32px);
     max-width: 410px;
-    
-    /* 🎯 Sincronizzato con l'altezza reale della PWA per evitare sbalzi di layout */
-    height: calc(100svh - 32px); 
-    max-height: 840px;
-    
-    margin: 20px auto;
+    height: calc(100svh - 90px); /* Regolato per ospitare la top nav */
+    max-height: 800px;
+    margin: 16px auto 20px auto;
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
     border: 1px solid rgba(212, 175, 55, 0.5);
@@ -64,9 +91,7 @@ body {
     overflow: hidden;
 }
 
-#profile-content .header-monolith {
-    text-align: center;
-}
+#profile-content .header-monolith { text-align: center; }
 
 #profile-content .avatar-block {
     display: flex;
@@ -118,7 +143,6 @@ body {
     border: none;
     box-sizing: border-box;
     margin: 0;
-    /* 🎯 Ripristinato il passo e la distanza di sicurezza dalla Quick Action come in PWA */
     padding: 30px 0 110px 0; 
 }
 
@@ -144,8 +168,8 @@ body {
     transition: color 0.2s ease;
 }
 
-/* 🎯 RETTIFICA SCRITTA: Uniformato a DIGITAL PSS senza la A */
-#profile-content #casella-qr .casella-invito::after { content: 'DIGITAL PSS'; color: var(--accent-gold); font-weight: 400; }
+/* 🎯 RETTIFICHE SCRITTE (PASS) */
+#profile-content #casella-qr .casella-invito::after { content: 'DIGITAL PASS'; color: var(--accent-gold); font-weight: 400; }
 #profile-content #casella-bio .casella-invito::after { content: 'BIO'; color: var(--text-sec); }
 #profile-content #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec); }
 #profile-content #casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec); }
@@ -155,7 +179,6 @@ body {
 #profile-content #casella-crea .casella-invito::after { content: '+ CREA LA TUA TAG'; color: #ffffff; font-weight: 500; }
 #profile-content #mainGrid .casella:active { opacity: 0.6; }
 
-/* 🎯 BARRA FLUTTUANTE QUICK ACTION PREMIUM COERENTE */
 #profile-content #casella-quick-action {
     position: absolute !important;
     bottom: 70px !important;
@@ -192,7 +215,7 @@ body {
 #profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8); }
 
 /* ============================================================
-   DRAWER SYSTEM EXECUTIVE
+   DRAWER SYSTEM
    ============================================================ */
 .drawer-overlay {
     position: fixed; bottom: -100%; left: 0; width: 100%; height: 60vh;
@@ -208,7 +231,6 @@ body {
 .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
 .drawer-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-white); }
 
-/* Tasto di annullamento (Freccia Indietro o X) */
 .drawer-close {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -225,21 +247,10 @@ body {
 }
 .drawer-close:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.15); }
 
-/* 🎯 TASTO DI CONFERMA INTERNO AI CASSETTI */
 .btn-conferma-drawer {
-    width: 100%;
-    padding: 14px;
-    margin-top: 24px;
-    background: #ffffff;
-    color: #000000;
-    border: none;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    width: 100%; padding: 14px; margin-top: 24px; background: #ffffff; color: #000000;
+    border: none; border-radius: 12px; font-weight: 600; font-size: 0.85rem;
+    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.2s;
 }
 .btn-conferma-drawer:active { transform: scale(0.98); background: #eeeeee; }
 
@@ -253,11 +264,9 @@ body {
 .lock-icon { color: var(--accent-smeraldo); font-size: 0.75rem; }
 
 .btn-nav-onboarding {
-    width: 100%; padding: 16px; margin-top: 20px;
-    background: #ffffff; color: #000000;
-    border: none; border-radius: 12px;
-    font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
-    cursor: pointer; transition: transform 0.2s ease;
+    width: 100%; padding: 16px; margin-top: 20px; background: #ffffff; color: #000000;
+    border: none; border-radius: 12px; font-weight: 600; font-size: 0.85rem;
+    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: transform 0.2s ease;
 }
 .btn-nav-onboarding:active { transform: scale(0.98); }
 
@@ -276,19 +285,17 @@ textarea { height: 70px; resize: none; }
 .plan-card.selected { border-color: #ffffff; background: rgba(255,255,255,0.04); }
 .plan-card i { font-size: 1rem; margin-right: 12px; color: var(--text-sec); width: 20px; text-align: center; }
 .plan-info h3 { margin: 0; font-size: 0.85rem; font-weight: 600; }
-.plan-info p { margin: 1px 0 0; font-size: 0.7()rem; color: var(--text-sec); }
+.plan-info p { margin: 1px 0 0; font-size: 0.7rem; color: var(--text-sec); }
 
 .social-input-group { display: flex; gap: 8px; align-items: center; }
 .btn-add-social { padding: 12px 16px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
 
-/* 🎯 STICKY FOOTER STRUTTURATO PER EVITARE SOVRAPPOSIZIONI */
-.sticky-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000 75%, rgba(0,0,0,0) 100%); padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100; }
-.save-btn { width: 100%; max-width: 390px; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.2s ease;}
+.sticky-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000 75%, rgba(0,0,0,0) 100%); padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100; pointer-events: none; }
+.save-btn { width: 100%; max-width: 390px; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.2s ease; pointer-events: auto;}
 .save-btn:disabled { background: #2c2c2e; color: #8e8e93; cursor: not-allowed; }
 .save-btn:active { transform: scale(0.98); }
-.back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; }
+.back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; pointer-events: auto; }
 
-/* Toast di notifica interno */
 .toast-edit {
     position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
     background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px;
@@ -305,6 +312,12 @@ textarea { height: 70px; resize: none; }
     <div id="toast-notifica" class="toast-edit">Modifiche applicate</div>
 
     <div class="configurator-wrapper">
+        
+        <div class="top-edit-nav">
+            <button class="nav-pill" onclick="apriDrawer('drawer-piano')"><i class="fas fa-crown"></i> Piano</button>
+            <button class="nav-pill" onclick="apriDrawer('drawer-identita')"><i class="fas fa-palette"></i> Tema</button>
+        </div>
+
         <div id="profile-content" class="app-container">
             <div class="header-monolith">
                 <div class="avatar-block" id="avatar-container" style="display:none;">
@@ -319,7 +332,7 @@ textarea { height: 70px; resize: none; }
                 <div class="casella" id="casella-qr" onclick="apriDrawerQR()">
                     <span class="casella-invito"></span>
                 </div>
-                <div class="casella" id="casella-crea" onclick="apriDrawer('drawer-funzioni')" style="display:none;">
+                <div class="casella" id="casella-crea" onclick="avviaFlussoEcosistema()" style="display:none;">
                     <span class="casella-invito"></span>
                 </div>
                 <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-bio-solo')">
@@ -544,7 +557,7 @@ textarea { height: 70px; resize: none; }
     <script>
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
-    let cacheStatoLicenza = "attivo"; // Memorizza lo stato reale del profilo
+    let cacheStatoLicenza = "attivo"; 
     let canaliCorrenti = [];
 
     if (nomeUtente) { 
@@ -568,7 +581,6 @@ textarea { height: 70px; resize: none; }
             const data = await response.json();
             
             if (data.success && data.fields) {
-                // Salviamo lo stato per regolare la visibilità dell'Annulla
                 cacheStatoLicenza = (data.fields.stato || "").toLowerCase().trim();
                 gestisciVisibilitaAnnulla();
             }
@@ -624,26 +636,11 @@ textarea { height: 70px; resize: none; }
                     const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
                     if (radio) radio.checked = true;
                 }
-
-                // Rilevamento dello stato di popolamento dell'ecosistema
-                const hasData = !!(f.bio || f.sito_web || f.email || f.cv || (f.modulo_vcf && JSON.parse(typeof f.modulo_vcf === 'string' ? f.modulo_vcf : JSON.stringify(f.modulo_vcf)).telefono1) || (canaliCorrenti && canaliCorrenti.length > 0) || f.quick_action_tipo);
-
-                const btnPrincipale = document.getElementById('btn-azione-principale');
-                if (btnPrincipale) {
-                    if (hasData) {
-                        btnPrincipale.innerText = "AGGIUNGI FUNZIONE";
-                        btnPrincipale.setAttribute('onclick', 'apriDrawer("drawer-funzioni")');
-                    } else {
-                        // Nuovo utente: Forza l'onboarding guidato sequenziale
-                        btnPrincipale.innerText = "CONFIGURA IL TUO ECOSISTEMA";
-                        btnPrincipale.setAttribute('onclick', 'avviaFlussoEcosistema()');
-                    }
-                }
+                aggiornaTagLive();
             }
         } catch (e) { console.error("Errore inizializzazione:", e); }
     }
 
-    // Gestione visibilità dinamica del tasto Annulla
     function gestisciVisibilitaAnnulla() {
         const backLink = document.getElementById("back-to-dash");
         if (backLink) {
@@ -655,17 +652,17 @@ textarea { height: 70px; resize: none; }
         }
     }
 
-        const socialDizionario = [
+    const socialDizionario = [
         { chiave: "instagram",  domini: ["instagram.com"],           icona: "fab fa-instagram" },
         { chiave: "tiktok",     domini: ["tiktok.com"],              icona: "fab fa-tiktok" },
         { chiave: "facebook",   domini: ["facebook.com","fb.com"],   icona: "fab fa-facebook-f" },
-        { chiave: "youtube",    domini: ["youtube.com","youtu.be"],  icona: "fab fa-youtube" },
+        { chiave: "youtube",    domini: ["youtube.com","youtu.be"], icona: "fab fa-youtube" },
         { chiave: "linkedin",   domini: ["linkedin.com"],            icona: "fab fa-linkedin-in" },
         { chiave: "x",          domini: ["x.com","twitter.com"],     icona: "fab fa-x-twitter" },
         { chiave: "whatsapp",   domini: ["wa.me","whatsapp.com"],    icona: "fab fa-whatsapp" },
         { chiave: "telegram",   domini: ["t.me","telegram.me"],      icona: "fab fa-telegram-plane" },
         { chiave: "github",     domini: ["github.com"],              icona: "fab fa-github" },
-        { chiave: "spotify",    domini: ["spotify.com"],             icona: "fab fa-spotify" },
+        { chiave: "spotify",    domini: ["spotify.com"], icona: "fab fa-spotify" },
         { chiave: "twitch",     domini: ["twitch.tv"],               icona: "fab fa-twitch" },
         { chiave: "pinterest",  domini: ["pinterest.com"],           icona: "fab fa-pinterest-p" },
         { chiave: "reddit",     domini: ["reddit.com"],              icona: "fab fa-reddit" },
@@ -677,7 +674,6 @@ textarea { height: 70px; resize: none; }
     function normalizzaUrl(val) {
         if (!val) return "";
         val = val.trim();
-        // Evita di sovrascrivere protocolli specifici come tel: o mailto:
         if (!val.startsWith("http://") && !val.startsWith("https://") && !val.startsWith("tel:") && !val.startsWith("mailto:")) {
             val = "https://" + val;
         }
@@ -693,10 +689,8 @@ textarea { height: 70px; resize: none; }
                 }
             }
         } catch(e) {}
-        // Il Fallback Premium per i link custom/siti personali non in lista
         return { nome: "link", icona: "fas fa-share-alt" }; 
     }
-
 
     function aggiungiCanale() {
         const pianoAttuale = document.getElementById('field-plan').value.toUpperCase();
@@ -770,9 +764,6 @@ textarea { height: 70px; resize: none; }
         document.body.style.overflow = 'auto';
     } 
 
-    // ============================================================
-    // 🎛️ CORE ARCHITETTURALE CASSETTI: ANNULLA VS CONFERMA
-    // ============================================================
     let activeDrawerId = null;
 
     function apriDrawer(idDrawer) {
@@ -788,7 +779,6 @@ textarea { height: 70px; resize: none; }
         setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
     }
 
-    // 🎯 AZIONE 1: Tasto Indietro/X o Click Fuori -> Chiude ed esclude il salvataggio automatico
     function chiudiSenzaSalvare() {
         if (window.location.hash === '#menu') {
             window.history.back(); 
@@ -808,18 +798,10 @@ textarea { height: 70px; resize: none; }
         aggiornaTagLive();
     }
 
-    // 🎯 AZIONE 2: Tasto "Conferma" o "Salva" all'interno del Cassetto
     function confermaEChiudiCassetto() {
-        // Applica le modifiche grafiche all'anteprima monolito immediatamente
         aggiornaTagLive();
-        
-        // Esegue il salvataggio invisibile sul server in background
         salvaDati(false, true);
-
-        // Feedback visivo lussuoso
         mostraToastEdit();
-
-        // Chiude il cassetto in sicurezza
         chiudiSenzaSalvare();
     }
 
@@ -836,11 +818,7 @@ textarea { height: 70px; resize: none; }
         else chiudiSenzaSalvare();
     }
 
-    // ============================================================
-    // 💾 MOTORE DI SALVATAGGIO AD ALTA TOLLERANZA
-    // ============================================================
     async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
-        const btn = document.getElementById("btn-azione-principale");
         const tagDallUrl = params.get("u") || "";
         const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
         
@@ -882,9 +860,6 @@ textarea { height: 70px; resize: none; }
         } catch (error) { console.error("Errore comunicazione server:", error); }
     }
 
-    // ============================================================
-    // 🎭 AGGIORNAMENTO DINAMICO LIVE DEL MONOLITO
-    // ============================================================
     const quickActionConfigLive = {
         'appuntamento': 'PRENOTA APPUNTAMENTO',
         'whatsapp':     'WHATSAPP LIVE',
@@ -903,7 +878,6 @@ textarea { height: 70px; resize: none; }
             elUsername.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
         }
 
-        // Gestione Stile ed Estetica Bordo Chassis
         const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
         container.classList.remove('tema-black-dna', 'tema-titanium', 'tema-obsidian-gold', 'tema-rose-pearl');
         const mappaTemi = { black: 'tema-black-dna', titanium: 'tema-titanium', obsidian_gold: 'tema-obsidian-gold', rose_pearl: 'tema-rose-pearl' };
@@ -923,10 +897,15 @@ textarea { height: 70px; resize: none; }
             if (el) el.style.display = valore ? 'flex' : 'none';
         }
 
+        // 🎯 GALLERY NASCOSTA IN STATO ZERO
+        const elGallery = container.querySelector('#casella-gallery');
+        if (elGallery) {
+            elGallery.style.display = 'none'; 
+        }
+
         const elSocial = container.querySelector('#casella-social');
         if (elSocial) elSocial.style.display = (canaliCorrenti.length > 0) ? 'flex' : 'none';
 
-        // Gestione Quick Action Reattiva
         const qaTipo = getVal('field-quick_action_tipo');
         const qaUrl = getVal('field-quick_action_url');
         const elQA = container.querySelector('#casella-quick-action');
@@ -940,10 +919,22 @@ textarea { height: 70px; resize: none; }
             }
         }
 
-        // Stato Zero: Tela Deserta
+        // 🎯 GESTIONE TASTO CONFIGURA (VISIBILITÀ)
         const haAlmenoUnaFunzione = !!(mappaCaselle['casella-bio'] || mappaCaselle['casella-sito'] || mappaCaselle['casella-cv'] || mappaCaselle['casella-contatti'] || canaliCorrenti.length > 0 || (qaTipo && qaUrl));
         const elCrea = container.querySelector('#casella-crea');
         if (elCrea) elCrea.style.display = haAlmenoUnaFunzione ? 'none' : 'flex';
+
+        const btnPrincipale = document.getElementById('btn-azione-principale');
+        if (btnPrincipale) {
+            if (haAlmenoUnaFunzione) {
+                btnPrincipale.style.display = 'block';
+                btnPrincipale.innerText = "AGGIUNGI FUNZIONE";
+                btnPrincipale.setAttribute('onclick', 'apriDrawer("drawer-funzioni")');
+            } else {
+                // Scompare completamente in stato zero
+                btnPrincipale.style.display = 'none';
+            }
+        }
         
         gestisciVisibilitaAnnulla();
     }
@@ -974,17 +965,13 @@ textarea { height: 70px; resize: none; }
         });
     }
 
+    // Flusso onboarding sequenziale chiamato dal tasto "+ CREA LA TUA TAG"
     function avviaFlussoEcosistema() {
         attivaStep('tag', 'drawer-identita');
         configuraTastoSuccessivo('drawer-identita', () => {
             attivaStep('tag', 'drawer-piano');
             configuraTastoSuccessivo('drawer-piano', () => {
                 chiudiSenzaSalvare();
-                const btnPrincipale = document.getElementById('btn-azione-principale');
-                if(btnPrincipale) {
-                    btnPrincipale.innerText = "AGGIUNGI FUNZIONE";
-                    btnPrincipale.setAttribute('onclick', 'apriDrawer("drawer-funzioni")');
-                }
                 setTimeout(() => apriDrawer('drawer-funzioni'), 350);
             }, "CONFERMA E CREA");
         }, "AVANTI");
