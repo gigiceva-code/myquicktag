@@ -231,7 +231,160 @@ textarea { height: 70px; resize: none; }
 
 .social-input-group { display: flex; gap: 8px; align-items: center; }
 .btn-add-social { padding: 12px 16px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+    .app-container.tema-black { --bg-chassis: #000000; --accent-gold: #ffffff; }
+    
+/* ============================================================
+   MONOLITO LIVE — variabili e chassis (in-flow, non fixed)
+   ============================================================ */
+:root {
+    --bg-chassis: #000000;
+    --accent-gold: #d4af37;
+    --text-main-tag: #f5f5f7;
+    --text-sec-tag: #86868b;
+}
 
+#profile-content.app-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    display: flex;
+    opacity: 1;
+    width: 100%;
+    max-width: 410px;
+    height: auto;
+    min-height: 560px;
+    margin: 20px auto;
+    padding: 40px 24px 32px 24px;
+    background-color: var(--bg-chassis);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 28px;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+    overflow: hidden;
+}
+
+#profile-content .avatar-block {
+    display: flex;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #070708;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    margin: 0 auto 5px auto;
+}
+#profile-content .user-media { width: 100%; height: 100%; object-fit: cover; }
+
+#profile-content .username-capsule {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212, 175, 55, 0.01);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px;
+    padding: 6px 18px;
+    margin: 10px auto;
+    max-width: 90%;
+    box-sizing: border-box;
+    box-shadow: 0 0 35px rgba(212, 175, 55, 0.15), 0 4px 15px rgba(0,0,0,0.5);
+}
+#profile-content .username-display {
+    font-size: 1.05rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    word-break: break-all;
+}
+
+#profile-content .header-monolith {
+    text-align: center;
+    cursor: pointer;
+}
+
+#profile-content #mainGrid {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+    width: 100%;
+    background: transparent;
+    border: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 30px 0 40px 0;
+}
+
+#profile-content #mainGrid .casella {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    min-height: auto;
+    padding: 8px 0;
+    width: auto;
+    cursor: pointer;
+}
+
+#profile-content #mainGrid .casella-invito {
+    font-size: 0;
+    line-height: 0;
+}
+#profile-content #mainGrid .casella-invito::after {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    font-weight: 300;
+    transition: color 0.2s ease;
+}
+
+#profile-content #casella-qr .casella-invito::after { content: 'DIGITAL PASS'; color: var(--accent-gold); font-weight: 400; }
+#profile-content #casella-bio .casella-invito::after { content: 'BIO'; color: var(--text-sec-tag); }
+#profile-content #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec-tag); }
+#profile-content #casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec-tag); }
+#profile-content #casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec-tag); }
+#profile-content #casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec-tag); }
+#profile-content #casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec-tag); }
+
+#profile-content #mainGrid .casella:active .casella-invito::after { color: #ffffff; }
+
+#profile-content #casella-quick-action {
+    width: calc(100% - 0px);
+    height: 46px;
+    min-height: 46px;
+    background: rgba(212, 175, 55, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    margin-top: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+#profile-content #casella-quick-action #quick-action-icon { font-size: 1.1rem; }
+#profile-content #casella-quick-action #quick-action-label {
+    font-size: 0.72rem;
+    line-height: 1;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #d4af37;
+}
+
+/* Temi — riusano le stesse classi di tag.html */
+#profile-content.tema-black-dna { border-color: rgba(80, 200, 120, 0.5); }
+#profile-content.tema-titanium { border-color: rgba(134, 134, 139, 0.6); }
+#profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.5); }
+#profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8); }
 /* Temi Dinamici Real-Time */
 .app-container.tema-black { --bg-chassis: #000000; --accent-gold: #ffffff; }
 .app-container.tema-black #casella-qr .casella-invito::after { color: #ffffff !important; }
@@ -330,11 +483,9 @@ textarea { height: 70px; resize: none; }
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiTuttiIDrawer()"></div>
 
     <div class="configurator-wrapper">
-        <!-- L'ANTEPRIMA IDENTICA A TAG.HTML (Stato Primordiale) -->
-<div id="live-tag-preview" class="tema-black-dna"> <!-- Parte col DNA nero di base -->
-    
-    <!-- L'Aura e l'Username originale -->
-    <div class="header-monolith" onclick="attivaStep('tema', 'drawer-identita')">
+       <!-- MONOLITO LIVE — struttura identica a tag.html -->
+<div id="profile-content" class="app-container ready">
+    <div class="header-monolith">
         <div class="avatar-block" id="avatar-container" style="display:none;">
             <img id="userImage" class="user-media" src="" alt="Logo">
         </div>
@@ -343,25 +494,35 @@ textarea { height: 70px; resize: none; }
         </div>
     </div>
 
-    <!-- La Griglia a Fisarmonica, con le scritte "Aggiungi" -->
     <div id="mainGrid">
-        <div class="casella" id="casella-bio" onclick="attivaStep('tag', 'drawer-bio-solo')">
-            <span class="casella-invito">+ AGGIUNGI INFO</span>
+        <div class="casella" id="casella-qr" onclick="apriDrawer('drawer-identita')">
+            <span class="casella-invito"></span>
+        </div>
+        <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-bio-solo')">
+            <span class="casella-invito"></span>
         </div>
         <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')">
-            <span class="casella-invito">+ AGGIUNGI GALLERY</span>
+            <span class="casella-invito"></span>
         </div>
-        <div class="casella" id="casella-contatti" onclick="attivaStep('tag', 'drawer-vcf')">
-            <span class="casella-invito">+ AGGIUNGI CONTATTI</span>
+        <div class="casella" id="casella-contatti" onclick="verificaPianoVcfMenu(event, 'drawer-vcf')">
+            <span class="casella-invito"></span>
         </div>
-        <div class="casella" id="casella-social" onclick="attivaStep('tag', 'drawer-social')">
-            <span class="casella-invito">+ AGGIUNGI SOCIAL</span>
+        <div class="casella" id="casella-social" onclick="apriDrawer('drawer-social')">
+            <span class="casella-invito"></span>
         </div>
-        <div class="casella" id="casella-sito" onclick="attivaStep('tag', 'drawer-diretti')">
-            <span class="casella-invito">+ AGGIUNGI SITO</span>
+        <div class="casella" id="casella-sito" onclick="apriDrawer('drawer-diretti')">
+            <span class="casella-invito"></span>
+        </div>
+        <div class="casella" id="casella-cv" onclick="apriDrawer('drawer-diretti')">
+            <span class="casella-invito"></span>
         </div>
     </div>
-</div>
+
+    <div class="casella" id="casella-quick-action" onclick="verificaPianoQuickActionMenu(event, 'drawer-quick')" style="display:none;">
+        <div id="quick-action-icon" style="font-size: 1.1rem;">⚡</div>
+        <div class="casella-invito" id="quick-action-label">Azione rapida</div>
+    </div>
+</div> 
 
 
     <div class="drawer-overlay" id="drawer-funzioni">
