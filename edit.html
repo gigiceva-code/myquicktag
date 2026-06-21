@@ -655,21 +655,29 @@ textarea { height: 70px; resize: none; }
         }
     }
 
-    const socialDizionario = [
+        const socialDizionario = [
         { chiave: "instagram",  domini: ["instagram.com"],           icona: "fab fa-instagram" },
         { chiave: "tiktok",     domini: ["tiktok.com"],              icona: "fab fa-tiktok" },
         { chiave: "facebook",   domini: ["facebook.com","fb.com"],   icona: "fab fa-facebook-f" },
-        { chiave: "youtube",    domini: ["youtube.com"],             icona: "fab fa-youtube" },
+        { chiave: "youtube",    domini: ["youtube.com","youtu.be"],  icona: "fab fa-youtube" },
         { chiave: "linkedin",   domini: ["linkedin.com"],            icona: "fab fa-linkedin-in" },
         { chiave: "x",          domini: ["x.com","twitter.com"],     icona: "fab fa-x-twitter" },
         { chiave: "whatsapp",   domini: ["wa.me","whatsapp.com"],    icona: "fab fa-whatsapp" },
         { chiave: "telegram",   domini: ["t.me","telegram.me"],      icona: "fab fa-telegram-plane" },
-        { chiave: "github",     domini: ["github.com"],              icona: "fab fa-github" }
+        { chiave: "github",     domini: ["github.com"],              icona: "fab fa-github" },
+        { chiave: "spotify",    domini: ["spotify.com"],             icona: "fab fa-spotify" },
+        { chiave: "twitch",     domini: ["twitch.tv"],               icona: "fab fa-twitch" },
+        { chiave: "pinterest",  domini: ["pinterest.com"],           icona: "fab fa-pinterest-p" },
+        { chiave: "reddit",     domini: ["reddit.com"],              icona: "fab fa-reddit" },
+        { chiave: "behance",    domini: ["behance.net"],             icona: "fab fa-behance" },
+        { chiave: "dribbble",   domini: ["dribbble.com"],            icona: "fab fa-dribbble" },
+        { chiave: "strava",     domini: ["strava.com"],              icona: "fab fa-strava" }
     ];
 
     function normalizzaUrl(val) {
         if (!val) return "";
         val = val.trim();
+        // Evita di sovrascrivere protocolli specifici come tel: o mailto:
         if (!val.startsWith("http://") && !val.startsWith("https://") && !val.startsWith("tel:") && !val.startsWith("mailto:")) {
             val = "https://" + val;
         }
@@ -685,8 +693,10 @@ textarea { height: 70px; resize: none; }
                 }
             }
         } catch(e) {}
-        return { nome: "link", icona: "fas fa-share-alt" };
+        // Il Fallback Premium per i link custom/siti personali non in lista
+        return { nome: "link", icona: "fas fa-share-alt" }; 
     }
+
 
     function aggiungiCanale() {
         const pianoAttuale = document.getElementById('field-plan').value.toUpperCase();
