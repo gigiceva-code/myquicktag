@@ -148,7 +148,7 @@ body {
 #profile-content #casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec); }
 #profile-content #casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec); }
 #profile-content #casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec); }
-
+#profile-content #casella-crea .casella-invito::after { content: '+ CREA LA TUA TAG'; color: #ffffff; font-weight: 500; }
 #profile-content #mainGrid .casella:active { opacity: 0.6; }
 #profile-content #mainGrid .casella:active .casella-invito::after { color: #ffffff; }
 
@@ -285,6 +285,9 @@ textarea { height: 70px; resize: none; }
         <div class="casella" id="casella-qr" onclick="apriDrawerQR()">
             <span class="casella-invito"></span>
         </div>
+        <div class="casella" id="casella-crea" onclick="apriDrawer('drawer-funzioni')" style="display:none;">
+    <span class="casella-invito"></span>
+</div>
         <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-bio-solo')">
             <span class="casella-invito"></span>
         </div>
@@ -1007,7 +1010,7 @@ function aggiornaTagLive() {
         elGallery.style.display = (window.datiGalleryCorrente && window.datiGalleryCorrente.length > 0) ? 'flex' : 'none';
     }
 
-    // Quick Action
+   // Quick Action
     const qaTipo = getVal('field-quick_action_tipo');
     const qaUrl = getVal('field-quick_action_url');
     const elQA = container.querySelector('#casella-quick-action');
@@ -1020,7 +1023,22 @@ function aggiornaTagLive() {
             elQA.style.display = 'none';
         }
     }
-        }
+
+    // Tela deserta — mostra "+ CREA LA TUA TAG" solo se nessuna funzione è ancora configurata
+    const haAlmenoUnaFunzione = !!(
+        mappaCaselle['casella-bio'] ||
+        mappaCaselle['casella-sito'] ||
+        mappaCaselle['casella-cv'] ||
+        mappaCaselle['casella-contatti'] ||
+        (typeof canaliCorrenti !== 'undefined' && canaliCorrenti.length > 0) ||
+        (qaTipo && qaUrl)
+    );
+
+    const elCrea = container.querySelector('#casella-crea');
+    if (elCrea) {
+        elCrea.style.display = haAlmenoUnaFunzione ? 'none' : 'flex';
+    }
+}
     function attivaAscoltatoriLive() {
         const selettori = [
             '#field-bio', '#field-email', '#field-sito_web', '#field-cv', 
