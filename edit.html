@@ -43,14 +43,17 @@ body {
    🏛️ MONOLITO LIVE: PERFETTA SIMMETRIA CON TAG.HTML
    ============================================================ */
 #profile-content.app-container {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     opacity: 1;
     width: calc(100% - 32px);
     max-width: 410px;
     height: calc(100svh - 32px); 
     max-height: 840px;
-    margin: 20px auto;
+    margin: 0; /* Rimuove il margine che causava l'uscita dallo schermo */
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
     border: 1px solid rgba(212, 175, 55, 0.5);
@@ -60,6 +63,7 @@ body {
     box-shadow: 0 30px 70px rgba(0,0,0,0.6);
     overflow: hidden;
 }
+
 
 #profile-content .header-monolith { text-align: center; }
 
