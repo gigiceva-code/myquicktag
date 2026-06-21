@@ -6,7 +6,7 @@
     <title>Configurazione Ecosistema - myquicktag</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
 <style>
@@ -40,16 +40,19 @@ body {
 }
 
 /* ============================================================
-   MONOLITO LIVE — la tag vera, identica a tag.html, in-flow
+   🏛️ MONOLITO LIVE: PERFETTA SIMMETRIA CON TAG.HTML
    ============================================================ */
 #profile-content.app-container {
     position: relative;
     display: flex;
     opacity: 1;
-    width: 100%;
+    width: calc(100% - 32px);
     max-width: 410px;
-    height: auto;
-    min-height: 560px;
+    
+    /* 🎯 Sincronizzato con l'altezza reale della PWA per evitare sbalzi di layout */
+    height: calc(100svh - 32px); 
+    max-height: 840px;
+    
     margin: 20px auto;
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
@@ -63,7 +66,6 @@ body {
 
 #profile-content .header-monolith {
     text-align: center;
-    cursor: pointer;
 }
 
 #profile-content .avatar-block {
@@ -116,7 +118,8 @@ body {
     border: none;
     box-sizing: border-box;
     margin: 0;
-    padding: 30px 0 40px 0;
+    /* 🎯 Ripristinato il passo e la distanza di sicurezza dalla Quick Action come in PWA */
+    padding: 30px 0 110px 0; 
 }
 
 #profile-content #mainGrid .casella {
@@ -124,7 +127,7 @@ body {
     border: none;
     box-shadow: none;
     min-height: auto;
-    padding: 8px 0;
+    padding: 4px 0;
     width: auto;
     cursor: pointer;
     transition: opacity 0.2s ease;
@@ -141,7 +144,8 @@ body {
     transition: color 0.2s ease;
 }
 
-#profile-content #casella-qr .casella-invito::after { content: 'DIGITAL PASS'; color: var(--accent-gold); font-weight: 400; }
+/* 🎯 RETTIFICA SCRITTA: Uniformato a DIGITAL PSS senza la A */
+#profile-content #casella-qr .casella-invito::after { content: 'DIGITAL PSS'; color: var(--accent-gold); font-weight: 400; }
 #profile-content #casella-bio .casella-invito::after { content: 'BIO'; color: var(--text-sec); }
 #profile-content #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec); }
 #profile-content #casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec); }
@@ -150,48 +154,50 @@ body {
 #profile-content #casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec); }
 #profile-content #casella-crea .casella-invito::after { content: '+ CREA LA TUA TAG'; color: #ffffff; font-weight: 500; }
 #profile-content #mainGrid .casella:active { opacity: 0.6; }
-#profile-content #mainGrid .casella:active .casella-invito::after { color: #ffffff; }
 
+/* 🎯 BARRA FLUTTUANTE QUICK ACTION PREMIUM COERENTE */
 #profile-content #casella-quick-action {
-    width: 100%;
-    height: 46px;
-    min-height: 46px;
-    background: rgba(212, 175, 55, 0.03);
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 0 16px;
-    margin-top: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: absolute !important;
+    bottom: 70px !important;
+    left: 24px !important;
+    right: 24px !important;
+    width: calc(100% - 48px) !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    background: rgba(212, 175, 55, 0.03) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 0 16px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
     cursor: pointer;
 }
-#profile-content #casella-quick-action #quick-action-icon { font-size: 1.1rem; }
+#profile-content #casella-quick-action #quick-action-icon { font-size: 1.1rem; margin-bottom: 0 !important; }
 #profile-content #casella-quick-action #quick-action-label {
-    font-size: 0.72rem;
-    line-height: 1;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #d4af37;
+    font-size: 0.72rem !important;
+    line-height: 1 !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    color: #d4af37 !important;
 }
-#profile-content #casella-quick-action:active { opacity: 0.6; }
 
-/* Temi — bordo dello chassis cambia colore in base al tema scelto */
+/* Temi Chassis */
 #profile-content.tema-black-dna { border-color: rgba(80, 200, 120, 0.5); }
 #profile-content.tema-titanium { border-color: rgba(134, 134, 139, 0.6); }
 #profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.5); }
 #profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8); }
 
 /* ============================================================
-   DRAWER SYSTEM (Gemini) — invariato
+   DRAWER SYSTEM EXECUTIVE
    ============================================================ */
 .drawer-overlay {
-    position: fixed; bottom: -100%; left: 0; width: 100%; height: 55vh;
+    position: fixed; bottom: -100%; left: 0; width: 100%; height: 60vh;
     background: var(--card-bg); border-top: 1px solid var(--card-border);
-    border-radius: 24px 24px 0 0; padding: 24px; z-index: 2000;
+    border-radius: 24px 24px 0 0; padding: 24px 24px 40px 24px; z-index: 2000;
     transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 -10px 40px rgba(0,0,0,0.9); overflow-y: auto;
     box-sizing: border-box;
@@ -201,6 +207,8 @@ body {
 
 .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
 .drawer-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-white); }
+
+/* Tasto di annullamento (Freccia Indietro o X) */
 .drawer-close {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -214,17 +222,31 @@ body {
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
 }
 .drawer-close:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.15); }
 
+/* 🎯 TASTO DI CONFERMA INTERNO AI CASSETTI */
+.btn-conferma-drawer {
+    width: 100%;
+    padding: 14px;
+    margin-top: 24px;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+.btn-conferma-drawer:active { transform: scale(0.98); background: #eeeeee; }
+
 .funzione-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--card-border);
-    cursor: pointer;
-    transition: opacity 0.2s ease;
+    padding: 16px 0; border-bottom: 1px solid var(--card-border);
+    cursor: pointer; transition: opacity 0.2s ease;
 }
 .funzione-row:active { opacity: 0.7; }
 .funzione-nome { font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; color: #fff; }
@@ -254,241 +276,261 @@ textarea { height: 70px; resize: none; }
 .plan-card.selected { border-color: #ffffff; background: rgba(255,255,255,0.04); }
 .plan-card i { font-size: 1rem; margin-right: 12px; color: var(--text-sec); width: 20px; text-align: center; }
 .plan-info h3 { margin: 0; font-size: 0.85rem; font-weight: 600; }
-.plan-info p { margin: 1px 0 0; font-size: 0.7rem; color: var(--text-sec); }
+.plan-info p { margin: 1px 0 0; font-size: 0.7()rem; color: var(--text-sec); }
 
 .social-input-group { display: flex; gap: 8px; align-items: center; }
 .btn-add-social { padding: 12px 16px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
 
+/* 🎯 STICKY FOOTER STRUTTURATO PER EVITARE SOVRAPPOSIZIONI */
 .sticky-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000 75%, rgba(0,0,0,0) 100%); padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100; }
 .save-btn { width: 100%; max-width: 390px; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.2s ease;}
+.save-btn:disabled { background: #2c2c2e; color: #8e8e93; cursor: not-allowed; }
 .save-btn:active { transform: scale(0.98); }
 .back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; }
+
+/* Toast di notifica interno */
+.toast-edit {
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px;
+    font-size: 0.85rem; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+    opacity: 0; z-index: 10000; pointer-events: none;
+}
+.toast-edit.mostra { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
 </head>
 <body>
 
-    <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiTuttiIDrawer()"></div>
+    <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
+    <div id="toast-notifica" class="toast-edit">Modifiche applicate</div>
 
     <div class="configurator-wrapper">
-       <!-- MONOLITO LIVE — struttura identica a tag.html -->
-<div id="profile-content" class="app-container ready">
-    <div class="header-monolith">
-        <div class="avatar-block" id="avatar-container" style="display:none;">
-            <img id="userImage" class="user-media" src="" alt="Logo">
-        </div>
-        <div class="username-capsule">
-            <h1 class="username-display" id="tag-username">@...</h1>
-        </div>
-    </div>
+        <div id="profile-content" class="app-container">
+            <div class="header-monolith">
+                <div class="avatar-block" id="avatar-container" style="display:none;">
+                    <img id="userImage" class="user-media" src="" alt="Logo">
+                </div>
+                <div class="username-capsule">
+                    <h1 class="username-display" id="tag-username">@...</h1>
+                </div>
+            </div>
 
-    <div id="mainGrid">
-        <div class="casella" id="casella-qr" onclick="apriDrawerQR()">
-            <span class="casella-invito"></span>
-        </div>
-        <div class="casella" id="casella-crea" onclick="apriDrawer('drawer-funzioni')" style="display:none;">
-    <span class="casella-invito"></span>
-</div>
-        <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-bio-solo')">
-            <span class="casella-invito"></span>
-        </div>
-        <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')">
-            <span class="casella-invito"></span>
-        </div>
-        <div class="casella" id="casella-contatti" onclick="verificaPianoVcfMenu(event, 'drawer-vcf')">
-            <span class="casella-invito"></span>
-        </div>
-        <div class="casella" id="casella-social" onclick="apriDrawer('drawer-social')">
-            <span class="casella-invito"></span>
-        </div>
-        <div class="casella" id="casella-sito" onclick="apriDrawer('drawer-diretti')">
-            <span class="casella-invito"></span>
-        </div>
-        <div class="casella" id="casella-cv" onclick="apriDrawer('drawer-diretti')">
-            <span class="casella-invito"></span>
-        </div>
-    </div>
+            <div id="mainGrid">
+                <div class="casella" id="casella-qr" onclick="apriDrawerQR()">
+                    <span class="casella-invito"></span>
+                </div>
+                <div class="casella" id="casella-crea" onclick="apriDrawer('drawer-funzioni')" style="display:none;">
+                    <span class="casella-invito"></span>
+                </div>
+                <div class="casella" id="casella-bio" onclick="apriDrawer('drawer-bio-solo')">
+                    <span class="casella-invito"></span>
+                </div>
+                <div class="casella" id="casella-gallery" onclick="gestisciBloccoPremium('drawer-gallery')">
+                    <span class="casella-invito"></span>
+                </div>
+                <div class="casella" id="casella-contatti" onclick="verificaPianoVcfMenu(event, 'drawer-vcf')">
+                    <span class="casella-invito"></span>
+                </div>
+                <div class="casella" id="casella-social" onclick="apriDrawer('drawer-social')">
+                    <span class="casella-invito"></span>
+                </div>
+                <div class="casella" id="casella-sito" onclick="apriDrawer('drawer-diretti')">
+                    <span class="casella-invito"></span>
+                </div>
+                <div class="casella" id="casella-cv" onclick="apriDrawer('drawer-diretti')">
+                    <span class="casella-invito"></span>
+                </div>
+            </div>
 
-    <div class="casella" id="casella-quick-action" onclick="verificaPianoQuickActionMenu(event, 'drawer-quick')" style="display:none;">
-        <div id="quick-action-icon" style="font-size: 1.1rem;">⚡</div>
-        <div class="casella-invito" id="quick-action-label">Azione rapida</div>
-    </div>
-</div> 
+            <div class="casella" id="casella-quick-action" onclick="verificaPianoQuickActionMenu(event, 'drawer-quick')" style="display:none;">
+                <div id="quick-action-icon">⚡</div>
+                <div class="casella-invito" id="quick-action-label">Azione rapida</div>
+            </div>
+        </div> 
 
-
-    <div class="drawer-overlay" id="drawer-funzioni">
-        <div class="drawer-header">
-            <div class="drawer-title">Aggiungi Funzione</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <div class="drawer-content-area" style="padding: 0;">
-            <div class="funzione-row" onclick="attivaStep('tag', 'drawer-bio-solo')">
-                <span class="funzione-nome">Biografia Breve</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
+        <div class="drawer-overlay" id="drawer-funzioni">
+            <div class="drawer-header">
+                <div class="drawer-title">Aggiungi Funzione</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
             </div>
-            <div class="funzione-row" onclick="attivaStep('tag', 'drawer-social')">
-                <span class="funzione-nome">Social Networks</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
-            </div>
-            <div class="funzione-row" onclick="attivaStep('tag', 'drawer-diretti')">
-                <span class="funzione-nome">Contatti Diretti</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
-            </div>
-            <div class="funzione-row" onclick="verificaPianoVcfMenu(event, 'drawer-vcf')">
-                <span class="funzione-nome">Rubrica VCF <i class="fas fa-lock lock-icon" style="margin-left: 5px;"></i></span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
-            </div>
-            <div class="funzione-row" onclick="verificaPianoQuickActionMenu(event, 'drawer-quick')">
-                <span class="funzione-nome">Azione Rapida <i class="fas fa-lock lock-icon" style="margin-left: 5px; color: var(--accent-gold);"></i></span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="drawer-overlay" id="drawer-piano">
-        <div class="drawer-header">
-            <div class="drawer-title">Seleziona Ecosistema</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <div class="plan-selector">
-            <div class="plan-card selected" id="plan-BASE" onclick="selectPlan('BASE')">
-                <i class="fas fa-seedling"></i>
-                <div class="plan-info"><h3>BASE</h3><p>Presenza digitale essenziale gratuita</p></div>
-            </div>
-            <div class="plan-card" id="plan-PREMIUM" onclick="selectPlan('PREMIUM')">
-                <i class="fas fa-crown"></i>
-                <div class="plan-info"><h3>PREMIUM</h3><p>Professionisti (Link estesi e VCF)</p></div>
-            </div>
-            <div class="plan-card" id="plan-GOLD" onclick="selectPlan('GOLD')">
-                <i class="fas fa-gem"></i>
-                <div class="plan-info"><h3>GOLD</h3><p>Aziende ed Ecosistema (Multi-Sede)</p></div>
-            </div>
-        </div>
-        <input type="hidden" id="field-plan" value="BASE">
-    </div>
-
-    <div class="drawer-overlay" id="drawer-identita">
-        <div class="drawer-header">
-            <div class="drawer-title">Scegli lo Stile Visivo</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <div class="drawer-overlay" id="drawer-qr-preview">
-    <div class="drawer-header">
-        <div class="drawer-title">Il tuo Digital Pass</div>
-        <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-    </div>
-    <div style="display:flex; flex-direction:column; align-items:center; padding:20px 0;">
-        <div id="qr-preview-wrapper" style="background:#ffffff; padding:16px; border-radius:16px; width:212px; height:212px; display:flex; align-items:center; justify-content:center;"></div>
-        <p style="color:var(--text-sec); font-size:0.8rem; text-align:center; margin-top:20px; line-height:1.5;">Questa è un'anteprima. Il QR sarà attivo e scansionabile solo dopo la pubblicazione.</p>
-    </div>
-        </div>
-        <div class="form-group">
-            <label>Seleziona Stile</label>
-            <div class="style-selector">
-                <div class="style-options">
-                    <label class="style-card">
-                        <input type="radio" name="digital_style" value="black" checked>
-                        <div class="style-preview black">Black DNA</div>
-                    </label>
-                    <label class="style-card">
-                        <input type="radio" name="digital_style" value="titanium">
-                        <div class="style-preview titanium">Titanium</div>
-                    </label>
-                    <label class="style-card">
-                        <input type="radio" name="digital_style" value="obsidian_gold">
-                        <div class="style-preview gold">Obsidian Gold</div>
-                    </label>
-                    <label class="style-card">
-                        <input type="radio" name="digital_style" value="rose_pearl">
-                        <div class="style-preview pearl">Satin Rose</div>
-                    </label>
+            <div class="drawer-content-area">
+                <div class="funzione-row" onclick="attivaStep('tag', 'drawer-bio-solo')">
+                    <span class="funzione-nome">Biografia Breve</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
+                </div>
+                <div class="funzione-row" onclick="attivaStep('tag', 'drawer-social')">
+                    <span class="funzione-nome">Social Networks</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
+                </div>
+                <div class="funzione-row" onclick="attivaStep('tag', 'drawer-diretti')">
+                    <span class="funzione-nome">Contatti Diretti</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
+                </div>
+                <div class="funzione-row" onclick="verificaPianoVcfMenu(event, 'drawer-vcf')">
+                    <span class="funzione-nome">Rubrica VCF <i class="fas fa-lock lock-icon" style="margin-left: 5px;"></i></span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
+                </div>
+                <div class="funzione-row" onclick="verificaPianoQuickActionMenu(event, 'drawer-quick')">
+                    <span class="funzione-nome">Azione Rapida <i class="fas fa-lock lock-icon" style="margin-left: 5px; color: var(--accent-gold);"></i></span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="drawer-overlay" id="drawer-bio-solo">
-        <div class="drawer-header">
-            <div class="drawer-title">Biografia Breve</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
+        <div class="drawer-overlay" id="drawer-piano">
+            <div class="drawer-header">
+                <div class="drawer-title">Seleziona Ecosistema</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <div class="plan-selector">
+                <div class="plan-card selected" id="plan-BASE" onclick="selectPlan('BASE')">
+                    <i class="fas fa-seedling"></i>
+                    <div class="plan-info"><h3>BASE</h3><p>Presenza digitale essenziale gratuita</p></div>
+                </div>
+                <div class="plan-card" id="plan-PREMIUM" onclick="selectPlan('PREMIUM')">
+                    <i class="fas fa-crown"></i>
+                    <div class="plan-info"><h3>PREMIUM</h3><p>Professionisti (Link estesi e VCF)</p></div>
+                </div>
+                <div class="plan-card" id="plan-GOLD" onclick="selectPlan('GOLD')">
+                    <i class="fas fa-gem"></i>
+                    <div class="plan-info"><h3>GOLD</h3><p>Aziende ed Ecosistema (Multi-Sede)</p></div>
+                </div>
+            </div>
+            <input type="hidden" id="field-plan" value="BASE">
+            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Conferma Piano</button>
         </div>
-        <div class="form-group">
-            <label>Scrivi la tua bio</label>
-            <textarea id="field-bio" placeholder="Racconta chi sei..."></textarea>
+
+        <div class="drawer-overlay" id="drawer-identita">
+            <div class="drawer-header">
+                <div class="drawer-title">Scegli lo Stile Visivo</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Seleziona Stile</label>
+                <div class="style-selector">
+                    <div class="style-options">
+                        <label class="style-card">
+                            <input type="radio" name="digital_style" value="black" checked>
+                            <div class="style-preview black">Black DNA</div>
+                        </label>
+                        <label class="style-card">
+                            <input type="radio" name="digital_style" value="titanium">
+                            <div class="style-preview titanium">Titanium</div>
+                        </label>
+                        <label class="style-card">
+                            <input type="radio" name="digital_style" value="obsidian_gold">
+                            <div class="style-preview gold">Obsidian Gold</div>
+                        </label>
+                        <label class="style-card">
+                            <input type="radio" name="digital_style" value="rose_pearl">
+                            <div class="style-preview pearl">Satin Rose</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Applica Stile</button>
+        </div>
+
+        <div class="drawer-overlay" id="drawer-qr-preview">
+            <div class="drawer-header">
+                <div class="drawer-title">Il tuo Digital Pass</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; padding:20px 0;">
+                <div id="qr-preview-wrapper" style="background:#ffffff; padding:16px; border-radius:16px; width:212px; height:212px; display:flex; align-items:center; justify-content:center;"></div>
+                <p style="color:var(--text-sec); font-size:0.8rem; text-align:center; margin-top:20px; line-height:1.5;">Questa è un'anteprima. Il QR sarà attivo e scansionabile solo dopo la pubblicazione.</p>
+            </div>
+        </div>
+
+        <div class="drawer-overlay" id="drawer-bio-solo">
+            <div class="drawer-header">
+                <div class="drawer-title">Biografia Breve</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Scrivi la tua bio</label>
+                <textarea id="field-bio" placeholder="Racconta chi sei..."></textarea>
+            </div>
+            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Aggiungi Bio</button>
+        </div>
+
+        <div class="drawer-overlay" id="drawer-diretti">
+            <div class="drawer-header">
+                <div class="drawer-title">Contatti & Link Diretti</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <div class="form-group"><label>Sito Web Principale</label><input type="text" id="field-sito_web" placeholder="https://tuosito.com"></div>
+            <div class="form-group"><label>Email Canale</label><input type="text" id="field-email" placeholder="nome@esempio.com"></div>
+            <div class="form-group"><label>Telefono Diretto</label><input type="text" id="field-phone" placeholder="+39..."></div>
+            <div class="form-group"><label>Link Curriculum Vitae (URL)</label><input type="text" id="field-cv" placeholder="https://link-al-tuo-cv.com"></div>
+            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Salva Contatti</button>
+        </div>
+
+        <div class="drawer-overlay" id="drawer-social">
+            <div class="drawer-header">
+                <div class="drawer-title">Social Ecosystem Network</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <div class="form-group social-input-group">
+                <input type="text" id="input-nuovo-canale" placeholder="Incolla link del profilo social...">
+                <button type="button" onclick="aggiungiCanale()" class="btn-add-social">+ Aggiungi</button>
+            </div>
+            <div id="lista-canali" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
+            <input type="hidden" id="field-config_canali" value="[]">
+            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Salva Canali</button>
+        </div>
+
+        <div class="drawer-overlay" id="drawer-quick">
+            <div class="drawer-header">
+                <div class="drawer-title">Configurazione Quick Action</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Tipo di azione primaria</label>
+                <select id="field-quick_action_tipo">
+                    <option value="">Nessuna azione</option>
+                    <option value="appuntamento">Prenota appuntamento</option>
+                    <option value="whatsapp">Scrivimi su WhatsApp</option>
+                    <option value="preventivo">Richiedi preventivo</option>
+                    <option value="chiamata">Chiama ora</option>
+                    <option value="maps">Trovami su Maps</option>
+                    <option value="demo">Ascolta demo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Destinazione URL o Numero</label>
+                <input type="text" id="field-quick_action_url" placeholder="Inserisci link o recapito">
+            </div>
+            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Salva Azione</button>
+        </div>
+
+        <div class="drawer-overlay" id="drawer-vcf">
+            <div class="drawer-header">
+                <div class="drawer-title">Scheda Rubrica VCF</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <div class="form-group"><label>Nome / Ragione Sociale</label><input type="text" id="vcf-nome"></div>
+            <div class="form-group"><label>Telefono Principale</label><input type="text" id="vcf-telefono1"></div>
+            <div class="form-group"><label>Email Principale</label><input type="text" id="vcf-email1"></div>
+            <div class="form-group"><label>Sito Web Azienda</label><input type="text" id="vcf-sito"></div>
+            <div id="vcf-premium-section" onclick="verificaPianoVcf(event)">
+                <div class="form-group"><label>Telefono Secondario</label><input type="text" id="vcf-telefono2"></div>
+                <div class="form-group"><label>Email Secondaria</label><input type="text" id="vcf-email2"></div>
+                <div class="form-group"><label>Indirizzo Completo</label><input type="text" id="vcf-indirizzo"></div>
+                <div class="form-group"><label>Partita IVA</label><input type="text" id="vcf-piva"></div>
+            </div>
+            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Salva in Rubrica</button>
+        </div>
+
+        <div class="drawer-overlay" id="drawer-gallery">
+            <div class="drawer-header">
+                <div class="drawer-title">Media & Gallery Showcase</div>
+                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
+            </div>
+            <p style="color:var(--text-sec); font-size:0.85rem; line-height:1.6; margin-bottom: 20px;">Gestione avanzata file e portfolio in caricamento JSON.</p>
+            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Chiudi</button>
+        </div>
+
+        <div class="sticky-footer" id="footer-actions">
+            <button class="save-btn" id="btn-azione-principale" onclick="apriDrawer('drawer-funzioni')">AGGIUNGI FUNZIONE</button>
+            <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
         </div>
     </div>
-
-    <div class="drawer-overlay" id="drawer-diretti">
-        <div class="drawer-header">
-            <div class="drawer-title">Contatti & Link Diretti</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <div class="form-group"><label>Sito Web Principale</label><input type="text" id="field-sito_web" placeholder="https://tuosito.com"></div>
-        <div class="form-group"><label>Email Canale</label><input type="text" id="field-email" placeholder="nome@esempio.com"></div>
-        <div class="form-group"><label>Telefono Diretto</label><input type="text" id="field-phone" placeholder="+39..."></div>
-        <div class="form-group"><label>Link Curriculum Vitae (URL)</label><input type="text" id="field-cv" placeholder="https://link-al-tuo-cv.com"></div>
-    </div>
-
-    <div class="drawer-overlay" id="drawer-social">
-        <div class="drawer-header">
-            <div class="drawer-title">Social Ecosystem Network</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <div class="form-group social-input-group">
-            <input type="text" id="input-nuovo-canale" placeholder="Incolla link del profilo social...">
-            <button type="button" onclick="aggiungiCanale()" class="btn-add-social">+ Aggiungi</button>
-        </div>
-        <div id="lista-canali" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
-        <input type="hidden" id="field-config_canali" value="[]">
-    </div>
-
-    <div class="drawer-overlay" id="drawer-quick">
-        <div class="drawer-header">
-            <div class="drawer-title">Configurazione Quick Action</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Tipo di azione primaria</label>
-            <select id="field-quick_action_tipo">
-                <option value="">Nessuna azione</option>
-                <option value="appuntamento">Prenota appuntamento</option>
-                <option value="whatsapp">Scrivimi su WhatsApp</option>
-                <option value="preventivo">Richiedi preventivo</option>
-                <option value="chiamata">Chiama ora</option>
-                <option value="maps">Trovami su Maps</option>
-                <option value="demo">Ascolta demo</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Destinazione URL o Numero</label>
-            <input type="text" id="field-quick_action_url" placeholder="Inserisci link o recapito">
-        </div>
-    </div>
-
-    <div class="drawer-overlay" id="drawer-vcf">
-        <div class="drawer-header">
-            <div class="drawer-title">Scheda Rubrica VCF</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <div class="form-group"><label>Nome / Ragione Sociale</label><input type="text" id="vcf-nome"></div>
-        <div class="form-group"><label>Telefono Principale</label><input type="text" id="vcf-telefono1"></div>
-        <div class="form-group"><label>Email Principale</label><input type="text" id="vcf-email1"></div>
-        <div class="form-group"><label>Sito Web Azienda</label><input type="text" id="vcf-sito"></div>
-        <div id="vcf-premium-section" onclick="verificaPianoVcf(event)">
-            <div class="form-group"><label>Telefono Secondario</label><input type="text" id="vcf-telefono2"></div>
-            <div class="form-group"><label>Email Secondaria</label><input type="text" id="vcf-email2"></div>
-            <div class="form-group"><label>Indirizzo Completo</label><input type="text" id="vcf-indirizzo"></div>
-            <div class="form-group"><label>Partita IVA</label><input type="text" id="vcf-piva"></div>
-        </div>
-    </div>
-
-    <div class="drawer-overlay" id="drawer-gallery">
-        <div class="drawer-header">
-            <div class="drawer-title">Media & Gallery Showcase</div>
-            <button class="drawer-close" onclick="chiudiTuttiIDrawer()">✕</button>
-        </div>
-        <p style="color:var(--text-sec); font-size:0.85rem; line-height:1.6;">Gestione avanzata file e portfolio in caricamento JSON.</p>
-    </div>
-
-       <div class="sticky-footer" id="footer-actions">
-        <button class="save-btn" id="btn-azione-principale" onclick="avviaFlussoEcosistema()" style="margin-bottom: 10px;">CONFIGURA IL TUO ECOSISTEMA</button>
-        <a href="#" id="back-to-dash" class="back-link">Annulla e torna al profilo</a>
-    </div>
-
 
     <div id="modal-piano" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; padding:24px;">
         <div style="background:#121214; border:1px solid #1c1c1e; border-radius:20px; padding:32px 24px; max-width:340px; width:100%; text-align:center;">
@@ -498,10 +540,12 @@ textarea { height: 70px; resize: none; }
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
-    let currentPlan = "BASE";
+    let cacheStatoLicenza = "attivo"; // Memorizza lo stato reale del profilo
+    let canaliCorrenti = [];
 
     if (nomeUtente) { 
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
@@ -522,6 +566,13 @@ textarea { height: 70px; resize: none; }
         try {
             const response = await fetch(`/api/get-profile?u=${nomePulito}`);
             const data = await response.json();
+            
+            if (data.success && data.fields) {
+                // Salviamo lo stato per regolare la visibilità dell'Annulla
+                cacheStatoLicenza = (data.fields.stato || "").toLowerCase().trim();
+                gestisciVisibilitaAnnulla();
+            }
+
             const f = (() => {
                 if (data.fields?.draft_json) {
                     try {
@@ -531,10 +582,10 @@ textarea { height: 70px; resize: none; }
                 }
                 return data.fields || data;
             })();
-            
+
             if (f) {
                 if(f.plan) selectPlan(f.plan);
-                
+
                 const campi = ['bio', 'email', 'sito_web', 'cv'];
                 campi.forEach(c => {
                     const el = document.getElementById(`field-${c}`);
@@ -550,7 +601,7 @@ textarea { height: 70px; resize: none; }
                 }
                 if (f.modulo_vcf) {
                     try {
-                        const vcf = JSON.parse(f.modulo_vcf);
+                        const vcf = typeof f.modulo_vcf === 'object' ? f.modulo_vcf : JSON.parse(f.modulo_vcf);
                         const campiVcf = ['nome', 'telefono1', 'telefono2', 'email1', 'email2', 'sito', 'indirizzo', 'piva'];
                         campiVcf.forEach(c => {
                             const el = document.getElementById(`vcf-${c}`);
@@ -560,78 +611,66 @@ textarea { height: 70px; resize: none; }
                 }        
                 if (f.config_canali) {
                     try {
-                        const parsed = JSON.parse(f.config_canali);
+                        const parsed = typeof f.config_canali === 'string' ? JSON.parse(f.config_canali) : f.config_canali;
                         if (Array.isArray(parsed)) {
                             canaliCorrenti = parsed;
                             aggiornaListaCanali();
                             aggiornaHiddenField();
                         }
                     } catch(e) {}
-                } 
-                if (f.sedi_json) {
-                    try {
-                        const sedi = typeof f.sedi_json === 'string' ? JSON.parse(f.sedi_json) : f.sedi_json;
-                        if (Array.isArray(sedi) && sedi.length > 0) {
-                            const sede = sedi[0];
-                            if (sede.nome) document.getElementById("ms-nome").value = sede.nome;
-                            if (sede.indirizzo) document.getElementById("ms-indirizzo").value = sede.indirizzo;
-                            if (sede.telefono) document.getElementById("ms-telefono").value = sede.telefono;
-                            if (sede.info) document.getElementById("ms-info").value = sede.info;
-                        }
-                    } catch(e) {}
-                }     
-                
+                }    
+
                 if (f.digital_style) {
                     const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
                     if (radio) radio.checked = true;
                 }
 
-                // 🚦 LOGICA DI RILEVAMENTO: Ecosistema vuoto o popolato?
-                const hasData = !!(f.bio || f.sito_web || f.email || f.cv || (f.modulo_vcf && JSON.parse(f.modulo_vcf).telefono1) || (canaliCorrenti && canaliCorrenti.length > 0) || f.quick_action_tipo);
-                
+                // Rilevamento dello stato di popolamento dell'ecosistema
+                const hasData = !!(f.bio || f.sito_web || f.email || f.cv || (f.modulo_vcf && JSON.parse(typeof f.modulo_vcf === 'string' ? f.modulo_vcf : JSON.stringify(f.modulo_vcf)).telefono1) || (canaliCorrenti && canaliCorrenti.length > 0) || f.quick_action_tipo);
+
                 const btnPrincipale = document.getElementById('btn-azione-principale');
-                const btnSalva = document.getElementById('btn-salva-dati');
-                
-                if (btnPrincipale && btnSalva) {
+                if (btnPrincipale) {
                     if (hasData) {
-                        // Utente esistente con dati
                         btnPrincipale.innerText = "AGGIUNGI FUNZIONE";
                         btnPrincipale.setAttribute('onclick', 'apriDrawer("drawer-funzioni")');
-                        btnSalva.style.display = 'block';
                     } else {
-                        // Nuovo utente, tela deserta
+                        // Nuovo utente: Forza l'onboarding guidato sequenziale
                         btnPrincipale.innerText = "CONFIGURA IL TUO ECOSISTEMA";
                         btnPrincipale.setAttribute('onclick', 'avviaFlussoEcosistema()');
-                        btnSalva.style.display = 'none';
                     }
                 }
             }
         } catch (e) { console.error("Errore inizializzazione:", e); }
     }
 
+    // Gestione visibilità dinamica del tasto Annulla
+    function gestisciVisibilitaAnnulla() {
+        const backLink = document.getElementById("back-to-dash");
+        if (backLink) {
+            if (cacheStatoLicenza === "in attesa") {
+                backLink.style.setProperty('display', 'none', 'important');
+            } else {
+                backLink.style.display = 'block';
+            }
+        }
+    }
+
     const socialDizionario = [
         { chiave: "instagram",  domini: ["instagram.com"],           icona: "fab fa-instagram" },
         { chiave: "tiktok",     domini: ["tiktok.com"],              icona: "fab fa-tiktok" },
         { chiave: "facebook",   domini: ["facebook.com","fb.com"],   icona: "fab fa-facebook-f" },
-        { chiave: "youtube",    domini: ["youtube.com","youtu.be"],  icona: "fab fa-youtube" },
+        { chiave: "youtube",    domini: ["youtube.com"],             icona: "fab fa-youtube" },
         { chiave: "linkedin",   domini: ["linkedin.com"],            icona: "fab fa-linkedin-in" },
         { chiave: "x",          domini: ["x.com","twitter.com"],     icona: "fab fa-x-twitter" },
         { chiave: "whatsapp",   domini: ["wa.me","whatsapp.com"],    icona: "fab fa-whatsapp" },
         { chiave: "telegram",   domini: ["t.me","telegram.me"],      icona: "fab fa-telegram-plane" },
-        { chiave: "github",     domini: ["github.com"],              icona: "fab fa-github" },
-        { chiave: "spotify",    domini: ["spotify.com","open.spotify.com"], icona: "fab fa-spotify" },
-        { chiave: "twitch",     domini: ["twitch.tv"],               icona: "fab fa-twitch" },
-        { chiave: "pinterest",  domini: ["pinterest.com"],           icona: "fab fa-pinterest-p" },
-        { chiave: "reddit",     domini: ["reddit.com"],              icona: "fab fa-reddit" },
-        { chiave: "behance",    domini: ["behance.net"],             icona: "fab fa-behance" },
-        { chiave: "dribbble",   domini: ["dribbble.com"],            icona: "fab fa-dribbble" },
-        { chiave: "strava",     domini: ["strava.com"],              icona: "fab fa-strava" },
+        { chiave: "github",     domini: ["github.com"],              icona: "fab fa-github" }
     ];
 
     function normalizzaUrl(val) {
         if (!val) return "";
         val = val.trim();
-        if (!val.startsWith("http://") && !val.startsWith("https://")) {
+        if (!val.startsWith("http://") && !val.startsWith("https://") && !val.startsWith("tel:") && !val.startsWith("mailto:")) {
             val = "https://" + val;
         }
         return val;
@@ -649,37 +688,26 @@ textarea { height: 70px; resize: none; }
         return { nome: "link", icona: "fas fa-share-alt" };
     }
 
-    let canaliCorrenti = [];
-
     function aggiungiCanale() {
         const pianoAttuale = document.getElementById('field-plan').value.toUpperCase();
-        
-        if (pianoAttuale === "BASE" && canaliCorrenti.length >= 3) {
-            apriModalPiano();
-            return;
-        }
-        if (pianoAttuale === "PREMIUM" && canaliCorrenti.length >= 8) {
-            apriModalPiano();
-            return;
-        }
+
+        if (pianoAttuale === "BASE" && canaliCorrenti.length >= 3) { apriModalPiano(); return; }
+        if (pianoAttuale === "PREMIUM" && canaliCorrenti.length >= 8) { apriModalPiano(); return; }
 
         const input = document.getElementById("input-nuovo-canale");
         let url = input.value.trim();
         if (!url) return;
 
         url = normalizzaUrl(url);
-        if (canaliCorrenti.find(c => c.url === url)) {
-            input.value = "";
-            return;
-        }
+        if (canaliCorrenti.find(c => c.url === url)) { input.value = ""; return; }
 
-        const { nome, icona } = riconosciSocial(url);
+        const { nome } = riconosciSocial(url);
         canaliCorrenti.push({ nome, url });
         aggiornaListaCanali();
         aggiornaHiddenField();
         input.value = "";
     }
-    
+
     function rimuoviCanale(index) {
         canaliCorrenti.splice(index, 1);
         aggiornaListaCanali();
@@ -689,21 +717,12 @@ textarea { height: 70px; resize: none; }
     function aggiornaListaCanali() {
         const lista = document.getElementById("lista-canali");
         lista.innerHTML = "";
-
         canaliCorrenti.forEach((canale, i) => {
             const { icona } = riconosciSocial(canale.url);
-            const dominio = (() => {
-                try { return new URL(canale.url).hostname.replace("www.", ""); }
-                catch(e) { return canale.url; }
-            })();
-
+            const dominio = (() => { try { return new URL(canale.url).hostname.replace("www.", ""); } catch(e) { return canale.url; } })();
             const card = document.createElement("div");
             card.style.cssText = "display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px 14px;";
-            card.innerHTML = `
-                <i class="${icona}" style="font-size:1.1rem; color:#ffffff; flex-shrink:0; width:20px; text-align:center;"></i>
-                <span style="flex:1; font-size:0.85rem; color:#a0a0a0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${dominio}</span>
-                <button onclick="rimuoviCanale(${i})" style="background:none; border:none; color:#a0a0a0; font-size:1rem; cursor:pointer; padding:0; flex-shrink:0; line-height:1;">✕</button>
-            `;
+            card.innerHTML = `<i class="${icona}" style="font-size:1.1rem; color:#ffffff; flex-shrink:0; width:20px; text-align:center;"></i><span style="flex:1; font-size:0.85rem; color:#a0a0a0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${dominio}</span><button onclick="rimuoviCanale(${i})" style="background:none; border:none; color:#a0a0a0; font-size:1rem; cursor:pointer; padding:0; flex-shrink:0; line-height:1;">✕</button>`;
             lista.appendChild(card);
         });
     }
@@ -712,129 +731,110 @@ textarea { height: 70px; resize: none; }
         document.getElementById("field-config_canali").value = JSON.stringify(canaliCorrenti);
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const inputCanale = document.getElementById("input-nuovo-canale");
-        if (inputCanale) {
-            inputCanale.addEventListener("keydown", function(e) {
-                if (e.key === "Enter") { e.preventDefault(); aggiungiCanale(); }
-            });
-        }
-    });
-    
     function verificaPianoQuickActionMenu(event, idDrawer) {
-        const piano = document.getElementById('field-plan').value.toUpperCase();
-        // Ipotesi: Quick Action richiede GOLD o PREMIUM. Adattalo in base alla tua policy
-        if (piano === 'BASE') {
-            event.preventDefault();
-            event.stopPropagation();
-            apriModalPiano();
-        } else {
-            attivaStep('tag', idDrawer);
-        }
+        if (document.getElementById('field-plan').value.toUpperCase() === 'BASE') {
+            event.preventDefault(); event.stopPropagation(); apriModalPiano();
+        } else { attivaStep('tag', idDrawer); }
     }
 
     function verificaPianoVcfMenu(event, idDrawer) {
-        const piano = document.getElementById('field-plan').value.toUpperCase();
-        if (piano === 'BASE') {
-            event.preventDefault();
-            event.stopPropagation();
-            apriModalPiano();
-        } else {
-            attivaStep('tag', idDrawer);
-        }
+        if (document.getElementById('field-plan').value.toUpperCase() === 'BASE') {
+            event.preventDefault(); event.stopPropagation(); apriModalPiano();
+        } else { attivaStep('tag', idDrawer); }
     }
 
     function verificaPianoVcf(event) {
-        const piano = document.getElementById('field-plan').value.toUpperCase();
-        if (piano === 'BASE') {
-            event.preventDefault();
-            event.stopPropagation();
-            const target = event.target;
-            if (target.tagName === 'INPUT') target.blur();
+        if (document.getElementById('field-plan').value.toUpperCase() === 'BASE') {
+            event.preventDefault(); event.stopPropagation();
+            if (event.target.tagName === 'INPUT') event.target.blur();
             apriModalPiano();
         }
     }      
 
     function apriModalPiano() {
-        const modal = document.getElementById('modal-piano');
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
+        document.getElementById('modal-piano').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
-
     function chiudiModalPiano() {
-        const modal = document.getElementById('modal-piano');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+        document.getElementById('modal-piano').style.display = 'none';
+        document.body.style.overflow = 'auto';
     } 
 
-     // ============================================================
-    // 🗺️ MOTORE CASSETTI E TASTO INDIETRO (ANTI-USCITA)
     // ============================================================
+    // 🎛️ CORE ARCHITETTURALE CASSETTI: ANNULLA VS CONFERMA
+    // ============================================================
+    let activeDrawerId = null;
+
     function apriDrawer(idDrawer) {
         document.querySelectorAll('.drawer-overlay.open').forEach(d => {
             if(d.id !== idDrawer) d.classList.remove('open');
         });
-        
-        // Crea la finta pagina per bloccare il tasto indietro del telefono
-        if (window.location.hash !== '#menu') {
-            window.history.pushState(null, null, '#menu');
-        }
-        
+        if (window.location.hash !== '#menu') window.history.pushState(null, null, '#menu');
+
         const drawer = document.getElementById(idDrawer);
-        const backdrop = document.getElementById('drawer-backdrop');
-        if (backdrop) backdrop.style.display = 'block';
-        
+        document.getElementById('drawer-backdrop').style.display = 'block';
+        activeDrawerId = idDrawer;
+
         setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
     }
 
-    function chiudiTuttiIDrawer() {
+    // 🎯 AZIONE 1: Tasto Indietro/X o Click Fuori -> Chiude ed esclude il salvataggio automatico
+    function chiudiSenzaSalvare() {
         if (window.location.hash === '#menu') {
             window.history.back(); 
         } else {
-            eseguiChiusuraCassetti();
+            eseguiChiusuraPura();
         }
     }
 
     window.addEventListener('hashchange', () => {
-        if (window.location.hash !== '#menu') eseguiChiusuraCassetti();
+        if (window.location.hash !== '#menu') eseguiChiusuraPura();
     });
 
-    function eseguiChiusuraCassetti() {
+    function eseguiChiusuraPura() {
         document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open'));
-        const backdrop = document.getElementById('drawer-backdrop');
-        if (backdrop) backdrop.style.display = 'none';
-        
+        document.getElementById('drawer-backdrop').style.display = 'none';
+        activeDrawerId = null;
+        aggiornaTagLive();
+    }
+
+    // 🎯 AZIONE 2: Tasto "Conferma" o "Salva" all'interno del Cassetto
+    function confermaEChiudiCassetto() {
+        // Applica le modifiche grafiche all'anteprima monolito immediatamente
         aggiornaTagLive();
         
-        // SALVATAGGIO FANTASMA ALLA CHIUSURA
-        setTimeout(() => {
-            if(typeof salvaDati === 'function') salvaDati(false, true);
-        }, 500); 
+        // Esegue il salvataggio invisibile sul server in background
+        salvaDati(false, true);
+
+        // Feedback visivo lussuoso
+        mostraToastEdit();
+
+        // Chiude il cassetto in sicurezza
+        chiudiSenzaSalvare();
+    }
+
+    function mostraToastEdit() {
+        const toast = document.getElementById('toast-notifica');
+        if (toast) {
+            toast.classList.add('mostra');
+            setTimeout(() => toast.classList.remove('mostra'), 2000);
+        }
     }
 
     function attivaStep(azioneIgnorata, idDrawer) {
         if (idDrawer) apriDrawer(idDrawer);
-        else chiudiTuttiIDrawer();
+        else chiudiSenzaSalvare();
     }
 
     // ============================================================
-    // 💾 MOTORE DI SALVATAGGIO (CON BLOCCO DEL SALTO)
+    // 💾 MOTORE DI SALVATAGGIO AD ALTA TOLLERANZA
     // ============================================================
     async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
-        const btn = document.getElementById("btn-salva-dati");
-        
-        if(btn && !salvataggioSilenzioso) {
-            btn.innerText = "SALVATAGGIO...";
-            btn.disabled = true;
-        }
-
+        const btn = document.getElementById("btn-azione-principale");
         const tagDallUrl = params.get("u") || "";
         const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
-        const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
+        
+        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.trim() : "";
 
         const bozza = {
             username_system: nomePerSistema,
@@ -848,18 +848,13 @@ textarea { height: 70px; resize: none; }
             config_canali: document.getElementById("field-config_canali").value,
             quick_action_tipo: getVal("field-quick_action_tipo"),
             quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),
-            sedi_json: (() => {
-                const msNome = getVal("ms-nome");
-                if (!msNome) return "";
-                return JSON.stringify([{ nome: msNome, indirizzo: getVal("ms-indirizzo"), telefono: getVal("ms-telefono"), info: getVal("ms-info") }]);
-            })(), 
             modulo_vcf: {
                 nome: getVal("vcf-nome"), telefono1: getVal("vcf-telefono1"), telefono2: getVal("vcf-telefono2"),
                 email1: getVal("vcf-email1"), email2: getVal("vcf-email2"), sito: normalizzaUrl(getVal("vcf-sito")),
                 indirizzo: getVal("vcf-indirizzo"), piva: getVal("vcf-piva")
             }
         }; 
-        
+
         try {
             const response = await fetch('/api/update-profile', {
                 method: 'POST',
@@ -868,286 +863,144 @@ textarea { height: 70px; resize: none; }
             });
 
             const result = await response.json();
-
             if (response.ok || result.success) {
-                // IL SEGRETO È QUI: Se è silenzioso, il codice si ferma e NON ti sbatte fuori
                 if (!salvataggioSilenzioso) {
                     if (mostraAnteprima) window.location.replace(`tag.html?u=${nomePerSistema}&mode=draft`);
                     else window.location.replace(`profile.html?u=${nomePerSistema}`);
                 }
-            } else {
-                if (!salvataggioSilenzioso) alert("Impossibile salvare le modifiche. Riprova.");
             }
-        } catch (error) {
-            if (!salvataggioSilenzioso) alert("Errore di connessione al server.");
-        } finally {
-            if(btn && !salvataggioSilenzioso) {
-                btn.innerText = "SALVA LE MODIFICHE";
-                btn.disabled = false;
-            }
-        }
+        } catch (error) { console.error("Errore comunicazione server:", error); }
     }
-    function luxuryNavigate(event, url) {
-        event.preventDefault();
-        setTimeout(function() {
-            window.location.href = url;
-        }, 250);
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        document.body.style.opacity = "1";
-        const backLink = document.getElementById("back-to-dash");
-        if (backLink) {
-            backLink.addEventListener("click", function(e) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const uParam = urlParams.get("u") || "";
-                const nomePulitoLocale = uParam.replace('@', '').trim().toLowerCase();
-                luxuryNavigate(e, `profile.html?u=${nomePulitoLocale}`);
-            });
-        }
-    });
 
     // ============================================================
-// QR CODE — generazione reale tramite qrcode.js (anteprima, non funzionale)
-// ============================================================
-function generaQRPreview(url) {
-    const wrapper = document.getElementById('qr-preview-wrapper');
-    if (!wrapper) return;
-    wrapper.innerHTML = '';
-    new QRCode(wrapper, {
-        text: url,
-        width: 180,
-        height: 180,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.M
-    });
-}
-
-function apriDrawerQR() {
-    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-    const urlAnteprima = `${window.location.origin}/tag.html?u=${nomePulito}`;
-    apriDrawer('drawer-qr-preview');
-    setTimeout(() => generaQRPreview(urlAnteprima), 50);
-}
-
-// ============================================================
-// SOCIAL ICONS — stesso dizionario di tag.html, per il rendering live
-// ============================================================
-const socialIconsLive = {
-    "instagram": "fab fa-instagram", "tiktok": "fab fa-tiktok", "facebook": "fab fa-facebook-f",
-    "youtube": "fab fa-youtube", "linkedin": "fab fa-linkedin-in", "x": "fab fa-x-twitter",
-    "twitter": "fab fa-x-twitter", "strava": "fab fa-strava", "github": "fab fa-github",
-    "behance": "fab fa-behance", "dribbble": "fab fa-dribbble", "spotify": "fab fa-spotify",
-    "telegram": "fab fa-telegram-plane", "whatsapp": "fab fa-whatsapp", "twitch": "fab fa-twitch",
-    "pinterest": "fab fa-pinterest-p", "default": "fas fa-share-alt"
-};
-
-const quickActionConfigLive = {
-    'appuntamento': 'PRENOTA APPUNTAMENTO',
-    'whatsapp':     'WHATSAPP LIVE',
-    'preventivo':   'RICHIESTA PREVENTIVO',
-    'chiamata':     'CHIAMA ORA',
-    'maps':         'TROVAMI SU MAPS',
-    'demo':         'ASCOLTA DEMO'
-};
-
-// ============================================================
-// MOTORE REATTIVO — aggiorna il monolito vero in tempo reale
-// ============================================================
-function aggiornaTagLive() {
-    const container = document.getElementById('profile-content');
-    if (!container) return;
-
-    // Username
-    const elUsername = document.getElementById('tag-username');
-    if (elUsername && nomeUtente) {
-        elUsername.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
-    }
-
-    // Avatar — predisposto, si attiverà da solo quando Airtable avrà il campo popolato
-    const elAvatar = document.getElementById('userImage');
-    const avatarContainer = document.getElementById('avatar-container');
-    if (elAvatar && avatarContainer) {
-        if (window.datiAvatarCorrente && Array.isArray(window.datiAvatarCorrente) && window.datiAvatarCorrente.length > 0) {
-            elAvatar.src = window.datiAvatarCorrente[0].url;
-            avatarContainer.style.display = 'flex';
-        } else {
-            avatarContainer.style.display = 'none';
-        }
-    }
-
-    // Tema — applica la classe corretta allo chassis
-    const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
-    container.classList.remove('tema-black-dna', 'tema-titanium', 'tema-obsidian-gold', 'tema-rose-pearl');
-    const mappaTemi = { black: 'tema-black-dna', titanium: 'tema-titanium', obsidian_gold: 'tema-obsidian-gold', rose_pearl: 'tema-rose-pearl' };
-    container.classList.add(mappaTemi[stileSelezionato] || 'tema-black-dna');
-
-    // Stato vuoto / popolato per ogni casella
-    const getVal = (id) => document.getElementById(id)?.value?.trim() || '';
-
-    const mappaCaselle = {
-        'casella-bio':      getVal('field-bio'),
-        'casella-sito':     getVal('field-sito_web'),
-        'casella-cv':       getVal('field-cv'),
-        'casella-contatti': getVal('vcf-telefono1') || getVal('vcf-email1') || getVal('field-email'),
+    // 🎭 AGGIORNAMENTO DINAMICO LIVE DEL MONOLITO
+    // ============================================================
+    const quickActionConfigLive = {
+        'appuntamento': 'PRENOTA APPUNTAMENTO',
+        'whatsapp':     'WHATSAPP LIVE',
+        'preventivo':   'RICHIESTA PREVENTIVO',
+        'chiamata':     'CHIAMA ORA',
+        'maps':         'TROVAMI SU MAPS',
+        'demo':         'ASCOLTA DEMO'
     };
 
-    for (const [id, valore] of Object.entries(mappaCaselle)) {
-        const el = container.querySelector('#' + id);
-        if (el) el.style.display = valore ? 'flex' : 'none';
-    }
+    function aggiornaTagLive() {
+        const container = document.getElementById('profile-content');
+        if (!container) return;
 
-    // Social
-    const elSocial = container.querySelector('#casella-social');
-    if (elSocial) {
-        elSocial.style.display = (typeof canaliCorrenti !== 'undefined' && canaliCorrenti.length > 0) ? 'flex' : 'none';
-    }
-
-    // Gallery — predisposto, sempre nascosto finché non implementiamo l'upload
-    const elGallery = container.querySelector('#casella-gallery');
-    if (elGallery) {
-        elGallery.style.display = (window.datiGalleryCorrente && window.datiGalleryCorrente.length > 0) ? 'flex' : 'none';
-    }
-
-   // Quick Action
-    const qaTipo = getVal('field-quick_action_tipo');
-    const qaUrl = getVal('field-quick_action_url');
-    const elQA = container.querySelector('#casella-quick-action');
-    if (elQA) {
-        if (qaTipo && qaUrl) {
-            elQA.style.display = 'flex';
-            const label = elQA.querySelector('#quick-action-label');
-            if (label) label.textContent = quickActionConfigLive[qaTipo] || 'AZIONE RAPIDA';
-        } else {
-            elQA.style.display = 'none';
+        const elUsername = document.getElementById('tag-username');
+        if (elUsername && nomeUtente) {
+            elUsername.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
         }
+
+        // Gestione Stile ed Estetica Bordo Chassis
+        const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
+        container.classList.remove('tema-black-dna', 'tema-titanium', 'tema-obsidian-gold', 'tema-rose-pearl');
+        const mappaTemi = { black: 'tema-black-dna', titanium: 'tema-titanium', obsidian_gold: 'tema-obsidian-gold', rose_pearl: 'tema-rose-pearl' };
+        container.classList.add(mappaTemi[stileSelezionato] || 'tema-black-dna');
+
+        const getVal = (id) => document.getElementById(id)?.value?.trim() || '';
+
+        const mappaCaselle = {
+            'casella-bio':      getVal('field-bio'),
+            'casella-sito':     getVal('field-sito_web'),
+            'casella-cv':       getVal('field-cv'),
+            'casella-contatti': getVal('vcf-telefono1') || getVal('vcf-email1') || getVal('field-email'),
+        };
+
+        for (const [id, valore] of Object.entries(mappaCaselle)) {
+            const el = container.querySelector('#' + id);
+            if (el) el.style.display = valore ? 'flex' : 'none';
+        }
+
+        const elSocial = container.querySelector('#casella-social');
+        if (elSocial) elSocial.style.display = (canaliCorrenti.length > 0) ? 'flex' : 'none';
+
+        // Gestione Quick Action Reattiva
+        const qaTipo = getVal('field-quick_action_tipo');
+        const qaUrl = getVal('field-quick_action_url');
+        const elQA = container.querySelector('#casella-quick-action');
+        if (elQA) {
+            if (qaTipo && qaUrl) {
+                elQA.style.setProperty('display', 'flex', 'important');
+                const label = elQA.querySelector('#quick-action-label');
+                if (label) label.textContent = quickActionConfigLive[qaTipo] || 'AZIONE RAPIDA';
+            } else {
+                elQA.style.setProperty('display', 'none', 'important');
+            }
+        }
+
+        // Stato Zero: Tela Deserta
+        const haAlmenoUnaFunzione = !!(mappaCaselle['casella-bio'] || mappaCaselle['casella-sito'] || mappaCaselle['casella-cv'] || mappaCaselle['casella-contatti'] || canaliCorrenti.length > 0 || (qaTipo && qaUrl));
+        const elCrea = container.querySelector('#casella-crea');
+        if (elCrea) elCrea.style.display = haAlmenoUnaFunzione ? 'none' : 'flex';
+        
+        gestisciVisibilitaAnnulla();
     }
 
-    // Tela deserta — mostra "+ CREA LA TUA TAG" solo se nessuna funzione è ancora configurata
-    const haAlmenoUnaFunzione = !!(
-        mappaCaselle['casella-bio'] ||
-        mappaCaselle['casella-sito'] ||
-        mappaCaselle['casella-cv'] ||
-        mappaCaselle['casella-contatti'] ||
-        (typeof canaliCorrenti !== 'undefined' && canaliCorrenti.length > 0) ||
-        (qaTipo && qaUrl)
-    );
-
-    const elCrea = container.querySelector('#casella-crea');
-    if (elCrea) {
-        elCrea.style.display = haAlmenoUnaFunzione ? 'none' : 'flex';
+    function apriDrawerQR() {
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+        const urlAnteprima = `${window.location.origin}/tag.html?u=${nomePulito}`;
+        apriDrawer('drawer-qr-preview');
+        setTimeout(() => {
+            const wrapper = document.getElementById('qr-preview-wrapper');
+            if (!wrapper) return;
+            wrapper.innerHTML = '';
+            new QRCode(wrapper, { text: urlAnteprima, width: 180, height: 180, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+        }, 50);
     }
-}
+
     function attivaAscoltatoriLive() {
-        const selettori = [
-            '#field-bio', '#field-email', '#field-sito_web', '#field-cv', 
-            '#field-quick_action_tipo', '#field-quick_action_url',
-            '#vcf-telefono1', '#vcf-nome'
-        ];
-
-        selettori.forEach(sel => {
-            const input = document.getElementById(sel.replace('#', ''));
-            if (input) {
-                input.addEventListener('input', aggiornaTagLive);
-                input.addEventListener('change', aggiornaTagLive);
+        const selettori = ['field-bio', 'field-email', 'field-sito_web', 'field-cv', 'field-quick_action_tipo', 'field-quick_action_url', 'vcf-telefono1', 'vcf-nome'];
+        selettori.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', aggiornaTagLive);
+                el.addEventListener('change', aggiornaTagLive);
             }
         });
-
         document.querySelectorAll('input[name="digital_style"]').forEach(radio => {
             radio.addEventListener('change', aggiornaTagLive);
         });
     }
 
-    const vecchioInizializza = inizializzaPagina;
-    inizializzaPagina = async function() {
-        await vecchioInizializza();
-        attivaAscoltatoriLive();
-        aggiornaTagLive(); 
-    };
-
-    const renderingSocialOriginale = aggiornaListaCanali;
-    aggiornaListaCanali = function() {
-        renderingSocialOriginale();
-        aggiornaTagLive();
-    };      
-
-    (function eseguiInizializzazioneImmediata() {
-        if (typeof nomeUtente !== 'undefined' && nomeUtente) {
-            const elUsernameDisplay = document.getElementById('tag-username');
-            if (elUsernameDisplay) {
-                elUsernameDisplay.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
-            }
-        }
-        if (typeof aggiornaTagLive === 'function') {
-            aggiornaTagLive();
-        }
-    })();
-
-    window.addEventListener('load', () => {
-        if (typeof aggiornaTagLive === 'function') {
-            aggiornaTagLive();
-        }
-    });
-
-    // Usata dai bottoni del menu funzioni
-    function attivaStep(azioneIgnorata, idDrawer) {
-        if (idDrawer) {
-            apriDrawer(idDrawer);
-        } else {
-            chiudiTuttiIDrawer();
-        }
-    }
-       
-    // 🚀 L'ALGORITMO DELL'ONBOARDING (LA GUIDA)
     function avviaFlussoEcosistema() {
-        // Step 1: Estetica
         attivaStep('tag', 'drawer-identita');
-        
         configuraTastoSuccessivo('drawer-identita', () => {
-            // Step 2: Piano
             attivaStep('tag', 'drawer-piano');
-            
             configuraTastoSuccessivo('drawer-piano', () => {
-                // Step 3: Conclusione Onboarding e apertura funzioni
-                chiudiTuttiIDrawer();
-                
-                // Aggiorniamo i bottoni della Console Master in basso
+                chiudiSenzaSalvare();
                 const btnPrincipale = document.getElementById('btn-azione-principale');
-                const btnSalva = document.getElementById('btn-salva-dati');
                 if(btnPrincipale) {
                     btnPrincipale.innerText = "AGGIUNGI FUNZIONE";
                     btnPrincipale.setAttribute('onclick', 'apriDrawer("drawer-funzioni")');
                 }
-                
-                
-                // Apriamo subito il cassetto delle funzioni per invitarlo alla prima configurazione
                 setTimeout(() => apriDrawer('drawer-funzioni'), 350);
-                
             }, "CONFERMA E CREA");
-            
         }, "AVANTI");
     }
 
     function configuraTastoSuccessivo(idCassetto, azioneSuccessiva, testoLabel) {
         const cassetto = document.getElementById(idCassetto);
-        if (!cassetto) return;
-        
-        // Evita duplicati se l'utente riapre il cassetto
-        if (cassetto.querySelector('.btn-nav-onboarding')) return;
-        
+        if (!cassetto || cassetto.querySelector('.btn-nav-onboarding')) return;
         const btn = document.createElement('button');
         btn.className = 'btn-nav-onboarding';
         btn.innerText = testoLabel || "AVANTI";
-        btn.onclick = (e) => {
-            e.preventDefault();
-            azioneSuccessiva();
-        };
-        
-        // Inseriamo il tasto in fondo al contenuto
+        btn.onclick = (e) => { e.preventDefault(); azioneSuccessiva(); };
         cassetto.appendChild(btn);
     }
-      
+
+    document.addEventListener("DOMContentLoaded", () => {
+        attivaAscoltatoriLive();
+        setTimeout(aggiornaTagLive, 100);
+        
+        const inputCanale = document.getElementById("input-nuovo-canale");
+        if (inputCanale) {
+            inputCanale.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); aggiungiCanale(); } });
+        }
+    });
+
+    window.addEventListener('load', aggiornaTagLive);
     </script>
 </body>
 </html>
