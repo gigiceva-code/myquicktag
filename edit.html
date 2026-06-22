@@ -30,62 +30,81 @@
     padding: 0;
     -webkit-tap-highlight-color: transparent;
 }
+/* ============================================================
+   🛡️ MOTORE DI IMPAGINAZIONE (ANTI-BARRA ANDROID)
+   ============================================================ */
 
-/* --- RESET E VIEWPORT DELLA PWA --- */
 html {
-    height: 100%;
+    height: 100%; /* Il segreto: 100% obbliga il browser a calcolare lo spazio AL NETTO della barra inferiore */
     overscroll-behavior-y: auto !important;
 }
+
 body {
     background-color: var(--bg-color, #000000);
-    color: var(--text-main, #f5f5f7);
-    min-height: calc(100dvh + 1px) !important; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    
+    height: 100%; 
+    min-height: calc(100% + 1px) !important; /* Il trucco del +1px per mantenere vivo il pull-to-refresh */
+    
     margin: 0;
-    overflow-y: auto !important; 
+    padding: 16px; /* Lo scudo fisico: 16px di distanza obbligatoria dai 4 bordi dello schermo */
+    box-sizing: border-box;
+    
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
-    -webkit-font-smoothing: antialiased;
 }
 
 .configurator-wrapper {
-    width: 100%;
-    height: 100%;
+    flex: 1; /* Occupa tutto lo spazio interno al body */
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
-/* 🏛️ CHASSIS: ANCORAGGIO FISICO INFALLIBILE */
+/* 🏛️ CHASSIS: LA GABBIA RELATIVA */
 #profile-content.app-container {
-    position: fixed !important;
-    
-    /* Invece di calcolare l'altezza, inchiodiamo i margini fisicamente a 16px dallo schermo */
-    top: 16px !important;
-    bottom: 16px !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin: auto !important; /* Mantiene la cornice centrata se lo schermo è molto lungo */
-    
-    height: auto !important; /* Si adatta automaticamente in base a top e bottom */
-    max-height: 840px !important;
-    width: calc(100% - 32px);
+    position: relative !important; /* ABBANDONIAMO IL FIXED! Così non può più scivolare sotto i menu del telefono */
+    width: 100%;
     max-width: 410px;
-
+    
+    height: 100% !important; /* Si tende come una molla nello spazio disponibile */
+    max-height: 840px !important;
+    
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
-    border: 1px solid rgba(212, 175, 55, 0.5);
+    border: 1px solid transparent; /* Sovrascritto dinamicamente dai temi */
     border-radius: 28px;
+    
+    display: flex !important;
     flex-direction: column;
     justify-content: space-between;
-    z-index: 2;
+    box-sizing: border-box;
     box-shadow: 0 30px 70px rgba(0,0,0,0.9);
     overflow: hidden;
-    display: flex !important;
     opacity: 1;
+    z-index: 2;
 }
+
+#profile-content .header-monolith { text-align: center; }
+
+#profile-content .avatar-block {
+    display: flex;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #070708;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    margin: 0 auto 5px auto;
+}
+
+#profile-content .user-media { width: 100%; height: 100%; object-fit: cover; }
+
     /* 🏆 CAPSULA NOME: SOLO FORMA (I colori li dà il tema) */
 .username-capsule {
     display: inline-flex;    
