@@ -39,9 +39,8 @@ body {
     overscroll-behavior-y: none; /* Disattiva il pull-to-refresh nativo */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
-
 #profile-content.app-container {
-    position: absolute;
+    position: fixed; /* Ancora la cornice allo schermo visibile, ignorando il browser */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -50,24 +49,23 @@ body {
     width: calc(100% - 32px);
     max-width: 410px;
     
-    /* Ridotto il margine di calcolo per garantire l'inquadratura su schermi piccoli */
-    height: calc(100dvh - 40px); 
+    /* svh garantisce che la cornice stia dentro i limiti fisici al netto delle barre di Android */
+    height: calc(100svh - 40px); 
     max-height: 820px;
     
     margin: 0;
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
     
-    /* Variabile dinamica per gestire il colore di bordo e testi */
     --theme-color: #50C878; 
-    border: 1.5px solid var(--theme-color); /* Spessore aumentato a 1.5px per maggior rilievo */
-    
+    border: 1.5px solid var(--theme-color); 
     border-radius: 28px;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 30px 70px rgba(0,0,0,0.6);
     overflow: hidden;
 }
+
 
 #profile-content .header-monolith { text-align: center; }
 
