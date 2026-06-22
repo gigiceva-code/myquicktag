@@ -34,14 +34,12 @@
 body {
     background-color: var(--bg-color);
     color: #ffffff;
-    min-height: 100dvh;
-    overflow-y: auto;
+    height: 100dvh; /* Forza l'altezza esatta dello schermo */
+    overflow: hidden; /* Uccide lo scroll extra e la visualizzazione del footer fantasma */
+    overscroll-behavior-y: none; /* Disattiva il pull-to-refresh nativo */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* ============================================================
-   🏛️ MONOLITO LIVE: PERFETTA SIMMETRIA CON TAG.HTML
-   ============================================================ */
 #profile-content.app-container {
     position: absolute;
     top: 50%;
@@ -51,19 +49,25 @@ body {
     opacity: 1;
     width: calc(100% - 32px);
     max-width: 410px;
-    height: calc(100svh - 32px); 
-    max-height: 840px;
-    margin: 0; /* Rimuove il margine che causava l'uscita dallo schermo */
+    
+    /* Ridotto il margine di calcolo per garantire l'inquadratura su schermi piccoli */
+    height: calc(100dvh - 40px); 
+    max-height: 820px;
+    
+    margin: 0;
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
-    border: 1px solid rgba(212, 175, 55, 0.5);
+    
+    /* Variabile dinamica per gestire il colore di bordo e testi */
+    --theme-color: #50C878; 
+    border: 1.5px solid var(--theme-color); /* Spessore aumentato a 1.5px per maggior rilievo */
+    
     border-radius: 28px;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 30px 70px rgba(0,0,0,0.6);
     overflow: hidden;
 }
-
 
 #profile-content .header-monolith { text-align: center; }
 
