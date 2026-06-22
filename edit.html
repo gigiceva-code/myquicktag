@@ -31,18 +31,25 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+html {
+    height: -webkit-fill-available; /* Hack specifico per evitare tagli su iOS/Android */
 }
 
 body {
     background-color: var(--bg-color);
     color: #ffffff;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    /* Flexbox puro per centrare tutto senza sbavature e senza bloccare il refresh */
+    
+    /* Gestione altezze infallibile */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    margin: 0;
+    
+    /* LA MAGIA È QUI: 16px di padding forzato su tutti i lati del body */
+    padding: 16px; 
+    box-sizing: border-box;
+    
+    /* Flexbox per centrare in mezzo allo schermo */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -59,11 +66,14 @@ body {
 #profile-content.app-container {
     position: relative; 
     display: flex;
-    width: calc(100% - 32px);
+    width: 100%;
     max-width: 410px;
-    height: 840px; 
-    max-height: calc(100% - 32px); /* La magia è qui: non sborderà MAI dallo schermo fisico */
-    margin: 0 auto;
+    
+    /* Si adatta automaticamente allo spazio lasciato dal padding del body */
+    height: 100%; 
+    max-height: 840px; 
+    
+    margin: 0;
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
     border-radius: 28px;
@@ -73,6 +83,8 @@ body {
     overflow: hidden;
     border: 1.5px solid rgba(80, 200, 120, 0.5); 
 }
+
+
 
 
 #profile-content .header-monolith { text-align: center; }
