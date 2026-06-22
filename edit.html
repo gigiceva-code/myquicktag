@@ -555,7 +555,7 @@ textarea { height: 70px; resize: none; }
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-    const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
     let canaliCorrenti = [];
 
@@ -573,16 +573,10 @@ textarea { height: 70px; resize: none; }
 
     async function inizializzaPagina() {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-       
 
         try {
             const response = await fetch(`/api/get-profile?u=${nomePulito}`);
             const data = await response.json();
-            
-            if (data.success && data.fields) {
-                cacheStatoLicenza = (data.fields.stato || "").toLowerCase().trim();
-                
-            }
 
             const f = (() => {
                 if (data.fields?.draft_json) {
@@ -640,7 +634,7 @@ textarea { height: 70px; resize: none; }
         } catch (e) { console.error("Errore inizializzazione:", e); }
     }
 
-   
+
     const socialDizionario = [
         { chiave: "instagram",  domini: ["instagram.com"],           icona: "fab fa-instagram" },
         { chiave: "tiktok",     domini: ["tiktok.com"],              icona: "fab fa-tiktok" },
@@ -810,7 +804,7 @@ textarea { height: 70px; resize: none; }
     async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
         const tagDallUrl = params.get("u") || "";
         const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
-        
+
         const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.trim() : "";
 
         const bozza = {
@@ -908,7 +902,7 @@ textarea { height: 70px; resize: none; }
             }
         }
 
-        // 🎯 GESTIONE TASTO CONFIGURA (VISIBILITÀ)
+        // 🎯 GESTIONE TASTO CONFIGURA E NASCONDIMENTO STATI VUOTI
         const haAlmenoUnaFunzione = !!(mappaCaselle['casella-bio'] || mappaCaselle['casella-sito'] || mappaCaselle['casella-cv'] || mappaCaselle['casella-contatti'] || canaliCorrenti.length > 0 || (qaTipo && qaUrl));
         const elCrea = container.querySelector('#casella-crea');
         if (elCrea) elCrea.style.display = haAlmenoUnaFunzione ? 'none' : 'flex';
@@ -924,40 +918,39 @@ textarea { height: 70px; resize: none; }
                 btnPrincipale.style.display = 'none';
             }
         }
-        
-      
+    } // FINE DELLA FUNZIONE aggiornaTagLive
+
 
     function apriDrawerQR() {
-    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-    const urlAnteprima = `${window.location.origin}/tag.html?u=${nomePulito}`;
-    
-    // Mappatura colori esatti per iniettarli nel Canvas del QR Code
-    const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
-    const themeColors = {
-        black: '#50C878',
-        titanium: '#86868b',
-        obsidian_gold: '#d4af37',
-        rose_pearl: '#e5b4b4'
-    };
-    const qrColor = themeColors[stileSelezionato] || '#000000';
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+        const urlAnteprima = `${window.location.origin}/tag.html?u=${nomePulito}`;
 
-    apriDrawer('drawer-qr-preview');
-    
-    setTimeout(() => {
-        const wrapper = document.getElementById('qr-preview-wrapper');
-        if (!wrapper) return;
-        wrapper.innerHTML = '';
-        new QRCode(wrapper, { 
-            text: urlAnteprima, 
-            width: 180, 
-            height: 180, 
-            colorDark: qrColor, // Il QR assume l'accento luxury del tema
-            colorLight: "#ffffff", 
-            correctLevel: QRCode.CorrectLevel.M 
-        });
-    }, 50);
-}
+        // Mappatura colori esatti per iniettarli nel Canvas del QR Code
+        const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
+        const themeColors = {
+            black: '#50C878',
+            titanium: '#86868b',
+            obsidian_gold: '#d4af37',
+            rose_pearl: '#e5b4b4'
+        };
+        const qrColor = themeColors[stileSelezionato] || '#000000';
 
+        apriDrawer('drawer-qr-preview');
+
+        setTimeout(() => {
+            const wrapper = document.getElementById('qr-preview-wrapper');
+            if (!wrapper) return;
+            wrapper.innerHTML = '';
+            new QRCode(wrapper, { 
+                text: urlAnteprima, 
+                width: 180, 
+                height: 180, 
+                colorDark: qrColor, // Il QR assume l'accento luxury del tema
+                colorLight: "#ffffff", 
+                correctLevel: QRCode.CorrectLevel.M 
+            });
+        }, 50);
+    }
 
     function attivaAscoltatoriLive() {
         const selettori = ['field-bio', 'field-email', 'field-sito_web', 'field-cv', 'field-quick_action_tipo', 'field-quick_action_url', 'vcf-telefono1', 'vcf-nome'];
@@ -998,7 +991,7 @@ textarea { height: 70px; resize: none; }
     document.addEventListener("DOMContentLoaded", () => {
         attivaAscoltatoriLive();
         setTimeout(aggiornaTagLive, 100);
-        
+
         const inputCanale = document.getElementById("input-nuovo-canale");
         if (inputCanale) {
             inputCanale.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); aggiungiCanale(); } });
@@ -1006,6 +999,7 @@ textarea { height: 70px; resize: none; }
     });
 
     window.addEventListener('load', aggiornaTagLive);
+
     </script>
 </body>
 </html>
