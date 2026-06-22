@@ -58,29 +58,59 @@ body {
     justify-content: center;
 }
 
-/* --- APP CONTAINER: CHASSIS PWA --- */
+/* 🏛️ CHASSIS: ANCORAGGIO FISICO INFALLIBILE */
 #profile-content.app-container {
     position: fixed !important;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1) !important;
+    
+    /* Invece di calcolare l'altezza, inchiodiamo i margini fisicamente a 16px dallo schermo */
+    top: 16px !important;
+    bottom: 16px !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: auto !important; /* Mantiene la cornice centrata se lo schermo è molto lungo */
+    
+    height: auto !important; /* Si adatta automaticamente in base a top e bottom */
+    max-height: 840px !important;
     width: calc(100% - 32px);
     max-width: 410px;
-    height: calc(100svh - 32px); 
-    max-height: 840px;
+
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
-    border: 1px solid rgba(212, 175, 55, 0.5); /* Tinta oro di base */
+    border: 1px solid rgba(212, 175, 55, 0.5);
     border-radius: 28px;
     flex-direction: column;
     justify-content: space-between;
     z-index: 2;
     box-shadow: 0 30px 70px rgba(0,0,0,0.9);
-    overflow: hidden; 
+    overflow: hidden;
     display: flex !important;
     opacity: 1;
 }
+    /* 🏆 CAPSULA NOME: SOLO FORMA (I colori li dà il tema) */
+.username-capsule {
+    display: inline-flex;    
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px !important; 
+    padding: 6px 18px;             
+    margin: 10px auto;             
+    max-width: 90%;          
+    box-sizing: border-box;
+    border: 1px solid transparent !important;
+    transition: all 0.3s ease;
+}
 
+.username-display {
+    font-size: 1.05rem !important; 
+    font-weight: 400 !important;
+    letter-spacing: 2px !important; 
+    text-transform: uppercase !important;
+    color: #ffffff !important; 
+    text-align: center;
+    margin: 0 !important;
+    padding: 0 !important;
+    word-break: break-all;   
+}
 /* --- GRIGLIA E SPAZIATURE --- */
 #profile-content #mainGrid {
     display: flex !important;
@@ -164,31 +194,43 @@ body {
     color: #d4af37 !important;
 }
 /* ============================================================
-   🎨 GESTIONE COLORI TEMI (Bordo Chassis e Scritta QR)
+   🎨 GESTIONE COLORI TEMI DINAMICI
    ============================================================ */
 
 /* TEMA BLACK DNA (Verde Smeraldo) */
-#profile-content.tema-black-dna { border-color: rgba(80, 200, 120, 0.6); }
+#profile-content.tema-black-dna { border-color: rgba(80, 200, 120, 0.6) !important; }
 #profile-content.tema-black-dna #casella-qr .casella-invito::after { color: #50C878 !important; }
+#profile-content.tema-black-dna .username-capsule {
+    background: rgba(80, 200, 120, 0.02) !important;
+    border-color: rgba(80, 200, 120, 0.25) !important;
+    box-shadow: 0 0 35px rgba(80, 200, 120, 0.15), 0 4px 15px rgba(0,0,0,0.5) !important;
+}
 
 /* TEMA TITANIUM (Grigio/Argento) */
-#profile-content.tema-titanium { border-color: rgba(134, 134, 139, 0.6); }
+#profile-content.tema-titanium { border-color: rgba(134, 134, 139, 0.6) !important; }
 #profile-content.tema-titanium #casella-qr .casella-invito::after { color: #86868b !important; }
+#profile-content.tema-titanium .username-capsule {
+    background: rgba(134, 134, 139, 0.02) !important;
+    border-color: rgba(134, 134, 139, 0.25) !important;
+    box-shadow: 0 0 35px rgba(134, 134, 139, 0.15), 0 4px 15px rgba(0,0,0,0.5) !important;
+}
 
 /* TEMA OBSIDIAN GOLD (Oro) */
-#profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.6); }
+#profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.6) !important; }
 #profile-content.tema-obsidian-gold #casella-qr .casella-invito::after { color: #d4af37 !important; }
+#profile-content.tema-obsidian-gold .username-capsule {
+    background: rgba(212, 175, 55, 0.02) !important;
+    border-color: rgba(212, 175, 55, 0.25) !important;
+    box-shadow: 0 0 35px rgba(212, 175, 55, 0.15), 0 4px 15px rgba(0,0,0,0.5) !important;
+}
 
 /* TEMA SATIN ROSE (Rosa Perla) */
-#profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8); }
+#profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8) !important; }
 #profile-content.tema-rose-pearl #casella-qr .casella-invito::after { color: #e5b4b4 !important; }
-
-
-/* DIGITAL PASS eredita automaticamente il colore del tema attivo */
-#profile-content #casella-qr .casella-invito::after { 
-    content: 'DIGITAL PASS'; 
-    color: var(--theme-color) !important; 
-    font-weight: 500; 
+#profile-content.tema-rose-pearl .username-capsule {
+    background: rgba(229, 180, 180, 0.02) !important;
+    border-color: rgba(229, 180, 180, 0.25) !important;
+    box-shadow: 0 0 35px rgba(229, 180, 180, 0.15), 0 4px 15px rgba(0,0,0,0.5) !important;
 }
 /* ============================================================
    DRAWER SYSTEM
