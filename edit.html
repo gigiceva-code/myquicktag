@@ -31,39 +31,47 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: var(--bg-color);
     color: #ffffff;
-    height: 100dvh; /* Forza l'altezza esatta dello schermo */
-    overflow: hidden; /* Uccide lo scroll extra e la visualizzazione del footer fantasma */
-    overscroll-behavior-y: none; /* Disattiva il pull-to-refresh nativo */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-#profile-content.app-container {
-    position: fixed; /* Ancora la cornice allo schermo visibile, ignorando il browser */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    /* Flexbox puro per centrare tutto senza sbavature e senza bloccare il refresh */
     display: flex;
-    opacity: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.configurator-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-content.app-container {
+    position: relative; 
+    display: flex;
     width: calc(100% - 32px);
     max-width: 410px;
-    
-    /* svh garantisce che la cornice stia dentro i limiti fisici al netto delle barre di Android */
-    height: calc(100svh - 40px); 
-    max-height: 820px;
-    
-    margin: 0;
+    height: 840px; 
+    max-height: calc(100% - 32px); /* La magia è qui: non sborderà MAI dallo schermo fisico */
+    margin: 0 auto;
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis);
-    
-    --theme-color: #50C878; 
-    border: 1.5px solid var(--theme-color); 
     border-radius: 28px;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 30px 70px rgba(0,0,0,0.6);
     overflow: hidden;
+    border: 1.5px solid rgba(80, 200, 120, 0.5); 
 }
 
 
@@ -183,12 +191,26 @@ body {
     text-transform: uppercase !important;
     color: #d4af37 !important;
 }
+/* ============================================================
+   🎨 GESTIONE COLORI TEMI (Bordo Chassis e Scritta QR)
+   ============================================================ */
 
-/* Temi Chassis */
-#profile-content.tema-black-dna { border-color: rgba(80, 200, 120, 0.5); }
+/* TEMA BLACK DNA (Verde Smeraldo) */
+#profile-content.tema-black-dna { border-color: rgba(80, 200, 120, 0.6); }
+#profile-content.tema-black-dna #casella-qr .casella-invito::after { color: #50C878 !important; }
+
+/* TEMA TITANIUM (Grigio/Argento) */
 #profile-content.tema-titanium { border-color: rgba(134, 134, 139, 0.6); }
-#profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.5); }
+#profile-content.tema-titanium #casella-qr .casella-invito::after { color: #86868b !important; }
+
+/* TEMA OBSIDIAN GOLD (Oro) */
+#profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.6); }
+#profile-content.tema-obsidian-gold #casella-qr .casella-invito::after { color: #d4af37 !important; }
+
+/* TEMA SATIN ROSE (Rosa Perla) */
 #profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8); }
+#profile-content.tema-rose-pearl #casella-qr .casella-invito::after { color: #e5b4b4 !important; }
+
 
 /* DIGITAL PASS eredita automaticamente il colore del tema attivo */
 #profile-content #casella-qr .casella-invito::after { 
