@@ -31,56 +31,56 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- MOTORE FISICO DEFINITIVO (OPZIONE NUCLEARE ANTI-BARRA) --- */
+/* --- IL MOTORE FLESSIBILE (PULL-TO-REFRESH + SCUDO ANTI-BARRA) --- */
 
 html {
     height: 100%;
-    width: 100%;
-    overflow: hidden; /* Blocca alla radice qualsiasi slittamento */
+    overscroll-behavior-y: auto !important; /* 1. RESUSCITA IL PULL-TO-REFRESH */
 }
 
 body {
-    position: fixed; /* INCHIODA IL BODY AI BORDI DELLO SCHERMO */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0; /* Questo lo forza a fermarsi SOPRA la barra Android */
-    
     margin: 0;
-    padding: 16px; /* Crea fisicamente 16px di spazio dai 4 bordi */
     background-color: var(--bg-esterno, #0d0d0f);
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-font-smoothing: antialiased;
+    color: #ffffff;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    
+    /* 2. LA MOLLA DEL REFRESH */
+    min-height: calc(100dvh + 1px) !important; 
+    
+    /* 3. STRUTTURA A COLONNA PER FAR ESPANDERE IL WRAPPER */
+    display: flex;
+    flex-direction: column;
 }
 
 .configurator-wrapper {
-    width: 100%;
-    height: 100%;
+    flex: 1; /* Occupa tutto lo spazio del body */
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center; /* Centra la tag verticalmente */
+    
+    /* IL SEGRETO: 32px di cuscinetto inferiore + la safe area di Android */
+    padding: 16px 16px calc(32px + env(safe-area-inset-bottom, 0px)) 16px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 #profile-content.app-container {
-    position: relative !important; /* Svincoliamolo! Ora dipende solo dal body */
+    /* NIENTE PIÙ TRUCCHI: Flusso normale della pagina */
+    position: relative !important;
     top: auto !important;
     left: auto !important;
-    transform: none !important; /* Niente più trucchi di scala */
+    transform: none !important; 
     
     width: 100%;
     max-width: 410px;
     
-    /* Occupa il 100% dello spazio DISPONIBILE nel body, protetto dai 16px di padding */
+    /* Si adatta esattamente allo spazio lasciato libero dal cuscinetto */
     height: 100% !important; 
     max-height: 840px !important;
     
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis, #000000);
-    border: 1px solid rgba(212, 175, 55, 0.5); 
+    border: 1px solid rgba(212, 175, 55, 0.5); /* Verrà sovrascritto dai temi */
     border-radius: 28px;
     
     display: flex !important;
