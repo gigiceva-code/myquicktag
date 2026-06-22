@@ -51,15 +51,14 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 .configurator-wrapper {
-    flex: 1; /* Occupa tutto lo spazio del body */
+    flex: 1; 
     display: flex;
     justify-content: center;
-    align-items: center; /* Centra la tag verticalmente */
+    align-items: center; 
     
-    /* LO SCUDO FISICO: 20px sopra, 40px di sicurezza sotto per la barra */
-    padding: 20px 16px 40px 16px;
+    /* 🎨 DESIGN SIMMETRICO: 16px esatti su tutti e 4 i lati */
+    padding: 16px; 
     box-sizing: border-box;
     width: 100%;
 }
@@ -73,15 +72,14 @@ body {
     width: 100%;
     max-width: 410px;
     
-    /* 🚨 LA CURA ANTI-SCHIACCIAMENTO 🚨 */
-    /* Prende l'altezza dello schermo (dvh) e sottrae esattamente i 60px del padding del wrapper (20+40) */
-    height: calc(100dvh - 60px) !important; 
-    min-height: 600px !important; /* Failsafe assoluto: non potrà MAI più diventare un quadrato */
+    /* 📐 ALTEZZA PERFETTA: 100% dello schermo dinamico meno i 32px totali di margine (16 sopra + 16 sotto) */
+    height: calc(100dvh - 32px) !important; 
+    min-height: 600px !important; 
     max-height: 840px !important;
     
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis, #000000);
-    border: 1px solid rgba(212, 175, 55, 0.5); /* Verrà sovrascritto dai temi */
+    border: 1px solid rgba(212, 175, 55, 0.5); 
     border-radius: 28px;
     
     display: flex !important;
@@ -92,6 +90,7 @@ body {
     overflow: hidden; 
     z-index: 2;
 }
+
 #profile-content .header-monolith { text-align: center; }
 
 #profile-content .avatar-block {
