@@ -35,7 +35,7 @@
 
 html {
     height: 100%;
-    overscroll-behavior-y: auto !important; /* 1. RESUSCITA IL PULL-TO-REFRESH */
+    overscroll-behavior-y: auto !important; /* RESUSCITA IL PULL-TO-REFRESH */
 }
 
 body {
@@ -44,10 +44,10 @@ body {
     color: #ffffff;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     
-    /* 2. LA MOLLA DEL REFRESH */
+    /* LA MOLLA DEL REFRESH */
     min-height: calc(100dvh + 1px) !important; 
     
-    /* 3. STRUTTURA A COLONNA PER FAR ESPANDERE IL WRAPPER */
+    /* STRUTTURA A COLONNA */
     display: flex;
     flex-direction: column;
 }
@@ -58,14 +58,13 @@ body {
     justify-content: center;
     align-items: center; /* Centra la tag verticalmente */
     
-    /* IL SEGRETO: 32px di cuscinetto inferiore + la safe area di Android */
-    padding: 16px 16px calc(32px + env(safe-area-inset-bottom, 0px)) 16px;
+    /* LO SCUDO FISICO: 20px sopra, 40px di sicurezza sotto per la barra */
+    padding: 20px 16px 40px 16px;
     box-sizing: border-box;
     width: 100%;
 }
 
 #profile-content.app-container {
-    /* NIENTE PIÙ TRUCCHI: Flusso normale della pagina */
     position: relative !important;
     top: auto !important;
     left: auto !important;
@@ -74,8 +73,10 @@ body {
     width: 100%;
     max-width: 410px;
     
-    /* Si adatta esattamente allo spazio lasciato libero dal cuscinetto */
-    height: 100% !important; 
+    /* 🚨 LA CURA ANTI-SCHIACCIAMENTO 🚨 */
+    /* Prende l'altezza dello schermo (dvh) e sottrae esattamente i 60px del padding del wrapper (20+40) */
+    height: calc(100dvh - 60px) !important; 
+    min-height: 600px !important; /* Failsafe assoluto: non potrà MAI più diventare un quadrato */
     max-height: 840px !important;
     
     padding: 40px 24px 32px 24px;
