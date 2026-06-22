@@ -31,50 +31,47 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-
 html, body {
-    height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Uccide definitivamente lo scroll del browser e i rimbalzi */
-}
-
-body {
+    width: 100%;
+    height: 100dvh; /* Si adatta dinamicamente alle barre di Android/iOS in tempo reale */
     background-color: var(--bg-color);
     color: #ffffff;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px; /* Bordo di sicurezza invalicabile su tutti i lati */
-    box-sizing: border-box;
+    overflow: hidden; /* Rende la schermata fissa come un'app nativa */
+    overscroll-behavior-y: none; /* Uccide il pull-to-refresh e i rimbalzi bianchi */
 }
 
 .configurator-wrapper {
     width: 100%;
-    height: 100%; /* Si espande fino al padding del body */
-    max-width: 410px;
-    max-height: 840px;
-    display: flex; /* Attiva il motore flex interno */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* La magia: 16px di base, ma in basso somma l'ingombro fisico della barra Android/iOS */
+    padding: 16px 16px calc(16px + env(safe-area-inset-bottom)) 16px; 
+    box-sizing: border-box;
 }
 
 #profile-content.app-container {
-    width: 100%;
-    flex: 1; /* LA MAGIA: Obbliga la cornice a tendersi fino al massimo spazio disponibile */
-    margin: 0;
-    padding: 40px 24px 32px 24px;
-    background-color: var(--bg-chassis);
-    border-radius: 28px;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-sizing: border-box;
+    width: 100%;
+    max-width: 410px;
+    height: 100%; /* Occupa tutto lo spazio concesso dal wrapper, fermandosi ai margini */
+    max-height: 820px;
+    margin: 0;
+    padding: 40px 24px 32px 24px;
+    background-color: var(--bg-chassis);
+    border: 1.5px solid rgba(80, 200, 120, 0.5); /* Colore base, sovrascritto dal JS */
+    border-radius: 28px;
     box-shadow: 0 30px 70px rgba(0,0,0,0.6);
-    border: 1.5px solid rgba(80, 200, 120, 0.5); /* Bordo di default, verrà sovrascritto dal tema */
+    box-sizing: border-box;
+    overflow: hidden;
 }
-
-
-
 
 #profile-content .header-monolith { text-align: center; }
 
