@@ -31,55 +31,37 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- IL MOTORE FLESSIBILE (PULL-TO-REFRESH + SCUDO ANTI-BARRA) --- */
+/* --- IL MOTORE "RIGIDO" (BLINDATO) --- */
 
-html {
-    height: 100%;
-    overscroll-behavior-y: auto !important; /* RESUSCITA IL PULL-TO-REFRESH */
-}
-
-body {
+html, body {
     margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Blocca qualsiasi scroll esterno */
     background-color: var(--bg-esterno, #0d0d0f);
-    color: #ffffff;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    
-    /* LA MOLLA DEL REFRESH */
-    min-height: calc(100dvh + 1px) !important; 
-    
-    /* STRUTTURA A COLONNA */
-    display: flex;
-    flex-direction: column;
 }
+
 .configurator-wrapper {
-    flex: 1; 
+    width: 100%;
+    height: 100%;
+    /* Questo comando è la chiave: forziamo il browser a considerare la barra Android come parte integrante del padding */
+    padding: 16px 16px calc(16px + env(safe-area-inset-bottom)) 16px; 
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
-    align-items: center; 
-    
-    /* 🎨 DESIGN SIMMETRICO: 16px esatti su tutti e 4 i lati */
-    padding: 16px; 
-    box-sizing: border-box;
-    width: 100%;
+    align-items: center;
 }
 
 #profile-content.app-container {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important; 
-    
     width: 100%;
     max-width: 410px;
-    
-    /* 📐 ALTEZZA PERFETTA: 100% dello schermo dinamico meno i 32px totali di margine (16 sopra + 16 sotto) */
-    height: calc(100dvh - 32px) !important; 
-    min-height: 600px !important; 
-    max-height: 840px !important;
+    height: 100%; /* Si estende nello spazio netto garantito dal padding */
+    max-height: 840px;
     
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis, #000000);
-    border: 1px solid rgba(212, 175, 55, 0.5); 
+    border: 1px solid rgba(212, 175, 55, 0.5);
     border-radius: 28px;
     
     display: flex !important;
