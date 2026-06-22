@@ -192,6 +192,12 @@ body {
 #profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.5); }
 #profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8); }
 
+/* DIGITAL PASS eredita automaticamente il colore del tema attivo */
+#profile-content #casella-qr .casella-invito::after { 
+    content: 'DIGITAL PASS'; 
+    color: var(--theme-color) !important; 
+    font-weight: 500; 
+}
 /* ============================================================
    DRAWER SYSTEM
    ============================================================ */
@@ -914,16 +920,36 @@ textarea { height: 70px; resize: none; }
     }
 
     function apriDrawerQR() {
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-        const urlAnteprima = `${window.location.origin}/tag.html?u=${nomePulito}`;
-        apriDrawer('drawer-qr-preview');
-        setTimeout(() => {
-            const wrapper = document.getElementById('qr-preview-wrapper');
-            if (!wrapper) return;
-            wrapper.innerHTML = '';
-            new QRCode(wrapper, { text: urlAnteprima, width: 180, height: 180, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
-        }, 50);
-    }
+    const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+    const urlAnteprima = `${window.location.origin}/tag.html?u=${nomePulito}`;
+    
+    // Mappatura colori esatti per iniettarli nel Canvas del QR Code
+    const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
+    const themeColors = {
+        black: '#50C878',
+        titanium: '#86868b',
+        obsidian_gold: '#d4af37',
+        rose_pearl: '#e5b4b4'
+    };
+    const qrColor = themeColors[stileSelezionato] || '#000000';
+
+    apriDrawer('drawer-qr-preview');
+    
+    setTimeout(() => {
+        const wrapper = document.getElementById('qr-preview-wrapper');
+        if (!wrapper) return;
+        wrapper.innerHTML = '';
+        new QRCode(wrapper, { 
+            text: urlAnteprima, 
+            width: 180, 
+            height: 180, 
+            colorDark: qrColor, // Il QR assume l'accento luxury del tema
+            colorLight: "#ffffff", 
+            correctLevel: QRCode.CorrectLevel.M 
+        });
+    }, 50);
+}
+
 
     function attivaAscoltatoriLive() {
         const selettori = ['field-bio', 'field-email', 'field-sito_web', 'field-cv', 'field-quick_action_tipo', 'field-quick_action_url', 'vcf-telefono1', 'vcf-nome'];
