@@ -552,8 +552,7 @@ textarea { height: 70px; resize: none; }
 
         <div class="sticky-footer" id="footer-actions">
             <button class="save-btn" id="btn-azione-principale" onclick="apriDrawer('drawer-funzioni')">AGGIUNGI FUNZIONE</button>
-            <a href="#" id="back-to-dash" class="back-link" style="display: none;">Annulla e torna al profilo</a>
-
+           
         </div>
     </div>
 
@@ -569,7 +568,6 @@ textarea { height: 70px; resize: none; }
     <script>
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
-    let cacheStatoLicenza = "attivo"; 
     let canaliCorrenti = [];
 
     if (nomeUtente) { 
@@ -586,7 +584,7 @@ textarea { height: 70px; resize: none; }
 
     async function inizializzaPagina() {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-        document.getElementById("back-to-dash").href = `profile.html?u=${nomePulito}`;
+       
 
         try {
             const response = await fetch(`/api/get-profile?u=${nomePulito}`);
@@ -594,7 +592,7 @@ textarea { height: 70px; resize: none; }
             
             if (data.success && data.fields) {
                 cacheStatoLicenza = (data.fields.stato || "").toLowerCase().trim();
-                gestisciVisibilitaAnnulla();
+                
             }
 
             const f = (() => {
@@ -653,17 +651,7 @@ textarea { height: 70px; resize: none; }
         } catch (e) { console.error("Errore inizializzazione:", e); }
     }
 
-    function gestisciVisibilitaAnnulla() {
-        const backLink = document.getElementById("back-to-dash");
-        if (backLink) {
-            if (cacheStatoLicenza === "in attesa") {
-                backLink.style.setProperty('display', 'none', 'important');
-            } else {
-                backLink.style.display = 'block';
-            }
-        }
-    }
-
+   
     const socialDizionario = [
         { chiave: "instagram",  domini: ["instagram.com"],           icona: "fab fa-instagram" },
         { chiave: "tiktok",     domini: ["tiktok.com"],              icona: "fab fa-tiktok" },
@@ -948,8 +936,7 @@ textarea { height: 70px; resize: none; }
             }
         }
         
-        gestisciVisibilitaAnnulla();
-    }
+      
 
     function apriDrawerQR() {
     const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
