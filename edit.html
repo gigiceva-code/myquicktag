@@ -84,37 +84,38 @@
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
 
-                .drawer-glass {
-            position: fixed; 
-            bottom: -100%; 
+                      /* IL CASSETTO BLINDATO (L'ID vince su tutto) */
+        #drawer-style.drawer-glass {
+            position: fixed !important; 
+            bottom: -100% !important; 
             
-            /* CENTRATURA INFALLIBILE SENZA MATEMATICA: 
-               Lo agganciamo a 16px da sinistra e 16px da destra, 
-               lasciando fare il resto al margine automatico */
-            left: 16px; 
-            right: 16px; 
-            margin: 0 auto; 
-            max-width: 380px; 
+            /* Staccato dai lati */
+            left: 16px !important; 
+            right: 16px !important; 
+            width: auto !important; /* Annulla vecchi width:100% */
+            margin: 0 auto !important; 
+            max-width: 380px !important; 
             
-            /* Trasparenza fisica al 25% */
-            background: rgba(40, 40, 45, 0.25); 
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px); 
+            /* Trasparenza e sfocatura */
+            background: rgba(30, 30, 35, 0.3) !important; 
+            backdrop-filter: blur(15px) !important; 
+            -webkit-backdrop-filter: blur(15px) !important; 
             
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px; 
-            padding: 24px;
-            z-index: 2000; 
-            transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); 
-            box-sizing: border-box;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+            /* Bordi e angoli */
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 28px !important; /* Arrotonda anche sotto */
+            padding: 24px !important;
+            z-index: 2000 !important; 
+            transition: bottom 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; 
+            box-sizing: border-box !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important; 
         }
 
-        /* IL GALLEGGIAMENTO: max() assicura che stia staccato di 20px, 
-           ma se il telefono ha la barra di sistema in basso (safe-area), si alza di più */
-        .drawer-glass.open { 
-            bottom: max(20px, env(safe-area-inset-bottom)) !important; 
+        /* Il galleggiamento forzato */
+        #drawer-style.drawer-glass.open { 
+            bottom: 24px !important; 
         }
+  
 
         /* HEADER E TITOLO SFINATI */
         .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 4px; }
