@@ -93,18 +93,34 @@
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
 
-                .drawer-glass {
-            position: fixed; bottom: -100%; left: 0; width: 100%;
-            /* Il vero vetro scuro: un velo di bianco leggerissimo al 7% */
-            background: rgba(255, 255, 255, 0.07); 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px); 
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px 28px 0 0; padding: 24px 24px 30px 24px;
+                 .drawer-glass {
+            position: fixed; 
+            bottom: -100%; 
+            /* Centratura perfetta per elementi fixed */
+            left: 0; right: 0; margin: 0 auto; 
+            
+            /* Più stretto della cornice (max 410px) e con margini laterali */
+            width: calc(100% - 40px); 
+            max-width: 380px; 
+            
+            /* Sfondo visibilmente trasparente (60% di opacità fisica) */
+            background: rgba(30, 30, 35, 0.6); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
+            
+            /* Bordo su tutti i lati, non solo sopra */
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 28px; /* Arrotondato in tutti e 4 gli angoli */
+            
+            padding: 24px;
             z-index: 2000; transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); box-sizing: border-box;
-            /* Ombra ridotta al minimo indispensabile per non oscurare i livelli sotto */
-            box-shadow: 0 -2px 15px rgba(0,0,0,0.2); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8); 
         }
+        
+        .drawer-glass.open { 
+            /* Sospeso a 20px dal fondo, non più attaccato! */
+            bottom: 20px !important; 
+        }
+
 
         .drawer-glass.open { bottom: 0 !important; }  
         
