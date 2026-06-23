@@ -85,60 +85,56 @@
         .testo-crea { font-size: 0.75rem; letter-spacing: 3px; font-weight: 500; color: #ffffff; } /* Il crea resta sempre visibile/bianco */
         #profile-content[data-theme="titanium_test"] .testo-crea { color: #000000; } /* Nel titanium diventa nero */
 
-      .drawer-backdrop { 
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-    background: transparent; /* Overlay invisibile */
-    z-index: 1900; opacity: 0; pointer-events: none; 
-}
-.drawer-backdrop.active { opacity: 1; pointer-events: auto; }
-        .drawer-glass {
-            position: fixed; bottom: -100%; left: 0; width: 100%;
-            background: rgba(20, 20, 22, 0.75); /* Scuro ma trasparente */
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); /* Effetto vetro iOS */
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 28px 28px 0 0; padding: 24px 24px 40px 24px;
-            z-index: 2000; transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); box-sizing: border-box;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+     /* --- IL CASSETTO FROSTED GLASS (Definitivo) --- */
+        .drawer-backdrop { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: transparent; /* Overlay invisibile */
+            z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
-        .drawer-glass.open { bottom: 0; }
+        .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
+
         .drawer-glass {
             position: fixed; bottom: -100%; left: 0; width: 100%;
-            background: rgba(15, 15, 18, 0.35); /* Molto più trasparente! */
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); /* Sfocatura raddoppiata */
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            /* IL SEGRETO: Usare un bianco leggerissimo al posto del nero trasparente */
+            background: rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 28px 28px 0 0; padding: 24px 24px 30px 24px;
             z-index: 2000; transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); box-sizing: border-box;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.8);
+            /* FORZA L'ACCELERAZIONE HARDWARE SU ANDROID */
+            transform: translateZ(0); 
+            -webkit-backface-visibility: hidden;
         }
+        .drawer-glass.open { bottom: 0; }
 
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .drawer-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #ffffff; flex: 1; text-align: center; }
+        /* HEADER E TITOLO SFINATI */
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; flex: 1; text-align: center; }
         
-        .drawer-close { 
-            color: rgba(255, 255, 255, 0.6); font-size: 1.2rem; cursor: pointer; padding: 5px; width: 30px; text-align: center;
-        }
+        .drawer-close { color: rgba(255, 255, 255, 0.6); font-size: 1rem; cursor: pointer; padding: 5px; width: 30px; text-align: center; }
         .drawer-close:active { color: #ffffff; }
 
-        /* Barre di selezione orizzontali */
-        .style-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+        /* BARRE DI SELEZIONE */
+        .style-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
         .style-bar-label { cursor: pointer; display: block; }
         .style-bar-label input { display: none; }
         .style-bar {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 14px; /* Padding ridotto per sfinare la barra */
+            padding: 10px 14px;
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.04); border-radius: 10px;
             color: #a0a0a0; font-size: 0.65rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
             transition: all 0.2s ease;
         }
-        .color-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); } /* Pallino più piccolo e raffinato */
-        /* Stato Selezionato */
+        .color-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #ffffff; }
 
+        /* BOTTONE SFINATO */
         .btn-crea {
-            width: 100%; padding: 16px; background: #ffffff; color: #000000;
-            border: none; border-radius: 14px; font-weight: 600; font-size: 0.9rem;
-            letter-spacing: 1px; cursor: pointer; transition: transform 0.2s;
+            width: 100%; padding: 14px; background: #ffffff; color: #000000;
+            border: none; border-radius: 10px; font-weight: 600; font-size: 0.7rem;
+            letter-spacing: 1.5px; cursor: pointer; transition: transform 0.2s;
         }
         .btn-crea:active { transform: scale(0.98); }
     </style>
