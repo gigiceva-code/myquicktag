@@ -145,42 +145,44 @@
             margin: 0 auto; text-align: center;
         }
         .btn-crea:active { transform: scale(0.98); }
-                /* --- NOTIFICA TOAST (Feedback Visivo) --- */
+                      /* --- NOTIFICA TOAST (Feedback Visivo Affinato) --- */
         #toast-notification {
             position: fixed;
-            top: -100px; /* Nascosta fuori dallo schermo in alto */
+            bottom: -100px; /* Ora è nascosta in basso */
             left: 50%;
             transform: translateX(-50%);
             background: rgba(30, 30, 35, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px; /* Forma a pillola perfetta */
-            padding: 12px 24px;
+            border-radius: 40px; 
+            padding: 10px 20px; /* Più snella ed elegante */
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             color: #ffffff;
-            font-size: 0.75rem;
+            font-size: 0.65rem; /* Font leggermente ridotto */
             font-weight: 500;
             letter-spacing: 1.5px;
             text-transform: uppercase;
+            white-space: nowrap; /* TASSATIVO: Impedisce l'a capo */
             z-index: 3000;
-            transition: top 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.5s ease;
+            /* Transizione spostata su "bottom" */
+            transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.5s ease;
             opacity: 0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
         #toast-notification.show {
-            top: 50px; /* Scende dolcemente nella safe area in alto */
+            bottom: 60px; /* Galleggia morbida sopra il tasto + CREA */
             opacity: 1;
         }
 
         #toast-notification i {
-            color: var(--accent-smeraldo); /* Spunta verde smeraldo */
-            font-size: 1.1rem;
+            color: var(--accent-smeraldo);
+            font-size: 1rem;
         }
-
+  
     </style>
 </head>
 <body>
