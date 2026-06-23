@@ -213,7 +213,6 @@
 
        <button class="btn-crea" onclick="chiudiDrawer()">AGGIUNGI</button>
    </div>
-
     <script>
         // Gestione Nome URL
         const params = new URLSearchParams(window.location.search);
@@ -223,40 +222,20 @@
             document.getElementById("tag-username").innerText = "@" + nomePulito;
         }
 
-        // Funzioni Cassetto e Live Canvas
+        // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
         const backdrop = document.getElementById('backdrop');
         const profileContent = document.getElementById('profile-content');
 
-        function apriDrawerStyle() {
-            backdrop.classList.add('active');
-            setTimeout(() => { drawer.classList.add('open'); }, 10);
-        }
-
-        function chiudiDrawer() {
-            drawer.classList.remove('open');
-            setTimeout(() => { backdrop.classList.remove('active'); }, 300); 
-        }
-
-        function applicaTemaLive() {
-            const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
-            profileContent.setAttribute('data-theme', temaSelezionato);
-        }
-                // Funzioni Cassetto e Live Canvas
-        const drawer = document.getElementById('drawer-style');
-        const backdrop = document.getElementById('backdrop');
-        const profileContent = document.getElementById('profile-content');
-
-        // --- NOVITÀ: CARICA IL TEMA SALVATO ALL'AVVIO ---
+        // --- CARICA IL TEMA SALVATO ALL'AVVIO ---
         const temaSalvato = localStorage.getItem('theme_scelto');
         if (temaSalvato) {
-            // Applica il tema al contenitore
             profileContent.setAttribute('data-theme', temaSalvato);
-            // Spunta il pallino corretto nel cassetto
             const radioCorretto = document.querySelector(`input[name="digital_style"][value="${temaSalvato}"]`);
             if (radioCorretto) radioCorretto.checked = true;
         }
 
+        // Funzioni di Apertura e Chiusura
         function apriDrawerStyle() {
             backdrop.classList.add('active');
             setTimeout(() => { drawer.classList.add('open'); }, 10);
@@ -267,16 +246,14 @@
             setTimeout(() => { backdrop.classList.remove('active'); }, 300); 
         }
 
+        // Funzione per il Cambio e Salvataggio Tema
         function applicaTemaLive() {
             const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
             profileContent.setAttribute('data-theme', temaSelezionato);
-            
-            // --- NOVITÀ: SALVA IL TEMA NELLA MEMORIA DEL TELEFONO ---
             localStorage.setItem('theme_scelto', temaSelezionato);
         }
 
-
-        // TRUCCO SVILUPPATORE: Tocco ripetuto sul nome per forzare il ricaricamento totale
+        // --- TRUCCO SVILUPPATORE (3 tocchi) ---
         let tapCount = 0;
         const usernameDisplay = document.getElementById('tag-username');
 
@@ -292,5 +269,7 @@
             });
         }
     </script>
+
+
 </body>
 </html>
