@@ -38,25 +38,31 @@
             transition: all 0.4s ease; /* Transizione morbida per il cambio tema */
         }
 
-        /* --- STILI DINAMICI (IL TEST "TITANIUM INVERTITO") --- */
+       /* --- I 4 TEMI UFFICIALI (Luxury Style) --- */
         
-        /* 1. TEMA STANDARD (Black DNA) */
-        #profile-content[data-theme="black_dna"] {
-            background-color: #000000;
-            border: 1px solid rgba(80, 200, 120, 0.6);
-        }
-        #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(80, 200, 120, 0.02); border: 1px solid rgba(80, 200, 120, 0.25); }
+        /* 1. Black DNA (Verde Smeraldo) */
+        #profile-content[data-theme="black_dna"] { border-color: rgba(80, 200, 120, 0.6); }
+        #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(80, 200, 120, 0.02); border-color: rgba(80, 200, 120, 0.25); }
         #profile-content[data-theme="black_dna"] .username-display { color: #ffffff; }
         #profile-content[data-theme="black_dna"] .testo-pass { color: #50C878; }
 
-        /* 2. TEMA TEST (Titanium Invertito) */
-        #profile-content[data-theme="titanium_test"] {
-            background-color: #86868b; /* Sfondo tutto grigio titanio */
-            border: 1px solid #000000; /* Cornice nera */
-        }
-        #profile-content[data-theme="titanium_test"] .username-capsule { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.3); }
-        #profile-content[data-theme="titanium_test"] .username-display { color: #000000; font-weight: 600; } /* Testo nero e più marcato */
-        #profile-content[data-theme="titanium_test"] .testo-pass { color: #000000; font-weight: 500; }
+        /* 2. Titanium (Grigio Argento) */
+        #profile-content[data-theme="titanium"] { border-color: rgba(134, 134, 139, 0.6); }
+        #profile-content[data-theme="titanium"] .username-capsule { background: rgba(134, 134, 139, 0.02); border-color: rgba(134, 134, 139, 0.25); }
+        #profile-content[data-theme="titanium"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="titanium"] .testo-pass { color: #86868b; }
+
+        /* 3. Obsidian Gold (Oro) */
+        #profile-content[data-theme="obsidian_gold"] { border-color: rgba(212, 175, 55, 0.6); }
+        #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(212, 175, 55, 0.02); border-color: rgba(212, 175, 55, 0.25); }
+        #profile-content[data-theme="obsidian_gold"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #d4af37; }
+
+        /* 4. Satin Rose (Rosa Perla) */
+        #profile-content[data-theme="satin_rose"] { border-color: rgba(229, 180, 180, 0.6); }
+        #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(229, 180, 180, 0.02); border-color: rgba(229, 180, 180, 0.25); }
+        #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="satin_rose"] .testo-pass { color: #e5b4b4; }
 
         /* --- ELEMENTI INTERNI --- */
         .header-monolith { text-align: center; }
@@ -157,9 +163,7 @@
            <div class="drawer-title">DIGITAL STYLE</div>
            <div style="width: 30px;"></div> <!-- Bilanciamento visivo per centrare il titolo -->
        </div>
-       
        <div class="style-list">
-           <!-- Opzione 1: Black DNA Standard -->
            <label class="style-bar-label">
                <input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()">
                <div class="style-bar">
@@ -168,15 +172,31 @@
                </div>
            </label>
 
-           <!-- Opzione 2: Test Titanium Invertito -->
            <label class="style-bar-label">
-               <input type="radio" name="digital_style" value="titanium_test" onchange="applicaTemaLive()">
+               <input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()">
                <div class="style-bar">
-                   <span>Titanium (Sfondo Invertito)</span>
+                   <span>Titanium</span>
                    <div class="color-dot" style="background: #86868b;"></div>
                </div>
            </label>
+
+           <label class="style-bar-label">
+               <input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()">
+               <div class="style-bar">
+                   <span>Obsidian Gold</span>
+                   <div class="color-dot" style="background: #d4af37;"></div>
+               </div>
+           </label>
+
+           <label class="style-bar-label">
+               <input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()">
+               <div class="style-bar">
+                   <span>Satin Rose</span>
+                   <div class="color-dot" style="background: #e5b4b4;"></div>
+               </div>
+           </label>
        </div>
+      
 
        <button class="btn-crea" onclick="chiudiDrawer()">AGGIUNGI</button>
    </div>
