@@ -93,33 +93,34 @@
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
 
-                 .drawer-glass {
+                       .drawer-glass {
             position: fixed; 
+            /* Lo centriamo matematicamente al centro dello schermo */
+            left: 50%; 
+            transform: translateX(-50%);
             bottom: -100%; 
-            /* Centratura perfetta per elementi fixed */
-            left: 0; right: 0; margin: 0 auto; 
             
-            /* Più stretto della cornice (max 410px) e con margini laterali */
-            width: calc(100% - 40px); 
+            /* Larghezza controllata: lascia 16px di respiro a destra e sinistra */
+            width: calc(100% - 32px); 
             max-width: 380px; 
             
-            /* Sfondo visibilmente trasparente (60% di opacità fisica) */
-            background: rgba(30, 30, 35, 0.6); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
+            /* TRASPARENZA FISICA GARANTITA: 25% di opacità. Si VEDRA' attraverso. */
+            background: rgba(40, 40, 45, 0.25); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px); 
             
-            /* Bordo su tutti i lati, non solo sopra */
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 28px; /* Arrotondato in tutti e 4 gli angoli */
-            
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px; /* Arrotondato su tutti i lati */
             padding: 24px;
-            z-index: 2000; transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); box-sizing: border-box;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8); 
+            z-index: 2000; 
+            transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); 
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
         }
         
-        .drawer-glass.open { 
-            /* Sospeso a 20px dal fondo, non più attaccato! */
-            bottom: 20px !important; 
-        }
+        /* Forza il posizionamento a 16px dal fondo fisico del telefono */
+        .drawer-glass.open { bottom: 16px !important; }
+  
 
 
         .drawer-glass.open { bottom: 0 !important; }  
@@ -147,11 +148,12 @@
         .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #ffffff; }
 
         /* BOTTONE SFINATO */
-        .btn-crea {
-            width: 100%; padding: 14px; background: #ffffff; color: #000000;
-            border: none; border-radius: 10px; font-weight: 600; font-size: 0.7rem;
-            letter-spacing: 1.5px; cursor: pointer; transition: transform 0.2s;
+        
+                .testo-crea { 
+            font-size: 0.75rem; letter-spacing: 3px; font-weight: 500; color: #ffffff; 
+            transition: opacity 0.5s ease-in-out; 
         }
+
         .btn-crea:active { transform: scale(0.98); }
     </style>
 </head>
