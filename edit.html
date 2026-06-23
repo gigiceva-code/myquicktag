@@ -30,44 +30,51 @@
     padding: 0;
     -webkit-tap-highlight-color: transparent;
 }
-
-/* --- MOTORE "ANCORAGGIO ASSOLUTO" --- */
+/* --- MOTORE "GABBIA D'ACCIAIO" (NESSUN CALCOLO, SOLO ANCORAGGIO) --- */
 
 html {
     height: 100%;
-    overflow: hidden; /* Blocca lo scroll del body */
+    overflow: hidden;
 }
 
 body {
     margin: 0;
-    height: 100%;
+    padding: 0;
     background-color: var(--bg-esterno, #0d0d0f);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Rende il body trasparente alle interazioni, lasciando il controllo al wrapper */
-    touch-action: none; 
+    
+    /* 1. Il body diventa ESATTAMENTE lo spazio visibile del telefono, né un pixel in più né uno in meno */
+    height: 100dvh; 
+    position: relative; /* 2. Diventa la griglia su cui piazzare gli elementi */
+    overflow: hidden;
+    touch-action: none;
 }
 
 .configurator-wrapper {
-    width: 100%;
-    height: 100%;
+    /* 3. L'ANCORAGGIO: non usiamo "height" o "flex" per l'altezza. 
+       Diciamo al contenitore: "stai letteralmente inchiodato a 16px da tutti e 4 i bordi" */
+    position: absolute;
+    top: 16px;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Padding generoso che garantisce che la card non tocchi mai i bordi */
-    padding: 16px; 
-    box-sizing: border-box;
 }
 
 #profile-content.app-container {
     width: 100%;
+    /* 4. La cornice si riempie come un gas nel vuoto, fermandosi ai bordi del wrapper (che sono a -16px dal fondo vero) */
+    height: 100%; 
     max-width: 410px;
-    margin: 0 auto;
+    max-height: 840px;
+    
     padding: 40px 24px 32px 24px;
     background-color: var(--bg-chassis, #000000);
-    border: 1px solid rgba(212, 175, 55, 0.5);
+    border: 1px solid rgba(212, 175, 55, 0.5); /* Prende il colore dal tema */
     border-radius: 28px;
+    
     display: flex !important;
     flex-direction: column;
     justify-content: space-between;
@@ -75,9 +82,7 @@ body {
     box-shadow: 0 30px 70px rgba(0,0,0,0.9);
     overflow: hidden; 
     z-index: 2;
-    /* Rimuoviamo qui ogni altezza fissa o dinamica */
 }
-
 
 #profile-content .header-monolith { text-align: center; }
 
@@ -1003,26 +1008,6 @@ textarea { height: 70px; resize: none; }
     });
 
     window.addEventListener('load', aggiornaTagLive);
-function correggiAltezzaAndroid() {
-    const container = document.getElementById('profile-content');
-    if (!container) return;
-    
-    // Usiamo visualViewport per avere la misura ESATTA al netto di tastiere e barre
-    const altezzaDisponibile = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    
-    // Sottraiamo il padding totale (16px sopra + 16px sotto = 32px)
-    const altezzaNetta = altezzaDisponibile - 32; 
-    
-    container.style.height = altezzaNetta + 'px';
-    container.style.maxHeight = '840px'; // Mantiene il limite massimo
-}
-
-// Eventi di ascolto potenziati
-window.addEventListener('load', correggiAltezzaAndroid);
-window.addEventListener('resize', correggiAltezzaAndroid);
-if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', correggiAltezzaAndroid);
-}
 
     </script>
 </body>
