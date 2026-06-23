@@ -9,1006 +9,145 @@
 
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
-<style>
-:root {
-    --bg-color: #000000;
-    --card-bg: #141416;
-    --card-border: #232326;
-    --input-bg: #1d1d20;
-    --input-border: #2c2c2e;
-    --accent-white: #ffffff;
-    --text-sec: #8e8e93;
-    --bg-chassis: #000000;
-    --accent-gold: #d4af37;
-    --accent-smeraldo: #50C878;
-    --text-main: #f5f5f7;
-}
+    <style>
+        :root {
+            --bg-esterno: #0d0d0f;
+            --bg-chassis: #000000;
+            --accent-gold: #d4af37;
+            --accent-smeraldo: #50C878;
+        }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-}
-/* --- MOTORE "GABBIA D'ACCIAIO" (NESSUN CALCOLO, SOLO ANCORAGGIO) --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-html {
-    height: 100%;
-    overflow: hidden;
-}
+        /* --- MOTORE "GABBIA D'ACCIAIO" --- */
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: var(--bg-esterno);
+            font-family: 'Inter', sans-serif;
+            touch-action: none;
+        }
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-esterno, #0d0d0f);
-    
-    /* 1. Il body diventa ESATTAMENTE lo spazio visibile del telefono, né un pixel in più né uno in meno */
-    height: 100dvh; 
-    position: relative; /* 2. Diventa la griglia su cui piazzare gli elementi */
-    overflow: hidden;
-    touch-action: none;
-}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.configurator-wrapper {
-    /* 3. L'ANCORAGGIO: non usiamo "height" o "flex" per l'altezza. 
-       Diciamo al contenitore: "stai letteralmente inchiodato a 16px da tutti e 4 i bordi" */
-    position: absolute;
-    top: 16px;
-    bottom: 16px;
-    left: 16px;
-    right: 16px;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .configurator-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px 16px calc(16px + env(safe-area-inset-bottom)) 16px; 
+        }
 
-#profile-content.app-container {
-    width: 100%;
-    /* 4. La cornice si riempie come un gas nel vuoto, fermandosi ai bordi del wrapper (che sono a -16px dal fondo vero) */
-    height: 100%; 
-    max-width: 410px;
-    max-height: 840px;
-    
-    padding: 40px 24px 32px 24px;
-    background-color: var(--bg-chassis, #000000);
-    border: 1px solid rgba(212, 175, 55, 0.5); /* Prende il colore dal tema */
-    border-radius: 28px;
-    
-    display: flex !important;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
-    box-shadow: 0 30px 70px rgba(0,0,0,0.9);
-    overflow: hidden; 
-    z-index: 2;
-}
+        #profile-content {
+            width: 100%;
+            max-width: 410px;
+            height: 100%; 
+            max-height: 840px;
+            
+            padding: 40px 24px 32px 24px;
+            background-color: var(--bg-chassis);
+            border: 1px solid rgba(80, 200, 120, 0.6); 
+            border-radius: 28px;
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.9);
+            overflow: hidden; 
+        }
 
-#profile-content .header-monolith { text-align: center; }
+        /* --- ELEMENTI INTERNI --- */
+        .header-monolith { text-align: center; }
+        
+        .username-capsule {
+            display: inline-flex;    
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px; 
+            padding: 6px 18px;             
+            margin: 10px auto;             
+            background: rgba(80, 200, 120, 0.02);
+            border: 1px solid rgba(80, 200, 120, 0.25);
+        }
 
-#profile-content .avatar-block {
-    display: flex;
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    background: #070708;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    margin: 0 auto 5px auto;
-}
+        .username-display {
+            font-size: 1.05rem; 
+            font-weight: 400;
+            letter-spacing: 2px; 
+            text-transform: uppercase;
+            color: #ffffff; 
+        }
 
-#profile-content .user-media { width: 100%; height: 100%; object-fit: cover; }
+        #mainGrid {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+            align-items: center;
+            flex: 1; 
+            width: 100%;
+            padding: 30px 0 30px 0; 
+        }
 
-    /* 🏆 CAPSULA NOME: SOLO FORMA (I colori li dà il tema) */
-.username-capsule {
-    display: inline-flex;    
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px !important; 
-    padding: 6px 18px;             
-    margin: 10px auto;             
-    max-width: 90%;          
-    box-sizing: border-box;
-    border: 1px solid transparent !important;
-    transition: all 0.3s ease;
-}
+        .casella {
+            padding: 4px 0; 
+            cursor: pointer;
+        }
 
-.username-display {
-    font-size: 1.05rem !important; 
-    font-weight: 400 !important;
-    letter-spacing: 2px !important; 
-    text-transform: uppercase !important;
-    color: #ffffff !important; 
-    text-align: center;
-    margin: 0 !important;
-    padding: 0 !important;
-    word-break: break-all;   
-}
-/* --- GRIGLIA E SPAZIATURE --- */
-#profile-content #mainGrid {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important; 
-    align-items: center !important;
-    gap: 0 !important; 
-    flex: 1 !important; 
-    width: 100% !important;
-    background: transparent !important;
-    border: none !important;
-    box-sizing: border-box !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-    padding: 30px 0 110px 0 !important; 
-}
+        .casella-invito { font-size: 0; line-height: 0; }
+        .casella-invito::after {
+            font-size: 0.75rem; 
+            letter-spacing: 3px; 
+            font-weight: 300;
+        }
 
-#profile-content #mainGrid .casella {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    min-height: auto !important;
-    padding: 4px 0 !important; 
-    width: auto !important;
-    cursor: pointer;
-}
-
-#profile-content #mainGrid .casella-invito {
-    font-size: 0 !important; 
-    line-height: 0 !important;
-}
-
-#profile-content #mainGrid .casella-invito::after {
-    font-size: 0.75rem !important; 
-    letter-spacing: 3px !important; 
-    font-weight: 300 !important;
-    transition: color 0.2s ease;
-}
-
-/* --- REGOLE SCRITTE TAG PRIMORDIALE --- */
-#profile-content #casella-qr .casella-invito::after { content: 'DIGITAL PASS'; color: var(--accent-gold); font-weight: 400; }
-#profile-content #casella-crea .casella-invito::after { content: '+ CREA LA TUA TAG'; color: #ffffff; font-weight: 500; }
-#profile-content #mainGrid .casella:active { opacity: 0.6; }
-/* 🎯 RETTIFICHE SCRITTE (PASS) */
-#profile-content #casella-qr .casella-invito::after { content: 'DIGITAL PASS'; color: var(--accent-gold); font-weight: 400; }
-#profile-content #casella-bio .casella-invito::after { content: 'BIO'; color: var(--text-sec); }
-#profile-content #casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec); }
-#profile-content #casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec); }
-#profile-content #casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec); }
-#profile-content #casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec); }
-#profile-content #casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec); }
-#profile-content #casella-crea .casella-invito::after { content: '+ CREA LA TUA TAG'; color: #ffffff; font-weight: 500; }
-#profile-content #mainGrid .casella:active { opacity: 0.6; }
-
-#profile-content #casella-quick-action {
-    position: relative !important;
-    left: 24px !important;
-    right: 24px !important;
-    width: calc(100% - 48px) !important;
-    height: 46px !important;
-    min-height: 46px !important;
-    background: rgba(212, 175, 55, 0.03) !important;
-    border: 1px solid rgba(212, 175, 55, 0.2) !important;
-    border-radius: 10px !important;
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 10px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
-    cursor: pointer;
-    margin-top: auto !important; 
-    margin-bottom: 20px !important; 
-    }
-#profile-content #casella-quick-action #quick-action-icon { font-size: 1.1rem; margin-bottom: 0 !important; }
-#profile-content #casella-quick-action #quick-action-label {
-    font-size: 0.72rem !important;
-    line-height: 1 !important;
-    letter-spacing: 1.5px !important;
-    text-transform: uppercase !important;
-    color: #d4af37 !important;
-}
-/* ============================================================
-   🎨 GESTIONE COLORI TEMI DINAMICI
-   ============================================================ */
-
-/* TEMA BLACK DNA (Verde Smeraldo) */
-#profile-content.tema-black-dna { border-color: rgba(80, 200, 120, 0.6) !important; }
-#profile-content.tema-black-dna #casella-qr .casella-invito::after { color: #50C878 !important; }
-#profile-content.tema-black-dna .username-capsule {
-    background: rgba(80, 200, 120, 0.02) !important;
-    border-color: rgba(80, 200, 120, 0.25) !important;
-    box-shadow: 0 0 35px rgba(80, 200, 120, 0.15), 0 4px 15px rgba(0,0,0,0.5) !important;
-}
-
-/* TEMA TITANIUM (Grigio/Argento) */
-#profile-content.tema-titanium { border-color: rgba(134, 134, 139, 0.6) !important; }
-#profile-content.tema-titanium #casella-qr .casella-invito::after { color: #86868b !important; }
-#profile-content.tema-titanium .username-capsule {
-    background: rgba(134, 134, 139, 0.02) !important;
-    border-color: rgba(134, 134, 139, 0.25) !important;
-    box-shadow: 0 0 35px rgba(134, 134, 139, 0.15), 0 4px 15px rgba(0,0,0,0.5) !important;
-}
-
-/* TEMA OBSIDIAN GOLD (Oro) */
-#profile-content.tema-obsidian-gold { border-color: rgba(212, 175, 55, 0.6) !important; }
-#profile-content.tema-obsidian-gold #casella-qr .casella-invito::after { color: #d4af37 !important; }
-#profile-content.tema-obsidian-gold .username-capsule {
-    background: rgba(212, 175, 55, 0.02) !important;
-    border-color: rgba(212, 175, 55, 0.25) !important;
-    box-shadow: 0 0 35px rgba(212, 175, 55, 0.15), 0 4px 15px rgba(0,0,0,0.5) !important;
-}
-
-/* TEMA SATIN ROSE (Rosa Perla) */
-#profile-content.tema-rose-pearl { border-color: rgba(229, 180, 180, 0.8) !important; }
-#profile-content.tema-rose-pearl #casella-qr .casella-invito::after { color: #e5b4b4 !important; }
-#profile-content.tema-rose-pearl .username-capsule {
-    background: rgba(229, 180, 180, 0.02) !important;
-    border-color: rgba(229, 180, 180, 0.25) !important;
-    box-shadow: 0 0 35px rgba(229, 180, 180, 0.15), 0 4px 15px rgba(0,0,0,0.5) !important;
-}
-/* ============================================================
-   DRAWER SYSTEM
-   ============================================================ */
-.drawer-overlay {
-    position: fixed; bottom: -100%; left: 0; width: 100%; height: 60vh;
-    background: var(--card-bg); border-top: 1px solid var(--card-border);
-    border-radius: 24px 24px 0 0; padding: 24px 24px 40px 24px; z-index: 2000;
-    transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.9); overflow-y: auto;
-    box-sizing: border-box;
-}
-.drawer-overlay.open { bottom: 0; }
-.drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1900; display: none; }
-
-.drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
-.drawer-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-white); }
-
-.drawer-close {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.drawer-close:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.15); }
-
-.btn-conferma-drawer {
-    width: 100%; padding: 14px; margin-top: 24px; background: #ffffff; color: #000000;
-    border: none; border-radius: 12px; font-weight: 600; font-size: 0.85rem;
-    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.2s;
-}
-.btn-conferma-drawer:active { transform: scale(0.98); background: #eeeeee; }
-
-.funzione-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 0; border-bottom: 1px solid var(--card-border);
-    cursor: pointer; transition: opacity 0.2s ease;
-}
-.funzione-row:active { opacity: 0.7; }
-.funzione-nome { font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; color: #fff; }
-.lock-icon { color: var(--accent-smeraldo); font-size: 0.75rem; }
-
-.btn-nav-onboarding {
-    width: 100%; padding: 16px; margin-top: 20px; background: #ffffff; color: #000000;
-    border: none; border-radius: 12px; font-weight: 600; font-size: 0.85rem;
-    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: transform 0.2s ease;
-}
-.btn-nav-onboarding:active { transform: scale(0.98); }
-
-.form-group { margin-bottom: 16px; text-align: left; }
-.form-group label { display: block; font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-input, textarea, select { width: 100%; padding: 12px 14px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: #ffffff; font-size: 0.9rem; outline: none; }
-textarea { height: 70px; resize: none; }
-
-.style-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.style-card input { display: none; }
-.style-preview { padding: 12px 2px; border-radius: 8px; border: 1px solid var(--input-border); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s ease; }
-.style-card input:checked + .style-preview { border-color: #ffffff; background: rgba(255,255,255,0.05); }
-.black { background: #000; color: #fff; } .titanium { background: #1c1c1e; color: #f5f5f7; } .gold { background: #000; color: #d4af37; } .pearl { background: #1a1518; color: #e8c5c8; }
-
-.plan-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 12px; cursor: pointer; display: flex; align-items: center; margin-bottom: 8px; transition: all 0.2s ease; }
-.plan-card.selected { border-color: #ffffff; background: rgba(255,255,255,0.04); }
-.plan-card i { font-size: 1rem; margin-right: 12px; color: var(--text-sec); width: 20px; text-align: center; }
-.plan-info h3 { margin: 0; font-size: 0.85rem; font-weight: 600; }
-.plan-info p { margin: 1px 0 0; font-size: 0.7rem; color: var(--text-sec); }
-
-.social-input-group { display: flex; gap: 8px; align-items: center; }
-.btn-add-social { padding: 12px 16px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
-
-.sticky-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000 75%, rgba(0,0,0,0) 100%); padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 100; pointer-events: none; }
-.save-btn { width: 100%; max-width: 390px; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.2s ease; pointer-events: auto;}
-.save-btn:disabled { background: #2c2c2e; color: #8e8e93; cursor: not-allowed; }
-.save-btn:active { transform: scale(0.98); }
-.back-link { display: block; text-align: center; margin-top: 12px; color: var(--text-sec); text-decoration: none; font-size: 0.8rem; pointer-events: auto; }
-
-.toast-edit {
-    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
-    background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px;
-    font-size: 0.85rem; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-    opacity: 0; z-index: 10000; pointer-events: none;
-}
-.toast-edit.mostra { transform: translateX(-50%) translateY(0); opacity: 1; }
-</style>
+        #casella-qr .casella-invito::after { content: 'DIGITAL PASS'; color: var(--accent-smeraldo); }
+        #casella-crea .casella-invito::after { content: '+ CREA LA TUA TAG'; color: #ffffff; font-weight: 500; }
+    </style>
 </head>
 <body>
 
-    <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
-    <div id="toast-notifica" class="toast-edit">Modifiche applicate</div>
-
    <div class="configurator-wrapper">
-        
-       <div id="profile-content" class="app-container">
-    <div class="header-monolith">
-        <div class="avatar-block" id="avatar-container" style="display:none;">
-            <img id="userImage" class="user-media" src="" alt="Logo">
-        </div>
-        <div class="username-capsule">
-            <h1 class="username-display" id="tag-username">@...</h1>
-        </div>
-    </div>
-
-    <div id="mainGrid">
-        <div class="casella" id="casella-qr" onclick="apriDrawerQR()">
-            <span class="casella-invito"></span>
-        </div>
-
-        <div class="casella" id="casella-crea" onclick="avviaFlussoEcosistema()">
-            <span class="casella-invito"></span>
-        </div>
-    </div>
-
-    <div class="casella" id="casella-quick-action" style="display:none;"></div>
-</div>
-               
-        <div class="drawer-overlay" id="drawer-funzioni">
-            <div class="drawer-header">
-                <div class="drawer-title">Aggiungi Funzione</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div class="drawer-content-area">
-                <div class="funzione-row" onclick="attivaStep('tag', 'drawer-bio-solo')">
-                    <span class="funzione-nome">Biografia Breve</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
-                </div>
-                <div class="funzione-row" onclick="attivaStep('tag', 'drawer-social')">
-                    <span class="funzione-nome">Social Networks</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
-                </div>
-                <div class="funzione-row" onclick="attivaStep('tag', 'drawer-diretti')">
-                    <span class="funzione-nome">Contatti Diretti</span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
-                </div>
-                <div class="funzione-row" onclick="verificaPianoVcfMenu(event, 'drawer-vcf')">
-                    <span class="funzione-nome">Rubrica VCF <i class="fas fa-lock lock-icon" style="margin-left: 5px;"></i></span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
-                </div>
-                <div class="funzione-row" onclick="verificaPianoQuickActionMenu(event, 'drawer-quick')">
-                    <span class="funzione-nome">Azione Rapida <i class="fas fa-lock lock-icon" style="margin-left: 5px; color: var(--accent-gold);"></i></span><i class="fas fa-chevron-right" style="color: var(--text-sec); font-size: 0.7rem;"></i>
+       <div id="profile-content">
+            
+            <div class="header-monolith">
+                <div class="username-capsule">
+                    <h1 class="username-display" id="tag-username">@...</h1>
                 </div>
             </div>
-        </div>
 
-        <div class="drawer-overlay" id="drawer-piano">
-            <div class="drawer-header">
-                <div class="drawer-title">Seleziona Ecosistema</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div class="plan-selector">
-                <div class="plan-card selected" id="plan-BASE" onclick="selectPlan('BASE')">
-                    <i class="fas fa-seedling"></i>
-                    <div class="plan-info"><h3>BASE</h3><p>Presenza digitale essenziale gratuita</p></div>
+            <div id="mainGrid">
+                <div class="casella" id="casella-qr">
+                    <span class="casella-invito"></span>
                 </div>
-                <div class="plan-card" id="plan-PREMIUM" onclick="selectPlan('PREMIUM')">
-                    <i class="fas fa-crown"></i>
-                    <div class="plan-info"><h3>PREMIUM</h3><p>Professionisti (Link estesi e VCF)</p></div>
-                </div>
-                <div class="plan-card" id="plan-GOLD" onclick="selectPlan('GOLD')">
-                    <i class="fas fa-gem"></i>
-                    <div class="plan-info"><h3>GOLD</h3><p>Aziende ed Ecosistema (Multi-Sede)</p></div>
+
+                <div class="casella" id="casella-crea">
+                    <span class="casella-invito"></span>
                 </div>
             </div>
-            <input type="hidden" id="field-plan" value="BASE">
-            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Conferma Piano</button>
-        </div>
 
-        <div class="drawer-overlay" id="drawer-identita">
-            <div class="drawer-header">
-                <div class="drawer-title">Scegli lo Stile Visivo</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div class="form-group">
-                <label>Seleziona Stile</label>
-                <div class="style-selector">
-                    <div class="style-options">
-                        <label class="style-card">
-                            <input type="radio" name="digital_style" value="black" checked>
-                            <div class="style-preview black">Black DNA</div>
-                        </label>
-                        <label class="style-card">
-                            <input type="radio" name="digital_style" value="titanium">
-                            <div class="style-preview titanium">Titanium</div>
-                        </label>
-                        <label class="style-card">
-                            <input type="radio" name="digital_style" value="obsidian_gold">
-                            <div class="style-preview gold">Obsidian Gold</div>
-                        </label>
-                        <label class="style-card">
-                            <input type="radio" name="digital_style" value="rose_pearl">
-                            <div class="style-preview pearl">Satin Rose</div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Applica Stile</button>
-        </div>
+       </div>
+   </div>
 
-        <div class="drawer-overlay" id="drawer-qr-preview">
-            <div class="drawer-header">
-                <div class="drawer-title">Il tuo Digital Pass</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; padding:20px 0;">
-                <div id="qr-preview-wrapper" style="background:#ffffff; padding:16px; border-radius:16px; width:212px; height:212px; display:flex; align-items:center; justify-content:center;"></div>
-                <p style="color:var(--text-sec); font-size:0.8rem; text-align:center; margin-top:20px; line-height:1.5;">Questa è un'anteprima. Il QR sarà attivo e scansionabile solo dopo la pubblicazione.</p>
-            </div>
-        </div>
-
-        <div class="drawer-overlay" id="drawer-bio-solo">
-            <div class="drawer-header">
-                <div class="drawer-title">Biografia Breve</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div class="form-group">
-                <label>Scrivi la tua bio</label>
-                <textarea id="field-bio" placeholder="Racconta chi sei..."></textarea>
-            </div>
-            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Aggiungi Bio</button>
-        </div>
-
-        <div class="drawer-overlay" id="drawer-diretti">
-            <div class="drawer-header">
-                <div class="drawer-title">Contatti & Link Diretti</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div class="form-group"><label>Sito Web Principale</label><input type="text" id="field-sito_web" placeholder="https://tuosito.com"></div>
-            <div class="form-group"><label>Email Canale</label><input type="text" id="field-email" placeholder="nome@esempio.com"></div>
-            <div class="form-group"><label>Telefono Diretto</label><input type="text" id="field-phone" placeholder="+39..."></div>
-            <div class="form-group"><label>Link Curriculum Vitae (URL)</label><input type="text" id="field-cv" placeholder="https://link-al-tuo-cv.com"></div>
-            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Salva Contatti</button>
-        </div>
-
-        <div class="drawer-overlay" id="drawer-social">
-            <div class="drawer-header">
-                <div class="drawer-title">Social Ecosystem Network</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div class="form-group social-input-group">
-                <input type="text" id="input-nuovo-canale" placeholder="Incolla link del profilo social...">
-                <button type="button" onclick="aggiungiCanale()" class="btn-add-social">+ Aggiungi</button>
-            </div>
-            <div id="lista-canali" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
-            <input type="hidden" id="field-config_canali" value="[]">
-            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Salva Canali</button>
-        </div>
-
-        <div class="drawer-overlay" id="drawer-quick">
-            <div class="drawer-header">
-                <div class="drawer-title">Configurazione Quick Action</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div class="form-group">
-                <label>Tipo di azione primaria</label>
-                <select id="field-quick_action_tipo">
-                    <option value="">Nessuna azione</option>
-                    <option value="appuntamento">Prenota appuntamento</option>
-                    <option value="whatsapp">Scrivimi su WhatsApp</option>
-                    <option value="preventivo">Richiedi preventivo</option>
-                    <option value="chiamata">Chiama ora</option>
-                    <option value="maps">Trovami su Maps</option>
-                    <option value="demo">Ascolta demo</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Destinazione URL o Numero</label>
-                <input type="text" id="field-quick_action_url" placeholder="Inserisci link o recapito">
-            </div>
-            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Salva Azione</button>
-        </div>
-
-        <div class="drawer-overlay" id="drawer-vcf">
-            <div class="drawer-header">
-                <div class="drawer-title">Scheda Rubrica VCF</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <div class="form-group"><label>Nome / Ragione Sociale</label><input type="text" id="vcf-nome"></div>
-            <div class="form-group"><label>Telefono Principale</label><input type="text" id="vcf-telefono1"></div>
-            <div class="form-group"><label>Email Principale</label><input type="text" id="vcf-email1"></div>
-            <div class="form-group"><label>Sito Web Azienda</label><input type="text" id="vcf-sito"></div>
-            <div id="vcf-premium-section" onclick="verificaPianoVcf(event)">
-                <div class="form-group"><label>Telefono Secondario</label><input type="text" id="vcf-telefono2"></div>
-                <div class="form-group"><label>Email Secondaria</label><input type="text" id="vcf-email2"></div>
-                <div class="form-group"><label>Indirizzo Completo</label><input type="text" id="vcf-indirizzo"></div>
-                <div class="form-group"><label>Partita IVA</label><input type="text" id="vcf-piva"></div>
-            </div>
-            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Salva in Rubrica</button>
-        </div>
-
-        <div class="drawer-overlay" id="drawer-gallery">
-            <div class="drawer-header">
-                <div class="drawer-title">Media & Gallery Showcase</div>
-                <button class="drawer-close" onclick="chiudiSenzaSalvare()">✕</button>
-            </div>
-            <p style="color:var(--text-sec); font-size:0.85rem; line-height:1.6; margin-bottom: 20px;">Gestione avanzata file e portfolio in caricamento JSON.</p>
-            <button class="btn-conferma-drawer" onclick="confermaEChiudiCassetto()">Chiudi</button>
-        </div>
-
-       <div class="sticky-footer" id="footer-actions">
-            <button class="save-btn" id="btn-azione-principale" onclick="apriDrawer('drawer-funzioni')">AGGIUNGI FUNZIONE</button>
-           
-        </div>
-    </div>
-
-    <div id="modal-piano" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; padding:24px;">
-        <div style="background:#121214; border:1px solid #1c1c1e; border-radius:20px; padding:32px 24px; max-width:340px; width:100%; text-align:center;">
-            <h3 style="margin:0 0 12px; font-size:1.1rem; color:#fff;">Funzione Avanzata</h3>
-            <p style="margin:0 0 24px; font-size:0.85rem; color:#8e8e93; line-height:1.5;">Questo blocco richiede l'attivazione di un account Premium o Gold.</p>
-            <button type="button" onclick="chiudiModalPiano()" style="width:100%; padding:14px; background:white; color:black; border:none; border-radius:12px; font-weight:600; cursor:pointer;">Ho capito</button>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-     
-    const params = new URLSearchParams(window.location.search);
-    const nomeUtente = params.get("u");
-    let canaliCorrenti = [];
+        // Legge il parametro "u" dall'URL in arrivo dall'index
+        const params = new URLSearchParams(window.location.search);
+        const nomeUtente = params.get("u");
 
-    if (nomeUtente) { 
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-        document.getElementById("tag-username").innerText = "@" + nomePulito.toUpperCase();
-        inizializzaPagina(); 
-    }
-
-    function selectPlan(plan) {
-        document.getElementById('field-plan').value = plan;
-        document.querySelectorAll('.plan-card').forEach(card => card.classList.remove('selected'));
-        document.getElementById('plan-' + plan).classList.add('selected');
-    }
-
-    async function inizializzaPagina() {
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-
-        try {
-            const response = await fetch(`/api/get-profile?u=${nomePulito}`);
-            const data = await response.json();
-
-            const f = (() => {
-                if (data.fields?.draft_json) {
-                    try {
-                        const bozza = JSON.parse(data.fields.draft_json);
-                        return { ...bozza, stato: data.fields.stato, plan: data.fields.plan };
-                    } catch(e) {}
-                }
-                return data.fields || data;
-            })();
-
-            if (f) {
-                if(f.plan) selectPlan(f.plan);
-
-                const campi = ['bio', 'email', 'sito_web', 'cv'];
-                campi.forEach(c => {
-                    const el = document.getElementById(`field-${c}`);
-                    if (el && f[c]) el.value = f[c];
-                });
-                if (f.quick_action_tipo) {
-                    const sel = document.getElementById('field-quick_action_tipo');
-                    if (sel) sel.value = f.quick_action_tipo;
-                }
-                if (f.quick_action_url) {
-                    const el = document.getElementById('field-quick_action_url');
-                    if (el) el.value = f.quick_action_url;
-                }
-                if (f.modulo_vcf) {
-                    try {
-                        const vcf = typeof f.modulo_vcf === 'object' ? f.modulo_vcf : JSON.parse(f.modulo_vcf);
-                        const campiVcf = ['nome', 'telefono1', 'telefono2', 'email1', 'email2', 'sito', 'indirizzo', 'piva'];
-                        campiVcf.forEach(c => {
-                            const el = document.getElementById(`vcf-${c}`);
-                            if (el && vcf[c]) el.value = vcf[c];
-                        });
-                    } catch(e) {}
-                }        
-                if (f.config_canali) {
-                    try {
-                        const parsed = typeof f.config_canali === 'string' ? JSON.parse(f.config_canali) : f.config_canali;
-                        if (Array.isArray(parsed)) {
-                            canaliCorrenti = parsed;
-                            aggiornaListaCanali();
-                            aggiornaHiddenField();
-                        }
-                    } catch(e) {}
-                }    
-
-                if (f.digital_style) {
-                    const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
-                    if (radio) radio.checked = true;
-                }
-                aggiornaTagLive();
-            }
-        } catch (e) { console.error("Errore inizializzazione:", e); }
-    }
-
-
-    const socialDizionario = [
-        { chiave: "instagram",  domini: ["instagram.com"],           icona: "fab fa-instagram" },
-        { chiave: "tiktok",     domini: ["tiktok.com"],              icona: "fab fa-tiktok" },
-        { chiave: "facebook",   domini: ["facebook.com","fb.com"],   icona: "fab fa-facebook-f" },
-        { chiave: "youtube",    domini: ["youtube.com","youtu.be"], icona: "fab fa-youtube" },
-        { chiave: "linkedin",   domini: ["linkedin.com"],            icona: "fab fa-linkedin-in" },
-        { chiave: "x",          domini: ["x.com","twitter.com"],     icona: "fab fa-x-twitter" },
-        { chiave: "whatsapp",   domini: ["wa.me","whatsapp.com"],    icona: "fab fa-whatsapp" },
-        { chiave: "telegram",   domini: ["t.me","telegram.me"],      icona: "fab fa-telegram-plane" },
-        { chiave: "github",     domini: ["github.com"],              icona: "fab fa-github" },
-        { chiave: "spotify",    domini: ["spotify.com"], icona: "fab fa-spotify" },
-        { chiave: "twitch",     domini: ["twitch.tv"],               icona: "fab fa-twitch" },
-        { chiave: "pinterest",  domini: ["pinterest.com"],           icona: "fab fa-pinterest-p" },
-        { chiave: "reddit",     domini: ["reddit.com"],              icona: "fab fa-reddit" },
-        { chiave: "behance",    domini: ["behance.net"],             icona: "fab fa-behance" },
-        { chiave: "dribbble",   domini: ["dribbble.com"],            icona: "fab fa-dribbble" },
-        { chiave: "strava",     domini: ["strava.com"],              icona: "fab fa-strava" }
-    ];
-
-    function normalizzaUrl(val) {
-        if (!val) return "";
-        val = val.trim();
-        if (!val.startsWith("http://") && !val.startsWith("https://") && !val.startsWith("tel:") && !val.startsWith("mailto:")) {
-            val = "https://" + val;
+        if (nomeUtente) { 
+            const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
+            document.getElementById("tag-username").innerText = "@" + nomePulito;
         }
-        return val;
-    }
-
-    function riconosciSocial(url) {
-        try {
-            const hostname = new URL(url).hostname.replace("www.", "");
-            for (const social of socialDizionario) {
-                if (social.domini.some(d => hostname === d || hostname.endsWith("." + d))) {
-                    return { nome: social.chiave, icona: social.icona };
-                }
-            }
-        } catch(e) {}
-        return { nome: "link", icona: "fas fa-share-alt" }; 
-    }
-
-    function aggiungiCanale() {
-        const pianoAttuale = document.getElementById('field-plan').value.toUpperCase();
-
-        if (pianoAttuale === "BASE" && canaliCorrenti.length >= 3) { apriModalPiano(); return; }
-        if (pianoAttuale === "PREMIUM" && canaliCorrenti.length >= 8) { apriModalPiano(); return; }
-
-        const input = document.getElementById("input-nuovo-canale");
-        let url = input.value.trim();
-        if (!url) return;
-
-        url = normalizzaUrl(url);
-        if (canaliCorrenti.find(c => c.url === url)) { input.value = ""; return; }
-
-        const { nome } = riconosciSocial(url);
-        canaliCorrenti.push({ nome, url });
-        aggiornaListaCanali();
-        aggiornaHiddenField();
-        input.value = "";
-    }
-
-    function rimuoviCanale(index) {
-        canaliCorrenti.splice(index, 1);
-        aggiornaListaCanali();
-        aggiornaHiddenField();
-    }
-
-    function aggiornaListaCanali() {
-        const lista = document.getElementById("lista-canali");
-        lista.innerHTML = "";
-        canaliCorrenti.forEach((canale, i) => {
-            const { icona } = riconosciSocial(canale.url);
-            const dominio = (() => { try { return new URL(canale.url).hostname.replace("www.", ""); } catch(e) { return canale.url; } })();
-            const card = document.createElement("div");
-            card.style.cssText = "display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px 14px;";
-            card.innerHTML = `<i class="${icona}" style="font-size:1.1rem; color:#ffffff; flex-shrink:0; width:20px; text-align:center;"></i><span style="flex:1; font-size:0.85rem; color:#a0a0a0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${dominio}</span><button onclick="rimuoviCanale(${i})" style="background:none; border:none; color:#a0a0a0; font-size:1rem; cursor:pointer; padding:0; flex-shrink:0; line-height:1;">✕</button>`;
-            lista.appendChild(card);
-        });
-    }
-
-    function aggiornaHiddenField() {
-        document.getElementById("field-config_canali").value = JSON.stringify(canaliCorrenti);
-    }
-
-    function verificaPianoQuickActionMenu(event, idDrawer) {
-        if (document.getElementById('field-plan').value.toUpperCase() === 'BASE') {
-            event.preventDefault(); event.stopPropagation(); apriModalPiano();
-        } else { attivaStep('tag', idDrawer); }
-    }
-
-    function verificaPianoVcfMenu(event, idDrawer) {
-        if (document.getElementById('field-plan').value.toUpperCase() === 'BASE') {
-            event.preventDefault(); event.stopPropagation(); apriModalPiano();
-        } else { attivaStep('tag', idDrawer); }
-    }
-
-    function verificaPianoVcf(event) {
-        if (document.getElementById('field-plan').value.toUpperCase() === 'BASE') {
-            event.preventDefault(); event.stopPropagation();
-            if (event.target.tagName === 'INPUT') event.target.blur();
-            apriModalPiano();
-        }
-    }      
-
-    function apriModalPiano() {
-        document.getElementById('modal-piano').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-    function chiudiModalPiano() {
-        document.getElementById('modal-piano').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    } 
-
-    let activeDrawerId = null;
-
-    function apriDrawer(idDrawer) {
-        document.querySelectorAll('.drawer-overlay.open').forEach(d => {
-            if(d.id !== idDrawer) d.classList.remove('open');
-        });
-        if (window.location.hash !== '#menu') window.history.pushState(null, null, '#menu');
-
-        const drawer = document.getElementById(idDrawer);
-        document.getElementById('drawer-backdrop').style.display = 'block';
-        activeDrawerId = idDrawer;
-
-        setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
-    }
-
-    function chiudiSenzaSalvare() {
-        if (window.location.hash === '#menu') {
-            window.history.back(); 
-        } else {
-            eseguiChiusuraPura();
-        }
-    }
-
-    window.addEventListener('hashchange', () => {
-        if (window.location.hash !== '#menu') eseguiChiusuraPura();
-    });
-
-    function eseguiChiusuraPura() {
-        document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open'));
-        document.getElementById('drawer-backdrop').style.display = 'none';
-        activeDrawerId = null;
-        aggiornaTagLive();
-    }
-
-    function confermaEChiudiCassetto() {
-        aggiornaTagLive();
-        salvaDati(false, true);
-        mostraToastEdit();
-        chiudiSenzaSalvare();
-    }
-
-    function mostraToastEdit() {
-        const toast = document.getElementById('toast-notifica');
-        if (toast) {
-            toast.classList.add('mostra');
-            setTimeout(() => toast.classList.remove('mostra'), 2000);
-        }
-    }
-
-    function attivaStep(azioneIgnorata, idDrawer) {
-        if (idDrawer) apriDrawer(idDrawer);
-        else chiudiSenzaSalvare();
-    }
-
-    async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
-        const tagDallUrl = params.get("u") || "";
-        const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
-
-        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.trim() : "";
-
-        const bozza = {
-            username_system: nomePerSistema,
-            username_display: tagDallUrl.startsWith('@') ? tagDallUrl : '@' + tagDallUrl,
-            plan: getVal("field-plan") || "BASE",
-            digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black",
-            bio: getVal("field-bio"),
-            email: getVal("field-email"),
-            sito_web: normalizzaUrl(getVal("field-sito_web")),
-            cv: normalizzaUrl(getVal("field-cv")),
-            config_canali: document.getElementById("field-config_canali").value,
-            quick_action_tipo: getVal("field-quick_action_tipo"),
-            quick_action_url: normalizzaUrl(getVal("field-quick_action_url")),
-            modulo_vcf: {
-                nome: getVal("vcf-nome"), telefono1: getVal("vcf-telefono1"), telefono2: getVal("vcf-telefono2"),
-                email1: getVal("vcf-email1"), email2: getVal("vcf-email2"), sito: normalizzaUrl(getVal("vcf-sito")),
-                indirizzo: getVal("vcf-indirizzo"), piva: getVal("vcf-piva")
-            }
-        }; 
-
-        try {
-            const response = await fetch('/api/update-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username_system: nomePerSistema, draft_json: JSON.stringify(bozza) })
-            });
-
-            const result = await response.json();
-            if (response.ok || result.success) {
-                if (!salvataggioSilenzioso) {
-                    if (mostraAnteprima) window.location.replace(`tag.html?u=${nomePerSistema}&mode=draft`);
-                    else window.location.replace(`profile.html?u=${nomePerSistema}`);
-                }
-            }
-        } catch (error) { console.error("Errore comunicazione server:", error); }
-    }
-
-    const quickActionConfigLive = {
-        'appuntamento': 'PRENOTA APPUNTAMENTO',
-        'whatsapp':     'WHATSAPP LIVE',
-        'preventivo':   'RICHIESTA PREVENTIVO',
-        'chiamata':     'CHIAMA ORA',
-        'maps':         'TROVAMI SU MAPS',
-        'demo':         'ASCOLTA DEMO'
-    };
-
-    function aggiornaTagLive() {
-        const container = document.getElementById('profile-content');
-        if (!container) return;
-
-        const elUsername = document.getElementById('tag-username');
-        if (elUsername && nomeUtente) {
-            elUsername.textContent = '@' + nomeUtente.replace('@', '').trim().toUpperCase();
-        }
-
-        const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
-        container.classList.remove('tema-black-dna', 'tema-titanium', 'tema-obsidian-gold', 'tema-rose-pearl');
-        const mappaTemi = { black: 'tema-black-dna', titanium: 'tema-titanium', obsidian_gold: 'tema-obsidian-gold', rose_pearl: 'tema-rose-pearl' };
-        container.classList.add(mappaTemi[stileSelezionato] || 'tema-black-dna');
-
-        const getVal = (id) => document.getElementById(id)?.value?.trim() || '';
-
-        const mappaCaselle = {
-            'casella-bio':      getVal('field-bio'),
-            'casella-sito':     getVal('field-sito_web'),
-            'casella-cv':       getVal('field-cv'),
-            'casella-contatti': getVal('vcf-telefono1') || getVal('vcf-email1') || getVal('field-email'),
-        };
-
-        for (const [id, valore] of Object.entries(mappaCaselle)) {
-            const el = container.querySelector('#' + id);
-            if (el) el.style.display = valore ? 'flex' : 'none';
-        }
-
-        // 🎯 GALLERY NASCOSTA IN STATO ZERO
-        const elGallery = container.querySelector('#casella-gallery');
-        if (elGallery) {
-            elGallery.style.display = 'none'; 
-        }
-
-        const elSocial = container.querySelector('#casella-social');
-        if (elSocial) elSocial.style.display = (canaliCorrenti.length > 0) ? 'flex' : 'none';
-
-        const qaTipo = getVal('field-quick_action_tipo');
-        const qaUrl = getVal('field-quick_action_url');
-        const elQA = container.querySelector('#casella-quick-action');
-        if (elQA) {
-            if (qaTipo && qaUrl) {
-                elQA.style.setProperty('display', 'flex', 'important');
-                const label = elQA.querySelector('#quick-action-label');
-                if (label) label.textContent = quickActionConfigLive[qaTipo] || 'AZIONE RAPIDA';
-            } else {
-                elQA.style.setProperty('display', 'none', 'important');
-            }
-        }
-
-        // 🎯 GESTIONE TASTO CONFIGURA E NASCONDIMENTO STATI VUOTI
-        const haAlmenoUnaFunzione = !!(mappaCaselle['casella-bio'] || mappaCaselle['casella-sito'] || mappaCaselle['casella-cv'] || mappaCaselle['casella-contatti'] || canaliCorrenti.length > 0 || (qaTipo && qaUrl));
-        const elCrea = container.querySelector('#casella-crea');
-        if (elCrea) elCrea.style.display = haAlmenoUnaFunzione ? 'none' : 'flex';
-
-        const btnPrincipale = document.getElementById('btn-azione-principale');
-        if (btnPrincipale) {
-            if (haAlmenoUnaFunzione) {
-                btnPrincipale.style.display = 'block';
-                btnPrincipale.innerText = "AGGIUNGI FUNZIONE";
-                btnPrincipale.setAttribute('onclick', 'apriDrawer("drawer-funzioni")');
-            } else {
-                // Scompare completamente in stato zero
-                btnPrincipale.style.display = 'none';
-            }
-        }
-    } // FINE DELLA FUNZIONE aggiornaTagLive
-
-
-    function apriDrawerQR() {
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-        const urlAnteprima = `${window.location.origin}/tag.html?u=${nomePulito}`;
-
-        // Mappatura colori esatti per iniettarli nel Canvas del QR Code
-        const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black";
-        const themeColors = {
-            black: '#50C878',
-            titanium: '#86868b',
-            obsidian_gold: '#d4af37',
-            rose_pearl: '#e5b4b4'
-        };
-        const qrColor = themeColors[stileSelezionato] || '#000000';
-
-        apriDrawer('drawer-qr-preview');
-
-        setTimeout(() => {
-            const wrapper = document.getElementById('qr-preview-wrapper');
-            if (!wrapper) return;
-            wrapper.innerHTML = '';
-            new QRCode(wrapper, { 
-                text: urlAnteprima, 
-                width: 180, 
-                height: 180, 
-                colorDark: qrColor, // Il QR assume l'accento luxury del tema
-                colorLight: "#ffffff", 
-                correctLevel: QRCode.CorrectLevel.M 
-            });
-        }, 50);
-    }
-
-    function attivaAscoltatoriLive() {
-        const selettori = ['field-bio', 'field-email', 'field-sito_web', 'field-cv', 'field-quick_action_tipo', 'field-quick_action_url', 'vcf-telefono1', 'vcf-nome'];
-        selettori.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('input', aggiornaTagLive);
-                el.addEventListener('change', aggiornaTagLive);
-            }
-        });
-        document.querySelectorAll('input[name="digital_style"]').forEach(radio => {
-            radio.addEventListener('change', aggiornaTagLive);
-        });
-    }
-
-    // Flusso onboarding sequenziale chiamato dal tasto "+ CREA LA TUA TAG"
-    function avviaFlussoEcosistema() {
-        attivaStep('tag', 'drawer-identita');
-        configuraTastoSuccessivo('drawer-identita', () => {
-            attivaStep('tag', 'drawer-piano');
-            configuraTastoSuccessivo('drawer-piano', () => {
-                chiudiSenzaSalvare();
-                setTimeout(() => apriDrawer('drawer-funzioni'), 350);
-            }, "CONFERMA E CREA");
-        }, "AVANTI");
-    }
-
-    function configuraTastoSuccessivo(idCassetto, azioneSuccessiva, testoLabel) {
-        const cassetto = document.getElementById(idCassetto);
-        if (!cassetto || cassetto.querySelector('.btn-nav-onboarding')) return;
-        const btn = document.createElement('button');
-        btn.className = 'btn-nav-onboarding';
-        btn.innerText = testoLabel || "AVANTI";
-        btn.onclick = (e) => { e.preventDefault(); azioneSuccessiva(); };
-        cassetto.appendChild(btn);
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        attivaAscoltatoriLive();
-        setTimeout(aggiornaTagLive, 100);
-
-        const inputCanale = document.getElementById("input-nuovo-canale");
-        if (inputCanale) {
-            inputCanale.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); aggiungiCanale(); } });
-        }
-    });
-
-    window.addEventListener('load', aggiornaTagLive);
-
     </script>
 </body>
 </html>
