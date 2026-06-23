@@ -63,7 +63,19 @@
         #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(229, 180, 180, 0.02); border: 1px solid rgba(229, 180, 180, 0.4); }
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #e5b4b4; }
-        .username-display { font-size: 1.05rem; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; transition: all 0.4s ease;}
+       .username-capsule {
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 8px; padding: 6px 16px; margin: 10px auto;
+            max-width: 90%; /* Impedisce di toccare i bordi dello schermo */
+            transition: all 0.4s ease;
+        }
+        .username-display { 
+            font-size: 0.95rem; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; 
+            transition: all 0.4s ease;
+            word-break: break-all; /* Forza l'a capo se la parola è un unico blocco lunghissimo */
+            text-align: center;
+            margin: 0;
+        }
         
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -89,6 +101,15 @@
             box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
         }
         .drawer-glass.open { bottom: 0; }
+        .drawer-glass {
+            position: fixed; bottom: -100%; left: 0; width: 100%;
+            background: rgba(15, 15, 18, 0.35); /* Molto più trasparente! */
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); /* Sfocatura raddoppiata */
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px 28px 0 0; padding: 24px 24px 30px 24px;
+            z-index: 2000; transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); box-sizing: border-box;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
 
         .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .drawer-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #ffffff; flex: 1; text-align: center; }
@@ -104,13 +125,13 @@
         .style-bar-label input { display: none; }
         .style-bar {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 20px; background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05); border-radius: 14px;
-            color: #a0a0a0; font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
+            padding: 10px 14px; /* Padding ridotto per sfinare la barra */
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04); border-radius: 10px;
+            color: #a0a0a0; font-size: 0.65rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
             transition: all 0.2s ease;
         }
-        .color-dot { width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        
+        .color-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); } /* Pallino più piccolo e raffinato */
         /* Stato Selezionato */
         .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #ffffff; }
 
