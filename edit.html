@@ -84,19 +84,37 @@
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
 
-        .drawer-glass {
-            position: fixed; left: 50%; transform: translateX(-50%); bottom: -100%; 
-            width: calc(100% - 32px); max-width: 380px; 
+                .drawer-glass {
+            position: fixed; 
+            bottom: -100%; 
+            
+            /* CENTRATURA INFALLIBILE SENZA MATEMATICA: 
+               Lo agganciamo a 16px da sinistra e 16px da destra, 
+               lasciando fare il resto al margine automatico */
+            left: 16px; 
+            right: 16px; 
+            margin: 0 auto; 
+            max-width: 380px; 
+            
+            /* Trasparenza fisica al 25% */
             background: rgba(40, 40, 45, 0.25); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px); 
+            
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px; padding: 24px;
-            z-index: 2000; transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); 
-            box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+            border-radius: 28px; 
+            padding: 24px;
+            z-index: 2000; 
+            transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); 
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
         }
 
-        /* Il cassetto galleggia a 16px dal fondo */
-        .drawer-glass.open { bottom: 16px !important; }  
+        /* IL GALLEGGIAMENTO: max() assicura che stia staccato di 20px, 
+           ma se il telefono ha la barra di sistema in basso (safe-area), si alza di più */
+        .drawer-glass.open { 
+            bottom: max(20px, env(safe-area-inset-bottom)) !important; 
+        }
 
         /* HEADER E TITOLO SFINATI */
         .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 4px; }
