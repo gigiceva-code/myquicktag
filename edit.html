@@ -75,10 +75,12 @@
         .testo-crea { font-size: 0.75rem; letter-spacing: 3px; font-weight: 500; color: #ffffff; } /* Il crea resta sempre visibile/bianco */
         #profile-content[data-theme="titanium_test"] .testo-crea { color: #000000; } /* Nel titanium diventa nero */
 
-        /* --- IL CASSETTO FROSTED GLASS --- */
-        .drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
-
+      .drawer-backdrop { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: transparent; /* Overlay invisibile */
+    z-index: 1900; opacity: 0; pointer-events: none; 
+}
+.drawer-backdrop.active { opacity: 1; pointer-events: auto; }
         .drawer-glass {
             position: fixed; bottom: -100%; left: 0; width: 100%;
             background: rgba(20, 20, 22, 0.75); /* Scuro ma trasparente */
@@ -176,7 +178,7 @@
            </label>
        </div>
 
-       <button class="btn-crea" onclick="chiudiDrawer()">CONFERMA E CREA</button>
+       <button class="btn-crea" onclick="chiudiDrawer()">AGGIUNGI</button>
    </div>
 
     <script>
