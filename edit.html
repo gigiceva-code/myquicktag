@@ -145,6 +145,42 @@
             margin: 0 auto; text-align: center;
         }
         .btn-crea:active { transform: scale(0.98); }
+                /* --- NOTIFICA TOAST (Feedback Visivo) --- */
+        #toast-notification {
+            position: fixed;
+            top: -100px; /* Nascosta fuori dallo schermo in alto */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 30, 35, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px; /* Forma a pillola perfetta */
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            z-index: 3000;
+            transition: top 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.5s ease;
+            opacity: 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        #toast-notification.show {
+            top: 50px; /* Scende dolcemente nella safe area in alto */
+            opacity: 1;
+        }
+
+        #toast-notification i {
+            color: var(--accent-smeraldo); /* Spunta verde smeraldo */
+            font-size: 1.1rem;
+        }
+
     </style>
 </head>
 <body>
@@ -211,8 +247,13 @@
            </label>
        </div>
 
-       <button class="btn-crea" onclick="chiudiDrawer()">AGGIUNGI</button>
+             <button class="btn-crea" onclick="salvaEChiudi()">AGGIUNGI</button>
+ 
    </div>
+       <div id="toast-notification">
+       <i class="fas fa-check-circle"></i> <span>Stile aggiornato</span>
+   </div>
+
     <script>
         // Gestione Nome URL
         const params = new URLSearchParams(window.location.search);
@@ -252,6 +293,26 @@
             profileContent.setAttribute('data-theme', temaSelezionato);
             localStorage.setItem('theme_scelto', temaSelezionato);
         }
+                // Funzione scatenata dal tasto AGGIUNGI
+        function salvaEChiudi() {
+            chiudiDrawer(); // 1. Chiude il cassetto
+            mostraToast();  // 2. Mostra la notifica
+            
+            // Qui in futuro metteremo la logica per Airtable (API)
+            console.log("Simulazione salvataggio API in corso..."); 
+        }
+
+        // Animazione del Toast
+        function mostraToast() {
+            const toast = document.getElementById('toast-notification');
+            toast.classList.add('show');
+            
+            // La fa sparire da sola dopo 2.5 secondi
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500); 
+        }
+
 
         // --- TRUCCO SVILUPPATORE (3 tocchi) ---
         let tapCount = 0;
