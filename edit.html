@@ -93,18 +93,19 @@
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
 
-        .drawer-glass {
+                .drawer-glass {
             position: fixed; bottom: -100%; left: 0; width: 100%;
-            /* Tinta scura ma con trasparenza fisica garantita (40% di visibilità) */
-            background: rgba(10, 10, 12, 0.4); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
+            /* Il vero vetro scuro: un velo di bianco leggerissimo al 7% */
+            background: rgba(255, 255, 255, 0.07); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
             border-top: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 28px 28px 0 0; padding: 24px 24px 30px 24px;
             z-index: 2000; transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); box-sizing: border-box;
-            /* Ombra più morbida per non interferire con il rendering del bordo sottostante */
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5); 
+            /* Ombra ridotta al minimo indispensabile per non oscurare i livelli sotto */
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.2); 
         }
+
         .drawer-glass.open { bottom: 0 !important; }  
         
         /* HEADER E TITOLO SFINATI */
