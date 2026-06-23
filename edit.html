@@ -84,26 +84,25 @@
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
 
-                      /* IL CASSETTO BLINDATO (L'ID vince su tutto) */
+                      
+          /* IL CASSETTO BLINDATO (L'ID vince su tutto) */
         #drawer-style.drawer-glass {
             position: fixed !important; 
             bottom: -100% !important; 
             
-            /* Staccato dai lati */
-            left: 16px !important; 
-            right: 16px !important; 
-            width: auto !important; /* Annulla vecchi width:100% */
+            /* Staccato maggiormente dai lati per mostrare la cornice */
+            left: 26px !important; 
+            right: 26px !important; 
+            width: auto !important; 
             margin: 0 auto !important; 
-            max-width: 380px !important; 
+            max-width: 360px !important; /* Più stretto della cornice (max 410px) */
             
-            /* Trasparenza e sfocatura */
             background: rgba(30, 30, 35, 0.3) !important; 
             backdrop-filter: blur(15px) !important; 
             -webkit-backdrop-filter: blur(15px) !important; 
             
-            /* Bordi e angoli */
             border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-radius: 28px !important; /* Arrotonda anche sotto */
+            border-radius: 28px !important; 
             padding: 24px !important;
             z-index: 2000 !important; 
             transition: bottom 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; 
@@ -115,7 +114,7 @@
         #drawer-style.drawer-glass.open { 
             bottom: 24px !important; 
         }
-  
+
 
         /* HEADER E TITOLO SFINATI */
         .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 4px; }
