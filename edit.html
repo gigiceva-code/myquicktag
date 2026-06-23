@@ -38,97 +38,70 @@
             transition: all 0.4s ease; /* Transizione morbida per il cambio tema */
         }
 
-    /* --- I 4 TEMI UFFICIALI (Luminosità Aumentata) --- */
-        
-        /* 1. Black DNA (Verde Smeraldo) */
+        /* --- I 4 TEMI UFFICIALI --- */
         #profile-content[data-theme="black_dna"] { border: 1px solid rgba(80, 200, 120, 0.9); }
         #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(80, 200, 120, 0.02); border: 1px solid rgba(80, 200, 120, 0.4); }
         #profile-content[data-theme="black_dna"] .username-display { color: #ffffff; }
         #profile-content[data-theme="black_dna"] .testo-pass { color: #50C878; }
 
-        /* 2. Titanium (Grigio Argento) */
         #profile-content[data-theme="titanium"] { border: 1px solid rgba(134, 134, 139, 0.9); }
         #profile-content[data-theme="titanium"] .username-capsule { background: rgba(134, 134, 139, 0.02); border: 1px solid rgba(134, 134, 139, 0.4); }
         #profile-content[data-theme="titanium"] .username-display { color: #ffffff; }
         #profile-content[data-theme="titanium"] .testo-pass { color: #86868b; }
 
-        /* 3. Obsidian Gold (Oro) */
         #profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(212, 175, 55, 0.9); }
         #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(212, 175, 55, 0.02); border: 1px solid rgba(212, 175, 55, 0.4); }
         #profile-content[data-theme="obsidian_gold"] .username-display { color: #ffffff; }
         #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #d4af37; }
 
-        /* 4. Satin Rose (Rosa Perla) */
         #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(229, 180, 180, 0.9); }
         #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(229, 180, 180, 0.02); border: 1px solid rgba(229, 180, 180, 0.4); }
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #e5b4b4; }
-       .username-capsule {
+
+        .username-capsule {
             display: inline-flex; align-items: center; justify-content: center;
             border-radius: 8px; padding: 6px 16px; margin: 10px auto;
-            max-width: 90%; /* Impedisce di toccare i bordi dello schermo */
+            max-width: 90%;
             transition: all 0.4s ease;
         }
         .username-display { 
             font-size: 0.95rem; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; 
-            transition: all 0.4s ease;
-            word-break: break-all; /* Forza l'a capo se la parola è un unico blocco lunghissimo */
-            text-align: center;
-            margin: 0;
+            transition: all 0.4s ease; word-break: break-all; text-align: center; margin: 0;
         }
-        
+
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
         .casella:active { opacity: 0.6; }
-        
-        .testo-pass { font-size: 0.75rem; letter-spacing: 3px; font-weight: 300; transition: all 0.4s ease;}
-        .testo-crea { font-size: 0.75rem; letter-spacing: 3px; font-weight: 500; color: #ffffff; } /* Il crea resta sempre visibile/bianco */
-        #profile-content[data-theme="titanium_test"] .testo-crea { color: #000000; } /* Nel titanium diventa nero */
 
-     /* --- IL CASSETTO FROSTED GLASS (Definitivo) --- */
+        .testo-pass { font-size: 0.75rem; letter-spacing: 3px; font-weight: 300; transition: all 0.4s ease;}
+        .testo-crea { font-size: 0.75rem; letter-spacing: 3px; font-weight: 500; color: #ffffff; transition: opacity 0.5s ease-in-out;}
+
+        /* --- IL CASSETTO FROSTED GLASS --- */
         .drawer-backdrop { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: transparent; /* Overlay invisibile */
-            z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            background: transparent; z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
 
-                       .drawer-glass {
-            position: fixed; 
-            /* Lo centriamo matematicamente al centro dello schermo */
-            left: 50%; 
-            transform: translateX(-50%);
-            bottom: -100%; 
-            
-            /* Larghezza controllata: lascia 16px di respiro a destra e sinistra */
-            width: calc(100% - 32px); 
-            max-width: 380px; 
-            
-            /* TRASPARENZA FISICA GARANTITA: 25% di opacità. Si VEDRA' attraverso. */
+        .drawer-glass {
+            position: fixed; left: 50%; transform: translateX(-50%); bottom: -100%; 
+            width: calc(100% - 32px); max-width: 380px; 
             background: rgba(40, 40, 45, 0.25); 
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px); 
-            
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px; /* Arrotondato su tutti i lati */
-            padding: 24px;
-            z-index: 2000; 
-            transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); 
-            box-sizing: border-box;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+            border-radius: 28px; padding: 24px;
+            z-index: 2000; transition: bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1); 
+            box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
         }
-        
-        /* Forza il posizionamento a 16px dal fondo fisico del telefono */
-        .drawer-glass.open { bottom: 16px !important; }
-  
 
+        /* Il cassetto galleggia a 16px dal fondo */
+        .drawer-glass.open { bottom: 16px !important; }  
 
-        .drawer-glass.open { bottom: 0 !important; }  
-        
         /* HEADER E TITOLO SFINATI */
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 4px; }
         .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; flex: 1; text-align: center; }
-        
+
         .drawer-close { color: rgba(255, 255, 255, 0.6); font-size: 1rem; cursor: pointer; padding: 5px; width: 30px; text-align: center; }
         .drawer-close:active { color: #ffffff; }
 
@@ -138,8 +111,7 @@
         .style-bar-label input { display: none; }
         .style-bar {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 14px;
-            background: rgba(255,255,255,0.02);
+            padding: 10px 14px; background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.04); border-radius: 10px;
             color: #a0a0a0; font-size: 0.65rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
             transition: all 0.2s ease;
@@ -147,37 +119,23 @@
         .color-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #ffffff; }
 
-        /* BOTTONE SFINATO */
-        
-                       /* BOTTONE RIPRISTINATO ALLA SUA BELLEZZA ORIGINALE */
+        /* BOTTONE RIPRISTINATO ALLA SUA BELLEZZA ORIGINALE */
         .btn-crea {
-            display: block; /* Fondamentale per il centramento */
-            width: 100%; 
-            padding: 16px; 
-            background: #ffffff; 
-            color: #000000;
-            border: none; 
-            border-radius: 14px; 
-            font-weight: 600; 
-            font-size: 0.85rem;
-            letter-spacing: 2px; 
-            cursor: pointer; 
-            transition: transform 0.2s;
-            margin: 0 auto; /* Centratura forzata */
-            text-align: center;
+            display: block; width: 100%; padding: 16px; background: #ffffff; color: #000000;
+            border: none; border-radius: 14px; font-weight: 600; font-size: 0.85rem;
+            letter-spacing: 2px; cursor: pointer; transition: transform 0.2s;
+            margin: 0 auto; text-align: center;
         }
         .btn-crea:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
-   <!-- LA TAG SULLO SFONDO -->
    <div class="configurator-wrapper">
-       <div id="profile-content" data-theme="black_dna"> <!-- Inizia col Black DNA -->
-            
+       <div id="profile-content" data-theme="black_dna"> 
             <div class="header-monolith">
                 <div class="username-capsule">
-                    <h1 class="username-display" id="tag-username">@...</h1>
+                    <h1 class="username-display" id="tag-username">@TUONOME.IT</h1>
                 </div>
             </div>
 
@@ -193,14 +151,13 @@
        </div>
    </div>
 
-   <!-- IL CASSETTO FROSTED GLASS -->
    <div class="drawer-backdrop" id="backdrop" onclick="chiudiDrawer()"></div>
-   
+
    <div class="drawer-glass" id="drawer-style">
        <div class="drawer-header">
            <i class="fas fa-chevron-down drawer-close" onclick="chiudiDrawer()"></i>
            <div class="drawer-title">DIGITAL STYLE</div>
-           <div style="width: 30px;"></div> <!-- Bilanciamento visivo per centrare il titolo -->
+           <div style="width: 30px;"></div> 
        </div>
        <div class="style-list">
            <label class="style-bar-label">
@@ -235,7 +192,6 @@
                </div>
            </label>
        </div>
-      
 
        <button class="btn-crea" onclick="chiudiDrawer()">AGGIUNGI</button>
    </div>
@@ -256,41 +212,34 @@
 
         function apriDrawerStyle() {
             backdrop.classList.add('active');
-            // Ritardo microscopico per fluidità animazione
             setTimeout(() => { drawer.classList.add('open'); }, 10);
         }
 
         function chiudiDrawer() {
             drawer.classList.remove('open');
-            setTimeout(() => { backdrop.classList.remove('active'); }, 300); // Attende la discesa
+            setTimeout(() => { backdrop.classList.remove('active'); }, 300); 
         }
 
         function applicaTemaLive() {
             const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
             profileContent.setAttribute('data-theme', temaSelezionato);
         }
-            <script>
-        // ... (il tuo JS esistente per i temi e il drawer) ...
 
-        // TRUCCO SVILUPPATORE: Tocco ripetuto sul nome per forzare il ricaricamento totale (ignora la cache)
+        // TRUCCO SVILUPPATORE: Tocco ripetuto sul nome per forzare il ricaricamento totale
         let tapCount = 0;
         const usernameDisplay = document.getElementById('tag-username');
-        
+
         if(usernameDisplay) {
             usernameDisplay.addEventListener('click', function() {
                 tapCount++;
                 if (tapCount >= 3) {
-                    // 3 tocchi veloci: ricarica la pagina forzando lo scaricamento di cache (aggiunge timestamp)
                     const url = new URL(window.location.href);
-                    url.searchParams.set('ts', new Date().getTime()); // Parametro inutile per ingannare la cache
+                    url.searchParams.set('ts', new Date().getTime());
                     window.location.href = url.toString();
                 }
-                // Resetta il contatore dopo 1 secondo se non hai cliccato 3 volte
                 setTimeout(() => { tapCount = 0; }, 1000);
             });
         }
-    </script>
-
     </script>
 </body>
 </html>
