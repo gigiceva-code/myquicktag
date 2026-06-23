@@ -269,6 +269,28 @@
             const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
             profileContent.setAttribute('data-theme', temaSelezionato);
         }
+            <script>
+        // ... (il tuo JS esistente per i temi e il drawer) ...
+
+        // TRUCCO SVILUPPATORE: Tocco ripetuto sul nome per forzare il ricaricamento totale (ignora la cache)
+        let tapCount = 0;
+        const usernameDisplay = document.getElementById('tag-username');
+        
+        if(usernameDisplay) {
+            usernameDisplay.addEventListener('click', function() {
+                tapCount++;
+                if (tapCount >= 3) {
+                    // 3 tocchi veloci: ricarica la pagina forzando lo scaricamento di cache (aggiunge timestamp)
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('ts', new Date().getTime()); // Parametro inutile per ingannare la cache
+                    window.location.href = url.toString();
+                }
+                // Resetta il contatore dopo 1 secondo se non hai cliccato 3 volte
+                setTimeout(() => { tapCount = 0; }, 1000);
+            });
+        }
+    </script>
+
     </script>
 </body>
 </html>
