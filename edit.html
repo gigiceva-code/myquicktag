@@ -38,39 +38,38 @@
             transition: all 0.4s ease; /* Transizione morbida per il cambio tema */
         }
 
-        /* --- I 5 TEMI UFFICIALI --- */
+      /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
         
-        /* 1. EMERALD (Il tuo vecchio verde) */
-        #profile-content[data-theme="emerald"] { border: 1px solid rgba(80, 200, 120, 0.9); }
-        #profile-content[data-theme="emerald"] .username-capsule { background: rgba(80, 200, 120, 0.02); border: 1px solid rgba(80, 200, 120, 0.4); }
+        /* 1. EMERALD */
+        #profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8); }
+        #profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.02); border: 1px solid rgba(0, 230, 128, 0.3); }
         #profile-content[data-theme="emerald"] .username-display { color: #ffffff; }
-        #profile-content[data-theme="emerald"] .testo-pass { color: #50C878; }
+        #profile-content[data-theme="emerald"] .testo-pass { color: #00E680; text-shadow: 0 0 10px rgba(0, 230, 128, 0.2); }
 
-        /* 2. BLACK DNA (Il VERO Total Black: zero bordi della card) */
-        #profile-content[data-theme="black_dna"] { border: 1px solid transparent; } 
+        /* 2. BLACK DNA (Stealth Puro) */
+        #profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); } 
         #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); }
         #profile-content[data-theme="black_dna"] .username-display { color: #ffffff; }
-        #profile-content[data-theme="black_dna"] .testo-pass { color: #ffffff; }
+        #profile-content[data-theme="black_dna"] .testo-pass { color: #ffffff; opacity: 0.9; }
 
         /* 3. TITANIUM */
-        #profile-content[data-theme="titanium"] { border: 1px solid rgba(134, 134, 139, 0.9); }
-        #profile-content[data-theme="titanium"] .username-capsule { background: rgba(134, 134, 139, 0.02); border: 1px solid rgba(134, 134, 139, 0.4); }
+        #profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8); }
+        #profile-content[data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.02); border: 1px solid rgba(176, 176, 181, 0.3); }
         #profile-content[data-theme="titanium"] .username-display { color: #ffffff; }
-        #profile-content[data-theme="titanium"] .testo-pass { color: #86868b; }
+        #profile-content[data-theme="titanium"] .testo-pass { color: #b0b0b5; }
 
         /* 4. OBSIDIAN GOLD */
-        #profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(212, 175, 55, 0.9); }
-        #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(212, 175, 55, 0.02); border: 1px solid rgba(212, 175, 55, 0.4); }
+        #profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8); }
+        #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.02); border: 1px solid rgba(229, 193, 88, 0.3); }
         #profile-content[data-theme="obsidian_gold"] .username-display { color: #ffffff; }
-        #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #d4af37; }
+        #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #e5c158; text-shadow: 0 0 10px rgba(229, 193, 88, 0.2); }
 
         /* 5. SATIN ROSE */
-        #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(229, 180, 180, 0.9); }
-        #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(229, 180, 180, 0.02); border: 1px solid rgba(229, 180, 180, 0.4); }
+        #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8); }
+        #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.02); border: 1px solid rgba(200, 150, 142, 0.3); }
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
-        #profile-content[data-theme="satin_rose"] .testo-pass { color: #e5b4b4; }
-
-
+        #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
+        
         .username-capsule {
             display: inline-flex; align-items: center; justify-content: center;
             border-radius: 8px; padding: 6px 16px; margin: 10px auto;
@@ -228,23 +227,23 @@
             transition: all 0.5s ease;
         }
         .qr-svg { width: 100%; height: 100%; transition: all 0.5s ease; }
+        
+        /* --- SINCRONIZZAZIONE COLORI QR (EFFETTO ILLUMINATO) --- */
+        body[data-qr-theme="emerald"] .qr-svg-wrapper { border: 1px solid rgba(0, 230, 128, 0.25); box-shadow: 0 0 35px rgba(0, 230, 128, 0.15); }
+        body[data-qr-theme="emerald"] .qr-svg { fill: #00E680; filter: drop-shadow(0 0 8px rgba(0, 230, 128, 0.4)); }
 
-        /* --- SINCRONIZZAZIONE COLORI QR CON I TEMI --- */
-        body[data-qr-theme="emerald"] .qr-svg-wrapper { border: 1px solid rgba(80, 200, 120, 0.3); box-shadow: 0 0 40px rgba(80, 200, 120, 0.15); }
-        body[data-qr-theme="emerald"] .qr-svg { fill: #50C878; filter: drop-shadow(0 0 10px rgba(80, 200, 120, 0.5)); }
+        body[data-qr-theme="black_dna"] .qr-svg-wrapper { border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 35px rgba(255, 255, 255, 0.03); }
+        body[data-qr-theme="black_dna"] .qr-svg { fill: #ffffff; filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25)); }
 
-        body[data-qr-theme="black_dna"] .qr-svg-wrapper { border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 0 40px rgba(255, 255, 255, 0.05); }
-        body[data-qr-theme="black_dna"] .qr-svg { fill: #ffffff; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
+        body[data-qr-theme="titanium"] .qr-svg-wrapper { border: 1px solid rgba(176, 176, 181, 0.2); box-shadow: 0 0 35px rgba(176, 176, 181, 0.1); }
+        body[data-qr-theme="titanium"] .qr-svg { fill: #b0b0b5; }
 
-        body[data-qr-theme="titanium"] .qr-svg-wrapper { border: 1px solid rgba(134, 134, 139, 0.3); box-shadow: 0 0 40px rgba(134, 134, 139, 0.15); }
-        body[data-qr-theme="titanium"] .qr-svg { fill: #86868b; }
+        body[data-qr-theme="obsidian_gold"] .qr-svg-wrapper { border: 1px solid rgba(229, 193, 88, 0.25); box-shadow: 0 0 35px rgba(229, 193, 88, 0.15); }
+        body[data-qr-theme="obsidian_gold"] .qr-svg { fill: #e5c158; filter: drop-shadow(0 0 8px rgba(229, 193, 88, 0.35)); }
 
-        body[data-qr-theme="obsidian_gold"] .qr-svg-wrapper { border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 0 40px rgba(212, 175, 55, 0.15); }
-        body[data-qr-theme="obsidian_gold"] .qr-svg { fill: #d4af37; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4)); }
-
-        body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(229, 180, 180, 0.3); box-shadow: 0 0 40px rgba(229, 180, 180, 0.15); }
-        body[data-qr-theme="satin_rose"] .qr-svg { fill: #e5b4b4; filter: drop-shadow(0 0 10px rgba(229, 180, 180, 0.4)); }
-
+        body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(200, 150, 142, 0.25); box-shadow: 0 0 35px rgba(200, 150, 142, 0.15); }
+        body[data-qr-theme="satin_rose"] .qr-svg { fill: #c8968e; filter: drop-shadow(0 0 8px rgba(200, 150, 142, 0.35)); }
+       
                 /* --- DOCK BAR INFERIORE --- */
         .luxury-dock {
             position: fixed;
@@ -341,7 +340,7 @@
                <input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()">
                <div class="style-bar">
                    <span>Black DNA</span>
-                   <div class="color-dot" style="background: #000000; border: 1px solid rgba(255,255,255,0.2);"></div>
+                   <div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div>
                </div>
            </label>
 
@@ -349,7 +348,7 @@
                <input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()">
                <div class="style-bar">
                    <span>Emerald</span>
-                   <div class="color-dot" style="background: #50C878;"></div>
+                   <div class="color-dot" style="background: #00E680;"></div>
                </div>
            </label>
 
@@ -357,7 +356,7 @@
                <input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()">
                <div class="style-bar">
                    <span>Titanium</span>
-                   <div class="color-dot" style="background: #86868b;"></div>
+                   <div class="color-dot" style="background: #b0b0b5;"></div>
                </div>
            </label>
 
@@ -365,7 +364,7 @@
                <input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()">
                <div class="style-bar">
                    <span>Obsidian Gold</span>
-                   <div class="color-dot" style="background: #d4af37;"></div>
+                   <div class="color-dot" style="background: #e5c158;"></div>
                </div>
            </label>
 
@@ -373,11 +372,10 @@
                <input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()">
                <div class="style-bar">
                    <span>Satin Rose</span>
-                   <div class="color-dot" style="background: #e5b4b4;"></div>
+                   <div class="color-dot" style="background: #c8968e;"></div>
                </div>
            </label>
        </div>
-
        <button class="btn-crea" onclick="salvaTemaEApriPiani()" style="margin-top: 10px;">CONFERMA STILE</button>
    </div>
    <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
