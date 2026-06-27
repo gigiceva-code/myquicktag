@@ -71,26 +71,28 @@
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
     .username-capsule {
-            display: inline-flex; 
+            display: flex;             /* Usiamo flex normale, non inline */
             align-items: center; 
-            justify-content: center;
+            justify-content: center;   /* Centratura orizzontale assoluta */
             border-radius: 12px; 
-            padding: 8px 24px; /* Aumentiamo il padding laterale per dare aria */
-            margin: 10px auto;
-            min-width: 120px; /* Larghezza minima garantita */
-            max-width: 90%;   /* Non sfora mai i bordi */
-            height: 45px;      /* Altezza fissa per dare solidità al badge */
+            padding: 10px 32px;        /* Padding uniforme e generoso */
+            margin: 10px auto;         /* Centratura del badge nella pagina */
+            width: fit-content;        /* La larghezza si adatta al testo */
+            max-width: 90%; 
+            min-height: 48px;
+            box-sizing: border-box;
+            text-align: center;        /* Forza il centro del testo */
         }
 
         .username-display { 
-            /* La logica dei domini: il font si adatta allo spazio */
-            font-size: clamp(0.5rem, 4vw, 0.95rem); 
+            font-size: clamp(0.6rem, 3.5vw, 0.95rem); 
             font-weight: 400; 
-            letter-spacing: 1px; 
+            letter-spacing: 1.5px; 
             text-transform: uppercase; 
-            white-space: nowrap; /* FORZIAMO LA RIGA SINGOLA: Non andrà mai a capo */
-            text-align: center;
+            white-space: nowrap; 
             margin: 0;
+            line-height: 1;            /* Forza l'allineamento verticale perfetto */
+            display: block;            /* Assicura che il testo occupi lo spazio correttamente */
         }
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
