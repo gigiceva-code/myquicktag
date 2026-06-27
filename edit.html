@@ -222,31 +222,29 @@
    <div class="drawer-backdrop" id="backdrop" onclick="chiudiDrawer()"></div>
 
    <div class="drawer-glass" id="drawer-style">
-       <div class="drawer-header">
-           <i class="fas fa-chevron-down drawer-close" onclick="chiudiDrawer()"></i>
-           <div class="drawer-title">DIGITAL STYLE</div>
-           <div style="width: 30px;"></div> 
+       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+           <i class="fas fa-chevron-down drawer-close" onclick="chiudiDrawer()" style="position: absolute; left: 0; top: 0;"></i>
+           <div class="drawer-title" style="font-size: 0.75rem; letter-spacing: 3px;">DIGITAL STYLE</div>
+           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Definisci il tuo stile</div>
        </div>
 
-           <!-- 2. BLACK DNA (Il pallino ha un bordo debolissimo per vederlo sul nero) -->
+       <div class="style-list">
            <label class="style-bar-label">
-               <input type="radio" name="digital_style" value="black_dna" onchange="applicaTemaLive()">
+               <input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()">
                <div class="style-bar">
                    <span>Black DNA</span>
                    <div class="color-dot" style="background: #000000; border: 1px solid rgba(255,255,255,0.2);"></div>
                </div>
            </label>
-       <div class="style-list">
-           <!-- 1. EMERALD -->
+
            <label class="style-bar-label">
-               <input type="radio" name="digital_style" value="emerald" checked onchange="applicaTemaLive()">
+               <input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()">
                <div class="style-bar">
                    <span>Emerald</span>
                    <div class="color-dot" style="background: #50C878;"></div>
                </div>
            </label>
 
-           <!-- 3. TITANIUM -->
            <label class="style-bar-label">
                <input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()">
                <div class="style-bar">
@@ -255,7 +253,6 @@
                </div>
            </label>
 
-           <!-- 4. OBSIDIAN GOLD -->
            <label class="style-bar-label">
                <input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()">
                <div class="style-bar">
@@ -264,7 +261,6 @@
                </div>
            </label>
 
-           <!-- 5. SATIN ROSE -->
            <label class="style-bar-label">
                <input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()">
                <div class="style-bar">
@@ -273,18 +269,8 @@
                </div>
            </label>
        </div>
-       
-        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
-           <i class="fas fa-chevron-down drawer-close" onclick="chiudiDrawer()" style="position: absolute; left: 0; top: 0;"></i>
-           <div class="drawer-title" style="font-size: 0.75rem; letter-spacing: 3px;">DIGITAL STYLE</div>
-           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Definisci la tua identità visiva</div>
-       </div>
 
        <button class="btn-crea" onclick="salvaTemaEApriPiani()" style="margin-top: 10px;">AVANTI</button>
-
-   </div>
-       <div id="toast-notification">
-       <i class="fas fa-check-circle"></i> <span>Stile aggiornato</span>
    </div>
 
     <script>
