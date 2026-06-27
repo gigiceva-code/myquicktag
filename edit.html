@@ -71,30 +71,31 @@
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
    .username-capsule {
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            border-radius: 12px; 
-            /* Padding ridotto lateralmente per guadagnare spazio prezioso */
-            padding: 10px 20px; 
-            margin: 10px auto;
-            width: fit-content; 
-            max-width: 95%; 
-            height: 48px;
-            box-sizing: border-box;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    padding: 12px 32px; /* Aumentato per evitare il contatto coi bordi */
+    margin: 10px auto;
+    width: fit-content;
+    max-width: 95%;
+    min-height: 52px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-        .username-display { 
-            font-size: 0.9rem; /* Dimensione fissa di lusso */
-            font-weight: 500;
-            letter-spacing: 1.5px; 
-            text-transform: uppercase; 
-            white-space: nowrap; 
-            margin: 0;
-            /* Forza il centro */
-            text-align: center;
-        }
+.username-display {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin: 0;
+    line-height: 1;
+    /* Forza la @ a essere esattamente alta come le lettere */
+    display: flex;
+    align-items: baseline; 
+}
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
         .casella:active { opacity: 0.6; }
@@ -425,22 +426,21 @@
    </div>
 
     <script>
-    // Gestione Nome URL con limite standard
-const params = new URLSearchParams(window.location.search);
-const nomeUtente = params.get("u");
-
-if (nomeUtente) {
-    let nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-    
-    // LIMITE STANDARD DOMINIO: 28 caratteri
-    const LIMITE_MAX = 28;
-    if (nomePulito.length > LIMITE_MAX) {
-        nomePulito = nomePulito.substring(0, LIMITE_MAX);
-    }
-    
-    const tagElement = document.getElementById("tag-username");
-    tagElement.innerText = "@" + nomePulito;
-}
+    // Gestione Nome URL
+        const params = new URLSearchParams(window.location.search);
+        const nomeUtente = params.get("u");
+        
+        if (nomeUtente) { 
+            const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
+            const tagElement = document.getElementById("tag-username");
+            
+            // LIMITE STANDARD: 28 caratteri
+            const LIMITE_MAX = 28;
+            let nomeFinale = nomePulito.length > LIMITE_MAX ? nomePulito.substring(0, LIMITE_MAX) : nomePulito;
+            
+            // Inserimento separato per gestire la @ e il nome con precisione chirurgica
+            tagElement.innerHTML = `<span style="font-weight: 400; margin-right: 6px;">@</span>${nomeFinale}`;
+        }
         // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
         const backdrop = document.getElementById('backdrop');
