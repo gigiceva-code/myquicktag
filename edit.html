@@ -71,30 +71,25 @@
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
        .username-capsule {
-            display: inline-flex; 
+            display: flex; 
             align-items: center; 
             justify-content: center;
-            border-radius: 12px; /* Leggermente più curvo per accogliere più righe */
-            padding: 8px 18px; 
+            border-radius: 8px; 
+            padding: 8px 16px; 
             margin: 10px auto;
-            max-width: 90%;
-            height: auto; /* Permette alla capsula di crescere in verticale */
-            transition: all 0.4s ease;
+            width: 85%; /* Lascia un margine elegante dai bordi dello schermo */
+            max-width: 320px;
+            overflow: hidden; /* Fondamentale per far funzionare lo script */
         }
 
         .username-display { 
-            /* Il clamp riduce fluidamente il font sugli schermi piccoli prima di andare a capo */
-            font-size: clamp(0.7rem, 4.5vw, 0.95rem); 
+            font-size: 0.95rem; 
             font-weight: 400; 
-            letter-spacing: 2px; 
+            letter-spacing: 1.5px; 
             text-transform: uppercase; 
-            text-align: center; 
+            white-space: nowrap; /* REGOLA D'ORO: Vietato andare a capo */
             margin: 0;
-            
-            /* Gestione dell'A-capo di emergenza */
-            white-space: normal; 
-            overflow-wrap: anywhere; /* Spezza la parola solo se strettamente necessario */
-            line-height: 1.3; /* Avvicina le righe per mantenere l'effetto blocco unico */
+            transform-origin: center; /* Permette il restringimento centrato */
         }
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -396,31 +391,21 @@
    <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
        <div class="qr-card">
            <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
-           <div class="qr-title-modal">IL TUO PASS</div>
+           <div class="qr-title-modal">ANTEPRIMA STILE</div>
            
            <div class="qr-svg-wrapper">
                <svg viewBox="0 0 100 100" class="qr-svg" xmlns="http://www.w3.org/2000/svg">
                    <path d="M10,10 h22 v22 h-22 z M14,14 h14 v14 h-14 z M18,18 h6 v6 h-6 z" />
                    <path d="M68,10 h22 v22 h-22 z M72,14 h14 v14 h-14 z M76,18 h6 v6 h-6 z" />
                    <path d="M10,68 h22 v22 h-22 z M14,72 h14 v14 h-14 z M18,76 h6 v6 h-6 z" />
-                   <rect x="40" y="10" width="8" height="8" />
-                   <rect x="52" y="10" width="8" height="8" />
-                   <rect x="40" y="22" width="20" height="8" />
-                   <rect x="10" y="40" width="8" height="20" />
-                   <rect x="22" y="40" width="26" height="8" />
-                   <rect x="52" y="40" width="8" height="20" />
-                   <rect x="64" y="40" width="26" height="8" />
-                   <rect x="76" y="52" width="14" height="8" />
-                   <rect x="40" y="52" width="8" height="8" />
-                   <rect x="40" y="64" width="20" height="8" />
-                   <rect x="64" y="64" width="8" height="26" />
-                   <rect x="76" y="76" width="14" height="14" />
-                   <rect x="40" y="82" width="8" height="8" />
-                   <rect x="52" y="76" width="8" height="14" />
+                   
+                   <path d="M38,10 h6 v6 h-6 z M48,10 h16 v6 h-16 z M38,20 h26 v6 h-26 z M10,38 h6 v16 h-6 z M20,38 h22 v6 h-22 z M46,38 h6 v16 h-6 z M56,38 h26 v6 h-26 z M74,48 h16 v6 h-16 z M38,48 h6 v6 h-6 z M38,58 h22 v6 h-22 z M58,58 h6 v24 h-6 z M74,68 h16 v16 h-16 z M38,78 h6 v6 h-6 z M48,68 h6 v16 h-6 z M28,10 h6 v6 h-6 z M28,28 h6 v6 h-6 z M10,28 h6 v6 h-6 z M66,10 h6 v6 h-6 z M82,28 h6 v6 h-6 z M28,66 h6 v6 h-6 z M10,66 h6 v6 h-6 z M68,68 h6 v6 h-6 z M14,48 h4 v4 h-4 z M24,54 h4 v4 h-4 z M24,14 h4 v4 h-4 z M54,24 h4 v4 h-4 z M84,48 h4 v4 h-4 z" />
+                   
+                   <path d="M42,46 v-4 a8,8 0 0,1 16,0 v4 h3 v18 h-22 v-18 z M45,46 h10 v-4 a5,5 0 0,0 -10,0 z M48.5,53.5 a1.5,1.5 0 0,0 3,0 v-2 a1.5,1.5 0 0,0 -3,0 z" />
                </svg>
            </div>
            
-           <div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-top: 24px; text-transform: uppercase;">Scansiona per connetterti</div>
+           <div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-top: 24px; text-transform: uppercase;">QR Demo • Attivazione post-checkout</div>
        </div>
    </div>
     
@@ -436,12 +421,29 @@
    </div>
 
     <script>
-        // Gestione Nome URL
+       // Gestione Nome URL
         const params = new URLSearchParams(window.location.search);
         const nomeUtente = params.get("u");
         if (nomeUtente) { 
             const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-            document.getElementById("tag-username").innerText = "@" + nomePulito;
+            const tagElement = document.getElementById("tag-username");
+            tagElement.innerText = "@" + nomePulito;
+
+            // Motore intelligente: Auto-Scale per nomi lunghi
+            setTimeout(() => {
+                const capsula = document.querySelector('.username-capsule');
+                if (capsula && tagElement) {
+                    // Calcola lo spazio disponibile sottraendo il padding
+                    const larghezzaMassima = capsula.clientWidth - 32; 
+                    const larghezzaTesto = tagElement.scrollWidth;
+                    
+                    // Se il testo sborda, lo rimpicciolisce in proporzione al millimetro
+                    if (larghezzaTesto > larghezzaMassima) {
+                        const scala = larghezzaMassima / larghezzaTesto;
+                        tagElement.style.transform = `scale(${scala})`;
+                    }
+                }
+            }, 50); 
         }
 
         // Variabili Cassetto e Contenitore
