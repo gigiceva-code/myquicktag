@@ -313,25 +313,33 @@
             localStorage.setItem('theme_scelto', temaSelezionato);
         }
         
-                function salvaTemaEApriPiani() {
+                 function salvaTemaEApriPiani() {
             // 1. Chiude il cassetto dello stile
             drawer.classList.remove('open');
             
-            // 2. DISINTEGRA IL TUO VERO TASTO ORIGINALE
+            // 2. DISINTEGRA IL TASTO ORIGINALE
             const tastoCrea = document.getElementById('casella-crea');
             if(tastoCrea) {
                 tastoCrea.style.display = 'none'; 
             }
             
-            // 3. Rimuove il backdrop per fluidità
+            // 3. Rimuove il backdrop e APRE IL CASSETTO PIANI
             setTimeout(() => { 
                 backdrop.classList.remove('active'); 
                 
-                // Qui andremo ad aprire il cassetto PIANI
-                console.log("Cassetto Temi chiuso. Tasto originale eliminato.");
+                // Funzione che crea la catena di montaggio: apre il secondo cassetto
+                apriDrawerPiani();
                 
             }, 300); 
         }
+
+        // Funzione dedicata all'apertura del cassetto Piani
+        function apriDrawerPiani() {
+            const drawerPiani = document.getElementById('drawer-plans');
+            backdrop.classList.add('active');
+            setTimeout(() => { drawerPiani.classList.add('open'); }, 10);
+        }
+       
 
 
 
