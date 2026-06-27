@@ -70,26 +70,31 @@
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
-       .username-capsule {
-            display: flex; 
+      .username-capsule {
+            display: inline-flex; 
             align-items: center; 
             justify-content: center;
-            border-radius: 8px; 
-            padding: 8px 16px; 
+            border-radius: 12px; 
+            padding: 8px 18px; 
             margin: 10px auto;
-            width: 85%; /* Lascia un margine elegante dai bordi dello schermo */
-            max-width: 320px;
-            overflow: hidden; /* Fondamentale per far funzionare lo script */
+            max-width: 90%; /* Occupa quasi tutta la larghezza */
+            width: auto;
+            height: auto;
         }
 
         .username-display { 
-            font-size: 0.95rem; 
+            /* Rimpicciolisce il font fluidamente fino a un limite minimo leggibile */
+            font-size: clamp(0.75rem, 4vw, 0.95rem); 
             font-weight: 400; 
             letter-spacing: 1.5px; 
             text-transform: uppercase; 
-            white-space: nowrap; /* REGOLA D'ORO: Vietato andare a capo */
+            text-align: center; 
             margin: 0;
-            transform-origin: center; /* Permette il restringimento centrato */
+            
+            /* Permette di andare a capo solo se necessario */
+            white-space: normal; 
+            word-wrap: break-word; /* Spezza la parola in modo più armonioso */
+            line-height: 1.3; 
         }
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
