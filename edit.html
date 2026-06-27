@@ -70,17 +70,25 @@
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
-  .username-capsule {
+ /* Allineamento garantito */
+.header-monolith {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.username-capsule {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
     padding: 14px 28px;
     margin: 10px auto;
     width: fit-content;
     max-width: 92%;
+    min-height: 48px;
     box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .username-display {
@@ -90,9 +98,10 @@
     text-transform: uppercase;
     white-space: nowrap;
     margin: 0;
-    text-align: center;
     display: flex;
-    align-items: center; /* Allinea la @ col testo */
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -424,16 +433,21 @@
    </div>
 
     <script>
-   const tagElement = document.getElementById("tag-username");
-const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-
-// Limitiamo a 28 caratteri
-const LIMITE_MAX = 28;
-let nomeFinale = nomePulito.length > LIMITE_MAX ? nomePulito.substring(0, LIMITE_MAX) : nomePulito;
-
-// Inseriamo tutto come un unico blocco di testo, il CSS farà il resto
-tagElement.innerText = "@" + nomeFinale;
-      }      
+   // Gestione Nome URL
+        const params = new URLSearchParams(window.location.search);
+        const nomeUtente = params.get("u");
+        
+        if (nomeUtente) { 
+            const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
+            const tagElement = document.getElementById("tag-username");
+            
+            // LIMITE STANDARD 28 caratteri
+            const LIMITE_MAX = 28;
+            let nomeFinale = nomePulito.length > LIMITE_MAX ? nomePulito.substring(0, LIMITE_MAX) : nomePulito;
+            
+            // Inserimento pulito: il CSS gestirà l'allineamento
+            tagElement.innerText = "@" + nomeFinale;
+        }
         // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
         const backdrop = document.getElementById('backdrop');
