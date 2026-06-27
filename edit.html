@@ -314,19 +314,27 @@
         }
         
         // Funzione scatenata dal tasto AVANTI
-        function salvaTemaEApriPiani() {
+                function salvaTemaEApriPiani() {
             // 1. Chiude il cassetto dello stile
             drawer.classList.remove('open');
             
-            // 2. Rimuove temporaneamente il backdrop per fluidità
+            // 2. DISINTEGRA PER SEMPRE il tasto "+ CREA LA TUA TAG"
+            const btnMaster = document.getElementById('btn-master-action');
+            if(btnMaster) {
+                btnMaster.style.display = 'none'; 
+            }
+            
+            // 3. Rimuove il backdrop per fluidità
             setTimeout(() => { 
                 backdrop.classList.remove('active'); 
+                document.body.classList.remove('drawer-open'); 
                 
-                // Qui in futuro metteremo la logica per Airtable (API)
-                console.log("Simulazione salvataggio API in corso... Preparazione apertura cassetto Piani...");
+                // Qui andremo ad aprire il cassetto PIANI
+                console.log("Cassetto Temi chiuso. Tasto Crea eliminato. Preparazione Piani...");
                 
             }, 300); 
         }
+
 
         // Animazione del Toast (nel caso serva usarla per altre notifiche)
         function mostraToast() {
