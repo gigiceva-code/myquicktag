@@ -70,16 +70,16 @@
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
-     .username-capsule {
-            display: flex; 
+    .username-capsule {
+            display: inline-flex; 
             align-items: center; 
             justify-content: center;
             border-radius: 12px; 
-            padding: 8px 16px; 
+            padding: 8px 24px; /* Aumentiamo il padding laterale per dare aria */
             margin: 10px auto;
-            width: fit-content; 
-            max-width: 90%; 
-            height: auto;
+            min-width: 120px; /* Larghezza minima garantita */
+            max-width: 90%;   /* Non sfora mai i bordi */
+            height: 45px;      /* Altezza fissa per dare solidità al badge */
         }
 
         .username-display { 
