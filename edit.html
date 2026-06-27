@@ -326,7 +326,9 @@
             profileContent.setAttribute('data-theme', temaSelezionato);
             localStorage.setItem('theme_scelto', temaSelezionato);
         }
-                        function salvaTemaEApriPiani() {
+        
+        // Funzione scatenata dal tasto AVANTI
+        function salvaTemaEApriPiani() {
             // 1. Chiude il cassetto dello stile
             drawer.classList.remove('open');
             
@@ -334,27 +336,22 @@
             setTimeout(() => { 
                 backdrop.classList.remove('active'); 
                 
-                // 3. Qui andrà l'apertura del cassetto PIANI
-                console.log("Cassetto Temi chiuso. Preparazione apertura cassetto Piani...");
+                // Qui in futuro metteremo la logica per Airtable (API)
+                console.log("Simulazione salvataggio API in corso... Preparazione apertura cassetto Piani...");
                 
             }, 300); 
         }
 
-            // Qui in futuro metteremo la logica per Airtable (API)
-            console.log("Simulazione salvataggio API in corso..."); 
-        }
-
-        // Animazione del Toast
+        // Animazione del Toast (nel caso serva usarla per altre notifiche)
         function mostraToast() {
             const toast = document.getElementById('toast-notification');
-            toast.classList.add('show');
-            
-            // La fa sparire da sola dopo 2.5 secondi
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2500); 
+            if(toast) {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2500); 
+            }
         }
-
 
         // --- TRUCCO SVILUPPATORE (3 tocchi) ---
         let tapCount = 0;
