@@ -273,10 +273,15 @@
                </div>
            </label>
        </div>
+       
+        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+           <i class="fas fa-chevron-down drawer-close" onclick="chiudiDrawer()" style="position: absolute; left: 0; top: 0;"></i>
+           <div class="drawer-title" style="font-size: 0.75rem; letter-spacing: 3px;">DIGITAL STYLE</div>
+           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Definisci la tua identità visiva</div>
+       </div>
 
+       <button class="btn-crea" onclick="salvaTemaEApriPiani()" style="margin-top: 10px;">AVANTI</button>
 
-             <button class="btn-crea" onclick="salvaEChiudi()">AGGIUNGI</button>
- 
    </div>
        <div id="toast-notification">
        <i class="fas fa-check-circle"></i> <span>Stile aggiornato</span>
@@ -321,11 +326,20 @@
             profileContent.setAttribute('data-theme', temaSelezionato);
             localStorage.setItem('theme_scelto', temaSelezionato);
         }
-                // Funzione scatenata dal tasto AGGIUNGI
-        function salvaEChiudi() {
-            chiudiDrawer(); // 1. Chiude il cassetto
-            mostraToast();  // 2. Mostra la notifica
+                        function salvaTemaEApriPiani() {
+            // 1. Chiude il cassetto dello stile
+            drawer.classList.remove('open');
             
+            // 2. Rimuove temporaneamente il backdrop per fluidità
+            setTimeout(() => { 
+                backdrop.classList.remove('active'); 
+                
+                // 3. Qui andrà l'apertura del cassetto PIANI
+                console.log("Cassetto Temi chiuso. Preparazione apertura cassetto Piani...");
+                
+            }, 300); 
+        }
+
             // Qui in futuro metteremo la logica per Airtable (API)
             console.log("Simulazione salvataggio API in corso..."); 
         }
