@@ -90,17 +90,22 @@
             box-sizing: border-box;
         }
 
-        .username-display {
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            margin: 0;
-            /* Forza il centro perfetto dentro la capsula */
-            display: flex;
-            align-items: center;
-        }
+       .username-display {
+    font-size: clamp(0.65rem, 3vw, 0.9rem);
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: none;
+
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+
+    text-align: center;
+    line-height: 1.4;
+
+    display: block;
+} 
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
         .casella:active { opacity: 0.6; }
@@ -436,18 +441,22 @@
     const nomeUtente = params.get("u");
     
     if (nomeUtente) { 
-        const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-        const tagElement = document.getElementById("tag-username");
-        
-        // Limite standard 28 caratteri
-        const LIMITE_MAX = 28;
-        let nomeFinale = nomePulito.length > LIMITE_MAX ? nomePulito.substring(0, LIMITE_MAX) : nomePulito;
+     const nomePulito = nomeUtente.replace('@', '').trim();
+const tagElement = document.getElementById("tag-username");
+
+const LIMITE_MAX = 28;
+
+if (nomePulito.length > LIMITE_MAX) {
+    return; // oppure qui mostri un messaggio "massimo 28 caratteri"
+}
+
+let nomeFinale = nomePulito; 
         
         // Applicazione stili e testo
         tagElement.style.display = "flex";
         tagElement.style.alignItems = "center";
         tagElement.style.justifyContent = "center";
-        tagElement.innerText = "@" + nomeFinale;
+       tagElement.innerText = "@" + nomeFinale;
     }
 });
         // Variabili Cassetto e Contenitore
