@@ -70,18 +70,17 @@
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
-   .username-capsule {
-    display: inline-flex;
-    align-items: center;
+  .username-capsule {
+    display: flex;
     justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    padding: 12px 32px; /* Aumentato per evitare il contatto coi bordi */
+    padding: 14px 28px;
     margin: 10px auto;
     width: fit-content;
-    max-width: 95%;
-    min-height: 52px;
+    max-width: 92%;
     box-sizing: border-box;
-    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .username-display {
@@ -91,10 +90,9 @@
     text-transform: uppercase;
     white-space: nowrap;
     margin: 0;
-    line-height: 1;
-    /* Forza la @ a essere esattamente alta come le lettere */
+    text-align: center;
     display: flex;
-    align-items: baseline; 
+    align-items: center; /* Allinea la @ col testo */
 }
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -426,21 +424,16 @@
    </div>
 
     <script>
-    // Gestione Nome URL
-        const params = new URLSearchParams(window.location.search);
-        const nomeUtente = params.get("u");
+   const tagElement = document.getElementById("tag-username");
+const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
+
+// Limitiamo a 28 caratteri
+const LIMITE_MAX = 28;
+let nomeFinale = nomePulito.length > LIMITE_MAX ? nomePulito.substring(0, LIMITE_MAX) : nomePulito;
+
+// Inseriamo tutto come un unico blocco di testo, il CSS farà il resto
+tagElement.innerText = "@" + nomeFinale;
         
-        if (nomeUtente) { 
-            const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-            const tagElement = document.getElementById("tag-username");
-            
-            // LIMITE STANDARD: 28 caratteri
-            const LIMITE_MAX = 28;
-            let nomeFinale = nomePulito.length > LIMITE_MAX ? nomePulito.substring(0, LIMITE_MAX) : nomePulito;
-            
-            // Inserimento separato per gestire la @ e il nome con precisione chirurgica
-            tagElement.innerHTML = `<span style="font-weight: 400; margin-right: 6px;">@</span>${nomeFinale}`;
-        }
         // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
         const backdrop = document.getElementById('backdrop');
