@@ -194,7 +194,57 @@
             color: var(--accent-smeraldo);
             font-size: 1rem;
         }
-  
+          /* --- QR MODAL (APPLE WALLET STYLE) --- */
+        .qr-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 3000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .qr-modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .qr-card {
+            width: 290px; background: rgba(30, 30, 35, 0.4);
+            border-radius: 32px; padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; flex-direction: column; align-items: center;
+            transform: scale(0.9) translateY(20px); transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+            position: relative;
+        }
+        .qr-modal-overlay.active .qr-card { transform: scale(1) translateY(0); }
+
+        .qr-close-btn {
+            position: absolute; top: 20px; right: 24px; color: rgba(255, 255, 255, 0.4);
+            font-size: 1.2rem; cursor: pointer; transition: color 0.2s; padding: 5px;
+        }
+        .qr-close-btn:active { color: #ffffff; }
+
+        .qr-title-modal { font-size: 0.8rem; letter-spacing: 4px; font-weight: 500; color: #fff; margin-bottom: 35px; text-transform: uppercase;}
+
+        .qr-svg-wrapper {
+            width: 190px; height: 190px; padding: 20px; border-radius: 24px;
+            background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+            transition: all 0.5s ease;
+        }
+        .qr-svg { width: 100%; height: 100%; transition: all 0.5s ease; }
+
+        /* --- SINCRONIZZAZIONE COLORI QR CON I TEMI --- */
+        body[data-qr-theme="emerald"] .qr-svg-wrapper { border: 1px solid rgba(80, 200, 120, 0.3); box-shadow: 0 0 40px rgba(80, 200, 120, 0.15); }
+        body[data-qr-theme="emerald"] .qr-svg { fill: #50C878; filter: drop-shadow(0 0 10px rgba(80, 200, 120, 0.5)); }
+
+        body[data-qr-theme="black_dna"] .qr-svg-wrapper { border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 0 40px rgba(255, 255, 255, 0.05); }
+        body[data-qr-theme="black_dna"] .qr-svg { fill: #ffffff; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
+
+        body[data-qr-theme="titanium"] .qr-svg-wrapper { border: 1px solid rgba(134, 134, 139, 0.3); box-shadow: 0 0 40px rgba(134, 134, 139, 0.15); }
+        body[data-qr-theme="titanium"] .qr-svg { fill: #86868b; }
+
+        body[data-qr-theme="obsidian_gold"] .qr-svg-wrapper { border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 0 40px rgba(212, 175, 55, 0.15); }
+        body[data-qr-theme="obsidian_gold"] .qr-svg { fill: #d4af37; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4)); }
+
+        body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(229, 180, 180, 0.3); box-shadow: 0 0 40px rgba(229, 180, 180, 0.15); }
+        body[data-qr-theme="satin_rose"] .qr-svg { fill: #e5b4b4; filter: drop-shadow(0 0 10px rgba(229, 180, 180, 0.4)); }
+
     </style>
 </head>
 <body>
@@ -208,7 +258,8 @@
             </div>
 
             <div id="mainGrid">
-                <div class="casella" id="casella-qr">
+                
+                <div class="casella" id="casella-qr" onclick="apriModalQR()">
                     <span class="testo-pass">DIGITAL PASS</span>
                 </div>
 
@@ -271,6 +322,36 @@
        </div>
 
        <button class="btn-crea" onclick="salvaTemaEApriPiani()" style="margin-top: 10px;">CONFERMA STILE</button>
+   </div>
+   <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
+       <div class="qr-card">
+           <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
+           <div class="qr-title-modal">IL TUO PASS</div>
+           
+           <div class="qr-svg-wrapper">
+               <svg viewBox="0 0 100 100" class="qr-svg" xmlns="http://www.w3.org/2000/svg">
+                   <path d="M10,10 h22 v22 h-22 z M14,14 h14 v14 h-14 z M18,18 h6 v6 h-6 z" />
+                   <path d="M68,10 h22 v22 h-22 z M72,14 h14 v14 h-14 z M76,18 h6 v6 h-6 z" />
+                   <path d="M10,68 h22 v22 h-22 z M14,72 h14 v14 h-14 z M18,76 h6 v6 h-6 z" />
+                   <rect x="40" y="10" width="8" height="8" />
+                   <rect x="52" y="10" width="8" height="8" />
+                   <rect x="40" y="22" width="20" height="8" />
+                   <rect x="10" y="40" width="8" height="20" />
+                   <rect x="22" y="40" width="26" height="8" />
+                   <rect x="52" y="40" width="8" height="20" />
+                   <rect x="64" y="40" width="26" height="8" />
+                   <rect x="76" y="52" width="14" height="8" />
+                   <rect x="40" y="52" width="8" height="8" />
+                   <rect x="40" y="64" width="20" height="8" />
+                   <rect x="64" y="64" width="8" height="26" />
+                   <rect x="76" y="76" width="14" height="14" />
+                   <rect x="40" y="82" width="8" height="8" />
+                   <rect x="52" y="76" width="8" height="14" />
+               </svg>
+           </div>
+           
+           <div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-top: 24px; text-transform: uppercase;">Scansiona per connetterti</div>
+       </div>
    </div>
 
     <script>
@@ -369,6 +450,28 @@
                 setTimeout(() => { tapCount = 0; }, 1000);
             });
         }
+               // Apri/Chiudi Modale QR
+        function apriModalQR() {
+            const modal = document.getElementById('modal-qr');
+            modal.classList.add('active');
+        }
+        function applicaTemaLive() {
+            const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
+            profileContent.setAttribute('data-theme', temaSelezionato);
+            
+            // QUESTA RIGA COMUNICA IL TEMA AL QR CODE:
+            document.body.setAttribute('data-qr-theme', temaSelezionato);
+            
+            localStorage.setItem('theme_scelto', temaSelezionato);
+        }
+
+        function chiudiModalQR(event) {
+            // Chiude solo se clicchi fuori dalla card o sulla X
+            if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
+                document.getElementById('modal-qr').classList.remove('active');
+            }
+        }
+ 
     </script>
 
 
