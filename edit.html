@@ -245,6 +245,63 @@
         body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(229, 180, 180, 0.3); box-shadow: 0 0 40px rgba(229, 180, 180, 0.15); }
         body[data-qr-theme="satin_rose"] .qr-svg { fill: #e5b4b4; filter: drop-shadow(0 0 10px rgba(229, 180, 180, 0.4)); }
 
+                /* --- DOCK BAR INFERIORE --- */
+        .luxury-dock {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            /* Parte nascosta 100px più in basso */
+            transform: translateX(-50%) translateY(100px); 
+            background: rgba(30, 30, 35, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            display: flex;
+            gap: 30px;
+            padding: 14px 32px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        /* Classe per farla apparire */
+        .luxury-dock.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .dock-item:active {
+            transform: scale(0.9);
+        }
+
+        .dock-item.active, .dock-item:hover {
+            color: #ffffff;
+        }
+
+        .dock-item i {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .dock-item span {
+            font-size: 0.5rem;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
     </style>
 </head>
 <body>
@@ -353,6 +410,17 @@
            <div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-top: 24px; text-transform: uppercase;">Scansiona per connetterti</div>
        </div>
    </div>
+    
+   <!-- DOCK BAR (Menu di navigazione inferiore) -->
+   <div class="luxury-dock" id="bottom-dock">
+       <!-- Tasto per riaprire lo Stile -->
+       <div class="dock-item" onclick="apriDrawerStyle()">
+           <i class="fas fa-palette"></i>
+           <span>STILE</span>
+       </div>
+       
+       <!-- Altre icone (es. Profilo, Piani) andranno aggiunte qui in futuro -->
+   </div>
 
     <script>
         // Gestione Nome URL
@@ -394,7 +462,7 @@
             localStorage.setItem('theme_scelto', temaSelezionato);
         }
         
-                 function salvaTemaEApriPiani() {
+                       function salvaTemaEApriPiani() {
             // 1. Chiude il cassetto dello stile
             drawer.classList.remove('open');
             
@@ -404,15 +472,19 @@
                 tastoCrea.style.display = 'none'; 
             }
             
-            // 3. Rimuove il backdrop e APRE IL CASSETTO PIANI
+            // 3. FA APPARIRE LA DOCK BAR INFERIORE
+            const dock = document.getElementById('bottom-dock');
+            if(dock) {
+                dock.classList.add('show');
+            }
+            
+            // 4. Rimuove il backdrop
             setTimeout(() => { 
                 backdrop.classList.remove('active'); 
-                
-                // Funzione che crea la catena di montaggio: apre il secondo cassetto
-                apriDrawerPiani();
-                
+                console.log("Cassetto Temi chiuso. Tasto eliminato. Dock apparsa.");
             }, 300); 
         }
+  
 
         // Funzione dedicata all'apertura del cassetto Piani
         function apriDrawerPiani() {
@@ -435,21 +507,7 @@
             }
         }
 
-        // --- TRUCCO SVILUPPATORE (3 tocchi) ---
-        let tapCount = 0;
-        const usernameDisplay = document.getElementById('tag-username');
-
-        if(usernameDisplay) {
-            usernameDisplay.addEventListener('click', function() {
-                tapCount++;
-                if (tapCount >= 3) {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('ts', new Date().getTime());
-                    window.location.href = url.toString();
-                }
-                setTimeout(() => { tapCount = 0; }, 1000);
-            });
-        }
+        
                // Apri/Chiudi Modale QR
         function apriModalQR() {
             const modal = document.getElementById('modal-qr');
@@ -471,7 +529,21 @@
                 document.getElementById('modal-qr').classList.remove('active');
             }
         }
- 
+ // --- TRUCCO SVILUPPATORE (3 tocchi) ---
+        let tapCount = 0;
+        const usernameDisplay = document.getElementById('tag-username');
+
+        if(usernameDisplay) {
+            usernameDisplay.addEventListener('click', function() {
+                tapCount++;
+                if (tapCount >= 3) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('ts', new Date().getTime());
+                    window.location.href = url.toString();
+                }
+                setTimeout(() => { tapCount = 0; }, 1000);
+            });
+        }
     </script>
 
 
