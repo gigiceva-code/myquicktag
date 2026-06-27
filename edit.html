@@ -70,29 +70,30 @@
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
-    .username-capsule {
-            display: flex;             /* Usiamo flex normale, non inline */
+   .username-capsule {
+            display: inline-flex; 
             align-items: center; 
-            justify-content: center;   /* Centratura orizzontale assoluta */
+            justify-content: center;
             border-radius: 12px; 
-            padding: 10px 32px;        /* Padding uniforme e generoso */
-            margin: 10px auto;         /* Centratura del badge nella pagina */
-            width: fit-content;        /* La larghezza si adatta al testo */
-            max-width: 90%; 
-            min-height: 48px;
+            /* Padding ridotto lateralmente per guadagnare spazio prezioso */
+            padding: 10px 20px; 
+            margin: 10px auto;
+            width: fit-content; 
+            max-width: 95%; 
+            height: 48px;
             box-sizing: border-box;
-            text-align: center;        /* Forza il centro del testo */
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .username-display { 
-            font-size: clamp(0.6rem, 3.5vw, 0.95rem); 
-            font-weight: 400; 
+            font-size: 0.9rem; /* Dimensione fissa di lusso */
+            font-weight: 500;
             letter-spacing: 1.5px; 
             text-transform: uppercase; 
             white-space: nowrap; 
             margin: 0;
-            line-height: 1;            /* Forza l'allineamento verticale perfetto */
-            display: block;            /* Assicura che il testo occupi lo spazio correttamente */
+            /* Forza il centro */
+            text-align: center;
         }
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -424,13 +425,22 @@
    </div>
 
     <script>
-     // Gestione Nome URL
-        const params = new URLSearchParams(window.location.search);
-        const nomeUtente = params.get("u");
-        if (nomeUtente) { 
-            const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-            document.getElementById("tag-username").innerText = "@" + nomePulito;
-        }
+    // Gestione Nome URL con limite standard
+const params = new URLSearchParams(window.location.search);
+const nomeUtente = params.get("u");
+
+if (nomeUtente) {
+    let nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
+    
+    // LIMITE STANDARD DOMINIO: 28 caratteri
+    const LIMITE_MAX = 28;
+    if (nomePulito.length > LIMITE_MAX) {
+        nomePulito = nomePulito.substring(0, LIMITE_MAX);
+    }
+    
+    const tagElement = document.getElementById("tag-username");
+    tagElement.innerText = "@" + nomePulito;
+}
         // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
         const backdrop = document.getElementById('backdrop');
