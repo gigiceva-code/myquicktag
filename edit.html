@@ -70,31 +70,32 @@
         #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
         
-      .username-capsule {
-            display: inline-flex; 
+     .username-capsule {
+            display: flex; /* Flexbox garantisce il centro */
             align-items: center; 
             justify-content: center;
             border-radius: 12px; 
-            padding: 8px 18px; 
+            padding: 8px 16px; 
             margin: 10px auto;
-            max-width: 90%; /* Occupa quasi tutta la larghezza */
-            width: auto;
-            height: auto;
+            width: fit-content; /* Si adatta alla parola */
+            max-width: 85%; /* Non tocca mai i bordi dello schermo */
+            min-height: 35px; /* Evita che si schiacci troppo */
+            text-align: center;
         }
 
         .username-display { 
-            /* Rimpicciolisce il font fluidamente fino a un limite minimo leggibile */
-            font-size: clamp(0.75rem, 4vw, 0.95rem); 
+            font-size: 0.85rem; /* Dimensione stabile e sicura */
             font-weight: 400; 
             letter-spacing: 1.5px; 
             text-transform: uppercase; 
-            text-align: center; 
             margin: 0;
             
-            /* Permette di andare a capo solo se necessario */
-            white-space: normal; 
-            word-wrap: break-word; /* Spezza la parola in modo più armonioso */
-            line-height: 1.3; 
+            /* Il trucco per il centro perfetto: */
+            text-align: center;
+            white-space: normal; /* Autorizza l'a-capo */
+            overflow-wrap: break-word; /* Spezza la stringa solo se sbatte contro il max-width */
+            word-break: break-all; /* Sicurezza estrema per parole senza spazi come "CONCESSIONARIA..." */
+            line-height: 1.4;
         }
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -431,35 +432,8 @@
         const nomeUtente = params.get("u");
         if (nomeUtente) { 
             const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-            const tagElement = document.getElementById("tag-username");
-            tagElement.innerText = "@" + nomePulito;
-
-            // Motore intelligente: Auto-Scale con "Limite di decenza"
-            setTimeout(() => {
-                const capsula = document.querySelector('.username-capsule');
-                if (capsula && tagElement) {
-                    // 1. Forza temporaneamente il testo su una riga per misurarne la larghezza reale
-                    tagElement.style.whiteSpace = 'nowrap';
-                    
-                    const larghezzaMassima = capsula.clientWidth - 32; 
-                    const larghezzaTesto = tagElement.scrollWidth;
-                    
-                    if (larghezzaTesto > larghezzaMassima) {
-                        const scala = larghezzaMassima / larghezzaTesto;
-                        
-                        // 2. IL LIMITE: Se la scala scende sotto lo 0.8 (80%), è troppo piccolo
-                        if (scala < 0.8) {
-                            // Disattiva il rimpicciolimento e lascia che vada a capo elegantemente
-                            tagElement.style.transform = 'none';
-                            tagElement.style.whiteSpace = 'normal'; 
-                        } else {
-                            // Se è > 0.8, applica il rimpicciolimento proporzionato
-                            tagElement.style.transform = `scale(${scala})`;
-                        }
-                    }
-                }
-            }, 50); 
-        } 
+            document.getElementById("tag-username").innerText = "@" + nomePulito;
+        }
         // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
         const backdrop = document.getElementById('backdrop');
