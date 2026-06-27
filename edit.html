@@ -433,21 +433,22 @@
    </div>
 
     <script>
-   // Gestione Nome URL
-        const params = new URLSearchParams(window.location.search);
-        const nomeUtente = params.get("u");
+   document.addEventListener("DOMContentLoaded", function() {
+    const params = new URLSearchParams(window.location.search);
+    const nomeUtente = params.get("u");
+    
+    if (nomeUtente) { 
+        const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
+        const tagElement = document.getElementById("tag-username");
         
-        if (nomeUtente) { 
-            const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-            const tagElement = document.getElementById("tag-username");
-            
-            // LIMITE STANDARD 28 caratteri
-            const LIMITE_MAX = 28;
-            let nomeFinale = nomePulito.length > LIMITE_MAX ? nomePulito.substring(0, LIMITE_MAX) : nomePulito;
-            
-            // Inserimento pulito: il CSS gestirà l'allineamento
-            tagElement.innerText = "@" + nomeFinale;
-        }
+        // Limite standard 28 caratteri
+        const LIMITE_MAX = 28;
+        let nomeFinale = nomePulito.length > LIMITE_MAX ? nomePulito.substring(0, LIMITE_MAX) : nomePulito;
+        
+        // Inserimento pulito
+        tagElement.innerText = "@" + nomeFinale;
+    }
+});
         // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
         const backdrop = document.getElementById('backdrop');
