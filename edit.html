@@ -313,27 +313,26 @@
             localStorage.setItem('theme_scelto', temaSelezionato);
         }
         
-        // Funzione scatenata dal tasto AVANTI
                 function salvaTemaEApriPiani() {
             // 1. Chiude il cassetto dello stile
             drawer.classList.remove('open');
             
-            // 2. DISINTEGRA PER SEMPRE il tasto "+ CREA LA TUA TAG"
-            const btnMaster = document.getElementById('btn-master-action');
-            if(btnMaster) {
-                btnMaster.style.display = 'none'; 
+            // 2. DISINTEGRA IL TUO VERO TASTO ORIGINALE
+            const tastoCrea = document.getElementById('casella-crea');
+            if(tastoCrea) {
+                tastoCrea.style.display = 'none'; 
             }
             
             // 3. Rimuove il backdrop per fluidità
             setTimeout(() => { 
                 backdrop.classList.remove('active'); 
-                document.body.classList.remove('drawer-open'); 
                 
                 // Qui andremo ad aprire il cassetto PIANI
-                console.log("Cassetto Temi chiuso. Tasto Crea eliminato. Preparazione Piani...");
+                console.log("Cassetto Temi chiuso. Tasto originale eliminato.");
                 
             }, 300); 
         }
+
 
 
         // Animazione del Toast (nel caso serva usarla per altre notifiche)
