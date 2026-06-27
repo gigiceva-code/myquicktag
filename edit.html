@@ -426,7 +426,7 @@
    </div>
 
     <script>
-       // Gestione Nome URL
+     // Gestione Nome URL
         const params = new URLSearchParams(window.location.search);
         const nomeUtente = params.get("u");
         if (nomeUtente) { 
@@ -434,23 +434,32 @@
             const tagElement = document.getElementById("tag-username");
             tagElement.innerText = "@" + nomePulito;
 
-            // Motore intelligente: Auto-Scale per nomi lunghi
+            // Motore intelligente: Auto-Scale con "Limite di decenza"
             setTimeout(() => {
                 const capsula = document.querySelector('.username-capsule');
                 if (capsula && tagElement) {
-                    // Calcola lo spazio disponibile sottraendo il padding
+                    // 1. Forza temporaneamente il testo su una riga per misurarne la larghezza reale
+                    tagElement.style.whiteSpace = 'nowrap';
+                    
                     const larghezzaMassima = capsula.clientWidth - 32; 
                     const larghezzaTesto = tagElement.scrollWidth;
                     
-                    // Se il testo sborda, lo rimpicciolisce in proporzione al millimetro
                     if (larghezzaTesto > larghezzaMassima) {
                         const scala = larghezzaMassima / larghezzaTesto;
-                        tagElement.style.transform = `scale(${scala})`;
+                        
+                        // 2. IL LIMITE: Se la scala scende sotto lo 0.8 (80%), è troppo piccolo
+                        if (scala < 0.8) {
+                            // Disattiva il rimpicciolimento e lascia che vada a capo elegantemente
+                            tagElement.style.transform = 'none';
+                            tagElement.style.whiteSpace = 'normal'; 
+                        } else {
+                            // Se è > 0.8, applica il rimpicciolimento proporzionato
+                            tagElement.style.transform = `scale(${scala})`;
+                        }
                     }
                 }
             }, 50); 
-        }
-
+        } 
         // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
         const backdrop = document.getElementById('backdrop');
