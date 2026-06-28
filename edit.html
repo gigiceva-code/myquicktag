@@ -358,7 +358,7 @@ overflow-wrap: break-word; /* Va a capo solo se la parola è più larga dell'int
                     <span class="testo-pass">DIGITAL PASS</span>
                 </div>
 
-                <div class="casella" id="casella-crea" onclick="apriDrawer('drawer-style')">
+                <div class="casella" id="casella-crea" onclick="apriDrawer('drawer-identita')">
                     <span class="testo-crea">+ CREA LA TUA TAG</span>
                 </div>
             </div>
@@ -373,6 +373,27 @@ overflow-wrap: break-word; /* Va a capo solo se la parola è più larga dell'int
            <div class="drawer-title" style="font-size: 0.75rem; letter-spacing: 3px;">DIGITAL STYLE</div>
            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Definisci il tuo stile</div>
        </div>
+       <div class="drawer-glass" id="drawer-identita">
+       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+           <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()" style="position: absolute; left: 0; top: 0;"></i>
+           <div class="drawer-title" style="font-size: 0.75rem; letter-spacing: 3px;">IDENTITÀ BRAND</div>
+           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Chi sei?</div>
+       </div>
+
+       <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 24px;">
+           <div>
+               <label style="font-size: 0.6rem; color: #a0a0a0; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block;">Nome Mostrato (Usa gli spazi)</label>
+               <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi Volkswagen" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+           </div>
+
+           <div>
+               <label style="font-size: 0.6rem; color: #a0a0a0; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block;">La tua Bio / Payoff</label>
+               <textarea id="field-bio" placeholder="Descrivi il tuo business in poche parole..." rows="3" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; resize: none;"></textarea>
+           </div>
+       </div>
+
+       <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA IDENTITÀ</button>
+   </div>
 
        <div class="style-list">
            <label class="style-bar-label">
@@ -449,128 +470,216 @@ overflow-wrap: break-word; /* Va a capo solo se la parola è più larga dell'int
        <!-- Altre icone (es. Profilo, Piani) andranno aggiunte qui in futuro -->
    </div>
 
-    <script>
-const params = new URLSearchParams(window.location.search);
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    // --- MOTORE CENTRALE MYQUICKTAG ---
+    const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
     let canaliCorrenti = [];
+    let activeDrawerId = null;
 
-    if (nomeUtente) { 
-        const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
-        const tagElement = document.getElementById("tag-username");
+    document.addEventListener("DOMContentLoaded", () => {
+        if (nomeUtente) { 
+            const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
+            const tagElement = document.getElementById("tag-username");
 
-        // Riduciamo dinamicamente in base alla lunghezza per farlo stare su una riga
-        // finché l'utente non inserisce gli spazi nel Display Name
-        if (nomePulito.length > 28) {
-            tagElement.style.fontSize = "0.65rem";
-        } else if (nomePulito.length > 20) {
-            tagElement.style.fontSize = "0.75rem";
-        } else {
-            tagElement.style.fontSize = "0.95rem";
+            // Scalatura primordiale (senza spazi)
+            if (nomePulito.length > 28) {
+                tagElement.style.fontSize = "0.65rem";
+            } else if (nomePulito.length > 20) {
+                tagElement.style.fontSize = "0.75rem";
+            } else {
+                tagElement.style.fontSize = "0.95rem";
+            }
+            
+            // Tag vuota primordiale: solo la @ e il nome
+            tagElement.innerText = "@" + nomePulito;
+            inizializzaPagina(); 
         }
 
-        // Stampiamo la tag primordiale: vuota, solo la @ e il nome
-        tagElement.innerText = "@" + nomePulito;
-        
-        inizializzaPagina(); 
+        attivaAscoltatoriLive();
+        setTimeout(aggiornaTagLive, 100);
+    });
+
+    // --- LOGICA A "BOLLA" (LOCAL STATE) & UI LIVE ---
+    function aggiornaTagLive() {
+        const container = document.getElementById('profile-content');
+        if (!container) return;
+
+        const elUsername = document.getElementById('tag-username');
+        const fieldDisplay = document.getElementById('field-username_display');
+
+        // La magia editoriale: se scrivi il nome con gli spazi, vince lui sul monoblocco della URL
+        if (elUsername) {
+            if (fieldDisplay && fieldDisplay.value.trim() !== '') {
+                let valDisplay = fieldDisplay.value.trim().toUpperCase();
+                if (!valDisplay.startsWith('@')) valDisplay = '@' + valDisplay;
+                
+                elUsername.innerText = valDisplay;
+                elUsername.style.fontSize = "0.95rem"; // Il CSS penserà ad andare a capo in modo fluido
+            } else if (nomeUtente) {
+                const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
+                elUsername.innerText = '@' + nomePulito;
+            }
+        }
+
+        // Cambio Temi
+        const stileSelezionato = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
+        container.setAttribute('data-theme', stileSelezionato);
+        document.body.setAttribute('data-qr-theme', stileSelezionato);
+
+        const getVal = (id) => document.getElementById(id)?.value?.trim() || '';
+
+        // Mappa visibilità campi primari
+        const mappaCaselle = {
+            'casella-bio':      getVal('field-bio'),
+            'casella-sito':     getVal('field-sito_web'),
+            'casella-cv':       getVal('field-cv'),
+            'casella-contatti': getVal('vcf-telefono1') || getVal('vcf-email1') || getVal('field-email'),
+        };
+
+        for (const [id, valore] of Object.entries(mappaCaselle)) {
+            const el = container.querySelector('#' + id);
+            if (el) el.style.display = valore ? 'flex' : 'none';
+        }
+
+        // Tasto Crea Scompare se ho inserito dei dati
+        const haIdentita = fieldDisplay?.value || getVal('field-bio');
+        const elCrea = container.querySelector('#casella-crea');
+        if (elCrea) elCrea.style.display = haIdentita ? 'none' : 'flex';
     }
-        // Variabili Cassetto e Contenitore
-        const drawer = document.getElementById('drawer-style');
-        const backdrop = document.getElementById('backdrop');
-        const profileContent = document.getElementById('profile-content');
 
-        // --- CARICA IL TEMA SALVATO ALL'AVVIO ---
-        const temaSalvato = localStorage.getItem('theme_scelto');
-        if (temaSalvato) {
-            profileContent.setAttribute('data-theme', temaSalvato);
-            const radioCorretto = document.querySelector(`input[name="digital_style"][value="${temaSalvato}"]`);
-            if (radioCorretto) radioCorretto.checked = true;
+    function attivaAscoltatoriLive() {
+        // Ogni volta che digiti, la tag cambia in tempo reale a zero impatto server
+        const selettori = ['field-username_display', 'field-bio', 'field-email', 'field-sito_web', 'field-cv', 'field-quick_action_tipo', 'field-quick_action_url', 'vcf-telefono1', 'vcf-nome'];
+        selettori.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', aggiornaTagLive);
+                el.addEventListener('change', aggiornaTagLive);
+            }
+        });
+    }
+
+    // --- GESTIONE INTERFACCIA E CASSETTI (DRAWERS) ---
+    function apriDrawer(idDrawer) {
+        document.querySelectorAll('.drawer-glass.open').forEach(d => {
+            if(d.id !== idDrawer) d.classList.remove('open');
+        });
+
+        const drawer = document.getElementById(idDrawer);
+        const backdrop = document.getElementById('drawer-backdrop');
+        
+        if (backdrop) backdrop.classList.add('active');
+        activeDrawerId = idDrawer;
+
+        setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
+    }
+
+    function chiudiSenzaSalvare() {
+        document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+        const backdrop = document.getElementById('drawer-backdrop');
+        if (backdrop) {
+            setTimeout(() => backdrop.classList.remove('active'), 300);
         }
+        activeDrawerId = null;
+        aggiornaTagLive();
+    }
 
-        // Funzioni di Apertura e Chiusura
-        function apriDrawerStyle() {
-            backdrop.classList.add('active');
-            setTimeout(() => { drawer.classList.add('open'); }, 10);
-        }
+    function confermaEChiudiCassetto() {
+        aggiornaTagLive();
+        
+        // Logica a Bolla: qui salviamo nel Local State visivo, 
+        // e opzionalmente in background tramite draft_json (Sbloccato)
+        salvaDati(false, true); 
 
-        function chiudiDrawer() {
-            drawer.classList.remove('open');
-            setTimeout(() => { backdrop.classList.remove('active'); }, 300); 
-        }
-
-        // Funzione per il Cambio e Salvataggio Tema
-        function applicaTemaLive() {
-            const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
-            profileContent.setAttribute('data-theme', temaSelezionato);
-            localStorage.setItem('theme_scelto', temaSelezionato);
+        // Accende la dock se non si vedeva
+        const dock = document.getElementById('bottom-dock');
+        if(dock && (document.getElementById('field-username_display')?.value || document.getElementById('field-bio')?.value)) {
+            dock.classList.add('show');
         }
         
-                       function salvaTemaEApriPiani() {
-            // 1. Chiude il cassetto dello stile
-            drawer.classList.remove('open');
-            
-            // 2. DISINTEGRA IL TASTO ORIGINALE
-            const tastoCrea = document.getElementById('casella-crea');
-            if(tastoCrea) {
-                tastoCrea.style.display = 'none'; 
+        chiudiSenzaSalvare();
+    }
+
+    // --- GESTIONE API AIRTABLE ---
+    async function inizializzaPagina() {
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+            const data = await response.json();
+
+            const f = (() => {
+                if (data.fields?.draft_json) {
+                    try {
+                        const bozza = JSON.parse(data.fields.draft_json);
+                        return { ...bozza, stato: data.fields.stato, plan: data.fields.plan };
+                    } catch(e) {}
+                }
+                return data.fields || data;
+            })();
+
+            if (f) {
+                // Popolamento Identità
+                if (f.username_display) {
+                    const elDisp = document.getElementById('field-username_display');
+                    if (elDisp) elDisp.value = f.username_display.replace('@', '');
+                }
+
+                const campi = ['bio', 'email', 'sito_web', 'cv'];
+                campi.forEach(c => {
+                    const el = document.getElementById(`field-${c}`);
+                    if (el && f[c]) el.value = f[c];
+                });
+
+                // Popolamento Stile
+                if (f.digital_style) {
+                    const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
+                    if (radio) radio.checked = true;
+                }
+                
+                aggiornaTagLive();
             }
-            
-            // 3. FA APPARIRE LA DOCK BAR INFERIORE
-            const dock = document.getElementById('bottom-dock');
-            if(dock) {
-                dock.classList.add('show');
-            }
-            
-            // 4. Rimuove il backdrop
-            setTimeout(() => { 
-                backdrop.classList.remove('active'); 
-                console.log("Cassetto Temi chiuso. Tasto eliminato. Dock apparsa.");
-            }, 300); 
-        }
-  
+        } catch (e) { console.error("Errore inizializzazione:", e); }
+    }
 
-        // Funzione dedicata all'apertura del cassetto Piani
-        function apriDrawerPiani() {
-            const drawerPiani = document.getElementById('drawer-plans');
-            backdrop.classList.add('active');
-            setTimeout(() => { drawerPiani.classList.add('open'); }, 10);
-        }
-       
+    async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
+        const tagDallUrl = params.get("u") || "";
+        const nomePerSistema = tagDallUrl.replace('@', '').trim().toLowerCase();
+        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.trim() : "";
 
+        // Il draft_json diventa il nostro scudo anti-sovraccarico per Airtable
+        const bozza = {
+            username_system: nomePerSistema,
+            username_display: getVal("field-username_display") ? '@' + getVal("field-username_display").toUpperCase() : tagDallUrl,
+            digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna",
+            bio: getVal("field-bio"),
+            // ... [Gli altri moduli json verranno uniti qui gradualmente]
+        }; 
 
+        try {
+            const response = await fetch('/api/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username_system: nomePerSistema, draft_json: JSON.stringify(bozza) })
+            });
+            // Nel caso silenzioso la pagina non si ricarica brutalmente, proteggendo il workflow visivo.
+        } catch (error) { console.error("Errore comunicazione server:", error); }
+    }
 
-        // Animazione del Toast (nel caso serva usarla per altre notifiche)
-        function mostraToast() {
-            const toast = document.getElementById('toast-notification');
-            if(toast) {
-                toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 2500); 
-            }
+    // --- SISTEMA QR NATIVO LUXURY ---
+    function apriModalQR() {
+        const modal = document.getElementById('modal-qr');
+        if(modal) modal.classList.add('active');
+    }
+    
+    function chiudiModalQR(event) {
+        if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
+            document.getElementById('modal-qr').classList.remove('active');
         }
+    }
 
-        
-               // Apri/Chiudi Modale QR
-        function apriModalQR() {
-            const modal = document.getElementById('modal-qr');
-            modal.classList.add('active');
-        }
-        function applicaTemaLive() {
-            const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
-            profileContent.setAttribute('data-theme', temaSelezionato);
-            
-            // QUESTA RIGA COMUNICA IL TEMA AL QR CODE:
-            document.body.setAttribute('data-qr-theme', temaSelezionato);
-            
-            localStorage.setItem('theme_scelto', temaSelezionato);
-        }
-
-        function chiudiModalQR(event) {
-            // Chiude solo se clicchi fuori dalla card o sulla X
-            if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
-                document.getElementById('modal-qr').classList.remove('active');
-            }
-        }
  // --- TRUCCO SVILUPPATORE (3 tocchi) ---
         let tapCount = 0;
         const usernameDisplay = document.getElementById('tag-username');
