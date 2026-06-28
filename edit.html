@@ -38,49 +38,62 @@
             transition: all 0.4s ease; 
         }
 
-      /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
+            /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
+        
+        /* 1. EMERALD */
         #profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8); }
-        #profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.02); border: 1px solid rgba(0, 230, 128, 0.3); }
-        #profile-content[data-theme="emerald"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="emerald"] .username-capsule { background: linear-gradient(135deg, #00E680, rgba(0,230,128,0.1)); }
         #profile-content[data-theme="emerald"] .testo-pass { color: #00E680; text-shadow: 0 0 10px rgba(0, 230, 128, 0.2); }
 
+        /* 2. BLACK DNA (Stealth Puro) */
         #profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); } 
-        #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); }
-        #profile-content[data-theme="black_dna"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="black_dna"] .username-capsule { background: linear-gradient(135deg, #ffffff, rgba(255,255,255,0.1)); }
         #profile-content[data-theme="black_dna"] .testo-pass { color: #ffffff; opacity: 0.9; }
 
+        /* 3. TITANIUM */
         #profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8); }
-        #profile-content[data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.02); border: 1px solid rgba(176, 176, 181, 0.3); }
-        #profile-content[data-theme="titanium"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="titanium"] .username-capsule { background: linear-gradient(135deg, #b0b0b5, rgba(176,176,181,0.1)); }
         #profile-content[data-theme="titanium"] .testo-pass { color: #b0b0b5; }
 
+        /* 4. OBSIDIAN GOLD */
         #profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8); }
-        #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.02); border: 1px solid rgba(229, 193, 88, 0.3); }
-        #profile-content[data-theme="obsidian_gold"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="obsidian_gold"] .username-capsule { background: linear-gradient(135deg, #e5c158, rgba(229,193,88,0.1)); }
         #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #e5c158; text-shadow: 0 0 10px rgba(229, 193, 88, 0.2); }
 
+        /* 5. SATIN ROSE */
         #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8); }
-        #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.02); border: 1px solid rgba(200, 150, 142, 0.3); }
-        #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="satin_rose"] .username-capsule { background: linear-gradient(135deg, #c8968e, rgba(200,150,142,0.1)); }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
-        
+
         .header-monolith {
             width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0;
         }
+        /* --- LA VERA SOLUZIONE 4: BADGE LUXURY (MINIMAL) --- */
+        .username-capsule-wrapper {
+            position: relative; margin: 10px auto; width: fit-content; max-width: 95%;
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5)); 
+        }
 
-       /* --- SOLUZIONE 4: BADGE LUXURY ADATTIVO --- */
         .username-capsule {
+            padding: 1px; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
+            clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
+        }
+
+        .username-capsule-inner {
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border-radius: 16px 4px 16px 4px; 
-            padding: 14px 24px; margin: 15px auto; width: fit-content; max-width: 92%; min-height: 56px;
-            box-sizing: border-box; position: relative; transition: all 0.3s ease;
+            background: #0d0d0f; 
+            padding: 24px 35px;
+            clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 24px 100%, 0 50%);
         }
-        .username-capsule::before { content: "◆"; font-size: 0.55rem; margin-bottom: 6px; opacity: 0.6; display: block; letter-spacing: 0; }
+
         .username-display {
-            font-size: 0.95rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; text-align: center; width: 100%;
+            font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; text-align: center; width: 100%;
+            text-transform: lowercase; 
             white-space: normal; word-break: keep-all; overflow-wrap: break-word;
-            transition: font-size 0.3s ease;
+            transition: font-size 0.3s ease; color: #fff;
         }
+
 
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -181,11 +194,17 @@
 
    <div class="configurator-wrapper">
        <div id="profile-content" data-theme="black_dna"> 
-           <div class="header-monolith">
-                <div class="username-capsule">
-                    <div class="username-display" id="tag-username">@TUONOME.IT</div>
+           
+                       <div class="header-monolith">
+                <div class="username-capsule-wrapper">
+                    <div class="username-capsule">
+                        <div class="username-capsule-inner">
+                            <div class="username-display" id="tag-username">@tuonome.it</div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
 
             <div id="mainGrid">
                 <div class="casella" id="casella-qr" onclick="apriModalQR()">
