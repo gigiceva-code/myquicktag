@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Configurazione Ecosistema - myquicktag</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link id="dynamic-manifest" rel="manifest" href="">
+    <link id="dynamic-icon" rel="icon" href="">
+
+    <style>
+        :root {
+            --bg-esterno: #0d0d0f;
+            --accent-smeraldo: #50C878;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            height: 100%; width: 100%; overflow: hidden; background-color: var(--bg-esterno);
+            font-family: 'Inter', sans-serif; touch-action: none;
+        }
+        body { display: flex; justify-content: center; align-items: center; }
+
+        .configurator-wrapper {
+            width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;
+            padding: 16px 16px calc(16px + env(safe-area-inset-bottom)) 16px; 
+        }
+
+        #profile-content {
+            width: 100%; max-width: 410px; height: 100%; max-height: 840px;
+            padding: 40px 24px 32px 24px;
+            border-radius: 28px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.9); overflow: hidden; 
+            transition: all 0.4s ease; 
+        }
+
+      /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
+        #profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8); }
+        #profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.02); border: 1px solid rgba(0, 230, 128, 0.3); }
+        #profile-content[data-theme="emerald"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="emerald"] .testo-pass { color: #00E680; text-shadow: 0 0 10px rgba(0, 230, 128, 0.2); }
+
+        #profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); } 
+        #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); }
+        #profile-content[data-theme="black_dna"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="black_dna"] .testo-pass { color: #ffffff; opacity: 0.9; }
+
+        #profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8); }
+        #profile-content[data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.02); border: 1px solid rgba(176, 176, 181, 0.3); }
+        #profile-content[data-theme="titanium"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="titanium"] .testo-pass { color: #b0b0b5; }
+
+        #profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8); }
+        #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.02); border: 1px solid rgba(229, 193, 88, 0.3); }
+        #profile-content[data-theme="obsidian_gold"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #e5c158; text-shadow: 0 0 10px rgba(229, 193, 88, 0.2); }
+
+        #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8); }
+        #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.02); border: 1px solid rgba(200, 150, 142, 0.3); }
+        #profile-content[data-theme="satin_rose"] .username-display { color: #ffffff; }
+        #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
+        
+        .header-monolith {
+            width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0;
+        }
+
+       /* --- SOLUZIONE 4: BADGE LUXURY ADATTIVO --- */
+        .username-capsule {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border-radius: 16px 4px 16px 4px; 
+            padding: 14px 24px; margin: 15px auto; width: fit-content; max-width: 92%; min-height: 56px;
+            box-sizing: border-box; position: relative; transition: all 0.3s ease;
+        }
+        .username-capsule::before { content: "◆"; font-size: 0.55rem; margin-bottom: 6px; opacity: 0.6; display: block; letter-spacing: 0; }
+        .username-display {
+            font-size: 0.95rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; text-align: center; width: 100%;
+            white-space: normal; word-break: keep-all; overflow-wrap: break-word;
+            transition: font-size 0.3s ease;
+        }
+
+        #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
+        .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
+        .casella:active { opacity: 0.6; }
+
+        .testo-pass { font-size: 0.75rem; letter-spacing: 3px; font-weight: 300; transition: all 0.4s ease;}
+        .testo-crea { font-size: 0.75rem; letter-spacing: 3px; font-weight: 500; color: #ffffff; transition: opacity 0.5s ease-in-out;}
+
+        .drawer-backdrop { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: transparent; z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
+                      
+        .drawer-glass {
+            position: fixed !important; bottom: -100% !important; left: 26px !important; right: 26px !important; width: auto !important; margin: 0 auto !important; max-width: 360px !important; 
+            background: rgba(30, 30, 35, 0.3) !important; backdrop-filter: blur(15px) !important; -webkit-backdrop-filter: blur(15px) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.15) !important; border-radius: 28px !important; padding: 24px !important;
+            z-index: 2000 !important; transition: bottom 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; box-sizing: border-box !important; box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important; 
+        }
+        .drawer-glass.open { bottom: 24px !important; }
+
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 4px; }
+        .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; flex: 1; text-align: center; }
+
+        .drawer-close { color: rgba(255, 255, 255, 0.6); font-size: 1rem; cursor: pointer; padding: 5px; width: 30px; text-align: center; position: absolute; left: 0; top: 0; }
+        .drawer-close:active { color: #ffffff; }
+
+        .style-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+        .style-bar-label { cursor: pointer; display: block; }
+        .style-bar-label input { display: none; }
+        .style-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04); border-radius: 10px;
+            color: #a0a0a0; font-size: 0.65rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+        .color-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #ffffff; }
+
+        .btn-crea {
+            display: block; width: 100%; padding: 16px; background: #ffffff; color: #000000;
+            border: none; border-radius: 14px; font-weight: 600; font-size: 0.85rem;
+            letter-spacing: 2px; cursor: pointer; transition: transform 0.2s; margin: 0 auto; text-align: center;
+        }
+        .btn-crea:active { transform: scale(0.98); }
+
+        .qr-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 3000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .qr-modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .qr-card {
+            width: 290px; background: rgba(30, 30, 35, 0.4); border-radius: 32px; padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; align-items: center;
+            transform: scale(0.9) translateY(20px); transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9); position: relative;
+        }
+        .qr-modal-overlay.active .qr-card { transform: scale(1) translateY(0); }
+
+        .qr-close-btn { position: absolute; top: 20px; right: 24px; color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; padding: 5px; }
+        .qr-close-btn:active { color: #ffffff; }
+        .qr-title-modal { font-size: 0.8rem; letter-spacing: 4px; font-weight: 500; color: #fff; margin-bottom: 35px; text-transform: uppercase;}
+
+        .qr-svg-wrapper { width: 190px; height: 190px; padding: 20px; border-radius: 24px; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; transition: all 0.5s ease; }
+        .qr-svg { width: 100%; height: 100%; transition: all 0.5s ease; }
+        
+        body[data-qr-theme="emerald"] .qr-svg-wrapper { border: 1px solid rgba(0, 230, 128, 0.25); box-shadow: 0 0 35px rgba(0, 230, 128, 0.15); }
+        body[data-qr-theme="emerald"] .qr-svg { fill: #00E680; filter: drop-shadow(0 0 8px rgba(0, 230, 128, 0.4)); }
+        body[data-qr-theme="black_dna"] .qr-svg-wrapper { border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 35px rgba(255, 255, 255, 0.03); }
+        body[data-qr-theme="black_dna"] .qr-svg { fill: #ffffff; filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25)); }
+        body[data-qr-theme="titanium"] .qr-svg-wrapper { border: 1px solid rgba(176, 176, 181, 0.2); box-shadow: 0 0 35px rgba(176, 176, 181, 0.1); }
+        body[data-qr-theme="titanium"] .qr-svg { fill: #b0b0b5; }
+        body[data-qr-theme="obsidian_gold"] .qr-svg-wrapper { border: 1px solid rgba(229, 193, 88, 0.25); box-shadow: 0 0 35px rgba(229, 193, 88, 0.15); }
+        body[data-qr-theme="obsidian_gold"] .qr-svg { fill: #e5c158; filter: drop-shadow(0 0 8px rgba(229, 193, 88, 0.35)); }
+        body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(200, 150, 142, 0.25); box-shadow: 0 0 35px rgba(200, 150, 142, 0.15); }
+        body[data-qr-theme="satin_rose"] .qr-svg { fill: #c8968e; filter: drop-shadow(0 0 8px rgba(200, 150, 142, 0.35)); }
+        
+        .luxury-dock {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); 
+            background: rgba(30, 30, 35, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 40px; display: flex; gap: 30px; padding: 14px 32px;
+            z-index: 1000; opacity: 0; pointer-events: none; transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1); box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+        .luxury-dock.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+        .dock-item { display: flex; flex-direction: column; align-items: center; color: rgba(255, 255, 255, 0.5); cursor: pointer; transition: color 0.3s; }
+        .dock-item:active { transform: scale(0.9); }
+        .dock-item.active, .dock-item:hover { color: #ffffff; }
+        .dock-item i { font-size: 1.1rem; margin-bottom: 6px; }
+        .dock-item span { font-size: 0.5rem; letter-spacing: 1.5px; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+   <div class="configurator-wrapper">
+       <div id="profile-content" data-theme="black_dna"> 
+           <div class="header-monolith">
+                <div class="username-capsule">
+                    <div class="username-display" id="tag-username">@TUONOME.IT</div>
+                </div>
+            </div>
+
+            <div id="mainGrid">
+                <div class="casella" id="casella-qr" onclick="apriModalQR()">
+                    <span class="testo-pass">DIGITAL PASS</span>
+                </div>
+
+                <div class="casella" id="casella-crea" onclick="apriDrawer('drawer-identita')">
+                    <span class="testo-crea">+ CREA LA TUA TAG</span>
+                </div>
+            </div>
+       </div>
+   </div>
+
+   <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
+
+   <div class="drawer-glass" id="drawer-style">
+       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+           <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+           <div class="drawer-title">DIGITAL STYLE</div>
+           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Definisci il tuo stile</div>
+       </div>
+
+       <div class="style-list">
+           <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
+           <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
+           <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
+           <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
+           <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
+       </div>
+       <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
+   </div>
+
+   <div class="drawer-glass" id="drawer-identita">
+       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+           <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+           <div class="drawer-title">IDENTITÀ BRAND</div>
+           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Aggiungi gli spazi al nome</div>
+       </div>
+       <div>
+           <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi Volkswagen" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px;">
+       </div>
+       <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA IDENTITÀ</button>
+   </div>
+
+   <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
+       <div class="qr-card">
+           <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
+           <div class="qr-title-modal">ANTEPRIMA STILE</div>
+           <div class="qr-svg-wrapper">
+               <svg viewBox="0 0 100 100" class="qr-svg" xmlns="http://www.w3.org/2000/svg">
+                   <path d="M10,10 h22 v22 h-22 z M14,14 h14 v14 h-14 z M18,18 h6 v6 h-6 z" />
+                   <path d="M68,10 h22 v22 h-22 z M72,14 h14 v14 h-14 z M76,18 h6 v6 h-6 z" />
+                   <path d="M10,68 h22 v22 h-22 z M14,72 h14 v14 h-14 z M18,76 h6 v6 h-6 z" />
+                   <path d="M38,10 h6 v6 h-6 z M48,10 h16 v6 h-16 z M38,20 h26 v6 h-26 z M10,38 h6 v16 h-6 z M20,38 h22 v6 h-22 z M46,38 h6 v16 h-6 z M56,38 h26 v6 h-26 z M74,48 h16 v6 h-16 z M38,48 h6 v6 h-6 z M38,58 h22 v6 h-22 z M58,58 h6 v24 h-6 z M74,68 h16 v16 h-16 z M38,78 h6 v6 h-6 z M48,68 h6 v16 h-6 z M28,10 h6 v6 h-6 z M28,28 h6 v6 h-6 z M10,28 h6 v6 h-6 z M66,10 h6 v6 h-6 z M82,28 h6 v6 h-6 z M28,66 h6 v6 h-6 z M10,66 h6 v6 h-6 z M68,68 h6 v6 h-6 z M14,48 h4 v4 h-4 z M24,54 h4 v4 h-4 z M24,14 h4 v4 h-4 z M54,24 h4 v4 h-4 z M84,48 h4 v4 h-4 z" />
+                   <path d="M42,46 v-4 a8,8 0 0,1 16,0 v4 h3 v18 h-22 v-18 z M45,46 h10 v-4 a5,5 0 0,0 -10,0 z M48.5,53.5 a1.5,1.5 0 0,0 3,0 v-2 a1.5,1.5 0 0,0 -3,0 z" />
+               </svg>
+           </div>
+           <div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-top: 24px; text-transform: uppercase;">QR Demo • Attivazione post-checkout</div>
+       </div>
+   </div>
+  
+   <div class="luxury-dock" id="bottom-dock">
+       <div class="dock-item" onclick="apriDrawer('drawer-style')">
+           <i class="fas fa-palette"></i>
+           <span>STILE</span>
+       </div>
+   </div>
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+   
+
+   <script>
+    const params = new URLSearchParams(window.location.search);
+    const nomeUtente = params.get("u");
+
+    function formattaBadge(testoBruto) {
+        const el = document.getElementById('tag-username');
+        if(!el) return;
+
+        let testo = testoBruto.trim().toUpperCase();
+        if(!testo.startsWith('@')) testo = '@' + testo;
+
+        if (testo.includes(' ')) {
+            el.style.whiteSpace = "normal"; 
+            el.style.fontSize = "0.95rem"; 
+        } else {
+            el.style.whiteSpace = "nowrap"; 
+            if (testo.length > 24) {
+                el.style.fontSize = "0.55rem"; 
+            } else if (testo.length > 18) {
+                el.style.fontSize = "0.65rem"; 
+            } else {
+                el.style.fontSize = "0.95rem"; 
+            }
+        }
+        el.innerText = testo;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        if (nomeUtente) { 
+            const nomePulito = nomeUtente.replace('@', '');
+            formattaBadge(nomePulito); 
+            inizializzaPagina(); 
+        }
+
+        const fieldDisplay = document.getElementById('field-username_display');
+        if (fieldDisplay) {
+            fieldDisplay.addEventListener('input', () => {
+                if(fieldDisplay.value.trim() !== '') {
+                    formattaBadge(fieldDisplay.value);
+                } else if(nomeUtente) {
+                    formattaBadge(nomeUtente.replace('@', ''));
+                }
+            });
+        }
+    });
+
+    function apriDrawer(idDrawer) {
+        document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+        const drawer = document.getElementById(idDrawer);
+        const backdrop = document.getElementById('drawer-backdrop');
+        
+        if (backdrop) backdrop.classList.add('active');
+        setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
+    }
+
+    function chiudiSenzaSalvare() {
+        document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+        const backdrop = document.getElementById('drawer-backdrop');
+        if (backdrop) setTimeout(() => backdrop.classList.remove('active'), 300);
+    }
+
+    function salvaIdentitaEApriStile() {
+        salvaDati(false, true); 
+        apriDrawer('drawer-style'); 
+    }
+
+    function applicaTemaLive() {
+        const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
+        document.getElementById('profile-content').setAttribute('data-theme', temaSelezionato);
+        document.body.setAttribute('data-qr-theme', temaSelezionato);
+    }
+
+    function confermaEChiudiCassetto() {
+        salvaDati(false, true); 
+        chiudiSenzaSalvare();
+        
+        const tastoCrea = document.getElementById('casella-crea');
+        if(tastoCrea) tastoCrea.style.display = 'none'; 
+        const dock = document.getElementById('bottom-dock');
+        if(dock) dock.classList.add('show');
+    }
+
+    function apriModalQR() {
+        document.getElementById('modal-qr').classList.add('active');
+    }
+    function chiudiModalQR(event) {
+        if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
+            document.getElementById('modal-qr').classList.remove('active');
+        }
+    }
+
+    async function inizializzaPagina() {
+        if(!nomeUtente) return;
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+            const data = await response.json();
+
+            const f = (() => {
+                if (data.fields?.draft_json) {
+                    try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {}
+                }
+                return data.fields || data;
+            })();
+
+            if (f) {
+                if (f.username_display) {
+                    document.getElementById('field-username_display').value = f.username_display.replace('@', '');
+                    formattaBadge(f.username_display);
+                }
+                if (f.digital_style) {
+                    const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        applicaTemaLive();
+                    }
+                }
+            }
+        } catch (e) { console.error("Errore Airtable:", e); }
+    }
+
+    async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+        const displayVal = document.getElementById("field-username_display").value.trim();
+        
+        const bozza = {
+            username_system: nomePulito,
+            username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + nomePulito.toUpperCase(),
+            digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna"
+        }; 
+
+        try {
+            await fetch('/api/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username_system: nomePulito, draft_json: JSON.stringify(bozza) })
+            });
+        } catch (error) { console.error("Errore salvataggio:", error); }
+    }
+
+    let tapCount = 0;
+    const badgeDiv = document.querySelector('.username-capsule');
+    if(badgeDiv) {
+        badgeDiv.addEventListener('click', function() {
+            tapCount++;
+            if (tapCount >= 3) {
+                const url = new URL(window.location.href);
+                url.searchParams.set('ts', new Date().getTime());
+                window.location.href = url.toString();
+            }
+            setTimeout(() => { tapCount = 0; }, 1000);
+        });
+    }
+   </script>
+</body>
+</html>
