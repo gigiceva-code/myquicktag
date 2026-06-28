@@ -116,9 +116,9 @@
             text-align: center;
             width: 100%;
             /* Tassativo: Niente tagli automatici, decide il nostro JS */
-            white-space: normal; 
-            word-break: normal; 
-            overflow-wrap: normal;
+            white-space: normal;
+word-break: keep-all; /* Impedisce di spezzare le parole a metà */
+overflow-wrap: break-word; /* Va a capo solo se la parola è più larga dell'intero schermo */
         }
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -458,28 +458,20 @@ const params = new URLSearchParams(window.location.search);
         const nomePulito = nomeUtente.replace('@', '').trim().toUpperCase();
         const tagElement = document.getElementById("tag-username");
 
-        if (nomePulito.length > 16) {
-            // Taglio chirurgico a metà per bilanciare perfettamente le due righe
-            const meta = Math.ceil(nomePulito.length / 2);
-            const riga1 = nomePulito.substring(0, meta);
-            const riga2 = nomePulito.substring(meta);
-            
-            tagElement.style.fontSize = "0.75rem"; 
-            tagElement.style.lineHeight = "1.5";
-            // Inserisce il comando "a capo" (<br>) esatto
-            tagElement.innerHTML = "@" + riga1 + "<br>" + riga2; 
+        // Riduciamo dinamicamente in base alla lunghezza per farlo stare su una riga
+        // finché l'utente non inserisce gli spazi nel Display Name
+        if (nomePulito.length > 28) {
+            tagElement.style.fontSize = "0.65rem";
+        } else if (nomePulito.length > 20) {
+            tagElement.style.fontSize = "0.75rem";
         } else {
-            // Nome corto, resta su una riga sola
             tagElement.style.fontSize = "0.95rem";
-            tagElement.innerText = "@" + nomePulito;
         }
+
+        // Stampiamo la tag primordiale: vuota, solo la @ e il nome
+        tagElement.innerText = "@" + nomePulito;
         
         inizializzaPagina(); 
-    }
-        // Output finale al centro della capsula
-        tagElement.innerText = "@" + nomeFinale;
-        
-        inizializzaPagina(); // Fa partire le chiamate al database
     }
         // Variabili Cassetto e Contenitore
         const drawer = document.getElementById('drawer-style');
