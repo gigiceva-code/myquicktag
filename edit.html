@@ -282,27 +282,33 @@
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
 
-    function formattaBadge(testoBruto) {
+        function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
 
-        let testo = testoBruto.trim().toUpperCase();
-        if(!testo.startsWith('@')) testo = '@' + testo;
+        // Trasformiamo in lowercase come da tua richiesta "luxury minimal"
+        let testo = testoBruto.trim().toLowerCase();
+        
+        // Isola la @ se presente e avvolgila in un span con classe at-symbol
+        if (testo.startsWith('@')) {
+            const nomeSolo = testo.substring(1);
+            el.innerHTML = `<span class="at-symbol">@</span>${nomeSolo}`;
+        } else {
+            el.innerHTML = `<span class="at-symbol">@</span>${testo}`;
+        }
 
+        // Logica di ridimensionamento del font
         if (testo.includes(' ')) {
             el.style.whiteSpace = "normal"; 
-            el.style.fontSize = "0.95rem"; 
+            el.style.fontSize = "1.05rem"; 
         } else {
             el.style.whiteSpace = "nowrap"; 
-            if (testo.length > 24) {
-                el.style.fontSize = "0.55rem"; 
-            } else if (testo.length > 18) {
-                el.style.fontSize = "0.65rem"; 
+            if (testo.length > 20) {
+                el.style.fontSize = "0.85rem"; 
             } else {
-                el.style.fontSize = "0.95rem"; 
+                el.style.fontSize = "1.05rem"; 
             }
         }
-        el.innerText = testo;
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -323,6 +329,7 @@
             });
         }
     });
+
 
     function apriDrawer(idDrawer) {
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
