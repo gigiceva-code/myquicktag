@@ -84,19 +84,15 @@
             clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
         }
 
-        .username-display {
+                .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
-            text-transform: lowercase; white-space: normal; word-break: keep-all;
+            width: 100%; margin: 0 auto;
+            text-align: center !important; /* BLINDA IL TESTO AL CENTRO */
+            display: block !important; 
+            text-transform: uppercase; 
+            white-space: normal; word-break: keep-all; overflow-wrap: break-word;
+            transition: font-size 0.3s ease; 
         }
-
-        /* La classe per rendere la @ elegante e discreta */
-        .at-symbol {
-            font-size: 0.75rem; /* Più piccola del nome */
-            opacity: 0.4;       /* Più chiara */
-            margin-right: 4px;
-            vertical-align: middle;
-        }
- 
 
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
@@ -283,25 +279,25 @@
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
     
-    function formattaBadge(testoBruto) {
+        function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
 
-        // Tutto in MAIUSCOLO
         let testo = testoBruto.trim().toUpperCase();
         if(!testo.startsWith('@')) testo = '@' + testo;
 
         el.innerText = testo;
+        el.style.textAlign = "center"; // Ribadiamo la centratura via codice
 
-        // Regole di formattazione
         if (testo.includes(' ')) {
             el.style.whiteSpace = "normal"; 
             el.style.wordBreak = "keep-all";
             el.style.overflowWrap = "break-word";
-            el.style.textWrap = "balance"; // IL TOCCO MAGICO PER CENTRARE E BILANCIARE LE RIGHE
+            el.style.textWrap = "balance"; 
             el.style.fontSize = "0.95rem"; 
         } else {
             el.style.whiteSpace = "nowrap"; 
+            el.style.textWrap = "nowrap"; // Rimuove il balance per il testo monoblocco
             if (testo.length > 24) {
                 el.style.fontSize = "0.55rem"; 
             } else if (testo.length > 18) {
@@ -322,14 +318,21 @@
         const fieldDisplay = document.getElementById('field-username_display');
         if (fieldDisplay) {
             fieldDisplay.addEventListener('input', () => {
-                if(fieldDisplay.value.trim() !== '') {
+                const nomePulito = nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
+                const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
+                
+                // IL CONTROLLO SPIETATO: 
+                // Il badge si aggiorna in diretta SOLO se hai digitato esattamente le stesse lettere di sistema
+                if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi === nomePulito) {
                     formattaBadge(fieldDisplay.value);
-                } else if(nomeUtente) {
-                    formattaBadge(nomeUtente.replace('@', ''));
+                } else {
+                    // Se metti lettere diverse, il badge visualizza inesorabilmente il tag di base
+                    formattaBadge(nomePulito);
                 }
             });
         }
     });
+
 
     function salvaIdentitaEApriStile() {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
