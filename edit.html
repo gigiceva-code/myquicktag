@@ -69,35 +69,33 @@
             width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0;
         }
         
-        /* --- LA VERA SOLUZIONE 4: BADGE LUXURY (MINIMAL) --- */
-        .username-capsule-wrapper {
-            position: relative; margin: 10px auto; width: fit-content; max-width: 95%;
-            filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.8)); 
-        }
-
+               /* --- SOLUZIONE 4: BADGE LUXURY (PERFEZIONATO) --- */
         .username-capsule {
-            display: flex; /* OBBLIGATORIO: Impedisce alla cornice di collassare */
-            padding: 2.5px; /* SPESSORE CORNICE: Alzato per schermi HD */
-            background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+            display: flex;
+            padding: 1.5px; /* Sottile, non più invasivo */
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05)); /* Opacità abbassata */
             clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
         }
 
         .username-capsule-inner {
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            width: 100%; flex: 1; /* Si espande riempiendo lo spazio meno i 2.5px di bordo */
-            background: #0d0d0f; 
-            padding: 24px 35px;
-            /* Leggermente più stretto (23px) per seguire l'angolo del bordo */
+            display: flex; justify-content: center; align-items: center;
+            width: 100%; background: #0d0d0f; padding: 24px 35px;
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
 
         .username-display {
-            font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; text-align: center; width: 100%;
-            text-transform: lowercase; 
-            white-space: normal; word-break: keep-all; overflow-wrap: break-word;
-            transition: font-size 0.3s ease; color: #fff;
+            font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
+            text-transform: lowercase; white-space: normal; word-break: keep-all;
         }
 
+        /* La classe per rendere la @ elegante e discreta */
+        .at-symbol {
+            font-size: 0.75rem; /* Più piccola del nome */
+            opacity: 0.4;       /* Più chiara */
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+ 
 
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
