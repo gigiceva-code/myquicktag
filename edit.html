@@ -282,34 +282,34 @@
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
 
-        function formattaBadge(testoBruto) {
+            function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
 
-        // Trasformiamo in lowercase come da tua richiesta "luxury minimal"
-        let testo = testoBruto.trim().toLowerCase();
-        
-        // Isola la @ se presente e avvolgila in un span con classe at-symbol
-        if (testo.startsWith('@')) {
-            const nomeSolo = testo.substring(1);
-            el.innerHTML = `<span class="at-symbol">@</span>${nomeSolo}`;
-        } else {
-            el.innerHTML = `<span class="at-symbol">@</span>${testo}`;
-        }
+        // Tutto in MAIUSCOLO e blocco unico con la @
+        let testo = testoBruto.trim().toUpperCase();
+        if(!testo.startsWith('@')) testo = '@' + testo;
 
-        // Logica di ridimensionamento del font
+        el.innerText = testo;
+
+        // Il controllo magico sugli spazi
         if (testo.includes(' ')) {
-            el.style.whiteSpace = "normal"; 
-            el.style.fontSize = "1.05rem"; 
+            el.style.whiteSpace = "normal";     // Permesso assoluto di andare a capo
+            el.style.wordBreak = "keep-all";    // Non spezzare mai le parole a metà carattere
+            el.style.overflowWrap = "break-word";
+            el.style.fontSize = "0.95rem";      // Dimensione piena e leggibile su due righe
         } else {
-            el.style.whiteSpace = "nowrap"; 
-            if (testo.length > 20) {
-                el.style.fontSize = "0.85rem"; 
+            el.style.whiteSpace = "nowrap";     // Senza spazi resta monoblocco su una riga
+            if (testo.length > 24) {
+                el.style.fontSize = "0.55rem"; 
+            } else if (testo.length > 18) {
+                el.style.fontSize = "0.65rem"; 
             } else {
-                el.style.fontSize = "1.05rem"; 
+                el.style.fontSize = "0.95rem"; 
             }
         }
     }
+
 
     document.addEventListener("DOMContentLoaded", () => {
         if (nomeUtente) { 
