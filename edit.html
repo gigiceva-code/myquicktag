@@ -38,49 +38,50 @@
             transition: all 0.4s ease; 
         }
       
-                 /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
+               /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
         
         /* 1. EMERALD */
         #profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8); }
-        #profile-content[data-theme="emerald"] .username-capsule { background: linear-gradient(135deg, #00E680, rgba(0,230,128,0.2)); }
+        #profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.5); }
         #profile-content[data-theme="emerald"] .testo-pass { color: #00E680; text-shadow: 0 0 10px rgba(0, 230, 128, 0.2); }
 
         /* 2. BLACK DNA (Stealth Puro) */
         #profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); } 
-        #profile-content[data-theme="black_dna"] .username-capsule { background: linear-gradient(135deg, #ffffff, rgba(255,255,255,0.2)); }
+        #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.35); }
         #profile-content[data-theme="black_dna"] .testo-pass { color: #ffffff; opacity: 0.9; }
 
         /* 3. TITANIUM */
         #profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8); }
-        #profile-content[data-theme="titanium"] .username-capsule { background: linear-gradient(135deg, #b0b0b5, rgba(176,176,181,0.2)); }
+        #profile-content[data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.4); }
         #profile-content[data-theme="titanium"] .testo-pass { color: #b0b0b5; }
 
         /* 4. OBSIDIAN GOLD */
         #profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8); }
-        #profile-content[data-theme="obsidian_gold"] .username-capsule { background: linear-gradient(135deg, #e5c158, rgba(229,193,88,0.2)); }
+        #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.5); }
         #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #e5c158; text-shadow: 0 0 10px rgba(229, 193, 88, 0.2); }
 
         /* 5. SATIN ROSE */
         #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8); }
-        #profile-content[data-theme="satin_rose"] .username-capsule { background: linear-gradient(135deg, #c8968e, rgba(200,150,142,0.2)); }
+        #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.5); }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
-       
+        
         .header-monolith {
             width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0;
         }
         
                /* --- SOLUZIONE 4: BADGE LUXURY (PERFEZIONATO) --- */
-        .username-capsule {
-            display: flex;
-            padding: 1.5px; /* Sottile, non più invasivo */
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05)); /* Opacità abbassata */
-            clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
-        }
+        
 
         .username-capsule-inner {
             display: flex; justify-content: center; align-items: center;
             width: 100%; background: #0d0d0f; padding: 24px 35px;
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
+        }
+        .username-capsule {
+            display: flex;
+            padding: 1.5px;
+            background: rgba(255, 255, 255, 0.3); /* Niente più gradiente */
+            clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
         }
 
         .username-display {
@@ -281,8 +282,7 @@
    <script>
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
-
-            function formattaBadge(testoBruto) {
+    function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
 
@@ -309,6 +309,8 @@
             }
         }
     }
+
+            
 
 
     document.addEventListener("DOMContentLoaded", () => {
