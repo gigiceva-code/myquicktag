@@ -243,13 +243,13 @@
    <div class="drawer-glass" id="drawer-identita">
        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
-           <div class="drawer-title">IDENTITÀ BRAND</div>
+           <div class="drawer-title">NOME BRAND</div>
            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Aggiungi gli spazi al nome</div>
        </div>
        <div>
            <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi Volkswagen" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px;">
        </div>
-       <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA IDENTITÀ</button>
+       <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME</button>
    </div>
 
    <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
@@ -282,24 +282,26 @@
    <script>
     const params = new URLSearchParams(window.location.search);
     const nomeUtente = params.get("u");
+    
     function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
 
-        // Tutto in MAIUSCOLO e blocco unico con la @
+        // Tutto in MAIUSCOLO
         let testo = testoBruto.trim().toUpperCase();
         if(!testo.startsWith('@')) testo = '@' + testo;
 
         el.innerText = testo;
 
-        // Il controllo magico sugli spazi
+        // Regole di formattazione
         if (testo.includes(' ')) {
-            el.style.whiteSpace = "normal";     // Permesso assoluto di andare a capo
-            el.style.wordBreak = "keep-all";    // Non spezzare mai le parole a metà carattere
+            el.style.whiteSpace = "normal"; 
+            el.style.wordBreak = "keep-all";
             el.style.overflowWrap = "break-word";
-            el.style.fontSize = "0.95rem";      // Dimensione piena e leggibile su due righe
+            el.style.textWrap = "balance"; // IL TOCCO MAGICO PER CENTRARE E BILANCIARE LE RIGHE
+            el.style.fontSize = "0.95rem"; 
         } else {
-            el.style.whiteSpace = "nowrap";     // Senza spazi resta monoblocco su una riga
+            el.style.whiteSpace = "nowrap"; 
             if (testo.length > 24) {
                 el.style.fontSize = "0.55rem"; 
             } else if (testo.length > 18) {
@@ -309,9 +311,6 @@
             }
         }
     }
-
-            
-
 
     document.addEventListener("DOMContentLoaded", () => {
         if (nomeUtente) { 
@@ -332,6 +331,26 @@
         }
     });
 
+    function salvaIdentitaEApriStile() {
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+        const fieldDisplay = document.getElementById('field-username_display');
+        
+        // Prendiamo quello che ha scritto l'utente e gli togliamo tutti gli spazi per il controllo
+        const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
+
+        // Se il campo non è vuoto e le lettere non combaciano col nome originale, BLOCCO TUTTO
+        if (fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
+            alert("⚠️ AZIONE NON CONSENTITA ⚠️\n\nIl tuo Tag è unico e registrato a sistema come @" + nomePulito.toUpperCase() + ".\n\nPuoi usare questo campo SOLO per aggiungere gli spazi e migliorare la leggibilità del brand, non puoi cambiare le parole o le lettere.");
+            
+            // Resetta il campo al nome di sistema corretto
+            fieldDisplay.value = nomeUtente.replace('@', '');
+            formattaBadge(nomeUtente.replace('@', ''));
+            return; // Interrompe l'esecuzione: non salva e non apre il cassetto stile
+        }
+
+        salvaDati(false, true); // Salva l'identità in Airtable
+        apriDrawer('drawer-style'); // Apre subito il cassetto per scegliere il colore
+    }
 
     function apriDrawer(idDrawer) {
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
