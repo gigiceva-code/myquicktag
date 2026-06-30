@@ -441,7 +441,11 @@
                     // Inserisce il nome formattato nel campo di testo
                     const inputField = document.getElementById('field-username_display');
                     if (inputField) inputField.value = f.username_display.replace('@', '');
+                    // SALVA IN CACHE IL NOME FORMATTATO
+                    localStorage.setItem('mqt_cache_' + nomePulito, f.username_display);
                     
+                    formattaBadge(f.username_display);
+                }
                     // Formatta il badge leggendo finalmente dal database!
                     formattaBadge(f.username_display);
                 }
