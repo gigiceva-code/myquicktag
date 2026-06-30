@@ -308,7 +308,8 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+       document.addEventListener("DOMContentLoaded", () => {
+        
         if (nomeUtente) { 
             const nomePulito = nomeUtente.replace('@', '');
             formattaBadge(nomePulito); 
@@ -316,22 +317,42 @@
         }
 
         const fieldDisplay = document.getElementById('field-username_display');
+        // Peschiamo esattamente il bottone che salva il nome, ovunque si trovi
+        const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
+
         if (fieldDisplay) {
             fieldDisplay.addEventListener('input', () => {
                 const nomePulito = nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
                 const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
                 
-                // IL CONTROLLO SPIETATO: 
-                // Il badge si aggiorna in diretta SOLO se hai digitato esattamente le stesse lettere di sistema
-                if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi === nomePulito) {
-                    formattaBadge(fieldDisplay.value);
+                // CONTROLLO SPIETATO IN TEMPO REALE
+                if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
+                    // Allarme rosso: l'utente sta cercando di cambiare le lettere
+                    fieldDisplay.style.borderColor = "#ff4444";
+                    fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
+                    
+                    if (btnSalva) {
+                        btnSalva.style.pointerEvents = "none";
+                        btnSalva.style.opacity = "0.3";
+                    }
+                    // Resetta il badge visivo al nome di base
+                    formattaBadge(nomePulito); 
                 } else {
-                    // Se metti lettere diverse, il badge visualizza inesorabilmente il tag di base
-                    formattaBadge(nomePulito);
+                    // Tutto ok: ha inserito solo spazi, riportiamo il campo alla normalità
+                    fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
+                    fieldDisplay.style.boxShadow = "none";
+                    
+                    if (btnSalva) {
+                        btnSalva.style.pointerEvents = "auto";
+                        btnSalva.style.opacity = "1";
+                    }
+                    // Aggiorna il badge con gli spazi
+                    formattaBadge(fieldDisplay.value);
                 }
             });
         }
     });
+
 
 
     function salvaIdentitaEApriStile() {
