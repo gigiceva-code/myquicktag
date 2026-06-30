@@ -421,7 +421,7 @@
         }
     }
 
-    async function inizializzaPagina() {
+        async function inizializzaPagina() { // TUTTO RIGOROSAMENTE MINUSCOLO
         if(!nomeUtente) return;
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
 
@@ -438,7 +438,11 @@
 
             if (f) {
                 if (f.username_display) {
-                    document.getElementById('field-username_display').value = f.username_display.replace('@', '');
+                    // Inserisce il nome formattato nel campo di testo
+                    const inputField = document.getElementById('field-username_display');
+                    if (inputField) inputField.value = f.username_display.replace('@', '');
+                    
+                    // Formatta il badge leggendo finalmente dal database!
                     formattaBadge(f.username_display);
                 }
                 if (f.digital_style) {
@@ -454,7 +458,8 @@
 
     async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-        const displayVal = document.getElementById("field-username_display").value.trim();
+        const inputField = document.getElementById("field-username_display");
+        const displayVal = inputField ? inputField.value.trim() : "";
         
         const bozza = {
             username_system: nomePulito,
@@ -471,6 +476,29 @@
         } catch (error) { console.error("Errore salvataggio:", error); }
     }
 
+    // IL BUTTAFUORI SUL TASTO SALVA
+    function salvaIdentitaEApriStile() {
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+        const fieldDisplay = document.getElementById('field-username_display');
+        
+        if(!fieldDisplay) return;
+
+        const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
+
+        if (fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
+            alert("⚠️ AZIONE NON CONSENTITA ⚠️\n\nIl tuo Tag è unico e registrato a sistema come @" + nomePulito.toUpperCase() + ".\n\nNon puoi cambiare le lettere del brand, puoi solo inserire gli spazi per migliorarne la lettura.");
+            fieldDisplay.value = nomeUtente.replace('@', '');
+            formattaBadge(nomeUtente.replace('@', ''));
+            return; 
+        }
+
+        salvaDati(false, true); 
+        
+        // Passiamo alla sezione stile (se la funzione esiste)
+        if (typeof apriDrawer === 'function') apriDrawer('drawer-style');
+    }
+
+    // GESTIONE DEL TRIPLO TAP PER IL REFRESH HARD
     let tapCount = 0;
     const badgeDiv = document.querySelector('.username-capsule');
     if(badgeDiv) {
@@ -484,6 +512,53 @@
             setTimeout(() => { tapCount = 0; }, 1000);
         });
     }
+
+    // INIZIALIZZAZIONE E CONTROLLO SPIETATO IN TEMPO REALE
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        if (nomeUtente) { 
+            const nomePulito = nomeUtente.replace('@', '');
+            formattaBadge(nomePulito); 
+            inizializzaPagina(); // Ora che la "A" è minuscola, scaricherà i dati!
+        }
+
+        const fieldDisplay = document.getElementById('field-username_display');
+        
+        if (fieldDisplay) {
+            fieldDisplay.addEventListener('input', () => {
+                const nomePulito = nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
+                const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
+                const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
+                
+                // Se digita lettere diverse dal nome registrato, ALLARME ROSSO
+                if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
+                    fieldDisplay.style.borderColor = "#ff4444";
+                    fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
+                    
+                    if (btnSalva) {
+                        btnSalva.style.pointerEvents = "none";
+                        btnSalva.style.opacity = "0.3";
+                    }
+                    
+                    // Il badge ignora l'errore e fa vedere il nome reale
+                    formattaBadge(nomePulito); 
+                } else {
+                    // Tutto ok, ha messo solo spazi. Campo regolare.
+                    fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
+                    fieldDisplay.style.boxShadow = "none";
+                    
+                    if (btnSalva) {
+                        btnSalva.style.pointerEvents = "auto";
+                        btnSalva.style.opacity = "1";
+                    }
+                    
+                    // Aggiorna il badge con gli spazi inseriti
+                    formattaBadge(fieldDisplay.value);
+                }
+            });
+        }
+    });
+
    </script>
 </body>
 </html>
