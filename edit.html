@@ -274,88 +274,12 @@
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
    
-
    <script>
-         document.addEventListener("DOMContentLoaded", () => {
-        
-        if (nomeUtente) { 
-            const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-            
-            // CERCA SUBITO IL NOME NELLA CACHE DEL BROWSER
-            const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
-            
-            if (nomeInCache) {
-                // Se lo trova, formatta il badge in un millisecondo prima che parta Airtable
-                formattaBadge(nomeInCache); 
-            } else {
-                // Se non lo trova, usa il nome base dell'URL
-                formattaBadge(nomePulito); 
-            }
-            
-            // Fatto questo, lascia che Airtable carichi i dati in background senza fare scatti
-            inizializzaPagina(); 
-        }
-
-        // IL BUTTAFUORI RIMANE ATTIVO
-        const fieldDisplay = document.getElementById('field-username_display');
-        const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
-
-        if (fieldDisplay) {
-            fieldDisplay.addEventListener('input', () => {
-                const nomePulito = nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
-                const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
-                
-                if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
-                    fieldDisplay.style.borderColor = "#ff4444";
-                    fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
-                    
-                    if (btnSalva) {
-                        btnSalva.style.pointerEvents = "none";
-                        btnSalva.style.opacity = "0.3";
-                    }
-                    formattaBadge(nomePulito); 
-                } else {
-                    fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
-                    fieldDisplay.style.boxShadow = "none";
-                    
-                    if (btnSalva) {
-                        btnSalva.style.pointerEvents = "auto";
-                        btnSalva.style.opacity = "1";
-                    }
-                    formattaBadge(fieldDisplay.value);
-                }
-            });
-        }
-    });
-
-    
-
-    function salvaIdentitaEApriStile() {
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-        const fieldDisplay = document.getElementById('field-username_display');
-        
-        // Prendiamo quello che ha scritto l'utente e gli togliamo tutti gli spazi per il controllo
-        const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
-
-        // Se il campo non è vuoto e le lettere non combaciano col nome originale, BLOCCO TUTTO
-        if (fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
-            alert("⚠️ AZIONE NON CONSENTITA ⚠️\n\nIl tuo Tag è unico e registrato a sistema come @" + nomePulito.toUpperCase() + ".\n\nPuoi usare questo campo SOLO per aggiungere gli spazi e migliorare la leggibilità del brand, non puoi cambiare le parole o le lettere.");
-            
-            // Resetta il campo al nome di sistema corretto
-            fieldDisplay.value = nomeUtente.replace('@', '');
-            formattaBadge(nomeUtente.replace('@', ''));
-            return; // Interrompe l'esecuzione: non salva e non apre il cassetto stile
-        }
-
-        salvaDati(false, true); // Salva l'identità in Airtable
-        apriDrawer('drawer-style'); // Apre subito il cassetto per scegliere il colore
-    }
-
+          // 1. GESTIONE CASSETTI E MODALI
     function apriDrawer(idDrawer) {
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
         const drawer = document.getElementById(idDrawer);
         const backdrop = document.getElementById('drawer-backdrop');
-        
         if (backdrop) backdrop.classList.add('active');
         setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
     }
@@ -364,11 +288,6 @@
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
         const backdrop = document.getElementById('drawer-backdrop');
         if (backdrop) setTimeout(() => backdrop.classList.remove('active'), 300);
-    }
-
-    function salvaIdentitaEApriStile() {
-        salvaDati(false, true); 
-        apriDrawer('drawer-style'); 
     }
 
     function applicaTemaLive() {
@@ -380,7 +299,6 @@
     function confermaEChiudiCassetto() {
         salvaDati(false, true); 
         chiudiSenzaSalvare();
-        
         const tastoCrea = document.getElementById('casella-crea');
         if(tastoCrea) tastoCrea.style.display = 'none'; 
         const dock = document.getElementById('bottom-dock');
@@ -390,13 +308,14 @@
     function apriModalQR() {
         document.getElementById('modal-qr').classList.add('active');
     }
+    
     function chiudiModalQR(event) {
         if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
             document.getElementById('modal-qr').classList.remove('active');
         }
     }
 
-        
+    // 2. CHIAMATE AIRTABLE E SALVATAGGIO
     async function inizializzaPagina() { 
         if(!nomeUtente) return;
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
@@ -414,14 +333,10 @@
 
             if (f) {
                 if (f.username_display) {
-                    // Inserisce il nome formattato nel campo di testo
                     const inputField = document.getElementById('field-username_display');
                     if (inputField) inputField.value = f.username_display.replace('@', '');
-                    
                     // SALVA IN CACHE IL NOME FORMATTATO
                     localStorage.setItem('mqt_cache_' + nomePulito, f.username_display);
-                    
-                    // Formatta il badge leggendo finalmente dal database!
                     formattaBadge(f.username_display);
                 }
                 
@@ -436,7 +351,7 @@
         } catch (e) { console.error("Errore Airtable:", e); }
     }
 
-        async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
+    async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
         const inputField = document.getElementById("field-username_display");
         const displayVal = inputField ? inputField.value.trim() : "";
@@ -459,8 +374,7 @@
         } catch (error) { console.error("Errore salvataggio:", error); }
     }
 
-
-    // IL BUTTAFUORI SUL TASTO SALVA
+    // 3. IL BUTTAFUORI (UNICO E BLINDATO)
     function salvaIdentitaEApriStile() {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
         const fieldDisplay = document.getElementById('field-username_display');
@@ -477,12 +391,10 @@
         }
 
         salvaDati(false, true); 
-        
-        // Passiamo alla sezione stile (se la funzione esiste)
-        if (typeof apriDrawer === 'function') apriDrawer('drawer-style');
+        apriDrawer('drawer-style');
     }
 
-    // GESTIONE DEL TRIPLO TAP PER IL REFRESH HARD
+    // 4. REFRESH TRIPLO TAP
     let tapCount = 0;
     const badgeDiv = document.querySelector('.username-capsule');
     if(badgeDiv) {
@@ -497,52 +409,46 @@
         });
     }
 
-    // INIZIALIZZAZIONE E CONTROLLO SPIETATO IN TEMPO REALE
+    // 5. MOTORE DI AVVIO E CONTROLLO REAL-TIME
     document.addEventListener("DOMContentLoaded", () => {
         
+        // Lettura CACHE immediata all'avvio del DOM
         if (nomeUtente) { 
-            const nomePulito = nomeUtente.replace('@', '');
-            formattaBadge(nomePulito); 
-            inizializzaPagina(); // Ora che la "A" è minuscola, scaricherà i dati!
+            const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+            const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
+            
+            if (nomeInCache) {
+                formattaBadge(nomeInCache); // Usa subito il nome impaginato
+            } else {
+                formattaBadge(nomePulito); // Usa l'URL grezzo se non ha cache
+            }
+            
+            inizializzaPagina(); // Chiama Airtable in silenzio
         }
 
+        // Controllo spietato sul campo di testo
         const fieldDisplay = document.getElementById('field-username_display');
-        
+        const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
+
         if (fieldDisplay) {
             fieldDisplay.addEventListener('input', () => {
                 const nomePulito = nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
                 const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
-                const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
                 
-                // Se digita lettere diverse dal nome registrato, ALLARME ROSSO
                 if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
                     fieldDisplay.style.borderColor = "#ff4444";
                     fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
-                    
-                    if (btnSalva) {
-                        btnSalva.style.pointerEvents = "none";
-                        btnSalva.style.opacity = "0.3";
-                    }
-                    
-                    // Il badge ignora l'errore e fa vedere il nome reale
+                    if (btnSalva) { btnSalva.style.pointerEvents = "none"; btnSalva.style.opacity = "0.3"; }
                     formattaBadge(nomePulito); 
                 } else {
-                    // Tutto ok, ha messo solo spazi. Campo regolare.
                     fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
                     fieldDisplay.style.boxShadow = "none";
-                    
-                    if (btnSalva) {
-                        btnSalva.style.pointerEvents = "auto";
-                        btnSalva.style.opacity = "1";
-                    }
-                    
-                    // Aggiorna il badge con gli spazi inseriti
+                    if (btnSalva) { btnSalva.style.pointerEvents = "auto"; btnSalva.style.opacity = "1"; }
                     formattaBadge(fieldDisplay.value);
                 }
             });
         }
     });
-
    </script>
 </body>
 </html>
