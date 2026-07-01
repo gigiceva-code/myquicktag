@@ -276,29 +276,27 @@
    
 
    <script>
-     
-    // --- 1. ESECUZIONE ISTANTANEA (Uccide lo scatto visivo a tempo zero) ---
-    if (typeof nomeUtente !== 'undefined' && nomeUtente) { 
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-        const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
-        
-        if (nomeInCache) {
-            // Se trova la cache, formatta il badge prima ancora che la pagina finisca di caricare
-            formattaBadge(nomeInCache); 
-        } else {
-            formattaBadge(nomePulito); 
-        }
-    }
-
-    // --- 2. ASCOLTATORI EVENTI AL CARICAMENTO COMPLETATO ---
-    document.addEventListener("DOMContentLoaded", () => {
+         document.addEventListener("DOMContentLoaded", () => {
         
         if (nomeUtente) { 
-            // La formattazione è già stata fatta sopra a tempo zero.
-            // Qui facciamo solo partire Airtable in silenzio in background.
+            const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+            
+            // CERCA SUBITO IL NOME NELLA CACHE DEL BROWSER
+            const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
+            
+            if (nomeInCache) {
+                // Se lo trova, formatta il badge in un millisecondo prima che parta Airtable
+                formattaBadge(nomeInCache); 
+            } else {
+                // Se non lo trova, usa il nome base dell'URL
+                formattaBadge(nomePulito); 
+            }
+            
+            // Fatto questo, lascia che Airtable carichi i dati in background senza fare scatti
             inizializzaPagina(); 
         }
 
+        // IL BUTTAFUORI RIMANE ATTIVO
         const fieldDisplay = document.getElementById('field-username_display');
         const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
 
@@ -307,7 +305,6 @@
                 const nomePulito = nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
                 const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
                 
-                // CONTROLLO SPIETATO IN TEMPO REALE
                 if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
                     fieldDisplay.style.borderColor = "#ff4444";
                     fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
@@ -331,8 +328,7 @@
         }
     });
 
-
-
+    
 
     function salvaIdentitaEApriStile() {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
