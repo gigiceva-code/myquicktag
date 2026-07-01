@@ -272,106 +272,7 @@
        </div>
    </div>
 
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-   
-  <script>
-    // 1. MOTORE VISIVO BADGE (QUELLO CHE MANCAVA!)
-    function formattaBadge(testoBruto) {
-        const el = document.getElementById('tag-username');
-        if(!el) return;
-
-        let testo = testoBruto.trim().toUpperCase();
-        if(!testo.startsWith('@')) testo = '@' + testo;
-
-        el.innerText = testo;
-        el.style.textAlign = "center";
-
-        if (testo.includes(' ')) {
-            el.style.whiteSpace = "normal"; 
-            el.style.wordBreak = "keep-all";
-            el.style.overflowWrap = "break-word";
-            el.style.textWrap = "balance"; 
-            el.style.fontSize = "0.95rem"; 
-        } else {
-            el.style.whiteSpace = "nowrap"; 
-            el.style.textWrap = "nowrap"; 
-            if (testo.length > 24) {
-                el.style.fontSize = "0.55rem"; 
-            } else if (testo.length > 18) {
-                el.style.fontSize = "0.65rem"; 
-            } else {
-                el.style.fontSize = "0.95rem"; 
-            }
-        }
-    }
-
-    // 2. GESTIONE CASSETTI E MODALI
-    function apriDrawer(idDrawer) {
-        document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
-        const drawer = document.getElementById(idDrawer);
-        const backdrop = document.getElementById('drawer-backdrop');
-        if (backdrop) backdrop.classList.add('active');
-        setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
-    }
-
-    function chiudiSenzaSalvare() {
-        document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
-        const backdrop = document.getElementById('drawer-backdrop');
-        if (backdrop) setTimeout(() => backdrop.classList.remove('active'), 300);
-    }
-
-    function applicaTemaLive() {
-        const temaSelezionato = document.querySelector('input[name="digital_style"]:checked').value;
-        document.getElementById('profile-content').setAttribute('data-theme', temaSelezionato);
-        document.body.setAttribute('data-qr-theme', temaSelezionato);
-    }
-
-    function confermaEChiudiCassetto() {
-        salvaDati(false, true); 
-        chiudiSenzaSalvare();
-        const tastoCrea = document.getElementById('casella-crea');
-        if(tastoCrea) tastoCrea.style.display = 'none'; 
-        const dock = document.getElementById('bottom-dock');
-        if(dock) dock.classList.add('show');
-    }
-
-    function apriModalQR() {
-        document.getElementById('modal-qr').classList.add('active');
-    }
-    
-    function chiudiModalQR(event) {
-        if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
-            document.getElementById('modal-qr').classList.remove('active');
-        }
-    }
-
-    // 3. CHIAMATE AIRTABLE E SALVATAGGIO
-    async function inizializzaPagina() { 
-        if(!nomeUtente) return;
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-
-        try {
-            const response = await fetch(`/api/get-profile?u=${nomePulito}`);
-            const data = await response.json();
-
-            const f = (() => {
-                if (data.fields?.draft_json) {
-                    try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {}
-                }
-                return data.fields || data;
-            })();
-
-            if (f) {
-                if (f.username_display) {
-                    const inputField = document.getElementById('field-username_display');
-                    if (inputField) inputField.value = f.username_display.replace('@', '');
-                    localStorage.setItem('mqt_cache_' + nomePulito, f.username_display);
-                    formattaBadge(f.username_display);
-                }
-                
-                if (f.digital_style) {
-                    const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
-<script>
+   <script>
     // 0. CORAZZA DI SICUREZZA (Salva la vita nelle pagine di test)
     function getNomeDiSistema() {
         if (typeof nomeUtente !== 'undefined' && nomeUtente) {
@@ -446,7 +347,7 @@
         const modal = document.getElementById('modal-qr');
         if(modal) modal.classList.add('active');
     }
-    
+
     function chiudiModalQR(event) {
         if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
             document.getElementById('modal-qr').classList.remove('active');
@@ -476,7 +377,7 @@
                     localStorage.setItem('mqt_cache_' + nomePulito, f.username_display);
                     formattaBadge(f.username_display);
                 }
-                
+
                 if (f.digital_style) {
                     const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
                     if (radio) {
@@ -493,7 +394,7 @@
         const nomePulito = getNomeDiSistema();
         const inputField = document.getElementById("field-username_display");
         const displayVal = inputField ? inputField.value.trim() : "";
-        
+
         const bozza = {
             username_system: nomePulito,
             username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + nomePulito.toUpperCase(),
@@ -511,11 +412,11 @@
         } catch (error) { console.error("Errore salvataggio:", error); }
     }
 
-    // 4. IL BUTTAFUORI SUL BOTTONE
+    // 4. IL BUTTAFUORI SUL BOTTONE E CONTROLLO
     function salvaIdentitaEApriStile() {
         const nomePulito = getNomeDiSistema();
         const fieldDisplay = document.getElementById('field-username_display');
-        
+
         if(!fieldDisplay) return;
 
         const inputVal = fieldDisplay.value;
@@ -547,19 +448,19 @@
         });
     }
 
-    // 6. MOTORE DI AVVIO E CONTROLLO REAL-TIME SPIETATO
+    // 6. MOTORE DI AVVIO E CONTROLLO REAL-TIME
     document.addEventListener("DOMContentLoaded", () => {
         const nomePulito = getNomeDiSistema();
         const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
-        
-        // Cache immediata per non far laggare la grafica
+
+        // Cache immediata
         if (nomeInCache) {
             formattaBadge(nomeInCache); 
         } else {
             formattaBadge(nomePulito); 
         }
-        
-        inizializzaPagina(); // Airtable in background (se non siamo in test)
+
+        inizializzaPagina(); 
 
         const fieldDisplay = document.getElementById('field-username_display');
         const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
@@ -569,21 +470,18 @@
                 const baseName = getNomeDiSistema();
                 const inputVal = fieldDisplay.value;
                 const inseritoSenzaSpazi = inputVal.toLowerCase().replace(/\s/g, '');
-                
+
                 if (inputVal.trim() === '') {
-                    // SE CANCELLA TUTTO: torna al nome di default
                     fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
                     fieldDisplay.style.boxShadow = "none";
                     if (btnSalva) { btnSalva.style.pointerEvents = "auto"; btnSalva.style.opacity = "1"; }
                     formattaBadge(baseName);
                 } else if (inseritoSenzaSpazi !== baseName) {
-                    // SE PROVA A CAMBIARE LETTERE: Allarme rosso e blocca bottone
                     fieldDisplay.style.borderColor = "#ff4444";
                     fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
                     if (btnSalva) { btnSalva.style.pointerEvents = "none"; btnSalva.style.opacity = "0.3"; }
                     formattaBadge(baseName); 
                 } else {
-                    // SE AGGIUNGE SOLO SPAZI CORRETTI: Via libera
                     fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
                     fieldDisplay.style.boxShadow = "none";
                     if (btnSalva) { btnSalva.style.pointerEvents = "auto"; btnSalva.style.opacity = "1"; }
