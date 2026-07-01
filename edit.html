@@ -308,11 +308,24 @@
         }
     }
 
-       document.addEventListener("DOMContentLoaded", () => {
+       
+    document.addEventListener("DOMContentLoaded", () => {
         
         if (nomeUtente) { 
-            const nomePulito = nomeUtente.replace('@', '');
-            formattaBadge(nomePulito); 
+            const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+            
+            // 1. Cerca nella cache istantanea
+            const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
+            
+            if (nomeInCache) {
+                // Se lo trova, mostra subito la versione con gli spazi a tempo zero
+                formattaBadge(nomeInCache); 
+            } else {
+                // Fallback estremo se è la prima volta in assoluto che apre la pagina
+                formattaBadge(nomePulito); 
+            }
+            
+            // 2. Chiama Airtable in background
             inizializzaPagina(); 
         }
 
@@ -461,7 +474,7 @@
         } catch (e) { console.error("Errore Airtable:", e); }
     }
 
-    async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
+        async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
         const inputField = document.getElementById("field-username_display");
         const displayVal = inputField ? inputField.value.trim() : "";
@@ -472,6 +485,9 @@
             digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna"
         }; 
 
+        // AGGIORNA LA CACHE ALL'ISTANTE
+        localStorage.setItem('mqt_cache_' + nomePulito, bozza.username_display);
+
         try {
             await fetch('/api/update-profile', {
                 method: 'POST',
@@ -480,6 +496,7 @@
             });
         } catch (error) { console.error("Errore salvataggio:", error); }
     }
+
 
     // IL BUTTAFUORI SUL TASTO SALVA
     function salvaIdentitaEApriStile() {
