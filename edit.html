@@ -274,8 +274,38 @@
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
    
-   <script>
-          // 1. GESTIONE CASSETTI E MODALI
+  <script>
+    // 1. MOTORE VISIVO BADGE (QUELLO CHE MANCAVA!)
+    function formattaBadge(testoBruto) {
+        const el = document.getElementById('tag-username');
+        if(!el) return;
+
+        let testo = testoBruto.trim().toUpperCase();
+        if(!testo.startsWith('@')) testo = '@' + testo;
+
+        el.innerText = testo;
+        el.style.textAlign = "center";
+
+        if (testo.includes(' ')) {
+            el.style.whiteSpace = "normal"; 
+            el.style.wordBreak = "keep-all";
+            el.style.overflowWrap = "break-word";
+            el.style.textWrap = "balance"; 
+            el.style.fontSize = "0.95rem"; 
+        } else {
+            el.style.whiteSpace = "nowrap"; 
+            el.style.textWrap = "nowrap"; 
+            if (testo.length > 24) {
+                el.style.fontSize = "0.55rem"; 
+            } else if (testo.length > 18) {
+                el.style.fontSize = "0.65rem"; 
+            } else {
+                el.style.fontSize = "0.95rem"; 
+            }
+        }
+    }
+
+    // 2. GESTIONE CASSETTI E MODALI
     function apriDrawer(idDrawer) {
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
         const drawer = document.getElementById(idDrawer);
@@ -315,7 +345,7 @@
         }
     }
 
-    // 2. CHIAMATE AIRTABLE E SALVATAGGIO
+    // 3. CHIAMATE AIRTABLE E SALVATAGGIO
     async function inizializzaPagina() { 
         if(!nomeUtente) return;
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
@@ -335,7 +365,6 @@
                 if (f.username_display) {
                     const inputField = document.getElementById('field-username_display');
                     if (inputField) inputField.value = f.username_display.replace('@', '');
-                    // SALVA IN CACHE IL NOME FORMATTATO
                     localStorage.setItem('mqt_cache_' + nomePulito, f.username_display);
                     formattaBadge(f.username_display);
                 }
@@ -362,7 +391,6 @@
             digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna"
         }; 
 
-        // AGGIORNA LA CACHE ALL'ISTANTE
         localStorage.setItem('mqt_cache_' + nomePulito, bozza.username_display);
 
         try {
@@ -374,7 +402,7 @@
         } catch (error) { console.error("Errore salvataggio:", error); }
     }
 
-    // 3. IL BUTTAFUORI (UNICO E BLINDATO)
+    // 4. IL BUTTAFUORI (UNICO E BLINDATO)
     function salvaIdentitaEApriStile() {
         const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
         const fieldDisplay = document.getElementById('field-username_display');
@@ -394,7 +422,7 @@
         apriDrawer('drawer-style');
     }
 
-    // 4. REFRESH TRIPLO TAP
+    // 5. REFRESH TRIPLO TAP
     let tapCount = 0;
     const badgeDiv = document.querySelector('.username-capsule');
     if(badgeDiv) {
@@ -409,30 +437,26 @@
         });
     }
 
-    // 5. MOTORE DI AVVIO E CONTROLLO REAL-TIME
+    // 6. MOTORE DI AVVIO E CONTROLLO REAL-TIME
     document.addEventListener("DOMContentLoaded", () => {
-        
-        // Lettura CACHE immediata all'avvio del DOM
-        if (nomeUtente) { 
+        if (typeof nomeUtente !== 'undefined' && nomeUtente) { 
             const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
             const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
             
             if (nomeInCache) {
-                formattaBadge(nomeInCache); // Usa subito il nome impaginato
+                formattaBadge(nomeInCache); 
             } else {
-                formattaBadge(nomePulito); // Usa l'URL grezzo se non ha cache
+                formattaBadge(nomePulito); 
             }
-            
-            inizializzaPagina(); // Chiama Airtable in silenzio
+            inizializzaPagina(); 
         }
 
-        // Controllo spietato sul campo di testo
         const fieldDisplay = document.getElementById('field-username_display');
         const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
 
         if (fieldDisplay) {
             fieldDisplay.addEventListener('input', () => {
-                const nomePulito = nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
+                const nomePulito = typeof nomeUtente !== 'undefined' && nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
                 const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
                 
                 if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
@@ -449,6 +473,9 @@
             });
         }
     });
-   </script>
+</script>
+
+        
+
 </body>
 </html>
