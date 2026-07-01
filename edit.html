@@ -371,6 +371,114 @@
                 
                 if (f.digital_style) {
                     const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
+<script>
+    // 0. CORAZZA DI SICUREZZA (Salva la vita nelle pagine di test)
+    function getNomeDiSistema() {
+        if (typeof nomeUtente !== 'undefined' && nomeUtente) {
+            return nomeUtente.replace('@', '').trim().toLowerCase();
+        }
+        return "tuonome.it"; // Fallback assoluto se la variabile di sistema manca
+    }
+
+    // 1. MOTORE VISIVO BADGE
+    function formattaBadge(testoBruto) {
+        const el = document.getElementById('tag-username');
+        if(!el) return;
+
+        let testo = testoBruto.trim().toUpperCase();
+        if(!testo.startsWith('@')) testo = '@' + testo;
+
+        el.innerText = testo;
+        el.style.textAlign = "center";
+
+        if (testo.includes(' ')) {
+            el.style.whiteSpace = "normal"; 
+            el.style.wordBreak = "keep-all";
+            el.style.overflowWrap = "break-word";
+            el.style.textWrap = "balance"; 
+            el.style.fontSize = "0.95rem"; 
+        } else {
+            el.style.whiteSpace = "nowrap"; 
+            el.style.textWrap = "nowrap"; 
+            if (testo.length > 24) {
+                el.style.fontSize = "0.55rem"; 
+            } else if (testo.length > 18) {
+                el.style.fontSize = "0.65rem"; 
+            } else {
+                el.style.fontSize = "0.95rem"; 
+            }
+        }
+    }
+
+    // 2. GESTIONE CASSETTI E MODALI
+    function apriDrawer(idDrawer) {
+        document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+        const drawer = document.getElementById(idDrawer);
+        const backdrop = document.getElementById('drawer-backdrop');
+        if (backdrop) backdrop.classList.add('active');
+        setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
+    }
+
+    function chiudiSenzaSalvare() {
+        document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+        const backdrop = document.getElementById('drawer-backdrop');
+        if (backdrop) setTimeout(() => backdrop.classList.remove('active'), 300);
+    }
+
+    function applicaTemaLive() {
+        const temaInput = document.querySelector('input[name="digital_style"]:checked');
+        if(!temaInput) return;
+        const temaSelezionato = temaInput.value;
+        document.getElementById('profile-content').setAttribute('data-theme', temaSelezionato);
+        document.body.setAttribute('data-qr-theme', temaSelezionato);
+    }
+
+    function confermaEChiudiCassetto() {
+        salvaDati(false, true); 
+        chiudiSenzaSalvare();
+        const tastoCrea = document.getElementById('casella-crea');
+        if(tastoCrea) tastoCrea.style.display = 'none'; 
+        const dock = document.getElementById('bottom-dock');
+        if(dock) dock.classList.add('show');
+    }
+
+    function apriModalQR() {
+        const modal = document.getElementById('modal-qr');
+        if(modal) modal.classList.add('active');
+    }
+    
+    function chiudiModalQR(event) {
+        if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
+            document.getElementById('modal-qr').classList.remove('active');
+        }
+    }
+
+    // 3. CHIAMATE AIRTABLE E SALVATAGGIO
+    async function inizializzaPagina() { 
+        if(typeof nomeUtente === 'undefined' || !nomeUtente) return; // Salta Airtable se siamo in test mode
+        const nomePulito = getNomeDiSistema();
+
+        try {
+            const response = await fetch(`/api/get-profile?u=${nomePulito}`);
+            const data = await response.json();
+
+            const f = (() => {
+                if (data.fields?.draft_json) {
+                    try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {}
+                }
+                return data.fields || data;
+            })();
+
+            if (f) {
+                if (f.username_display) {
+                    const inputField = document.getElementById('field-username_display');
+                    if (inputField) inputField.value = f.username_display.replace('@', '');
+                    localStorage.setItem('mqt_cache_' + nomePulito, f.username_display);
+                    formattaBadge(f.username_display);
+                }
+                
+                if (f.digital_style) {
+                    const radio = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
                     if (radio) {
                         radio.checked = true;
                         applicaTemaLive();
@@ -381,7 +489,8 @@
     }
 
     async function salvaDati(mostraAnteprima = false, salvataggioSilenzioso = false) {
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+        if(typeof nomeUtente === 'undefined' || !nomeUtente) return; // Salta Airtable se in test
+        const nomePulito = getNomeDiSistema();
         const inputField = document.getElementById("field-username_display");
         const displayVal = inputField ? inputField.value.trim() : "";
         
@@ -402,19 +511,20 @@
         } catch (error) { console.error("Errore salvataggio:", error); }
     }
 
-    // 4. IL BUTTAFUORI (UNICO E BLINDATO)
+    // 4. IL BUTTAFUORI SUL BOTTONE
     function salvaIdentitaEApriStile() {
-        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+        const nomePulito = getNomeDiSistema();
         const fieldDisplay = document.getElementById('field-username_display');
         
         if(!fieldDisplay) return;
 
-        const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
+        const inputVal = fieldDisplay.value;
+        const inseritoSenzaSpazi = inputVal.toLowerCase().replace(/\s/g, '');
 
-        if (fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
+        if (inputVal.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
             alert("⚠️ AZIONE NON CONSENTITA ⚠️\n\nIl tuo Tag è unico e registrato a sistema come @" + nomePulito.toUpperCase() + ".\n\nNon puoi cambiare le lettere del brand, puoi solo inserire gli spazi per migliorarne la lettura.");
-            fieldDisplay.value = nomeUtente.replace('@', '');
-            formattaBadge(nomeUtente.replace('@', ''));
+            fieldDisplay.value = nomePulito;
+            formattaBadge(nomePulito);
             return; 
         }
 
@@ -437,38 +547,47 @@
         });
     }
 
-    // 6. MOTORE DI AVVIO E CONTROLLO REAL-TIME
+    // 6. MOTORE DI AVVIO E CONTROLLO REAL-TIME SPIETATO
     document.addEventListener("DOMContentLoaded", () => {
-        if (typeof nomeUtente !== 'undefined' && nomeUtente) { 
-            const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-            const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
-            
-            if (nomeInCache) {
-                formattaBadge(nomeInCache); 
-            } else {
-                formattaBadge(nomePulito); 
-            }
-            inizializzaPagina(); 
+        const nomePulito = getNomeDiSistema();
+        const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
+        
+        // Cache immediata per non far laggare la grafica
+        if (nomeInCache) {
+            formattaBadge(nomeInCache); 
+        } else {
+            formattaBadge(nomePulito); 
         }
+        
+        inizializzaPagina(); // Airtable in background (se non siamo in test)
 
         const fieldDisplay = document.getElementById('field-username_display');
         const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
 
         if (fieldDisplay) {
             fieldDisplay.addEventListener('input', () => {
-                const nomePulito = typeof nomeUtente !== 'undefined' && nomeUtente ? nomeUtente.replace('@', '').trim().toLowerCase() : '';
-                const inseritoSenzaSpazi = fieldDisplay.value.toLowerCase().replace(/\s/g, '');
+                const baseName = getNomeDiSistema();
+                const inputVal = fieldDisplay.value;
+                const inseritoSenzaSpazi = inputVal.toLowerCase().replace(/\s/g, '');
                 
-                if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
-                    fieldDisplay.style.borderColor = "#ff4444";
-                    fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
-                    if (btnSalva) { btnSalva.style.pointerEvents = "none"; btnSalva.style.opacity = "0.3"; }
-                    formattaBadge(nomePulito); 
-                } else {
+                if (inputVal.trim() === '') {
+                    // SE CANCELLA TUTTO: torna al nome di default
                     fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
                     fieldDisplay.style.boxShadow = "none";
                     if (btnSalva) { btnSalva.style.pointerEvents = "auto"; btnSalva.style.opacity = "1"; }
-                    formattaBadge(fieldDisplay.value);
+                    formattaBadge(baseName);
+                } else if (inseritoSenzaSpazi !== baseName) {
+                    // SE PROVA A CAMBIARE LETTERE: Allarme rosso e blocca bottone
+                    fieldDisplay.style.borderColor = "#ff4444";
+                    fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
+                    if (btnSalva) { btnSalva.style.pointerEvents = "none"; btnSalva.style.opacity = "0.3"; }
+                    formattaBadge(baseName); 
+                } else {
+                    // SE AGGIUNGE SOLO SPAZI CORRETTI: Via libera
+                    fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
+                    fieldDisplay.style.boxShadow = "none";
+                    if (btnSalva) { btnSalva.style.pointerEvents = "auto"; btnSalva.style.opacity = "1"; }
+                    formattaBadge(inputVal);
                 }
             });
         }
