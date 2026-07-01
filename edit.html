@@ -276,61 +276,30 @@
    
 
    <script>
-    const params = new URLSearchParams(window.location.search);
-    const nomeUtente = params.get("u");
-    
-        function formattaBadge(testoBruto) {
-        const el = document.getElementById('tag-username');
-        if(!el) return;
-
-        let testo = testoBruto.trim().toUpperCase();
-        if(!testo.startsWith('@')) testo = '@' + testo;
-
-        el.innerText = testo;
-        el.style.textAlign = "center"; // Ribadiamo la centratura via codice
-
-        if (testo.includes(' ')) {
-            el.style.whiteSpace = "normal"; 
-            el.style.wordBreak = "keep-all";
-            el.style.overflowWrap = "break-word";
-            el.style.textWrap = "balance"; 
-            el.style.fontSize = "0.95rem"; 
+     
+    // --- 1. ESECUZIONE ISTANTANEA (Uccide lo scatto visivo a tempo zero) ---
+    if (typeof nomeUtente !== 'undefined' && nomeUtente) { 
+        const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
+        const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
+        
+        if (nomeInCache) {
+            // Se trova la cache, formatta il badge prima ancora che la pagina finisca di caricare
+            formattaBadge(nomeInCache); 
         } else {
-            el.style.whiteSpace = "nowrap"; 
-            el.style.textWrap = "nowrap"; // Rimuove il balance per il testo monoblocco
-            if (testo.length > 24) {
-                el.style.fontSize = "0.55rem"; 
-            } else if (testo.length > 18) {
-                el.style.fontSize = "0.65rem"; 
-            } else {
-                el.style.fontSize = "0.95rem"; 
-            }
+            formattaBadge(nomePulito); 
         }
     }
 
-       
+    // --- 2. ASCOLTATORI EVENTI AL CARICAMENTO COMPLETATO ---
     document.addEventListener("DOMContentLoaded", () => {
         
         if (nomeUtente) { 
-            const nomePulito = nomeUtente.replace('@', '').trim().toLowerCase();
-            
-            // 1. Cerca nella cache istantanea
-            const nomeInCache = localStorage.getItem('mqt_cache_' + nomePulito);
-            
-            if (nomeInCache) {
-                // Se lo trova, mostra subito la versione con gli spazi a tempo zero
-                formattaBadge(nomeInCache); 
-            } else {
-                // Fallback estremo se è la prima volta in assoluto che apre la pagina
-                formattaBadge(nomePulito); 
-            }
-            
-            // 2. Chiama Airtable in background
+            // La formattazione è già stata fatta sopra a tempo zero.
+            // Qui facciamo solo partire Airtable in silenzio in background.
             inizializzaPagina(); 
         }
 
         const fieldDisplay = document.getElementById('field-username_display');
-        // Peschiamo esattamente il bottone che salva il nome, ovunque si trovi
         const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
 
         if (fieldDisplay) {
@@ -340,7 +309,6 @@
                 
                 // CONTROLLO SPIETATO IN TEMPO REALE
                 if(fieldDisplay.value.trim() !== '' && inseritoSenzaSpazi !== nomePulito) {
-                    // Allarme rosso: l'utente sta cercando di cambiare le lettere
                     fieldDisplay.style.borderColor = "#ff4444";
                     fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
                     
@@ -348,10 +316,8 @@
                         btnSalva.style.pointerEvents = "none";
                         btnSalva.style.opacity = "0.3";
                     }
-                    // Resetta il badge visivo al nome di base
                     formattaBadge(nomePulito); 
                 } else {
-                    // Tutto ok: ha inserito solo spazi, riportiamo il campo alla normalità
                     fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
                     fieldDisplay.style.boxShadow = "none";
                     
@@ -359,12 +325,12 @@
                         btnSalva.style.pointerEvents = "auto";
                         btnSalva.style.opacity = "1";
                     }
-                    // Aggiorna il badge con gli spazi
                     formattaBadge(fieldDisplay.value);
                 }
             });
         }
     });
+
 
 
 
