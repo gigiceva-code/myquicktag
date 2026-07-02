@@ -93,6 +93,117 @@
             white-space: normal; word-break: keep-all; overflow-wrap: break-word;
             transition: font-size 0.3s ease; 
         }
+        /* =========================================================
+           UI COMPONENT: BRANDING LAYOUT SWITCHER
+           Modifies the default .username-capsule natively based on 
+           the data-layout attribute applied to #profile-content.
+           Default is "badge" (Luxury Badge - Option 4).
+           ========================================================= */
+
+        /* --- LAYOUT 2: DIVIDER (Minimal Horizontal Accent) --- */
+        #profile-content[data-layout="divider"] .username-capsule {
+            background: transparent !important;
+            clip-path: none !important;
+            padding: 0;
+            width: 100%;
+        }
+
+        #profile-content[data-layout="divider"] .username-capsule-inner {
+            background: transparent !important;
+            clip-path: none !important;
+            padding: 15px 0;
+            position: relative;
+        }
+
+        /* Linee divisorie sopra e sotto */
+        #profile-content[data-layout="divider"] .username-capsule-inner::before,
+        #profile-content[data-layout="divider"] .username-capsule-inner::after {
+            content: '';
+            position: absolute;
+            left: 10%;
+            width: 80%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        #profile-content[data-layout="divider"] .username-capsule-inner::before { top: 0; }
+        #profile-content[data-layout="divider"] .username-capsule-inner::after { bottom: 0; }
+
+        /* --- LAYOUT 3: FOCUS FRAME (Minimalist HUD Brackets) --- */
+        #profile-content[data-layout="focus"] .username-capsule {
+            background: transparent !important;
+            clip-path: none !important;
+            padding: 0;
+        }
+
+        #profile-content[data-layout="focus"] .username-capsule-inner {
+            background: transparent !important;
+            clip-path: none !important;
+            padding: 24px 30px;
+            position: relative;
+        }
+
+        /* Rendering degli angolari (Corner Brackets) */
+        #profile-content[data-layout="focus"] .username-capsule-inner::before,
+        #profile-content[data-layout="focus"] .username-capsule-inner::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: border-color 0.4s ease;
+        }
+
+        /* Angolo Superiore Sinistro */
+        #profile-content[data-layout="focus"] .username-capsule-inner::before {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        /* Angolo Inferiore Destro */
+        #profile-content[data-layout="focus"] .username-capsule-inner::after {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* =========================================================
+           LAYOUT THEME ADAPTATION
+           Applies the selected brand color to the active layout decorators.
+           ========================================================= */
+        
+        /* Tema Emerald */
+        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before,
+        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after {
+            background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.5), transparent);
+        }
+        #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::before,
+        #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::after {
+            border-color: #00E680;
+        }
+
+        /* Tema Obsidian Gold */
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::before,
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after {
+            background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.5), transparent);
+        }
+        #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::before,
+        #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::after {
+            border-color: #e5c158;
+        }
+
+        /* Tema Satin Rose */
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before,
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after {
+            background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.5), transparent);
+        }
+        #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::before,
+        #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::after {
+            border-color: #c8968e;
+        }
 
         #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
         .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
