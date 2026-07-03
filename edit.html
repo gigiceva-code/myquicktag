@@ -301,20 +301,18 @@
     </style>
 </head>
 <body>
-
    <div class="configurator-wrapper">
        <div id="profile-content" data-theme="black_dna"> 
            
-                       <div class="header-monolith">
+            <div class="header-monolith">
                 <div class="username-capsule-wrapper">
                     <div class="username-capsule">
                         <div class="username-capsule-inner">
                             <div class="username-display" id="tag-username">@tuonome.it</div>
                         </div>
-                    </div>⁹9i
+                    </div>
                 </div>
             </div>
-
 
             <div id="mainGrid">
                 <div class="casella" id="casella-qr" onclick="apriModalQR()">
@@ -344,6 +342,33 @@
            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
        </div>
+
+       <!-- ========================================== -->
+       <!-- INIZIO SELETTORE LAYOUT (NUOVO PEZZO)      -->
+       <!-- ========================================== -->
+       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-top: 25px; margin-bottom: 15px; padding: 0;">
+           <div class="drawer-title">BRAND LAYOUT</div>
+           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">La forma del tuo tag</div>
+       </div>
+
+       <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
+           <label class="style-bar-label" style="flex: 1;">
+               <input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()">
+               <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div>
+           </label>
+           <label class="style-bar-label" style="flex: 1;">
+               <input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()">
+               <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div>
+           </label>
+           <label class="style-bar-label" style="flex: 1;">
+               <input type="radio" name="digital_layout" value="focus" onchange="applicaTemaLive()">
+               <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Focus</span></div>
+           </label>
+       </div>
+       <!-- ========================================== -->
+       <!-- FINE SELETTORE LAYOUT                      -->
+       <!-- ========================================== -->
+
        <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
    </div>
 
@@ -382,6 +407,8 @@
            <span>STILE</span>
        </div>
    </div>
+
+
  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     // 1. IL CERVELLO: CHI CAZZO È L'UTENTE? (Trova l'identità a prova di bomba)
