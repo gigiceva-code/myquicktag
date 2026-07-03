@@ -99,36 +99,44 @@
            the data-layout attribute applied to #profile-content.
            Default is "badge" (Luxury Badge - Option 4).
            ========================================================= */
-
-        /* --- LAYOUT 2: DIVIDER (Minimal Horizontal Accent) --- */
+        /* --- LAYOUT 2: DIVIDER (Vero Divisore Elegante) --- */
         #profile-content[data-layout="divider"] .username-capsule {
             background: transparent !important;
             clip-path: none !important;
-            padding: 0;
-            width: 100%;
+            padding: 0; width: 100%;
         }
-
         #profile-content[data-layout="divider"] .username-capsule-inner {
             background: transparent !important;
             clip-path: none !important;
-            padding: 15px 0;
+            padding: 10px 0 25px 0; /* Crea lo spazio sotto per la linea */
             position: relative;
         }
-
-        /* Linee divisorie sopra e sotto */
-        #profile-content[data-layout="divider"] .username-capsule-inner::before,
+        
+        /* La linea sfumata orizzontale */
         #profile-content[data-layout="divider"] .username-capsule-inner::after {
-            content: '';
-            position: absolute;
-            left: 10%;
-            width: 80%;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.15);
+            content: ''; position: absolute; bottom: 10px; left: 10%; width: 80%; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+        
+        /* Il diamante centrale */
+        #profile-content[data-layout="divider"] .username-capsule-inner::before {
+            content: '◆'; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+            font-size: 11px; color: rgba(255, 255, 255, 0.6);
+            background: #0d0d0f; /* Nasconde la linea dietro al diamante */
+            padding: 0 8px; z-index: 2;
         }
 
-        #profile-content[data-layout="divider"] .username-capsule-inner::before { top: 0; }
-        #profile-content[data-layout="divider"] .username-capsule-inner::after { bottom: 0; }
+        /* --- ADATTAMENTO COLORI SOLO PER IL DIVIDER --- */
+        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.6), transparent); }
+        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before { color: #00E680; }
+        
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.6), transparent); }
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::before { color: #e5c158; }
 
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before { color: #c8968e; }
+
+        
         /* --- LAYOUT 3: FOCUS FRAME (Minimalist HUD Brackets) --- */
         #profile-content[data-layout="focus"] .username-capsule {
             background: transparent !important;
