@@ -10,7 +10,7 @@
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
 
-       <style>
+    <style>
         :root {
             --bg-esterno: #0d0d0f;
             --accent-smeraldo: #50C878;
@@ -33,41 +33,31 @@
             width: 100%; max-width: 410px; height: 100%; max-height: 840px;
             padding: 40px 24px 32px 24px;
             border-radius: 28px;
-            display: flex; flex-direction: column; justify-content: flex-start; /* Fix per caduta nel vuoto */
+            display: flex; flex-direction: column; justify-content: flex-start; 
             box-shadow: 0 30px 70px rgba(0,0,0,0.9); overflow: hidden; 
             transition: all 0.4s ease; 
         }
 
-        /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
+        /* --- TEMI UFFICIALI --- */
         #profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8); }
         #profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.5); }
-        #profile-content[data-theme="emerald"] .testo-pass { color: #00E680; text-shadow: 0 0 10px rgba(0, 230, 128, 0.2); }
-
+        
         #profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); } 
         #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.35); }
-        #profile-content[data-theme="black_dna"] .testo-pass { color: #ffffff; opacity: 0.9; }
-
+        
         #profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8); }
         #profile-content[data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.4); }
-        #profile-content[data-theme="titanium"] .testo-pass { color: #b0b0b5; }
-
+        
         #profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8); }
         #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.5); }
-        #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #e5c158; text-shadow: 0 0 10px rgba(229, 193, 88, 0.2); }
-
+        
         #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8); }
         #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.5); }
-        #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
 
-
-                /* =========================================================
-           HEADER E CAPSULA BRAND (Struttura Base)
-           ========================================================= */
+        /* --- STRUTTURA BASE BRAND --- */
         .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; }
-
-        /* Il wrapper fa da "polmone": si stringe o si allarga in base al layout */
-        .username-capsule-wrapper { display: flex; justify-content: center; align-items: center; width: auto; max-width: 100%; }
         
+        .username-capsule-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; }
         .username-capsule {
             display: flex; padding: 1.5px; background: rgba(255, 255, 255, 0.3); width: 100%;
             clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
@@ -77,7 +67,6 @@
             background: #0d0d0f; padding: 24px 35px;
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
-
         .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
@@ -85,27 +74,23 @@
             transition: font-size 0.3s ease; 
         }
 
-                /* =========================================================
-           LAYOUT 2 E 3: DIVIDER E FOCUS (ARCHITETTURA DEFINITIVA)
-           ========================================================= */
+        /* --- LAYOUT 2: DIVIDER (Il Taglio Centrale) --- */
+        #profile-content[data-layout="divider"] .username-capsule-wrapper { width: 100% !important; padding: 0 5px !important; }
+        #profile-content[data-layout="divider"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0 !important; width: 100% !important; }
+        /* Padding 0 per centrare la riga matematicamente */
+        #profile-content[data-layout="divider"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 0 !important; min-height: 80px; position: relative !important; width: 100% !important; display: flex; align-items: center; justify-content: center; }
         
-        /* --- LAYOUT 2: DIVIDER (Taglia il nome in due a metà) --- */
-        #profile-content[data-layout="divider"] .username-capsule-wrapper { display: flex !important; width: 100% !important; padding: 0 10px !important; }
-        #profile-content[data-layout="divider"] .username-capsule { display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; }
-        #profile-content[data-layout="divider"] .username-capsule-inner { display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 10px 0 !important; position: relative !important; }
-        
-        /* Qui c'è la magia: line-height a 2.6 crea un cratere tra la prima e la seconda riga */
+        /* Line-height gigante crea il vuoto al centro per la riga */
         #profile-content[data-layout="divider"] .username-display { 
-            white-space: normal !important; word-break: keep-all !important; max-width: 280px !important; margin: 0 auto !important; 
-            line-height: 2.6 !important; text-wrap: balance !important; position: relative; z-index: 3;
+            white-space: normal !important; max-width: 280px !important; margin: 0 auto !important; 
+            line-height: 2.8 !important; text-wrap: balance !important; position: relative; z-index: 3; width: 100%;
         }
         
-        /* La linea è forzata esattamente al 50% dell'altezza, finendo nel cratere tra le due righe */
+        /* Riga forzata al 50% esatto dell'altezza */
         #profile-content[data-layout="divider"] .username-capsule-inner::after {
-            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
+            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; margin-top: 0;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); z-index: 1;
         }
-        /* Il diamante è forzato al 50% orizzontale e verticale */
         #profile-content[data-layout="divider"] .username-capsule-inner::before {
             content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-size: 11px; color: rgba(255, 255, 255, 0.6); background: var(--bg-esterno); padding: 0 10px; z-index: 2;
@@ -118,11 +103,10 @@
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before { color: #c8968e; }
 
-        /* --- LAYOUT 3: FOCUS FRAME (Strizzato sulle lettere) --- */
+        /* --- LAYOUT 3: FOCUS FRAME (Abbraccio Shrink-to-Fit) --- */
         #profile-content[data-layout="focus"] .username-capsule-wrapper { display: flex !important; justify-content: center !important; width: 100% !important; }
-        /* fit-content obbliga la capsula ad avvolgere solo il testo, nient'altro */
         #profile-content[data-layout="focus"] .username-capsule { display: inline-flex !important; width: fit-content !important; max-width: 95% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; }
-        #profile-content[data-layout="focus"] .username-capsule-inner { display: flex !important; width: auto !important; background: transparent !important; clip-path: none !important; padding: 12px 18px !important; position: relative !important; }
+        #profile-content[data-layout="focus"] .username-capsule-inner { display: flex !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 12px 18px !important; position: relative !important; }
         
         #profile-content[data-layout="focus"] .username-display { white-space: normal !important; width: fit-content !important; max-width: 280px !important; margin: 0 auto !important; line-height: 1.3 !important; text-wrap: balance !important; }
         
@@ -137,10 +121,10 @@
         #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::after { border-color: #e5c158; }
         #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::after { border-color: #c8968e; }
 
-
         .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
         .brand-text { font-weight: inherit; }
 
+        /* --- CASSETTI E MODALI --- */
         .drawer-backdrop { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.4); z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
@@ -214,7 +198,7 @@
         body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(200, 150, 142, 0.25); box-shadow: 0 0 35px rgba(200, 150, 142, 0.15); }
         body[data-qr-theme="satin_rose"] .qr-svg { fill: #c8968e; filter: drop-shadow(0 0 8px rgba(200, 150, 142, 0.35)); }
 
-        /* MENU FLOATTANTE INFERIORE */
+        /* --- MENU FLOATTANTE E DRAG & DROP --- */
         .luxury-menu-btn {
             position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); 
             background: rgba(30, 30, 35, 0.8); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -226,7 +210,6 @@
         .luxury-menu-btn i { font-size: 1.1rem; color: #fff; }
         .luxury-menu-btn span { font-size: 0.7rem; letter-spacing: 2.5px; font-weight: 600; color: #fff; text-transform: uppercase; }
 
-        /* PISTA DRAG & DROP */
         .blocks-track {
             width: 100%; max-width: 320px; margin: 40px auto 100px auto; 
             display: flex; flex-direction: column; gap: 15px; min-height: 50px;
@@ -249,7 +232,6 @@
         .sortable-drag { background: rgba(20, 20, 22, 0.95); box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
 
     </style>
-
 </head>
 <body>
 
@@ -258,6 +240,7 @@
 
             <div class="header-monolith">
                 <div class="username-capsule-wrapper">
+                    <!-- Nome cliccabile (Scorciatoia al cassetto Identità) -->
                     <div class="username-capsule" onclick="apriDrawer('drawer-identita')" style="cursor: pointer;">
                         <div class="username-capsule-inner">
                             <div class="username-display" id="tag-username">@tuonome.it</div>
@@ -266,8 +249,10 @@
                 </div>
             </div>
 
+            <!-- PISTA DRAG & DROP -->
             <div id="blocks-track" class="blocks-track">
                 
+                <!-- BLOCCO 1: DIGITAL PASS -->
                 <div class="tag-block" data-type="digital-pass">
                     <div class="drag-handle">⋮⋮</div>
                     <div class="block-content" onclick="apriModalQR()">
@@ -275,18 +260,21 @@
                     </div>
                 </div>
                 
-                </div>
+            </div>
 
         </div> 
     </div> 
 
+    <!-- PILLOLA MENU -->
     <div class="luxury-menu-btn" onclick="apriDrawer('drawer-master')">
         <i class="fas fa-bars"></i>
         <span>MENU</span>
     </div>
 
+    <!-- BACKDROP -->
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
 
+    <!-- 1. CASSETTO MASTER -->
     <div class="drawer-glass" id="drawer-master">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
@@ -313,6 +301,7 @@
         </div>
     </div>
 
+    <!-- 2. CASSETTO IDENTITÀ -->
     <div class="drawer-glass" id="drawer-identita">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
@@ -326,6 +315,7 @@
         <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME</button>
     </div>
 
+    <!-- 3. CASSETTO STILE -->
     <div class="drawer-glass" id="drawer-style">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
@@ -352,6 +342,7 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
     </div>
 
+    <!-- 4. CASSETTO MODULI -->
     <div class="drawer-glass" id="drawer-moduli">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
@@ -364,6 +355,7 @@
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-align-center" style="color: rgba(255,255,255,0.5);"></i><span>Testo & Bio</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
+            <!-- Futuri Moduli -->
             <div class="style-bar" style="opacity: 0.5;">
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-share-nodes" style="color: rgba(255,255,255,0.5);"></i><span>Contatti & Social</span></div>
                 <i class="fas fa-lock" style="font-size: 0.7rem; color: rgba(255,255,255,0.3);"></i>
@@ -371,6 +363,7 @@
         </div>
     </div>
 
+    <!-- 5. CASSETTO BIO -->
     <div class="drawer-glass" id="drawer-bio">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-moduli')"></i>
@@ -384,6 +377,7 @@
         <button class="btn-crea" onclick="salvaBioEChiudi()">SALVA BIO</button>
     </div>
 
+    <!-- 6. CASSETTO PIANI -->
     <div class="drawer-glass" id="drawer-piani">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
@@ -409,6 +403,7 @@
         </div>
     </div>
 
+    <!-- MODALE QR CODE -->
     <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
         <div class="qr-card">
            <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
@@ -442,12 +437,6 @@
         return "tuonome.it";
     }
 
-        /**
-     * =========================================================
-     * 2. BADGE VISUAL ENGINE (Optical Symmetry)
-     * =========================================================
-     */
-        
     function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
@@ -465,7 +454,7 @@
             el.style.whiteSpace = "normal"; 
             el.style.wordBreak = "keep-all";
             el.style.overflowWrap = "break-word";
-            el.style.textWrap = "balance"; // IL TOCCO DI CLASSE
+            el.style.textWrap = "balance"; 
             el.style.fontSize = "0.95rem"; 
         } else {
             el.style.whiteSpace = "nowrap"; 
@@ -476,8 +465,6 @@
         }
     }
 
-
-    /* GESTIONE AVANZATA CASSETTI & STORICO (ANDROID BACK BUTTON) */
     function apriDrawer(idDrawer) {
         const currentlyOpen = document.querySelector('.drawer-glass.open');
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
