@@ -386,13 +386,15 @@
     </style>
 </head>
 <body>
-      <div class="configurator-wrapper">
-       <div id="profile-content" data-theme="black_dna"> 
-           
-            <!-- HEADER (Intatto, con la logica del layout) -->
+     
+    <div class="configurator-wrapper">
+        <div id="profile-content" data-theme="black_dna"> 
+
+            <!-- HEADER IMMACOLATO -->
             <div class="header-monolith">
                 <div class="username-capsule-wrapper">
-                    <div class="username-capsule">
+                    <!-- Cliccando la capsula ora si apre il cassetto identità -->
+                    <div class="username-capsule" onclick="apriDrawer('drawer-identita')" style="cursor: pointer;">
                         <div class="username-capsule-inner">
                             <div class="username-display" id="tag-username">@tuonome.it</div>
                         </div>
@@ -400,95 +402,103 @@
                 </div>
             </div>
 
-            <!-- NUOVA PISTA DRAG & DROP (Sostituisce il vecchio mainGrid) -->
+            <!-- PISTA DRAG & DROP COMPLETAMENTE VUOTA -->
             <div id="blocks-track" class="blocks-track">
-                
-                <!-- BLOCCO 1: BIO -->
-                <div class="tag-block" data-type="bio">
-                    <div class="drag-handle">⋮⋮</div>
-                    <div class="block-content" onclick="apriDrawer('drawer-bio')">
-                        <p id="testo-bio-live" class="bio-display-text">Aggiungi una breve bio o il tuo ruolo professionale...</p>
-                    </div>
-                </div>
-
+                <!-- I blocchi nasceranno qui solo se l'utente li crea -->
             </div>
 
-       </div> 
-   </div> 
+        </div> 
+    </div> 
 
-   <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
+    <!-- BACKDROP UNIVERSALE -->
+    <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
 
-   <div class="drawer-glass" id="drawer-style">
-       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
-           <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
-           <div class="drawer-title">DIGITAL STYLE</div>
-           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Definisci il tuo stile</div>
-       </div>
+    <!-- CASSETTO STILE -->
+    <div class="drawer-glass" id="drawer-style">
+        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">DIGITAL STYLE</div>
+            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Definisci il tuo stile</div>
+        </div>
 
-       <div class="style-list">
-           <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
-           <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
-           <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
-           <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
-           <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
-       </div>
+        <div class="style-list">
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
+        </div>
 
-       <!-- ========================================== -->
-       <!-- INIZIO SELETTORE LAYOUT (NUOVO PEZZO)      -->
-       <!-- ========================================== -->
-       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-top: 25px; margin-bottom: 15px; padding: 0;">
-           <div class="drawer-title">BRAND LAYOUT</div>
-           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">La forma del tuo tag</div>
-       </div>
+        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-top: 25px; margin-bottom: 15px; padding: 0;">
+            <div class="drawer-title">BRAND LAYOUT</div>
+            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">La forma del tuo tag</div>
+        </div>
 
-       <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
-           <label class="style-bar-label" style="flex: 1;">
-               <input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()">
-               <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div>
-           </label>
-           <label class="style-bar-label" style="flex: 1;">
-               <input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()">
-               <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div>
-           </label>
-           <label class="style-bar-label" style="flex: 1;">
-               <input type="radio" name="digital_layout" value="focus" onchange="applicaTemaLive()">
-               <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Focus</span></div>
-           </label>
-       </div>
-       <!-- ========================================== -->
-       <!-- FINE SELETTORE LAYOUT                      -->
-       <!-- ========================================== -->
+        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
+            <label class="style-bar-label" style="flex: 1;">
+                <input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()">
+                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div>
+            </label>
+            <label class="style-bar-label" style="flex: 1;">
+                <input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()">
+                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div>
+            </label>
+            <label class="style-bar-label" style="flex: 1;">
+                <input type="radio" name="digital_layout" value="focus" onchange="applicaTemaLive()">
+                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Focus</span></div>
+            </label>
+        </div>
 
-       <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
-   </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
+    </div>
 
-   <div class="drawer-glass" id="drawer-identita">
-       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
-           <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
-           <div class="drawer-title">NOME BRAND</div>
-           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Aggiungi gli spazi al nome</div>
-       </div>
-          <!-- CASSETTO BIO -->
-   <div class="drawer-glass" id="drawer-bio">
-       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
-           <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
-           <div class="drawer-title">BIOGRAFIA</div>
-           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Il tuo ruolo o payoff</div>
-       </div>
-       <div>
-           <textarea id="field-bio" placeholder="Es. Boutique Hotel nel cuore di Roma, oppure Site Foreman @ CTI" rows="3" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px; resize: none;"></textarea>
-       </div>
-       <button class="btn-crea" onclick="salvaBioEChiudi()">SALVA BIO</button>
-   </div>
+    <!-- CASSETTO IDENTITÀ -->
+    <div class="drawer-glass" id="drawer-identita">
+        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">NOME BRAND</div>
+            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Aggiungi gli spazi al nome</div>
+        </div>
+        <div>
+            <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px;">
+        </div>
+        <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME</button>
+    </div>
 
-       <div>
-           <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi Volkswagen" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px;">
-       </div>
-       <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME</button>
-   </div>
+    <!-- CASSETTO MENU MODULI -->
+    <div class="drawer-glass" id="drawer-moduli">
+        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">AGGIUNGI MODULO</div>
+            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Espandi il tuo tag</div>
+        </div>
+        <div class="style-list" style="flex-direction: column; gap: 10px;">
+            <div class="style-bar" style="cursor:pointer; justify-content: space-between;" onclick="apriDrawer('drawer-bio')">
+                <div style="display:flex; align-items:center; gap: 12px;">
+                    <i class="fas fa-align-center" style="color: rgba(255,255,255,0.5);"></i>
+                    <span>Testo & Bio</span>
+                </div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+        </div>
+    </div>
 
-   <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
-       <div class="qr-card">
+    <!-- CASSETTO BIO -->
+    <div class="drawer-glass" id="drawer-bio">
+        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">BIOGRAFIA</div>
+            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Il tuo ruolo o payoff</div>
+        </div>
+        <div>
+            <textarea id="field-bio" placeholder="Es. Boutique Hotel nel cuore di Roma" rows="3" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px; resize: none;"></textarea>
+        </div>
+        <button class="btn-crea" onclick="salvaBioEChiudi()">SALVA BIO</button>
+    </div>
+
+    <!-- MODALE QR CODE -->
+    <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
+        <div class="qr-card">
            <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
            <div class="qr-title-modal">ANTEPRIMA STILE</div>
            <div class="qr-svg-wrapper">
@@ -502,15 +512,19 @@
            </div>
            <div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-top: 24px; text-transform: uppercase;">QR Demo • Attivazione post-checkout</div>
        </div>
-   </div>
-  
-   <div class="luxury-dock" id="bottom-dock">
-       <div class="dock-item" onclick="apriDrawer('drawer-style')">
-           <i class="fas fa-palette"></i>
-           <span>STILE</span>
-       </div>
-   </div>
+    </div>
 
+    <!-- DOCK INFERIORE AGGIORNATA -->
+    <div class="luxury-dock show" id="bottom-dock">
+        <div class="dock-item" onclick="apriDrawer('drawer-moduli')">
+            <i class="fas fa-plus-circle"></i>
+            <span>MODULI</span>
+        </div>
+        <div class="dock-item" onclick="apriDrawer('drawer-style')">
+            <i class="fas fa-palette"></i>
+            <span>STILE</span>
+        </div>
+    </div>
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
