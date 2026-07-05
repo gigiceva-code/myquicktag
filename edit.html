@@ -54,8 +54,8 @@
         #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8); }
         #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.5); }
 
-        /* --- STRUTTURA BASE BRAND --- */
-        .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; }
+        /* --- STRUTTURA BASE BRAND (BADGE) --- */
+        .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; position: relative; }
         
         .username-capsule-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; }
         .username-capsule {
@@ -74,39 +74,49 @@
             transition: font-size 0.3s ease; 
         }
 
-        /* --- LAYOUT 2: DIVIDER (Il Taglio Centrale) --- */
-        #profile-content[data-layout="divider"] .username-capsule-wrapper { width: 100% !important; padding: 0 5px !important; }
-        #profile-content[data-layout="divider"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0 !important; width: 100% !important; }
-        /* Padding 0 per centrare la riga matematicamente */
-        #profile-content[data-layout="divider"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 0 !important; min-height: 80px; position: relative !important; width: 100% !important; display: flex; align-items: center; justify-content: center; }
+        /* =========================================================
+           LAYOUT 2: DIVIDER (Svincolato, taglia lo schermo)
+           ========================================================= */
+        /* Uccidiamo il flexbox del padre che stringeva tutto */
+        #profile-content[data-layout="divider"] .header-monolith { display: block !important; width: 100% !important; padding: 20px 0 !important; }
         
-        /* Line-height gigante crea il vuoto al centro per la riga */
+        #profile-content[data-layout="divider"] .username-capsule-wrapper,
+        #profile-content[data-layout="divider"] .username-capsule,
+        #profile-content[data-layout="divider"] .username-capsule-inner { 
+            display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; 
+        }
+        
+        /* Il testo ha un cratere (line-height) in mezzo e sfondo trasparente */
         #profile-content[data-layout="divider"] .username-display { 
             white-space: normal !important; max-width: 280px !important; margin: 0 auto !important; 
-            line-height: 2.8 !important; text-wrap: balance !important; position: relative; z-index: 3; width: 100%;
+            line-height: 2.8 !important; text-wrap: balance !important; position: relative; z-index: 3; 
         }
         
-        /* Riga forzata al 50% esatto dell'altezza */
-        #profile-content[data-layout="divider"] .username-capsule-inner::after {
-            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; margin-top: 0;
+        /* LA RIGA: applicata all'estremo contenitore padre per toccare i lati */
+        #profile-content[data-layout="divider"] .header-monolith::after {
+            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); z-index: 1;
         }
-        #profile-content[data-layout="divider"] .username-capsule-inner::before {
+        #profile-content[data-layout="divider"] .header-monolith::before {
             content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-size: 11px; color: rgba(255, 255, 255, 0.6); background: var(--bg-esterno); padding: 0 10px; z-index: 2;
         }
 
-        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.6), transparent); }
-        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before { color: #00E680; }
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.6), transparent); }
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::before { color: #e5c158; }
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before { color: #c8968e; }
+        /* Colori Riga Divider */
+        #profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.6), transparent); }
+        #profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::before { color: #00E680; }
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.6), transparent); }
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::before { color: #e5c158; }
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::before { color: #c8968e; }
 
-        /* --- LAYOUT 3: FOCUS FRAME (Abbraccio Shrink-to-Fit) --- */
-        #profile-content[data-layout="focus"] .username-capsule-wrapper { display: flex !important; justify-content: center !important; width: 100% !important; }
+        /* =========================================================
+           LAYOUT 3: FOCUS FRAME (Shrink to fit puro)
+           ========================================================= */
+        #profile-content[data-layout="focus"] .header-monolith { display: flex !important; justify-content: center !important; }
+        #profile-content[data-layout="focus"] .username-capsule-wrapper { width: auto !important; }
         #profile-content[data-layout="focus"] .username-capsule { display: inline-flex !important; width: fit-content !important; max-width: 95% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; }
-        #profile-content[data-layout="focus"] .username-capsule-inner { display: flex !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 12px 18px !important; position: relative !important; }
+        #profile-content[data-layout="focus"] .username-capsule-inner { display: flex !important; width: auto !important; background: transparent !important; clip-path: none !important; padding: 12px 18px !important; position: relative !important; }
         
         #profile-content[data-layout="focus"] .username-display { white-space: normal !important; width: fit-content !important; max-width: 280px !important; margin: 0 auto !important; line-height: 1.3 !important; text-wrap: balance !important; }
         
@@ -240,8 +250,8 @@
 
             <div class="header-monolith">
                 <div class="username-capsule-wrapper">
-                    <!-- Nome cliccabile (Scorciatoia al cassetto Identità) -->
-                    <div class="username-capsule" onclick="apriDrawer('drawer-identita')" style="cursor: pointer;">
+                    <!-- IL NOME NON È PIÙ CLICCABILE. Solo visualizzazione. -->
+                    <div class="username-capsule">
                         <div class="username-capsule-inner">
                             <div class="username-display" id="tag-username">@tuonome.it</div>
                         </div>
@@ -251,7 +261,6 @@
 
             <!-- PISTA DRAG & DROP -->
             <div id="blocks-track" class="blocks-track">
-                
                 <!-- BLOCCO 1: DIGITAL PASS -->
                 <div class="tag-block" data-type="digital-pass">
                     <div class="drag-handle">⋮⋮</div>
@@ -259,7 +268,6 @@
                         <p class="digital-pass-text">Digital Pass</p>
                     </div>
                 </div>
-                
             </div>
 
         </div> 
@@ -301,7 +309,7 @@
         </div>
     </div>
 
-    <!-- 2. CASSETTO IDENTITÀ -->
+    <!-- 2. CASSETTO IDENTITÀ (Con Sicurezza Nome) -->
     <div class="drawer-glass" id="drawer-identita">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
@@ -310,7 +318,11 @@
             <div class="drawer-subtitle">Aggiungi gli spazi al nome</div>
         </div>
         <div>
-            <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px;">
+            <!-- LABEL SICUREZZA: Ricorda all'utente il brand originario -->
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; text-align: center; letter-spacing: 1px;">
+                TAG ORIGINARIO: <span id="label-nome-sistema" style="color: #fff; font-weight: 600;">@...</span>
+            </div>
+            <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px; text-align: center;">
         </div>
         <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME</button>
     </div>
@@ -617,7 +629,14 @@
     function accendiIControlli() {
         const fieldDisplay = document.getElementById('field-username_display');
         const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
+        const labelSistema = document.getElementById('label-nome-sistema');
+
+        // Scriviamo il nome di base in bella vista nel cassetto
+        if (labelSistema) { labelSistema.innerText = '@' + NOME_SISTEMA.toUpperCase(); }
+
         if (!fieldDisplay) return;
+
+        // Ascolto l'input per colorare di rosso se fa errori
         fieldDisplay.addEventListener('input', () => {
             const inputVal = fieldDisplay.value;
             const inseritoSenzaSpazi = inputVal.toLowerCase().replace(/\s/g, '');
@@ -633,6 +652,17 @@
                 fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)"; fieldDisplay.style.boxShadow = "none";
                 if (btnSalva) { btnSalva.style.pointerEvents = "auto"; btnSalva.style.opacity = "1"; }
                 formattaBadge(inputVal);
+            }
+        });
+
+        // Intercettiamo il tasto "INVIO / OK" della tastiera Android
+        fieldDisplay.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                e.preventDefault();
+                fieldDisplay.blur(); // Abbassa la tastiera
+                if (btnSalva && btnSalva.style.pointerEvents !== "none") {
+                    salvaIdentitaEApriStile(); // Salva e chiude
+                }
             }
         });
     }
