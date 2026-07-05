@@ -276,12 +276,14 @@
     <!-- BACKDROP -->
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
 
-    <!-- 1. CASSETTO MASTER -->
+        <!-- ========================================================= -->
+    <!-- 1. CASSETTO MASTER (IL MENU PRINCIPALE)                   -->
+    <!-- ========================================================= -->
     <div class="drawer-glass" id="drawer-master">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">PLANCIA COMANDI</div>
-            <div class="drawer-subtitle">Gestisci il tuo tag</div>
+            <div class="drawer-subtitle">Gestisci la tua tag</div> <!-- Corretto al femminile -->
         </div>
         <div class="style-list" style="margin-top: 10px;">
             <div class="style-bar" onclick="apriDrawer('drawer-identita')">
@@ -302,26 +304,37 @@
             </div>
         </div>
     </div>
+    <!-- /FINE CASSETTO MASTER -->
 
-    <!-- 2. CASSETTO IDENTITÀ (Con Sicurezza Nome) -->
+
+    <!-- ========================================================= -->
+    <!-- 2. CASSETTO IDENTITÀ (Modifica Nome e Box di Sicurezza)   -->
+    <!-- ========================================================= -->
     <div class="drawer-glass" id="drawer-identita">
-        <div class="drawer-header" style="flex-direction: column;">
+        <div class="drawer-header" style="flex-direction: column; margin-bottom: 15px;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">NOME BRAND</div>
             <div class="drawer-subtitle">Aggiungi gli spazi al nome</div>
         </div>
-        <div>
-            <!-- LABEL SICUREZZA: Ricorda all'utente il brand originario -->
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; text-align: center; letter-spacing: 1px;">
-                TAG ORIGINARIO: <span id="label-nome-sistema" style="color: #fff; font-weight: 600;">@...</span>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+            <!-- Box Separato e pulito per la Tag Originaria -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; text-align: center; display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 0.55rem; color: rgba(255,255,255,0.5); letter-spacing: 1.5px; text-transform: uppercase;">La tua Tag Originaria</span>
+                <span id="label-nome-sistema" style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px; word-break: break-word;">@...</span>
             </div>
-            <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px; text-align: center;">
+            
+            <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.9rem;">
         </div>
         <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME</button>
     </div>
+    <!-- /FINE CASSETTO IDENTITÀ -->
 
-    <!-- 3. CASSETTO STILE -->
+
+    <!-- ========================================================= -->
+    <!-- 3. CASSETTO STILE (Temi e Layout: Badge, Divider, Pure)   -->
+    <!-- ========================================================= -->
     <div class="drawer-glass" id="drawer-style">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
@@ -336,48 +349,46 @@
             <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
             <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
         </div>
+        
         <div class="drawer-header" style="flex-direction: column; margin-top: 25px; margin-bottom: 15px;">
             <div class="drawer-title">BRAND LAYOUT</div>
-            <div class="drawer-subtitle">La forma del tuo tag</div>
+            <div class="drawer-subtitle">La forma della tua tag</div> <!-- Corretto al femminile -->
         </div>
-                <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
-            <label class="style-bar-label" style="flex: 1;">
-                <input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()">
-                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div>
-            </label>
-            <label class="style-bar-label" style="flex: 1;">
-                <input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()">
-                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div>
-            </label>
-            <label class="style-bar-label" style="flex: 1;">
-                <input type="radio" name="digital_layout" value="pure" onchange="applicaTemaLive()">
-                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Pure</span></div>
-            </label>
+        
+        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div></label>
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div></label>
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="pure" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Pure</span></div></label>
         </div>
-
         <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
     </div>
+    <!-- /FINE CASSETTO STILE -->
 
-    <!-- 4. CASSETTO MODULI -->
+
+    <!-- ========================================================= -->
+    <!-- 4. CASSETTO MODULI (Testo & Bio, Social, ecc.)            -->
+    <!-- ========================================================= -->
     <div class="drawer-glass" id="drawer-moduli">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">AGGIUNGI MODULO</div>
-            <div class="drawer-subtitle">Espandi il tuo tag</div>
+            <div class="drawer-subtitle">Espandi la tua tag</div> <!-- Corretto al femminile -->
         </div>
         <div class="style-list" style="flex-direction: column; gap: 10px;">
             <div class="style-bar" onclick="apriDrawer('drawer-bio')">
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-align-center" style="color: rgba(255,255,255,0.5);"></i><span>Testo & Bio</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
-            <!-- Futuri Moduli -->
+            <!-- Futuri Moduli Bloccati -->
             <div class="style-bar" style="opacity: 0.5;">
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-share-nodes" style="color: rgba(255,255,255,0.5);"></i><span>Contatti & Social</span></div>
                 <i class="fas fa-lock" style="font-size: 0.7rem; color: rgba(255,255,255,0.3);"></i>
             </div>
         </div>
     </div>
+    <!-- /FINE CASSETTO MODULI -->
+
 
     <!-- 5. CASSETTO BIO -->
     <div class="drawer-glass" id="drawer-bio">
