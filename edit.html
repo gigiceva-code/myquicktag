@@ -525,7 +525,7 @@
             const params = new URLSearchParams(window.location.search);
             const nomeUrl = params.get('u') || params.get('user');
             if (nomeUrl) return nomeUrl.replace('@', '').trim().toLowerCase();
-            
+
             if (typeof nomeUtente !== 'undefined' && nomeUtente) {
                 return nomeUtente.replace('@', '').trim().toLowerCase();
             }
@@ -535,29 +535,24 @@
 
     const NOME_SISTEMA = getNomeBrandReale();
 
-    
-     /**
+    /**
      * =========================================================
-     * 2. BADGE VISUAL ENGINE (Aggiornato per simmetria ottica)
+     * 2. BADGE VISUAL ENGINE (Optical Symmetry)
      * =========================================================
      */
     function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
 
-        // Pulizia spietata
         let testo = testoBruto.trim().toUpperCase();
-        
-        // Se c'è già una chiocciola incollata, la stacchiamo
+
         if(testo.startsWith('@')) {
             testo = testo.substring(1).trim(); 
         }
 
-        // Inietta la @ isolata e stilizzata, seguita dal testo puro
         el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
         el.style.textAlign = "center";
 
-        // Logiche di impaginazione e bilanciamento
         if (testo.includes(' ')) {
             el.style.whiteSpace = "normal"; 
             el.style.wordBreak = "keep-all";
@@ -572,7 +567,6 @@
             else { el.style.fontSize = "0.95rem"; }
         }
     }
-
 
     /**
      * =========================================================
@@ -597,7 +591,7 @@
         const temaInput = document.querySelector('input[name="digital_style"]:checked');
         const layoutInput = document.querySelector('input[name="digital_layout"]:checked');
         const profileContent = document.getElementById('profile-content');
-        
+
         if(temaInput && profileContent) {
             profileContent.setAttribute('data-theme', temaInput.value);
             document.body.setAttribute('data-qr-theme', temaInput.value);
@@ -620,7 +614,27 @@
 
     /**
      * =========================================================
-     * 4. DATA SYNCHRONIZATION (AIRTABLE API + LOCAL CACHE)
+     * 4. CONTENT EDITORS (MODULES)
+     * =========================================================
+     */
+    function salvaBioEChiudi() {
+        const testoInserito = document.getElementById('field-bio').value.trim();
+        const bioLive = document.getElementById('testo-bio-live');
+        
+        if(testoInserito !== "") {
+            bioLive.innerText = testoInserito;
+            bioLive.style.opacity = "1";
+        } else {
+            bioLive.innerText = "Aggiungi una breve bio o il tuo ruolo professionale...";
+            bioLive.style.opacity = "0.5";
+        }
+        
+        chiudiSenzaSalvare();
+    }
+
+    /**
+     * =========================================================
+     * 5. DATA SYNCHRONIZATION (AIRTABLE API + LOCAL CACHE)
      * =========================================================
      */
     async function inizializzaPagina() { 
@@ -628,7 +642,7 @@
         try {
             const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
             const data = await response.json();
-            
+
             const f = (() => {
                 if (data.fields?.draft_json) {
                     try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {}
@@ -643,8 +657,7 @@
                     localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display);
                     formattaBadge(f.username_display);
                 }
-                
-                // Aggiorna la cache locale con i dati del server (se diversi)
+
                 if (f.digital_style) {
                     localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style);
                     const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
@@ -655,7 +668,7 @@
                     const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`);
                     if (radioLayout) radioLayout.checked = true;
                 }
-                
+
                 applicaTemaLive();
             }
         } catch (e) { console.error("Data synchronization failed:", e); }
@@ -667,19 +680,18 @@
         const displayVal = inputField ? inputField.value.trim() : "";
         const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
         const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
-        
+
         const bozza = {
             username_system: NOME_SISTEMA,
             username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(),
             digital_style: styleVal,
             digital_layout: layoutVal
         }; 
-        
-        // SALVATAGGIO ISTANTANEO IN MEMORIA LOCALE (Batte il lag del server)
+
         localStorage.setItem('mqt_cache_' + NOME_SISTEMA, bozza.username_display);
         localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
         localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
-        
+
         try {
             await fetch('/api/update-profile', {
                 method: 'POST',
@@ -700,7 +712,7 @@
 
     /**
      * =========================================================
-     * 5. REAL-TIME INPUT VALIDATION
+     * 6. REAL-TIME INPUT VALIDATION
      * =========================================================
      */
     function salvaIdentitaEApriStile() {
@@ -752,36 +764,54 @@
 
     /**
      * =========================================================
-     * 6. SYSTEM INITIALIZATION (INSTANT RENDER)
+     * 7. DRAG & DROP ENGINE (SORTABLE)
+     * =========================================================
+     */
+    function initDragAndDrop() {
+        const track = document.getElementById('blocks-track');
+        if(track) {
+            new Sortable(track, {
+                handle: '.drag-handle',
+                animation: 250,
+                easing: "cubic-bezier(1, 0, 0, 1)",
+                ghostClass: 'sortable-ghost',
+                dragClass: 'sortable-drag',
+                onEnd: function (evt) {
+                    console.log("Blocks order updated. Ready for database sync.");
+                }
+            });
+        }
+    }
+
+    /**
+     * =========================================================
+     * 8. SYSTEM INITIALIZATION (INSTANT RENDER)
      * =========================================================
      */
     function avviaMyQuickTag() {
-        // 1. CARICAMENTO ISTANTANEO NOME DA CACHE
         const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
         if (nomeInCache) formattaBadge(nomeInCache); 
         else formattaBadge(NOME_SISTEMA);
-        
-        // 2. CARICAMENTO ISTANTANEO TEMA E LAYOUT DA CACHE
+
         const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
         if (temaInCache) {
             const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`);
             if(radioTheme) radioTheme.checked = true;
         }
-        
+
         const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
         if (layoutInCache) {
             const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`);
             if(radioLayout) radioLayout.checked = true;
         }
-        
-        // Applica visivamente tutto prima ancora che il server risponda
+
         applicaTemaLive();
-        
-        // 3. Accensione sistema e sync in background
         accendiIControlli();
         inizializzaPagina();
         
-        // 4. Refresh Nascosto
+        // Attivazione motore fluidità moduli
+        initDragAndDrop();
+
         let tapCount = 0;
         const badgeDiv = document.querySelector('.username-capsule-wrapper') || document.getElementById('tag-username');
         if(badgeDiv) {
