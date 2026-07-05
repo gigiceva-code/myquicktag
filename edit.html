@@ -386,9 +386,10 @@
     </style>
 </head>
 <body>
-   <div class="configurator-wrapper">
+      <div class="configurator-wrapper">
        <div id="profile-content" data-theme="black_dna"> 
            
+            <!-- HEADER (Intatto, con la logica del layout) -->
             <div class="header-monolith">
                 <div class="username-capsule-wrapper">
                     <div class="username-capsule">
@@ -399,17 +400,21 @@
                 </div>
             </div>
 
-            <div id="mainGrid">
-                <div class="casella" id="casella-qr" onclick="apriModalQR()">
-                    <span class="testo-pass">DIGITAL PASS</span>
+            <!-- NUOVA PISTA DRAG & DROP (Sostituisce il vecchio mainGrid) -->
+            <div id="blocks-track" class="blocks-track">
+                
+                <!-- BLOCCO 1: BIO -->
+                <div class="tag-block" data-type="bio">
+                    <div class="drag-handle">⋮⋮</div>
+                    <div class="block-content" onclick="apriDrawer('drawer-bio')">
+                        <p id="testo-bio-live" class="bio-display-text">Aggiungi una breve bio o il tuo ruolo professionale...</p>
+                    </div>
                 </div>
 
-                <div class="casella" id="casella-crea" onclick="apriDrawer('drawer-identita')">
-                    <span class="testo-crea">+ CREA LA TUA TAG</span>
-                </div>
             </div>
-       </div>
-   </div>
+
+       </div> 
+   </div> 
 
    <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
 
