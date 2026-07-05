@@ -611,24 +611,40 @@
             document.getElementById('modal-qr').classList.remove('active');
         }
     }
-
-    /**
+        /**
      * =========================================================
      * 4. CONTENT EDITORS (MODULES)
      * =========================================================
      */
     function salvaBioEChiudi() {
         const testoInserito = document.getElementById('field-bio').value.trim();
-        const bioLive = document.getElementById('testo-bio-live');
-        
+        const track = document.getElementById('blocks-track');
+        let bioBlock = document.getElementById('blocco-bio-live');
+
         if(testoInserito !== "") {
-            bioLive.innerText = testoInserito;
-            bioLive.style.opacity = "1";
-        } else {
-            bioLive.innerText = "Aggiungi una breve bio o il tuo ruolo professionale...";
-            bioLive.style.opacity = "0.5";
+            if(!bioBlock) {
+                // Il blocco non esiste, lo generiamo dal nulla
+                bioBlock = document.createElement('div');
+                bioBlock.className = 'tag-block';
+                bioBlock.id = 'blocco-bio-live';
+                bioBlock.setAttribute('data-type', 'bio');
+                bioBlock.innerHTML = `
+                    <div class="drag-handle">⋮⋮</div>
+                    <div class="block-content" onclick="apriDrawer('drawer-bio')">
+                        <p class="bio-display-text">${testoInserito}</p>
+                    </div>
+                `;
+                // Lo piazziamo in cima alla pista
+                track.insertBefore(bioBlock, track.firstChild);
+            } else {
+                // Il blocco esiste, aggiorniamo solo il testo
+                bioBlock.querySelector('.bio-display-text').innerText = testoInserito;
+            }
+        } else if (bioBlock) {
+            // L'utente ha cancellato tutto, distruggiamo il blocco
+            bioBlock.remove();
         }
-        
+
         chiudiSenzaSalvare();
     }
 
