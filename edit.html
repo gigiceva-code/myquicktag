@@ -463,6 +463,19 @@
            <div class="drawer-title">NOME BRAND</div>
            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Aggiungi gli spazi al nome</div>
        </div>
+          <!-- CASSETTO BIO -->
+   <div class="drawer-glass" id="drawer-bio">
+       <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
+           <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+           <div class="drawer-title">BIOGRAFIA</div>
+           <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Il tuo ruolo o payoff</div>
+       </div>
+       <div>
+           <textarea id="field-bio" placeholder="Es. Boutique Hotel nel cuore di Roma, oppure Site Foreman @ CTI" rows="3" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px; resize: none;"></textarea>
+       </div>
+       <button class="btn-crea" onclick="salvaBioEChiudi()">SALVA BIO</button>
+   </div>
+
        <div>
            <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi Volkswagen" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px;">
        </div>
