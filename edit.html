@@ -77,75 +77,7 @@
             text-transform: uppercase; white-space: normal; word-break: keep-all; overflow-wrap: break-word;
             transition: font-size 0.3s ease; 
         }
-          /* --- FIX DIVIDER WRAP (Logica del testo a capo e Separazione) --- */
-        #profile-content[data-layout="divider"] .username-capsule { 
-            background: transparent !important; 
-            clip-path: none !important; 
-            padding: 0; 
-            width: 100%; 
-        }
-        
-        #profile-content[data-layout="divider"] .username-capsule-inner { 
-            background: transparent !important; 
-            clip-path: none !important; 
-            padding: 10px 0 45px 0 !important; /* Molto più respiro sotto per far respirare la riga */
-            position: relative; 
-        }
-        
-        /* Il segreto dell'eleganza: Forza il bilanciamento ottico delle righe */
-        #profile-content[data-layout="divider"] .username-display { 
-            white-space: normal !important; 
-            word-break: keep-all !important; 
-            overflow-wrap: break-word !important;
-            text-wrap: balance !important; /* LA MAGIA: Bilancia le righe simmetricamente */
-            line-height: 1.4 !important; 
-        }
-        
-        /* La linea sfumata orizzontale (Ora divide davvero la plancia) */
-        #profile-content[data-layout="divider"] .username-capsule-inner::after {
-            content: ''; 
-            position: absolute; 
-            bottom: 18px; /* Distanza dal fondo */
-            left: 5%; 
-            width: 90%; /* Più larga, taglia la pagina da parte a parte */
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        }
-        
-        /* Il diamante centrale riposizionato al millimetro */
-        #profile-content[data-layout="divider"] .username-capsule-inner::before {
-            content: '◆'; 
-            position: absolute; 
-            bottom: 12px; /* Centrato esattamente sulla riga */
-            left: 50%; 
-            transform: translateX(-50%);
-            font-size: 11px; 
-            color: rgba(255, 255, 255, 0.6); 
-            background: var(--bg-esterno); /* Si fonde perfettamente col fondo nero */
-            padding: 0 10px; 
-            z-index: 2;
-        }
-
-        /* Colori Divider Adattati */
-        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.6), transparent); }
-        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before { color: #00E680; }
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.6), transparent); }
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::before { color: #e5c158; }
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before { color: #c8968e; }
-
-        /* Focus Frame */
-        #profile-content[data-layout="focus"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; }
-        #profile-content[data-layout="focus"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 24px 30px; position: relative; }
-        #profile-content[data-layout="focus"] .username-capsule-inner::before, #profile-content[data-layout="focus"] .username-capsule-inner::after {
-            content: ''; position: absolute; width: 20px; height: 20px; border: 1px solid rgba(255, 255, 255, 0.4); transition: border-color 0.4s ease;
-        }
-        #profile-content[data-layout="focus"] .username-capsule-inner::before { top: 0; left: 0; border-right: none; border-bottom: none; }
-        #profile-content[data-layout="focus"] .username-capsule-inner::after { bottom: 0; right: 0; border-left: none; border-top: none; }
-        #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::after { border-color: #00E680; }
-        #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::after { border-color: #e5c158; }
-        #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::after { border-color: #c8968e; }
-
+          
         .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
         .brand-text { font-weight: inherit; }
 
