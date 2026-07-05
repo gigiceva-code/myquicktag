@@ -320,6 +320,69 @@
         .dock-item.active, .dock-item:hover { color: #ffffff; }
         .dock-item i { font-size: 1.1rem; margin-bottom: 6px; }
         .dock-item span { fon⁸t-size: 0.5rem; letter-spacing: 1.5px; font-weight: 500; }
+                /* =========================================================
+           DRAG & DROP TRACK E BLOCCHI TIPOGRAFICI
+           ========================================================= */
+        .blocks-track {
+            width: 100%;
+            max-width: 320px;
+            margin: 20px auto 100px auto; /* Spazio per la dock inferiore */
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 50px; /* Pista sempre attiva anche se vuota */
+        }
+
+        .tag-block {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: transparent;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        /* Maniglia di trascinamento visibile solo in Edit */
+        .drag-handle {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 1.2rem;
+            margin-right: 15px;
+            cursor: grab;
+            padding: 5px;
+            line-height: 1;
+            letter-spacing: -2px; /* Avvicina i puntini */
+        }
+        
+        .drag-handle:active { cursor: grabbing; }
+
+        /* Contenuto cliccabile del blocco */
+        .block-content {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        /* Tipografia specifica per la Bio */
+        .bio-display-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            font-weight: 300;
+            line-height: 1.4;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        /* Effetto quando un blocco viene sollevato (Drag) */
+        .sortable-ghost {
+            opacity: 0.4;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .sortable-drag {
+            background: rgba(20, 20, 22, 0.95);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+
     </style>
 </head>
 <body>
