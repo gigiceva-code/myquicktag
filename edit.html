@@ -59,52 +59,59 @@
         #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.5); }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
 
+
+                /* =========================================================
+           HEADER E CAPSULA BRAND (Struttura Base)
+           ========================================================= */
         .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; }
 
-        .username-capsule-inner {
-            display: flex; justify-content: center; align-items: center;
-            width: 100%; background: #0d0d0f; padding: 24px 35px;
-            clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
-        }
+        /* Il wrapper fa da "polmone": si stringe o si allarga in base al layout */
+        .username-capsule-wrapper { display: flex; justify-content: center; align-items: center; width: auto; max-width: 100%; }
+        
         .username-capsule {
-            display: flex; padding: 1.5px; background: rgba(255, 255, 255, 0.3);
+            display: flex; padding: 1.5px; background: rgba(255, 255, 255, 0.3); width: 100%;
             clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
+        }
+        .username-capsule-inner {
+            display: flex; justify-content: center; align-items: center; width: 100%;
+            background: #0d0d0f; padding: 24px 35px;
+            clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
 
         .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
-            width: 100%; margin: 0 auto; text-align: center !important; display: block !important; 
+            margin: 0 auto; text-align: center !important; display: block !important; 
             text-transform: uppercase; white-space: normal; word-break: keep-all; overflow-wrap: break-word;
             transition: font-size 0.3s ease; 
         }
-          
+
         /* =========================================================
-           LAYOUT 2 E 3: DIVIDER E FOCUS (Fix Simmetria)
+           LAYOUT 2: DIVIDER (La riga che taglia lo schermo)
            ========================================================= */
-        
-        /* --- LAYOUT 2: DIVIDER --- */
-        #profile-content[data-layout="divider"] .username-capsule-wrapper { width: 100%; padding: 0 15px; }
+        /* Imponiamo larghezza 100% così la riga tocca i lati della card */
+        #profile-content[data-layout="divider"] .username-capsule-wrapper { width: 100%; padding: 0 10px; }
         #profile-content[data-layout="divider"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; width: 100%; }
         #profile-content[data-layout="divider"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 10px 0 45px 0 !important; position: relative; width: 100%; }
         
-        /* Forza il bilanciamento ottico (Antiproiettile per Android) */
+        /* Bilanciamento simmetrico del testo limitato al centro */
         #profile-content[data-layout="divider"] .username-display { 
             white-space: normal !important; word-break: keep-all !important; overflow-wrap: break-word !important; text-wrap: balance !important; 
-            max-width: 260px; margin: 0 auto; line-height: 1.4 !important; 
+            max-width: 260px; margin: 0 auto; line-height: 1.4 !important; width: 100%;
         }
         
-        /* La linea sfumata orizzontale allargata */
+        /* La riga esplode al 100% */
         #profile-content[data-layout="divider"] .username-capsule-inner::after {
             content: ''; position: absolute; bottom: 18px; left: 0; width: 100%; height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         }
         
-        /* Il diamante centrale */
+        /* Il diamante perfettamente centrato */
         #profile-content[data-layout="divider"] .username-capsule-inner::before {
             content: '◆'; position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
             font-size: 11px; color: rgba(255, 255, 255, 0.6); background: var(--bg-esterno); padding: 0 10px; z-index: 2;
         }
 
+        /* Colori Divider */
         #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.6), transparent); }
         #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before { color: #00E680; }
         #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.6), transparent); }
@@ -112,12 +119,15 @@
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before { color: #c8968e; }
 
-        /* --- LAYOUT 3: FOCUS FRAME --- */
-        #profile-content[data-layout="focus"] .username-capsule-wrapper { width: auto; padding: 0; }
-        #profile-content[data-layout="focus"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; }
+        /* =========================================================
+           LAYOUT 3: FOCUS FRAME (Cornici incollate al testo)
+           ========================================================= */
+        /* Imponiamo lo Shrink-to-Fit (strizzamento) attorno al nome */
+        #profile-content[data-layout="focus"] .username-capsule-wrapper { width: auto; max-width: 95%; }
+        #profile-content[data-layout="focus"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; width: auto; }
+        #profile-content[data-layout="focus"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 14px 22px !important; position: relative; width: auto; }
         
-        /* Riduce il padding per incollare le cornici al nome */
-        #profile-content[data-layout="focus"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 14px 20px !important; position: relative; width: auto; }
+        #profile-content[data-layout="focus"] .username-display { width: auto; text-wrap: balance !important; line-height: 1.4 !important; max-width: 280px; }
         
         #profile-content[data-layout="focus"] .username-capsule-inner::before, 
         #profile-content[data-layout="focus"] .username-capsule-inner::after {
@@ -126,9 +136,11 @@
         #profile-content[data-layout="focus"] .username-capsule-inner::before { top: 0; left: 0; border-right: none; border-bottom: none; }
         #profile-content[data-layout="focus"] .username-capsule-inner::after { bottom: 0; right: 0; border-left: none; border-top: none; }
         
+        /* Colori Focus */
         #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::after { border-color: #00E680; }
         #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::after { border-color: #e5c158; }
         #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::after { border-color: #c8968e; }
+
 
         .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
         .brand-text { font-weight: inherit; }
