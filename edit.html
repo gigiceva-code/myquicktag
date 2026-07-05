@@ -77,22 +77,56 @@
             text-transform: uppercase; white-space: normal; word-break: keep-all; overflow-wrap: break-word;
             transition: font-size 0.3s ease; 
         }
-
-        /* --- FIX DIVIDER WRAP (Logica del testo a capo) --- */
-        #profile-content[data-layout="divider"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; width: 100%; }
-        #profile-content[data-layout="divider"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 10px 0 30px 0; position: relative; }
-        #profile-content[data-layout="divider"] .username-display { white-space: pre-wrap !important; word-wrap: break-word !important; line-height: 1.3; }
+        /* --- FIX DIVIDER WRAP (Logica del testo a capo e Separazione) --- */
+        #profile-content[data-layout="divider"] .username-capsule { 
+            background: transparent !important; 
+            clip-path: none !important; 
+            padding: 0; 
+            width: 100%; 
+        }
         
+        #profile-content[data-layout="divider"] .username-capsule-inner { 
+            background: transparent !important; 
+            clip-path: none !important; 
+            padding: 10px 0 45px 0 !important; /* Molto più respiro sotto per far respirare la riga */
+            position: relative; 
+        }
+        
+        /* Il segreto dell'eleganza: Forza il bilanciamento ottico delle righe */
+        #profile-content[data-layout="divider"] .username-display { 
+            white-space: normal !important; 
+            word-break: keep-all !important; 
+            overflow-wrap: break-word !important;
+            text-wrap: balance !important; /* LA MAGIA: Bilancia le righe simmetricamente */
+            line-height: 1.4 !important; 
+        }
+        
+        /* La linea sfumata orizzontale (Ora divide davvero la plancia) */
         #profile-content[data-layout="divider"] .username-capsule-inner::after {
-            content: ''; position: absolute; bottom: 10px; left: 10%; width: 80%; height: 1px;
+            content: ''; 
+            position: absolute; 
+            bottom: 18px; /* Distanza dal fondo */
+            left: 5%; 
+            width: 90%; /* Più larga, taglia la pagina da parte a parte */
+            height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         }
+        
+        /* Il diamante centrale riposizionato al millimetro */
         #profile-content[data-layout="divider"] .username-capsule-inner::before {
-            content: '◆'; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
-            font-size: 11px; color: rgba(255, 255, 255, 0.6); background: #0d0d0f; padding: 0 8px; z-index: 2;
+            content: '◆'; 
+            position: absolute; 
+            bottom: 12px; /* Centrato esattamente sulla riga */
+            left: 50%; 
+            transform: translateX(-50%);
+            font-size: 11px; 
+            color: rgba(255, 255, 255, 0.6); 
+            background: var(--bg-esterno); /* Si fonde perfettamente col fondo nero */
+            padding: 0 10px; 
+            z-index: 2;
         }
 
-        /* Colori Divider */
+        /* Colori Divider Adattati */
         #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.6), transparent); }
         #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before { color: #00E680; }
         #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.6), transparent); }
@@ -100,6 +134,7 @@
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before { color: #c8968e; }
 
+        
         /* Focus Frame */
         #profile-content[data-layout="focus"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; }
         #profile-content[data-layout="focus"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 24px 30px; position: relative; }
