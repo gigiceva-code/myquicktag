@@ -6,7 +6,7 @@
     <title>Configurazione Ecosistema - myquicktag</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
 
@@ -33,44 +33,33 @@
             width: 100%; max-width: 410px; height: 100%; max-height: 840px;
             padding: 40px 24px 32px 24px;
             border-radius: 28px;
-            display: flex; flex-direction: column; justify-content: space-between;
+            display: flex; flex-direction: column; justify-content: flex-start; /* Fix per caduta nel vuoto */
             box-shadow: 0 30px 70px rgba(0,0,0,0.9); overflow: hidden; 
             transition: all 0.4s ease; 
         }
-      
-               /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
-        
-        /* 1. EMERALD */
+
+        /* --- I 5 TEMI UFFICIALI RICALIBRATI (LUXURY) --- */
         #profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8); }
         #profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.5); }
         #profile-content[data-theme="emerald"] .testo-pass { color: #00E680; text-shadow: 0 0 10px rgba(0, 230, 128, 0.2); }
 
-        /* 2. BLACK DNA (Stealth Puro) */
         #profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); } 
         #profile-content[data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.35); }
         #profile-content[data-theme="black_dna"] .testo-pass { color: #ffffff; opacity: 0.9; }
 
-        /* 3. TITANIUM */
         #profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8); }
         #profile-content[data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.4); }
         #profile-content[data-theme="titanium"] .testo-pass { color: #b0b0b5; }
 
-        /* 4. OBSIDIAN GOLD */
         #profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8); }
         #profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.5); }
         #profile-content[data-theme="obsidian_gold"] .testo-pass { color: #e5c158; text-shadow: 0 0 10px rgba(229, 193, 88, 0.2); }
 
-        /* 5. SATIN ROSE */
         #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8); }
         #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.5); }
         #profile-content[data-theme="satin_rose"] .testo-pass { color: #c8968e; text-shadow: 0 0 10px rgba(200, 150, 142, 0.2); }
-        
-        .header-monolith {
-            width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0;
-        }
-        
-               /* --- SOLUZIONE 4: BADGE LUXURY (PERFEZIONATO) --- */
-        
+
+        .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; }
 
         .username-capsule-inner {
             display: flex; justify-content: center; align-items: center;
@@ -78,194 +67,88 @@
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
         .username-capsule {
-            display: flex;
-            padding: 1.5px;
-            background: rgba(255, 255, 255, 0.3); /* Niente più gradiente */
+            display: flex; padding: 1.5px; background: rgba(255, 255, 255, 0.3);
             clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
         }
 
-                .username-display {
+        .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
-            width: 100%; margin: 0 auto;
-            text-align: center !important; /* BLINDA IL TESTO AL CENTRO */
-            display: block !important; 
-            text-transform: uppercase; 
-            white-space: normal; word-break: keep-all; overflow-wrap: break-word;
+            width: 100%; margin: 0 auto; text-align: center !important; display: block !important; 
+            text-transform: uppercase; white-space: normal; word-break: keep-all; overflow-wrap: break-word;
             transition: font-size 0.3s ease; 
         }
-        /* =========================================================
-           UI COMPONENT: BRANDING LAYOUT SWITCHER
-           Modifies the default .username-capsule natively based on 
-           the data-layout attribute applied to #profile-content.
-           Default is "badge" (Luxury Badge - Option 4).
-           ========================================================= */
-        /* --- LAYOUT 2: DIVIDER (Vero Divisore Elegante) --- */
-        #profile-content[data-layout="divider"] .username-capsule {
-            background: transparent !important;
-            clip-path: none !important;
-            padding: 0; width: 100%;
-        }
-        #profile-content[data-layout="divider"] .username-capsule-inner {
-            background: transparent !important;
-            clip-path: none !important;
-            padding: 10px 0 25px 0; /* Crea lo spazio sotto per la linea */
-            position: relative;
-        }
+
+        /* --- FIX DIVIDER WRAP (Logica del testo a capo) --- */
+        #profile-content[data-layout="divider"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; width: 100%; }
+        #profile-content[data-layout="divider"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 10px 0 30px 0; position: relative; }
+        #profile-content[data-layout="divider"] .username-display { white-space: pre-wrap !important; word-wrap: break-word !important; line-height: 1.3; }
         
-        /* La linea sfumata orizzontale */
         #profile-content[data-layout="divider"] .username-capsule-inner::after {
             content: ''; position: absolute; bottom: 10px; left: 10%; width: 80%; height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         }
-        
-        /* Il diamante centrale */
         #profile-content[data-layout="divider"] .username-capsule-inner::before {
             content: '◆'; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
-            font-size: 11px; color: rgba(255, 255, 255, 0.6);
-            background: #0d0d0f; /* Nasconde la linea dietro al diamante */
-            padding: 0 8px; z-index: 2;
+            font-size: 11px; color: rgba(255, 255, 255, 0.6); background: #0d0d0f; padding: 0 8px; z-index: 2;
         }
 
-        /* --- ADATTAMENTO COLORI SOLO PER IL DIVIDER --- */
+        /* Colori Divider */
         #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.6), transparent); }
         #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before { color: #00E680; }
-        
         #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.6), transparent); }
         #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::before { color: #e5c158; }
-
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before { color: #c8968e; }
 
-        
-        /* --- LAYOUT 3: FOCUS FRAME (Minimalist HUD Brackets) --- */
-        #profile-content[data-layout="focus"] .username-capsule {
-            background: transparent !important;
-            clip-path: none !important;
-            padding: 0;
+        /* Focus Frame */
+        #profile-content[data-layout="focus"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; }
+        #profile-content[data-layout="focus"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 24px 30px; position: relative; }
+        #profile-content[data-layout="focus"] .username-capsule-inner::before, #profile-content[data-layout="focus"] .username-capsule-inner::after {
+            content: ''; position: absolute; width: 20px; height: 20px; border: 1px solid rgba(255, 255, 255, 0.4); transition: border-color 0.4s ease;
         }
+        #profile-content[data-layout="focus"] .username-capsule-inner::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+        #profile-content[data-layout="focus"] .username-capsule-inner::after { bottom: 0; right: 0; border-left: none; border-top: none; }
+        #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::after { border-color: #00E680; }
+        #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::after { border-color: #e5c158; }
+        #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::after { border-color: #c8968e; }
 
-        #profile-content[data-layout="focus"] .username-capsule-inner {
-            background: transparent !important;
-            clip-path: none !important;
-            padding: 24px 30px;
-            position: relative;
-        }
-
-        /* Rendering degli angolari (Corner Brackets) */
-        #profile-content[data-layout="focus"] .username-capsule-inner::before,
-        #profile-content[data-layout="focus"] .username-capsule-inner::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            transition: border-color 0.4s ease;
-        }
-
-        /* Angolo Superiore Sinistro */
-        #profile-content[data-layout="focus"] .username-capsule-inner::before {
-            top: 0;
-            left: 0;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        /* Angolo Inferiore Destro */
-        #profile-content[data-layout="focus"] .username-capsule-inner::after {
-            bottom: 0;
-            right: 0;
-            border-left: none;
-            border-top: none;
-        }
-
-        /* =========================================================
-           LAYOUT THEME ADAPTATION
-           Applies the selected brand color to the active layout decorators.
-           ========================================================= */
-        
-        /* Tema Emerald */
-        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before,
-        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after {
-            background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.5), transparent);
-        }
-        #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::before,
-        #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::after {
-            border-color: #00E680;
-        }
-
-        /* Tema Obsidian Gold */
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::before,
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after {
-            background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.5), transparent);
-        }
-        #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::before,
-        #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::after {
-            border-color: #e5c158;
-        }
-
-        /* Tema Satin Rose */
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before,
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after {
-            background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.5), transparent);
-        }
-        #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::before,
-        #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::after {
-            border-color: #c8968e;
-        }
-        /* =========================================================
-           @ SYMBOL REFINEMENT (Luxury Typography)
-           Isola la chiocciola per bilanciare il centro ottico
-           ========================================================= */
-        .at-symbol {
-            opacity: 0.4;
-            font-weight: 300;
-            margin-right: 4px;
-            font-size: 0.9em;
-            letter-spacing: 0;
-        }
-        .brand-text {
-            font-weight: inherit;
-        }
-
-        #mainGrid { display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex: 1; width: 100%; padding: 30px 0 30px 0; }
-        .casella { padding: 4px 0; cursor: pointer; transition: opacity 0.2s; }
-        .casella:active { opacity: 0.6; }
-
-        .testo-pass { font-size: 0.75rem; letter-spacing: 3px; font-weight: 300; transition: all 0.4s ease;}
-        .testo-crea { font-size: 0.75rem; letter-spacing: 3px; font-weight: 500; color: #ffffff; transition: opacity 0.5s ease-in-out;}
+        .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
+        .brand-text { font-weight: inherit; }
 
         .drawer-backdrop { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: transparent; z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            background: rgba(0,0,0,0.4); z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
-                      
+
         .drawer-glass {
             position: fixed !important; bottom: -100% !important; left: 26px !important; right: 26px !important; width: auto !important; margin: 0 auto !important; max-width: 360px !important; 
-            background: rgba(30, 30, 35, 0.3) !important; backdrop-filter: blur(15px) !important; -webkit-backdrop-filter: blur(15px) !important; 
+            background: rgba(30, 30, 35, 0.4) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; 
             border: 1px solid rgba(255, 255, 255, 0.15) !important; border-radius: 28px !important; padding: 24px !important;
-            z-index: 2000 !important; transition: bottom 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; box-sizing: border-box !important; box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important; 
+            z-index: 2000 !important; transition: bottom 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; box-sizing: border-box !important; box-shadow: 0 10px 40px rgba(0,0,0,0.9) !important; 
         }
         .drawer-glass.open { bottom: 24px !important; }
 
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 4px; }
-        .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; flex: 1; text-align: center; }
-
-        .drawer-close { color: rgba(255, 255, 255, 0.6); font-size: 1rem; cursor: pointer; padding: 5px; width: 30px; text-align: center; position: absolute; left: 0; top: 0; }
-        .drawer-close:active { color: #ffffff; }
+        .drawer-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; padding: 0; position: relative; width: 100%; }
+        .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-align: center; width: 100%; }
+        .drawer-subtitle { font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase; text-align: center; }
+        .drawer-close { color: rgba(255, 255, 255, 0.6); font-size: 1.1rem; cursor: pointer; padding: 5px; position: absolute; right: -5px; top: -5px; }
+        .drawer-back { color: rgba(255, 255, 255, 0.6); font-size: 1.1rem; cursor: pointer; padding: 5px; position: absolute; left: -5px; top: -5px; }
+        .drawer-close:active, .drawer-back:active { color: #ffffff; }
 
         .style-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
         .style-bar-label { cursor: pointer; display: block; }
         .style-bar-label input { display: none; }
         .style-bar {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 14px; background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.04); border-radius: 10px;
-            color: #a0a0a0; font-size: 0.65rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
-            transition: all 0.2s ease;
+            padding: 14px 16px; background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06); border-radius: 12px;
+            color: #a0a0a0; font-size: 0.7rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
+            transition: all 0.2s ease; cursor: pointer;
         }
         .color-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #ffffff; }
+        .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: #ffffff; }
+        .style-bar:active { background: rgba(255,255,255,0.08); }
 
         .btn-crea {
             display: block; width: 100%; padding: 16px; background: #ffffff; color: #000000;
@@ -281,7 +164,6 @@
             opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
         .qr-modal-overlay.active { opacity: 1; pointer-events: auto; }
-
         .qr-card {
             width: 290px; background: rgba(30, 30, 35, 0.4); border-radius: 32px; padding: 40px 30px;
             border: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; align-items: center;
@@ -289,14 +171,12 @@
             box-shadow: 0 40px 80px rgba(0,0,0,0.9); position: relative;
         }
         .qr-modal-overlay.active .qr-card { transform: scale(1) translateY(0); }
-
         .qr-close-btn { position: absolute; top: 20px; right: 24px; color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; padding: 5px; }
         .qr-close-btn:active { color: #ffffff; }
         .qr-title-modal { font-size: 0.8rem; letter-spacing: 4px; font-weight: 500; color: #fff; margin-bottom: 35px; text-transform: uppercase;}
-
         .qr-svg-wrapper { width: 190px; height: 190px; padding: 20px; border-radius: 24px; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; transition: all 0.5s ease; }
         .qr-svg { width: 100%; height: 100%; transition: all 0.5s ease; }
-        
+
         body[data-qr-theme="emerald"] .qr-svg-wrapper { border: 1px solid rgba(0, 230, 128, 0.25); box-shadow: 0 0 35px rgba(0, 230, 128, 0.15); }
         body[data-qr-theme="emerald"] .qr-svg { fill: #00E680; filter: drop-shadow(0 0 8px rgba(0, 230, 128, 0.4)); }
         body[data-qr-theme="black_dna"] .qr-svg-wrapper { border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 35px rgba(255, 255, 255, 0.03); }
@@ -307,94 +187,50 @@
         body[data-qr-theme="obsidian_gold"] .qr-svg { fill: #e5c158; filter: drop-shadow(0 0 8px rgba(229, 193, 88, 0.35)); }
         body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(200, 150, 142, 0.25); box-shadow: 0 0 35px rgba(200, 150, 142, 0.15); }
         body[data-qr-theme="satin_rose"] .qr-svg { fill: #c8968e; filter: drop-shadow(0 0 8px rgba(200, 150, 142, 0.35)); }
-        
-        .luxury-dock {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); 
-            background: rgba(30, 30, 35, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 40px; display: flex; gap: 30px; padding: 14px 32px;
-            z-index: 1000; opacity: 0; pointer-events: none; transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1); box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-        }
-        .luxury-dock.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
-        .dock-item { display: flex; flex-direction: column; align-items: center; color: rgba(255, 255, 255, 0.5); cursor: pointer; transition: color 0.3s; }
-        .dock-item:active { transform: scale(0.9); }
-        .dock-item.active, .dock-item:hover { color: #ffffff; }
-        .dock-item i { font-size: 1.1rem; margin-bottom: 6px; }
-        .dock-item span { fon⁸t-size: 0.5rem; letter-spacing: 1.5px; font-weight: 500; }
-                /* =========================================================
-           DRAG & DROP TRACK E BLOCCHI TIPOGRAFICI
-           ========================================================= */
-                .blocks-track {
-            width: 100%;
-            max-width: 320px;
-            margin: 40px auto 100px auto; /* 40px di spazio dal nome */
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            min-height: 50px;
-        }
 
+        /* MENU FLOATTANTE INFERIORE */
+        .luxury-menu-btn {
+            position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); 
+            background: rgba(30, 30, 35, 0.8); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; 
+            display: flex; gap: 12px; padding: 16px 28px; justify-content: center; align-items: center;
+            z-index: 1000; cursor: pointer; transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1); box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+        }
+        .luxury-menu-btn:active { transform: translateX(-50%) scale(0.95); background: rgba(255,255,255,0.1); }
+        .luxury-menu-btn i { font-size: 1.1rem; color: #fff; }
+        .luxury-menu-btn span { font-size: 0.7rem; letter-spacing: 2.5px; font-weight: 600; color: #fff; text-transform: uppercase; }
 
+        /* PISTA DRAG & DROP */
+        .blocks-track {
+            width: 100%; max-width: 320px; margin: 40px auto 100px auto; 
+            display: flex; flex-direction: column; gap: 15px; min-height: 50px;
+        }
         .tag-block {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            background: transparent;
-            border-radius: 8px;
-            transition: background 0.2s ease;
+            display: flex; align-items: center; padding: 10px 15px; background: transparent; border-radius: 8px; transition: background 0.2s ease;
         }
-
-        /* Maniglia di trascinamento visibile solo in Edit */
         .drag-handle {
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 1.2rem;
-            margin-right: 15px;
-            cursor: grab;
-            padding: 5px;
-            line-height: 1;
-            letter-spacing: -2px; /* Avvicina i puntini */
+            color: rgba(255, 255, 255, 0.15); font-size: 1.2rem; margin-right: 15px; cursor: grab; padding: 5px; line-height: 1; letter-spacing: -2px; 
         }
-        
-        .drag-handle:active { cursor: grabbing; }
-
-        /* Contenuto cliccabile del blocco */
-        .block-content {
-            flex: 1;
-            cursor: pointer;
-        }
-
-        /* Tipografia specifica per la Bio */
+        .drag-handle:active { cursor: grabbing; color: rgba(255,255,255,0.6); }
+        .block-content { flex: 1; cursor: pointer; }
         .bio-display-text {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85rem;
-            font-weight: 300;
-            line-height: 1.4;
-            text-align: center;
-            letter-spacing: 0.5px;
-            margin: 0;
+            color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; font-weight: 300; line-height: 1.4; text-align: center; letter-spacing: 0.5px; margin: 0;
         }
-
-        /* Effetto quando un blocco viene sollevato (Drag) */
-        .sortable-ghost {
-            opacity: 0.4;
-            background: rgba(255, 255, 255, 0.05);
+        .digital-pass-text {
+            color: rgba(255, 255, 255, 0.9); font-size: 0.65rem; font-weight: 500; text-align: center; letter-spacing: 4px; text-transform: uppercase; margin: 0; padding: 5px 0;
         }
-        .sortable-drag {
-            background: rgba(20, 20, 22, 0.95);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-        }
+        .sortable-ghost { opacity: 0.4; background: rgba(255, 255, 255, 0.05); }
+        .sortable-drag { background: rgba(20, 20, 22, 0.95); box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
 
     </style>
 </head>
 <body>
-     
+
     <div class="configurator-wrapper">
         <div id="profile-content" data-theme="black_dna"> 
 
-            <!-- HEADER IMMACOLATO -->
             <div class="header-monolith">
                 <div class="username-capsule-wrapper">
-                    <!-- Cliccando la capsula ora si apre il cassetto identità -->
                     <div class="username-capsule" onclick="apriDrawer('drawer-identita')" style="cursor: pointer;">
                         <div class="username-capsule-inner">
                             <div class="username-display" id="tag-username">@tuonome.it</div>
@@ -403,62 +239,59 @@
                 </div>
             </div>
 
-            <!-- PISTA DRAG & DROP COMPLETAMENTE VUOTA -->
             <div id="blocks-track" class="blocks-track">
-                <!-- I blocchi nasceranno qui solo se l'utente li crea -->
-            </div>
+                
+                <div class="tag-block" data-type="digital-pass">
+                    <div class="drag-handle">⋮⋮</div>
+                    <div class="block-content" onclick="apriModalQR()">
+                        <p class="digital-pass-text">Digital Pass</p>
+                    </div>
+                </div>
+                
+                </div>
 
         </div> 
     </div> 
 
-    <!-- BACKDROP UNIVERSALE -->
-    <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
-
-    <!-- CASSETTO STILE -->
-    <div class="drawer-glass" id="drawer-style">
-        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
-            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">DIGITAL STYLE</div>
-            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Definisci il tuo stile</div>
-        </div>
-
-        <div class="style-list">
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
-        </div>
-
-        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-top: 25px; margin-bottom: 15px; padding: 0;">
-            <div class="drawer-title">BRAND LAYOUT</div>
-            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">La forma del tuo tag</div>
-        </div>
-
-        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
-            <label class="style-bar-label" style="flex: 1;">
-                <input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()">
-                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div>
-            </label>
-            <label class="style-bar-label" style="flex: 1;">
-                <input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()">
-                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div>
-            </label>
-            <label class="style-bar-label" style="flex: 1;">
-                <input type="radio" name="digital_layout" value="focus" onchange="applicaTemaLive()">
-                <div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Focus</span></div>
-            </label>
-        </div>
-
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
+    <div class="luxury-menu-btn" onclick="apriDrawer('drawer-master')">
+        <i class="fas fa-bars"></i>
+        <span>MENU</span>
     </div>
 
-    <!-- CASSETTO IDENTITÀ -->
+    <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
+
+    <div class="drawer-glass" id="drawer-master">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">PLANCIA COMANDI</div>
+            <div class="drawer-subtitle">Gestisci il tuo tag</div>
+        </div>
+        <div class="style-list" style="margin-top: 10px;">
+            <div class="style-bar" onclick="apriDrawer('drawer-identita')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-id-badge" style="color: rgba(255,255,255,0.5);"></i><span>Identità & Profilo</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+            <div class="style-bar" onclick="apriDrawer('drawer-style')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-palette" style="color: rgba(255,255,255,0.5);"></i><span>Stile & Layout</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+            <div class="style-bar" onclick="apriDrawer('drawer-moduli')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-cubes" style="color: rgba(255,255,255,0.5);"></i><span>Moduli Tag</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+            <div class="style-bar" onclick="apriDrawer('drawer-piani')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-gem" style="color: rgba(229, 193, 88, 0.8);"></i><span style="color: #e5c158;">Gestione Piano</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+        </div>
+    </div>
+
     <div class="drawer-glass" id="drawer-identita">
-        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
-            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">NOME BRAND</div>
-            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Aggiungi gli spazi al nome</div>
+            <div class="drawer-subtitle">Aggiungi gli spazi al nome</div>
         </div>
         <div>
             <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px;">
@@ -466,30 +299,57 @@
         <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME</button>
     </div>
 
-    <!-- CASSETTO MENU MODULI -->
+    <div class="drawer-glass" id="drawer-style">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">DIGITAL STYLE</div>
+            <div class="drawer-subtitle">Definisci il tuo stile</div>
+        </div>
+        <div class="style-list">
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
+        </div>
+        <div class="drawer-header" style="flex-direction: column; margin-top: 25px; margin-bottom: 15px;">
+            <div class="drawer-title">BRAND LAYOUT</div>
+            <div class="drawer-subtitle">La forma del tuo tag</div>
+        </div>
+        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div></label>
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div></label>
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="focus" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Focus</span></div></label>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
+    </div>
+
     <div class="drawer-glass" id="drawer-moduli">
-        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
-            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">AGGIUNGI MODULO</div>
-            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Espandi il tuo tag</div>
+            <div class="drawer-subtitle">Espandi il tuo tag</div>
         </div>
         <div class="style-list" style="flex-direction: column; gap: 10px;">
-            <div class="style-bar" style="cursor:pointer; justify-content: space-between;" onclick="apriDrawer('drawer-bio')">
-                <div style="display:flex; align-items:center; gap: 12px;">
-                    <i class="fas fa-align-center" style="color: rgba(255,255,255,0.5);"></i>
-                    <span>Testo & Bio</span>
-                </div>
+            <div class="style-bar" onclick="apriDrawer('drawer-bio')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-align-center" style="color: rgba(255,255,255,0.5);"></i><span>Testo & Bio</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+            <div class="style-bar" style="opacity: 0.5;">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-share-nodes" style="color: rgba(255,255,255,0.5);"></i><span>Contatti & Social</span></div>
+                <i class="fas fa-lock" style="font-size: 0.7rem; color: rgba(255,255,255,0.3);"></i>
             </div>
         </div>
     </div>
 
-    <!-- CASSETTO BIO -->
     <div class="drawer-glass" id="drawer-bio">
-        <div class="drawer-header" style="flex-direction: column; align-items: center; margin-bottom: 24px; position: relative;">
-            <i class="fas fa-chevron-down drawer-close" onclick="chiudiSenzaSalvare()"></i>
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-moduli')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">BIOGRAFIA</div>
-            <div style="font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;">Il tuo ruolo o payoff</div>
+            <div class="drawer-subtitle">Il tuo ruolo o payoff</div>
         </div>
         <div>
             <textarea id="field-bio" placeholder="Es. Boutique Hotel nel cuore di Roma" rows="3" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px; resize: none;"></textarea>
@@ -497,7 +357,31 @@
         <button class="btn-crea" onclick="salvaBioEChiudi()">SALVA BIO</button>
     </div>
 
-    <!-- MODALE QR CODE -->
+    <div class="drawer-glass" id="drawer-piani">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">PIANI E ABBONAMENTI</div>
+            <div class="drawer-subtitle">Espandi le potenzialità</div>
+        </div>
+        <div class="style-list" style="gap: 12px;">
+            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2);">
+                <div style="display:flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">BASE (Attuale)</span>
+                </div>
+                <div style="color: #888; font-size: 0.65rem; line-height: 1.4;">Identità essenziale. Nome, bio, avatar e QR Code standard.</div>
+            </div>
+            
+            <div style="background: rgba(229, 193, 88, 0.08); padding: 16px; border-radius: 14px; border: 1px solid rgba(229, 193, 88, 0.3); cursor: pointer;" onclick="alert('Funzione di Checkout in arrivo!')">
+                <div style="display:flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: #e5c158; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">PREMIUM</span>
+                    <i class="fas fa-lock" style="color: #e5c158; font-size: 0.8rem;"></i>
+                </div>
+                <div style="color: #aaa; font-size: 0.65rem; line-height: 1.4;">Sblocca Download VCF, Quick Actions, Link Social illimitati e Gallery.</div>
+            </div>
+        </div>
+    </div>
+
     <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
         <div class="qr-card">
            <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
@@ -515,92 +399,76 @@
        </div>
     </div>
 
-    <!-- DOCK INFERIORE AGGIORNATA -->
-    <div class="luxury-dock show" id="bottom-dock">
-        <div class="dock-item" onclick="apriDrawer('drawer-moduli')">
-            <i class="fas fa-plus-circle"></i>
-            <span>MODULI</span>
-        </div>
-        <div class="dock-item" onclick="apriDrawer('drawer-style')">
-            <i class="fas fa-palette"></i>
-            <span>STILE</span>
-        </div>
-    </div>
-
  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
  <script>
-    /**
-     * =========================================================
-     * 1. USER IDENTITY RESOLUTION
-     * =========================================================
-     */
+    const NOME_SISTEMA = getNomeBrandReale();
+    let isDrawerOpen = false;
+
     function getNomeBrandReale() {
         try {
             const params = new URLSearchParams(window.location.search);
             const nomeUrl = params.get('u') || params.get('user');
             if (nomeUrl) return nomeUrl.replace('@', '').trim().toLowerCase();
-
-            if (typeof nomeUtente !== 'undefined' && nomeUtente) {
-                return nomeUtente.replace('@', '').trim().toLowerCase();
-            }
-        } catch(e) { console.warn("Identity resolution error", e); }
+            if (typeof nomeUtente !== 'undefined' && nomeUtente) return nomeUtente.replace('@', '').trim().toLowerCase();
+        } catch(e) {}
         return "tuonome.it";
     }
 
-    const NOME_SISTEMA = getNomeBrandReale();
-
-    /**
-     * =========================================================
-     * 2. BADGE VISUAL ENGINE (Optical Symmetry)
-     * =========================================================
-     */
     function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
-
         let testo = testoBruto.trim().toUpperCase();
-
-        if(testo.startsWith('@')) {
-            testo = testo.substring(1).trim(); 
-        }
+        if(testo.startsWith('@')) testo = testo.substring(1).trim(); 
 
         el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
-        el.style.textAlign = "center";
-
+        
         if (testo.includes(' ')) {
             el.style.whiteSpace = "normal"; 
-            el.style.wordBreak = "keep-all";
+            el.style.wordBreak = "break-word";
             el.style.overflowWrap = "break-word";
-            el.style.textWrap = "balance"; 
             el.style.fontSize = "0.95rem"; 
         } else {
             el.style.whiteSpace = "nowrap"; 
-            el.style.textWrap = "nowrap"; 
+            el.style.wordBreak = "keep-all";
             if (testo.length > 24) { el.style.fontSize = "0.55rem"; } 
             else if (testo.length > 18) { el.style.fontSize = "0.65rem"; } 
             else { el.style.fontSize = "0.95rem"; }
         }
     }
 
-    /**
-     * =========================================================
-     * 3. UI CONTROLLERS & MODAL MANAGEMENT
-     * =========================================================
-     */
+    /* GESTIONE AVANZATA CASSETTI & STORICO (ANDROID BACK BUTTON) */
     function apriDrawer(idDrawer) {
+        const currentlyOpen = document.querySelector('.drawer-glass.open');
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
         const drawer = document.getElementById(idDrawer);
         const backdrop = document.getElementById('drawer-backdrop');
+        
         if (backdrop) backdrop.classList.add('active');
         setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
+
+        if (!currentlyOpen && !isDrawerOpen) {
+            history.pushState({ modal: true }, "", "");
+            isDrawerOpen = true;
+        }
     }
 
-    function chiudiSenzaSalvare() {
+    function chiudiSenzaSalvare(fromHistory = false) {
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
         const backdrop = document.getElementById('drawer-backdrop');
         if (backdrop) setTimeout(() => backdrop.classList.remove('active'), 300);
+
+        if (isDrawerOpen && !fromHistory) {
+            isDrawerOpen = false;
+            history.back();
+        } else {
+            isDrawerOpen = false;
+        }
     }
+
+    window.addEventListener('popstate', function(e) {
+        if (isDrawerOpen) { chiudiSenzaSalvare(true); }
+    });
 
     function applicaTemaLive() {
         const temaInput = document.querySelector('input[name="digital_style"]:checked');
@@ -618,69 +486,47 @@
 
     function apriModalQR() {
         const m = document.getElementById('modal-qr');
-        if(m) m.classList.add('active');
+        if(m) {
+            m.classList.add('active');
+            if(!isDrawerOpen) { history.pushState({ modal: true }, "", ""); isDrawerOpen = true; }
+        }
     }
 
     function chiudiModalQR(event) {
-        if (event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
+        if (!event || event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
             document.getElementById('modal-qr').classList.remove('active');
+            chiudiSenzaSalvare();
         }
     }
-        /**
-     * =========================================================
-     * 4. CONTENT EDITORS (MODULES)
-     * =========================================================
-     */
-        function salvaBioEChiudi() {
+
+    function salvaBioEChiudi() {
         const testoInserito = document.getElementById('field-bio').value.trim();
         const track = document.getElementById('blocks-track');
         let bioBlock = document.getElementById('blocco-bio-live');
 
         if(testoInserito !== "") {
             if(!bioBlock) {
-                // Il blocco non esiste, lo generiamo dal nulla
                 bioBlock = document.createElement('div');
                 bioBlock.className = 'tag-block';
                 bioBlock.id = 'blocco-bio-live';
                 bioBlock.setAttribute('data-type', 'bio');
-                bioBlock.innerHTML = `
-                    <div class="drag-handle">⋮⋮</div>
-                    <div class="block-content" onclick="apriDrawer('drawer-bio')">
-                        <p class="bio-display-text">${testoInserito}</p>
-                    </div>
-                `;
-                // Lo piazziamo in pista sotto il nome
-                track.insertBefore(bioBlock, track.firstChild);
+                bioBlock.innerHTML = `<div class="drag-handle">⋮⋮</div><div class="block-content" onclick="apriDrawer('drawer-bio')"><p class="bio-display-text">${testoInserito}</p></div>`;
+                track.appendChild(bioBlock); 
             } else {
-                // Il blocco esiste, aggiorniamo solo il testo
                 bioBlock.querySelector('.bio-display-text').innerText = testoInserito;
             }
         } else if (bioBlock) {
-            // L'utente ha cancellato tutto, distruggiamo il blocco
             bioBlock.remove();
         }
-
         chiudiSenzaSalvare();
     }
 
-
-    /**
-     * =========================================================
-     * 5. DATA SYNCHRONIZATION (AIRTABLE API + LOCAL CACHE)
-     * =========================================================
-     */
     async function inizializzaPagina() { 
         if(NOME_SISTEMA === "tuonome.it") return; 
         try {
             const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
             const data = await response.json();
-
-            const f = (() => {
-                if (data.fields?.draft_json) {
-                    try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {}
-                }
-                return data.fields || data;
-            })();
+            const f = (() => { if (data.fields?.draft_json) { try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {} } return data.fields || data; })();
 
             if (f) {
                 if (f.username_display) {
@@ -689,7 +535,6 @@
                     localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display);
                     formattaBadge(f.username_display);
                 }
-
                 if (f.digital_style) {
                     localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style);
                     const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
@@ -700,10 +545,9 @@
                     const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`);
                     if (radioLayout) radioLayout.checked = true;
                 }
-
                 applicaTemaLive();
             }
-        } catch (e) { console.error("Data synchronization failed:", e); }
+        } catch (e) {}
     }
 
     async function salvaDati() {
@@ -713,158 +557,94 @@
         const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
         const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
 
-        const bozza = {
-            username_system: NOME_SISTEMA,
-            username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(),
-            digital_style: styleVal,
-            digital_layout: layoutVal
-        }; 
+        const bozza = { username_system: NOME_SISTEMA, username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), digital_style: styleVal, digital_layout: layoutVal }; 
 
         localStorage.setItem('mqt_cache_' + NOME_SISTEMA, bozza.username_display);
         localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
         localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
 
         try {
-            await fetch('/api/update-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username_system: NOME_SISTEMA, draft_json: JSON.stringify(bozza) })
-            });
-        } catch (error) { console.error("Save operation failed:", error); }
+            await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username_system: NOME_SISTEMA, draft_json: JSON.stringify(bozza) }) });
+        } catch (error) {}
     }
 
     function confermaEChiudiCassetto() {
         salvaDati(); 
         chiudiSenzaSalvare();
-        const tastoCrea = document.getElementById('casella-crea');
-        if(tastoCrea) tastoCrea.style.display = 'none'; 
-        const dock = document.getElementById('bottom-dock');
-        if(dock) dock.classList.add('show');
     }
 
-    /**
-     * =========================================================
-     * 6. REAL-TIME INPUT VALIDATION
-     * =========================================================
-     */
     function salvaIdentitaEApriStile() {
         const fieldDisplay = document.getElementById('field-username_display');
         if(!fieldDisplay) return;
-
         const inputVal = fieldDisplay.value;
         const inseritoSenzaSpazi = inputVal.toLowerCase().replace(/\s/g, '');
 
         if (inputVal.trim() !== '' && inseritoSenzaSpazi !== NOME_SISTEMA) {
             alert("⚠️ AZIONE NON CONSENTITA ⚠️\n\nIl tuo Tag è registrato come @" + NOME_SISTEMA.toUpperCase() + ".\nNon puoi alterare il brand originario, sono ammessi unicamente gli spazi.");
-            fieldDisplay.value = NOME_SISTEMA;
-            formattaBadge(NOME_SISTEMA);
-            return; 
+            fieldDisplay.value = NOME_SISTEMA; formattaBadge(NOME_SISTEMA); return; 
         }
-
         salvaDati(); 
-        apriDrawer('drawer-style');
+        chiudiSenzaSalvare();
     }
 
     function accendiIControlli() {
         const fieldDisplay = document.getElementById('field-username_display');
         const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
-
         if (!fieldDisplay) return;
-
         fieldDisplay.addEventListener('input', () => {
             const inputVal = fieldDisplay.value;
             const inseritoSenzaSpazi = inputVal.toLowerCase().replace(/\s/g, '');
-
             if (inputVal.trim() === '') {
-                fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
-                fieldDisplay.style.boxShadow = "none";
+                fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)"; fieldDisplay.style.boxShadow = "none";
                 if (btnSalva) { btnSalva.style.pointerEvents = "auto"; btnSalva.style.opacity = "1"; }
                 formattaBadge(NOME_SISTEMA);
             } else if (inseritoSenzaSpazi !== NOME_SISTEMA) {
-                fieldDisplay.style.borderColor = "#ff4444";
-                fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
+                fieldDisplay.style.borderColor = "#ff4444"; fieldDisplay.style.boxShadow = "0 0 8px rgba(255, 68, 68, 0.5)";
                 if (btnSalva) { btnSalva.style.pointerEvents = "none"; btnSalva.style.opacity = "0.3"; }
                 formattaBadge(NOME_SISTEMA); 
             } else {
-                fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)";
-                fieldDisplay.style.boxShadow = "none";
+                fieldDisplay.style.borderColor = "rgba(255,255,255,0.1)"; fieldDisplay.style.boxShadow = "none";
                 if (btnSalva) { btnSalva.style.pointerEvents = "auto"; btnSalva.style.opacity = "1"; }
                 formattaBadge(inputVal);
             }
         });
     }
 
-    /**
-     * =========================================================
-     * 7. DRAG & DROP ENGINE (SORTABLE)
-     * =========================================================
-     */
     function initDragAndDrop() {
         const track = document.getElementById('blocks-track');
         if(track) {
-            new Sortable(track, {
-                handle: '.drag-handle',
-                animation: 250,
-                easing: "cubic-bezier(1, 0, 0, 1)",
-                ghostClass: 'sortable-ghost',
-                dragClass: 'sortable-drag',
-                onEnd: function (evt) {
-                    console.log("Blocks order updated. Ready for database sync.");
-                }
-            });
+            new Sortable(track, { handle: '.drag-handle', animation: 250, easing: "cubic-bezier(1, 0, 0, 1)", ghostClass: 'sortable-ghost', dragClass: 'sortable-drag' });
         }
     }
 
-    /**
-     * =========================================================
-     * 8. SYSTEM INITIALIZATION (INSTANT RENDER)
-     * =========================================================
-     */
     function avviaMyQuickTag() {
         const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
-        if (nomeInCache) formattaBadge(nomeInCache); 
-        else formattaBadge(NOME_SISTEMA);
+        if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
 
         const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
-        if (temaInCache) {
-            const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`);
-            if(radioTheme) radioTheme.checked = true;
-        }
+        if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
 
         const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
-        if (layoutInCache) {
-            const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`);
-            if(radioLayout) radioLayout.checked = true;
-        }
+        if (layoutInCache) { const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`); if(radioLayout) radioLayout.checked = true; }
 
         applicaTemaLive();
         accendiIControlli();
         inizializzaPagina();
-        
-        // Attivazione motore fluidità moduli
         initDragAndDrop();
 
         let tapCount = 0;
-        const badgeDiv = document.querySelector('.username-capsule-wrapper') || document.getElementById('tag-username');
+        const badgeDiv = document.querySelector('.username-capsule-wrapper');
         if(badgeDiv) {
-            badgeDiv.addEventListener('click', function() {
+            badgeDiv.addEventListener('click', function(e) {
+                if(e.target.closest('.drawer-glass')) return;
                 tapCount++;
-                if (tapCount >= 3) {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('ts', new Date().getTime());
-                    window.location.href = url.toString();
-                }
+                if (tapCount >= 3) { const url = new URL(window.location.href); url.searchParams.set('ts', new Date().getTime()); window.location.href = url.toString(); }
                 setTimeout(() => { tapCount = 0; }, 1000);
             });
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', avviaMyQuickTag);
-    } else {
-        avviaMyQuickTag();
-    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviaMyQuickTag); } else { avviaMyQuickTag(); }
 </script>
-
 </body>
 </html>
