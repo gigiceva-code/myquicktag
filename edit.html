@@ -422,8 +422,6 @@
     /**
      * =========================================================
      * 1. USER IDENTITY RESOLUTION
-     * Retrieves the core user identity from the URL or server variable.
-     * Includes fallback for testing environments.
      * =========================================================
      */
     function getNomeBrandReale() {
@@ -435,10 +433,7 @@
             if (typeof nomeUtente !== 'undefined' && nomeUtente) {
                 return nomeUtente.replace('@', '').trim().toLowerCase();
             }
-        } catch(e) {
-            console.warn("Identity resolution error", e);
-        }
-        
+        } catch(e) { console.warn("Identity resolution error", e); }
         return "tuonome.it";
     }
 
@@ -447,8 +442,6 @@
     /**
      * =========================================================
      * 2. BADGE VISUAL ENGINE
-     * Formats the username display, managing spacing, text wrap,
-     * and dynamic font scaling based on string length.
      * =========================================================
      */
     function formattaBadge(testoBruto) {
@@ -479,7 +472,6 @@
     /**
      * =========================================================
      * 3. UI CONTROLLERS & MODAL MANAGEMENT
-     * Handles opening and closing of settings drawers and QR modals.
      * =========================================================
      */
     function apriDrawer(idDrawer) {
@@ -523,8 +515,7 @@
 
     /**
      * =========================================================
-     * 4. DATA SYNCHRONIZATION (AIRTABLE API)
-     * Fetches and pushes user preferences (Theme, Layout, Spacing).
+     * 4. DATA SYNCHRONIZATION (AIRTABLE API + LOCAL CACHE)
      * =========================================================
      */
     async function inizializzaPagina() { 
@@ -548,12 +539,14 @@
                     formattaBadge(f.username_display);
                 }
                 
+                // Aggiorna la cache locale con i dati del server (se diversi)
                 if (f.digital_style) {
+                    localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style);
                     const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
                     if (radioTheme) radioTheme.checked = true; 
                 }
-                
                 if (f.digital_layout) {
+                    localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout);
                     const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`);
                     if (radioLayout) radioLayout.checked = true;
                 }
@@ -567,15 +560,20 @@
         if(NOME_SISTEMA === "tuonome.it") return; 
         const inputField = document.getElementById("field-username_display");
         const displayVal = inputField ? inputField.value.trim() : "";
+        const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
+        const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
         
         const bozza = {
             username_system: NOME_SISTEMA,
             username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(),
-            digital_style: document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna",
-            digital_layout: document.querySelector('input[name="digital_layout"]:checked')?.value || "badge"
+            digital_style: styleVal,
+            digital_layout: layoutVal
         }; 
         
+        // SALVATAGGIO ISTANTANEO IN MEMORIA LOCALE (Batte il lag del server)
         localStorage.setItem('mqt_cache_' + NOME_SISTEMA, bozza.username_display);
+        localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
+        localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
         
         try {
             await fetch('/api/update-profile', {
@@ -598,8 +596,6 @@
     /**
      * =========================================================
      * 5. REAL-TIME INPUT VALIDATION
-     * Ensures data integrity by preventing unauthorized handle alterations.
-     * Allows only spacing formatting.
      * =========================================================
      */
     function salvaIdentitaEApriStile() {
@@ -651,21 +647,38 @@
 
     /**
      * =========================================================
-     * 6. SYSTEM INITIALIZATION
-     * Bootstraps the application, prioritizes cache for zero-latency rendering,
-     * initializes listeners, and triggers background sync.
+     * 6. SYSTEM INITIALIZATION (INSTANT RENDER)
      * =========================================================
      */
     function avviaMyQuickTag() {
+        // 1. CARICAMENTO ISTANTANEO NOME DA CACHE
         const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
         if (nomeInCache) formattaBadge(nomeInCache); 
         else formattaBadge(NOME_SISTEMA);
         
+        // 2. CARICAMENTO ISTANTANEO TEMA E LAYOUT DA CACHE
+        const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
+        if (temaInCache) {
+            const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`);
+            if(radioTheme) radioTheme.checked = true;
+        }
+        
+        const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
+        if (layoutInCache) {
+            const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`);
+            if(radioLayout) radioLayout.checked = true;
+        }
+        
+        // Applica visivamente tutto prima ancora che il server risponda
+        applicaTemaLive();
+        
+        // 3. Accensione sistema e sync in background
         accendiIControlli();
         inizializzaPagina();
         
+        // 4. Refresh Nascosto
         let tapCount = 0;
-        const badgeDiv = document.querySelector('.username-capsule');
+        const badgeDiv = document.querySelector('.username-capsule-wrapper') || document.getElementById('tag-username');
         if(badgeDiv) {
             badgeDiv.addEventListener('click', function() {
                 tapCount++;
