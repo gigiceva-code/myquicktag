@@ -323,15 +323,16 @@
                 /* =========================================================
            DRAG & DROP TRACK E BLOCCHI TIPOGRAFICI
            ========================================================= */
-        .blocks-track {
+                .blocks-track {
             width: 100%;
             max-width: 320px;
-            margin: 20px auto 100px auto; /* Spazio per la dock inferiore */
+            margin: 40px auto 100px auto; /* 40px di spazio dal nome */
             display: flex;
             flex-direction: column;
             gap: 15px;
-            min-height: 50px; /* Pista sempre attiva anche se vuota */
+            min-height: 50px;
         }
+
 
         .tag-block {
             display: flex;
@@ -630,7 +631,7 @@
      * 4. CONTENT EDITORS (MODULES)
      * =========================================================
      */
-    function salvaBioEChiudi() {
+        function salvaBioEChiudi() {
         const testoInserito = document.getElementById('field-bio').value.trim();
         const track = document.getElementById('blocks-track');
         let bioBlock = document.getElementById('blocco-bio-live');
@@ -648,7 +649,7 @@
                         <p class="bio-display-text">${testoInserito}</p>
                     </div>
                 `;
-                // Lo piazziamo in cima alla pista
+                // Lo piazziamo in pista sotto il nome
                 track.insertBefore(bioBlock, track.firstChild);
             } else {
                 // Il blocco esiste, aggiorniamo solo il testo
@@ -661,6 +662,7 @@
 
         chiudiSenzaSalvare();
     }
+
 
     /**
      * =========================================================
