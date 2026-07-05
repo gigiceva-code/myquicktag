@@ -10,7 +10,7 @@
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
 
-    <style>
+       <style>
         :root {
             --bg-esterno: #0d0d0f;
             --accent-smeraldo: #50C878;
@@ -78,6 +78,58 @@
             transition: font-size 0.3s ease; 
         }
           
+        /* =========================================================
+           LAYOUT 2 E 3: DIVIDER E FOCUS (Fix Simmetria)
+           ========================================================= */
+        
+        /* --- LAYOUT 2: DIVIDER --- */
+        #profile-content[data-layout="divider"] .username-capsule-wrapper { width: 100%; padding: 0 15px; }
+        #profile-content[data-layout="divider"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; width: 100%; }
+        #profile-content[data-layout="divider"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 10px 0 45px 0 !important; position: relative; width: 100%; }
+        
+        /* Forza il bilanciamento ottico (Antiproiettile per Android) */
+        #profile-content[data-layout="divider"] .username-display { 
+            white-space: normal !important; word-break: keep-all !important; overflow-wrap: break-word !important; text-wrap: balance !important; 
+            max-width: 260px; margin: 0 auto; line-height: 1.4 !important; 
+        }
+        
+        /* La linea sfumata orizzontale allargata */
+        #profile-content[data-layout="divider"] .username-capsule-inner::after {
+            content: ''; position: absolute; bottom: 18px; left: 0; width: 100%; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+        
+        /* Il diamante centrale */
+        #profile-content[data-layout="divider"] .username-capsule-inner::before {
+            content: '◆'; position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+            font-size: 11px; color: rgba(255, 255, 255, 0.6); background: var(--bg-esterno); padding: 0 10px; z-index: 2;
+        }
+
+        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(0, 230, 128, 0.6), transparent); }
+        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-inner::before { color: #00E680; }
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(229, 193, 88, 0.6), transparent); }
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-inner::before { color: #e5c158; }
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::after { background: linear-gradient(90deg, transparent, rgba(200, 150, 142, 0.6), transparent); }
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-inner::before { color: #c8968e; }
+
+        /* --- LAYOUT 3: FOCUS FRAME --- */
+        #profile-content[data-layout="focus"] .username-capsule-wrapper { width: auto; padding: 0; }
+        #profile-content[data-layout="focus"] .username-capsule { background: transparent !important; clip-path: none !important; padding: 0; }
+        
+        /* Riduce il padding per incollare le cornici al nome */
+        #profile-content[data-layout="focus"] .username-capsule-inner { background: transparent !important; clip-path: none !important; padding: 14px 20px !important; position: relative; width: auto; }
+        
+        #profile-content[data-layout="focus"] .username-capsule-inner::before, 
+        #profile-content[data-layout="focus"] .username-capsule-inner::after {
+            content: ''; position: absolute; width: 16px; height: 16px; border: 1px solid rgba(255, 255, 255, 0.4); transition: border-color 0.4s ease;
+        }
+        #profile-content[data-layout="focus"] .username-capsule-inner::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+        #profile-content[data-layout="focus"] .username-capsule-inner::after { bottom: 0; right: 0; border-left: none; border-top: none; }
+        
+        #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="emerald"][data-layout="focus"] .username-capsule-inner::after { border-color: #00E680; }
+        #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="obsidian_gold"][data-layout="focus"] .username-capsule-inner::after { border-color: #e5c158; }
+        #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::before, #profile-content[data-theme="satin_rose"][data-layout="focus"] .username-capsule-inner::after { border-color: #c8968e; }
+
         .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
         .brand-text { font-weight: inherit; }
 
@@ -189,6 +241,7 @@
         .sortable-drag { background: rgba(20, 20, 22, 0.95); box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
 
     </style>
+
 </head>
 <body>
 
@@ -386,7 +439,7 @@
      * 2. BADGE VISUAL ENGINE (Optical Symmetry)
      * =========================================================
      */
-    function formattaBadge(testoBruto) {
+        function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
 
