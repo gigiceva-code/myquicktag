@@ -415,18 +415,29 @@
         return "tuonome.it";
     }
 
+        /**
+     * =========================================================
+     * 2. BADGE VISUAL ENGINE (Optical Symmetry)
+     * =========================================================
+     */
     function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
+
         let testo = testoBruto.trim().toUpperCase();
-        if(testo.startsWith('@')) testo = testo.substring(1).trim(); 
+
+        if(testo.startsWith('@')) {
+            testo = testo.substring(1).trim(); 
+        }
 
         el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
-        
+        el.style.textAlign = "center";
+
         if (testo.includes(' ')) {
             el.style.whiteSpace = "normal"; 
-            el.style.wordBreak = "break-word";
+            el.style.wordBreak = "keep-all";
             el.style.overflowWrap = "break-word";
+            el.style.textWrap = "balance"; // IL TOCCO DI CLASSE
             el.style.fontSize = "0.95rem"; 
         } else {
             el.style.whiteSpace = "nowrap"; 
@@ -436,6 +447,7 @@
             else { el.style.fontSize = "0.95rem"; }
         }
     }
+
 
     /* GESTIONE AVANZATA CASSETTI & STORICO (ANDROID BACK BUTTON) */
     function apriDrawer(idDrawer) {
