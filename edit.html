@@ -438,20 +438,25 @@
         </div>
     </div>
 
-    <!-- MODALE QR CODE -->
-        <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
+        <!-- ========================================================= -->
+    <!-- MODALE QR CODE (Design "La Piastra" e Copy Onesto)        -->
+    <!-- ========================================================= -->
+    <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
         <div class="qr-card">
            <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
-           <div class="qr-title-modal">ANTEPRIMA DIGITAL PASS</div>
+           <div class="qr-title-modal">IL TUO QR CODE</div>
            
-           <div class="qr-svg-wrapper" id="qr-container" style="display: flex; justify-content: center; align-items: center; background: #fff; padding: 15px;">
-               </div>
+           <!-- Contenitore Piastra (L'estetica è gestita dal JS) -->
+           <div id="qr-container"></div>
            
-           <div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-top: 24px; text-transform: uppercase; text-align: center;">
-               Inquadra per testare la tua Tag
+           <!-- Messaggio Onesto e Professionale -->
+           <div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; margin-top: 24px; text-align: center; line-height: 1.6;">
+               Questo è il codice ufficiale del tuo brand.<br>
+               <span style="color: #fff; font-weight: 500;">Si attiverà alla pubblicazione del tag.</span>
            </div>
        </div>
     </div>
+
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -560,62 +565,46 @@
             chiudiSenzaSalvare();
         }
     }
-       function disegnaQRDinamico(temaVal) {
+        
+        function disegnaQRDinamico(temaVal) {
         const container = document.getElementById('qr-container');
         if(!container) return;
 
-        // Mappa dei colori: definiamo il colore del QR e il colore dell'ombra luminosa (glow)
-        const colori = {
-            'emerald': { qr: '#00E680', glow: 'rgba(0, 230, 128, 0.4)' },
-            'obsidian_gold': { qr: '#e5c158', glow: 'rgba(229, 193, 88, 0.4)' },
-            'satin_rose': { qr: '#c8968e', glow: 'rgba(200, 150, 142, 0.4)' },
-            'titanium': { qr: '#4a4a4f', glow: 'rgba(176, 176, 181, 0.4)' }, // Più scuro per contrasto su bianco
-            'black_dna': { qr: '#000000', glow: 'rgba(255, 255, 255, 0.2)' }
-        };
-        const stile = colori[temaVal] || colori['black_dna'];
-
+        // Il link reale e definitivo
         const linkDestinazione = `https://myquicktag.it/${NOME_SISTEMA}`;
 
-        // Svuotiamo il contenitore
         container.innerHTML = '';
         
-        // VESTIAMO IL CONTENITORE (Effetto Luxury)
-        container.style.background = "#ffffff";
-        container.style.padding = "16px";
-        container.style.borderRadius = "24px"; // Angoli esterni molto morbidi
-        container.style.border = `2px solid ${stile.qr}`; // Cornice del colore del tema
-        container.style.boxShadow = `0 15px 35px ${stile.glow}`; // Luminescenza posteriore
+        // VESTITO "LA PIASTRA": Lusso industriale, materico e incassato
+        container.style.background = "#f0f0f4"; // Grigio titanio chiarissimo
+        container.style.padding = "20px";
+        container.style.borderRadius = "8px"; // Smusso meccanico leggero
+        container.style.border = "1px solid rgba(0,0,0,0.1)"; // Micro-bordo per lo stacco
+        container.style.boxShadow = "inset 0 4px 10px rgba(0,0,0,0.15), 0 15px 35px rgba(0,0,0,0.6)"; // Incasso interno + ombra proiettata sul fondo nero
         container.style.display = "flex";
         container.style.justifyContent = "center";
         container.style.alignItems = "center";
-        container.style.transition = "all 0.4s ease"; // Transizione morbida al cambio tema
+        container.style.margin = "0 auto";
 
-        // Generiamo il QR base
+        // QR Code rigorosamente Nero Inchiostro
         new QRCode(container, {
             text: linkDestinazione,
             width: 160,
             height: 160,
-            colorDark : stile.qr,
-            colorLight : "#ffffff", 
+            colorDark : "#0a0a0c", // Nero densissimo
+            colorLight : "#00000000", // Sfondo del QR trasparente (prende il titanio del contenitore)
             correctLevel : QRCode.CorrectLevel.H
         });
         
-        // SMUSSIAMO IL QR STESSO (I bordi dell'immagine interna)
+        // Centratura millimetrica
         setTimeout(() => {
             const qrImg = container.querySelector('img');
             const qrCanvas = container.querySelector('canvas');
-            if(qrImg) { 
-                qrImg.style.margin = "0 auto"; 
-                qrImg.style.display = "block"; 
-                qrImg.style.borderRadius = "10px"; // Arrotonda gli spigoli taglienti dei quadratini esterni
-            }
-            if(qrCanvas) { 
-                qrCanvas.style.margin = "0 auto"; 
-                qrCanvas.style.display = "block";
-                qrCanvas.style.borderRadius = "10px"; 
-            }
+            if(qrImg) { qrImg.style.margin = "0 auto"; qrImg.style.display = "block"; }
+            if(qrCanvas) { qrCanvas.style.margin = "0 auto"; qrCanvas.style.display = "block"; }
         }, 50);
     }
+   
  
 
     function salvaBioEChiudi() {
