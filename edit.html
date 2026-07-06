@@ -560,42 +560,63 @@
             chiudiSenzaSalvare();
         }
     }
-    function disegnaQRDinamico(temaVal) {
+       function disegnaQRDinamico(temaVal) {
         const container = document.getElementById('qr-container');
         if(!container) return;
 
-        // Mappa dei colori per abbinare il QR al tema
+        // Mappa dei colori: definiamo il colore del QR e il colore dell'ombra luminosa (glow)
         const colori = {
-            'emerald': '#00E680',
-            'obsidian_gold': '#e5c158',
-            'satin_rose': '#c8968e',
-            'titanium': '#4a4a4f', // Un po' più scuro per essere leggibile su bianco
-            'black_dna': '#000000'
+            'emerald': { qr: '#00E680', glow: 'rgba(0, 230, 128, 0.4)' },
+            'obsidian_gold': { qr: '#e5c158', glow: 'rgba(229, 193, 88, 0.4)' },
+            'satin_rose': { qr: '#c8968e', glow: 'rgba(200, 150, 142, 0.4)' },
+            'titanium': { qr: '#4a4a4f', glow: 'rgba(176, 176, 181, 0.4)' }, // Più scuro per contrasto su bianco
+            'black_dna': { qr: '#000000', glow: 'rgba(255, 255, 255, 0.2)' }
         };
-        const coloreScelto = colori[temaVal] || '#000000';
+        const stile = colori[temaVal] || colori['black_dna'];
 
-        // L'URL reale della pagina pubblica
         const linkDestinazione = `https://myquicktag.it/${NOME_SISTEMA}`;
 
-        // Svuota e disegna
+        // Svuotiamo il contenitore
         container.innerHTML = '';
+        
+        // VESTIAMO IL CONTENITORE (Effetto Luxury)
+        container.style.background = "#ffffff";
+        container.style.padding = "16px";
+        container.style.borderRadius = "24px"; // Angoli esterni molto morbidi
+        container.style.border = `2px solid ${stile.qr}`; // Cornice del colore del tema
+        container.style.boxShadow = `0 15px 35px ${stile.glow}`; // Luminescenza posteriore
+        container.style.display = "flex";
+        container.style.justifyContent = "center";
+        container.style.alignItems = "center";
+        container.style.transition = "all 0.4s ease"; // Transizione morbida al cambio tema
+
+        // Generiamo il QR base
         new QRCode(container, {
             text: linkDestinazione,
             width: 160,
             height: 160,
-            colorDark : coloreScelto,
-            colorLight : "#ffffff", // Sfondo bianco per massima leggibilità
+            colorDark : stile.qr,
+            colorLight : "#ffffff", 
             correctLevel : QRCode.CorrectLevel.H
         });
         
-        // Fix per centrare il canvas generato da qrcode.js
+        // SMUSSIAMO IL QR STESSO (I bordi dell'immagine interna)
         setTimeout(() => {
             const qrImg = container.querySelector('img');
             const qrCanvas = container.querySelector('canvas');
-            if(qrImg) { qrImg.style.margin = "0 auto"; qrImg.style.display = "block"; }
-            if(qrCanvas) { qrCanvas.style.margin = "0 auto"; qrCanvas.style.display = "block"; }
+            if(qrImg) { 
+                qrImg.style.margin = "0 auto"; 
+                qrImg.style.display = "block"; 
+                qrImg.style.borderRadius = "10px"; // Arrotonda gli spigoli taglienti dei quadratini esterni
+            }
+            if(qrCanvas) { 
+                qrCanvas.style.margin = "0 auto"; 
+                qrCanvas.style.display = "block";
+                qrCanvas.style.borderRadius = "10px"; 
+            }
         }, 50);
     }
+ 
 
     function salvaBioEChiudi() {
         const testoInserito = document.getElementById('field-bio').value.trim();
