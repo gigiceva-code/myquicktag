@@ -423,6 +423,62 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
     </div>
     <!-- /FINE ASSET BIO -->
+    <!-- ========================================================= -->
+    <!-- 6. ASSET: RUBRICA & CONTATTI                              -->
+    <!-- ========================================================= -->
+    <div class="drawer-glass" id="drawer-contatti">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-asset')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">RUBRICA & CONTATTI</div>
+            <div class="drawer-subtitle">I dati del tuo file VCF</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            
+            <!-- Telefono Principale (Sempre sbloccato) -->
+            <div style="position: relative;">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TELEFONO PRINCIPALE</label>
+                <input type="tel" id="field-tel1" placeholder="+39 333 1234567" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+            </div>
+
+            <!-- Email (Sempre sbloccata) -->
+            <div style="position: relative;">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">EMAIL</label>
+                <input type="email" id="field-email" placeholder="info@tuobrand.it" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+            </div>
+
+            <!-- Divisore Visivo -->
+            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 5px 0;"></div>
+            <div style="font-size: 0.65rem; color: #d4af37; text-align: center; letter-spacing: 1px;">FUNZIONI AVANZATE</div>
+
+            <!-- Telefono Secondario (Lucchetto pronto per il JS) -->
+            <div style="position: relative;" class="premium-field-container">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TELEFONO SECONDARIO</label>
+                <input type="tel" id="field-tel2" placeholder="+39 02 123456" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                
+                <!-- Questo è il lucchetto dormiente -->
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.2rem;"></i>
+                </div>
+            </div>
+
+            <!-- Indirizzo (Lucchetto pronto per il JS) -->
+            <div style="position: relative;" class="premium-field-container">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">INDIRIZZO (MAPS)</label>
+                <input type="text" id="field-indirizzo" placeholder="Via Roma 1, Milano" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                
+                <!-- Questo è il lucchetto dormiente -->
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.2rem;"></i>
+                </div>
+            </div>
+
+        </div>
+        
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
+    </div>
+    <!-- /FINE ASSET CONTATTI -->
 
     <!-- 6. CASSETTO PIANI -->
     <div class="drawer-glass" id="drawer-piani">
