@@ -479,6 +479,61 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
     </div>
     <!-- /FINE ASSET CONTATTI -->
+        <!-- ========================================================= -->
+    <!-- 7. ASSET: SOCIAL & LINK                                   -->
+    <!-- ========================================================= -->
+    <div class="drawer-glass" id="drawer-social">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-asset')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">SOCIAL & LINK</div>
+            <div class="drawer-subtitle">Connetti il tuo mondo digitale</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            
+            <!-- Sito Web (Separato perché ha la sua casella dedicata) -->
+            <div style="position: relative;">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">SITO WEB UFFICIALE</label>
+                <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px; transition: border-color 0.3s;">
+                    <i class="fas fa-globe" style="color: #86868b; font-size: 0.9rem;"></i>
+                    <input type="url" id="field-sito" placeholder="https://www.tuobrand.it" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+            </div>
+
+            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 5px 0;"></div>
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px;">CANALI SOCIAL PRINCIPALI</div>
+
+            <!-- Instagram -->
+            <div style="position: relative;">
+                <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
+                    <i class="fab fa-instagram" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
+                    <input type="url" id="field-social-ig" placeholder="Link profilo Instagram" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+            </div>
+
+            <!-- LinkedIn -->
+            <div style="position: relative;">
+                <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
+                    <i class="fab fa-linkedin-in" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
+                    <input type="url" id="field-social-in" placeholder="Link profilo LinkedIn" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+            </div>
+
+             <!-- Facebook -->
+            <div style="position: relative;">
+                <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
+                    <i class="fab fa-facebook-f" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
+                    <input type="url" id="field-social-fb" placeholder="Link pagina Facebook" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+            </div>
+
+        </div>
+        
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
+    </div>
+    <!-- /FINE ASSET SOCIAL -->
+
 
     <!-- 6. CASSETTO PIANI -->
     <div class="drawer-glass" id="drawer-piani">
