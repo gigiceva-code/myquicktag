@@ -397,6 +397,11 @@
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-share-nodes" style="color: rgba(255,255,255,0.5);"></i><span>Social & Link</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
+                       <div class="style-bar" onclick="apriDrawer('drawer-sito')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-globe" style="color: rgba(255,255,255,0.5);"></i><span>Sito Web Ufficiale</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+ 
         </div>
     </div>
     <!-- /FINE MENU ASSET -->
@@ -479,136 +484,85 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
     </div>
     <!-- /FINE ASSET CONTATTI -->
-            <!-- ========================================================= -->
-    <!-- 7. ASSET: SOCIAL & LINK (ARSENALE COMPLETO)               -->
+            
+                <!-- ========================================================= -->
+    <!-- 7. ASSET: SOCIAL & LINK (Solo Social)                     -->
     <!-- ========================================================= -->
     <div class="drawer-glass" id="drawer-social">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-asset')"></i>
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">SOCIAL & LINK</div>
-            <div class="drawer-subtitle">Connetti tutto il tuo mondo digitale</div>
+            <div class="drawer-subtitle">Gestisci il tuo ecosistema</div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px; margin-bottom: 20px;">
-            
-            <!-- Sito Web -->
-            <div style="position: relative;">
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">SITO WEB UFFICIALE</label>
-                <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                    <i class="fas fa-globe" style="color: #86868b; font-size: 0.9rem;"></i>
-                    <input type="url" id="field-sito" placeholder="https://www.tuobrand.it" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none;">
+        <div style="flex: 1; overflow-y: auto; padding: 0 5px 20px 5px;">
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
+                
+                <!-- CONTATORE PIANO E LISTA INTERNA DEI SOCIAL -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <div style="font-size: 0.65rem; color: #d4af37; letter-spacing: 1px;">I TUOI CANALI</div>
+                    <div id="social-counter" style="font-size: 0.65rem; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px;">0/3 (Piano Base)</div>
                 </div>
-            </div>
 
-            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 5px 0;"></div>
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px;">CANALI E PIATTAFORME</div>
+                <!-- QUI DENTRO AVVIENE IL TRASCINAMENTO -->
+                <div id="social-internal-track" style="display: flex; flex-direction: column; gap: 8px; min-height: 10px; margin-bottom: 10px;">
+                    <!-- I blocchetti dei link vengono generati qui dal JS -->
+                </div>
 
-            <!-- Instagram -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-instagram" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-instagram" placeholder="Link Instagram" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- TikTok -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-tiktok" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-tiktok" placeholder="Link TikTok" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- Facebook -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-facebook-f" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-facebook" placeholder="Link Facebook" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- LinkedIn -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-linkedin-in" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-linkedin" placeholder="Link LinkedIn" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- X (Twitter) -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-x-twitter" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-x" placeholder="Link X (Twitter)" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- YouTube -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-youtube" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-youtube" placeholder="Link YouTube" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- WhatsApp -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-whatsapp" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-whatsapp" placeholder="Link WhatsApp (es. wa.me/...)" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- Telegram -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-telegram-plane" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-telegram" placeholder="Link Telegram" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- Spotify -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-spotify" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-spotify" placeholder="Link Spotify" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- TripAdvisor -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-tripadvisor" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-tripadvisor" placeholder="Link TripAdvisor" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- TheFork (Usa icona posate) -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fas fa-utensils" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-thefork" placeholder="Link TheFork" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- OnlyFans (Usa icona stella) -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fas fa-star" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-onlyfans" placeholder="Link OnlyFans" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- GitHub -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-github" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-github" placeholder="Link GitHub" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- Twitch -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-twitch" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-twitch" placeholder="Link Twitch" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- Strava -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-strava" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-strava" placeholder="Link Strava" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- Pinterest -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-pinterest-p" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-pinterest" placeholder="Link Pinterest" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- Behance -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-behance" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-behance" placeholder="Link Behance" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
-            <!-- Dribbble -->
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                <i class="fab fa-dribbble" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                <input type="url" id="field-social-dribbble" placeholder="Link Dribbble" style="width: 100%; background: transparent; border: none; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
+                <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px; margin-top: 10px;">AGGIUNGI NUOVO LINK</div>
 
-            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 5px 0;"></div>
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px;">LINK PERSONALIZZATO</div>
-            
-            <!-- Link Libero -->
-            <div style="display: flex; gap: 8px;">
-                <input type="text" id="field-social-custom-name" placeholder="Es. Menu Digitale" style="width: 40%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-                <input type="url" id="field-social-custom-url" placeholder="https://..." style="flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 12px 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
-            </div>
+                <!-- IL MOTORE INTELLIGENTE -->
+                <div style="position: relative;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">URL DEL COLLEGAMENTO</label>
+                    <input type="url" id="smart-link-url" placeholder="Incolla qui il link..." oninput="rilevaSocialAutomatico()" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
 
+                <div style="position: relative;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">NOME SULLA TAG (Auto-rilevato)</label>
+                    <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
+                        <i id="smart-link-icon" class="fas fa-link" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
+                        <input type="text" id="smart-link-name" placeholder="Es. Il mio Instagram" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
+                    </div>
+                </div>
+
+                <button id="btn-add-social" class="btn-crea" style="background: #10b981; color: #000; margin-top: 5px; margin-bottom: 10px; font-weight: 700; border-radius: 12px;" onclick="aggiungiLinkSmart()">
+                    + AGGIUNGI AL PROFILO
+                </button>
+            </div>
         </div>
-        
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
     </div>
     <!-- /FINE ASSET SOCIAL -->
+
+    <!-- ========================================================= -->
+    <!-- 8. ASSET: SITO WEB (Indipendente)                         -->
+    <!-- ========================================================= -->
+    <div class="drawer-glass" id="drawer-sito">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-asset')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">SITO WEB</div>
+            <div class="drawer-subtitle">Il tuo dominio principale</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="position: relative;">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">URL DEL SITO</label>
+                <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
+                    <i class="fas fa-globe" style="color: #86868b; font-size: 0.9rem;"></i>
+                    <input type="url" id="field-sito" placeholder="https://www.tuobrand.it" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+            </div>
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px;">
+                Il sito web gode di massima priorità visiva su myquicktag.
+            </div>
+        </div>
+        
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA SITO</button>
+    </div>
+    <!-- /FINE ASSET SITO WEB -->
+
 
 
     <!-- 6. CASSETTO PIANI -->
