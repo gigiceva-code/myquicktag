@@ -927,6 +927,16 @@ function mostraShowroom(username) {
     const content = document.querySelector(".conversion-content");
     if (content) content.style.opacity = "1";
 } 
+// ============================================================
+// ERRORE GENERICO
+// ============================================================
+function mostraErrore(messaggio) {
+    const container = document.querySelector('.app-container');
+    if (container) {
+        container.innerHTML = `<p style="color:#86868b; text-align:center; padding:40px;">${messaggio}</p>`;
+        container.classList.add('ready');
+    }
+}
 
 // ============================================================
 // MESSAGGIO PERSUASIVO (TAG IN ATTESA)
