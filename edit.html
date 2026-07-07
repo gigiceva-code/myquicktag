@@ -518,13 +518,17 @@
                     <input type="url" id="smart-link-url" placeholder="Incolla qui il link..." oninput="rilevaSocialAutomatico()" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
 
-                <div style="position: relative;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">NOME SULLA TAG (Auto-rilevato)</label>
+                                <div style="position: relative;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">NOME DEL CANALE</label>
                     <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
                         <i id="smart-link-icon" class="fas fa-link" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
                         <input type="text" id="smart-link-name" placeholder="Es. Il mio Instagram" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
                     </div>
+                    <div style="font-size: 0.6rem; color: rgba(255,255,255,0.3); margin-top: 6px; text-align: center;">
+                        Incollando un link famoso (es. Instagram), il nome si compilerà da solo.
+                    </div>
                 </div>
+
 
                 <button id="btn-add-social" class="btn-crea" style="background: #10b981; color: #000; margin-top: 5px; margin-bottom: 10px; font-weight: 700; border-radius: 12px;" onclick="aggiungiLinkSmart()">
                     + AGGIUNGI AL PROFILO
@@ -735,29 +739,28 @@
         }, 50);
     }
 
-        // ============================================================
-    // MOTORE LIVE: Disegna i Macro-Blocchi sulla Plancia (LUXURY MINIMAL)
+            // ============================================================
+    // MOTORE LIVE: Disegna i Macro-Blocchi sulla Plancia (CENTRATI)
     // ============================================================
     function aggiornaAnteprimaLive() {
         const track = document.getElementById('blocks-track');
         if(!track) return;
 
-        // 1. Rileva il tema attualmente selezionato
         const temaVal = document.querySelector('input[name="digital_style"]:checked')?.value || 'black_dna';
         
-        // 2. Mappa esatta dei colori di myquicktag
         const coloriTema = {
             'emerald': '#00E680',
             'obsidian_gold': '#d4af37',
             'satin_rose': '#c8968e',
             'titanium': '#b0b0b5', 
-            'black_dna': '#ffffff' // Su fondo nero, il tema black_dna usa il bianco puro
+            'black_dna': '#ffffff' 
         };
         const coloreTesto = coloriTema[temaVal] || '#ffffff';
 
-        // 3. Lo Stile D'Élite: Testo del colore del tema, zero sfondi, zero bordi.
-        const blockStyle = "display: flex; align-items: center; background: transparent; border: none; padding: 12px 0; margin-bottom: 0; cursor: pointer;";
-        const textStyle = `font-size: 0.75rem; letter-spacing: 3px; font-weight: 400; color: ${coloreTesto}; text-transform: uppercase; transition: color 0.3s ease;`;
+        // STILE D'ÉLITE CENTRATO: Il blocco è relativo, il testo è centrato al 100%, la maniglia "fluttua" a sinistra.
+        const blockStyle = "position: relative; display: flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 12px 0; margin-bottom: 0; cursor: pointer;";
+        const textStyle = `font-size: 0.75rem; letter-spacing: 3px; font-weight: 400; color: ${coloreTesto}; text-transform: uppercase; transition: color 0.3s ease; text-align: center; width: 100%;`;
+        const handleHTML = `<div class="drag-handle" style="position: absolute; left: 10px; color: rgba(255,255,255,0.15); font-size: 1.2rem; cursor: grab;">⋮⋮</div>`;
 
         // MACRO-BLOCCO BIO
         const bioInput = document.getElementById('field-bio');
@@ -767,7 +770,7 @@
                 bioBlock = document.createElement('div');
                 bioBlock.className = 'tag-block'; bioBlock.id = 'blocco-bio-live';
                 bioBlock.style.cssText = blockStyle;
-                bioBlock.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.15); padding-right: 20px; font-size: 1.2rem;">⋮⋮</div><div class="block-content" style="flex: 1;" onclick="apriDrawer('drawer-bio')"><span class="dynamic-theme-text" style="${textStyle}">BIO</span></div>`;
+                bioBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-bio')"><span class="dynamic-theme-text" style="${textStyle}">BIO</span></div>`;
                 track.appendChild(bioBlock); 
             } else {
                 const spanText = bioBlock.querySelector('.dynamic-theme-text');
@@ -785,7 +788,7 @@
                 sitoBlock = document.createElement('div');
                 sitoBlock.className = 'tag-block'; sitoBlock.id = 'blocco-sito-live';
                 sitoBlock.style.cssText = blockStyle;
-                sitoBlock.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.15); padding-right: 20px; font-size: 1.2rem;">⋮⋮</div><div class="block-content" style="flex: 1;" onclick="apriDrawer('drawer-sito')"><span class="dynamic-theme-text" style="${textStyle}">SITO WEB</span></div>`;
+                sitoBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-sito')"><span class="dynamic-theme-text" style="${textStyle}">SITO WEB</span></div>`;
                 track.appendChild(sitoBlock);
             } else {
                 const spanText = sitoBlock.querySelector('.dynamic-theme-text');
@@ -803,7 +806,7 @@
                 macroSocial = document.createElement('div');
                 macroSocial.className = 'tag-block'; macroSocial.id = 'blocco-social-macro';
                 macroSocial.style.cssText = blockStyle;
-                macroSocial.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.15); padding-right: 20px; font-size: 1.2rem;">⋮⋮</div><div class="block-content" style="flex: 1;" onclick="apriDrawer('drawer-social')"><span class="dynamic-theme-text" style="${textStyle}">SOCIAL</span></div>`;
+                macroSocial.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-social')"><span class="dynamic-theme-text" style="${textStyle}">SOCIAL</span></div>`;
                 track.appendChild(macroSocial);
             } else {
                 const spanText = macroSocial.querySelector('.dynamic-theme-text');
@@ -813,6 +816,7 @@
             const m = document.getElementById('blocco-social-macro'); if(m) m.remove();
         }
     }
+
 
 
     // ============================================================
