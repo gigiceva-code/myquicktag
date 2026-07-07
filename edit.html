@@ -828,7 +828,7 @@
         chiudiSenzaSalvare();
     }
 
-    async function inizializzaPagina() { 
+        async function inizializzaPagina() { 
         if(NOME_SISTEMA === "tuonome.it") return; 
         try {
             const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
@@ -836,6 +836,7 @@
             const f = (() => { if (data.fields?.draft_json) { try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {} } return data.fields || data; })();
 
             if (f) {
+                // --- CARICAMENTO IDENTITÀ E STILI ---
                 if (f.username_display) {
                     const inputField = document.getElementById('field-username_display');
                     if (inputField) inputField.value = f.username_display.replace('@', '');
@@ -853,27 +854,141 @@
                     if (radioLayout) radioLayout.checked = true;
                 }
                 applicaTemaLive();
+
+                // --- CARICAMENTO NUOVI ASSET (Bio, Contatti, Social) ---
+                if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
+                if (f.sito_web && document.getElementById('field-sito')) document.getElementById('field-sito').value = f.sito_web;
+                if (f.email && document.getElementById('field-email')) document.getElementById('field-email').value = f.email;
+
+                // Estrai dati dal modulo VCF JSON
+                if (f.modulo_vcf) {
+                    try {
+                        const vcf = typeof f.modulo_vcf === 'string' ? JSON.parse(f.modulo_vcf) : f.modulo_vcf;
+                        if (vcf.telefono1 && document.getElementById('field-tel1')) document.getElementById('field-tel1').value = vcf.telefono1;
+                        if (vcf.telefono2 && document.getElementById('field-tel2')) document.getElementById('field-tel2').value = vcf.telefono2;
+                        if (vcf.indirizzo && document.getElementById('field-indirizzo')) document.getElementById('field-indirizzo').value = vcf.indirizzo;
+                    } catch(e) { console.error("Errore parsing modulo_vcf", e); }
+                }
+
+                // Estrai e popola i Social JSON
+                if (f.config_canali) {
+                    try {
+                        const canali = typeof f.config_canali === 'string' ? JSON.parse(f.config_canali) : f.config_canali;
+                        canali.forEach(canale => {
+                            const inputId = `field-social-${canale.nome.toLowerCase()}`;
+                            const inputEl = document.getElementById(inputId);
+                            if (inputEl) {
+                                inputEl.value = canale.url;
+                            } else if (document.getElementById('field-social-custom-name') && document.getElementById('field-social-custom-url')) {
+                                // Se non è nella lista dei giganti, è il link personalizzato
+                                document.getElementById('field-social-custom-name').value = canale.nome;
+                                document.getElementById('field-social-custom-url').value = canale.url;
+                            }
+                        });
+                    } catch(e) { console.error("Errore parsing config_canali", e); }
+                }
+
+                // --- LOGICA GESTIONE PIANO (Sblocco Lucchetti) ---
+                const pianoAttuale = (f.plan || 'BASE').toUpperCase();
+                if (pianoAttuale !== 'BASE') {
+                    // Sblocca i lucchetti premium
+                    document.querySelectorAll('.premium-lock-overlay').forEach(el => el.style.display = 'none');
+                } else {
+                    // Mostra i lucchetti e rimanda al checkout se ci cliccano
+                    document.querySelectorAll('.premium-field-container').forEach(container => {
+                        const overlay = container.querySelector('.premium-lock-overlay');
+                        if(overlay) {
+                            overlay.style.display = 'flex';
+                            overlay.onclick = function(e) {
+                                e.stopPropagation(); // Ferma il click sull'input sottostante
+                                alert("Questo Asset fa parte dei Piani Premium.\nAttiva il tuo ecosistema per sbloccarlo.");
+                                // QUI IN FUTURO METTEREMO L'APERTURA DEL CASSETTO "GESTIONE PIANO"
+                            };
+                        }
+                    });
+                }
             }
-        } catch (e) {}
+        } catch (e) { console.error("Errore caricamento profilo", e); }
     }
 
     async function salvaDati() {
         if(NOME_SISTEMA === "tuonome.it") return; 
+        
+        // 1. Identità e Stile
         const inputField = document.getElementById("field-username_display");
         const displayVal = inputField ? inputField.value.trim() : "";
         const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
         const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
 
-        const bozza = { username_system: NOME_SISTEMA, username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), digital_style: styleVal, digital_layout: layoutVal }; 
+        // 2. Lettura Asset Testuali
+        const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
+        const sitoVal = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
+        const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
+        
+        // 3. Costruzione Oggetto Contatti (VCF)
+        const tel1Val = document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "";
+        const tel2Val = document.getElementById('field-tel2') ? document.getElementById('field-tel2').value.trim() : "";
+        const indirizzoVal = document.getElementById('field-indirizzo') ? document.getElementById('field-indirizzo').value.trim() : "";
+        const vcfObject = {
+            telefono1: tel1Val,
+            telefono2: tel2Val,
+            indirizzo: indirizzoVal
+        };
 
+        // 4. Costruzione Array Social JSON
+        const canaliSocial = [];
+        const nomiSocialFissi = ['instagram', 'tiktok', 'facebook', 'linkedin', 'x', 'youtube', 'whatsapp', 'telegram', 'spotify', 'tripadvisor', 'thefork', 'onlyfans', 'github', 'twitch', 'strava', 'pinterest', 'behance', 'dribbble'];
+        
+        nomiSocialFissi.forEach(nome => {
+            const el = document.getElementById(`field-social-${nome}`);
+            if (el && el.value.trim() !== "") {
+                // Mettiamo la prima lettera maiuscola per estetica (es. "Instagram")
+                const nomeFormattato = nome.charAt(0).toUpperCase() + nome.slice(1);
+                canaliSocial.push({ nome: nomeFormattato, url: el.value.trim() });
+            }
+        });
+
+        // Aggiunta eventuale del Link Personalizzato
+        const customNameEl = document.getElementById('field-social-custom-name');
+        const customUrlEl = document.getElementById('field-social-custom-url');
+        if (customNameEl && customUrlEl && customNameEl.value.trim() !== "" && customUrlEl.value.trim() !== "") {
+            canaliSocial.push({ nome: customNameEl.value.trim(), url: customUrlEl.value.trim() });
+        }
+
+        // 5. Creazione della Bozza Master
+        const bozza = { 
+            username_system: NOME_SISTEMA, 
+            username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
+            digital_style: styleVal, 
+            digital_layout: layoutVal,
+            bio: bioVal,
+            sito_web: sitoVal,
+            email: emailVal,
+            modulo_vcf: JSON.stringify(vcfObject), // Serializzato in stringa per Airtable
+            config_canali: JSON.stringify(canaliSocial) // Serializzato in stringa per Airtable
+        }; 
+
+        // Salvataggi in Cache Locale (solo per UI rapida)
         localStorage.setItem('mqt_cache_' + NOME_SISTEMA, bozza.username_display);
         localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
         localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
 
+        // 6. Chiamata al Database
         try {
-            await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username_system: NOME_SISTEMA, draft_json: JSON.stringify(bozza) }) });
-        } catch (error) {}
+            await fetch('/api/update-profile', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ 
+                    username_system: NOME_SISTEMA, 
+                    draft_json: JSON.stringify(bozza) 
+                }) 
+            });
+        } catch (error) {
+            console.error("Errore salvataggio dati", error);
+        }
     }
+
+    
 
     function confermaEChiudiCassetto() {
         salvaDati(); 
