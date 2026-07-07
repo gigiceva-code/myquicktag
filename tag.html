@@ -760,10 +760,11 @@ async function avviaFlusso(username) {
                 // Utente che vede anteprima → rendering + overlay acquisto dedicato
                 renderizzaTagCompleta(fields);
                 mostraOverlayAcquisto();
-            } else {
-                // Chiunque altro scansiona il QR prima del pagamento → messaggio neutro
-                mostraErrore("Questa tag non è ancora disponibile.");
+                        } else {
+                // Chiunque altro scansiona il QR prima del pagamento → messaggio persuasivo luxury
+                mostraMessaggioPersuasivo(fields);
             }
+
         } else {
             // Stato 3: showroom
             mostraShowroom(username);
@@ -926,16 +927,35 @@ function mostraShowroom(username) {
     const content = document.querySelector(".conversion-content");
     if (content) content.style.opacity = "1";
 } 
+
 // ============================================================
-// ERRORE GENERICO
+// MESSAGGIO PERSUASIVO (TAG IN ATTESA)
 // ============================================================
-function mostraErrore(messaggio) {
+function mostraMessaggioPersuasivo(fields) {
     const container = document.querySelector('.app-container');
+    const nomeBrand = fields.username_display || fields.username_system;
+    
     if (container) {
-        container.innerHTML = `<p style="color:#86868b; text-align:center; padding:40px;">${messaggio}</p>`;
+        // Svuota lo chassis e stampa il messaggio luxury senza bottoni
+        container.innerHTML = `
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 20px;">
+                <div style="font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; color: #ffffff; margin-bottom: 24px;">
+                    BENVENUTO IN <span style="font-weight: 600;">MYQUICKTAG</span>
+                </div>
+                
+                <div style="width: 30px; height: 1px; background: rgba(212, 175, 55, 0.5); margin-bottom: 24px;"></div>
+                
+                <div style="font-size: 0.95rem; color: #86868b; line-height: 1.8;">
+                    La tag <span style="color: #ffffff; font-weight: 500;">@${nomeBrand.replace('@', '')}</span> non è ancora attiva.<br><br>
+                    Completa la configurazione per sfruttare tutta la potenza del tuo ecosistema.
+                </div>
+            </div>
+        `;
+        // Accende l'interfaccia
         container.classList.add('ready');
     }
 }
+
        // ============================================================
 // TAG.HTML - BLOCCO 2: SOCIAL E CASELLE CONTENUTO
 // ============================================================
