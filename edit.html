@@ -903,13 +903,17 @@
                                 e.stopPropagation(); // Ferma il click sull'input sottostante
                                 alert("Questo Asset fa parte dei Piani Premium.\nAttiva il tuo ecosistema per sbloccarlo.");
                                 // QUI IN FUTURO METTEREMO L'APERTURA DEL CASSETTO "GESTIONE PIANO"
-                            };
+                                                        };
                         }
                     });
                 }
+                
+                // Disegna fisicamente i blocchi salvati sulla plancia all'avvio
+                aggiornaAnteprimaLive();
             }
         } catch (e) { console.error("Errore caricamento profilo", e); }
     }
+
 
     async function salvaDati() {
         if(NOME_SISTEMA === "tuonome.it") return; 
@@ -990,10 +994,44 @@
 
     
 
+        // ============================================================
+    // MOTORE VISIVO: Disegna i blocchi sull'anteprima in tempo reale
+    // ============================================================
+    function aggiornaAnteprimaLive() {
+        const track = document.getElementById('blocks-track');
+        if(!track) return;
+
+        // --- Render Live della Bio ---
+        const bioInput = document.getElementById('field-bio');
+        if (bioInput) {
+            const bioVal = bioInput.value.trim();
+            let bioBlock = document.getElementById('blocco-bio-live');
+            
+            if (bioVal !== "") {
+                if (!bioBlock) {
+                    bioBlock = document.createElement('div');
+                    bioBlock.className = 'tag-block';
+                    bioBlock.id = 'blocco-bio-live';
+                    // Estetica luxury per il blocco trascinabile
+                    bioBlock.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 16px; border-radius: 12px; margin-bottom: 10px;";
+                    bioBlock.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div><div class="block-content" style="flex: 1;" onclick="apriDrawer('drawer-bio')"><p class="bio-display-text" style="font-size: 0.85rem; color: #fff; margin: 0;">${bioVal}</p></div>`;
+                    track.appendChild(bioBlock); 
+                } else {
+                    const textEl = bioBlock.querySelector('.bio-display-text');
+                    if(textEl) textEl.innerText = bioVal;
+                }
+            } else if (bioBlock) {
+                bioBlock.remove();
+            }
+        }
+    }
+
     function confermaEChiudiCassetto() {
         salvaDati(); 
+        aggiornaAnteprimaLive(); // Accende il monitor prima di chiudere
         chiudiSenzaSalvare();
     }
+
 
     function salvaIdentitaEApriStile() {
         const fieldDisplay = document.getElementById('field-username_display');
