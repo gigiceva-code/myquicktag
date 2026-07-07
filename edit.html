@@ -302,10 +302,11 @@
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-palette" style="color: rgba(255,255,255,0.5);"></i><span>Stile & Layout</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
-            <div class="style-bar" onclick="apriDrawer('drawer-moduli')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-cubes" style="color: rgba(255,255,255,0.5);"></i><span>Moduli Tag</span></div>
+                        <div class="style-bar" onclick="apriDrawer('drawer-asset')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-layer-group" style="color: rgba(255,255,255,0.5);"></i><span>Asset Brand</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
+
             <div class="style-bar" onclick="apriDrawer('drawer-piani')">
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-gem" style="color: rgba(229, 193, 88, 0.8);"></i><span style="color: #e5c158;">Gestione Piano</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
@@ -373,44 +374,55 @@
     <!-- /FINE CASSETTO STILE -->
 
 
+        <!-- ========================================================= -->
+    <!-- 4. MENU ASSET BRAND (Sostituisce il vecchio Moduli)       -->
     <!-- ========================================================= -->
-    <!-- 4. CASSETTO MODULI (Testo & Bio, Social, ecc.)            -->
-    <!-- ========================================================= -->
-    <div class="drawer-glass" id="drawer-moduli">
+    <div class="drawer-glass" id="drawer-asset">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-master')"></i>
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">AGGIUNGI MODULO</div>
-            <div class="drawer-subtitle">Espandi la tua tag</div> <!-- Corretto al femminile -->
+            <div class="drawer-title">ASSET BRAND</div>
+            <div class="drawer-subtitle">Gestisci i contenuti della tua tag</div>
         </div>
         <div class="style-list" style="flex-direction: column; gap: 10px;">
             <div class="style-bar" onclick="apriDrawer('drawer-bio')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-align-center" style="color: rgba(255,255,255,0.5);"></i><span>Testo & Bio</span></div>
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-pen-nib" style="color: rgba(255,255,255,0.5);"></i><span>Presentazione (Bio)</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
-            <!-- Futuri Moduli Bloccati -->
-            <div class="style-bar" style="opacity: 0.5;">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-share-nodes" style="color: rgba(255,255,255,0.5);"></i><span>Contatti & Social</span></div>
-                <i class="fas fa-lock" style="font-size: 0.7rem; color: rgba(255,255,255,0.3);"></i>
+            <div class="style-bar" onclick="apriDrawer('drawer-contatti')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-address-card" style="color: rgba(255,255,255,0.5);"></i><span>Rubrica & Contatti</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+            <div class="style-bar" onclick="apriDrawer('drawer-social')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-share-nodes" style="color: rgba(255,255,255,0.5);"></i><span>Social & Link</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
         </div>
     </div>
-    <!-- /FINE CASSETTO MODULI -->
+    <!-- /FINE MENU ASSET -->
 
-
-    <!-- 5. CASSETTO BIO -->
+    <!-- ========================================================= -->
+    <!-- 5. ASSET: PRESENTAZIONE (BIO)                             -->
+    <!-- ========================================================= -->
     <div class="drawer-glass" id="drawer-bio">
         <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-moduli')"></i>
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-asset')"></i>
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">BIOGRAFIA</div>
-            <div class="drawer-subtitle">Il tuo ruolo o payoff</div>
+            <div class="drawer-title">PRESENTAZIONE</div>
+            <div class="drawer-subtitle">Racconta chi sei</div>
         </div>
-        <div>
-            <textarea id="field-bio" placeholder="Es. Boutique Hotel nel cuore di Roma" rows="3" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 15px; resize: none;"></textarea>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 10px;">
+            <textarea id="field-bio" placeholder="Scrivi qui la tua bio o la descrizione del tuo business..." style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; resize: none;"></textarea>
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center;">
+                Un testo breve e incisivo converte molto di più.
+            </div>
         </div>
-        <button class="btn-crea" onclick="salvaBioEChiudi()">SALVA BIO</button>
+        
+        <!-- Al click su Salva, chiudiamo il cassetto per confermare l'azione visivamente -->
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
     </div>
+    <!-- /FINE ASSET BIO -->
 
     <!-- 6. CASSETTO PIANI -->
     <div class="drawer-glass" id="drawer-piani">
