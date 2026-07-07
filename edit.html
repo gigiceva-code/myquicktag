@@ -616,6 +616,7 @@
  <script>
     const NOME_SISTEMA = getNomeBrandReale();
     let isDrawerOpen = false;
+    let userPlan = 'BASE'; // Variabile globale per il controllo dei lucchetti
 
     function getNomeBrandReale() {
         try {
@@ -630,25 +631,17 @@
     function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
-
         let testo = testoBruto.trim().toUpperCase();
-
-        if(testo.startsWith('@')) {
-            testo = testo.substring(1).trim(); 
-        }
+        if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
         el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
         el.style.textAlign = "center";
-
         if (testo.includes(' ')) {
-            el.style.whiteSpace = "normal"; 
-            el.style.wordBreak = "keep-all";
-            el.style.overflowWrap = "break-word";
-            el.style.textWrap = "balance"; 
+            el.style.whiteSpace = "normal"; el.style.wordBreak = "keep-all";
+            el.style.overflowWrap = "break-word"; el.style.textWrap = "balance"; 
             el.style.fontSize = "0.95rem"; 
         } else {
-            el.style.whiteSpace = "nowrap"; 
-            el.style.wordBreak = "keep-all";
+            el.style.whiteSpace = "nowrap"; el.style.wordBreak = "keep-all";
             if (testo.length > 24) { el.style.fontSize = "0.55rem"; } 
             else if (testo.length > 18) { el.style.fontSize = "0.65rem"; } 
             else { el.style.fontSize = "0.95rem"; }
@@ -660,7 +653,7 @@
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
         const drawer = document.getElementById(idDrawer);
         const backdrop = document.getElementById('drawer-backdrop');
-        
+
         if (backdrop) backdrop.classList.add('active');
         setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
 
@@ -676,16 +669,14 @@
         if (backdrop) setTimeout(() => backdrop.classList.remove('active'), 300);
 
         if (isDrawerOpen && !fromHistory) {
-            isDrawerOpen = false;
-            history.back();
-        } else {
-            isDrawerOpen = false;
-        }
+            isDrawerOpen = false; history.back();
+        } else { isDrawerOpen = false; }
     }
 
     window.addEventListener('popstate', function(e) {
         if (isDrawerOpen) { chiudiSenzaSalvare(true); }
     });
+
     function applicaTemaLive() {
         const temaInput = document.querySelector('input[name="digital_style"]:checked');
         const layoutInput = document.querySelector('input[name="digital_layout"]:checked');
@@ -694,16 +685,11 @@
         if(temaInput && profileContent) {
             profileContent.setAttribute('data-theme', temaInput.value);
             document.body.setAttribute('data-qr-theme', temaInput.value);
-            
-            // Disegna il QR col nuovo colore
             disegnaQRDinamico(temaInput.value); 
         }
-        if(layoutInput && profileContent) {
-            profileContent.setAttribute('data-layout', layoutInput.value);
-        }
+        if(layoutInput && profileContent) { profileContent.setAttribute('data-layout', layoutInput.value); }
     }
 
-    
     function apriModalQR() {
         const m = document.getElementById('modal-qr');
         if(m) {
@@ -718,255 +704,45 @@
             chiudiSenzaSalvare();
         }
     }
-        
-        function disegnaQRDinamico(temaVal) {
+
+    function disegnaQRDinamico(temaVal) {
         const container = document.getElementById('qr-container');
         if(!container) return;
-
-        // Il link reale e definitivo
         const linkDestinazione = `https://myquicktag.it/${NOME_SISTEMA}`;
-
         container.innerHTML = '';
-        
-        // VESTITO "LA PIASTRA": Lusso industriale, materico e incassato
-        container.style.background = "#f0f0f4"; // Grigio titanio chiarissimo
+        container.style.background = "#f0f0f4"; 
         container.style.padding = "20px";
-        container.style.borderRadius = "8px"; // Smusso meccanico leggero
-        container.style.border = "1px solid rgba(0,0,0,0.1)"; // Micro-bordo per lo stacco
-        container.style.boxShadow = "inset 0 4px 10px rgba(0,0,0,0.15), 0 15px 35px rgba(0,0,0,0.6)"; // Incasso interno + ombra proiettata sul fondo nero
+        container.style.borderRadius = "8px"; 
+        container.style.border = "1px solid rgba(0,0,0,0.1)"; 
+        container.style.boxShadow = "inset 0 4px 10px rgba(0,0,0,0.15), 0 15px 35px rgba(0,0,0,0.6)"; 
         container.style.display = "flex";
-        container.style.justifyContent = "center";
-        container.style.alignItems = "center";
+        container.style.justifyContent = "center"; container.style.alignItems = "center";
         container.style.margin = "0 auto";
 
-        // QR Code rigorosamente Nero Inchiostro
-        new QRCode(container, {
-            text: linkDestinazione,
-            width: 160,
-            height: 160,
-            colorDark : "#0a0a0c", // Nero densissimo
-            colorLight : "#00000000", // Sfondo del QR trasparente (prende il titanio del contenitore)
-            correctLevel : QRCode.CorrectLevel.H
-        });
-        
-        // Centratura millimetrica
+        new QRCode(container, { text: linkDestinazione, width: 160, height: 160, colorDark : "#0a0a0c", colorLight : "#00000000", correctLevel : QRCode.CorrectLevel.H });
         setTimeout(() => {
-            const qrImg = container.querySelector('img');
-            const qrCanvas = container.querySelector('canvas');
+            const qrImg = container.querySelector('img'); const qrCanvas = container.querySelector('canvas');
             if(qrImg) { qrImg.style.margin = "0 auto"; qrImg.style.display = "block"; }
             if(qrCanvas) { qrCanvas.style.margin = "0 auto"; qrCanvas.style.display = "block"; }
         }, 50);
     }
-   
- 
 
-    function salvaBioEChiudi() {
-        const testoInserito = document.getElementById('field-bio').value.trim();
-        const track = document.getElementById('blocks-track');
-        let bioBlock = document.getElementById('blocco-bio-live');
-
-        if(testoInserito !== "") {
-            if(!bioBlock) {
-                bioBlock = document.createElement('div');
-                bioBlock.className = 'tag-block';
-                bioBlock.id = 'blocco-bio-live';
-                bioBlock.setAttribute('data-type', 'bio');
-                bioBlock.innerHTML = `<div class="drag-handle">⋮⋮</div><div class="block-content" onclick="apriDrawer('drawer-bio')"><p class="bio-display-text">${testoInserito}</p></div>`;
-                track.appendChild(bioBlock); 
-            } else {
-                bioBlock.querySelector('.bio-display-text').innerText = testoInserito;
-            }
-        } else if (bioBlock) {
-            bioBlock.remove();
-        }
-        chiudiSenzaSalvare();
-    }
-
-        async function inizializzaPagina() { 
-        if(NOME_SISTEMA === "tuonome.it") return; 
-        try {
-            const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
-            const data = await response.json();
-            const f = (() => { if (data.fields?.draft_json) { try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {} } return data.fields || data; })();
-
-            if (f) {
-                // --- CARICAMENTO IDENTITÀ E STILI ---
-                if (f.username_display) {
-                    const inputField = document.getElementById('field-username_display');
-                    if (inputField) inputField.value = f.username_display.replace('@', '');
-                    localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display);
-                    formattaBadge(f.username_display);
-                }
-                if (f.digital_style) {
-                    localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style);
-                    const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`);
-                    if (radioTheme) radioTheme.checked = true; 
-                }
-                if (f.digital_layout) {
-                    localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout);
-                    const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`);
-                    if (radioLayout) radioLayout.checked = true;
-                }
-                applicaTemaLive();
-
-                // --- CARICAMENTO NUOVI ASSET (Bio, Contatti, Social) ---
-                if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
-                if (f.sito_web && document.getElementById('field-sito')) document.getElementById('field-sito').value = f.sito_web;
-                if (f.email && document.getElementById('field-email')) document.getElementById('field-email').value = f.email;
-
-                // Estrai dati dal modulo VCF JSON
-                if (f.modulo_vcf) {
-                    try {
-                        const vcf = typeof f.modulo_vcf === 'string' ? JSON.parse(f.modulo_vcf) : f.modulo_vcf;
-                        if (vcf.telefono1 && document.getElementById('field-tel1')) document.getElementById('field-tel1').value = vcf.telefono1;
-                        if (vcf.telefono2 && document.getElementById('field-tel2')) document.getElementById('field-tel2').value = vcf.telefono2;
-                        if (vcf.indirizzo && document.getElementById('field-indirizzo')) document.getElementById('field-indirizzo').value = vcf.indirizzo;
-                    } catch(e) { console.error("Errore parsing modulo_vcf", e); }
-                }
-
-                // Estrai e popola i Social JSON
-                if (f.config_canali) {
-                    try {
-                        const canali = typeof f.config_canali === 'string' ? JSON.parse(f.config_canali) : f.config_canali;
-                        canali.forEach(canale => {
-                            const inputId = `field-social-${canale.nome.toLowerCase()}`;
-                            const inputEl = document.getElementById(inputId);
-                            if (inputEl) {
-                                inputEl.value = canale.url;
-                            } else if (document.getElementById('field-social-custom-name') && document.getElementById('field-social-custom-url')) {
-                                // Se non è nella lista dei giganti, è il link personalizzato
-                                document.getElementById('field-social-custom-name').value = canale.nome;
-                                document.getElementById('field-social-custom-url').value = canale.url;
-                            }
-                        });
-                    } catch(e) { console.error("Errore parsing config_canali", e); }
-                }
-
-                // --- LOGICA GESTIONE PIANO (Sblocco Lucchetti) ---
-                const pianoAttuale = (f.plan || 'BASE').toUpperCase();
-                if (pianoAttuale !== 'BASE') {
-                    // Sblocca i lucchetti premium
-                    document.querySelectorAll('.premium-lock-overlay').forEach(el => el.style.display = 'none');
-                } else {
-                    // Mostra i lucchetti e rimanda al checkout se ci cliccano
-                    document.querySelectorAll('.premium-field-container').forEach(container => {
-                        const overlay = container.querySelector('.premium-lock-overlay');
-                        if(overlay) {
-                            overlay.style.display = 'flex';
-                            overlay.onclick = function(e) {
-                                e.stopPropagation(); // Ferma il click sull'input sottostante
-                                alert("Questo Asset fa parte dei Piani Premium.\nAttiva il tuo ecosistema per sbloccarlo.");
-                                // QUI IN FUTURO METTEREMO L'APERTURA DEL CASSETTO "GESTIONE PIANO"
-                                                        };
-                        }
-                    });
-                }
-                
-                // Disegna fisicamente i blocchi salvati sulla plancia all'avvio
-                aggiornaAnteprimaLive();
-            }
-        } catch (e) { console.error("Errore caricamento profilo", e); }
-    }
-
-
-    async function salvaDati() {
-        if(NOME_SISTEMA === "tuonome.it") return; 
-        
-        // 1. Identità e Stile
-        const inputField = document.getElementById("field-username_display");
-        const displayVal = inputField ? inputField.value.trim() : "";
-        const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
-        const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
-
-        // 2. Lettura Asset Testuali
-        const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
-        const sitoVal = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
-        const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
-        
-        // 3. Costruzione Oggetto Contatti (VCF)
-        const tel1Val = document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "";
-        const tel2Val = document.getElementById('field-tel2') ? document.getElementById('field-tel2').value.trim() : "";
-        const indirizzoVal = document.getElementById('field-indirizzo') ? document.getElementById('field-indirizzo').value.trim() : "";
-        const vcfObject = {
-            telefono1: tel1Val,
-            telefono2: tel2Val,
-            indirizzo: indirizzoVal
-        };
-
-        // 4. Costruzione Array Social JSON
-        const canaliSocial = [];
-        const nomiSocialFissi = ['instagram', 'tiktok', 'facebook', 'linkedin', 'x', 'youtube', 'whatsapp', 'telegram', 'spotify', 'tripadvisor', 'thefork', 'onlyfans', 'github', 'twitch', 'strava', 'pinterest', 'behance', 'dribbble'];
-        
-        nomiSocialFissi.forEach(nome => {
-            const el = document.getElementById(`field-social-${nome}`);
-            if (el && el.value.trim() !== "") {
-                // Mettiamo la prima lettera maiuscola per estetica (es. "Instagram")
-                const nomeFormattato = nome.charAt(0).toUpperCase() + nome.slice(1);
-                canaliSocial.push({ nome: nomeFormattato, url: el.value.trim() });
-            }
-        });
-
-        // Aggiunta eventuale del Link Personalizzato
-        const customNameEl = document.getElementById('field-social-custom-name');
-        const customUrlEl = document.getElementById('field-social-custom-url');
-        if (customNameEl && customUrlEl && customNameEl.value.trim() !== "" && customUrlEl.value.trim() !== "") {
-            canaliSocial.push({ nome: customNameEl.value.trim(), url: customUrlEl.value.trim() });
-        }
-
-        // 5. Creazione della Bozza Master
-        const bozza = { 
-            username_system: NOME_SISTEMA, 
-            username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
-            digital_style: styleVal, 
-            digital_layout: layoutVal,
-            bio: bioVal,
-            sito_web: sitoVal,
-            email: emailVal,
-            modulo_vcf: JSON.stringify(vcfObject), // Serializzato in stringa per Airtable
-            config_canali: JSON.stringify(canaliSocial) // Serializzato in stringa per Airtable
-        }; 
-
-        // Salvataggi in Cache Locale (solo per UI rapida)
-        localStorage.setItem('mqt_cache_' + NOME_SISTEMA, bozza.username_display);
-        localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
-        localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
-
-        // 6. Chiamata al Database
-        try {
-            await fetch('/api/update-profile', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ 
-                    username_system: NOME_SISTEMA, 
-                    draft_json: JSON.stringify(bozza) 
-                }) 
-            });
-        } catch (error) {
-            console.error("Errore salvataggio dati", error);
-        }
-    }
-
-    
-
-        // ============================================================
-    // MOTORE VISIVO: Disegna i blocchi sull'anteprima in tempo reale
+    // ============================================================
+    // MOTORE LIVE: Disegna i Macro-Blocchi sulla Plancia
     // ============================================================
     function aggiornaAnteprimaLive() {
         const track = document.getElementById('blocks-track');
         if(!track) return;
 
-        // --- Render Live della Bio ---
+        // 1. MACRO-BLOCCO BIO
         const bioInput = document.getElementById('field-bio');
         if (bioInput) {
             const bioVal = bioInput.value.trim();
             let bioBlock = document.getElementById('blocco-bio-live');
-            
             if (bioVal !== "") {
                 if (!bioBlock) {
                     bioBlock = document.createElement('div');
-                    bioBlock.className = 'tag-block';
-                    bioBlock.id = 'blocco-bio-live';
-                    // Estetica luxury per il blocco trascinabile
+                    bioBlock.className = 'tag-block'; bioBlock.id = 'blocco-bio-live';
                     bioBlock.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 16px; border-radius: 12px; margin-bottom: 10px;";
                     bioBlock.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div><div class="block-content" style="flex: 1;" onclick="apriDrawer('drawer-bio')"><p class="bio-display-text" style="font-size: 0.85rem; color: #fff; margin: 0;">${bioVal}</p></div>`;
                     track.appendChild(bioBlock); 
@@ -974,18 +750,293 @@
                     const textEl = bioBlock.querySelector('.bio-display-text');
                     if(textEl) textEl.innerText = bioVal;
                 }
-            } else if (bioBlock) {
-                bioBlock.remove();
+            } else if (bioBlock) { bioBlock.remove(); }
+        }
+
+        // 2. MACRO-BLOCCO SITO WEB
+        const sitoInput = document.getElementById('field-sito');
+        if (sitoInput) {
+            const sitoVal = sitoInput.value.trim();
+            let sitoBlock = document.getElementById('blocco-sito-live');
+            if (sitoVal !== "") {
+                if (!sitoBlock) {
+                    sitoBlock = document.createElement('div');
+                    sitoBlock.className = 'tag-block'; sitoBlock.id = 'blocco-sito-live';
+                    sitoBlock.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 16px; border-radius: 12px; margin-bottom: 10px;";
+                    sitoBlock.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div><div class="block-content" style="flex: 1; display:flex; align-items:center; gap:12px;" onclick="apriDrawer('drawer-sito')"><i class="fas fa-globe" style="color:#d4af37; font-size:1.1rem;"></i><span style="font-size: 0.85rem; color: #fff; font-weight:500;">Sito Web Ufficiale</span></div>`;
+                    track.appendChild(sitoBlock);
+                }
+            } else if (sitoBlock) { sitoBlock.remove(); }
+        }
+
+        // 3. MACRO-BLOCCO SOCIAL
+        const internalTrack = document.getElementById('social-internal-track');
+        if (internalTrack) {
+            const numSocial = internalTrack.children.length;
+            let macroSocial = document.getElementById('blocco-social-macro');
+            if (numSocial > 0) {
+                if (!macroSocial) {
+                    macroSocial = document.createElement('div');
+                    macroSocial.className = 'tag-block'; macroSocial.id = 'blocco-social-macro';
+                    macroSocial.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 16px; border-radius: 12px; margin-bottom: 10px;";
+                    macroSocial.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div><div class="block-content" style="flex: 1; display:flex; align-items:center; gap:12px;" onclick="apriDrawer('drawer-social')"><i class="fas fa-share-nodes" style="color:#d4af37; font-size:1.1rem;"></i><span style="font-size: 0.85rem; color: #fff; font-weight:500;">SOCIAL</span><span class="social-count" style="margin-left:auto; font-size:0.7rem; color:rgba(255,255,255,0.5);">${numSocial} canali</span></div>`;
+                    track.appendChild(macroSocial);
+                } else {
+                    const spanCount = macroSocial.querySelector('.social-count');
+                    if (spanCount) spanCount.innerText = `${numSocial} canali`;
+                }
+            } else if (macroSocial) { macroSocial.remove(); }
+        }
+    }
+
+    // ============================================================
+    // IL MOTORE INTELLIGENTE SOCIAL & LIMITI DEL PIANO
+    // ============================================================
+    function aggiornaLimitiSocial() {
+        const internalTrack = document.getElementById('social-internal-track');
+        if (!internalTrack) return;
+        const count = internalTrack.children.length;
+        const counterEl = document.getElementById('social-counter');
+        const btnAdd = document.getElementById('btn-add-social');
+        
+        let limit = 3;
+        let planName = "Piano Base";
+        if (userPlan === 'PREMIUM') { limit = 8; planName = "Piano Premium"; }
+        if (userPlan === 'GOLD') { limit = 999; planName = "Piano Gold"; }
+
+        if (counterEl) {
+            if (limit === 999) { counterEl.innerText = `${count}/∞ (${planName})`; } 
+            else { counterEl.innerText = `${count}/${limit} (${planName})`; }
+        }
+
+        if (btnAdd) {
+            if (count >= limit) {
+                btnAdd.innerHTML = `<i class="fas fa-lock"></i> SBLOCCA PIANO`;
+                btnAdd.style.background = "rgba(255,255,255,0.1)";
+                btnAdd.style.color = "#d4af37";
+                btnAdd.onclick = function() { 
+                    alert("Hai raggiunto il limite del tuo abbonamento.\nFai l'upgrade per aggiungere più canali alla tua identità."); 
+                };
+            } else {
+                btnAdd.innerHTML = `+ AGGIUNGI AL PROFILO`;
+                btnAdd.style.background = "#10b981";
+                btnAdd.style.color = "#000";
+                btnAdd.onclick = aggiungiLinkSmart;
             }
         }
     }
 
+    function rilevaSocialAutomatico() {
+        const urlStr = document.getElementById('smart-link-url').value.toLowerCase();
+        const nameInput = document.getElementById('smart-link-name');
+        const iconEl = document.getElementById('smart-link-icon');
+        
+        const mappa = {
+            'instagram.com': { n: 'Instagram', i: 'fab fa-instagram' }, 'tiktok.com': { n: 'TikTok', i: 'fab fa-tiktok' },
+            'facebook.com': { n: 'Facebook', i: 'fab fa-facebook-f' }, 'linkedin.com': { n: 'LinkedIn', i: 'fab fa-linkedin-in' },
+            'x.com': { n: 'X', i: 'fab fa-x-twitter' }, 'twitter.com': { n: 'X', i: 'fab fa-x-twitter' },
+            'youtube.com': { n: 'YouTube', i: 'fab fa-youtube' }, 'wa.me': { n: 'WhatsApp', i: 'fab fa-whatsapp' },
+            't.me': { n: 'Telegram', i: 'fab fa-telegram-plane' }, 'spotify.com': { n: 'Spotify', i: 'fab fa-spotify' },
+            'tripadvisor': { n: 'TripAdvisor', i: 'fab fa-tripadvisor' }, 'thefork': { n: 'TheFork', i: 'fas fa-utensils' },
+            'onlyfans.com': { n: 'OnlyFans', i: 'fas fa-star' }, 'github.com': { n: 'GitHub', i: 'fab fa-github' },
+            'twitch.tv': { n: 'Twitch', i: 'fab fa-twitch' }, 'strava.com': { n: 'Strava', i: 'fab fa-strava' }
+        };
+
+        let trovato = false;
+        for (const [key, val] of Object.entries(mappa)) {
+            if (urlStr.includes(key)) {
+                nameInput.value = val.n; iconEl.className = val.i + " smart-detected-icon"; iconEl.style.color = "#10b981";
+                trovato = true; break;
+            }
+        }
+        if(!trovato && urlStr.length > 5) {
+            if(nameInput.value === "") nameInput.value = "Visita il link";
+            iconEl.className = "fas fa-link smart-detected-icon"; iconEl.style.color = "#d4af37";
+        } else if (urlStr.length <= 5) { iconEl.className = "fas fa-link"; iconEl.style.color = "#86868b"; }
+    }
+
+    function aggiungiLinkSmart() {
+        const url = document.getElementById('smart-link-url').value.trim();
+        let nome = document.getElementById('smart-link-name').value.trim();
+        const iconEl = document.getElementById('smart-link-icon');
+        
+        if(url === "") { alert("Inserisci un URL valido."); return; }
+        if(nome === "") nome = "Visita il link";
+        let iconClass = iconEl.className.replace('smart-detected-icon', '').trim();
+        if(iconClass === "") iconClass = "fas fa-link";
+        
+        const track = document.getElementById('social-internal-track');
+        const blockId = 'social-' + Date.now();
+        const block = document.createElement('div');
+        block.className = 'social-block-live'; block.id = blockId;
+        block.setAttribute('data-nome', nome); block.setAttribute('data-url', url);
+        block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
+        
+        block.innerHTML = `
+            <div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div>
+            <div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;">
+                <i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>
+                <span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${nome}</span>
+            </div>
+            <div class="block-actions" style="padding-left: 10px;">
+                <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
+            </div>
+        `;
+        
+        track.appendChild(block);
+        
+        document.getElementById('smart-link-url').value = ""; document.getElementById('smart-link-name').value = "";
+        iconEl.className = "fas fa-link"; iconEl.style.color = "#86868b";
+        
+        aggiornaLimitiSocial();
+        salvaDati(); 
+        aggiornaAnteprimaLive();
+    }
+
+    function rimuoviBlocco(id) {
+        const block = document.getElementById(id);
+        if(block) block.remove();
+        aggiornaLimitiSocial();
+        salvaDati();
+        aggiornaAnteprimaLive();
+    }
+
     function confermaEChiudiCassetto() {
         salvaDati(); 
-        aggiornaAnteprimaLive(); // Accende il monitor prima di chiudere
+        aggiornaAnteprimaLive();
         chiudiSenzaSalvare();
     }
 
+    async function inizializzaPagina() { 
+        if(NOME_SISTEMA === "tuonome.it") return; 
+        try {
+            const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
+            const data = await response.json();
+            const f = (() => { if (data.fields?.draft_json) { try { return { ...JSON.parse(data.fields.draft_json), plan: data.fields.plan }; } catch(e) {} } return data.fields || data; })();
+
+            if (f) {
+                userPlan = (f.plan || 'BASE').toUpperCase();
+
+                if (f.username_display) {
+                    const inputField = document.getElementById('field-username_display');
+                    if (inputField) inputField.value = f.username_display.replace('@', '');
+                    localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display);
+                    formattaBadge(f.username_display);
+                }
+                if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
+                if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
+                applicaTemaLive();
+
+                if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
+                if (f.sito_web && document.getElementById('field-sito')) document.getElementById('field-sito').value = f.sito_web;
+                if (f.email && document.getElementById('field-email')) document.getElementById('field-email').value = f.email;
+
+                if (f.modulo_vcf) {
+                    try {
+                        const vcf = typeof f.modulo_vcf === 'string' ? JSON.parse(f.modulo_vcf) : f.modulo_vcf;
+                        if (vcf.telefono1 && document.getElementById('field-tel1')) document.getElementById('field-tel1').value = vcf.telefono1;
+                        if (vcf.telefono2 && document.getElementById('field-tel2')) document.getElementById('field-tel2').value = vcf.telefono2;
+                        if (vcf.indirizzo && document.getElementById('field-indirizzo')) document.getElementById('field-indirizzo').value = vcf.indirizzo;
+                    } catch(e) {}
+                }
+
+                if (f.config_canali) {
+                    try {
+                        const canali = typeof f.config_canali === 'string' ? JSON.parse(f.config_canali) : f.config_canali;
+                        const track = document.getElementById('social-internal-track');
+                        if (track) {
+                            track.innerHTML = ""; // Pulisce prima di caricare
+                            canali.forEach(canale => {
+                                let iconClass = "fas fa-link";
+                                const nLower = canale.nome.toLowerCase();
+                                const dIcons = { "instagram": "fab fa-instagram", "tiktok": "fab fa-tiktok", "facebook": "fab fa-facebook-f", "youtube": "fab fa-youtube", "linkedin": "fab fa-linkedin-in", "x ": "fab fa-x-twitter", "twitter": "fab fa-x-twitter", "strava": "fab fa-strava", "github": "fab fa-github", "behance": "fab fa-behance", "dribbble": "fab fa-dribbble", "spotify": "fab fa-spotify", "telegram": "fab fa-telegram-plane", "whatsapp": "fab fa-whatsapp", "twitch": "fab fa-twitch", "pinterest": "fab fa-pinterest-p", "tripadvisor": "fab fa-tripadvisor", "thefork": "fas fa-utensils", "onlyfans": "fas fa-star" };
+                                for (let key in dIcons) { if(nLower.includes(key)) iconClass = dIcons[key]; }
+
+                                const blockId = 'social-' + Math.random().toString(36).substr(2, 9);
+                                const block = document.createElement('div');
+                                block.className = 'social-block-live'; block.id = blockId;
+                                block.setAttribute('data-nome', canale.nome); block.setAttribute('data-url', canale.url);
+                                block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
+                                
+                                block.innerHTML = `
+                                    <div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div>
+                                    <div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;">
+                                        <i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>
+                                        <span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${canale.nome}</span>
+                                    </div>
+                                    <div class="block-actions" style="padding-left: 10px;">
+                                        <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1.1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
+                                    </div>
+                                `;
+                                track.appendChild(block);
+                            });
+                        }
+                    } catch(e) {}
+                }
+
+                if (userPlan !== 'BASE') {
+                    document.querySelectorAll('.premium-lock-overlay').forEach(el => el.style.display = 'none');
+                } else {
+                    document.querySelectorAll('.premium-field-container').forEach(container => {
+                        const overlay = container.querySelector('.premium-lock-overlay');
+                        if(overlay) {
+                            overlay.style.display = 'flex';
+                            overlay.onclick = function(e) {
+                                e.stopPropagation(); 
+                                alert("Questo Asset fa parte dei Piani Premium.\nAttiva il tuo ecosistema per sbloccarlo.");
+                            };
+                        }
+                    });
+                }
+                aggiornaLimitiSocial();
+                aggiornaAnteprimaLive();
+            }
+        } catch (e) { console.error("Errore caricamento", e); }
+    }
+
+    async function salvaDati() {
+        if(NOME_SISTEMA === "tuonome.it") return; 
+        
+        const inputField = document.getElementById("field-username_display");
+        const displayVal = inputField ? inputField.value.trim() : "";
+        const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
+        const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
+
+        const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
+        const sitoVal = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
+        const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
+        
+        const vcfObject = {
+            telefono1: document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "",
+            telefono2: document.getElementById('field-tel2') ? document.getElementById('field-tel2').value.trim() : "",
+            indirizzo: document.getElementById('field-indirizzo') ? document.getElementById('field-indirizzo').value.trim() : ""
+        };
+
+        const canaliSocial = [];
+        const internalTrack = document.getElementById('social-internal-track');
+        if (internalTrack) {
+            const socialBlocks = internalTrack.querySelectorAll('.social-block-live');
+            socialBlocks.forEach(block => {
+                canaliSocial.push({ nome: block.getAttribute('data-nome'), url: block.getAttribute('data-url') });
+            });
+        }
+
+        const bozza = { 
+            username_system: NOME_SISTEMA, 
+            username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
+            digital_style: styleVal, digital_layout: layoutVal,
+            bio: bioVal, sito_web: sitoVal, email: emailVal,
+            modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
+        }; 
+
+        localStorage.setItem('mqt_cache_' + NOME_SISTEMA, bozza.username_display);
+        localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
+        localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
+
+        try {
+            await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username_system: NOME_SISTEMA, draft_json: JSON.stringify(bozza) }) });
+        } catch (error) {}
+    }
 
     function salvaIdentitaEApriStile() {
         const fieldDisplay = document.getElementById('field-username_display');
@@ -997,8 +1048,7 @@
             alert("⚠️ AZIONE NON CONSENTITA ⚠️\n\nIl tuo Tag è registrato come @" + NOME_SISTEMA.toUpperCase() + ".\nNon puoi alterare il brand originario, sono ammessi unicamente gli spazi.");
             fieldDisplay.value = NOME_SISTEMA; formattaBadge(NOME_SISTEMA); return; 
         }
-        salvaDati(); 
-        chiudiSenzaSalvare();
+        salvaDati(); chiudiSenzaSalvare();
     }
 
     function accendiIControlli() {
@@ -1006,12 +1056,9 @@
         const btnSalva = document.querySelector('button[onclick="salvaIdentitaEApriStile()"]'); 
         const labelSistema = document.getElementById('label-nome-sistema');
 
-        // Scriviamo il nome di base in bella vista nel cassetto
         if (labelSistema) { labelSistema.innerText = '@' + NOME_SISTEMA.toUpperCase(); }
-
         if (!fieldDisplay) return;
 
-        // Ascolto l'input per colorare di rosso se fa errori
         fieldDisplay.addEventListener('input', () => {
             const inputVal = fieldDisplay.value;
             const inseritoSenzaSpazi = inputVal.toLowerCase().replace(/\s/g, '');
@@ -1030,22 +1077,36 @@
             }
         });
 
-        // Intercettiamo il tasto "INVIO / OK" della tastiera Android
         fieldDisplay.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.keyCode === 13) {
-                e.preventDefault();
-                fieldDisplay.blur(); // Abbassa la tastiera
-                if (btnSalva && btnSalva.style.pointerEvents !== "none") {
-                    salvaIdentitaEApriStile(); // Salva e chiude
-                }
+                e.preventDefault(); fieldDisplay.blur(); 
+                if (btnSalva && btnSalva.style.pointerEvents !== "none") salvaIdentitaEApriStile(); 
             }
         });
     }
 
     function initDragAndDrop() {
-        const track = document.getElementById('blocks-track');
-        if(track) {
-            new Sortable(track, { handle: '.drag-handle', animation: 250, easing: "cubic-bezier(1, 0, 0, 1)", ghostClass: 'sortable-ghost', dragClass: 'sortable-drag' });
+        // Drag&Drop per la plancia principale
+        const trackMain = document.getElementById('blocks-track');
+        if(trackMain) {
+            new Sortable(trackMain, { 
+                handle: '.drag-handle', animation: 250, 
+                easing: "cubic-bezier(1, 0, 0, 1)", ghostClass: 'sortable-ghost', dragClass: 'sortable-drag',
+                onEnd: function () { salvaDati(); }
+            });
+        }
+        
+        // Drag&Drop INTERNO al cassetto Social
+        const trackSocial = document.getElementById('social-internal-track');
+        if(trackSocial) {
+            new Sortable(trackSocial, { 
+                handle: '.drag-handle', animation: 250, 
+                easing: "cubic-bezier(1, 0, 0, 1)", ghostClass: 'sortable-ghost', dragClass: 'sortable-drag',
+                onEnd: function () { 
+                    salvaDati(); 
+                    aggiornaAnteprimaLive(); 
+                }
+            });
         }
     }
 
@@ -1059,10 +1120,7 @@
         const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
         if (layoutInCache) { const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`); if(radioLayout) radioLayout.checked = true; }
 
-        applicaTemaLive();
-        accendiIControlli();
-        inizializzaPagina();
-        initDragAndDrop();
+        applicaTemaLive(); accendiIControlli(); inizializzaPagina(); initDragAndDrop();
 
         let tapCount = 0;
         const badgeDiv = document.querySelector('.username-capsule-wrapper');
