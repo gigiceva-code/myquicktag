@@ -70,7 +70,7 @@
         .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
-            text-transform: uppercase; white-space: normal; word-break: keep-all; overflow-wrap: break-word;
+            text-transform: uppercase; white-space: normal; word-break: normal; overflow-wrap: break-word;
             transition: font-size 0.3s ease; 
         }
 
@@ -86,8 +86,8 @@
         }
         
         #profile-content[data-layout="divider"] .username-display { 
-            white-space: normal !important; word-break: break-word !important; overflow-wrap: break-word !important; max-width: 280px !important; margin: 0 auto !important; 
-            line-height: 2.8 !important; text-wrap: balance !important; position: relative; z-index: 3; 
+            white-space: normal !important; word-break: normal !important; overflow-wrap: break-word !important; max-width: 280px !important; margin: 0 auto !important; 
+            line-height: 1.6 !important; padding: 15px 0 !important; text-wrap: balance !important; position: relative; z-index: 3; 
         }
         
         #profile-content[data-layout="divider"] .header-monolith::after {
@@ -115,7 +115,7 @@
         #profile-content[data-layout="pure"] .username-capsule-inner { display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 10px 0 !important; position: relative !important; }
         
         #profile-content[data-layout="pure"] .username-display { 
-            white-space: normal !important; word-break: break-word !important; overflow-wrap: break-word !important; max-width: 280px !important; margin: 0 auto !important; 
+            white-space: normal !important; word-break: normal !important; overflow-wrap: break-word !important; max-width: 280px !important; margin: 0 auto !important; 
             line-height: 1.4 !important; text-wrap: balance !important; 
         }
   
@@ -620,11 +620,11 @@
             el.style.textAlign = "center";
             
             if (testo.includes(' ')) {
-                el.style.whiteSpace = "normal"; el.style.wordBreak = "keep-all";
+                el.style.whiteSpace = "normal"; el.style.wordBreak = "normal";
                 el.style.overflowWrap = "break-word"; el.style.textWrap = "balance"; 
                 el.style.fontSize = "0.95rem"; 
             } else {
-                el.style.whiteSpace = "nowrap"; el.style.wordBreak = "keep-all";
+                el.style.whiteSpace = "nowrap"; el.style.wordBreak = "normal";
                 if (testo.length > 24) { el.style.fontSize = "0.55rem"; } 
                 else if (testo.length > 18) { el.style.fontSize = "0.65rem"; } 
                 else { el.style.fontSize = "0.95rem"; }
