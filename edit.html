@@ -67,7 +67,7 @@
             background: #0d0d0f; padding: 24px 35px;
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
-        .username-display {
+                .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
             text-transform: uppercase; white-space: normal; 
@@ -88,9 +88,16 @@
             white-space: normal !important;
             word-wrap: break-word !important; /* Salva-vita per vecchi Safari */
             overflow-wrap: break-word !important;
-            word-break: break-word !important; /* Forza il taglio delle parole giganti */
+            word-break: normal !important; /* Non taglia a caso le parole se c'è spazio */
             hyphens: auto;
             line-height: 1.45 !important;
+        }
+
+        /* Hack vitale per Safari: impedisce al flexbox di allargarsi all'infinito */
+        #profile-content[data-layout="divider"] .username-capsule-wrapper,
+        #profile-content[data-layout="pure"] .username-capsule-wrapper {
+            min-width: 0 !important; 
+            width: 100% !important;
         }
 
         /* =========================================================
@@ -98,7 +105,6 @@
            ========================================================= */
         #profile-content[data-layout="divider"] .header-monolith { display: block !important; width: 100% !important; padding: 20px 0 !important; }
         
-        #profile-content[data-layout="divider"] .username-capsule-wrapper,
         #profile-content[data-layout="divider"] .username-capsule,
         #profile-content[data-layout="divider"] .username-capsule-inner { 
             display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; 
@@ -131,7 +137,6 @@
            LAYOUT 3: PURE (Nudo, Solo Tipografia)
            ========================================================= */
         #profile-content[data-layout="pure"] .header-monolith { display: flex !important; justify-content: center !important; }
-        #profile-content[data-layout="pure"] .username-capsule-wrapper { width: 100% !important; padding: 0 10px !important; }
         #profile-content[data-layout="pure"] .username-capsule { display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; }
         #profile-content[data-layout="pure"] .username-capsule-inner { display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 10px 0 !important; position: relative !important; }
   
@@ -626,13 +631,12 @@
             return "tuonome.it";
         }
 
-        function formattaBadge(testoBruto) {
+                function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
             
-            // Pulisce in modo brutale tutti gli spazi non divisibili (tastiere mobile)
+            // Pulisce tutti gli spazi anomali (invisibili) inseriti dalle tastiere mobile
             let testo = testoBruto.replace(/\s+/g, ' ').trim().toUpperCase();
-            
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
@@ -640,8 +644,9 @@
             
             if (testo.includes(' ')) {
                 el.style.whiteSpace = "normal";
-                el.style.wordBreak = "break-word";
+                el.style.wordBreak = "normal";
                 el.style.overflowWrap = "break-word";
+                el.style.textWrap = "wrap"; // Forza il text-wrap standard, uccidendo il balance
                 
                 if (testo.length > 32) {
                     el.style.fontSize = "0.72rem";
@@ -651,13 +656,15 @@
                     el.style.fontSize = "0.95rem";
                 }
             } else {
+                // Se è una parola unica enorme, la spezza
                 el.style.whiteSpace = "normal"; 
-                el.style.wordBreak = "break-all"; /* Anche senza spazi, se sfora taglia */
+                el.style.wordBreak = "break-all"; 
                 if (testo.length > 24) { el.style.fontSize = "0.55rem"; } 
                 else if (testo.length > 18) { el.style.fontSize = "0.65rem"; } 
                 else { el.style.fontSize = "0.95rem"; }
             }
         }
+
 
         function apriDrawer(idDrawer) {
             const currentlyOpen = document.querySelector('.drawer-glass.open');
