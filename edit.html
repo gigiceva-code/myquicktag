@@ -669,10 +669,15 @@
  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
  <script>
+    // ============================================================
+    // CAPITOLO 1: SETUP E FUNZIONI DI BASE (UI, Cassetti, QR)
+    // ============================================================
+    
     const NOME_SISTEMA = getNomeBrandReale();
     let isDrawerOpen = false;
-    let userPlan = 'BASE'; // Variabile globale per il controllo dei lucchetti
+    let userPlan = 'BASE'; // Variabile globale per governare i lucchetti d'oro
 
+    // 1.1 Estrae il nome dell'utente dall'URL
     function getNomeBrandReale() {
         try {
             const params = new URLSearchParams(window.location.search);
@@ -683,6 +688,7 @@
         return "tuonome.it";
     }
 
+    // 1.2 Formatta il nome in alto al centro (Testo auto-adattante)
     function formattaBadge(testoBruto) {
         const el = document.getElementById('tag-username');
         if(!el) return;
@@ -691,6 +697,7 @@
 
         el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
         el.style.textAlign = "center";
+        
         if (testo.includes(' ')) {
             el.style.whiteSpace = "normal"; el.style.wordBreak = "keep-all";
             el.style.overflowWrap = "break-word"; el.style.textWrap = "balance"; 
@@ -703,6 +710,7 @@
         }
     }
 
+    // 1.3 Gestione apertura e chiusura Cassetti (Drawers)
     function apriDrawer(idDrawer) {
         const currentlyOpen = document.querySelector('.drawer-glass.open');
         document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
@@ -732,7 +740,8 @@
         if (isDrawerOpen) { chiudiSenzaSalvare(true); }
     });
 
-        function applicaTemaLive() {
+    // 1.4 Cambio Tema in tempo reale
+    function applicaTemaLive() {
         const temaInput = document.querySelector('input[name="digital_style"]:checked');
         const layoutInput = document.querySelector('input[name="digital_layout"]:checked');
         const profileContent = document.getElementById('profile-content');
@@ -745,14 +754,14 @@
         if(layoutInput && profileContent) { 
             profileContent.setAttribute('data-layout', layoutInput.value); 
         }
-        
-        // Aggiorna istantaneamente il colore delle scritte sulla plancia!
+
+        // Accende le scritte sulla plancia col nuovo colore
         if (typeof aggiornaAnteprimaLive === 'function') {
             aggiornaAnteprimaLive();
         }
     }
 
-
+    // 1.5 Gestione QR Code (Modal e Disegno Dettagliato)
     function apriModalQR() {
         const m = document.getElementById('modal-qr');
         if(m) {
@@ -790,98 +799,87 @@
         }, 50);
     }
 
-            // ============================================================
-    // MOTORE LIVE: Disegna i Macro-Blocchi sulla Plancia (CENTRATI)
+
     // ============================================================
+    // CAPITOLO 2: MOTORE VISIVO (Anteprima in tempo reale sulla plancia)
+    // ============================================================
+    
     function aggiornaAnteprimaLive() {
         const track = document.getElementById('blocks-track');
         if(!track) return;
 
+        // 2.1 Lettura tema e colore
         const temaVal = document.querySelector('input[name="digital_style"]:checked')?.value || 'black_dna';
-        
         const coloriTema = {
-            'emerald': '#00E680',
-            'obsidian_gold': '#d4af37',
-            'satin_rose': '#c8968e',
-            'titanium': '#b0b0b5', 
-            'black_dna': '#ffffff' 
+            'emerald': '#00E680', 'obsidian_gold': '#d4af37', 'satin_rose': '#c8968e',
+            'titanium': '#b0b0b5', 'black_dna': '#ffffff' 
         };
         const coloreTesto = coloriTema[temaVal] || '#ffffff';
 
-        // STILE D'ÉLITE CENTRATO: Il blocco è relativo, il testo è centrato al 100%, la maniglia "fluttua" a sinistra.
+        // 2.2 Stile architetturale Luxury Minimal (Centrato, fluttuante)
         const blockStyle = "position: relative; display: flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 12px 0; margin-bottom: 0; cursor: pointer;";
         const textStyle = `font-size: 0.75rem; letter-spacing: 3px; font-weight: 400; color: ${coloreTesto}; text-transform: uppercase; transition: color 0.3s ease; text-align: center; width: 100%;`;
         const handleHTML = `<div class="drag-handle" style="position: absolute; left: 10px; color: rgba(255,255,255,0.15); font-size: 1.2rem; cursor: grab;">⋮⋮</div>`;
 
-        // MACRO-BLOCCO BIO
+        // 2.3 Macro-Blocco: BIO
         const bioInput = document.getElementById('field-bio');
         if (bioInput && bioInput.value.trim() !== "") {
             let bioBlock = document.getElementById('blocco-bio-live');
             if (!bioBlock) {
-                bioBlock = document.createElement('div');
-                bioBlock.className = 'tag-block'; bioBlock.id = 'blocco-bio-live';
-                bioBlock.style.cssText = blockStyle;
+                bioBlock = document.createElement('div'); bioBlock.className = 'tag-block'; bioBlock.id = 'blocco-bio-live'; bioBlock.style.cssText = blockStyle;
                 bioBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-bio')"><span class="dynamic-theme-text" style="${textStyle}">BIO</span></div>`;
                 track.appendChild(bioBlock); 
-            } else {
-                const spanText = bioBlock.querySelector('.dynamic-theme-text');
-                if (spanText) spanText.style.color = coloreTesto;
-            }
-        } else {
-            const b = document.getElementById('blocco-bio-live'); if(b) b.remove();
-        }
+            } else { const spanText = bioBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+        } else { const b = document.getElementById('blocco-bio-live'); if(b) b.remove(); }
 
-        // MACRO-BLOCCO SITO WEB
+        // 2.4 Macro-Blocco: AZIONE RAPIDA (Quick Action Premium)
+        const qaInput = document.getElementById('field-qa-label');
+        if (qaInput && qaInput.value.trim() !== "") {
+            let qaBlock = document.getElementById('blocco-qa-live');
+            if (!qaBlock) {
+                qaBlock = document.createElement('div'); qaBlock.className = 'tag-block'; qaBlock.id = 'blocco-qa-live'; qaBlock.style.cssText = blockStyle;
+                qaBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-quick')"><span class="dynamic-theme-text" style="${textStyle}">⚡ AZIONE RAPIDA</span></div>`;
+                track.appendChild(qaBlock);
+            } else { const spanText = qaBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+        } else { const q = document.getElementById('blocco-qa-live'); if(q) q.remove(); }
+
+        // 2.5 Macro-Blocco: SITO WEB
         const sitoInput = document.getElementById('field-sito');
         if (sitoInput && sitoInput.value.trim() !== "") {
             let sitoBlock = document.getElementById('blocco-sito-live');
             if (!sitoBlock) {
-                sitoBlock = document.createElement('div');
-                sitoBlock.className = 'tag-block'; sitoBlock.id = 'blocco-sito-live';
-                sitoBlock.style.cssText = blockStyle;
+                sitoBlock = document.createElement('div'); sitoBlock.className = 'tag-block'; sitoBlock.id = 'blocco-sito-live'; sitoBlock.style.cssText = blockStyle;
                 sitoBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-sito')"><span class="dynamic-theme-text" style="${textStyle}">SITO WEB</span></div>`;
                 track.appendChild(sitoBlock);
-            } else {
-                const spanText = sitoBlock.querySelector('.dynamic-theme-text');
-                if (spanText) spanText.style.color = coloreTesto;
-            }
-        } else {
-            const s = document.getElementById('blocco-sito-live'); if(s) s.remove();
-        }
+            } else { const spanText = sitoBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+        } else { const s = document.getElementById('blocco-sito-live'); if(s) s.remove(); }
 
-        // MACRO-BLOCCO SOCIAL
+        // 2.6 Macro-Blocco: SOCIAL
         const internalTrack = document.getElementById('social-internal-track');
         if (internalTrack && internalTrack.children.length > 0) {
             let macroSocial = document.getElementById('blocco-social-macro');
             if (!macroSocial) {
-                macroSocial = document.createElement('div');
-                macroSocial.className = 'tag-block'; macroSocial.id = 'blocco-social-macro';
-                macroSocial.style.cssText = blockStyle;
+                macroSocial = document.createElement('div'); macroSocial.className = 'tag-block'; macroSocial.id = 'blocco-social-macro'; macroSocial.style.cssText = blockStyle;
                 macroSocial.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-social')"><span class="dynamic-theme-text" style="${textStyle}">SOCIAL</span></div>`;
                 track.appendChild(macroSocial);
-            } else {
-                const spanText = macroSocial.querySelector('.dynamic-theme-text');
-                if (spanText) spanText.style.color = coloreTesto;
-            }
-        } else {
-            const m = document.getElementById('blocco-social-macro'); if(m) m.remove();
-        }
+            } else { const spanText = macroSocial.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+        } else { const m = document.getElementById('blocco-social-macro'); if(m) m.remove(); }
     }
 
 
-
     // ============================================================
-    // IL MOTORE INTELLIGENTE SOCIAL & LIMITI DEL PIANO
+    // CAPITOLO 3: MOTORE SOCIAL E LIMITI ABBONAMENTO (Upselling)
     // ============================================================
+    
+    // 3.1 Aggiorna i contatori dei link e attiva il Lucchetto
     function aggiornaLimitiSocial() {
         const internalTrack = document.getElementById('social-internal-track');
         if (!internalTrack) return;
         const count = internalTrack.children.length;
         const counterEl = document.getElementById('social-counter');
         const btnAdd = document.getElementById('btn-add-social');
-        
-        let limit = 3;
-        let planName = "Piano Base";
+
+        let limit = 3; let planName = "Piano Base";
         if (userPlan === 'PREMIUM') { limit = 8; planName = "Piano Premium"; }
         if (userPlan === 'GOLD') { limit = 999; planName = "Piano Gold"; }
 
@@ -893,25 +891,24 @@
         if (btnAdd) {
             if (count >= limit) {
                 btnAdd.innerHTML = `<i class="fas fa-lock"></i> SBLOCCA PIANO`;
-                btnAdd.style.background = "rgba(255,255,255,0.1)";
-                btnAdd.style.color = "#d4af37";
+                btnAdd.style.background = "rgba(255,255,255,0.1)"; btnAdd.style.color = "#d4af37";
                 btnAdd.onclick = function() { 
                     alert("Hai raggiunto il limite del tuo abbonamento.\nFai l'upgrade per aggiungere più canali alla tua identità."); 
                 };
             } else {
                 btnAdd.innerHTML = `+ AGGIUNGI AL PROFILO`;
-                btnAdd.style.background = "#10b981";
-                btnAdd.style.color = "#000";
+                btnAdd.style.background = "#10b981"; btnAdd.style.color = "#000";
                 btnAdd.onclick = aggiungiLinkSmart;
             }
         }
     }
 
+    // 3.2 Riconosce automaticamente il brand dal link
     function rilevaSocialAutomatico() {
         const urlStr = document.getElementById('smart-link-url').value.toLowerCase();
         const nameInput = document.getElementById('smart-link-name');
         const iconEl = document.getElementById('smart-link-icon');
-        
+
         const mappa = {
             'instagram.com': { n: 'Instagram', i: 'fab fa-instagram' }, 'tiktok.com': { n: 'TikTok', i: 'fab fa-tiktok' },
             'facebook.com': { n: 'Facebook', i: 'fab fa-facebook-f' }, 'linkedin.com': { n: 'LinkedIn', i: 'fab fa-linkedin-in' },
@@ -936,23 +933,24 @@
         } else if (urlStr.length <= 5) { iconEl.className = "fas fa-link"; iconEl.style.color = "#86868b"; }
     }
 
+    // 3.3 Crea fisicamente il blocco del link nel cassetto
     function aggiungiLinkSmart() {
         const url = document.getElementById('smart-link-url').value.trim();
         let nome = document.getElementById('smart-link-name').value.trim();
         const iconEl = document.getElementById('smart-link-icon');
-        
+
         if(url === "") { alert("Inserisci un URL valido."); return; }
         if(nome === "") nome = "Visita il link";
         let iconClass = iconEl.className.replace('smart-detected-icon', '').trim();
         if(iconClass === "") iconClass = "fas fa-link";
-        
+
         const track = document.getElementById('social-internal-track');
         const blockId = 'social-' + Date.now();
         const block = document.createElement('div');
         block.className = 'social-block-live'; block.id = blockId;
         block.setAttribute('data-nome', nome); block.setAttribute('data-url', url);
         block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
-        
+
         block.innerHTML = `
             <div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div>
             <div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;">
@@ -963,12 +961,11 @@
                 <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
             </div>
         `;
-        
+
         track.appendChild(block);
-        
         document.getElementById('smart-link-url').value = ""; document.getElementById('smart-link-name').value = "";
         iconEl.className = "fas fa-link"; iconEl.style.color = "#86868b";
-        
+
         aggiornaLimitiSocial();
         salvaDati(); 
         aggiornaAnteprimaLive();
@@ -977,17 +974,19 @@
     function rimuoviBlocco(id) {
         const block = document.getElementById(id);
         if(block) block.remove();
-        aggiornaLimitiSocial();
-        salvaDati();
-        aggiornaAnteprimaLive();
+        aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
     }
 
+
+    // ============================================================
+    // CAPITOLO 4: COMUNICAZIONE DATABASE (Salvataggio e Caricamento)
+    // ============================================================
+    
     function confermaEChiudiCassetto() {
-        salvaDati(); 
-        aggiornaAnteprimaLive();
-        chiudiSenzaSalvare();
+        salvaDati(); aggiornaAnteprimaLive(); chiudiSenzaSalvare();
     }
 
+    // 4.1 Scarica i dati dal Server (Incluso il check del Piano)
     async function inizializzaPagina() { 
         if(NOME_SISTEMA === "tuonome.it") return; 
         try {
@@ -998,20 +997,27 @@
             if (f) {
                 userPlan = (f.plan || 'BASE').toUpperCase();
 
+                // Identità e Stile
                 if (f.username_display) {
                     const inputField = document.getElementById('field-username_display');
                     if (inputField) inputField.value = f.username_display.replace('@', '');
-                    localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display);
-                    formattaBadge(f.username_display);
+                    localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display); formattaBadge(f.username_display);
                 }
                 if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                 if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
                 applicaTemaLive();
 
+                // Asset Base
                 if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
                 if (f.sito_web && document.getElementById('field-sito')) document.getElementById('field-sito').value = f.sito_web;
                 if (f.email && document.getElementById('field-email')) document.getElementById('field-email').value = f.email;
 
+                // Azione Rapida (Premium)
+                if (f.quick_action_tipo && document.getElementById('field-qa-tipo')) document.getElementById('field-qa-tipo').value = f.quick_action_tipo;
+                if (f.quick_action_label && document.getElementById('field-qa-label')) document.getElementById('field-qa-label').value = f.quick_action_label;
+                if (f.quick_action_url && document.getElementById('field-qa-url')) document.getElementById('field-qa-url').value = f.quick_action_url;
+
+                // Contatti VCF
                 if (f.modulo_vcf) {
                     try {
                         const vcf = typeof f.modulo_vcf === 'string' ? JSON.parse(f.modulo_vcf) : f.modulo_vcf;
@@ -1021,12 +1027,13 @@
                     } catch(e) {}
                 }
 
+                // Caricamento Social e icone
                 if (f.config_canali) {
                     try {
                         const canali = typeof f.config_canali === 'string' ? JSON.parse(f.config_canali) : f.config_canali;
                         const track = document.getElementById('social-internal-track');
                         if (track) {
-                            track.innerHTML = ""; // Pulisce prima di caricare
+                            track.innerHTML = ""; 
                             canali.forEach(canale => {
                                 let iconClass = "fas fa-link";
                                 const nLower = canale.nome.toLowerCase();
@@ -1034,27 +1041,17 @@
                                 for (let key in dIcons) { if(nLower.includes(key)) iconClass = dIcons[key]; }
 
                                 const blockId = 'social-' + Math.random().toString(36).substr(2, 9);
-                                const block = document.createElement('div');
-                                block.className = 'social-block-live'; block.id = blockId;
+                                const block = document.createElement('div'); block.className = 'social-block-live'; block.id = blockId;
                                 block.setAttribute('data-nome', canale.nome); block.setAttribute('data-url', canale.url);
                                 block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
-                                
-                                block.innerHTML = `
-                                    <div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div>
-                                    <div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;">
-                                        <i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>
-                                        <span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${canale.nome}</span>
-                                    </div>
-                                    <div class="block-actions" style="padding-left: 10px;">
-                                        <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1.1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
-                                    </div>
-                                `;
+                                block.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div><div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;"><i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i><span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${canale.nome}</span></div><div class="block-actions" style="padding-left: 10px;"><i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1.1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i></div>`;
                                 track.appendChild(block);
                             });
                         }
                     } catch(e) {}
                 }
 
+                // Logica di Upselling e Lucchetti
                 if (userPlan !== 'BASE') {
                     document.querySelectorAll('.premium-lock-overlay').forEach(el => el.style.display = 'none');
                 } else {
@@ -1064,20 +1061,20 @@
                             overlay.style.display = 'flex';
                             overlay.onclick = function(e) {
                                 e.stopPropagation(); 
-                                alert("Questo Asset fa parte dei Piani Premium.\nAttiva il tuo ecosistema per sbloccarlo.");
+                                alert("Questo Asset fa parte dei Piani Premium.\nAccedi a 'Gestione Piano' per sbloccarlo.");
                             };
                         }
                     });
                 }
-                aggiornaLimitiSocial();
-                aggiornaAnteprimaLive();
+                aggiornaLimitiSocial(); aggiornaAnteprimaLive();
             }
         } catch (e) { console.error("Errore caricamento", e); }
     }
 
+    // 4.2 Invia i dati al Server
     async function salvaDati() {
         if(NOME_SISTEMA === "tuonome.it") return; 
-        
+
         const inputField = document.getElementById("field-username_display");
         const displayVal = inputField ? inputField.value.trim() : "";
         const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
@@ -1086,7 +1083,11 @@
         const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
         const sitoVal = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
         const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
-        
+
+        const qaTipo = document.getElementById('field-qa-tipo') ? document.getElementById('field-qa-tipo').value : "";
+        const qaLabel = document.getElementById('field-qa-label') ? document.getElementById('field-qa-label').value.trim() : "";
+        const qaUrl = document.getElementById('field-qa-url') ? document.getElementById('field-qa-url').value.trim() : "";
+
         const vcfObject = {
             telefono1: document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "",
             telefono2: document.getElementById('field-tel2') ? document.getElementById('field-tel2').value.trim() : "",
@@ -1107,6 +1108,7 @@
             username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
             digital_style: styleVal, digital_layout: layoutVal,
             bio: bioVal, sito_web: sitoVal, email: emailVal,
+            quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl,
             modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
         }; 
 
@@ -1119,6 +1121,11 @@
         } catch (error) {}
     }
 
+
+    // ============================================================
+    // CAPITOLO 5: INIZIALIZZAZIONE E CONTROLLI 
+    // ============================================================
+    
     function salvaIdentitaEApriStile() {
         const fieldDisplay = document.getElementById('field-username_display');
         if(!fieldDisplay) return;
@@ -1167,7 +1174,7 @@
     }
 
     function initDragAndDrop() {
-        // Drag&Drop per la plancia principale
+        // Drag&Drop per la plancia principale (Macro-blocchi)
         const trackMain = document.getElementById('blocks-track');
         if(trackMain) {
             new Sortable(trackMain, { 
@@ -1176,22 +1183,20 @@
                 onEnd: function () { salvaDati(); }
             });
         }
-        
-        // Drag&Drop INTERNO al cassetto Social
+
+        // Drag&Drop INTERNO al cassetto Social (Singoli Link)
         const trackSocial = document.getElementById('social-internal-track');
         if(trackSocial) {
             new Sortable(trackSocial, { 
                 handle: '.drag-handle', animation: 250, 
                 easing: "cubic-bezier(1, 0, 0, 1)", ghostClass: 'sortable-ghost', dragClass: 'sortable-drag',
-                onEnd: function () { 
-                    salvaDati(); 
-                    aggiornaAnteprimaLive(); 
-                }
+                onEnd: function () { salvaDati(); aggiornaAnteprimaLive(); }
             });
         }
     }
 
-    function avviaMyQuickTag() {
+    // 5.1 Il comando di accensione generale dell'ecosistema
+    function avviamyquicktag() {
         const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
         if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
 
@@ -1203,6 +1208,7 @@
 
         applicaTemaLive(); accendiIControlli(); inizializzaPagina(); initDragAndDrop();
 
+        // Easter Egg: Triplo click sul badge per resettare l'interfaccia
         let tapCount = 0;
         const badgeDiv = document.querySelector('.username-capsule-wrapper');
         if(badgeDiv) {
@@ -1215,7 +1221,9 @@
         }
     }
 
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviaMyQuickTag); } else { avviaMyQuickTag(); }
+    // 5.2 Boot finale 
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
 </script>
+
 </body>
 </html>
