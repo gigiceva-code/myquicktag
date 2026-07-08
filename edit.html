@@ -1071,7 +1071,7 @@
         } catch (e) { console.error("Errore caricamento", e); }
     }
 
-    // 4.2 Invia i dati al Server
+        // 4.2 Invia i dati al Server
     async function salvaDati() {
         if(NOME_SISTEMA === "tuonome.it") return; 
 
@@ -1116,10 +1116,17 @@
         localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
         localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
 
+        // ==========================================
+        // IL MOTORE VISIVO SI ACCENDE QUI
+        // Aggiorna la plancia nell'esatto momento in cui salvi
+        applicaTemaLive();
+        // ==========================================
+
         try {
             await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username_system: NOME_SISTEMA, draft_json: JSON.stringify(bozza) }) });
         } catch (error) {}
     }
+
 
 
     // ============================================================
