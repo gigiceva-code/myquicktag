@@ -70,13 +70,14 @@
         .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
-            text-transform: uppercase; white-space: normal; word-break: normal; overflow-wrap: break-word;
+            text-transform: uppercase; white-space: normal; 
+            word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;
             padding-inline: 12px;
             transition: font-size 0.3s ease; 
         }
 
         /* =========================================================
-           LAYOUT DIVIDER E PURE (Regole testo unificate)
+           LAYOUT DIVIDER E PURE (Regole testo unificate ed extremely bulletproof)
            ========================================================= */
         #profile-content[data-layout="divider"] .username-display,
         #profile-content[data-layout="pure"] .username-display {
@@ -85,10 +86,10 @@
             display: block !important;
             margin: 0 auto !important;
             white-space: normal !important;
-            word-break: normal !important;
-            overflow-wrap: anywhere !important;
+            word-wrap: break-word !important; /* Salva-vita per vecchi Safari */
+            overflow-wrap: break-word !important;
+            word-break: break-word !important; /* Forza il taglio delle parole giganti */
             hyphens: auto;
-            text-wrap: balance !important;
             line-height: 1.45 !important;
         }
 
@@ -109,14 +110,13 @@
         
         #profile-content[data-layout="divider"] .header-monolith::after {
             content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
-            /* Gradiente tagliato al centro per non incrociare il diamante trasparente */
             background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 35%, transparent 45%, transparent 55%, rgba(255, 255, 255, 0.3) 65%, transparent 100%); 
             z-index: 1;
         }
         #profile-content[data-layout="divider"] .header-monolith::before {
             content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-size: 11px; color: rgba(255, 255, 255, 0.6); 
-            background: transparent; /* Sfondo trasparente come richiesto */
+            background: transparent; 
             padding: 0 10px; z-index: 2;
         }
 
@@ -629,7 +629,10 @@
         function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
-            let testo = testoBruto.trim().toUpperCase();
+            
+            // Pulisce in modo brutale tutti gli spazi non divisibili (tastiere mobile)
+            let testo = testoBruto.replace(/\s+/g, ' ').trim().toUpperCase();
+            
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
@@ -637,9 +640,8 @@
             
             if (testo.includes(' ')) {
                 el.style.whiteSpace = "normal";
-                el.style.wordBreak = "normal";
-                el.style.overflowWrap = "anywhere";
-                el.style.textWrap = "balance";
+                el.style.wordBreak = "break-word";
+                el.style.overflowWrap = "break-word";
                 
                 if (testo.length > 32) {
                     el.style.fontSize = "0.72rem";
@@ -649,8 +651,8 @@
                     el.style.fontSize = "0.95rem";
                 }
             } else {
-                el.style.whiteSpace = "nowrap"; 
-                el.style.wordBreak = "keep-all";
+                el.style.whiteSpace = "normal"; 
+                el.style.wordBreak = "break-all"; /* Anche senza spazi, se sfora taglia */
                 if (testo.length > 24) { el.style.fontSize = "0.55rem"; } 
                 else if (testo.length > 18) { el.style.fontSize = "0.65rem"; } 
                 else { el.style.fontSize = "0.95rem"; }
@@ -686,7 +688,6 @@
             if (isDrawerOpen) { chiudiSenzaSalvare(true); }
         });
 
-            // 1.4 Cambio Tema in tempo reale
     function applicaTemaLive() {
         const temaInput = document.querySelector('input[name="digital_style"]:checked');
         const layoutInput = document.querySelector('input[name="digital_layout"]:checked');
@@ -701,13 +702,10 @@
             profileContent.setAttribute('data-layout', layoutInput.value); 
         }
 
-        // Accende le scritte Macro-Blocchi sulla plancia col nuovo colore
         if (typeof aggiornaAnteprimaLive === 'function') {
             aggiornaAnteprimaLive();
         }
     }
-
-        
 
         function apriModalQR() {
             const m = document.getElementById('modal-qr');
