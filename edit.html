@@ -739,7 +739,6 @@
     window.addEventListener('popstate', function(e) {
         if (isDrawerOpen) { chiudiSenzaSalvare(true); }
     });
-
     // 1.4 Cambio Tema in tempo reale
     function applicaTemaLive() {
         const temaInput = document.querySelector('input[name="digital_style"]:checked');
@@ -755,11 +754,24 @@
             profileContent.setAttribute('data-layout', layoutInput.value); 
         }
 
+        // FORZATURA ANTI-GLITCH: Ricalcola a capo del testo ogni volta che cambi forma!
+        const inputField = document.getElementById('field-username_display');
+        let nomeAttuale = NOME_SISTEMA;
+        if (inputField && inputField.value.trim() !== '') {
+            nomeAttuale = inputField.value;
+        } else {
+            const cache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
+            if (cache) nomeAttuale = cache;
+        }
+        formattaBadge(nomeAttuale);
+
         // Accende le scritte sulla plancia col nuovo colore
         if (typeof aggiornaAnteprimaLive === 'function') {
             aggiornaAnteprimaLive();
         }
     }
+
+    
 
     // 1.5 Gestione QR Code (Modal e Disegno Dettagliato)
     function apriModalQR() {
