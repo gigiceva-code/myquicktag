@@ -401,7 +401,11 @@
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-globe" style="color: rgba(255,255,255,0.5);"></i><span>Sito Web Ufficiale</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
- 
+             <div class="style-bar" onclick="apriDrawer('drawer-quick')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-bolt" style="color: rgba(255,255,255,0.5);"></i><span>Azione Rapida (CTA)</span></div>
+                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
+            </div>
+
         </div>
     </div>
     <!-- /FINE MENU ASSET -->
@@ -565,7 +569,54 @@
         
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA SITO</button>
     </div>
+    
     <!-- /FINE ASSET SITO WEB -->
+      <div class="drawer-glass" id="drawer-quick">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-left drawer-back" onclick="apriDrawer('drawer-asset')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">AZIONE RAPIDA</div>
+            <div class="drawer-subtitle">Il bottone ad alta conversione</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
+                Crea un bottone in evidenza sulla tua tag per spingere i clienti all'azione.
+            </div>
+
+            <div style="position: relative;" class="premium-field-container">
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TIPO DI AZIONE</label>
+                    <select id="field-qa-tipo" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; appearance: none;">
+                        <option value="whatsapp" style="color: #000;">WhatsApp (Chat)</option>
+                        <option value="calling" style="color: #000;">Chiamata Diretta</option>
+                        <option value="maps" style="color: #000;">Navigazione Mappe</option>
+                        <option value="appointment" style="color: #000;">Prenota Appuntamento</option>
+                        <option value="quote" style="color: #000;">Richiedi Preventivo</option>
+                        <option value="demo" style="color: #000;">Richiedi Demo</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO DEL BOTTONE</label>
+                    <input type="text" id="field-qa-label" placeholder="Es. Prenota una consulenza" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+
+                <div>
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">URL O NUMERO</label>
+                    <input type="text" id="field-qa-url" placeholder="Es. https://calendly.com/... o +39333..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE PREMIUM</span>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA AZIONE</button>
+      </div>
 
 
 
