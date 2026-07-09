@@ -67,19 +67,20 @@
             background: #0d0d0f; padding: 24px 35px;
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
-                    .username-display {
+                    
+        .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
             text-transform: uppercase; 
-            white-space: pre-wrap !important; /* Il vero segreto per forzare l'a capo su iOS */
-            word-wrap: break-word !important; 
-            overflow-wrap: break-word !important; 
-            word-break: break-word !important;
-            padding-inline: 12px; transition: font-size 0.3s ease; 
+            white-space: normal !important; /* Fondamentale: permette l'a capo naturale */
+            word-break: normal !important; /* Non spezza MAI le parole a metà a caso */
+            overflow-wrap: break-word !important; /* Spezza solo una parola colossale che sfora lo schermo */
+            padding: 0 12px !important; box-sizing: border-box !important;
+            transition: font-size 0.3s ease; 
         }
 
         /* =========================================================
-           LAYOUT DIVIDER E PURE (Distruzione totale del Flexbox per far andare a capo)
+           RESET FLEXBOX PER DIVIDER E PURE
            ========================================================= */
         #profile-content[data-layout="divider"] .username-capsule-wrapper,
         #profile-content[data-layout="divider"] .username-capsule,
@@ -87,27 +88,31 @@
         #profile-content[data-layout="pure"] .username-capsule-wrapper,
         #profile-content[data-layout="pure"] .username-capsule,
         #profile-content[data-layout="pure"] .username-capsule-inner { 
-            display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; 
+            display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; min-width: 0 !important;
         }
 
+        /* Testo ristretto per forzarlo ad andare su più righe */
         #profile-content[data-layout="divider"] .username-display,
         #profile-content[data-layout="pure"] .username-display {
             width: 100% !important;
-            max-width: 260px !important; /* Più stretto per costringerlo su due o più righe */
+            max-width: 280px !important; 
             margin: 0 auto !important;
-            line-height: 1.8 !important; /* Distanzia le righe per far passare la linea in mezzo! */
-            padding: 15px 0 !important;
+            line-height: 1.8 !important; /* Crea il corridoio vuoto tra le due righe! */
         }
 
         /* =========================================================
-           LAYOUT 2: DIVIDER (La linea taglia perfettamente in mezzo)
+           LAYOUT 2: DIVIDER (La linea taglia in mezzo al corridoio)
            ========================================================= */
-        #profile-content[data-layout="divider"] .header-monolith { display: block !important; width: 100% !important; padding: 20px 0 !important; position: relative; }
-        #profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; }
+        #profile-content[data-layout="divider"] .header-monolith { 
+            display: block !important; width: 100% !important; padding: 20px 0 !important; position: relative; 
+        }
+        #profile-content[data-layout="divider"] .username-display { 
+            position: relative; z-index: 3; 
+        }
         
         #profile-content[data-layout="divider"] .header-monolith::after {
             content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
-            /* Sfuma a zero al centro esatto per lasciare leggere le lettere, se mai si accavallassero */
+            /* Linea invisibile al centro per salvaguardare le lettere, visibile ai lati */
             background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
             z-index: 1; pointer-events: none;
         }
@@ -126,11 +131,10 @@
         /* =========================================================
            LAYOUT 3: PURE
            ========================================================= */
-        #profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; }
-        
+        #profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
+  
         .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
         .brand-text { font-weight: inherit; }
-    
 
         /* =========================================================
            PUNTO LUCE E ACCENTI
@@ -620,23 +624,23 @@
             return "tuonome.it";
         }
 
-                        function formattaBadge(testoBruto) {
+                                function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
             
-            // Pulisce tutti gli spazi anomali invisibili inseriti dalle tastiere mobile
-            let testo = testoBruto.replace(/\s+/g, ' ').trim().toUpperCase();
+            // Pulisce in modo radicale gli spazi invisibili generati dalle tastiere dei telefoni
+            let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
             
-            // ELIMINIAMO TUTTI GLI STILI INLINE che bloccavano l'a capo su Safari. Ora comanda solo il CSS!
+            // AZZERIAMO GLI STILI INLINE: lascia fare tutto al CSS!
             el.style.whiteSpace = "";
             el.style.wordBreak = "";
             el.style.overflowWrap = "";
             el.style.textWrap = "";
             
-            // Gestiamo solo il font-size dinamico in base alla lunghezza per incastrarlo a perfezione
+            // Gestiamo solamente la scalatura del font per mantenere l'estetica
             if (testo.length > 32) {
                 el.style.fontSize = "0.72rem";
             } else if (testo.length > 24) {
@@ -645,6 +649,7 @@
                 el.style.fontSize = "0.95rem";
             }
         }
+
 
 
 
