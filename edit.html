@@ -67,81 +67,70 @@
             background: #0d0d0f; padding: 24px 35px;
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
-                .username-display {
+                    .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
-            text-transform: uppercase; white-space: normal; 
-            word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;
-            padding-inline: 12px;
-            transition: font-size 0.3s ease; 
+            text-transform: uppercase; 
+            white-space: pre-wrap !important; /* Il vero segreto per forzare l'a capo su iOS */
+            word-wrap: break-word !important; 
+            overflow-wrap: break-word !important; 
+            word-break: break-word !important;
+            padding-inline: 12px; transition: font-size 0.3s ease; 
         }
 
         /* =========================================================
-           LAYOUT DIVIDER E PURE (Regole testo unificate ed extremely bulletproof)
+           LAYOUT DIVIDER E PURE (Distruzione totale del Flexbox per far andare a capo)
            ========================================================= */
+        #profile-content[data-layout="divider"] .username-capsule-wrapper,
+        #profile-content[data-layout="divider"] .username-capsule,
+        #profile-content[data-layout="divider"] .username-capsule-inner,
+        #profile-content[data-layout="pure"] .username-capsule-wrapper,
+        #profile-content[data-layout="pure"] .username-capsule,
+        #profile-content[data-layout="pure"] .username-capsule-inner { 
+            display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; 
+        }
+
         #profile-content[data-layout="divider"] .username-display,
         #profile-content[data-layout="pure"] .username-display {
             width: 100% !important;
-            max-width: 320px !important;
-            display: block !important;
+            max-width: 260px !important; /* Più stretto per costringerlo su due o più righe */
             margin: 0 auto !important;
-            white-space: normal !important;
-            word-wrap: break-word !important; /* Salva-vita per vecchi Safari */
-            overflow-wrap: break-word !important;
-            word-break: normal !important; /* Non taglia a caso le parole se c'è spazio */
-            hyphens: auto;
-            line-height: 1.45 !important;
-        }
-
-        /* Hack vitale per Safari: impedisce al flexbox di allargarsi all'infinito */
-        #profile-content[data-layout="divider"] .username-capsule-wrapper,
-        #profile-content[data-layout="pure"] .username-capsule-wrapper {
-            min-width: 0 !important; 
-            width: 100% !important;
+            line-height: 1.8 !important; /* Distanzia le righe per far passare la linea in mezzo! */
+            padding: 15px 0 !important;
         }
 
         /* =========================================================
-           LAYOUT 2: DIVIDER (Svincolato, taglia lo schermo)
+           LAYOUT 2: DIVIDER (La linea taglia perfettamente in mezzo)
            ========================================================= */
-        #profile-content[data-layout="divider"] .header-monolith { display: block !important; width: 100% !important; padding: 20px 0 !important; }
-        
-        #profile-content[data-layout="divider"] .username-capsule,
-        #profile-content[data-layout="divider"] .username-capsule-inner { 
-            display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; 
-        }
-        
-        #profile-content[data-layout="divider"] .username-display { 
-            position: relative; z-index: 3; padding: 15px 0 !important;
-        }
+        #profile-content[data-layout="divider"] .header-monolith { display: block !important; width: 100% !important; padding: 20px 0 !important; position: relative; }
+        #profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; }
         
         #profile-content[data-layout="divider"] .header-monolith::after {
             content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
-            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 35%, transparent 45%, transparent 55%, rgba(255, 255, 255, 0.3) 65%, transparent 100%); 
-            z-index: 1;
+            /* Sfuma a zero al centro esatto per lasciare leggere le lettere, se mai si accavallassero */
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
+            z-index: 1; pointer-events: none;
         }
         #profile-content[data-layout="divider"] .header-monolith::before {
             content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 11px; color: rgba(255, 255, 255, 0.6); 
-            background: transparent; 
-            padding: 0 10px; z-index: 2;
+            font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2;
         }
 
-        #profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 35%, transparent 45%, transparent 55%, rgba(0, 230, 128, 0.6) 65%, transparent 100%); }
+        #profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
         #profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::before { color: #00E680; }
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 35%, transparent 45%, transparent 55%, rgba(229, 193, 88, 0.6) 65%, transparent 100%); }
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
         #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::before { color: #e5c158; }
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 35%, transparent 45%, transparent 55%, rgba(200, 150, 142, 0.6) 65%, transparent 100%); }
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
         #profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::before { color: #c8968e; }
         
         /* =========================================================
-           LAYOUT 3: PURE (Nudo, Solo Tipografia)
+           LAYOUT 3: PURE
            ========================================================= */
-        #profile-content[data-layout="pure"] .header-monolith { display: flex !important; justify-content: center !important; }
-        #profile-content[data-layout="pure"] .username-capsule { display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; }
-        #profile-content[data-layout="pure"] .username-capsule-inner { display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 10px 0 !important; position: relative !important; }
-  
+        #profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; }
+        
         .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
         .brand-text { font-weight: inherit; }
+    
 
         /* =========================================================
            PUNTO LUCE E ACCENTI
@@ -631,39 +620,32 @@
             return "tuonome.it";
         }
 
-                function formattaBadge(testoBruto) {
+                        function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
             
-            // Pulisce tutti gli spazi anomali (invisibili) inseriti dalle tastiere mobile
+            // Pulisce tutti gli spazi anomali invisibili inseriti dalle tastiere mobile
             let testo = testoBruto.replace(/\s+/g, ' ').trim().toUpperCase();
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
-            el.style.textAlign = "center";
             
-            if (testo.includes(' ')) {
-                el.style.whiteSpace = "normal";
-                el.style.wordBreak = "normal";
-                el.style.overflowWrap = "break-word";
-                el.style.textWrap = "wrap"; // Forza il text-wrap standard, uccidendo il balance
-                
-                if (testo.length > 32) {
-                    el.style.fontSize = "0.72rem";
-                } else if (testo.length > 24) {
-                    el.style.fontSize = "0.82rem";
-                } else {
-                    el.style.fontSize = "0.95rem";
-                }
+            // ELIMINIAMO TUTTI GLI STILI INLINE che bloccavano l'a capo su Safari. Ora comanda solo il CSS!
+            el.style.whiteSpace = "";
+            el.style.wordBreak = "";
+            el.style.overflowWrap = "";
+            el.style.textWrap = "";
+            
+            // Gestiamo solo il font-size dinamico in base alla lunghezza per incastrarlo a perfezione
+            if (testo.length > 32) {
+                el.style.fontSize = "0.72rem";
+            } else if (testo.length > 24) {
+                el.style.fontSize = "0.82rem";
             } else {
-                // Se è una parola unica enorme, la spezza
-                el.style.whiteSpace = "normal"; 
-                el.style.wordBreak = "break-all"; 
-                if (testo.length > 24) { el.style.fontSize = "0.55rem"; } 
-                else if (testo.length > 18) { el.style.fontSize = "0.65rem"; } 
-                else { el.style.fontSize = "0.95rem"; }
+                el.style.fontSize = "0.95rem";
             }
         }
+
 
 
         function apriDrawer(idDrawer) {
