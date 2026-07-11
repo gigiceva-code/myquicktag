@@ -67,16 +67,18 @@
             background: #0d0d0f; padding: 24px 35px;
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
+                  
                   .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
             text-transform: uppercase; 
             white-space: normal !important; 
-            word-break: keep-all !important; /* Vieta di spezzare le parole a metà */
+            word-break: keep-all !important; 
             overflow-wrap: break-word !important; 
-            text-wrap: balance !important; /* IL SEGRETO PER L'A CAPO PERFETTO E SIMMETRICO */
-            width: 100% !important; max-width: 100% !important; /* La gabbia che salva Safari */
+            text-wrap: balance !important; 
+            width: 100% !important; max-width: 100% !important; 
             padding: 0 12px !important; box-sizing: border-box !important;
+            line-height: 1.5 !important; /* Dà respiro al layout Badge */
             transition: font-size 0.3s ease; 
         }
 
@@ -98,9 +100,9 @@
             width: 100% !important;
             max-width: 280px !important; 
             margin: 0 auto !important;
-            line-height: 1.8 !important; /* Mantiene il corridoio per la linea del divider */
+            line-height: 2.2 !important; /* Spalanca lo spazio centrale per la riga e il diamante */
         }
-          
+
        
 
         /* =========================================================
