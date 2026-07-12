@@ -610,8 +610,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-
-    <script>
+<script>
         // ============================================================
         // CAPITOLO 1: SETUP E FUNZIONI DI BASE (UI, Cassetti, QR)
         // ============================================================
@@ -630,23 +629,20 @@
             return "tuonome.it";
         }
 
-                            function formattaBadge(testoBruto) {
+        function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
             
-            // Pulisce tutti gli spazi anomali (invisibili) inseriti dalle tastiere mobile
             let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
             
-            // AZZERIAMO GLI STILI INLINE: lascia fare tutto al CSS!
             el.style.whiteSpace = "";
             el.style.wordBreak = "";
             el.style.overflowWrap = "";
             el.style.textWrap = "";
             
-            // Gestiamo solamente la scalatura del font per mantenere l'estetica
             if (testo.length > 32) {
                 el.style.fontSize = "0.72rem";
             } else if (testo.length > 24) {
@@ -655,11 +651,8 @@
                 el.style.fontSize = "0.95rem";
             }
 
-            // Hack letale per Safari: lo obbliga a ricalcolare graficamente l'a capo all'istante
             void el.offsetHeight; 
         }
-
-                    
 
         function apriDrawer(idDrawer) {
             const currentlyOpen = document.querySelector('.drawer-glass.open');
@@ -689,79 +682,6 @@
         window.addEventListener('popstate', function(e) {
             if (isDrawerOpen) { chiudiSenzaSalvare(true); }
         });
-
-            function aggiornaAnteprimaLive() {
-            const track = document.getElementById('blocks-track');
-            if(!track) return;
-
-            const temaVal = document.querySelector('input[name="digital_style"]:checked')?.value || 'black_dna';
-            const coloriTema = {
-                'emerald': '#00E680', 'obsidian_gold': '#d4af37', 'satin_rose': '#c8968e',
-                'titanium': '#b0b0b5', 'black_dna': '#ffffff' 
-            };
-            const coloreTesto = coloriTema[temaVal] || '#ffffff';
-
-            const blockStyle = "position: relative; display: flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 12px 0; margin-bottom: 0; cursor: pointer;";
-            const textStyle = `font-size: 0.75rem; letter-spacing: 3px; font-weight: 400; color: ${coloreTesto}; text-transform: uppercase; transition: color 0.3s ease; text-align: center; width: 100%;`;
-            const handleHTML = `<div class="drag-handle" style="position: absolute; left: 10px; color: rgba(255,255,255,0.15); font-size: 1.2rem; cursor: grab;">⋮⋮</div>`;
-
-            // BIO
-            const bioInput = document.getElementById('field-bio');
-            if (bioInput && bioInput.value.trim() !== "") {
-                let bioBlock = document.getElementById('blocco-bio-live');
-                if (!bioBlock) {
-                    bioBlock = document.createElement('div'); bioBlock.className = 'tag-block'; bioBlock.id = 'blocco-bio-live'; bioBlock.style.cssText = blockStyle;
-                    bioBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-bio')"><span class="dynamic-theme-text" style="${textStyle}">BIO</span></div>`;
-                    track.appendChild(bioBlock); 
-                } else { const spanText = bioBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const b = document.getElementById('blocco-bio-live'); if(b) b.remove(); }
-
-            // CONTATTI E RUBRICA (Il pezzo che mancava)
-            const telInput = document.getElementById('field-tel1');
-            const emailInput = document.getElementById('field-email');
-            if ((telInput && telInput.value.trim() !== "") || (emailInput && emailInput.value.trim() !== "")) {
-                let contattiBlock = document.getElementById('blocco-contatti-live');
-                if (!contattiBlock) {
-                    contattiBlock = document.createElement('div'); contattiBlock.className = 'tag-block'; contattiBlock.id = 'blocco-contatti-live'; contattiBlock.style.cssText = blockStyle;
-                    contattiBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-contatti')"><span class="dynamic-theme-text" style="${textStyle}">CONTATTI</span></div>`;
-                    track.appendChild(contattiBlock);
-                } else { const spanText = contattiBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const c = document.getElementById('blocco-contatti-live'); if(c) c.remove(); }
-
-            // AZIONE RAPIDA
-            const qaInput = document.getElementById('field-qa-label');
-            if (qaInput && qaInput.value.trim() !== "") {
-                let qaBlock = document.getElementById('blocco-qa-live');
-                if (!qaBlock) {
-                    qaBlock = document.createElement('div'); qaBlock.className = 'tag-block'; qaBlock.id = 'blocco-qa-live'; qaBlock.style.cssText = blockStyle;
-                    qaBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-quick')"><span class="dynamic-theme-text" style="${textStyle}">⚡ AZIONE RAPIDA</span></div>`;
-                    track.appendChild(qaBlock);
-                } else { const spanText = qaBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const q = document.getElementById('blocco-qa-live'); if(q) q.remove(); }
-
-            // SITO WEB
-            const sitoInput = document.getElementById('field-sito');
-            if (sitoInput && sitoInput.value.trim() !== "") {
-                let sitoBlock = document.getElementById('blocco-sito-live');
-                if (!sitoBlock) {
-                    sitoBlock = document.createElement('div'); sitoBlock.className = 'tag-block'; sitoBlock.id = 'blocco-sito-live'; sitoBlock.style.cssText = blockStyle;
-                    sitoBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-sito')"><span class="dynamic-theme-text" style="${textStyle}">SITO WEB</span></div>`;
-                    track.appendChild(sitoBlock);
-                } else { const spanText = sitoBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const s = document.getElementById('blocco-sito-live'); if(s) s.remove(); }
-
-            // SOCIAL
-            const internalTrack = document.getElementById('social-internal-track');
-            if (internalTrack && internalTrack.children.length > 0) {
-                let macroSocial = document.getElementById('blocco-social-macro');
-                if (!macroSocial) {
-                    macroSocial = document.createElement('div'); macroSocial.className = 'tag-block'; macroSocial.id = 'blocco-social-macro'; macroSocial.style.cssText = blockStyle;
-                    macroSocial.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-social')"><span class="dynamic-theme-text" style="${textStyle}">SOCIAL</span></div>`;
-                    track.appendChild(macroSocial);
-                } else { const spanText = macroSocial.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const m = document.getElementById('blocco-social-macro'); if(m) m.remove(); }
-        }
-
 
         function apriModalQR() {
             const m = document.getElementById('modal-qr');
@@ -803,8 +723,25 @@
         // ============================================================
         // CAPITOLO 2: MOTORE VISIVO
         // ============================================================
+
+        function applicaTemaLive() {
+            const temaInput = document.querySelector('input[name="digital_style"]:checked');
+            const layoutInput = document.querySelector('input[name="digital_layout"]:checked');
+            const profileContent = document.getElementById('profile-content');
+
+            if(temaInput && profileContent) {
+                profileContent.setAttribute('data-theme', temaInput.value);
+                document.body.setAttribute('data-qr-theme', temaInput.value);
+                disegnaQRDinamico(temaInput.value); 
+            }
+            if(layoutInput && profileContent) { 
+                profileContent.setAttribute('data-layout', layoutInput.value); 
+            }
+
+            aggiornaAnteprimaLive();
+        }
         
-                        function aggiornaAnteprimaLive() {
+        function aggiornaAnteprimaLive() {
             const track = document.getElementById('blocks-track');
             if(!track) return;
 
@@ -830,7 +767,7 @@
                 } else { const spanText = bioBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
             } else { const b = document.getElementById('blocco-bio-live'); if(b) b.remove(); }
 
-            // CONTATTI E RUBRICA (Il motore che era stato sovrascritto)
+            // CONTATTI
             const telInput = document.getElementById('field-tel1');
             const emailInput = document.getElementById('field-email');
             if ((telInput && telInput.value.trim() !== "") || (emailInput && emailInput.value.trim() !== "")) {
@@ -986,6 +923,7 @@
         // ============================================================
         
         function confermaEChiudiCassetto() { salvaDati(); chiudiSenzaSalvare(); }
+        
         async function inizializzaPagina() { 
             if(NOME_SISTEMA === "tuonome.it") return; 
             try {
@@ -996,12 +934,9 @@
                 if (f) {
                     userPlan = (f.plan || 'BASE').toUpperCase();
 
-                    // --- INVERSIONE CRITICA: PRIMA STILE E LAYOUT ---
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                     if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
-                    applicaTemaLive();
-
-                    // --- POI INSERISCE IL NOME NELLA GABBIA GIA' PRONTA ---
+                    
                     if (f.username_display) {
                         const inputField = document.getElementById('field-username_display');
                         if (inputField) inputField.value = f.username_display.replace('@', '');
@@ -1063,12 +998,13 @@
                             }
                         });
                     }
-                    aggiornaLimitiSocial(); aggiornaAnteprimaLive();
+                    
+                    // SOLO ORA CHE I CAMPI SONO PIENI, DISEGNAMO L'ANTEPRIMA:
+                    applicaTemaLive(); 
+                    aggiornaLimitiSocial(); 
                 }
             } catch (e) { console.error("Errore caricamento", e); }
         }
-
-
 
         async function salvaDati() {
             if(NOME_SISTEMA === "tuonome.it") return; 
@@ -1193,17 +1129,13 @@
             }
         }
 
-                function avviamyquicktag() {
-            // 1. PRIMA COSTRUISCE LA GABBIA LEGGENDO LA CACHE DEI LAYOUT
+        function avviamyquicktag() {
             const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
             if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
 
             const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
             if (layoutInCache) { const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`); if(radioLayout) radioLayout.checked = true; }
 
-            applicaTemaLive();
-
-            // 2. POI INIETTA IL TESTO (Ora Safari non può più sbagliare)
             const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
             if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
 
@@ -1224,5 +1156,6 @@
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
     </script>
 
+    
 </body>
 </html>
