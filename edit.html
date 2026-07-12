@@ -68,12 +68,12 @@
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
             
-                  .username-display {
+                 .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
             text-transform: uppercase; 
             white-space: normal !important; 
-            word-break: normal !important; /* Molto più sicuro su Safari rispetto a keep-all */
+            word-break: normal !important; /* Riportato a normal per sicurezza assoluta */
             overflow-wrap: break-word !important; 
             text-wrap: balance !important; 
             width: 100% !important; max-width: 100% !important; 
@@ -81,6 +81,7 @@
             line-height: 1.5 !important; 
             transition: font-size 0.3s ease; 
         }
+         
         
 
         /* =========================================================
@@ -1134,13 +1135,18 @@
             }
         }
 
-        function avviamyquicktag() {
+                function avviamyquicktag() {
+            // 1. Legge la cache locale e setta i bottoni
             const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
             if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
 
             const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
             if (layoutInCache) { const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`); if(radioLayout) radioLayout.checked = true; }
 
+            // 2. APPLICA IL LAYOUT ISTANTANEAMENTE (Il pezzo mancante che causava l'esplosione visiva)
+            applicaTemaLive();
+
+            // 3. Inietta il testo nella "gabbia" già pronta
             const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
             if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
 
@@ -1157,6 +1163,7 @@
                 });
             }
         }
+
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
     </script>
