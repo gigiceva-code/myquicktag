@@ -67,20 +67,21 @@
             background: #0d0d0f; padding: 24px 35px;
             clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
         }
-                  
+            
                   .username-display {
             font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
             margin: 0 auto; text-align: center !important; display: block !important; 
             text-transform: uppercase; 
             white-space: normal !important; 
-            word-break: keep-all !important; 
+            word-break: normal !important; /* Molto più sicuro su Safari rispetto a keep-all */
             overflow-wrap: break-word !important; 
             text-wrap: balance !important; 
             width: 100% !important; max-width: 100% !important; 
             padding: 0 12px !important; box-sizing: border-box !important;
-            line-height: 1.5 !important; /* Dà respiro al layout Badge */
+            line-height: 1.5 !important; 
             transition: font-size 0.3s ease; 
         }
+        
 
         /* =========================================================
            RESET FLEXBOX PER DIVIDER E PURE
@@ -629,23 +630,23 @@
             return "tuonome.it";
         }
 
-                    function formattaBadge(testoBruto) {
+                            function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
             
-            // Pulisce in modo radicale gli spazi invisibili generati dalle tastiere dei telefoni
+            // Pulisce tutti gli spazi anomali (invisibili) inseriti dalle tastiere mobile
             let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
             
-            // AZZERIAMO GLI STILI INLINE: facciamo comandare solo il CSS!
+            // AZZERIAMO GLI STILI INLINE: lascia fare tutto al CSS!
             el.style.whiteSpace = "";
             el.style.wordBreak = "";
             el.style.overflowWrap = "";
             el.style.textWrap = "";
             
-            // Gestiamo solamente la scalatura del font
+            // Gestiamo solamente la scalatura del font per mantenere l'estetica
             if (testo.length > 32) {
                 el.style.fontSize = "0.72rem";
             } else if (testo.length > 24) {
@@ -653,7 +654,11 @@
             } else {
                 el.style.fontSize = "0.95rem";
             }
+
+            // Hack letale per Safari: lo obbliga a ricalcolare graficamente l'a capo all'istante
+            void el.offsetHeight; 
         }
+
                     
 
         function apriDrawer(idDrawer) {
@@ -914,7 +919,6 @@
         // ============================================================
         
         function confermaEChiudiCassetto() { salvaDati(); chiudiSenzaSalvare(); }
-
         async function inizializzaPagina() { 
             if(NOME_SISTEMA === "tuonome.it") return; 
             try {
@@ -925,14 +929,18 @@
                 if (f) {
                     userPlan = (f.plan || 'BASE').toUpperCase();
 
-                    if (f.username_display) {
-                        const inputField = document.getElementById('field-username_display');
-                        if (inputField) inputField.value = f.username_display.replace('@', '');
-                        localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display); formattaBadge(f.username_display);
-                    }
+                    // --- INVERSIONE CRITICA: PRIMA STILE E LAYOUT ---
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                     if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
                     applicaTemaLive();
+
+                    // --- POI INSERISCE IL NOME NELLA GABBIA GIA' PRONTA ---
+                    if (f.username_display) {
+                        const inputField = document.getElementById('field-username_display');
+                        if (inputField) inputField.value = f.username_display.replace('@', '');
+                        localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display); 
+                        formattaBadge(f.username_display);
+                    }
 
                     if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
                     if (f.sito_web && document.getElementById('field-sito')) document.getElementById('field-sito').value = f.sito_web;
@@ -992,6 +1000,8 @@
                 }
             } catch (e) { console.error("Errore caricamento", e); }
         }
+
+
 
         async function salvaDati() {
             if(NOME_SISTEMA === "tuonome.it") return; 
@@ -1116,17 +1126,21 @@
             }
         }
 
-        function avviamyquicktag() {
-            const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
-            if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
-
+                function avviamyquicktag() {
+            // 1. PRIMA COSTRUISCE LA GABBIA LEGGENDO LA CACHE DEI LAYOUT
             const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
             if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
 
             const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
             if (layoutInCache) { const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`); if(radioLayout) radioLayout.checked = true; }
 
-            applicaTemaLive(); accendiIControlli(); inizializzaPagina(); initDragAndDrop();
+            applicaTemaLive();
+
+            // 2. POI INIETTA IL TESTO (Ora Safari non può più sbagliare)
+            const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
+            if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
+
+            accendiIControlli(); inizializzaPagina(); initDragAndDrop();
 
             let tapCount = 0;
             const badgeDiv = document.querySelector('.username-capsule-wrapper');
