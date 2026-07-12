@@ -628,31 +628,36 @@
             } catch(e) {}
             return "tuonome.it";
         }
-
         function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
             
+            // Pulisce tutti gli spazi anomali
             let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
             
+            // AZZERIAMO GLI STILI INLINE
             el.style.whiteSpace = "";
             el.style.wordBreak = "";
             el.style.overflowWrap = "";
             el.style.textWrap = "";
             
-            if (testo.length > 32) {
-                el.style.fontSize = "0.72rem";
-            } else if (testo.length > 24) {
-                el.style.fontSize = "0.82rem";
-            } else {
+            // NUOVA SCALATURA FONT: molto meno aggressiva perché ora l'a capo gestisce lo spazio
+            if (testo.length > 35) {
+                el.style.fontSize = "0.85rem";
+            } else if (testo.length > 22) {
                 el.style.fontSize = "0.95rem";
+            } else {
+                el.style.fontSize = "1.05rem"; // Stessa grandezza originale del CSS
             }
 
+            // Hack per il ricalcolo istantaneo del motore grafico
             void el.offsetHeight; 
         }
+
+        
 
         function apriDrawer(idDrawer) {
             const currentlyOpen = document.querySelector('.drawer-glass.open');
