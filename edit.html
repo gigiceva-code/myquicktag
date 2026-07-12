@@ -690,24 +690,78 @@
             if (isDrawerOpen) { chiudiSenzaSalvare(true); }
         });
 
-    function applicaTemaLive() {
-        const temaInput = document.querySelector('input[name="digital_style"]:checked');
-        const layoutInput = document.querySelector('input[name="digital_layout"]:checked');
-        const profileContent = document.getElementById('profile-content');
+            function aggiornaAnteprimaLive() {
+            const track = document.getElementById('blocks-track');
+            if(!track) return;
 
-        if(temaInput && profileContent) {
-            profileContent.setAttribute('data-theme', temaInput.value);
-            document.body.setAttribute('data-qr-theme', temaInput.value);
-            disegnaQRDinamico(temaInput.value); 
-        }
-        if(layoutInput && profileContent) { 
-            profileContent.setAttribute('data-layout', layoutInput.value); 
+            const temaVal = document.querySelector('input[name="digital_style"]:checked')?.value || 'black_dna';
+            const coloriTema = {
+                'emerald': '#00E680', 'obsidian_gold': '#d4af37', 'satin_rose': '#c8968e',
+                'titanium': '#b0b0b5', 'black_dna': '#ffffff' 
+            };
+            const coloreTesto = coloriTema[temaVal] || '#ffffff';
+
+            const blockStyle = "position: relative; display: flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 12px 0; margin-bottom: 0; cursor: pointer;";
+            const textStyle = `font-size: 0.75rem; letter-spacing: 3px; font-weight: 400; color: ${coloreTesto}; text-transform: uppercase; transition: color 0.3s ease; text-align: center; width: 100%;`;
+            const handleHTML = `<div class="drag-handle" style="position: absolute; left: 10px; color: rgba(255,255,255,0.15); font-size: 1.2rem; cursor: grab;">⋮⋮</div>`;
+
+            // BIO
+            const bioInput = document.getElementById('field-bio');
+            if (bioInput && bioInput.value.trim() !== "") {
+                let bioBlock = document.getElementById('blocco-bio-live');
+                if (!bioBlock) {
+                    bioBlock = document.createElement('div'); bioBlock.className = 'tag-block'; bioBlock.id = 'blocco-bio-live'; bioBlock.style.cssText = blockStyle;
+                    bioBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-bio')"><span class="dynamic-theme-text" style="${textStyle}">BIO</span></div>`;
+                    track.appendChild(bioBlock); 
+                } else { const spanText = bioBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+            } else { const b = document.getElementById('blocco-bio-live'); if(b) b.remove(); }
+
+            // CONTATTI E RUBRICA (Il pezzo che mancava)
+            const telInput = document.getElementById('field-tel1');
+            const emailInput = document.getElementById('field-email');
+            if ((telInput && telInput.value.trim() !== "") || (emailInput && emailInput.value.trim() !== "")) {
+                let contattiBlock = document.getElementById('blocco-contatti-live');
+                if (!contattiBlock) {
+                    contattiBlock = document.createElement('div'); contattiBlock.className = 'tag-block'; contattiBlock.id = 'blocco-contatti-live'; contattiBlock.style.cssText = blockStyle;
+                    contattiBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-contatti')"><span class="dynamic-theme-text" style="${textStyle}">CONTATTI</span></div>`;
+                    track.appendChild(contattiBlock);
+                } else { const spanText = contattiBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+            } else { const c = document.getElementById('blocco-contatti-live'); if(c) c.remove(); }
+
+            // AZIONE RAPIDA
+            const qaInput = document.getElementById('field-qa-label');
+            if (qaInput && qaInput.value.trim() !== "") {
+                let qaBlock = document.getElementById('blocco-qa-live');
+                if (!qaBlock) {
+                    qaBlock = document.createElement('div'); qaBlock.className = 'tag-block'; qaBlock.id = 'blocco-qa-live'; qaBlock.style.cssText = blockStyle;
+                    qaBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-quick')"><span class="dynamic-theme-text" style="${textStyle}">⚡ AZIONE RAPIDA</span></div>`;
+                    track.appendChild(qaBlock);
+                } else { const spanText = qaBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+            } else { const q = document.getElementById('blocco-qa-live'); if(q) q.remove(); }
+
+            // SITO WEB
+            const sitoInput = document.getElementById('field-sito');
+            if (sitoInput && sitoInput.value.trim() !== "") {
+                let sitoBlock = document.getElementById('blocco-sito-live');
+                if (!sitoBlock) {
+                    sitoBlock = document.createElement('div'); sitoBlock.className = 'tag-block'; sitoBlock.id = 'blocco-sito-live'; sitoBlock.style.cssText = blockStyle;
+                    sitoBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-sito')"><span class="dynamic-theme-text" style="${textStyle}">SITO WEB</span></div>`;
+                    track.appendChild(sitoBlock);
+                } else { const spanText = sitoBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+            } else { const s = document.getElementById('blocco-sito-live'); if(s) s.remove(); }
+
+            // SOCIAL
+            const internalTrack = document.getElementById('social-internal-track');
+            if (internalTrack && internalTrack.children.length > 0) {
+                let macroSocial = document.getElementById('blocco-social-macro');
+                if (!macroSocial) {
+                    macroSocial = document.createElement('div'); macroSocial.className = 'tag-block'; macroSocial.id = 'blocco-social-macro'; macroSocial.style.cssText = blockStyle;
+                    macroSocial.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-social')"><span class="dynamic-theme-text" style="${textStyle}">SOCIAL</span></div>`;
+                    track.appendChild(macroSocial);
+                } else { const spanText = macroSocial.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+            } else { const m = document.getElementById('blocco-social-macro'); if(m) m.remove(); }
         }
 
-        if (typeof aggiornaAnteprimaLive === 'function') {
-            aggiornaAnteprimaLive();
-        }
-    }
 
         function apriModalQR() {
             const m = document.getElementById('modal-qr');
