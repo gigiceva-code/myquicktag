@@ -804,7 +804,7 @@
         // CAPITOLO 2: MOTORE VISIVO
         // ============================================================
         
-                function aggiornaAnteprimaLive() {
+                        function aggiornaAnteprimaLive() {
             const track = document.getElementById('blocks-track');
             if(!track) return;
 
@@ -819,7 +819,7 @@
             const textStyle = `font-size: 0.75rem; letter-spacing: 3px; font-weight: 400; color: ${coloreTesto}; text-transform: uppercase; transition: color 0.3s ease; text-align: center; width: 100%;`;
             const handleHTML = `<div class="drag-handle" style="position: absolute; left: 10px; color: rgba(255,255,255,0.15); font-size: 1.2rem; cursor: grab;">⋮⋮</div>`;
 
-            // 1. BIO
+            // BIO
             const bioInput = document.getElementById('field-bio');
             if (bioInput && bioInput.value.trim() !== "") {
                 let bioBlock = document.getElementById('blocco-bio-live');
@@ -830,7 +830,7 @@
                 } else { const spanText = bioBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
             } else { const b = document.getElementById('blocco-bio-live'); if(b) b.remove(); }
 
-            // 2. CONTATTI E RUBRICA
+            // CONTATTI E RUBRICA (Il motore che era stato sovrascritto)
             const telInput = document.getElementById('field-tel1');
             const emailInput = document.getElementById('field-email');
             if ((telInput && telInput.value.trim() !== "") || (emailInput && emailInput.value.trim() !== "")) {
@@ -842,7 +842,7 @@
                 } else { const spanText = contattiBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
             } else { const c = document.getElementById('blocco-contatti-live'); if(c) c.remove(); }
 
-            // 3. AZIONE RAPIDA
+            // AZIONE RAPIDA
             const qaInput = document.getElementById('field-qa-label');
             if (qaInput && qaInput.value.trim() !== "") {
                 let qaBlock = document.getElementById('blocco-qa-live');
@@ -853,7 +853,7 @@
                 } else { const spanText = qaBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
             } else { const q = document.getElementById('blocco-qa-live'); if(q) q.remove(); }
 
-            // 4. SITO WEB
+            // SITO WEB
             const sitoInput = document.getElementById('field-sito');
             if (sitoInput && sitoInput.value.trim() !== "") {
                 let sitoBlock = document.getElementById('blocco-sito-live');
@@ -864,7 +864,7 @@
                 } else { const spanText = sitoBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
             } else { const s = document.getElementById('blocco-sito-live'); if(s) s.remove(); }
 
-            // 5. SOCIAL
+            // SOCIAL
             const internalTrack = document.getElementById('social-internal-track');
             if (internalTrack && internalTrack.children.length > 0) {
                 let macroSocial = document.getElementById('blocco-social-macro');
