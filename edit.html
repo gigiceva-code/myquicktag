@@ -258,7 +258,11 @@
         }
         .sortable-ghost { opacity: 0.4; background: rgba(255, 255, 255, 0.05); }
         .sortable-drag { background: rgba(20, 20, 22, 0.95); box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
-        
+        /* --- VIP VAULT SWITCH --- */
+        .vip-switch { position: relative; width: 40px; height: 22px; -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.1); border-radius: 24px; outline: none; cursor: pointer; transition: 0.3s; margin: 0; }
+        .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
+        .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; }
 
     </style>
 </head>
@@ -458,7 +462,7 @@
         
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
     </div>
-    <div class="drawer-glass" id="drawer-social">
+  <div class="drawer-glass" id="drawer-social">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
@@ -490,16 +494,31 @@
                         <i id="smart-link-icon" class="fas fa-link" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
                         <input type="text" id="smart-link-name" placeholder="Es. Il mio Instagram" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
                     </div>
-                    <div style="font-size: 0.6rem; color: rgba(255,255,255,0.3); margin-top: 6px; text-align: center;">
-                        Incollando un link famoso (es. Instagram), il nome si compilerà da solo.
+                </div>
+
+                <!-- Modulo VIP Vault (Esclusiva Gold) -->
+                <div style="margin-top: 5px; padding: 14px 16px; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.7rem; color: #e5c158; font-weight: 600; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fas fa-lock"></i> VIP VAULT
+                            </div>
+                            <div style="font-size: 0.55rem; color: rgba(255,255,255,0.4); margin-top: 4px; letter-spacing: 0.5px;">Proteggi con PIN (Solo Gold)</div>
+                        </div>
+                        <input type="checkbox" id="smart-link-vip" class="vip-switch" onchange="gestisciVIPSwitch(this)">
+                    </div>
+                    <div id="vip-pin-container" style="display: none; margin-top: 15px;">
+                        <input type="number" id="smart-link-pin" placeholder="Inserisci PIN (es. 1234)" style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.85rem; letter-spacing: 2px;">
                     </div>
                 </div>
 
-                <button id="btn-add-social" class="btn-crea" style="background: #10b981; color: #000; margin-top: 5px; margin-bottom: 10px; font-weight: 700; border-radius: 12px;" onclick="aggiungiLinkSmart()">
+                <button id="btn-add-social" class="btn-crea" style="background: #10b981; color: #000; margin-top: 10px; margin-bottom: 10px; font-weight: 700; border-radius: 12px;" onclick="aggiungiLinkSmart()">
                     + AGGIUNGI AL PROFILO
                 </button>
             </div>
         </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
+    </div> 
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
     </div>
     <div class="drawer-glass" id="drawer-sito">
@@ -618,7 +637,7 @@
         
         const NOME_SISTEMA = getNomeBrandReale();
         let isDrawerOpen = false;
-        let userPlan = 'BASE';
+        let userPlan = 'BASE'; // Simula l'utente Base. Se lo cambi in 'GOLD', il lucchetto si attiva.
 
         function getNomeBrandReale() {
             try {
@@ -629,36 +648,31 @@
             } catch(e) {}
             return "tuonome.it";
         }
+
         function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
             
-            // Pulisce tutti gli spazi anomali
             let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
             
-            // AZZERIAMO GLI STILI INLINE
             el.style.whiteSpace = "";
             el.style.wordBreak = "";
             el.style.overflowWrap = "";
             el.style.textWrap = "";
             
-            // NUOVA SCALATURA FONT: molto meno aggressiva perché ora l'a capo gestisce lo spazio
             if (testo.length > 35) {
                 el.style.fontSize = "0.85rem";
             } else if (testo.length > 22) {
                 el.style.fontSize = "0.95rem";
             } else {
-                el.style.fontSize = "1.05rem"; // Stessa grandezza originale del CSS
+                el.style.fontSize = "1.05rem"; 
             }
 
-            // Hack per il ricalcolo istantaneo del motore grafico
             void el.offsetHeight; 
         }
-
-        
 
         function apriDrawer(idDrawer) {
             const currentlyOpen = document.querySelector('.drawer-glass.open');
@@ -773,7 +787,7 @@
                 } else { const spanText = bioBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
             } else { const b = document.getElementById('blocco-bio-live'); if(b) b.remove(); }
 
-            // CONTATTI
+            // CONTATTI E RUBRICA
             const telInput = document.getElementById('field-tel1');
             const emailInput = document.getElementById('field-email');
             if ((telInput && telInput.value.trim() !== "") || (emailInput && emailInput.value.trim() !== "")) {
@@ -821,7 +835,7 @@
 
 
         // ============================================================
-        // CAPITOLO 3: MOTORE SOCIAL E UPSELLING
+        // CAPITOLO 3: MOTORE SOCIAL, INTELLIGENZA E UPSELLING
         // ============================================================
         
         function aggiornaLimitiSocial() {
@@ -853,11 +867,21 @@
             }
         }
 
+        function gestisciVIPSwitch(checkbox) {
+            if(userPlan !== 'GOLD') {
+                checkbox.checked = false;
+                alert("🔒 VIP VAULT ESCLUSIVO\n\nQuesta è una funzione riservata al Piano GOLD. Ti permette di nascondere link speciali, listini privati o portfolio dietro un PIN segreto.\n\nEsegui l'upgrade in 'Gestione Piano' per sbloccare la funzione.");
+                return;
+            }
+            document.getElementById('vip-pin-container').style.display = checkbox.checked ? 'block' : 'none';
+        }
+
         function rilevaSocialAutomatico() {
             const urlStr = document.getElementById('smart-link-url').value.toLowerCase();
             const nameInput = document.getElementById('smart-link-name');
             const iconEl = document.getElementById('smart-link-icon');
 
+            // Arsenale completo 26+ canali
             const mappa = {
                 'instagram.com': { n: 'Instagram', i: 'fab fa-instagram' }, 'tiktok.com': { n: 'TikTok', i: 'fab fa-tiktok' },
                 'facebook.com': { n: 'Facebook', i: 'fab fa-facebook-f' }, 'linkedin.com': { n: 'LinkedIn', i: 'fab fa-linkedin-in' },
@@ -866,53 +890,113 @@
                 't.me': { n: 'Telegram', i: 'fab fa-telegram-plane' }, 'spotify.com': { n: 'Spotify', i: 'fab fa-spotify' },
                 'tripadvisor': { n: 'TripAdvisor', i: 'fab fa-tripadvisor' }, 'thefork': { n: 'TheFork', i: 'fas fa-utensils' },
                 'onlyfans.com': { n: 'OnlyFans', i: 'fas fa-star' }, 'github.com': { n: 'GitHub', i: 'fab fa-github' },
-                'twitch.tv': { n: 'Twitch', i: 'fab fa-twitch' }, 'strava.com': { n: 'Strava', i: 'fab fa-strava' }
+                'twitch.tv': { n: 'Twitch', i: 'fab fa-twitch' }, 'strava.com': { n: 'Strava', i: 'fab fa-strava' },
+                'pinterest.com': { n: 'Pinterest', i: 'fab fa-pinterest-p' }, 'discord.com': { n: 'Discord', i: 'fab fa-discord' },
+                'discord.gg': { n: 'Discord', i: 'fab fa-discord' }, 'snapchat.com': { n: 'Snapchat', i: 'fab fa-snapchat-ghost' },
+                'threads.net': { n: 'Threads', i: 'fab fa-threads' }, 'calendly.com': { n: 'Calendly', i: 'far fa-calendar-check' },
+                'patreon.com': { n: 'Patreon', i: 'fab fa-patreon' }, 'behance.net': { n: 'Behance', i: 'fab fa-behance' },
+                'dribbble.com': { n: 'Dribbble', i: 'fab fa-dribbble' }, 'vimeo.com': { n: 'Vimeo', i: 'fab fa-vimeo-v' }
             };
 
             let trovato = false;
             for (const [key, val] of Object.entries(mappa)) {
                 if (urlStr.includes(key)) {
-                    nameInput.value = val.n; iconEl.className = val.i + " smart-detected-icon"; iconEl.style.color = "#10b981";
-                    trovato = true; break;
+                    nameInput.value = val.n; 
+                    iconEl.className = val.i + " smart-detected-icon"; 
+                    iconEl.style.color = "#10b981";
+                    iconEl.setAttribute('data-official', 'true');
+                    trovato = true; 
+                    break;
                 }
             }
+            
             if(!trovato && urlStr.length > 5) {
                 if(nameInput.value === "") nameInput.value = "Visita il link";
-                iconEl.className = "fas fa-link smart-detected-icon"; iconEl.style.color = "#d4af37";
-            } else if (urlStr.length <= 5) { iconEl.className = "fas fa-link"; iconEl.style.color = "#86868b"; }
+                iconEl.className = "fas fa-link smart-detected-icon"; 
+                iconEl.style.color = "#d4af37";
+                iconEl.setAttribute('data-official', 'false');
+            } else if (urlStr.length <= 5) { 
+                iconEl.className = "fas fa-link"; 
+                iconEl.style.color = "#86868b"; 
+                iconEl.removeAttribute('data-official');
+            }
         }
 
         function aggiungiLinkSmart() {
             const url = document.getElementById('smart-link-url').value.trim();
             let nome = document.getElementById('smart-link-name').value.trim();
             const iconEl = document.getElementById('smart-link-icon');
+            
+            const vipSwitch = document.getElementById('smart-link-vip');
+            const isVip = vipSwitch ? vipSwitch.checked : false;
+            const vipPin = document.getElementById('smart-link-pin') ? document.getElementById('smart-link-pin').value : "";
 
             if(url === "") { alert("Inserisci un URL valido."); return; }
             if(nome === "") nome = "Visita il link";
+            
             let iconClass = iconEl.className.replace('smart-detected-icon', '').trim();
             if(iconClass === "") iconClass = "fas fa-link";
+            
+            const isOfficial = iconEl.getAttribute('data-official') === 'true';
 
             const track = document.getElementById('social-internal-track');
             const blockId = 'social-' + Date.now();
             const block = document.createElement('div');
             block.className = 'social-block-live'; block.id = blockId;
-            block.setAttribute('data-nome', nome); block.setAttribute('data-url', url);
+            
+            block.setAttribute('data-nome', nome); 
+            block.setAttribute('data-url', url);
+            block.setAttribute('data-vip', isVip);
+            block.setAttribute('data-pin', vipPin);
+            block.setAttribute('data-official', isOfficial);
+            block.setAttribute('data-icon', iconClass);
+            
             block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
+
+            // LOGICA INTELLIGENTE PER FAVICON O ICONA STANDARD
+            let iconaVisualizzata = `<i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>`;
+            if (!isOfficial && url.startsWith('http')) {
+                try {
+                    const domain = new URL(url).hostname;
+                    const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+                    // Sfondo bianco opzionale per far risaltare favicons scure su sfondo scuro
+                    iconaVisualizzata = `<img src="${faviconUrl}" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; background: #fff; padding: 2px;">`;
+                } catch(e) {}
+            }
+
+            // BADGE UFFICIALITÀ E LUCCHETTO VIP
+            let officialBadge = isOfficial ? `<i class="fas fa-certificate" style="color: #1DA1F2; font-size: 0.75rem; margin-left: 6px;" title="Canale Ufficiale Verificato"></i>` : "";
+            let vipBadge = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.75rem; margin-left: 6px;" title="Protetto da VIP Vault"></i>` : "";
 
             block.innerHTML = `
                 <div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div>
                 <div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;">
-                    <i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>
-                    <span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${nome}</span>
+                    <div style="display:flex; justify-content:center; align-items:center; width:24px;">
+                        ${iconaVisualizzata}
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${nome}</span>
+                        ${officialBadge} ${vipBadge}
+                    </div>
                 </div>
                 <div class="block-actions" style="padding-left: 10px;">
-                    <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
+                    <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1.1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
                 </div>
             `;
 
             track.appendChild(block);
-            document.getElementById('smart-link-url').value = ""; document.getElementById('smart-link-name').value = "";
-            iconEl.className = "fas fa-link"; iconEl.style.color = "#86868b";
+            
+            // Reset campi input
+            document.getElementById('smart-link-url').value = ""; 
+            document.getElementById('smart-link-name').value = "";
+            if(vipSwitch) {
+                vipSwitch.checked = false;
+                document.getElementById('vip-pin-container').style.display = "none";
+                document.getElementById('smart-link-pin').value = "";
+            }
+            iconEl.className = "fas fa-link"; 
+            iconEl.style.color = "#86868b";
+            iconEl.removeAttribute('data-official');
 
             aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
         }
@@ -974,16 +1058,48 @@
                             if (track) {
                                 track.innerHTML = ""; 
                                 canali.forEach(canale => {
-                                    let iconClass = "fas fa-link";
-                                    const nLower = canale.nome.toLowerCase();
-                                    const dIcons = { "instagram": "fab fa-instagram", "tiktok": "fab fa-tiktok", "facebook": "fab fa-facebook-f", "youtube": "fab fa-youtube", "linkedin": "fab fa-linkedin-in", "x ": "fab fa-x-twitter", "twitter": "fab fa-x-twitter", "strava": "fab fa-strava", "github": "fab fa-github", "behance": "fab fa-behance", "dribbble": "fab fa-dribbble", "spotify": "fab fa-spotify", "telegram": "fab fa-telegram-plane", "whatsapp": "fab fa-whatsapp", "twitch": "fab fa-twitch", "pinterest": "fab fa-pinterest-p", "tripadvisor": "fab fa-tripadvisor", "thefork": "fas fa-utensils", "onlyfans": "fas fa-star" };
-                                    for (let key in dIcons) { if(nLower.includes(key)) iconClass = dIcons[key]; }
-
                                     const blockId = 'social-' + Math.random().toString(36).substr(2, 9);
                                     const block = document.createElement('div'); block.className = 'social-block-live'; block.id = blockId;
-                                    block.setAttribute('data-nome', canale.nome); block.setAttribute('data-url', canale.url);
+                                    
+                                    const isVip = canale.vip === true || canale.vip === 'true';
+                                    const isOfficial = canale.official === true || canale.official === 'true';
+                                    
+                                    block.setAttribute('data-nome', canale.nome); 
+                                    block.setAttribute('data-url', canale.url);
+                                    block.setAttribute('data-vip', isVip);
+                                    block.setAttribute('data-pin', canale.pin || "");
+                                    block.setAttribute('data-official', isOfficial);
+                                    block.setAttribute('data-icon', canale.iconClass || "fas fa-link");
+
+                                    // Rigenerazione intelligente Icona
+                                    let iconaVisualizzata = `<i class="${canale.iconClass || 'fas fa-link'}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>`;
+                                    if (!isOfficial && canale.url && canale.url.startsWith('http')) {
+                                        try {
+                                            const domain = new URL(canale.url).hostname;
+                                            const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+                                            iconaVisualizzata = `<img src="${faviconUrl}" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; background: #fff; padding: 2px;">`;
+                                        } catch(e) {}
+                                    }
+
+                                    let officialBadge = isOfficial ? `<i class="fas fa-certificate" style="color: #1DA1F2; font-size: 0.75rem; margin-left: 6px;" title="Canale Ufficiale Verificato"></i>` : "";
+                                    let vipBadge = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.75rem; margin-left: 6px;" title="Protetto da VIP Vault"></i>` : "";
+
                                     block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
-                                    block.innerHTML = `<div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div><div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;"><i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i><span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${canale.nome}</span></div><div class="block-actions" style="padding-left: 10px;"><i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1.1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i></div>`;
+                                    block.innerHTML = `
+                                        <div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div>
+                                        <div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;">
+                                            <div style="display:flex; justify-content:center; align-items:center; width:24px;">
+                                                ${iconaVisualizzata}
+                                            </div>
+                                            <div style="display:flex; align-items:center;">
+                                                <span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${canale.nome}</span>
+                                                ${officialBadge} ${vipBadge}
+                                            </div>
+                                        </div>
+                                        <div class="block-actions" style="padding-left: 10px;">
+                                            <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1.1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
+                                        </div>
+                                    `;
                                     track.appendChild(block);
                                 });
                             }
@@ -1005,7 +1121,6 @@
                         });
                     }
                     
-                    // SOLO ORA CHE I CAMPI SONO PIENI, DISEGNAMO L'ANTEPRIMA:
                     applicaTemaLive(); 
                     aggiornaLimitiSocial(); 
                 }
@@ -1039,7 +1154,14 @@
             if (internalTrack) {
                 const socialBlocks = internalTrack.querySelectorAll('.social-block-live');
                 socialBlocks.forEach(block => {
-                    canaliSocial.push({ nome: block.getAttribute('data-nome'), url: block.getAttribute('data-url') });
+                    canaliSocial.push({ 
+                        nome: block.getAttribute('data-nome'), 
+                        url: block.getAttribute('data-url'),
+                        vip: block.getAttribute('data-vip') === 'true',
+                        pin: block.getAttribute('data-pin') || "",
+                        official: block.getAttribute('data-official') === 'true',
+                        iconClass: block.getAttribute('data-icon') || "fas fa-link"
+                    });
                 });
             }
 
@@ -1135,18 +1257,15 @@
             }
         }
 
-                function avviamyquicktag() {
-            // 1. Legge la cache locale e setta i bottoni
+        function avviamyquicktag() {
             const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
             if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
 
             const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
             if (layoutInCache) { const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`); if(radioLayout) radioLayout.checked = true; }
 
-            // 2. APPLICA IL LAYOUT ISTANTANEAMENTE (Il pezzo mancante che causava l'esplosione visiva)
             applicaTemaLive();
 
-            // 3. Inietta il testo nella "gabbia" già pronta
             const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
             if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
 
@@ -1164,10 +1283,8 @@
             }
         }
 
-
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
     </script>
-
     
 </body>
 </html>
