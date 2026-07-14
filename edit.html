@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="it">
+<!⁰="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -1316,7 +1315,37 @@
                     onEnd: function () { salvaDati(); aggiornaAnteprimaLive(); }
                 });
             }
+        }            let conteggioTap = 0;
+            let tempoUltimoTap = 0;
+            
+            // Il bersaglio ora è tutta la zona del nome, impossibile mancarla
+            const areaNome = document.querySelector('.username-display'); 
+            
+            if (areaNome) {
+                areaNome.addEventListener('click', function(e) {
+                    if(e.target.closest('.drawer-glass')) return;
+                    
+                    const adesso = new Date().getTime();
+                    
+                    // Se fai passare più di 800 millisecondi tra un tocco e l'altro, azzera. 
+                    if (adesso - tempoUltimoTap > 800) {
+                        conteggioTap = 0;
+                    }
+                    
+                    conteggioTap++;
+                    tempoUltimoTap = adesso;
+
+                    // Al terzo tap, ricarica istantaneamente la pagina bypassando la cache
+                    if (conteggioTap >= 3) {
+                        conteggioTap = 0;
+                        const url = new URL(window.location.href); 
+                        url.searchParams.set('ts', adesso); 
+                        window.location.href = url.toString();
+                    }
+                });
+            }
         }
+
 
         function avviamyquicktag() {
             const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
@@ -1332,17 +1361,7 @@
 
             accendiIControlli(); inizializzaPagina(); initDragAndDrop();
 
-            let tapCount = 0;
-            const badgeDiv = document.querySelector('.username-capsule-wrapper');
-            if(badgeDiv) {
-                badgeDiv.addEventListener('click', function(e) {
-                    if(e.target.closest('.drawer-glass')) return;
-                    tapCount++;
-                    if (tapCount >= 3) { const url = new URL(window.location.href); url.searchParams.set('ts', new Date().getTime()); window.location.href = url.toString(); }
-                    setTimeout(() => { tapCount = 0; }, 1000);
-                });
-            }
-        }
+            
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
     </script>
