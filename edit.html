@@ -875,12 +875,11 @@
             document.getElementById('vip-pin-container').style.display = checkbox.checked ? 'block' : 'none';
         }
 
-        function rilevaSocialAutomatico() {
+       function rilevaSocialAutomatico() {
             const urlStr = document.getElementById('smart-link-url').value.toLowerCase();
             const nameInput = document.getElementById('smart-link-name');
             const iconEl = document.getElementById('smart-link-icon');
 
-            // Arsenale completo 26+ canali
             const mappa = {
                 'instagram.com': { n: 'Instagram', i: 'fab fa-instagram' }, 'tiktok.com': { n: 'TikTok', i: 'fab fa-tiktok' },
                 'facebook.com': { n: 'Facebook', i: 'fab fa-facebook-f' }, 'linkedin.com': { n: 'LinkedIn', i: 'fab fa-linkedin-in' },
@@ -894,7 +893,9 @@
                 'discord.gg': { n: 'Discord', i: 'fab fa-discord' }, 'snapchat.com': { n: 'Snapchat', i: 'fab fa-snapchat-ghost' },
                 'threads.net': { n: 'Threads', i: 'fab fa-threads' }, 'calendly.com': { n: 'Calendly', i: 'far fa-calendar-check' },
                 'patreon.com': { n: 'Patreon', i: 'fab fa-patreon' }, 'behance.net': { n: 'Behance', i: 'fab fa-behance' },
-                'dribbble.com': { n: 'Dribbble', i: 'fab fa-dribbble' }, 'vimeo.com': { n: 'Vimeo', i: 'fab fa-vimeo-v' }
+                'dribbble.com': { n: 'Dribbble', i: 'fab fa-dribbble' }, 'vimeo.com': { n: 'Vimeo', i: 'fab fa-vimeo-v' },
+                'reddit.com': { n: 'Reddit', i: 'fab fa-reddit-alien' }, 'medium.com': { n: 'Medium', i: 'fab fa-medium-m' },
+                'soundcloud.com': { n: 'SoundCloud', i: 'fab fa-soundcloud' }, 'apple.com/it/music': { n: 'Apple Music', i: 'fab fa-apple' }
             };
 
             let trovato = false;
@@ -920,7 +921,6 @@
                 iconEl.removeAttribute('data-official');
             }
         }
-
         function aggiungiLinkSmart() {
             const url = document.getElementById('smart-link-url').value.trim();
             let nome = document.getElementById('smart-link-name').value.trim();
