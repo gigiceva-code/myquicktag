@@ -921,7 +921,7 @@
                 iconEl.removeAttribute('data-official');
             }
         }
-        function aggiungiLinkSmart() {
+                function aggiungiLinkSmart() {
             const url = document.getElementById('smart-link-url').value.trim();
             let nome = document.getElementById('smart-link-name').value.trim();
             const iconEl = document.getElementById('smart-link-icon');
@@ -931,13 +931,22 @@
             const vipPin = document.getElementById('smart-link-pin') ? document.getElementById('smart-link-pin').value : "";
 
             if(url === "") { alert("Inserisci un URL valido."); return; }
-            if(nome === "") nome = "Visita il link";
-            
-            let iconClass = iconEl.className.replace('smart-detected-icon', '').trim();
-            if(iconClass === "") iconClass = "fas fa-link";
             
             const isOfficial = iconEl.getAttribute('data-official') === 'true';
 
+            // --- LA DOGANA ANTI-FURBETTO (Il pezzo che mancava) ---
+            if (!isOfficial) {
+                alert("⚠️ AZIONE NON CONSENTITA\n\nIn questa sezione puoi aggiungere unicamente canali Social ufficiali.\nPer inserire siti web generici (come Google o link aziendali), usa l'apposito modulo 'SITO WEB'.");
+                document.getElementById('smart-link-url').value = ""; 
+                document.getElementById('smart-link-name').value = "";
+                iconEl.className = "fas fa-link"; 
+                iconEl.style.color = "#86868b";
+                return; // Questa singola parolina blocca definitivamente l'inserimento.
+            }
+
+            if(nome === "") nome = "Visita il link";
+            let iconClass = iconEl.className.replace('smart-detected-icon', '').trim();
+            
             const track = document.getElementById('social-internal-track');
             const blockId = 'social-' + Date.now();
             const block = document.createElement('div');
@@ -952,16 +961,42 @@
             
             block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
 
-            // LOGICA INTELLIGENTE PER FAVICON O ICONA STANDARD
             let iconaVisualizzata = `<i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>`;
-            if (!isOfficial && url.startsWith('http')) {
-                try {
-                    const domain = new URL(url).hostname;
-                    const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-                    // Sfondo bianco opzionale per far risaltare favicons scure su sfondo scuro
-                    iconaVisualizzata = `<img src="${faviconUrl}" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; background: #fff; padding: 2px;">`;
-                } catch(e) {}
+            let officialBadge = isOfficial ? `<i class="fas fa-certificate" style="color: #1DA1F2; font-size: 0.75rem; margin-left: 6px;" title="Canale Ufficiale Verificato"></i>` : "";
+            let vipBadge = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.75rem; margin-left: 6px;" title="Protetto da VIP Vault"></i>` : "";
+
+            block.innerHTML = `
+                <div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div>
+                <div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;">
+                    <div style="display:flex; justify-content:center; align-items:center; width:24px;">
+                        ${iconaVisualizzata}
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${nome}</span>
+                        ${officialBadge} ${vipBadge}
+                    </div>
+                </div>
+                <div class="block-actions" style="padding-left: 10px;">
+                    <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1.1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
+                </div>
+            `;
+
+            track.appendChild(block);
+            
+            document.getElementById('smart-link-url').value = ""; 
+            document.getElementById('smart-link-name').value = "";
+            if(vipSwitch) {
+                vipSwitch.checked = false;
+                document.getElementById('vip-pin-container').style.display = "none";
+                document.getElementById('smart-link-pin').value = "";
             }
+            iconEl.className = "fas fa-link"; 
+            iconEl.style.color = "#86868b";
+            iconEl.removeAttribute('data-official');
+
+            aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
+        }
+
 
             // BADGE UFFICIALITÀ E LUCCHETTO VIP
             let officialBadge = isOfficial ? `<i class="fas fa-certificate" style="color: #1DA1F2; font-size: 0.75rem; margin-left: 6px;" title="Canale Ufficiale Verificato"></i>` : "";
