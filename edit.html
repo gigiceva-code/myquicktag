@@ -1126,8 +1126,30 @@
             } catch (e) { console.error("Errore caricamento", e); }
         }
 
-        async function salvaDati() {
+       async function salvaDati() {
             if(NOME_SISTEMA === "tuonome.it") return; 
+
+            // --- REGOLA ANTI-FURBETTO N.2: BLOCCO SOCIAL NEL MODULO SITO WEB ---
+            const sitoInput = document.getElementById('field-sito');
+            let sitoVal = "";
+            if (sitoInput) {
+                sitoVal = sitoInput.value.trim();
+                if (sitoVal !== "") {
+                    const socials = ['instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'x.com', 'twitter.com', 'youtube.com', 'wa.me', 't.me', 'spotify.com', 'tripadvisor', 'thefork', 'onlyfans.com', 'github.com', 'twitch.tv', 'strava.com', 'pinterest.com', 'discord.com', 'discord.gg', 'snapchat.com', 'threads.net', 'calendly.com', 'patreon.com', 'behance.net', 'dribbble.com', 'vimeo.com', 'reddit.com', 'medium.com', 'soundcloud.com', 'apple.com/it/music'];
+                    const lowerSito = sitoVal.toLowerCase();
+                    let isSocial = false;
+                    
+                    for (let s of socials) {
+                        if (lowerSito.includes(s)) { isSocial = true; break; }
+                    }
+                    
+                    if (isSocial) {
+                        alert("⚠️ AZIONE NON CONSENTITA\n\nHai incollato un link Social nel modulo 'SITO WEB'.\nQuesto campo è riservato unicamente al sito istituzionale o personale.\n\nIl link è stato rimosso per impedire l'elusione delle regole del piano.");
+                        sitoInput.value = "";
+                        sitoVal = ""; 
+                    }
+                }
+            }
 
             const inputField = document.getElementById("field-username_display");
             const displayVal = inputField ? inputField.value.trim() : "";
@@ -1135,7 +1157,6 @@
             const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
 
             const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
-            const sitoVal = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
             const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
 
             const qaTipo = document.getElementById('field-qa-tipo') ? document.getElementById('field-qa-tipo').value : "";
@@ -1183,8 +1204,6 @@
                 await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username_system: NOME_SISTEMA, draft_json: JSON.stringify(bozza) }) });
             } catch (error) {}
         }
-
-
         // ============================================================
         // CAPITOLO 5: INIZIALIZZAZIONE E CONTROLLI 
         // ============================================================
