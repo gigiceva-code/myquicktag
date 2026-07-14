@@ -874,8 +874,7 @@
             }
             document.getElementById('vip-pin-container').style.display = checkbox.checked ? 'block' : 'none';
         }
-
-       function rilevaSocialAutomatico() {
+        function rilevaSocialAutomatico() {
             const urlStr = document.getElementById('smart-link-url').value.toLowerCase();
             const nameInput = document.getElementById('smart-link-name');
             const iconEl = document.getElementById('smart-link-icon');
@@ -921,7 +920,8 @@
                 iconEl.removeAttribute('data-official');
             }
         }
-                function aggiungiLinkSmart() {
+
+        function aggiungiLinkSmart() {
             const url = document.getElementById('smart-link-url').value.trim();
             let nome = document.getElementById('smart-link-name').value.trim();
             const iconEl = document.getElementById('smart-link-icon');
@@ -934,14 +934,14 @@
             
             const isOfficial = iconEl.getAttribute('data-official') === 'true';
 
-            // --- LA DOGANA ANTI-FURBETTO (Il pezzo che mancava) ---
+            // --- LA DOGANA ANTI-FURBETTO ---
             if (!isOfficial) {
                 alert("⚠️ AZIONE NON CONSENTITA\n\nIn questa sezione puoi aggiungere unicamente canali Social ufficiali.\nPer inserire siti web generici (come Google o link aziendali), usa l'apposito modulo 'SITO WEB'.");
                 document.getElementById('smart-link-url').value = ""; 
                 document.getElementById('smart-link-name').value = "";
                 iconEl.className = "fas fa-link"; 
                 iconEl.style.color = "#86868b";
-                return; // Questa singola parolina blocca definitivamente l'inserimento.
+                return; 
             }
 
             if(nome === "") nome = "Visita il link";
@@ -996,6 +996,14 @@
 
             aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
         }
+
+        function rimuoviBlocco(id) {
+            const block = document.getElementById(id);
+            if(block) block.remove();
+            aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
+        }
+
+
 
 
             // BADGE UFFICIALITÀ E LUCCHETTO VIP
