@@ -1346,7 +1346,6 @@
             }
         }
 
-
         function avviamyquicktag() {
             const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
             if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
@@ -1361,10 +1360,41 @@
 
             accendiIControlli(); inizializzaPagina(); initDragAndDrop();
 
+            let conteggioTap = 0;
+            let tempoUltimoTap = 0;
             
+            // Ripristinato il tuo selettore originale che siamo sicuri esista
+            const badgeDiv = document.querySelector('.username-capsule-wrapper');
+            
+            if (badgeDiv) {
+                badgeDiv.addEventListener('click', function(e) {
+                    if(e.target.closest('.drawer-glass')) return;
+                    
+                    const adesso = new Date().getTime();
+                    
+                    // Se passa quasi 1 secondo tra un tap e l'altro, si azzera
+                    if (adesso - tempoUltimoTap > 800) {
+                        conteggioTap = 0;
+                    }
+                    
+                    conteggioTap++;
+                    tempoUltimoTap = adesso;
+
+                    // Al terzo tap ricarica la pagina
+                    if (conteggioTap >= 3) {
+                        conteggioTap = 0;
+                        const url = new URL(window.location.href); 
+                        url.searchParams.set('ts', adesso); 
+                        window.location.href = url.toString();
+                    }
+                });
+            }
+        }
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
     </script>
+
+        
     
 </body>
 </html>
