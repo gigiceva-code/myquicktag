@@ -628,11 +628,12 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-<script>
+
+   <script>
         // ============================================================
         // CAPITOLO 1: SETUP E FUNZIONI DI BASE (UI, Cassetti, QR)
         // ============================================================
-        
+
         const NOME_SISTEMA = getNomeBrandReale();
         let isDrawerOpen = false;
         let userPlan = 'BASE'; // Simula l'utente Base. Se lo cambi in 'GOLD', il lucchetto si attiva.
@@ -650,17 +651,17 @@
         function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
-            
+
             let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
-            
+
             el.style.whiteSpace = "";
             el.style.wordBreak = "";
             el.style.overflowWrap = "";
             el.style.textWrap = "";
-            
+
             if (testo.length > 35) {
                 el.style.fontSize = "0.85rem";
             } else if (testo.length > 22) {
@@ -758,7 +759,7 @@
 
             aggiornaAnteprimaLive();
         }
-        
+
         function aggiornaAnteprimaLive() {
             const track = document.getElementById('blocks-track');
             if(!track) return;
@@ -831,11 +832,10 @@
             } else { const m = document.getElementById('blocco-social-macro'); if(m) m.remove(); }
         }
 
-
         // ============================================================
         // CAPITOLO 3: MOTORE SOCIAL, INTELLIGENZA E UPSELLING
         // ============================================================
-        
+
         function aggiornaLimitiSocial() {
             const internalTrack = document.getElementById('social-internal-track');
             if (!internalTrack) return;
@@ -873,6 +873,7 @@
             }
             document.getElementById('vip-pin-container').style.display = checkbox.checked ? 'block' : 'none';
         }
+
         function rilevaSocialAutomatico() {
             const urlStr = document.getElementById('smart-link-url').value.toLowerCase();
             const nameInput = document.getElementById('smart-link-name');
@@ -907,7 +908,7 @@
                     break;
                 }
             }
-            
+
             if(!trovato && urlStr.length > 5) {
                 if(nameInput.value === "") nameInput.value = "Visita il link";
                 iconEl.className = "fas fa-link smart-detected-icon"; 
@@ -924,13 +925,13 @@
             const url = document.getElementById('smart-link-url').value.trim();
             let nome = document.getElementById('smart-link-name').value.trim();
             const iconEl = document.getElementById('smart-link-icon');
-            
+
             const vipSwitch = document.getElementById('smart-link-vip');
             const isVip = vipSwitch ? vipSwitch.checked : false;
             const vipPin = document.getElementById('smart-link-pin') ? document.getElementById('smart-link-pin').value : "";
 
             if(url === "") { alert("Inserisci un URL valido."); return; }
-            
+
             const isOfficial = iconEl.getAttribute('data-official') === 'true';
 
             // --- LA DOGANA ANTI-FURBETTO ---
@@ -945,19 +946,19 @@
 
             if(nome === "") nome = "Visita il link";
             let iconClass = iconEl.className.replace('smart-detected-icon', '').trim();
-            
+
             const track = document.getElementById('social-internal-track');
             const blockId = 'social-' + Date.now();
             const block = document.createElement('div');
             block.className = 'social-block-live'; block.id = blockId;
-            
+
             block.setAttribute('data-nome', nome); 
             block.setAttribute('data-url', url);
             block.setAttribute('data-vip', isVip);
             block.setAttribute('data-pin', vipPin);
             block.setAttribute('data-official', isOfficial);
             block.setAttribute('data-icon', iconClass);
-            
+
             block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
 
             let iconaVisualizzata = `<i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>`;
@@ -981,7 +982,7 @@
             `;
 
             track.appendChild(block);
-            
+
             document.getElementById('smart-link-url').value = ""; 
             document.getElementById('smart-link-name').value = "";
             if(vipSwitch) {
@@ -1001,60 +1002,13 @@
             if(block) block.remove();
             aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
         }
-
-
-
-
-            // BADGE UFFICIALITÀ E LUCCHETTO VIP
-            let officialBadge = isOfficial ? `<i class="fas fa-certificate" style="color: #1DA1F2; font-size: 0.75rem; margin-left: 6px;" title="Canale Ufficiale Verificato"></i>` : "";
-            let vipBadge = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.75rem; margin-left: 6px;" title="Protetto da VIP Vault"></i>` : "";
-
-            block.innerHTML = `
-                <div class="drag-handle" style="color: rgba(255,255,255,0.3); padding-right: 15px; font-size: 1.2rem; cursor: grab;">⋮⋮</div>
-                <div class="block-content" style="flex: 1; display: flex; align-items: center; gap: 12px;">
-                    <div style="display:flex; justify-content:center; align-items:center; width:24px;">
-                        ${iconaVisualizzata}
-                    </div>
-                    <div style="display:flex; align-items:center;">
-                        <span style="font-size: 0.95rem; color: #fff; font-weight: 500;">${nome}</span>
-                        ${officialBadge} ${vipBadge}
-                    </div>
-                </div>
-                <div class="block-actions" style="padding-left: 10px;">
-                    <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1.1rem; opacity: 0.8;" onclick="rimuoviBlocco('${blockId}')"></i>
-                </div>
-            `;
-
-            track.appendChild(block);
-            
-            // Reset campi input
-            document.getElementById('smart-link-url').value = ""; 
-            document.getElementById('smart-link-name').value = "";
-            if(vipSwitch) {
-                vipSwitch.checked = false;
-                document.getElementById('vip-pin-container').style.display = "none";
-                document.getElementById('smart-link-pin').value = "";
-            }
-            iconEl.className = "fas fa-link"; 
-            iconEl.style.color = "#86868b";
-            iconEl.removeAttribute('data-official');
-
-            aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
-        }
-
-        function rimuoviBlocco(id) {
-            const block = document.getElementById(id);
-            if(block) block.remove();
-            aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
-        }
-
 
         // ============================================================
         // CAPITOLO 4: DATABASE (Fetch, Salva, Carica)
         // ============================================================
-        
+
         function confermaEChiudiCassetto() { salvaDati(); chiudiSenzaSalvare(); }
-        
+
         async function inizializzaPagina() { 
             if(NOME_SISTEMA === "tuonome.it") return; 
             try {
@@ -1067,7 +1021,7 @@
 
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                     if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
-                    
+
                     if (f.username_display) {
                         const inputField = document.getElementById('field-username_display');
                         if (inputField) inputField.value = f.username_display.replace('@', '');
@@ -1101,10 +1055,10 @@
                                 canali.forEach(canale => {
                                     const blockId = 'social-' + Math.random().toString(36).substr(2, 9);
                                     const block = document.createElement('div'); block.className = 'social-block-live'; block.id = blockId;
-                                    
+
                                     const isVip = canale.vip === true || canale.vip === 'true';
                                     const isOfficial = canale.official === true || canale.official === 'true';
-                                    
+
                                     block.setAttribute('data-nome', canale.nome); 
                                     block.setAttribute('data-url', canale.url);
                                     block.setAttribute('data-vip', isVip);
@@ -1112,7 +1066,6 @@
                                     block.setAttribute('data-official', isOfficial);
                                     block.setAttribute('data-icon', canale.iconClass || "fas fa-link");
 
-                                    // Rigenerazione intelligente Icona
                                     let iconaVisualizzata = `<i class="${canale.iconClass || 'fas fa-link'}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>`;
                                     if (!isOfficial && canale.url && canale.url.startsWith('http')) {
                                         try {
@@ -1161,7 +1114,7 @@
                             }
                         });
                     }
-                    
+
                     applicaTemaLive(); 
                     aggiornaLimitiSocial(); 
                 }
@@ -1180,11 +1133,11 @@
                     const socials = ['instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'x.com', 'twitter.com', 'youtube.com', 'wa.me', 't.me', 'spotify.com', 'tripadvisor', 'thefork', 'onlyfans.com', 'github.com', 'twitch.tv', 'strava.com', 'pinterest.com', 'discord.com', 'discord.gg', 'snapchat.com', 'threads.net', 'calendly.com', 'patreon.com', 'behance.net', 'dribbble.com', 'vimeo.com', 'reddit.com', 'medium.com', 'soundcloud.com', 'apple.com/it/music'];
                     const lowerSito = sitoVal.toLowerCase();
                     let isSocial = false;
-                    
+
                     for (let s of socials) {
                         if (lowerSito.includes(s)) { isSocial = true; break; }
                     }
-                    
+
                     if (isSocial) {
                         alert("⚠️ AZIONE NON CONSENTITA\n\nHai incollato un link Social nel modulo 'SITO WEB'.\nQuesto campo è riservato unicamente al sito istituzionale o personale.\n\nIl link è stato rimosso per impedire l'elusione delle regole del piano.");
                         sitoInput.value = "";
@@ -1246,10 +1199,11 @@
                 await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username_system: NOME_SISTEMA, draft_json: JSON.stringify(bozza) }) });
             } catch (error) {}
         }
+
         // ============================================================
         // CAPITOLO 5: INIZIALIZZAZIONE E CONTROLLI 
         // ============================================================
-        
+
         function salvaIdentitaEApriStile() {
             const fieldDisplay = document.getElementById('field-username_display');
             if(!fieldDisplay) return;
@@ -1315,35 +1269,6 @@
                     onEnd: function () { salvaDati(); aggiornaAnteprimaLive(); }
                 });
             }
-        }            let conteggioTap = 0;
-            let tempoUltimoTap = 0;
-            
-            // Il bersaglio ora è tutta la zona del nome, impossibile mancarla
-            const areaNome = document.querySelector('.username-display'); 
-            
-            if (areaNome) {
-                areaNome.addEventListener('click', function(e) {
-                    if(e.target.closest('.drawer-glass')) return;
-                    
-                    const adesso = new Date().getTime();
-                    
-                    // Se fai passare più di 800 millisecondi tra un tocco e l'altro, azzera. 
-                    if (adesso - tempoUltimoTap > 800) {
-                        conteggioTap = 0;
-                    }
-                    
-                    conteggioTap++;
-                    tempoUltimoTap = adesso;
-
-                    // Al terzo tap, ricarica istantaneamente la pagina bypassando la cache
-                    if (conteggioTap >= 3) {
-                        conteggioTap = 0;
-                        const url = new URL(window.location.href); 
-                        url.searchParams.set('ts', adesso); 
-                        window.location.href = url.toString();
-                    }
-                });
-            }
         }
 
         function avviamyquicktag() {
@@ -1362,21 +1287,20 @@
 
             let conteggioTap = 0;
             let tempoUltimoTap = 0;
-            
-            // Ripristinato il tuo selettore originale che siamo sicuri esista
+
             const badgeDiv = document.querySelector('.username-capsule-wrapper');
-            
+
             if (badgeDiv) {
                 badgeDiv.addEventListener('click', function(e) {
                     if(e.target.closest('.drawer-glass')) return;
-                    
+
                     const adesso = new Date().getTime();
-                    
+
                     // Se passa quasi 1 secondo tra un tap e l'altro, si azzera
                     if (adesso - tempoUltimoTap > 800) {
                         conteggioTap = 0;
                     }
-                    
+
                     conteggioTap++;
                     tempoUltimoTap = adesso;
 
@@ -1393,8 +1317,7 @@
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
     </script>
-
-        
+     
     
 </body>
 </html>
