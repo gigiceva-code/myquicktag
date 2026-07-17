@@ -835,7 +835,6 @@
         // ============================================================
         // CAPITOLO 3: MOTORE SOCIAL, INTELLIGENZA E UPSELLING
         // ============================================================
-
         function aggiornaLimitiSocial() {
             const internalTrack = document.getElementById('social-internal-track');
             if (!internalTrack) return;
@@ -854,9 +853,12 @@
 
             if (btnAdd) {
                 if (count >= limit) {
-                    btnAdd.innerHTML = `<i class="fas fa-lock"></i> SBLOCCA PIANO`;
-                    btnAdd.style.background = "rgba(255,255,255,0.1)"; btnAdd.style.color = "#d4af37";
-                    btnAdd.onclick = function() { alert("Hai raggiunto il limite del tuo abbonamento.\nFai l'upgrade per aggiungere più canali alla tua identità."); };
+                    btnAdd.innerHTML = `<i class="fas fa-lock"></i> LIMITE RAGGIUNTO`;
+                    btnAdd.style.background = "rgba(255,255,255,0.1)"; btnAdd.style.color = "#ff4444";
+                    btnAdd.onclick = function(e) { 
+                        if(e) e.preventDefault();
+                        alert("Avviso di Sistema\n\nHai raggiunto il limite massimo di " + limit + " canali previsto dal tuo piano.\nPer aggiungere ulteriori collegamenti, visita la sezione 'Gestione Piano'."); 
+                    };
                 } else {
                     btnAdd.innerHTML = `+ AGGIUNGI AL PROFILO`;
                     btnAdd.style.background = "#10b981"; btnAdd.style.color = "#000";
@@ -868,7 +870,7 @@
         function gestisciVIPSwitch(checkbox) {
             if(userPlan !== 'GOLD') {
                 checkbox.checked = false;
-                alert("🔒 VIP VAULT ESCLUSIVO\n\nQuesta è una funzione riservata al Piano GOLD. Ti permette di nascondere link speciali, listini privati o portfolio dietro un PIN segreto.\n\nEsegui l'upgrade in 'Gestione Piano' per sbloccare la funzione.");
+                alert("Funzione Premium\n\nIl modulo VIP Vault è un'esclusiva del Piano Gold. Consente di proteggere link riservati o listini privati tramite PIN.\n\nPer abilitare questa funzione, procedi all'upgrade nella sezione 'Gestione Piano'.");
                 return;
             }
             document.getElementById('vip-pin-container').style.display = checkbox.checked ? 'block' : 'none';
@@ -922,6 +924,17 @@
         }
 
         function aggiungiLinkSmart() {
+            // Verifica preventiva: controllo limiti del piano in uso
+            const internalTrack = document.getElementById('social-internal-track');
+            let limit = 3; 
+            if (userPlan === 'PREMIUM') limit = 8;
+            if (userPlan === 'GOLD') limit = 999;
+            
+            if (internalTrack && internalTrack.children.length >= limit) {
+                alert("Avviso di Sistema\n\nIl piano attuale consente l'inserimento di un massimo di " + limit + " canali.\nProcedere all'upgrade per rimuovere questo limite.");
+                return;
+            }
+
             const url = document.getElementById('smart-link-url').value.trim();
             let nome = document.getElementById('smart-link-name').value.trim();
             const iconEl = document.getElementById('smart-link-icon');
@@ -930,13 +943,13 @@
             const isVip = vipSwitch ? vipSwitch.checked : false;
             const vipPin = document.getElementById('smart-link-pin') ? document.getElementById('smart-link-pin').value : "";
 
-            if(url === "") { alert("Inserisci un URL valido."); return; }
+            if(url === "") { alert("Inserire un URL valido."); return; }
 
             const isOfficial = iconEl.getAttribute('data-official') === 'true';
 
-            // --- LA DOGANA ANTI-FURBETTO ---
+            // Validazione input: restrizione ai soli domini social supportati
             if (!isOfficial) {
-                alert("⚠️ AZIONE NON CONSENTITA\n\nIn questa sezione puoi aggiungere unicamente canali Social ufficiali.\nPer inserire siti web generici (come Google o link aziendali), usa l'apposito modulo 'SITO WEB'.");
+                alert("Validazione Link\n\nIn questa sezione è consentito unicamente l'inserimento di piattaforme social riconosciute.\nPer inserire link a siti web o domini aziendali, si prega di utilizzare il modulo dedicato 'SITO WEB'.");
                 document.getElementById('smart-link-url').value = ""; 
                 document.getElementById('smart-link-name').value = "";
                 iconEl.className = "fas fa-link"; 
@@ -961,6 +974,7 @@
 
             block.style.cssText = "display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px; border-radius: 12px;";
 
+            // Generazione componenti grafici dinamici
             let iconaVisualizzata = `<i class="${iconClass}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>`;
             let officialBadge = isOfficial ? `<i class="fas fa-certificate" style="color: #1DA1F2; font-size: 0.75rem; margin-left: 6px;" title="Canale Ufficiale Verificato"></i>` : "";
             let vipBadge = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.75rem; margin-left: 6px;" title="Protetto da VIP Vault"></i>` : "";
@@ -983,6 +997,7 @@
 
             track.appendChild(block);
 
+            // Ripristino stato iniziale dei moduli di input
             document.getElementById('smart-link-url').value = ""; 
             document.getElementById('smart-link-name').value = "";
             if(vipSwitch) {
@@ -997,6 +1012,7 @@
             aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
         }
 
+        
         function rimuoviBlocco(id) {
             const block = document.getElementById(id);
             if(block) block.remove();
