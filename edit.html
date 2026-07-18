@@ -227,18 +227,61 @@
         body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(200, 150, 142, 0.25); box-shadow: 0 0 35px rgba(200, 150, 142, 0.15); }
         body[data-qr-theme="satin_rose"] .qr-svg { fill: #c8968e; filter: drop-shadow(0 0 8px rgba(200, 150, 142, 0.35)); }
 
-        /* --- MENU FLOATTANTE E DRAG & DROP --- */
-        .luxury-menu-btn {
-            position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); 
-            background: rgba(30, 30, 35, 0.8); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; 
-            display: flex; gap: 12px; padding: 16px 28px; justify-content: center; align-items: center;
-            z-index: 1000; cursor: pointer; transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1); box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+        /* --- MENU FLOATTANTE E STRUTTURA BARRA DI NAVIGAZIONE --- */
+        .floating-nav-bar {
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 1500;
+            align-items: center;
+            width: auto;
+            white-space: nowrap;
         }
-        .luxury-menu-btn:active { transform: translateX(-50%) scale(0.95); background: rgba(255,255,255,0.1); }
-        .luxury-menu-btn i { font-size: 1.1rem; color: #fff; }
-        .luxury-menu-btn span { font-size: 0.7rem; letter-spacing: 2.5px; font-weight: 600; color: #fff; text-transform: uppercase; }
+        .luxury-menu-btn {
+            background: rgba(30, 30, 35, 0.8);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px; 
+            display: flex;
+            gap: 10px;
+            padding: 16px 24px;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+        }
+        .luxury-menu-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .luxury-menu-btn i {
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        .luxury-menu-btn span {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+        }
 
+        /* Stili specifici per il pulsante Master di conversione commerciale */
+        .btn-action-primary {
+            background: #e5c158;
+            border: none;
+        }
+        .btn-action-primary i, .btn-action-primary span {
+            color: #000 !important;
+        }
+        .btn-action-primary:active {
+            background: #d4af37;
+        } 
         .blocks-track {
             width: 100%; max-width: 320px; margin: 40px auto 100px auto; 
             display: flex; flex-direction: column; gap: 15px; min-height: 50px;
@@ -294,9 +337,15 @@
         </div> 
     </div> 
 
-    <div class="luxury-menu-btn" onclick="apriDrawer('drawer-master')">
-        <i class="fas fa-bars"></i>
-        <span>MENU</span>
+    <div class="floating-nav-bar">
+        <div class="luxury-menu-btn" onclick="apriDrawer('drawer-master')">
+            <i class="fas fa-bars"></i>
+            <span>MENU</span>
+        </div>
+        <div id="master-action-btn" class="luxury-menu-btn btn-action-primary" onclick="gestisciAzioneMaster()">
+            <i class="fas fa-lock-open" id="master-action-icon"></i>
+            <span id="master-action-text">ATTIVA TAG</span>
+        </div>
     </div>
 
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
@@ -606,7 +655,7 @@
                 <div style="color: #888; font-size: 0.65rem; line-height: 1.4;">Identità essenziale. Nome, bio, avatar e QR Code standard.</div>
             </div>
             
-            <div style="background: rgba(229, 193, 88, 0.08); padding: 16px; border-radius: 14px; border: 1px solid rgba(229, 193, 88, 0.3); cursor: pointer;" onclick="alert('Funzione di Checkout in arrivo!')">
+            <div style="background: rgba(229, 193, 88, 0.08); padding: 16px; border-radius: 14px; border: 1px solid rgba(229, 193, 88, 0.3); cursor: pointer;" onclick="window.location.href = '/checkout.html?u=' + NOME_SISTEMA;">
                 <div style="display:flex; justify-content: space-between; margin-bottom: 6px;">
                     <span style="color: #e5c158; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">PREMIUM</span>
                     <i class="fas fa-lock" style="color: #e5c158; font-size: 0.8rem;"></i>
@@ -638,6 +687,7 @@
 
         const NOME_SISTEMA = getNomeBrandReale();
         let isDrawerOpen = false;
+        let statoUtente = 'in attesa'; 
         let userPlan = 'BASE'; // Simula l'utente Base. Se lo cambi in 'GOLD', il lucchetto si attiva.
 
         function getNomeBrandReale() {
@@ -1036,6 +1086,8 @@
 
                 if (f) {
                     userPlan = (f.plan || 'BASE').toUpperCase();
+                    statoUtente = (f.stato || 'in attesa').toLowerCase();
+                    aggiornaBottoneMaster();
 
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                     if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
@@ -1334,6 +1386,33 @@
         }
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
+       function aggiornaBottoneMaster() {
+            const btnText = document.getElementById('master-action-text');
+            const btnIcon = document.getElementById('master-action-icon');
+            const btn = document.getElementById('master-action-btn');
+            
+            if (!btnText || !btnIcon || !btn) return;
+
+            if (statoUtente === 'attivo') {
+                btnText.innerText = "PUBBLICA";
+                btnIcon.className = "fas fa-cloud-upload-alt";
+                btn.style.background = "#10b981"; // Verde successo se è già cliente
+            } else {
+                btnText.innerText = "ATTIVA TAG";
+                btnIcon.className = "fas fa-lock-open";
+                btn.style.background = "#e5c158"; // Oro per invitare all'acquisto
+            }
+        }
+
+        function gestisciAzioneMaster() {
+            if (statoUtente === 'attivo') {
+                salvaDati();
+                alert("Aggiornamento Completato\n\nLe modifiche sono state salvate e la tua Tag pubblica è stata aggiornata.");
+            } else {
+                salvaDati(); // Salva il lavoro fatto finora prima di portarlo al pagamento
+                window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+            }
+        }
     </script>
      
     
