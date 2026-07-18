@@ -828,6 +828,7 @@
             }
 
             aggiornaAnteprimaLive();
+            aggiornaBottoneMaster();
         }
 
         function aggiornaAnteprimaLive() {
@@ -1105,7 +1106,7 @@
                 if (f) {
                     userPlan = (f.plan || 'BASE').toUpperCase();
                     statoUtente = (f.stato || 'in attesa').toLowerCase();
-                    aggiornaBottoneMaster();
+                    
 
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                     if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
