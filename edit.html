@@ -227,61 +227,62 @@
         body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(200, 150, 142, 0.25); box-shadow: 0 0 35px rgba(200, 150, 142, 0.15); }
         body[data-qr-theme="satin_rose"] .qr-svg { fill: #c8968e; filter: drop-shadow(0 0 8px rgba(200, 150, 142, 0.35)); }
 
-        /* --- MENU FLOATTANTE E STRUTTURA BARRA DI NAVIGAZIONE --- */
+       /* --- MENU FLOATTANTE E STRUTTURA BARRA DI NAVIGAZIONE --- */
         .floating-nav-bar {
-            position: fixed;
-            bottom: 35px;
-            left: 50%;
+            position: fixed; 
+            bottom: 35px; 
+            left: 50%; 
             transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-            z-index: 1500;
-            align-items: center;
-            width: auto;
-            white-space: nowrap;
-        }
-        .luxury-menu-btn {
-            background: rgba(30, 30, 35, 0.8);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px; 
-            display: flex;
-            gap: 10px;
-            padding: 16px 24px;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
-        }
-        .luxury-menu-btn:active {
-            transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .luxury-menu-btn i {
-            font-size: 1.1rem;
-            color: #fff;
-        }
-        .luxury-menu-btn span {
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            font-weight: 600;
-            color: #fff;
-            text-transform: uppercase;
+            display: flex; 
+            align-items: center; 
+            z-index: 1500; 
+            
+            /* La singola capsula in vetro scuro unificata */
+            background: rgba(20, 20, 25, 0.7); 
+            backdrop-filter: blur(30px); 
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 50px; 
+            padding: 6px; /* Margine interno per l'effetto incastonato */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
-        /* Stili specifici per il pulsante Master di conversione commerciale */
-        .btn-action-primary {
-            background: #e5c158;
-            border: none;
+        .luxury-menu-btn {
+            display: flex; 
+            gap: 10px; 
+            padding: 12px 20px; 
+            justify-content: center; 
+            align-items: center;
+            cursor: pointer; 
+            border-radius: 40px;
+            transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+            background: transparent;
         }
-        .btn-action-primary i, .btn-action-primary span {
-            color: #000 !important;
+
+        .luxury-menu-btn:active { 
+            transform: scale(0.96); 
+            background: rgba(255,255,255,0.08); 
         }
-        .btn-action-primary:active {
-            background: #d4af37;
-        } 
+        
+        .luxury-menu-btn i { font-size: 1rem; color: #fff; }
+        .luxury-menu-btn span { font-size: 0.75rem; letter-spacing: 2px; font-weight: 600; color: #fff; text-transform: uppercase; }
+
+        /* Divisore verticale elegante tra i due comandi */
+        .nav-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 2px;
+        }
+
+        /* Stile hollow (vuoto) per il tasto azione - Niente blocchi solidi */
+        .btn-action-primary { 
+            background: rgba(212, 175, 55, 0.06); 
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+        }
+        .btn-action-primary:active { 
+            background: rgba(212, 175, 55, 0.15); 
+        }
         .blocks-track {
             width: 100%; max-width: 320px; margin: 40px auto 100px auto; 
             display: flex; flex-direction: column; gap: 15px; min-height: 50px;
@@ -337,11 +338,19 @@
         </div> 
     </div> 
 
-    <div class="floating-nav-bar">
+   <div class="floating-nav-bar">
         <div class="luxury-menu-btn" onclick="apriDrawer('drawer-master')">
             <i class="fas fa-bars"></i>
             <span>MENU</span>
         </div>
+        
+        <div class="nav-divider"></div>
+        
+        <div id="master-action-btn" class="luxury-menu-btn btn-action-primary" onclick="gestisciAzioneMaster()">
+            <i class="fas fa-lock-open" id="master-action-icon" style="color: #d4af37;"></i>
+            <span id="master-action-text" style="color: #d4af37;">ATTIVA TAG</span>
+        </div>
+    </div> 
         <div id="master-action-btn" class="luxury-menu-btn btn-action-primary" onclick="gestisciAzioneMaster()">
             <i class="fas fa-lock-open" id="master-action-icon"></i>
             <span id="master-action-text">ATTIVA TAG</span>
@@ -1386,7 +1395,7 @@
         }
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
-       function aggiornaBottoneMaster() {
+      function aggiornaBottoneMaster() {
             const btnText = document.getElementById('master-action-text');
             const btnIcon = document.getElementById('master-action-icon');
             const btn = document.getElementById('master-action-btn');
@@ -1396,14 +1405,21 @@
             if (statoUtente === 'attivo') {
                 btnText.innerText = "PUBBLICA";
                 btnIcon.className = "fas fa-cloud-upload-alt";
-                btn.style.background = "#10b981"; // Verde successo se è già cliente
+                // Stile Smeraldo Trasparente
+                btn.style.background = "rgba(16, 185, 129, 0.08)"; 
+                btn.style.borderColor = "rgba(16, 185, 129, 0.3)";
+                btnIcon.style.color = "#10b981";
+                btnText.style.color = "#10b981";
             } else {
                 btnText.innerText = "ATTIVA TAG";
                 btnIcon.className = "fas fa-lock-open";
-                btn.style.background = "#e5c158"; // Oro per invitare all'acquisto
+                // Stile Oro Trasparente
+                btn.style.background = "rgba(212, 175, 55, 0.06)"; 
+                btn.style.borderColor = "rgba(212, 175, 55, 0.3)";
+                btnIcon.style.color = "#d4af37";
+                btnText.style.color = "#d4af37";
             }
         }
-
         function gestisciAzioneMaster() {
             if (statoUtente === 'attivo') {
                 salvaDati();
