@@ -275,13 +275,28 @@
             margin: 0 2px;
         }
 
-        /* Stile hollow (vuoto) per il tasto azione - Niente blocchi solidi */
-        .btn-action-primary { 
-            background: rgba(212, 175, 55, 0.06); 
-            border: 1px solid rgba(212, 175, 55, 0.3); 
+       /* Stili specifici per il pulsante Master di conversione */
+        .btn-action-primary {
+            /* STATO 1: Spento / Bloccato (Grigio scuro vetro) */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
         }
-        .btn-action-primary:active { 
-            background: rgba(212, 175, 55, 0.15); 
+        .btn-action-primary i, .btn-action-primary span {
+            color: rgba(255, 255, 255, 0.4) !important;
+            transition: all 0.3s ease;
+        }
+        
+        /* STATO 2 & 3: Acceso / Pronto (Il Verde della tua Index) */
+        .btn-action-primary.ready {
+            background: rgba(16, 185, 129, 0.15); /* Verde myquicktag incastonato */
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .btn-action-primary.ready i, .btn-action-primary.ready span {
+            color: #10b981 !important; /* Verde neon acceso */
+        }
+        .btn-action-primary.ready:active {
+            background: rgba(16, 185, 129, 0.25);
         }
         .blocks-track {
             width: 100%; max-width: 320px; margin: 40px auto 100px auto; 
@@ -347,8 +362,8 @@
         <div class="nav-divider"></div>
         
         <div id="master-action-btn" class="luxury-menu-btn btn-action-primary" onclick="gestisciAzioneMaster()">
-            <i class="fas fa-lock-open" id="master-action-icon" style="color: #d4af37;"></i>
-            <span id="master-action-text" style="color: #d4af37;">ATTIVA TAG</span>
+            <i class="fas fa-lock" id="master-action-icon"></i>
+            <span id="master-action-text">COMPLETA TAG</span>
         </div>
     </div>
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
@@ -1389,7 +1404,24 @@
         }
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
-      function aggiornaBottoneMaster() {
+    // 1. Controlla se l'utente ha inserito almeno un dato utile
+        function verificaCompletamentoBase() {
+            const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
+            const sitoVal = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
+            const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
+            const tel1Val = document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "";
+            
+            const internalTrack = document.getElementById('social-internal-track');
+            const haSocial = internalTrack && internalTrack.children.length > 0;
+
+            if (bioVal !== "" || sitoVal !== "" || emailVal !== "" || tel1Val !== "" || haSocial) {
+                return true; // Ha inserito qualcosa, può procedere!
+            }
+            return false; // Profilo completamente vuoto
+        }
+
+        // 2. Cambia il colore e il testo del bottone in base allo stato
+        function aggiornaBottoneMaster() {
             const btnText = document.getElementById('master-action-text');
             const btnIcon = document.getElementById('master-action-icon');
             const btn = document.getElementById('master-action-btn');
@@ -1397,32 +1429,39 @@
             if (!btnText || !btnIcon || !btn) return;
 
             if (statoUtente === 'attivo') {
+                // FASE 3: Cliente già pagante (PUBBLICA)
                 btnText.innerText = "PUBBLICA";
                 btnIcon.className = "fas fa-cloud-upload-alt";
-                // Stile Smeraldo Trasparente
-                btn.style.background = "rgba(16, 185, 129, 0.08)"; 
-                btn.style.borderColor = "rgba(16, 185, 129, 0.3)";
-                btnIcon.style.color = "#10b981";
-                btnText.style.color = "#10b981";
+                btn.classList.add('ready'); // Si accende di verde
             } else {
-                btnText.innerText = "ATTIVA TAG";
-                btnIcon.className = "fas fa-lock-open";
-                // Stile Oro Trasparente
-                btn.style.background = "rgba(212, 175, 55, 0.06)"; 
-                btn.style.borderColor = "rgba(212, 175, 55, 0.3)";
-                btnIcon.style.color = "#d4af37";
-                btnText.style.color = "#d4af37";
+                if (verificaCompletamentoBase()) {
+                    // FASE 2: Dati inseriti, pronto per il checkout
+                    btnText.innerText = "ATTIVA TAG";
+                    btnIcon.className = "fas fa-lock-open";
+                    btn.classList.add('ready'); // Si accende di verde
+                } else {
+                    // FASE 1: Profilo vuoto, acquisto bloccato
+                    btnText.innerText = "COMPLETA TAG";
+                    btnIcon.className = "fas fa-lock";
+                    btn.classList.remove('ready'); // Torna grigio spento
+                }
             }
         }
+
+        // 3. Regola cosa succede quando l'utente ci clicca sopra
         function gestisciAzioneMaster() {
             if (statoUtente === 'attivo') {
                 salvaDati();
                 alert("Aggiornamento Completato\n\nLe modifiche sono state salvate e la tua Tag pubblica è stata aggiornata.");
             } else {
-                salvaDati(); // Salva il lavoro fatto finora prima di portarlo al pagamento
-                window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+                if (verificaCompletamentoBase()) {
+                    salvaDati(); 
+                    window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+                } else {
+                    alert("⚠️ Profilo Incompleto\n\nPer attivare la tua Tag, devi inserire almeno un collegamento o un testo.\n\nAggiungi una Bio, un numero di telefono, un sito o un canale social prima di procedere all'attivazione.");
+                }
             }
-        }
+        } 
     </script>
      
     
