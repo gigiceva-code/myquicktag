@@ -697,7 +697,73 @@ body {
         </div>
     </div>
 
-   <script> 
+   <script>
+       // ============================================================
+// GESTIONE VIP VAULT (SICUREZZA ACCESSO LINK)
+// ============================================================
+let urlRiservato = "";
+let pinRiservato = "";
+
+function apriVipVault(url, pin, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    urlRiservato = url;
+    pinRiservato = pin;
+    
+    const overlay = document.getElementById('vip-vault-overlay');
+    const input = document.getElementById('vip-pin-input');
+    
+    if (overlay && input) {
+        input.value = "";
+        input.placeholder = "****";
+        input.style.borderColor = "rgba(229, 193, 88, 0.3)";
+        overlay.style.display = 'flex';
+        // Auto-focus per agevolare l'inserimento da mobile
+        setTimeout(() => input.focus(), 100);
+    }
+}
+
+function chiudiVipVault() {
+    const overlay = document.getElementById('vip-vault-overlay');
+    if (overlay) overlay.style.display = 'none';
+    urlRiservato = "";
+    pinRiservato = "";
+}
+
+function verificaPinVip() {
+    const input = document.getElementById('vip-pin-input');
+    if (!input) return;
+    
+    if (input.value === pinRiservato) {
+        // PIN Corretto: Chiude il Vault e apre la destinazione
+        chiudiVipVault();
+        window.open(urlRiservato, '_blank', 'noopener noreferrer');
+    } else {
+        // PIN Errato: Feedback visivo di errore
+        input.style.borderColor = "#ff4444";
+        input.value = "";
+        input.placeholder = "ERRATO";
+        setTimeout(() => {
+            input.style.borderColor = "rgba(229, 193, 88, 0.3)";
+            input.placeholder = "****";
+        }, 1500);
+    }
+}
+
+// Associa la pressione del tasto "Invio" sul tastierino alla verifica del PIN
+document.addEventListener('DOMContentLoaded', () => {
+    const pinInput = document.getElementById('vip-pin-input');
+    if (pinInput) {
+        pinInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                verificaPinVip();
+            }
+        });
+    }
+});
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     usernameCorrente = (urlParams.get("u") || "").toLowerCase().trim();
@@ -1089,36 +1155,43 @@ function renderizzaSocial(configCanali) {
     const container = document.getElementById("casella-social");
     if (!container) return;
 
-    // Se non ci sono canali, nascondi la casella
     if (!configCanali || configCanali.trim() === "") {
         container.style.display = 'none';
         return;
     }
 
     try {
-      const canali = JSON.parse(configCanali);
+        const canali = JSON.parse(configCanali);
 
         if (!canali || !Array.isArray(canali) || canali.length === 0) {
             container.style.display = 'none';
             return;
         } 
 
-        // Svuota il contenuto precedente
         container.innerHTML = "";
 
         canali.forEach(canale => {
             const nomeLower = canale.nome.toLowerCase();
             const iconClass = socialIcons[nomeLower] || socialIcons["default"];
+            const isVip = (canale.vip === true || canale.vip === 'true');
 
             const btn = document.createElement("a");
             btn.className = "btn-social";
-            btn.href = canale.url;
-            btn.target = "_blank";
-            btn.rel = "noopener noreferrer";
-            btn.style.cssText = "text-decoration:none; color:inherit; display:flex; align-items:center; gap:8px;";
-            btn.innerHTML = `<i class="${iconClass}"></i> ${canale.nome}`;
+            
+            // Logica condizionale per l'ingaggio VIP Vault
+            if (isVip) {
+                btn.href = "#";
+                btn.onclick = (e) => apriVipVault(canale.url, canale.pin, e);
+                btn.innerHTML = `<i class="${iconClass}"></i> ${canale.nome} <i class="fas fa-lock" style="color: #e5c158; font-size: 0.7rem; margin-left: 5px;"></i>`;
+            } else {
+                btn.href = canale.url;
+                btn.target = "_blank";
+                btn.rel = "noopener noreferrer";
+                btn.innerHTML = `<i class="${iconClass}"></i> ${canale.nome}`;
+            }
 
-            // Condivisione singolo social (tasto lungo)
+            btn.style.cssText = "text-decoration:none; color:inherit; display:flex; align-items:center; gap:8px; justify-content: center;";
+
             btn.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 _condividi(canale.nome, canale.url);
@@ -1135,7 +1208,6 @@ function renderizzaSocial(configCanali) {
         return;
     }
 }
-
 // ============================================================
 // VISIBILITÀ AUTOMATICA CASELLE
 // Nasconde le caselle senza contenuto
@@ -1319,16 +1391,26 @@ function apriSezione(tipo) {
             canali.forEach(canale => {
                 const nomeLower = canale.nome.toLowerCase();
                 const iconClass = socialIcons[nomeLower] || socialIcons["default"];
+                const isVip = (canale.vip === true || canale.vip === 'true');
+                const lockHtml = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.8rem; margin-left: 8px;"></i>` : '';
 
                 const riga = document.createElement('div');
                 riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
 
                 const link = document.createElement('a');
-                link.href = canale.url;
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
+                
+                // Intercettazione del link per i canali protetti
+                if (isVip) {
+                    link.href = "#";
+                    link.onclick = (e) => apriVipVault(canale.url, canale.pin, e);
+                } else {
+                    link.href = canale.url;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                }
+                
                 link.style.cssText = 'display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;';
-                link.innerHTML = `<i class="${iconClass}" style="font-size:1.2rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; font-weight:500;">${canale.nome}</span>`;
+                link.innerHTML = `<i class="${iconClass}" style="font-size:1.2rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; font-weight:500;">${canale.nome}</span>${lockHtml}`;
 
                 const btnCondividi = document.createElement('button');
                 btnCondividi.style.cssText = 'background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff; padding:7px 10px; border-radius:8px; cursor:pointer; flex-shrink:0;';
