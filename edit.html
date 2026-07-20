@@ -152,6 +152,72 @@
         #profile-content[data-theme="satin_rose"] .at-symbol { color: #c8968e; opacity: 0.9; text-shadow: 0 0 10px rgba(200, 150, 142, 0.3); }
         #profile-content[data-theme="titanium"] .at-symbol { color: #b0b0b5; opacity: 0.9; }
         #profile-content[data-theme="black_dna"] .at-symbol { color: #ffffff; opacity: 0.4; }
+                /* =========================================================
+           DNA CORE - L'OGGETTO IDENTITARIO
+           ========================================================= */
+        :root {
+            --core-glow: rgba(255, 255, 255, 0.1);
+            --core-border: rgba(255, 255, 255, 0.2);
+        }
+
+        #profile-content[data-theme="emerald"] { --core-glow: rgba(0, 230, 128, 0.4); --core-border: rgba(0, 230, 128, 0.8); }
+        #profile-content[data-theme="obsidian_gold"] { --core-glow: rgba(229, 193, 88, 0.4); --core-border: rgba(229, 193, 88, 0.8); }
+        #profile-content[data-theme="satin_rose"] { --core-glow: rgba(200, 150, 142, 0.4); --core-border: rgba(200, 150, 142, 0.8); }
+        #profile-content[data-theme="titanium"] { --core-glow: rgba(176, 176, 181, 0.3); --core-border: rgba(176, 176, 181, 0.6); }
+        #profile-content[data-theme="black_dna"] { --core-glow: rgba(255, 255, 255, 0.15); --core-border: rgba(255, 255, 255, 0.3); }
+
+        .dna-core-container {
+            display: none; 
+            justify-content: center; 
+            align-items: center;
+            margin-bottom: 25px; 
+            margin-top: 15px; 
+            position: relative; 
+            z-index: 10;
+        }
+
+        /* L'anello esterno che respira */
+        .dna-core-ring {
+            width: 82px; 
+            height: 82px; 
+            border-radius: 22px; /* Forma a casella morbida, non rotonda */
+            padding: 3px;
+            background: linear-gradient(135deg, var(--core-border), transparent 60%, var(--core-border));
+            box-shadow: 0 0 20px var(--core-glow), inset 0 0 10px var(--core-glow);
+            animation: coreBreathe 6s ease-in-out infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* L'immagine vera e propria incastonata */
+        .dna-core-img {
+            width: 100%; 
+            height: 100%; 
+            border-radius: 19px; 
+            object-fit: cover; 
+            background: #0d0d0f;
+            z-index: 2;
+        }
+
+        /* Effetto materializzazione al caricamento */
+        .materialize-effect {
+            animation: coreMaterialize 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes coreBreathe {
+            0% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); }
+            50% { transform: scale(1.04); box-shadow: 0 0 30px var(--core-glow), inset 0 0 15px var(--core-glow); }
+            100% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); }
+        }
+
+        @keyframes coreMaterialize {
+            0% { transform: scale(0.5) translateY(-20px); opacity: 0; filter: blur(10px) brightness(2); }
+            50% { transform: scale(1.1); opacity: 1; filter: blur(0px) brightness(1.5); box-shadow: 0 0 50px #fff; }
+            100% { transform: scale(1); opacity: 1; filter: blur(0px) brightness(1); }
+        }
+
 
         /* --- CASSETTI E MODALI --- */
         .drawer-backdrop { 
@@ -331,9 +397,13 @@
     <div class="configurator-wrapper">
         <div id="profile-content" data-theme="black_dna"> 
 
-            <div id="live-avatar-container" style="display: none; justify-content: center; margin-bottom: 15px; margin-top: 10px; position: relative; z-index: 10;">
-                <img id="live-avatar-img" src="" alt="Avatar" style="width: 72px; height: 72px; border-radius: 18px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+                        <!-- DNA CORE - Identità Visiva -->
+            <div id="live-avatar-container" class="dna-core-container">
+                <div class="dna-core-ring" id="dna-core-ring">
+                    <img id="live-avatar-img" class="dna-core-img" src="" alt="Core">
+                </div>
             </div>
+
 
             <div class="header-monolith">
                 <div class="username-capsule-wrapper">
