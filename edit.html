@@ -1224,6 +1224,27 @@
                     if (f.quick_action_url && document.getElementById('field-qa-url')) document.getElementById('field-qa-url').value = f.quick_action_url;
 
                     if (f.modulo_vcf) {
+                                            // Ricarica il DNA CORE se esiste
+                    if (f.avatar_url && document.getElementById('field-avatar-url')) {
+                        document.getElementById('field-avatar-url').value = f.avatar_url;
+                        const liveImg = document.getElementById('live-avatar-img');
+                        if(liveImg) {
+                            liveImg.src = f.avatar_url;
+                            document.getElementById('live-avatar-container').style.display = 'flex';
+                            
+                            // Aggiorna anche la finestrella nel cassetto
+                            const box = document.getElementById('avatar-preview-box');
+                            if(box) {
+                                box.style.backgroundImage = `url('${f.avatar_url}')`;
+                                box.style.backgroundSize = 'cover';
+                                box.style.backgroundPosition = 'center';
+                                box.style.border = '1px solid rgba(255,255,255,0.4)';
+                                const icon = document.getElementById('avatar-icon');
+                                if(icon) icon.style.display = 'none';
+                            }
+                        }
+                    }
+
                         try {
                             const vcf = typeof f.modulo_vcf === 'string' ? JSON.parse(f.modulo_vcf) : f.modulo_vcf;
                             if (vcf.telefono1 && document.getElementById('field-tel1')) document.getElementById('field-tel1').value = vcf.telefono1;
@@ -1372,6 +1393,7 @@
                 digital_style: styleVal, digital_layout: layoutVal,
                 bio: bioVal, sito_web: sitoVal, email: emailVal,
                 quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl,
+                avatar_url: coreUrl,
                 modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
             }; 
 
@@ -1585,31 +1607,41 @@
                 const data = await response.json();
 
                 if (data.secure_url) {
+                                    
                     // SUCCESSO! Cloudinary ci restituisce il link pubblico ottimizzato
                     const imageUrl = data.secure_url;
-                    
+
                     // Salviamo il link nel campo nascosto
                     document.getElementById('field-avatar-url').value = imageUrl;
 
-                    // Aggiorniamo la miniatura nel cassetto (sparisce la fotocamera e appare la foto)
+                    // Aggiorniamo la miniatura nel cassetto
                     const box = document.getElementById('avatar-preview-box');
                     box.style.backgroundImage = `url('${imageUrl}')`;
                     box.style.backgroundSize = 'cover';
                     box.style.backgroundPosition = 'center';
-                    box.style.border = '1px solid #10b981'; // Bordino verde di conferma
+                    box.style.border = '1px solid #10b981'; 
                     document.getElementById('avatar-icon').style.display = 'none';
 
-                    // Aggiorniamo l'anteprima centrale del telefono
+                    // ACCENSIONE DEL DNA CORE CENTRALE
+                    const liveContainer = document.getElementById('live-avatar-container');
                     const liveImg = document.getElementById('live-avatar-img');
-                    if(liveImg) {
-                        liveImg.src = imageUrl;
-                        document.getElementById('live-avatar-container').style.display = 'flex';
-                    }
+                    const coreRing = document.getElementById('dna-core-ring');
                     
+                    if(liveImg && liveContainer && coreRing) {
+                        liveImg.src = imageUrl;
+                        liveContainer.style.display = 'flex';
+                        
+                        // Rimuove e rimette la classe per forzare l'animazione di materializzazione
+                        coreRing.classList.remove('materialize-effect');
+                        void coreRing.offsetWidth; // Trucco per resettare l'animazione CSS
+                        coreRing.classList.add('materialize-effect');
+                    }
+
                     // Facciamo scattare il lucchetto verde intelligente
                     if(typeof aggiornaBottoneMaster === 'function') {
                         aggiornaBottoneMaster();
                     }
+
                 } else {
                     console.error("Errore Cloudinary:", data);
                     alert("Errore dal server Cloudinary. Riprova.");
