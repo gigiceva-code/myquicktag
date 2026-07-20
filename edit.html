@@ -1322,7 +1322,7 @@
        async function salvaDati() {
             if(NOME_SISTEMA === "tuonome.it") return; 
 
-            // --- REGOLA ANTI-FURBETTO N.2: BLOCCO SOCIAL NEL MODULO SITO WEB ---
+            // --- VALIDAZIONE INPUT: RESTRIZIONE DOMINI SOCIAL NEL CAMPO SITO WEB ---
             const sitoInput = document.getElementById('field-sito');
             let sitoVal = "";
             if (sitoInput) {
@@ -1378,13 +1378,16 @@
                 });
             }
 
+                        // Recupera l'URL del DNA Core dal campo nascosto
+            const coreUrl = document.getElementById('field-avatar-url') ? document.getElementById('field-avatar-url').value : "";
+
             const bozza = { 
                 username_system: NOME_SISTEMA, 
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
                 digital_style: styleVal, digital_layout: layoutVal,
                 bio: bioVal, sito_web: sitoVal, email: emailVal,
                 quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl,
-                avatar_url: coreUrl,
+                avatar_url: coreUrl, // Ora la variabile esiste e non farà più crashare il salvataggio
                 modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
             }; 
 
