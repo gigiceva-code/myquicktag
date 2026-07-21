@@ -707,7 +707,32 @@ body {
     </div>
 
    <script>
-       // ============================================================
+        function formattaBadge(testoBruto) {
+            const el = document.getElementById('tag-username');
+            if(!el) return;
+
+            let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
+            if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
+
+            el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
+
+            el.style.whiteSpace = "";
+            el.style.wordBreak = "";
+            el.style.overflowWrap = "";
+            el.style.textWrap = "";
+
+            if (testo.length > 35) {
+                el.style.fontSize = "0.85rem";
+            } else if (testo.length > 22) {
+                el.style.fontSize = "0.95rem";
+            } else {
+                el.style.fontSize = "1.05rem"; 
+            }
+
+            void el.offsetHeight; 
+        }
+
+ // ============================================================
 // GESTIONE VIP VAULT (SICUREZZA ACCESSO LINK)
 // ============================================================
 let urlRiservato = "";
@@ -871,20 +896,41 @@ async function avviaFlusso(username) {
 // ============================================================
 // RENDERING BASE — popola gli elementi visibili della tag
 // ============================================================
+
 function renderizzaTagCompleta(fields) {
 
-    // 1. USERNAME
-    const elUsername = document.getElementById('tag-username');
-    if (elUsername) {
-elUsername.textContent = '@' + (fields.username_display || fields.username_system).replace('@', '');
+    // 0. APPLICAZIONE TEMA E LAYOUT (Per far funzionare i 3 stili e i colori corretti)
+    const container = document.getElementById('profile-content');
+    if (container) {
+        container.setAttribute('data-theme', fields.digital_style || 'black_dna');
+        container.setAttribute('data-layout', fields.digital_layout || 'badge');
+        // Allineiamo anche il tema del QR code
+        document.body.setAttribute('data-qr-theme', fields.digital_style || 'black_dna'); 
     }
 
-    // 2. AVATAR — Airtable ritorna gli attachment come array di oggetti
-    const elAvatar = document.getElementById('userImage');
-    if (elAvatar && fields.avatar && Array.isArray(fields.avatar) && fields.avatar.length > 0) {
-        elAvatar.src = fields.avatar[0].url;
-        elAvatar.alt = fields.username_display || fields.username_system;
+    // 1. USERNAME (Identica logica di edit.html)
+    const nomeDaMostrare = fields.username_display || fields.username_system;
+    formattaBadge(nomeDaMostrare);
+
+    // 2. DNA CORE AVATAR (Lettura da Cloudinary)
+    const liveContainer = document.getElementById('live-avatar-container');
+    const liveImg = document.getElementById('live-avatar-img');
+    const coreRing = document.getElementById('dna-core-ring');
+    
+    if (fields.avatar_url && liveImg && liveContainer && coreRing) {
+        liveImg.src = fields.avatar_url;
+        liveContainer.style.display = 'flex';
+        
+        // Innesca l'animazione
+        coreRing.classList.remove('materialize-effect');
+        void coreRing.offsetWidth; 
+        coreRing.classList.add('materialize-effect');
+    } else if (liveContainer) {
+        liveContainer.style.display = 'none';
     }
+
+    // 3. QR CODE — punta all'URL pubblico di questa tag
+    // (IL RESTO DELLA FUNZIONE RIMANE IDENTICO A PRIMA)
 
     // 3. QR CODE — punta all'URL pubblico di questa tag
     const urlPubblico = `${window.location.origin}/tag.html?u=${fields.username_system}`;
