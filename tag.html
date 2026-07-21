@@ -572,6 +572,57 @@ body {
 .app-container.ready::after {
     display: none !important;
 }
+/* =========================================================
+   TEMI, LAYOUT E DNA CORE (MOTORE GRAFICO PWA)
+   ========================================================= */
+/* --- TEMI UFFICIALI --- */
+#profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8) !important; }
+#profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.2) !important; border-color: rgba(0, 230, 128, 0.5) !important; box-shadow: 0 0 35px rgba(0, 230, 128, 0.15) !important; }
+
+#profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05) !important; box-shadow: inset 0 0 20px rgba(255,255,255,0.02) !important; } 
+#profile-content[data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.2) !important; box-shadow: 0 0 35px rgba(255, 255, 255, 0.05) !important;}
+
+#profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8) !important; }
+#profile-content[data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.2) !important; border-color: rgba(176, 176, 181, 0.5) !important; box-shadow: 0 0 35px rgba(176, 176, 181, 0.15) !important;}
+
+#profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8) !important; }
+#profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(212, 175, 55, 0.05) !important; border-color: rgba(212, 175, 55, 0.25) !important; box-shadow: 0 0 35px rgba(212, 175, 55, 0.15) !important;}
+
+#profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8) !important; }
+#profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.2) !important; border-color: rgba(200, 150, 142, 0.5) !important; box-shadow: 0 0 35px rgba(200, 150, 142, 0.15) !important;}
+
+/* --- LAYOUT DIVIDER E PURE --- */
+#profile-content[data-layout="divider"] .username-capsule-wrapper,
+#profile-content[data-layout="divider"] .username-capsule,
+#profile-content[data-layout="pure"] .username-capsule-wrapper,
+#profile-content[data-layout="pure"] .username-capsule { 
+    display: block !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;
+}
+#profile-content[data-layout="divider"] .header-monolith, #profile-content[data-layout="pure"] .header-monolith {
+    position: relative; padding: 20px 0 !important;
+}
+#profile-content[data-layout="divider"] .header-monolith::after {
+    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
+    z-index: 1; pointer-events: none;
+}
+#profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; margin: 0 auto !important; max-width: 280px !important; line-height: 2.2 !important; }
+#profile-content[data-layout="pure"] .username-display { margin: 0 auto !important; max-width: 280px !important; line-height: 2.2 !important; }
+
+/* --- DNA CORE --- */
+:root { --core-glow: rgba(255, 255, 255, 0.1); --core-border: rgba(255, 255, 255, 0.2); }
+#profile-content[data-theme="emerald"] { --core-glow: rgba(0, 230, 128, 0.4); --core-border: rgba(0, 230, 128, 0.8); }
+#profile-content[data-theme="obsidian_gold"] { --core-glow: rgba(229, 193, 88, 0.4); --core-border: rgba(229, 193, 88, 0.8); }
+#profile-content[data-theme="satin_rose"] { --core-glow: rgba(200, 150, 142, 0.4); --core-border: rgba(200, 150, 142, 0.8); }
+#profile-content[data-theme="titanium"] { --core-glow: rgba(176, 176, 181, 0.3); --core-border: rgba(176, 176, 181, 0.6); }
+#profile-content[data-theme="black_dna"] { --core-glow: rgba(255, 255, 255, 0.15); --core-border: rgba(255, 255, 255, 0.3); }
+
+.dna-core-container { display: none; justify-content: center; align-items: center; margin-bottom: 25px; margin-top: 15px; position: relative; z-index: 10; }
+.dna-core-ring { width: 82px; height: 82px; border-radius: 22px; padding: 3px; background: linear-gradient(135deg, var(--core-border), transparent 60%, var(--core-border)); box-shadow: 0 0 20px var(--core-glow), inset 0 0 10px var(--core-glow); animation: coreBreathe 6s ease-in-out infinite; display: flex; justify-content: center; align-items: center; position: relative; }
+.dna-core-img { width: 100%; height: 100%; border-radius: 19px; object-fit: cover; background: #0d0d0f; z-index: 2; }
+.materialize-effect { animation: coreMaterialize 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes coreBreathe { 0% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); } 50% { transform: scale(1.04); box-shadow: 0 0 30px var(--core-glow), inset 0 0 15px var(--core-glow); } 100% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); } }
+@keyframes coreMaterialize { 0% { transform: scale(0.5) translateY(-20px); opacity: 0; filter: blur(10px) brightness(2); } 50% { transform: scale(1.1); opacity: 1; filter: blur(0px) brightness(1.5); box-shadow: 0 0 50px #fff; } 100% { transform: scale(1); opacity: 1; filter: blur(0px) brightness(1); } }
 
 </style>       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -707,30 +758,7 @@ body {
     </div>
 
    <script>
-        function formattaBadge(testoBruto) {
-            const el = document.getElementById('tag-username');
-            if(!el) return;
-
-            let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
-            if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
-
-            el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
-
-            el.style.whiteSpace = "";
-            el.style.wordBreak = "";
-            el.style.overflowWrap = "";
-            el.style.textWrap = "";
-
-            if (testo.length > 35) {
-                el.style.fontSize = "0.85rem";
-            } else if (testo.length > 22) {
-                el.style.fontSize = "0.95rem";
-            } else {
-                el.style.fontSize = "1.05rem"; 
-            }
-
-            void el.offsetHeight; 
-        }
+        
 
  // ============================================================
 // GESTIONE VIP VAULT (SICUREZZA ACCESSO LINK)
@@ -894,25 +922,50 @@ async function avviaFlusso(username) {
     }
 }
 // ============================================================
+// FORMATTAZIONE INTELLIGENTE DEL BADGE
+// ============================================================
+function formattaBadge(testoBruto) {
+    const el = document.getElementById('tag-username');
+    if(!el) return;
+
+    // Prevenzione crash se il dato dal database è vuoto
+    if (!testoBruto) testoBruto = "TUONOME";
+
+    let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
+    if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
+
+    el.innerHTML = `<span class="at-symbol" style="opacity:0.4; font-weight:300; margin-right:4px;">@</span><span class="brand-text">${testo}</span>`;
+
+    el.style.whiteSpace = "normal";
+    el.style.wordBreak = "normal";
+    el.style.overflowWrap = "break-word";
+
+    if (testo.length > 25) {
+        el.style.fontSize = "0.85rem";
+    } else if (testo.length > 18) {
+        el.style.fontSize = "0.95rem";
+    } else {
+        el.style.fontSize = "1.05rem"; 
+    }
+}
+
+// ============================================================
 // RENDERING BASE — popola gli elementi visibili della tag
 // ============================================================
-
 function renderizzaTagCompleta(fields) {
-
-    // 0. APPLICAZIONE TEMA E LAYOUT (Per far funzionare i 3 stili e i colori corretti)
+    // 0. APPLICAZIONE TEMA E LAYOUT 
     const container = document.getElementById('profile-content');
     if (container) {
         container.setAttribute('data-theme', fields.digital_style || 'black_dna');
         container.setAttribute('data-layout', fields.digital_layout || 'badge');
-        // Allineiamo anche il tema del QR code
         document.body.setAttribute('data-qr-theme', fields.digital_style || 'black_dna'); 
     }
 
-    // 1. USERNAME (Identica logica di edit.html)
+    // 1. USERNAME 
     const nomeDaMostrare = fields.username_display || fields.username_system;
     formattaBadge(nomeDaMostrare);
 
-    // 2. DNA CORE AVATAR (Lettura da Cloudinary)
+    // 2. DNA CORE AVATAR 
     const liveContainer = document.getElementById('live-avatar-container');
     const liveImg = document.getElementById('live-avatar-img');
     const coreRing = document.getElementById('dna-core-ring');
@@ -920,8 +973,6 @@ function renderizzaTagCompleta(fields) {
     if (fields.avatar_url && liveImg && liveContainer && coreRing) {
         liveImg.src = fields.avatar_url;
         liveContainer.style.display = 'flex';
-        
-        // Innesca l'animazione
         coreRing.classList.remove('materialize-effect');
         void coreRing.offsetWidth; 
         coreRing.classList.add('materialize-effect');
@@ -930,38 +981,39 @@ function renderizzaTagCompleta(fields) {
     }
 
     // 3. QR CODE — punta all'URL pubblico di questa tag
-    // (IL RESTO DELLA FUNZIONE RIMANE IDENTICO A PRIMA)
-
-    // 3. QR CODE — punta all'URL pubblico di questa tag
     const urlPubblico = `${window.location.origin}/tag.html?u=${fields.username_system}`;
-   generaQR(urlPubblico);
+    generaQR(urlPubblico);
+    
     // 4. SITO WEB — casella dedicata (se presente)
     renderizzaSitoWeb(fields.sito_web);
-gestisciVisibilitaCaselle(fields);
-    // 5. Attiva visibilità container con animazione
-const container = document.querySelector('.app-container');
-if (container) {
-    container.classList.add('ready');
-}
-// 6. Controlla se arriva da checkout o è in modalità draft
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('welcome') === '1') {
-    mostraWelcomeOverlay();
-}
-if (urlParams.get('mode') === 'draft') {
-    if (fields.stato === 'attivo') {
-        const ctaPubblica = document.getElementById('cta-pubblica-container');
-        if (ctaPubblica) ctaPubblica.style.display = 'block';
-    } else {
-        mostraOverlayAcquisto();
+    gestisciVisibilitaCaselle(fields);
+    
+    // 5. Attiva visibilità container con animazione (LA LUCE SI ACCENDE)
+    if (container) {
+        container.classList.add('ready');
     }
+    
+    // 6. Controlla se arriva da checkout o è in modalità draft
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('welcome') === '1') {
+        mostraWelcomeOverlay();
+    }
+    if (urlParams.get('mode') === 'draft') {
+        if (fields.stato === 'attivo') {
+            const ctaPubblica = document.getElementById('cta-pubblica-container');
+            if (ctaPubblica) ctaPubblica.style.display = 'block';
+        } else {
+            mostraOverlayAcquisto();
+        }
+    }
+    
+    // 7. Manifest e icona dinamici per PWA
+    const manifestLink = document.getElementById('dynamic-manifest');
+    const iconLink = document.getElementById('dynamic-icon');
+    if (manifestLink) manifestLink.href = `/api/manifest?u=${fields.username_system}`;
+    if (iconLink) iconLink.href = `/api/generate-icons?u=${fields.username_system}`; 
 }
-   // 7. Manifest e icona dinamici per PWA
-const manifestLink = document.getElementById('dynamic-manifest');
-const iconLink = document.getElementById('dynamic-icon');
-if (manifestLink) manifestLink.href = `/api/manifest?u=${fields.username_system}`;
-if (iconLink) iconLink.href = `/api/generate-icons?u=${fields.username_system}`; 
-}    
+
 // ============================================================
 // QR CODE — generazione reale tramite qrcode.js
 // ============================================================
