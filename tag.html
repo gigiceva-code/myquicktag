@@ -692,24 +692,25 @@ body {
     </a>
 
     <div id="profile-content" class="app-container">
-              <div class="header-monolith" style="flex-direction: column;">
-            
-            <div id="live-avatar-container" class="dna-core-container">
-                <div class="dna-core-ring" id="dna-core-ring">
-                    <img id="live-avatar-img" class="dna-core-img" src="" alt="Core">
-                </div>
+             <div class="header-monolith" style="flex-direction: column;">
+        
+        <!-- TAG CORE -->
+        <div id="live-avatar-container" class="dna-core-container">
+            <div class="dna-core-ring" id="dna-core-ring">
+                <img id="live-avatar-img" class="dna-core-img" src="" alt="Core">
             </div>
-
-            <div class="username-capsule-wrapper" style="width: 100%; display: flex; justify-content: center;">
-                <div class="username-capsule">
-                    <div class="username-capsule-inner">
-                        <h1 class="username-display" id="tag-username">@tuonome.it</h1>
-                    </div>
-                </div>
-            </div>
-            
         </div>
 
+        <!-- IDENTITÀ BRAND -->
+        <div id="name-capsule-wrapper" class="username-capsule-wrapper" style="width: 100%; display: flex; justify-content: center;">
+            <div class="username-capsule">
+                <div class="username-capsule-inner">
+                    <h1 class="username-display" id="tag-username">@tuonome.it</h1>
+                </div>
+            </div>
+        </div>
+        
+    </div> 
 
    <div id="mainGrid">
         <div class="casella" id="casella-qr" onclick="apriQR()">
@@ -987,9 +988,7 @@ function formattaBadge(testoBruto) {
     const el = document.getElementById('tag-username');
     if(!el) return;
 
-    // Prevenzione crash se il dato dal database è vuoto
     if (!testoBruto) testoBruto = "TUONOME";
-
     let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
     if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
@@ -999,20 +998,16 @@ function formattaBadge(testoBruto) {
     el.style.wordBreak = "normal";
     el.style.overflowWrap = "break-word";
 
-    if (testo.length > 25) {
-        el.style.fontSize = "0.85rem";
-    } else if (testo.length > 18) {
-        el.style.fontSize = "0.95rem";
-    } else {
-        el.style.fontSize = "1.05rem"; 
-    }
+    if (testo.length > 25) { el.style.fontSize = "0.85rem"; } 
+    else if (testo.length > 18) { el.style.fontSize = "0.95rem"; } 
+    else { el.style.fontSize = "1.05rem"; }
 }
 
 // ============================================================
-// RENDERING BASE — popola gli elementi visibili della tag
+// RENDERING BASE E SEQUENZA DI ACCENSIONE
 // ============================================================
 function renderizzaTagCompleta(fields) {
-    // 0. APPLICAZIONE TEMA E LAYOUT 
+    // 0. APPLICAZIONE TEMA E LAYOUT
     const container = document.getElementById('profile-content');
     if (container) {
         container.setAttribute('data-theme', fields.digital_style || 'black_dna');
@@ -1020,43 +1015,60 @@ function renderizzaTagCompleta(fields) {
         document.body.setAttribute('data-qr-theme', fields.digital_style || 'black_dna'); 
     }
 
-    // 1. USERNAME 
+    // 1. FORMATTAZIONE IDENTITÀ
     const nomeDaMostrare = fields.username_display || fields.username_system;
     formattaBadge(nomeDaMostrare);
 
-    // 2. DNA CORE AVATAR 
+    // 2. INNESTO DEL TAG CORE
     const liveContainer = document.getElementById('live-avatar-container');
     const liveImg = document.getElementById('live-avatar-img');
     const coreRing = document.getElementById('dna-core-ring');
     
-    if (fields.avatar_url && liveImg && liveContainer && coreRing) {
+    if (fields.avatar_url && liveImg && liveContainer) {
         liveImg.src = fields.avatar_url;
         liveContainer.style.display = 'flex';
-        coreRing.classList.remove('materialize-effect');
-        void coreRing.offsetWidth; 
-        coreRing.classList.add('materialize-effect');
     } else if (liveContainer) {
         liveContainer.style.display = 'none';
     }
 
-    // 3. QR CODE — punta all'URL pubblico di questa tag
+    // 3. GENERAZIONE DEL QR E POPOLAMENTO CASELLE
     const urlPubblico = `${window.location.origin}/tag.html?u=${fields.username_system}`;
     generaQR(urlPubblico);
-    
-    // 4. SITO WEB — casella dedicata (se presente)
     renderizzaSitoWeb(fields.sito_web);
     gestisciVisibilitaCaselle(fields);
     
-    // 5. Attiva visibilità container con animazione (LA LUCE SI ACCENDE)
+    // 4. ESECUZIONE DELLA BOOT SEQUENCE (L'EFFETTO WOW)
     if (container) {
-        container.classList.add('ready');
+        container.classList.add('ready'); // Accende lo chassis di vetro
+
+        // A. Materializzazione del TAG CORE
+        if (coreRing && fields.avatar_url) {
+            coreRing.classList.add('boot-core-active');
+        }
+
+        // B. Accensione dell'Identità (Nome)
+        const nameWrapper = document.getElementById('name-capsule-wrapper');
+        if (nameWrapper) {
+            nameWrapper.classList.add('boot-text-active');
+        }
+
+        // C. Rilascio a Cascata dei Moduli
+        const caselle = document.querySelectorAll('#mainGrid .casella');
+        let moduliVisibili = 0;
+        caselle.forEach((casella) => {
+            // Conta e anima solo i moduli effettivamente attivi e visibili
+            if (window.getComputedStyle(casella).display !== 'none') {
+                casella.classList.add('boot-module-active');
+                // Calcolo millimetrico: Il primo modulo aspetta 1.2s, i successivi 0.15s in più
+                casella.style.animationDelay = `${1.2 + (moduliVisibili * 0.15)}s`;
+                moduliVisibili++;
+            }
+        });
     }
     
-    // 6. Controlla se arriva da checkout o è in modalità draft
+    // 5. CONTROLLI DI STATO E PWA
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('welcome') === '1') {
-        mostraWelcomeOverlay();
-    }
+    if (urlParams.get('welcome') === '1') { mostraWelcomeOverlay(); }
     if (urlParams.get('mode') === 'draft') {
         if (fields.stato === 'attivo') {
             const ctaPubblica = document.getElementById('cta-pubblica-container');
@@ -1065,14 +1077,11 @@ function renderizzaTagCompleta(fields) {
             mostraOverlayAcquisto();
         }
     }
-    
-    // 7. Manifest e icona dinamici per PWA
     const manifestLink = document.getElementById('dynamic-manifest');
     const iconLink = document.getElementById('dynamic-icon');
     if (manifestLink) manifestLink.href = `/api/manifest?u=${fields.username_system}`;
     if (iconLink) iconLink.href = `/api/generate-icons?u=${fields.username_system}`; 
 }
-
 // ============================================================
 // QR CODE — generazione reale tramite qrcode.js
 // ============================================================
