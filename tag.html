@@ -573,9 +573,9 @@ body {
     display: none !important;
 }
 /* =========================================================
-   TEMI, LAYOUT E DNA CORE (MOTORE GRAFICO PWA)
+   TEMI E LAYOUT (MOTORE GRAFICO PWA)
    ========================================================= */
-/* --- TEMI UFFICIALI --- */
+/* --- TEMI UFFICIALI (CAPSULA NOME) --- */
 #profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8) !important; }
 #profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.2) !important; border-color: rgba(0, 230, 128, 0.5) !important; box-shadow: 0 0 35px rgba(0, 230, 128, 0.15) !important; }
 
@@ -609,22 +609,8 @@ body {
 #profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; margin: 0 auto !important; max-width: 280px !important; line-height: 2.2 !important; }
 #profile-content[data-layout="pure"] .username-display { margin: 0 auto !important; max-width: 280px !important; line-height: 2.2 !important; }
 
-/* --- DNA CORE --- */
-:root { --core-glow: rgba(255, 255, 255, 0.1); --core-border: rgba(255, 255, 255, 0.2); }
-#profile-content[data-theme="emerald"] { --core-glow: rgba(0, 230, 128, 0.4); --core-border: rgba(0, 230, 128, 0.8); }
-#profile-content[data-theme="obsidian_gold"] { --core-glow: rgba(229, 193, 88, 0.4); --core-border: rgba(229, 193, 88, 0.8); }
-#profile-content[data-theme="satin_rose"] { --core-glow: rgba(200, 150, 142, 0.4); --core-border: rgba(200, 150, 142, 0.8); }
-#profile-content[data-theme="titanium"] { --core-glow: rgba(176, 176, 181, 0.3); --core-border: rgba(176, 176, 181, 0.6); }
-#profile-content[data-theme="black_dna"] { --core-glow: rgba(255, 255, 255, 0.15); --core-border: rgba(255, 255, 255, 0.3); }
-
-.dna-core-container { display: none; justify-content: center; align-items: center; margin-bottom: 25px; margin-top: 15px; position: relative; z-index: 10; }
-.dna-core-ring { width: 82px; height: 82px; border-radius: 22px; padding: 3px; background: linear-gradient(135deg, var(--core-border), transparent 60%, var(--core-border)); box-shadow: 0 0 20px var(--core-glow), inset 0 0 10px var(--core-glow); animation: coreBreathe 6s ease-in-out infinite; display: flex; justify-content: center; align-items: center; position: relative; }
-.dna-core-img { width: 100%; height: 100%; border-radius: 19px; object-fit: cover; background: #0d0d0f; z-index: 2; }
-.materialize-effect { animation: coreMaterialize 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-@keyframes coreBreathe { 0% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); } 50% { transform: scale(1.04); box-shadow: 0 0 30px var(--core-glow), inset 0 0 15px var(--core-glow); } 100% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); } }
-@keyframes coreMaterialize { 0% { transform: scale(0.5) translateY(-20px); opacity: 0; filter: blur(10px) brightness(2); } 50% { transform: scale(1.1); opacity: 1; filter: blur(0px) brightness(1.5); box-shadow: 0 0 50px #fff; } 100% { transform: scale(1); opacity: 1; filter: blur(0px) brightness(1); } }
 /* =========================================================
-   TAG CORE E MOTORE DI ACCENSIONE (BOOT SEQUENCE)
+   IL SIGILLO ORBITALE E IL RITO D'INGRESSO
    ========================================================= */
 :root { 
     --core-glow: rgba(255, 255, 255, 0.1); 
@@ -636,53 +622,73 @@ body {
 #profile-content[data-theme="titanium"] { --core-glow: rgba(176, 176, 181, 0.3); --core-border: rgba(176, 176, 181, 0.6); }
 #profile-content[data-theme="black_dna"] { --core-glow: rgba(255, 255, 255, 0.15); --core-border: rgba(255, 255, 255, 0.3); }
 
-.dna-core-container { display: none; justify-content: center; align-items: center; margin-bottom: 25px; margin-top: 15px; position: relative; z-index: 10; }
-
-/* Forma più compatta per recuperare spazio verticale in myquicktag (72px) */
-.dna-core-ring { 
-    width: 72px; height: 72px; border-radius: 20px; padding: 3px; 
-    background: linear-gradient(135deg, var(--core-border), transparent 60%, var(--core-border)); 
-    opacity: 0; transform: translateY(-40px) scale(0.8); /* Stato ZERO */
-    display: flex; justify-content: center; align-items: center; position: relative; 
+/* --- STATO 0: LA PORTA CHIUSA (LOCKED) --- */
+.app-container.locked .header-monolith {
+    transform: translateY(28vh) scale(1.15);
+    transition: transform 1.2s cubic-bezier(0.25, 1, 0.3, 1);
+}
+.app-container.locked #mainGrid, 
+.app-container.locked #casella-quick-action,
+.app-container.locked #cta-pubblica-container,
+.app-container.locked #cta-sblocco-container {
+    display: none !important;
 }
 
-.dna-core-img { width: 100%; height: 100%; border-radius: 17px; object-fit: cover; background: #0d0d0f; z-index: 2; }
-
-/* Nasconde inizialmente l'identità e i bottoni per la sequenza */
-#name-capsule-wrapper { opacity: 0; transform: translateY(15px); filter: blur(5px); }
-#mainGrid .casella { opacity: 0; transform: translateY(20px); }
-
-/* FISICA DELLE ANIMAZIONI DI SISTEMA */
-@keyframes coreDrop {
-    0% { opacity: 0; transform: translateY(-40px) scale(0.8); }
-    60% { opacity: 1; transform: translateY(10px) scale(1.05); box-shadow: 0 0 10px var(--core-glow); }
-    100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 0 35px var(--core-glow), inset 0 0 10px var(--core-glow); }
+/* --- STATO 1: L'ECOSISTEMA APERTO (UNLOCKED) --- */
+.app-container.unlocked .header-monolith {
+    transform: translateY(0) scale(1);
+    transition: transform 1s cubic-bezier(0.25, 1, 0.3, 1);
 }
-@keyframes coreBreathe { 
-    0% { transform: scale(1); box-shadow: 0 0 20px var(--core-glow), inset 0 0 5px var(--core-glow); } 
-    50% { transform: scale(1.04); box-shadow: 0 0 40px var(--core-glow), inset 0 0 15px var(--core-glow); } 
-    100% { transform: scale(1); box-shadow: 0 0 20px var(--core-glow), inset 0 0 5px var(--core-glow); } 
-}
-@keyframes textIgnite {
-    0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
-    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-@keyframes moduleCascade {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+.app-container.unlocked .entrance-prompt {
+    opacity: 0; transform: translate(-50%, 50px); pointer-events: none;
 }
 
-/* INNESCHI DEL SEQUENZIATORE JS (Con respiro perpetuo automatico per il core) */
-.boot-core-active {
-    animation: coreDrop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, coreBreathe 6s ease-in-out infinite 0.8s;
+/* --- LA SFERA VIVA --- */
+.orbital-container {
+    position: relative; width: 80px; height: 80px; margin: 0 auto 25px auto;
+    display: flex; justify-content: center; align-items: center; z-index: 10;
 }
-.boot-text-active {
-    animation: textIgnite 0.6s ease-out forwards;
-    animation-delay: 0.6s; /* Il nome aspetta che il core si posizioni */
+.orbital-sphere {
+    width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: #000;
+    position: relative; z-index: 2;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.08);
 }
-.boot-module-active {
-    animation: moduleCascade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+.orbital-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) brightness(0.95); }
+
+/* --- L'ANELLO ORBITALE --- */
+.orbital-ring {
+    position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
+    border-radius: 50%; border: 1px solid transparent;
+    border-top-color: var(--core-border); 
+    border-right-color: rgba(255,255,255,0.02);
+    border-bottom-color: rgba(255,255,255,0.01); 
+    border-left-color: rgba(255,255,255,0.02);
+    animation: orbitSpin 40s linear infinite; z-index: 1;
+    filter: drop-shadow(0 0 12px var(--core-glow));
 }
+@keyframes orbitSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* --- IL PULSANTE DEL RITO D'INGRESSO --- */
+.entrance-prompt {
+    position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 15px;
+    cursor: pointer; z-index: 100; transition: opacity 0.5s ease, transform 0.8s ease;
+}
+.pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--text-sec);
+    animation: pulseDot 2.5s infinite ease-in-out;
+}
+.entrance-prompt span { font-size: 0.6rem; letter-spacing: 6px; text-transform: uppercase; color: var(--text-sec); }
+@keyframes pulseDot { 
+    0% { transform: scale(0.8); opacity: 0.3; } 
+    50% { transform: scale(1.8); opacity: 1; box-shadow: 0 0 20px var(--core-glow); background: #fff;} 
+    100% { transform: scale(0.8); opacity: 0.3; } 
+}
+
+/* Moduli invisibili pronti alla discesa a cascata */
+#mainGrid .casella, #casella-quick-action { opacity: 0; transform: translateY(25px); }
+.boot-module-active { animation: moduleCascade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+@keyframes moduleCascade { 0% { opacity: 0; transform: translateY(25px); } 100% { opacity: 1; transform: translateY(0); } }
 </style>       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
@@ -692,25 +698,32 @@ body {
     </a>
 
     <div id="profile-content" class="app-container">
-             <div class="header-monolith" style="flex-direction: column;">
-        
-        <!-- TAG CORE -->
-        <div id="live-avatar-container" class="dna-core-container">
-            <div class="dna-core-ring" id="dna-core-ring">
-                <img id="live-avatar-img" class="dna-core-img" src="" alt="Core">
-            </div>
-        </div>
-
-        <!-- IDENTITÀ BRAND -->
-        <div id="name-capsule-wrapper" class="username-capsule-wrapper" style="width: 100%; display: flex; justify-content: center;">
-            <div class="username-capsule">
-                <div class="username-capsule-inner">
-                    <h1 class="username-display" id="tag-username">@tuonome.it</h1>
+            <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
+            
+            <!-- IL SIGILLO ORBITALE -->
+            <div id="live-avatar-container" class="orbital-container">
+                <div class="orbital-ring" id="dna-core-ring"></div>
+                <div class="orbital-sphere">
+                    <img id="live-avatar-img" class="orbital-img" src="" alt="Core">
                 </div>
             </div>
+
+            <!-- IL NOME BRAND -->
+            <div id="name-capsule-wrapper" class="username-capsule-wrapper" style="width: 100%; display: flex; justify-content: center;">
+                <div class="username-capsule">
+                    <div class="username-capsule-inner">
+                        <h1 class="username-display" id="tag-username">@tuonome.it</h1>
+                    </div>
+                </div>
+            </div>
+            
         </div>
-        
-    </div> 
+
+        <!-- IL RITO D'INGRESSO (Scompare all'apertura) -->
+        <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
+            <div class="pulse-dot"></div>
+            <span>Tocca per entrare</span>
+        </div>
 
    <div id="mainGrid">
         <div class="casella" id="casella-qr" onclick="apriQR()">
@@ -993,10 +1006,7 @@ function formattaBadge(testoBruto) {
     if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
     el.innerHTML = `<span class="at-symbol" style="opacity:0.4; font-weight:300; margin-right:4px;">@</span><span class="brand-text">${testo}</span>`;
-
-    el.style.whiteSpace = "normal";
-    el.style.wordBreak = "normal";
-    el.style.overflowWrap = "break-word";
+    el.style.whiteSpace = "normal"; el.style.wordBreak = "normal"; el.style.overflowWrap = "break-word";
 
     if (testo.length > 25) { el.style.fontSize = "0.85rem"; } 
     else if (testo.length > 18) { el.style.fontSize = "0.95rem"; } 
@@ -1004,10 +1014,9 @@ function formattaBadge(testoBruto) {
 }
 
 // ============================================================
-// RENDERING BASE E SEQUENZA DI ACCENSIONE
+// RENDERING DELLA TAG IN STATO "CHIUSO" (IL RITO)
 // ============================================================
 function renderizzaTagCompleta(fields) {
-    // 0. APPLICAZIONE TEMA E LAYOUT
     const container = document.getElementById('profile-content');
     if (container) {
         container.setAttribute('data-theme', fields.digital_style || 'black_dna');
@@ -1015,14 +1024,12 @@ function renderizzaTagCompleta(fields) {
         document.body.setAttribute('data-qr-theme', fields.digital_style || 'black_dna'); 
     }
 
-    // 1. FORMATTAZIONE IDENTITÀ
     const nomeDaMostrare = fields.username_display || fields.username_system;
     formattaBadge(nomeDaMostrare);
 
-    // 2. INNESTO DEL TAG CORE
+    // Innesto dell'immagine nel Sigillo
     const liveContainer = document.getElementById('live-avatar-container');
     const liveImg = document.getElementById('live-avatar-img');
-    const coreRing = document.getElementById('dna-core-ring');
     
     if (fields.avatar_url && liveImg && liveContainer) {
         liveImg.src = fields.avatar_url;
@@ -1031,42 +1038,17 @@ function renderizzaTagCompleta(fields) {
         liveContainer.style.display = 'none';
     }
 
-    // 3. GENERAZIONE DEL QR E POPOLAMENTO CASELLE
     const urlPubblico = `${window.location.origin}/tag.html?u=${fields.username_system}`;
     generaQR(urlPubblico);
     renderizzaSitoWeb(fields.sito_web);
     gestisciVisibilitaCaselle(fields);
     
-    // 4. ESECUZIONE DELLA BOOT SEQUENCE (L'EFFETTO WOW)
     if (container) {
-        container.classList.add('ready'); // Accende lo chassis di vetro
-
-        // A. Materializzazione del TAG CORE
-        if (coreRing && fields.avatar_url) {
-            coreRing.classList.add('boot-core-active');
-        }
-
-        // B. Accensione dell'Identità (Nome)
-        const nameWrapper = document.getElementById('name-capsule-wrapper');
-        if (nameWrapper) {
-            nameWrapper.classList.add('boot-text-active');
-        }
-
-        // C. Rilascio a Cascata dei Moduli
-        const caselle = document.querySelectorAll('#mainGrid .casella');
-        let moduliVisibili = 0;
-        caselle.forEach((casella) => {
-            // Conta e anima solo i moduli effettivamente attivi e visibili
-            if (window.getComputedStyle(casella).display !== 'none') {
-                casella.classList.add('boot-module-active');
-                // Calcolo millimetrico: Il primo modulo aspetta 1.2s, i successivi 0.15s in più
-                casella.style.animationDelay = `${1.2 + (moduliVisibili * 0.15)}s`;
-                moduliVisibili++;
-            }
-        });
+        // Accende lo schermo e innesca la serratura
+        container.classList.add('ready');
+        container.classList.add('locked');
     }
     
-    // 5. CONTROLLI DI STATO E PWA
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('welcome') === '1') { mostraWelcomeOverlay(); }
     if (urlParams.get('mode') === 'draft') {
@@ -1077,10 +1059,48 @@ function renderizzaTagCompleta(fields) {
             mostraOverlayAcquisto();
         }
     }
-    const manifestLink = document.getElementById('dynamic-manifest');
-    const iconLink = document.getElementById('dynamic-icon');
-    if (manifestLink) manifestLink.href = `/api/manifest?u=${fields.username_system}`;
-    if (iconLink) iconLink.href = `/api/generate-icons?u=${fields.username_system}`; 
+}
+
+// ============================================================
+// LO SBLOCCO (IL MOMENTO "WOW")
+// ============================================================
+function sbloccaTag() {
+    const container = document.getElementById('profile-content');
+    if (!container || !container.classList.contains('locked')) return;
+
+    // Feedback tattile (Vibrazione) se supportato dal telefono
+    if (navigator.vibrate) { navigator.vibrate(40); }
+
+    // Rimuove la serratura e avvia la transizione del Sigillo
+    container.classList.remove('locked');
+    container.classList.add('unlocked');
+
+    // Mette in visibilità i moduli (ancora trasparenti)
+    const mainGrid = document.getElementById('mainGrid');
+    const quickAction = document.getElementById('casella-quick-action');
+    if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
+    if (quickAction && quickAction.getAttribute('data-active') !== 'false') {
+        // Se c'è la quick action, ripristinala visivamente
+        quickAction.style.setProperty("display", "flex", "important");
+    }
+
+    // Aspetta 600ms che il sigillo si sposti in alto, poi lancia la cascata dei moduli
+    setTimeout(() => {
+        const caselle = document.querySelectorAll('#mainGrid .casella');
+        let moduliVisibili = 0;
+        caselle.forEach((casella) => {
+            if (window.getComputedStyle(casella).display !== 'none') {
+                casella.classList.add('boot-module-active');
+                casella.style.animationDelay = `${(moduliVisibili * 0.12)}s`;
+                moduliVisibili++;
+            }
+        });
+        
+        if(quickAction && quickAction.style.display !== 'none') {
+            quickAction.classList.add('boot-module-active');
+            quickAction.style.animationDelay = `${(moduliVisibili * 0.12)}s`;
+        }
+    }, 600);
 }
 // ============================================================
 // QR CODE — generazione reale tramite qrcode.js
@@ -1665,9 +1685,7 @@ window.addEventListener('popstate', (e) => {
         return;
     }
 });
-       // ============================================================
-// TAG.HTML - BLOCCO 3: CONDIVISIONE E TOAST
-// ============================================================
+       
 
 // ============================================================
 // CONDIVIDI PROFILO COMPLETO (bottone nella smart card)
