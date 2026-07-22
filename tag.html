@@ -623,7 +623,66 @@ body {
 .materialize-effect { animation: coreMaterialize 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 @keyframes coreBreathe { 0% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); } 50% { transform: scale(1.04); box-shadow: 0 0 30px var(--core-glow), inset 0 0 15px var(--core-glow); } 100% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); } }
 @keyframes coreMaterialize { 0% { transform: scale(0.5) translateY(-20px); opacity: 0; filter: blur(10px) brightness(2); } 50% { transform: scale(1.1); opacity: 1; filter: blur(0px) brightness(1.5); box-shadow: 0 0 50px #fff; } 100% { transform: scale(1); opacity: 1; filter: blur(0px) brightness(1); } }
+/* =========================================================
+   TAG CORE E MOTORE DI ACCENSIONE (BOOT SEQUENCE)
+   ========================================================= */
+:root { 
+    --core-glow: rgba(255, 255, 255, 0.1); 
+    --core-border: rgba(255, 255, 255, 0.2); 
+}
+#profile-content[data-theme="emerald"] { --core-glow: rgba(0, 230, 128, 0.4); --core-border: rgba(0, 230, 128, 0.8); }
+#profile-content[data-theme="obsidian_gold"] { --core-glow: rgba(229, 193, 88, 0.4); --core-border: rgba(229, 193, 88, 0.8); }
+#profile-content[data-theme="satin_rose"] { --core-glow: rgba(200, 150, 142, 0.4); --core-border: rgba(200, 150, 142, 0.8); }
+#profile-content[data-theme="titanium"] { --core-glow: rgba(176, 176, 181, 0.3); --core-border: rgba(176, 176, 181, 0.6); }
+#profile-content[data-theme="black_dna"] { --core-glow: rgba(255, 255, 255, 0.15); --core-border: rgba(255, 255, 255, 0.3); }
 
+.dna-core-container { display: none; justify-content: center; align-items: center; margin-bottom: 25px; margin-top: 15px; position: relative; z-index: 10; }
+
+/* Forma più compatta per recuperare spazio verticale in myquicktag (72px) */
+.dna-core-ring { 
+    width: 72px; height: 72px; border-radius: 20px; padding: 3px; 
+    background: linear-gradient(135deg, var(--core-border), transparent 60%, var(--core-border)); 
+    opacity: 0; transform: translateY(-40px) scale(0.8); /* Stato ZERO */
+    display: flex; justify-content: center; align-items: center; position: relative; 
+}
+
+.dna-core-img { width: 100%; height: 100%; border-radius: 17px; object-fit: cover; background: #0d0d0f; z-index: 2; }
+
+/* Nasconde inizialmente l'identità e i bottoni per la sequenza */
+#name-capsule-wrapper { opacity: 0; transform: translateY(15px); filter: blur(5px); }
+#mainGrid .casella { opacity: 0; transform: translateY(20px); }
+
+/* FISICA DELLE ANIMAZIONI DI SISTEMA */
+@keyframes coreDrop {
+    0% { opacity: 0; transform: translateY(-40px) scale(0.8); }
+    60% { opacity: 1; transform: translateY(10px) scale(1.05); box-shadow: 0 0 10px var(--core-glow); }
+    100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 0 35px var(--core-glow), inset 0 0 10px var(--core-glow); }
+}
+@keyframes coreBreathe { 
+    0% { transform: scale(1); box-shadow: 0 0 20px var(--core-glow), inset 0 0 5px var(--core-glow); } 
+    50% { transform: scale(1.04); box-shadow: 0 0 40px var(--core-glow), inset 0 0 15px var(--core-glow); } 
+    100% { transform: scale(1); box-shadow: 0 0 20px var(--core-glow), inset 0 0 5px var(--core-glow); } 
+}
+@keyframes textIgnite {
+    0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes moduleCascade {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* INNESCHI DEL SEQUENZIATORE JS (Con respiro perpetuo automatico per il core) */
+.boot-core-active {
+    animation: coreDrop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, coreBreathe 6s ease-in-out infinite 0.8s;
+}
+.boot-text-active {
+    animation: textIgnite 0.6s ease-out forwards;
+    animation-delay: 0.6s; /* Il nome aspetta che il core si posizioni */
+}
+.boot-module-active {
+    animation: moduleCascade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
 </style>       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
