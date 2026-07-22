@@ -475,36 +475,97 @@ body {
     display: none !important;
 }
  /* ============================================================
-   🏆 LA TARGA DELL'OLIMPO WITH AURA (RIPRISTINATA)
+   🏆 STRUTTURA BASE BRAND (BADGE POLIGONALE)
    ============================================================ */
+.username-capsule-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; }
+
 .username-capsule {
-    display: inline-flex;    
-    align-items: center;
-    justify-content: center;
-
-    background: rgba(212, 175, 55, 0.01) !important; 
-    border: 1px solid rgba(212, 175, 55, 0.25) !important; 
-    border-radius: 8px !important; 
-    padding: 6px 18px;             
-    margin: 10px auto;             
-    max-width: 90%;          
+    display: flex; padding: 1.5px; background: rgba(255, 255, 255, 0.3); width: 100%;
+    clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
     box-sizing: border-box;
-
-    /* L'AURA: Doppio alone per creare l'effetto cruscotto luxury */
-    box-shadow: 0 0 35px rgba(212, 175, 55, 0.15), 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
+.username-capsule-inner {
+    display: flex; justify-content: center; align-items: center; width: 100%;
+    background: #0d0d0f; padding: 24px 35px;
+    clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
+    box-sizing: border-box;
+}
+            
 .username-display {
-    font-size: 1.05rem !important; 
-    font-weight: 400 !important;
-    letter-spacing: 2px !important; 
-    text-transform: uppercase !important;
-    color: #ffffff !important; 
-    text-align: center;
-    margin: 0 !important;
-    padding: 0 !important;
-    word-break: break-all;   
-}       
+    /* Senza !important su font-size, così il JS lo scala in automatico */
+    font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
+    margin: 0 auto; text-align: center !important; display: block !important; 
+    text-transform: uppercase; white-space: normal !important; 
+    word-break: normal !important; overflow-wrap: break-word !important; 
+    text-wrap: balance !important; width: 100% !important; max-width: 100% !important; 
+    padding: 0 12px !important; box-sizing: border-box !important;
+    line-height: 1.5 !important; transition: font-size 0.3s ease; 
+}
+
+/* =========================================================
+   RESET FLEXBOX PER DIVIDER E PURE (Spegne il poligono)
+   ========================================================= */
+#profile-content[data-layout="divider"] .username-capsule-wrapper,
+#profile-content[data-layout="divider"] .username-capsule,
+#profile-content[data-layout="divider"] .username-capsule-inner,
+#profile-content[data-layout="pure"] .username-capsule-wrapper,
+#profile-content[data-layout="pure"] .username-capsule,
+#profile-content[data-layout="pure"] .username-capsule-inner { 
+    display: block !important; width: 100% !important; background: transparent !important; 
+    clip-path: none !important; padding: 0 !important; min-width: 0 !important;
+}
+
+/* Testo ristretto per forzarlo ad andare su più righe nei layout aperti */
+#profile-content[data-layout="divider"] .username-display,
+#profile-content[data-layout="pure"] .username-display {
+    width: 100% !important; max-width: 280px !important; margin: 0 auto !important;
+    line-height: 2.2 !important; /* Spalanca lo spazio centrale per la riga e il diamante */
+}
+
+/* =========================================================
+   LAYOUT 2: DIVIDER (La linea taglia in mezzo al corridoio)
+   ========================================================= */
+#profile-content[data-layout="divider"] .header-monolith { 
+    display: block !important; width: 100% !important; padding: 20px 0 !important; position: relative; 
+}
+#profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; }
+
+#profile-content[data-layout="divider"] .header-monolith::after {
+    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
+    z-index: 1; pointer-events: none;
+}
+#profile-content[data-layout="divider"] .header-monolith::before {
+    content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2;
+}
+
+/* Colori del Divider in base al tema */
+#profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::before { color: #00E680; }
+#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::before { color: #e5c158; }
+#profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::before { color: #c8968e; }
+
+/* =========================================================
+   LAYOUT 3: PURE (Solo testo)
+   ========================================================= */
+#profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
+
+/* =========================================================
+   LA CHIOCCIOLA (@) E I SUOI COLORI
+   ========================================================= */
+.at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
+.brand-text { font-weight: inherit; }
+
+#profile-content[data-theme="emerald"] .at-symbol { color: #00E680; opacity: 0.9; text-shadow: 0 0 10px rgba(0, 230, 128, 0.3); }
+#profile-content[data-theme="obsidian_gold"] .at-symbol { color: #e5c158; opacity: 0.9; text-shadow: 0 0 10px rgba(229, 193, 88, 0.3); }
+#profile-content[data-theme="satin_rose"] .at-symbol { color: #c8968e; opacity: 0.9; text-shadow: 0 0 10px rgba(200, 150, 142, 0.3); }
+#profile-content[data-theme="titanium"] .at-symbol { color: #b0b0b5; opacity: 0.9; }
+#profile-content[data-theme="black_dna"] .at-symbol { color: #ffffff; opacity: 0.4; }
+
 /* ============================================================
    🏆 IL TOTEM DINAMICO A PASSO COSTANTE (ANTI-SOVRAPPOSIZIONE)
    ============================================================ */
