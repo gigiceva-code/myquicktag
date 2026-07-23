@@ -58,41 +58,6 @@
         /* --- STRUTTURA BASE BRAND (BADGE) --- */
         .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; position: relative; }
         
-  /* ============================================================
-   LAYOUT 1: BADGE (DYNAMIC WIDTH ENFORCEMENT)
-   ============================================================ */
-#profile-content[data-layout="badge"] .username-capsule-wrapper { 
-    display: flex !important; 
-    justify-content: center !important; 
-    width: 100% !important; 
-}
-
-#profile-content[data-layout="badge"] .username-capsule {
-    display: inline-flex !important; 
-    width: max-content !important; 
-    max-width: 90% !important; 
-    margin: 0 auto !important; 
-    padding: 1.5px !important; 
-    background: rgba(255, 255, 255, 0.3) !important; 
-    clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%) !important;
-}
-
-#profile-content[data-layout="badge"] .username-capsule-inner {
-    display: inline-flex !important; 
-    width: auto !important; 
-    justify-content: center !important; 
-    align-items: center !important; 
-    background: #0d0d0f !important; 
-    padding: 18px 40px !important; 
-    clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%) !important;
-}
-
-#profile-content[data-layout="badge"] .username-display {
-    width: auto !important; 
-    max-width: 250px !important; 
-    margin: 0 auto !important;
-}
-   
             
   .username-display {
     font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
@@ -469,6 +434,39 @@
         .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
         .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; }
+/* ============================================================
+   LAYOUT 1: BADGE (SHRINK-WRAP ENFORCEMENT)
+   ============================================================ */
+#profile-content[data-layout="badge"] .username-capsule-wrapper { 
+    display: block !important; 
+    text-align: center !important; 
+    width: 100% !important; 
+}
+
+#profile-content[data-layout="badge"] .username-capsule {
+    display: inline-block !important; /* Abbandona il Flexbox, forza la restrizione al contenuto */
+    width: auto !important; 
+    max-width: 95% !important; 
+    margin: 0 auto !important; 
+    padding: 1.5px !important; 
+    background: rgba(255, 255, 255, 0.3) !important; 
+    clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%) !important;
+}
+
+#profile-content[data-layout="badge"] .username-capsule-inner {
+    display: block !important; 
+    width: auto !important; 
+    background: #0d0d0f !important; 
+    padding: 16px 35px !important; /* Quote aerodinamiche riviste per una centratura perfetta */
+    clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%) !important;
+}
+
+#profile-content[data-layout="badge"] .username-display {
+    display: block !important; 
+    width: auto !important; 
+    max-width: 250px !important; 
+    margin: 0 auto !important;
+}
 
     </style>
 </head>
