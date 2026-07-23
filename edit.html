@@ -1344,89 +1344,123 @@
             } catch (e) { console.error("Errore caricamento", e); }
         }
 
-       async function salvaDati() {
-            if(NOME_SISTEMA === "tuonome.it") return; 
+      async function salvaDati() {
+    if(NOME_SISTEMA === "tuonome.it") return; 
 
-            // --- VALIDAZIONE INPUT: RESTRIZIONE DOMINI SOCIAL NEL CAMPO SITO WEB ---
-            const sitoInput = document.getElementById('field-sito');
-            let sitoVal = "";
-            if (sitoInput) {
-                sitoVal = sitoInput.value.trim();
-                if (sitoVal !== "") {
-                    const socials = ['instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'x.com', 'twitter.com', 'youtube.com', 'wa.me', 't.me', 'spotify.com', 'tripadvisor', 'thefork', 'onlyfans.com', 'github.com', 'twitch.tv', 'strava.com', 'pinterest.com', 'discord.com', 'discord.gg', 'snapchat.com', 'threads.net', 'calendly.com', 'patreon.com', 'behance.net', 'dribbble.com', 'vimeo.com', 'reddit.com', 'medium.com', 'soundcloud.com', 'apple.com/it/music'];
-                    const lowerSito = sitoVal.toLowerCase();
-                    let isSocial = false;
+    // --- VALIDAZIONE INPUT: RESTRIZIONE DOMINI SOCIAL NEL CAMPO SITO WEB ---
+    const sitoInput = document.getElementById('field-sito');
+    let sitoVal = "";
+    if (sitoInput) {
+        sitoVal = sitoInput.value.trim();
+        if (sitoVal !== "") {
+            const socials = ['instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'x.com', 'twitter.com', 'youtube.com', 'wa.me', 't.me', 'spotify.com', 'tripadvisor', 'thefork', 'onlyfans.com', 'github.com', 'twitch.tv', 'strava.com', 'pinterest.com', 'discord.com', 'discord.gg', 'snapchat.com', 'threads.net', 'calendly.com', 'patreon.com', 'behance.net', 'dribbble.com', 'vimeo.com', 'reddit.com', 'medium.com', 'soundcloud.com', 'apple.com/it/music'];
+            const lowerSito = sitoVal.toLowerCase();
+            let isSocial = false;
 
-                    for (let s of socials) {
-                        if (lowerSito.includes(s)) { isSocial = true; break; }
-                    }
-
-                    if (isSocial) {
-                        alert("⚠️ AZIONE NON CONSENTITA\n\nHai incollato un link Social nel modulo 'SITO WEB'.\nQuesto campo è riservato unicamente al sito istituzionale o personale.\n\nIl link è stato rimosso per impedire l'elusione delle regole del piano.");
-                        sitoInput.value = "";
-                        sitoVal = ""; 
-                    }
-                }
+            for (let s of socials) {
+                if (lowerSito.includes(s)) { isSocial = true; break; }
             }
 
-            const inputField = document.getElementById("field-username_display");
-            const displayVal = inputField ? inputField.value.trim() : "";
-            const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
-            const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
+            if (isSocial) {
+                alert("⚠️ AZIONE NON CONSENTITA\n\nHai incollato un link Social nel modulo 'SITO WEB'.\nQuesto campo è riservato unicamente al sito istituzionale o personale.\n\nIl link è stato rimosso per impedire l'elusione delle regole del piano.");
+                sitoInput.value = "";
+                sitoVal = ""; 
+            }
+        }
+    }
 
-            const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
-            const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
+    const inputField = document.getElementById("field-username_display");
+    const displayVal = inputField ? inputField.value.trim() : "";
+    const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
+    const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
 
-            const qaTipo = document.getElementById('field-qa-tipo') ? document.getElementById('field-qa-tipo').value : "";
-            const qaLabel = document.getElementById('field-qa-label') ? document.getElementById('field-qa-label').value.trim() : "";
-            const qaUrl = document.getElementById('field-qa-url') ? document.getElementById('field-qa-url').value.trim() : "";
+    const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
+    const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
 
-            const vcfObject = {
-                telefono1: document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "",
-                telefono2: document.getElementById('field-tel2') ? document.getElementById('field-tel2').value.trim() : "",
-                indirizzo: document.getElementById('field-indirizzo') ? document.getElementById('field-indirizzo').value.trim() : ""
+    const qaTipo = document.getElementById('field-qa-tipo') ? document.getElementById('field-qa-tipo').value : "";
+    const qaLabel = document.getElementById('field-qa-label') ? document.getElementById('field-qa-label').value.trim() : "";
+    const qaUrl = document.getElementById('field-qa-url') ? document.getElementById('field-qa-url').value.trim() : "";
+
+    const vcfObject = {
+        telefono1: document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "",
+        telefono2: document.getElementById('field-tel2') ? document.getElementById('field-tel2').value.trim() : "",
+        indirizzo: document.getElementById('field-indirizzo') ? document.getElementById('field-indirizzo').value.trim() : ""
+    };
+
+    const canaliSocial = [];
+    const internalTrack = document.getElementById('social-internal-track');
+    if (internalTrack) {
+        const socialBlocks = internalTrack.querySelectorAll('.social-block-live');
+        socialBlocks.forEach(block => {
+            canaliSocial.push({ 
+                nome: block.getAttribute('data-nome'), 
+                url: block.getAttribute('data-url'),
+                vip: block.getAttribute('data-vip') === 'true',
+                pin: block.getAttribute('data-pin') || "",
+                official: block.getAttribute('data-official') === 'true',
+                iconClass: block.getAttribute('data-icon') || "fas fa-link"
+            });
+        });
+    }
+
+    const coreUrl = document.getElementById('field-avatar-url') ? document.getElementById('field-avatar-url').value : "";
+
+    const payloadDati = { 
+        username_system: NOME_SISTEMA, 
+        username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
+        digital_style: styleVal, 
+        digital_layout: layoutVal,
+        bio: bioVal, 
+        sito_web: sitoVal, 
+        email: emailVal,
+        quick_action_tipo: qaTipo, 
+        quick_action_label: qaLabel, 
+        quick_action_url: qaUrl,
+        avatar_url: coreUrl,
+        modulo_vcf: JSON.stringify(vcfObject), 
+        config_canali: JSON.stringify(canaliSocial) 
+    }; 
+
+    localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
+    localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
+    localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
+
+    applicaTemaLive();
+
+    try {
+        // --- LA VERA LOGICA DI SALVATAGGIO ---
+        // Verifica se l'utente è "attivo" o in bozza tramite i dati scaricati all'inizio
+        const statoAttuale = (typeof datiGlobaliUtente !== 'undefined' && datiGlobaliUtente.stato) ? datiGlobaliUtente.stato.toLowerCase().trim() : "";
+        let bodyRichiesta = {};
+
+        if (statoAttuale === 'attivo') {
+            // UTENTE PAGANTE: Salva i dati direttamente nei campi definitivi e svuota la bozza
+            bodyRichiesta = { ...payloadDati, draft_json: "" };
+        } else {
+            // UTENTE IN PROVA: Salva tutto dentro il campo draft_json
+            bodyRichiesta = {
+                username_system: NOME_SISTEMA,
+                draft_json: JSON.stringify(payloadDati)
             };
-
-            const canaliSocial = [];
-            const internalTrack = document.getElementById('social-internal-track');
-            if (internalTrack) {
-                const socialBlocks = internalTrack.querySelectorAll('.social-block-live');
-                socialBlocks.forEach(block => {
-                    canaliSocial.push({ 
-                        nome: block.getAttribute('data-nome'), 
-                        url: block.getAttribute('data-url'),
-                        vip: block.getAttribute('data-vip') === 'true',
-                        pin: block.getAttribute('data-pin') || "",
-                        official: block.getAttribute('data-official') === 'true',
-                        iconClass: block.getAttribute('data-icon') || "fas fa-link"
-                    });
-                });
-            }
-
-                        // Recupera l'URL del DNA Core dal campo nascosto
-            const coreUrl = document.getElementById('field-avatar-url') ? document.getElementById('field-avatar-url').value : "";
-
-            const bozza = { 
-                username_system: NOME_SISTEMA, 
-                username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
-                digital_style: styleVal, digital_layout: layoutVal,
-                bio: bioVal, sito_web: sitoVal, email: emailVal,
-                quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl,
-                avatar_url: coreUrl, // Ora la variabile esiste e non farà più crashare il salvataggio
-                modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
-            }; 
-
-            localStorage.setItem('mqt_cache_' + NOME_SISTEMA, bozza.username_display);
-            localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
-            localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
-
-            applicaTemaLive();
-
-            try {
-                await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username_system: NOME_SISTEMA, draft_json: JSON.stringify(bozza) }) });
-            } catch (error) {}
         }
 
+        const response = await fetch('/api/update-profile', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify(bodyRichiesta) 
+        });
+
+        const data = await response.json();
+        
+        // Se non è attivo, reindirizza al checkout dopo il salvataggio
+        if (data.success && statoAttuale !== 'attivo' && document.activeElement.id === 'btn-attiva-tag') {
+            window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+        }
+        
+    } catch (error) {
+        console.error("Errore di salvataggio:", error);
+    }
+}
         // ============================================================
         // CAPITOLO 5: INIZIALIZZAZIONE E CONTROLLI 
         // ============================================================
