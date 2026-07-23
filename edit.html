@@ -58,36 +58,41 @@
         /* --- STRUTTURA BASE BRAND (BADGE) --- */
         .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; position: relative; }
         
-     /* ============================================================
-   🏆 STRUTTURA BASE BRAND (BADGE BLINDATO CON FIT-CONTENT)
+  /* ============================================================
+   LAYOUT 1: BADGE (DYNAMIC WIDTH ENFORCEMENT)
    ============================================================ */
-.username-capsule-wrapper { 
+#profile-content[data-layout="badge"] .username-capsule-wrapper { 
     display: flex !important; 
     justify-content: center !important; 
-    align-items: center !important; 
     width: 100% !important; 
 }
 
-.username-capsule {
-    display: flex !important; 
-    width: fit-content !important; /* 🎯 CEMENTO ARMATO: Forza la restrizione al contenuto */
-    margin: 0 auto !important; /* Forza la centratura */
+#profile-content[data-layout="badge"] .username-capsule {
+    display: inline-flex !important; 
+    width: max-content !important; 
+    max-width: 90% !important; 
+    margin: 0 auto !important; 
     padding: 1.5px !important; 
-    background: rgba(255, 255, 255, 0.3); 
+    background: rgba(255, 255, 255, 0.3) !important; 
     clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%) !important;
-    box-sizing: border-box !important;
 }
 
-.username-capsule-inner {
-    display: flex !important; 
-    width: fit-content !important; /* 🎯 CEMENTO ARMATO: Forza la restrizione al contenuto */
+#profile-content[data-layout="badge"] .username-capsule-inner {
+    display: inline-flex !important; 
+    width: auto !important; 
     justify-content: center !important; 
     align-items: center !important; 
     background: #0d0d0f !important; 
     padding: 18px 40px !important; 
     clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%) !important;
-    box-sizing: border-box !important;
 }
+
+#profile-content[data-layout="badge"] .username-display {
+    width: auto !important; 
+    max-width: 250px !important; 
+    margin: 0 auto !important;
+}
+   
             
   .username-display {
     font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
