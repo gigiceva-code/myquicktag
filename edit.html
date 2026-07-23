@@ -107,34 +107,58 @@
         }
 
        
+/* =========================================================
+   IL SIGILLO ORBITALE (Allineato a tag.html)
+   ========================================================= */
+.orbital-container {
+    position: relative; width: 80px; height: 80px; margin: 0 auto 25px auto;
+    display: flex; justify-content: center; align-items: center; z-index: 10;
+}
+.orbital-sphere {
+    width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: #000;
+    position: relative; z-index: 2;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.08);
+}
+.orbital-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) brightness(0.95); }
 
-        /* =========================================================
-           LAYOUT 2: DIVIDER (La linea taglia in mezzo al corridoio)
-           ========================================================= */
-        #profile-content[data-layout="divider"] .header-monolith { 
-            display: block !important; width: 100% !important; padding: 20px 0 !important; position: relative; 
-        }
-        #profile-content[data-layout="divider"] .username-display { 
-            position: relative; z-index: 3; 
-        }
-        
-        #profile-content[data-layout="divider"] .header-monolith::after {
-            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
-            /* Linea invisibile al centro per salvaguardare le lettere, visibile ai lati */
-            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
-            z-index: 1; pointer-events: none;
-        }
-        #profile-content[data-layout="divider"] .header-monolith::before {
-            content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2;
-        }
+.orbital-ring {
+    position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
+    border-radius: 50%; border: 1px solid transparent;
+    border-top-color: var(--core-border); 
+    border-right-color: rgba(255,255,255,0.02);
+    border-bottom-color: rgba(255,255,255,0.01); 
+    border-left-color: rgba(255,255,255,0.02);
+    animation: orbitSpin 40s linear infinite; z-index: 1;
+    filter: drop-shadow(0 0 12px var(--core-glow));
+}
+@keyframes orbitSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        #profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
-        #profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::before { color: #00E680; }
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
-        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::before { color: #e5c158; }
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
-        #profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::before { color: #c8968e; }
+/* =========================================================
+   LAYOUT 2: DIVIDER (Riparato per non tagliare l'orbita)
+   ========================================================= */
+#profile-content[data-layout="divider"] .username-capsule-wrapper { 
+    position: relative; padding: 20px 0 !important; display: block !important;
+}
+#profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; }
+
+#profile-content[data-layout="divider"] .username-capsule-wrapper::after {
+    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
+    z-index: 1; pointer-events: none;
+}
+#profile-content[data-layout="divider"] .username-capsule-wrapper::before {
+    content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2;
+}
+
+/* Colori del Divider */
+#profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::before { color: #00E680; }
+#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::before { color: #e5c158; }
+#profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::before { color: #c8968e; }
+
         
         /* =========================================================
            LAYOUT 3: PURE
