@@ -134,13 +134,36 @@
 @keyframes orbitSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 /* =========================================================
-   LAYOUT 2: DIVIDER (Riparato per non tagliare l'orbita)
+   LAYOUT 2 (DIVIDER) E 3 (PURE): TESTO SBLOCCATO E A CAPO
    ========================================================= */
+
+/* 1. Spegne il poligono e sblocca i contenitori interni */
+#profile-content[data-layout="divider"] .username-capsule,
+#profile-content[data-layout="divider"] .username-capsule-inner,
+#profile-content[data-layout="pure"] .username-capsule-wrapper,
+#profile-content[data-layout="pure"] .username-capsule,
+#profile-content[data-layout="pure"] .username-capsule-inner { 
+    display: block !important; width: 100% !important; background: transparent !important; 
+    clip-path: none !important; padding: 0 !important; min-width: 0 !important;
+}
+
+/* 2. Imposta il wrapper specifico per il Divider (crea lo spazio per la linea) */
 #profile-content[data-layout="divider"] .username-capsule-wrapper { 
     position: relative; padding: 20px 0 !important; display: block !important;
+    background: transparent !important; clip-path: none !important; 
 }
-#profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; }
 
+/* 3. 🎯 LA REGOLA SALVA-VITA PER L'A CAPO E LO SPAZIO */
+#profile-content[data-layout="divider"] .username-display,
+#profile-content[data-layout="pure"] .username-display {
+    position: relative; z-index: 3;
+    width: 100% !important; 
+    max-width: 220px !important; /* Misura perfetta per forzare l'a capo di due parole */
+    margin: 0 auto !important;
+    line-height: 2.5 !important; /* Spalanca lo spazio esatto in mezzo alle righe */
+}
+
+/* 4. La linea magica e il diamante che passano nel corridoio */
 #profile-content[data-layout="divider"] .username-capsule-wrapper::after {
     content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
     background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
@@ -151,7 +174,7 @@
     font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2;
 }
 
-/* Colori del Divider */
+/* 5. Colori del Divider in base al tema */
 #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
 #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::before { color: #00E680; }
 #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
@@ -159,14 +182,13 @@
 #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
 #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::before { color: #c8968e; }
 
-        
-        /* =========================================================
-           LAYOUT 3: PURE
-           ========================================================= */
-        #profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
-  
-        .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
-        .brand-text { font-weight: inherit; }
+/* =========================================================
+   LAYOUT 3: PURE E SIMBOLI CHIOCCIOLA
+   ========================================================= */
+#profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
+
+.at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
+.brand-text { font-weight: inherit; }
 
         /* =========================================================
            PUNTO LUCE E ACCENTI
