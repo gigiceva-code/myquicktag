@@ -80,15 +80,19 @@
     box-sizing: border-box;
 }
             
-             .username-display {
+  .username-display {
     font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
     margin: 0 auto; text-align: center !important; display: block !important; 
     text-transform: uppercase; 
     white-space: normal !important; 
-    word-break: normal !important; /* Riportato a normal per sicurezza assoluta */
+    word-break: normal !important; 
     overflow-wrap: break-word !important; 
     text-wrap: balance !important; 
-    width: 100% !important; max-width: 100% !important; 
+    
+    /* 🎯 IL BISTURI: Tolto il 100% e messo 'auto'. Ora il poligono si stringerà attorno al testo! */
+    width: auto !important; 
+    max-width: 280px !important; /* Aiuta ad andare a capo in modo armonico se il nome è lungo */
+    
     padding: 0 12px !important; box-sizing: border-box !important;
     line-height: 1.5 !important; 
     transition: font-size 0.3s ease; 
@@ -97,7 +101,7 @@
     user-select: none !important; 
     -webkit-user-select: none !important; 
     touch-action: manipulation !important; 
-} 
+}
          
         
 
