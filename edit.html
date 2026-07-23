@@ -58,26 +58,35 @@
         /* --- STRUTTURA BASE BRAND (BADGE) --- */
         .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; position: relative; }
         
-      .username-capsule-wrapper { 
-    display: flex; justify-content: center; align-items: center; width: 100%; 
+     /* ============================================================
+   🏆 STRUTTURA BASE BRAND (BADGE BLINDATO CON FIT-CONTENT)
+   ============================================================ */
+.username-capsule-wrapper { 
+    display: flex !important; 
+    justify-content: center !important; 
+    align-items: center !important; 
+    width: 100% !important; 
 }
 
 .username-capsule {
-    display: inline-flex; /* 🎯 Si restringe al contenuto */
-    padding: 1.5px; 
+    display: flex !important; 
+    width: fit-content !important; /* 🎯 CEMENTO ARMATO: Forza la restrizione al contenuto */
+    margin: 0 auto !important; /* Forza la centratura */
+    padding: 1.5px !important; 
     background: rgba(255, 255, 255, 0.3); 
-    max-width: 100%;
-    clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
-    box-sizing: border-box;
+    clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%) !important;
+    box-sizing: border-box !important;
 }
 
 .username-capsule-inner {
-    display: inline-flex; /* 🎯 Segue la restrizione del padre */
-    justify-content: center; align-items: center; 
-    background: #0d0d0f; 
-    padding: 18px 40px; /* 🎯 Spazi laterali ricalibrati per non tagliare le lettere */
-    clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
-    box-sizing: border-box;
+    display: flex !important; 
+    width: fit-content !important; /* 🎯 CEMENTO ARMATO: Forza la restrizione al contenuto */
+    justify-content: center !important; 
+    align-items: center !important; 
+    background: #0d0d0f !important; 
+    padding: 18px 40px !important; 
+    clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%) !important;
+    box-sizing: border-box !important;
 }
             
   .username-display {
