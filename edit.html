@@ -890,11 +890,9 @@
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
+            // Il JS si arrende: il controllo geometrico e la larghezza spettano al CSS
+            el.style.cssText = ""; 
 
-            el.style.whiteSpace = "";
-            el.style.wordBreak = "";
-            el.style.overflowWrap = "";
-            el.style.textWrap = "";
 
             if (testo.length > 35) {
                 el.style.fontSize = "0.85rem";
