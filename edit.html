@@ -435,38 +435,52 @@
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
         .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; }
 /* ============================================================
-   LAYOUT 1: BADGE (SHRINK-WRAP ENFORCEMENT)
+   LAYOUT 1: BADGE (RISOLUZIONE DEFINITIVA LARGHEZZA E COLORI)
    ============================================================ */
 #profile-content[data-layout="badge"] .username-capsule-wrapper { 
-    display: block !important; 
-    text-align: center !important; 
+    display: flex !important; 
+    justify-content: center !important; 
+    align-items: center !important;
     width: 100% !important; 
 }
 
 #profile-content[data-layout="badge"] .username-capsule {
-    display: inline-block !important; /* Abbandona il Flexbox, forza la restrizione al contenuto */
-    width: auto !important; 
-    max-width: 95% !important; 
+    display: inline-flex !important; 
+    width: max-content !important; /* 🎯 Il muro di cemento contro l'allargamento */
+    max-width: 290px !important; 
     margin: 0 auto !important; 
     padding: 1.5px !important; 
-    background: rgba(255, 255, 255, 0.3) !important; 
     clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%) !important;
+    box-sizing: border-box !important;
+    /* Rimosso il background bianco fisso: ora i temi possono funzionare! */
 }
 
 #profile-content[data-layout="badge"] .username-capsule-inner {
-    display: block !important; 
-    width: auto !important; 
+    display: inline-flex !important; 
+    width: 100% !important; /* Si adatta alla restrizione del padre */
+    justify-content: center !important; 
+    align-items: center !important; 
     background: #0d0d0f !important; 
-    padding: 16px 35px !important; /* Quote aerodinamiche riviste per una centratura perfetta */
+    padding: 16px 35px !important; 
     clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%) !important;
+    box-sizing: border-box !important;
 }
 
 #profile-content[data-layout="badge"] .username-display {
     display: block !important; 
-    width: auto !important; 
-    max-width: 250px !important; 
+    width: max-content !important; /* Costringe il testo a non spingere i bordi */
+    max-width: 100% !important; 
     margin: 0 auto !important;
+    text-align: center !important;
 }
+
+/* --- RIPRISTINO FORZATO DEI COLORI DEL TEMA SUL BADGE --- */
+#profile-content[data-layout="badge"][data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.6) !important; }
+#profile-content[data-layout="badge"][data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.6) !important; }
+#profile-content[data-layout="badge"][data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.6) !important; }
+#profile-content[data-layout="badge"][data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.6) !important; }
+#profile-content[data-layout="badge"][data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.35) !important; }
+
 
     </style>
 </head>
