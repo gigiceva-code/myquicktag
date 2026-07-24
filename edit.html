@@ -1439,10 +1439,10 @@
             } catch (e) { console.error("Errore caricamento", e); }
         }
 
-      async function salvaDati() {
+      async function salvaDati(azioneRedirect = null) {
     if(NOME_SISTEMA === "tuonome.it") return; 
 
-    // --- VALIDAZIONE INPUT: RESTRIZIONE DOMINI SOCIAL NEL CAMPO SITO WEB ---
+    // --- Raccoglie tutti gli input (La validazione è intatta) ---
     const sitoInput = document.getElementById('field-sito');
     let sitoVal = "";
     if (sitoInput) {
@@ -1451,16 +1451,8 @@
             const socials = ['instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'x.com', 'twitter.com', 'youtube.com', 'wa.me', 't.me', 'spotify.com', 'tripadvisor', 'thefork', 'onlyfans.com', 'github.com', 'twitch.tv', 'strava.com', 'pinterest.com', 'discord.com', 'discord.gg', 'snapchat.com', 'threads.net', 'calendly.com', 'patreon.com', 'behance.net', 'dribbble.com', 'vimeo.com', 'reddit.com', 'medium.com', 'soundcloud.com', 'apple.com/it/music'];
             const lowerSito = sitoVal.toLowerCase();
             let isSocial = false;
-
-            for (let s of socials) {
-                if (lowerSito.includes(s)) { isSocial = true; break; }
-            }
-
-            if (isSocial) {
-                alert("⚠️ AZIONE NON CONSENTITA\n\nHai incollato un link Social nel modulo 'SITO WEB'.\nQuesto campo è riservato unicamente al sito istituzionale o personale.\n\nIl link è stato rimosso per impedire l'elusione delle regole del piano.");
-                sitoInput.value = "";
-                sitoVal = ""; 
-            }
+            for (let s of socials) { if (lowerSito.includes(s)) { isSocial = true; break; } }
+            if (isSocial) { alert("⚠️ AZIONE NON CONSENTITA\nHai incollato un link Social nel modulo 'SITO WEB'..."); sitoInput.value = ""; sitoVal = ""; }
         }
     }
 
@@ -1468,13 +1460,12 @@
     const displayVal = inputField ? inputField.value.trim() : "";
     const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
     const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
-
     const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
     const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
-
     const qaTipo = document.getElementById('field-qa-tipo') ? document.getElementById('field-qa-tipo').value : "";
     const qaLabel = document.getElementById('field-qa-label') ? document.getElementById('field-qa-label').value.trim() : "";
     const qaUrl = document.getElementById('field-qa-url') ? document.getElementById('field-qa-url').value.trim() : "";
+    const coreUrl = document.getElementById('field-avatar-url') ? document.getElementById('field-avatar-url').value : "";
 
     const vcfObject = {
         telefono1: document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "",
@@ -1485,77 +1476,58 @@
     const canaliSocial = [];
     const internalTrack = document.getElementById('social-internal-track');
     if (internalTrack) {
-        const socialBlocks = internalTrack.querySelectorAll('.social-block-live');
-        socialBlocks.forEach(block => {
+        internalTrack.querySelectorAll('.social-block-live').forEach(block => {
             canaliSocial.push({ 
-                nome: block.getAttribute('data-nome'), 
-                url: block.getAttribute('data-url'),
-                vip: block.getAttribute('data-vip') === 'true',
-                pin: block.getAttribute('data-pin') || "",
-                official: block.getAttribute('data-official') === 'true',
-                iconClass: block.getAttribute('data-icon') || "fas fa-link"
+                nome: block.getAttribute('data-nome'), url: block.getAttribute('data-url'),
+                vip: block.getAttribute('data-vip') === 'true', pin: block.getAttribute('data-pin') || "",
+                official: block.getAttribute('data-official') === 'true', iconClass: block.getAttribute('data-icon') || "fas fa-link"
             });
         });
     }
 
-    const coreUrl = document.getElementById('field-avatar-url') ? document.getElementById('field-avatar-url').value : "";
-
     const payloadDati = { 
-        username_system: NOME_SISTEMA, 
-        username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
-        digital_style: styleVal, 
-        digital_layout: layoutVal,
-        bio: bioVal, 
-        sito_web: sitoVal, 
-        email: emailVal,
-        quick_action_tipo: qaTipo, 
-        quick_action_label: qaLabel, 
-        quick_action_url: qaUrl,
-        avatar_url: coreUrl,
-        modulo_vcf: JSON.stringify(vcfObject), 
-        config_canali: JSON.stringify(canaliSocial) 
+        username_system: NOME_SISTEMA, username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
+        digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
+        quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
+        modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
     }; 
 
     localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
     localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
     localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
-
     applicaTemaLive();
 
     try {
-        // --- LA VERA LOGICA DI SALVATAGGIO ---
-        // Verifica se l'utente è "attivo" o in bozza tramite i dati scaricati all'inizio
-        const statoAttuale = (typeof datiGlobaliUtente !== 'undefined' && datiGlobaliUtente.stato) ? datiGlobaliUtente.stato.toLowerCase().trim() : "";
+        // --- IL MOTORE DI SALVATAGGIO DINAMICO ---
         let bodyRichiesta = {};
 
-        if (statoAttuale === 'attivo') {
-            // UTENTE PAGANTE: Salva i dati direttamente nei campi definitivi e svuota la bozza
-            bodyRichiesta = { ...payloadDati, draft_json: "" };
+        // Se ha cliccato "PUBBLICA", svuota la bozza e scrive sui campi definitivi
+        if (azioneRedirect === 'pubblica') {
+            bodyRichiesta = { ...payloadDati, draft_json: "" }; 
         } else {
-            // UTENTE IN PROVA: Salva tutto dentro il campo draft_json
-            bodyRichiesta = {
-                username_system: NOME_SISTEMA,
-                draft_json: JSON.stringify(payloadDati)
-            };
+            // Se in background, chiude un cassetto o preme "BOZZA", scrive tutto nel draft_json
+            bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
         }
 
         const response = await fetch('/api/update-profile', { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify(bodyRichiesta) 
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 
         });
 
         const data = await response.json();
-        
-        // Se non è attivo, reindirizza al checkout dopo il salvataggio
-        if (data.success && statoAttuale !== 'attivo' && document.activeElement.id === 'btn-attiva-tag') {
-            window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+
+        // --- IL MOTORE DEI REDIRECT (RISOLVE IL 404) ---
+        if (data.success && azioneRedirect) {
+            if (azioneRedirect === 'checkout') {
+                window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+            } else if (azioneRedirect === 'bozza') {
+                window.location.href = `/profile.html`; // Torna al pannello di controllo
+            } else if (azioneRedirect === 'pubblica') {
+                window.location.href = `/tag.html?u=${NOME_SISTEMA}`; // Visualizza la Tag online aggiornata
+            }
         }
-        
-    } catch (error) {
-        console.error("Errore di salvataggio:", error);
-    }
+    } catch (error) { console.error("Errore di salvataggio:", error); }
 }
+
         // ============================================================
         // CAPITOLO 5: INIZIALIZZAZIONE E CONTROLLI 
         // ============================================================
@@ -1688,30 +1660,30 @@
             return false; // Profilo completamente vuoto
         }
 
-        // 2. Cambia il colore e il testo del bottone in base allo stato
+                // 2. Cambia il colore e il testo del bottone in base allo stato (La Plancia)
         function aggiornaBottoneMaster() {
             const btnText = document.getElementById('master-action-text');
             const btnIcon = document.getElementById('master-action-icon');
             const btn = document.getElementById('master-action-btn');
-            
+
             if (!btnText || !btnIcon || !btn) return;
 
             if (statoUtente === 'attivo') {
-                // FASE 3: Cliente già pagante (PUBBLICA)
-                btnText.innerText = "PUBBLICA";
-                btnIcon.className = "fas fa-cloud-upload-alt";
-                btn.classList.add('ready'); // Si accende di verde
+                // FASE UTENTE PAGANTE: Il tasto apre il cassetto delle scelte
+                btnText.innerText = "SALVA MODIFICHE";
+                btnIcon.className = "fas fa-check-circle";
+                btn.classList.add('ready'); // Si accende
             } else {
                 if (verificaCompletamentoBase()) {
-                    // FASE 2: Dati inseriti, pronto per il checkout
+                    // FASE IN PROVA: Dati inseriti, va al checkout
                     btnText.innerText = "ATTIVA TAG";
                     btnIcon.className = "fas fa-lock-open";
-                    btn.classList.add('ready'); // Si accende di verde
+                    btn.classList.add('ready'); // Si accende
                 } else {
-                    // FASE 1: Profilo vuoto, acquisto bloccato
+                    // FASE INIZIALE: Profilo vuoto
                     btnText.innerText = "COMPLETA TAG";
                     btnIcon.className = "fas fa-lock";
-                    btn.classList.remove('ready'); // Torna grigio spento
+                    btn.classList.remove('ready'); // Spento
                 }
             }
         }
@@ -1719,17 +1691,24 @@
         // 3. Regola cosa succede quando l'utente ci clicca sopra
         function gestisciAzioneMaster() {
             if (statoUtente === 'attivo') {
-                salvaDati();
-                alert("Aggiornamento Completato\n\nLe modifiche sono state salvate e la tua Tag pubblica è stata aggiornata.");
+                // Apre l'Action Sheet Minimal Luxury
+                apriDrawer('drawer-salvataggio');
             } else {
                 if (verificaCompletamentoBase()) {
-                    salvaDati(); 
-                    window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+                    // Manda dritto al checkout
+                    salvaEDirigi('checkout');
                 } else {
-                    alert("⚠️ Profilo Incompleto\n\nPer attivare la tua Tag, devi inserire almeno un collegamento o un testo.\n\nAggiungi una Bio, un numero di telefono, un sito o un canale social prima di procedere all'attivazione.");
+                    alert("⚠️ Profilo Incompleto\n\nPer attivare la tua Tag, devi inserire almeno un collegamento o un testo.");
                 }
             }
-        } 
+        }
+
+        // 4. Nuova funzione di innesco per i bottoni dell'Action Sheet
+        function salvaEDirigi(azione) {
+            document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open')); // Chiude il cassetto per feedback visivo
+            setTimeout(() => salvaDati(azione), 200); // Salva e viaggia
+        }
+
        // ==========================================
         // MOTORE DI UPLOAD IMMAGINI (CLOUDINARY)
         // ==========================================
