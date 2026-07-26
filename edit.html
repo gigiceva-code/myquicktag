@@ -917,7 +917,7 @@
         let isDrawerOpen = false;
         let statoUtente = 'in attesa'; 
         let userPlan = 'BASE'; // Simula l'utente Base. Se lo cambi in 'GOLD', il lucchetto si attiva.
-
+        let isLoadingDati = true;
         function getNomeBrandReale() {
             try {
                 const params = new URLSearchParams(window.location.search);
@@ -1672,13 +1672,21 @@
             return false; // Profilo completamente vuoto
         }
 
-                // 2. Cambia il colore e il testo del bottone in base allo stato (La Plancia)
+                        // 2. Cambia il colore e il testo del bottone in base allo stato (La Plancia)
         function aggiornaBottoneMaster() {
             const btnText = document.getElementById('master-action-text');
             const btnIcon = document.getElementById('master-action-icon');
             const btn = document.getElementById('master-action-btn');
 
             if (!btnText || !btnIcon || !btn) return;
+
+            // 🎯 Finché Airtable carica, mostra la connessione
+            if (isLoadingDati) {
+                btnText.innerText = "CONNESSIONE...";
+                btnIcon.className = "fas fa-wifi fa-fade";
+                btn.classList.remove('ready'); // Spento finché non riceve i dati
+                return;
+            }
 
             if (statoUtente === 'attivo') {
                 // FASE UTENTE PAGANTE: Il tasto apre il cassetto delle scelte
@@ -1699,6 +1707,7 @@
                 }
             }
         }
+
 
         // 3. Regola cosa succede quando l'utente ci clicca sopra
         function gestisciAzioneMaster() {
