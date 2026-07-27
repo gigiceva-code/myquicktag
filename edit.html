@@ -376,7 +376,8 @@
         }
         
         .luxury-menu-btn i { font-size: 1rem; color: #fff; }
-        .luxury-menu-btn span { font-size: 0.75rem; letter-spacing: 2px; font-weight: 600; color: #fff; text-transform: uppercase; }
+        .luxury-menu-btn span { font-size: 0.75rem; letter-spacing: 2px; font-weight: 600; color: #fff; text-transform: uppercase; white-space: nowrap; }
+
 
         /* Divisore verticale elegante tra i due comandi */
         .nav-divider {
@@ -1690,7 +1691,7 @@
 
             if (statoUtente === 'attivo') {
                 // FASE UTENTE PAGANTE: Il tasto apre il cassetto delle scelte
-                btnText.innerText = "SALVA MODIFICHE";
+                btnText.innerText = "SALVA";
                 btnIcon.className = "fas fa-check-circle";
                 btn.classList.add('ready'); // Si accende
             } else {
