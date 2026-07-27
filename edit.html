@@ -840,6 +840,9 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA AZIONE</button>
       </div>
 
+        <!-- ========================================== -->
+    <!-- CASSETTO PIANI (Pulito e chiuso correttamente) -->
+    <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-piani">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-master')"></i>
@@ -847,29 +850,6 @@
             <div class="drawer-title">PIANI E ABBONAMENTI</div>
             <div class="drawer-subtitle">Espandi le potenzialità</div>
         </div>
-           // Il drawer salvataggio era qui// 
-        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
-
-            <div onclick="salvaEDirigi('bozza')" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
-                <i class="fas fa-inbox" style="color: rgba(255,255,255,0.4); font-size: 1.2rem;"></i>
-                <div style="flex: 1;">
-                    <div style="color: #fff; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">SALVA IN DASHBOARD</div>
-                    <div style="color: rgba(255,255,255,0.4); font-size: 0.6rem; margin-top: 4px; letter-spacing: 0.5px;">Bozza privata, non visibile online.</div>
-                </div>
-                <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.2); font-size: 0.8rem;"></i>
-            </div>
-
-            <div onclick="salvaEDirigi('pubblica')" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
-                <i class="fas fa-globe" style="color: #10b981; font-size: 1.2rem;"></i>
-                <div style="flex: 1;">
-                    <div style="color: #10b981; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">PUBBLICA ADESSO</div>
-                    <div style="color: rgba(16, 185, 129, 0.6); font-size: 0.6rem; margin-top: 4px; letter-spacing: 0.5px;">Aggiorna la tua Tag in tempo reale.</div>
-                </div>
-                <i class="fas fa-chevron-right" style="color: rgba(16, 185, 129, 0.4); font-size: 0.8rem;"></i>
-            </div>
-
-        </div>
-    </div>
 
         <div class="style-list" style="gap: 12px;">
             <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2);">
@@ -888,12 +868,41 @@
             </div>
         </div>
     </div>
-<div class="drawer-glass" id="drawer-salvataggio">
+
+    <!-- ========================================== -->
+    <!-- CASSETTO SALVATAGGIO (Ricostruito e Indipendente) -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-salvataggio">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">OPZIONI DI SALVATAGGIO</div>
             <div class="drawer-subtitle">Scegli come procedere</div>
         </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+            <div onclick="salvaEDirigi('bozza')" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                <i class="fas fa-inbox" style="color: rgba(255,255,255,0.4); font-size: 1.2rem;"></i>
+                <div style="flex: 1;">
+                    <div style="color: #fff; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">SALVA IN DASHBOARD</div>
+                    <div style="color: rgba(255,255,255,0.4); font-size: 0.6rem; margin-top: 4px; letter-spacing: 0.5px;">Bozza privata, non visibile online.</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.2); font-size: 0.8rem;"></i>
+            </div>
+
+            <div onclick="salvaEDirigi('pubblica')" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                <i class="fas fa-globe" style="color: #10b981; font-size: 1.2rem;"></i>
+                <div style="flex: 1;">
+                    <div style="color: #10b981; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">PUBBLICA ADESSO</div>
+                    <div style="color: rgba(16, 185, 129, 0.6); font-size: 0.6rem; margin-top: 4px; letter-spacing: 0.5px;">Aggiorna la tua Tag in tempo reale.</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: rgba(16, 185, 129, 0.4); font-size: 0.8rem;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODALE QR CODE (Intatto) -->
+    <!-- ========================================== -->
     <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
         <div class="qr-card">
            <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
@@ -905,6 +914,7 @@
            </div>
        </div>
     </div>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
