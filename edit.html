@@ -846,12 +846,7 @@
             <div class="drawer-title">PIANI E ABBONAMENTI</div>
             <div class="drawer-subtitle">Espandi le potenzialità</div>
         </div>
-            <div class="drawer-glass" id="drawer-salvataggio">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">OPZIONI DI SALVATAGGIO</div>
-            <div class="drawer-subtitle">Scegli come procedere</div>
-        </div>
+            
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
 
             <div onclick="salvaEDirigi('bozza')" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
@@ -892,7 +887,12 @@
             </div>
         </div>
     </div>
-
+<div class="drawer-glass" id="drawer-salvataggio">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">OPZIONI DI SALVATAGGIO</div>
+            <div class="drawer-subtitle">Scegli come procedere</div>
+        </div>
     <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
         <div class="qr-card">
            <i class="fas fa-times qr-close-btn" onclick="chiudiModalQR(event)"></i>
