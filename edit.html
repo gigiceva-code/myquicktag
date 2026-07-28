@@ -1465,18 +1465,27 @@
     if(NOME_SISTEMA === "tuonome.it") return; 
 
     // --- Raccoglie tutti gli input ---
-    const sitoInput = document.getElementById('field-sito');
+        const sitoInput = document.getElementById('field-sito');
     let sitoVal = "";
     if (sitoInput) {
         sitoVal = sitoInput.value.trim();
         if (sitoVal !== "") {
+            // 1. Controllo Anti-Social (Che hai già)
             const socials = ['instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'x.com', 'twitter.com', 'youtube.com', 'wa.me', 't.me', 'spotify.com', 'tripadvisor', 'thefork', 'onlyfans.com', 'github.com', 'twitch.tv', 'strava.com', 'pinterest.com', 'discord.com', 'discord.gg', 'snapchat.com', 'threads.net', 'calendly.com', 'patreon.com', 'behance.net', 'dribbble.com', 'vimeo.com', 'reddit.com', 'medium.com', 'soundcloud.com', 'apple.com/it/music'];
             const lowerSito = sitoVal.toLowerCase();
             let isSocial = false;
             for (let s of socials) { if (lowerSito.includes(s)) { isSocial = true; break; } }
             if (isSocial) { alert("⚠️ AZIONE NON CONSENTITA\nHai incollato un link Social nel modulo 'SITO WEB'..."); sitoInput.value = ""; sitoVal = ""; }
+            
+            // 2. NUOVO: Controllo Anti-Email
+            if (sitoVal.includes('@') || lowerSito.startsWith('mailto:')) {
+                alert("⚠️ AZIONE NON CONSENTITA\nHai inserito un indirizzo Email nel modulo 'SITO WEB'.\nPer le email, usa l'apposito campo nel cassetto 'CONTATTI'.");
+                sitoInput.value = ""; 
+                sitoVal = "";
+            }
         }
     }
+
 
     const inputField = document.getElementById("field-username_display");
     const displayVal = inputField ? inputField.value.trim() : "";
