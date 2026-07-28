@@ -1315,38 +1315,18 @@
 
         function confermaEChiudiCassetto() { salvaDati(); chiudiSenzaSalvare(); }
 
-                        async function inizializzaPagina() { 
+                        
+        async function inizializzaPagina() { 
             if(NOME_SISTEMA === "tuonome.it") {
                 isLoadingDati = false;
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
                 return; 
             }
             try {
-                // 🎯 IL MAGAZZINO LOCALE (Scudo contro i limiti API di Airtable)
-                const CACHE_KEY = 'mqt_dati_' + NOME_SISTEMA;
-                const CACHE_TIME = 'mqt_tempo_' + NOME_SISTEMA;
-                const SCADENZA_MINUTI = 15 * 60 * 1000; // 15 minuti di respiro
-                const adesso = new Date().getTime();
-                
-                let data;
-                const datiInCantina = sessionStorage.getItem(CACHE_KEY);
-                const tempoCantina = sessionStorage.getItem(CACHE_TIME);
-                
-                // Se abbiamo i dati in tasca e non sono scaduti, NON disturbiamo Airtable!
-                if (datiInCantina && tempoCantina && (adesso - tempoCantina < SCADENZA_MINUTI)) {
-                    console.log("📦 Dati presi dal magazzino locale (Zero API consumate!)");
-                    data = JSON.parse(datiInCantina);
-                } else {
-                    console.log("🌐 Chiamata fresca ad Airtable...");
-                    const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
-                    data = await response.json();
-                    
-                    // Salviamo in cantina per i prossimi 15 minuti
-                    sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
-                    sessionStorage.setItem(CACHE_TIME, adesso);
-                }
+                const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
+                const data = await response.json();
 
-                // 🎯 LA MAGIA: Legge le colonne esatte...
+                // 🎯 LA MAGIA: Legge le colonne esatte del tuo schema Airtable PRIMA di caricare la bozza!
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
                 userPlan = (data.fields?.plan || 'BASE').toUpperCase().trim();
 
@@ -1479,7 +1459,6 @@
             }
         }
 
-
       async function salvaDati(azioneRedirect = null) {
     if(NOME_SISTEMA === "tuonome.it") return; 
 
@@ -1539,14 +1518,7 @@
     applicaTemaLive();
 
     try {
-        // --- IL MOTORE DI SALVATAGGIO DINAMICO ---
-        let bodyRichiesta = {};
-
-        // Se ha cliccato "PUBBLICA", svuota la bozza e scrive sui campi definitivi
-        if (azioneRedirect === 'pubblica') {
-            bodyRichiesta = { ...payloadDati, draft_json: "" }; 
-        } else {
-            // Se in background, chiude un cassetto o preme "BOZZA", scrive tutto nel draft_json
+        
             bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
         }
 
@@ -1555,13 +1527,9 @@
         });
 
         const data = await response.json();
-        // --- IL MOTORE DEI REDIRECT (RISOLVE IL 404) ---
+      
+                // --- IL MOTORE DEI REDIRECT (RISOLVE IL 404) ---
         if (data.success && azioneRedirect) {
-            
-            // 🎯 PULIZIA MAGAZZINO: Svuota la cache dopo il salvataggio per caricare i dati nuovi
-            sessionStorage.removeItem('mqt_dati_' + NOME_SISTEMA);
-            sessionStorage.removeItem('mqt_tempo_' + NOME_SISTEMA);
-
             if (azioneRedirect === 'checkout') {
                 window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
             } else if (azioneRedirect === 'bozza') {
@@ -1572,8 +1540,7 @@
         }
     } catch (error) { console.error("Errore di salvataggio:", error); }
 }
-
-         ============================================================
+ ============================================================
         // CAPITOLO 5: INIZIALIZZAZIONE E CONTROLLI 
         // ============================================================
 
