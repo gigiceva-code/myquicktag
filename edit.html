@@ -1459,10 +1459,10 @@
             }
         }
 
-      async function salvaDati(azioneRedirect = null) {
+            async function salvaDati(azioneRedirect = null) {
     if(NOME_SISTEMA === "tuonome.it") return; 
 
-    // --- Raccoglie tutti gli input (La validazione è intatta) ---
+    // --- Raccoglie tutti gli input ---
     const sitoInput = document.getElementById('field-sito');
     let sitoVal = "";
     if (sitoInput) {
@@ -1518,7 +1518,12 @@
     applicaTemaLive();
 
     try {
-        
+        // --- IL MOTORE DI SALVATAGGIO DINAMICO ---
+        let bodyRichiesta = {};
+
+        if (azioneRedirect === 'pubblica') {
+            bodyRichiesta = { ...payloadDati, draft_json: "" }; 
+        } else {
             bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
         }
 
@@ -1528,7 +1533,7 @@
 
         const data = await response.json();
       
-                // --- IL MOTORE DEI REDIRECT (RISOLVE IL 404) ---
+        // --- IL MOTORE DEI REDIRECT (RISOLVE IL 404) ---
         if (data.success && azioneRedirect) {
             if (azioneRedirect === 'checkout') {
                 window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
