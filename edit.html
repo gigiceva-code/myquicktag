@@ -1315,8 +1315,7 @@
 
         function confermaEChiudiCassetto() { salvaDati(); chiudiSenzaSalvare(); }
 
-                        
-        async function inizializzaPagina() { 
+              async function inizializzaPagina() { 
             if(NOME_SISTEMA === "tuonome.it") {
                 isLoadingDati = false;
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
@@ -1336,11 +1335,13 @@
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                     if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
 
-                    if (f.username_display) {
+                    // 🎯 IL FIX INSERITO QUI: Se username_display è vuoto, usa NOME_SISTEMA (username_system)!
+                    const nomeDaMostrare = f.username_display || NOME_SISTEMA;
+                    if (nomeDaMostrare && nomeDaMostrare !== "tuonome.it") {
                         const inputField = document.getElementById('field-username_display');
-                        if (inputField) inputField.value = f.username_display.replace('@', '');
-                        localStorage.setItem('mqt_cache_' + NOME_SISTEMA, f.username_display); 
-                        formattaBadge(f.username_display);
+                        if (inputField) inputField.value = nomeDaMostrare.replace('@', '');
+                        localStorage.setItem('mqt_cache_' + NOME_SISTEMA, nomeDaMostrare); 
+                        formattaBadge(nomeDaMostrare);
                     }
 
                     if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
@@ -1458,7 +1459,8 @@
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
             }
         }
-
+                  
+        
             async function salvaDati(azioneRedirect = null) {
     if(NOME_SISTEMA === "tuonome.it") return; 
 
