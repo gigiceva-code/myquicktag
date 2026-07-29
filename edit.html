@@ -628,6 +628,11 @@
             <div class="drawer-subtitle">Gestisci i contenuti della tua tag</div>
         </div>
         <div class="style-list" style="flex-direction: column; gap: 10px;">
+            <div class="style-bar" onclick="apriDrawer('drawer-live-status')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-broadcast-tower" style="color: #10b981;"></i><span style="font-weight: 600; color: #10b981;">Live Status (Semaforo)</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+
             <div class="style-bar" onclick="apriDrawer('drawer-bio')">
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-pen-nib" style="color: rgba(255,255,255,0.5);"></i><span>Presentazione (Bio)</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
@@ -839,6 +844,54 @@
         
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA AZIONE</button>
       </div>
+    <!-- ========================================== -->
+    <!-- CASSETTO MQT LIVE STATUS (SEMAFORO) -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-live-status">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">LIVE STATUS</div>
+            <div class="drawer-subtitle">Cosa stai facendo in tempo reale</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px;">
+                Il badge luminoso apparirà in cima alla tua Tag pubblica.
+            </div>
+
+            <!-- I Tre Bottoni del Semaforo -->
+            <div style="display: flex; gap: 10px;">
+                <div class="status-btn" id="btn-status-green" onclick="selezionaStatus('green')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); color:#10b981; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">
+                    🟢 ONLINE
+                </div>
+                <div class="status-btn" id="btn-status-yellow" onclick="selezionaStatus('yellow')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); color:#f59e0b; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">
+                    🟡 BUSY
+                </div>
+                <div class="status-btn" id="btn-status-red" onclick="selezionaStatus('red')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); color:#ef4444; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">
+                    🔴 OFFLINE
+                </div>
+            </div>
+
+            <!-- Il campo di testo e la memoria nascosta -->
+            <input type="hidden" id="field-status-color" value="">
+            
+            <div style="position: relative;">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">MESSAGGIO (Max 30 caratteri)</label>
+                <input type="text" id="field-status-text" placeholder="Es. In riunione fino alle 15:00" maxlength="30" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+            </div>
+
+            <div style="text-align: center; margin-top: 5px;">
+                <button type="button" onclick="spegniStatus()" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-power-off"></i> SPEGNI SEMAFORO
+                </button>
+            </div>
+        </div>
+
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA STATUS</button>
+    </div>
+
 
         <!-- ========================================== -->
     <!-- CASSETTO PIANI (Pulito e chiuso correttamente) -->
