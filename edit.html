@@ -1593,12 +1593,19 @@
         });
     }
 
+     
+           const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
+    const statusText = document.getElementById('field-status-text') ? document.getElementById('field-status-text').value.trim() : "";
+
     const payloadDati = { 
         username_system: NOME_SISTEMA, username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
         digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
         quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
+        live_status_color: statusColor, // <--- CAMPO SEMAFORO
+        live_status_text: statusText,   // <--- CAMPO SEMAFORO
         modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
     }; 
+
 
     localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
     localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
