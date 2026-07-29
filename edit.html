@@ -896,6 +896,37 @@
 
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA STATUS</button>
     </div>
+    <!-- ========================================== -->
+    <!-- CASSETTO MQT FLASH (STORIE 24H) -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-flash">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">MQT FLASH (24H)</div>
+            <div class="drawer-subtitle">Un annuncio che si autodistrugge</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px;">
+                Il messaggio apparirà come banner dorato e sparirà da solo tra 24 ore esatte.
+            </div>
+
+            <div style="position: relative;">
+                <label style="font-size: 0.7rem; color: #e5c158; margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO DELL'ANNUNCIO (Max 40 caratteri)</label>
+                <input type="text" id="field-flash-text" placeholder="Es. -20% su tutto solo per oggi!" maxlength="40" style="width: 100%; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.3); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;" oninput="aggiornaAnteprimaLive()">
+            </div>
+
+            <div style="text-align: center; margin-top: 5px;">
+                <button type="button" onclick="spegniFlash()" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-trash-alt"></i> ELIMINA FLASH
+                </button>
+            </div>
+        </div>
+
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA FLASH</button>
+    </div>
 
 
         <!-- ========================================== -->
@@ -1145,6 +1176,27 @@
                 statusBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-live-status')"><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: 700; color: ${colorHex};">${icona} ${displayTesto}</span></div>`;
             } else {
                 const sb = document.getElementById('blocco-status-live'); if(sb) sb.remove(); 
+            }
+            // ==========================================
+            // MQT FLASH (BANNER 24H)
+            // ==========================================
+            const flashText = document.getElementById('field-flash-text') ? document.getElementById('field-flash-text').value.trim() : "";
+            
+            if (flashText !== "") {
+                let flashBlock = document.getElementById('blocco-flash-live');
+                if (!flashBlock) {
+                    flashBlock = document.createElement('div'); flashBlock.className = 'tag-block'; flashBlock.id = 'blocco-flash-live'; flashBlock.style.cssText = blockStyle;
+                    // Se c'è il semaforo lo mette al secondo posto, altrimenti in cima
+                    const statusNode = document.getElementById('blocco-status-live');
+                    if (statusNode && statusNode.nextSibling) {
+                        track.insertBefore(flashBlock, statusNode.nextSibling);
+                    } else {
+                        track.insertBefore(flashBlock, track.firstChild);
+                    }
+                }
+                flashBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-flash')"><span style="font-size: 0.7rem; letter-spacing: 1px; font-weight: 700; color: #e5c158;"><i class="fas fa-bolt"></i> FLASH: ${flashText.toUpperCase()}</span></div>`;
+            } else {
+                const fb = document.getElementById('blocco-flash-live'); if(fb) fb.remove(); 
             }
 
             // BIO
@@ -1597,20 +1649,31 @@
             });
         });
     }
-
-     
-           const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
+    const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
     const statusText = document.getElementById('field-status-text') ? document.getElementById('field-status-text').value.trim() : "";
+    
+    // Calcolo automatico della scadenza Flash (24h)
+    const flashText = document.getElementById('field-flash-text') ? document.getElementById('field-flash-text').value.trim() : "";
+    let flashExpiry = "";
+    if (flashText !== "") {
+        flashExpiry = new Date(Date.now() + 86400000).toISOString(); // Aggiunge 24 ore
+    }
 
     const payloadDati = { 
         username_system: NOME_SISTEMA, username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
         digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
         quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
-        live_status_color: statusColor, // <--- CAMPO SEMAFORO
-        live_status_text: statusText,   // <--- CAMPO SEMAFORO
+        live_status_color: statusColor, 
+        live_status_text: statusText,   
+        flash_text: flashText,
+        flash_expiry: flashExpiry,
         modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
     }; 
 
+     
+           
+
+    
 
     localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
     localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
@@ -1940,6 +2003,11 @@
             const fieldText = document.getElementById('field-status-text');
             if (fieldText) fieldText.value = '';
 
+            aggiornaAnteprimaLive();
+        }
+        function spegniFlash() {
+            const f = document.getElementById('field-flash-text');
+            if (f) f.value = '';
             aggiornaAnteprimaLive();
         }
 
