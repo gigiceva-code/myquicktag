@@ -1103,7 +1103,7 @@
             aggiornaBottoneMaster();
         }
 
-        function aggiornaAnteprimaLive() {
+                function aggiornaAnteprimaLive() {
             const track = document.getElementById('blocks-track');
             if(!track) return;
 
@@ -1117,6 +1117,30 @@
             const blockStyle = "position: relative; display: flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 12px 0; margin-bottom: 0; cursor: pointer;";
             const textStyle = `font-size: 0.75rem; letter-spacing: 3px; font-weight: 400; color: ${coloreTesto}; text-transform: uppercase; transition: color 0.3s ease; text-align: center; width: 100%;`;
             const handleHTML = `<div class="drag-handle" style="position: absolute; left: 10px; color: rgba(255,255,255,0.15); font-size: 1.2rem; cursor: grab;">⋮⋮</div>`;
+
+            // ==========================================
+            // SEMAFORO LIVE STATUS (Si piazza in cima)
+            // ==========================================
+            const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
+            const statusText = document.getElementById('field-status-text') ? document.getElementById('field-status-text').value.trim() : "";
+            
+            if (statusColor !== "") {
+                let statusBlock = document.getElementById('blocco-status-live');
+                if (!statusBlock) {
+                    statusBlock = document.createElement('div'); statusBlock.className = 'tag-block'; statusBlock.id = 'blocco-status-live'; statusBlock.style.cssText = blockStyle;
+                    track.insertBefore(statusBlock, track.firstChild); // Lo mette sempre come primo blocco in alto!
+                }
+                
+                let colorHex = '#10b981'; let icona = '🟢';
+                if (statusColor === 'yellow') { colorHex = '#f59e0b'; icona = '🟡'; }
+                if (statusColor === 'red') { colorHex = '#ef4444'; icona = '🔴'; }
+                
+                const displayTesto = statusText !== "" ? statusText.toUpperCase() : 'LIVE STATUS';
+                
+                statusBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-live-status')"><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: 700; color: ${colorHex};">${icona} ${displayTesto}</span></div>`;
+            } else {
+                const sb = document.getElementById('blocco-status-live'); if(sb) sb.remove(); 
+            }
 
             // BIO
             const bioInput = document.getElementById('field-bio');
@@ -1871,6 +1895,42 @@
                 document.getElementById('avatar-loader').style.display = 'none';
             }
         }
+        // ==========================================
+        // MOTORE MQT LIVE STATUS (SEMAFORO)
+        // ==========================================
+        function selezionaStatus(colore) {
+            // Abbassa l'opacità di tutti i bottoni
+            document.getElementById('btn-status-green').style.opacity = '0.3';
+            document.getElementById('btn-status-yellow').style.opacity = '0.3';
+            document.getElementById('btn-status-red').style.opacity = '0.3';
+
+            // Illumina a palla solo quello cliccato
+            const btnSelezionato = document.getElementById('btn-status-' + colore);
+            if (btnSelezionato) btnSelezionato.style.opacity = '1';
+
+            // Salva il colore nella memoria nascosta
+            const fieldColor = document.getElementById('field-status-color');
+            if (fieldColor) fieldColor.value = colore;
+            
+            aggiornaAnteprimaLive();
+        }
+
+        function spegniStatus() {
+            // Riaccende tutti i bottoni in stato di riposo
+            document.getElementById('btn-status-green').style.opacity = '1';
+            document.getElementById('btn-status-yellow').style.opacity = '1';
+            document.getElementById('btn-status-red').style.opacity = '1';
+
+            // Svuota i campi
+            const fieldColor = document.getElementById('field-status-color');
+            if (fieldColor) fieldColor.value = '';
+            
+            const fieldText = document.getElementById('field-status-text');
+            if (fieldText) fieldText.value = '';
+
+            aggiornaAnteprimaLive();
+        }
+
     </script>
      
     
