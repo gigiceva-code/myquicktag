@@ -1449,7 +1449,7 @@
 
         function confermaEChiudiCassetto() { salvaDati(); chiudiSenzaSalvare(); }
 
-              async function inizializzaPagina() { 
+                      async function inizializzaPagina() { 
             if(NOME_SISTEMA === "tuonome.it") {
                 isLoadingDati = false;
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
@@ -1459,7 +1459,6 @@
                 const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
                 const data = await response.json();
 
-                // 🎯 LA MAGIA: Legge le colonne esatte del tuo schema Airtable PRIMA di caricare la bozza!
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
                 userPlan = (data.fields?.plan || 'BASE').toUpperCase().trim();
 
@@ -1469,7 +1468,6 @@
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                     if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
 
-                    // 🎯 IL FIX INSERITO QUI: Se username_display è vuoto, usa NOME_SISTEMA (username_system)!
                     const nomeDaMostrare = f.username_display || NOME_SISTEMA;
                     if (nomeDaMostrare && nomeDaMostrare !== "tuonome.it") {
                         const inputField = document.getElementById('field-username_display');
@@ -1485,16 +1483,16 @@
                     if (f.quick_action_tipo && document.getElementById('field-qa-tipo')) document.getElementById('field-qa-tipo').value = f.quick_action_tipo;
                     if (f.quick_action_label && document.getElementById('field-qa-label')) document.getElementById('field-qa-label').value = f.quick_action_label;
                     if (f.quick_action_url && document.getElementById('field-qa-url')) document.getElementById('field-qa-url').value = f.quick_action_url;
- // ==========================================
+
+                    // ==========================================
                     // RICARICA LIVE STATUS E FLASH (Tre Tap)
                     // ==========================================
                     if (f.live_status_color) selezionaStatus(f.live_status_color);
                     if (f.live_status_text && document.getElementById('field-status-text')) document.getElementById('field-status-text').value = f.live_status_text;
-                    
+
                     if (f.flash_text && document.getElementById('field-flash-text')) document.getElementById('field-flash-text').value = f.flash_text;
                     // ==========================================
 
-
                     if (f.modulo_vcf) {
                         if (f.avatar_url && document.getElementById('field-avatar-url')) {
                             document.getElementById('field-avatar-url').value = f.avatar_url;
@@ -1505,25 +1503,7 @@
 
                                 const box = document.getElementById('avatar-preview-box');
                                 if(box) {
-                          if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
-                    if (f.sito_web && document.getElementById('field-sito')) document.getElementById('field-sito').value = f.sito_web;
-                    if (f.email && document.getElementById('field-email')) document.getElementById('field-email').value = f.email;
-
-                    if (f.quick_action_tipo && document.getElementById('field-qa-tipo')) document.getElementById('field-qa-tipo').value = f.quick_action_tipo;
-                    if (f.quick_action_label && document.getElementById('field-qa-label')) document.getElementById('field-qa-label').value = f.quick_action_label;
-                    if (f.quick_action_url && document.getElementById('field-qa-url')) document.getElementById('field-qa-url').value = f.quick_action_url;
-
-                    if (f.modulo_vcf) {
-                        if (f.avatar_url && document.getElementById('field-avatar-url')) {
-                            document.getElementById('field-avatar-url').value = f.avatar_url;
-                            const liveImg = document.getElementById('live-avatar-img');
-                            if(liveImg) {
-                                liveImg.src = f.avatar_url;
-                                document.getElementById('live-avatar-container').style.display = 'flex';
-
-                                const box = document.getElementById('avatar-preview-box');
-                                if(box) {
-                                  box.style.backgroundImage = `url('${f.avatar_url}')`;
+                                    box.style.backgroundImage = `url('${f.avatar_url}')`;
                                     box.style.backgroundSize = 'cover';
                                     box.style.backgroundPosition = 'center';
                                     box.style.border = '1px solid rgba(255,255,255,0.4)';
@@ -1620,6 +1600,7 @@
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
             }
         }
+
                   
         
             async function salvaDati(azioneRedirect = null) {
