@@ -927,6 +927,59 @@
 
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA FLASH</button>
     </div>
+    <!-- ========================================== -->
+    <!-- CASSETTO DIGITAL SHOWCASE (VETRINA PDF) -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-showcase">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">DIGITAL SHOWCASE</div>
+            <div class="drawer-subtitle">Carica il tuo Menu, Listino o CV</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
+                I file verranno ospitati in cloud ad altissima velocità.
+            </div>
+
+            <div style="position: relative;" class="premium-field-container">
+                
+                <!-- Nome del Bottone PDF -->
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO BOTTONE</label>
+                    <input type="text" id="field-pdf-label" placeholder="Es. Scarica il nostro Menu" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+
+                <!-- Area di Upload PDF -->
+                <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px;">
+                    <input type="file" id="pdf-upload" accept="application/pdf" style="display: none;" onchange="gestisciUploadPDF(event)">
+                    
+                    <label for="pdf-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #e5c158; margin-bottom: 10px;"></i>
+                        <span id="pdf-upload-text" style="color: #fff; font-size: 0.8rem; font-weight: 600;">Seleziona un file PDF</span>
+                        <span style="font-size: 0.6rem; color: rgba(255,255,255,0.4); margin-top: 5px;">Max 5 MB</span>
+                    </label>
+
+                    <div id="pdf-loader" style="display: none; margin-top: 15px; width: 100%; text-align: center;">
+                        <i class="fas fa-circle-notch fa-spin" style="color: #e5c158; font-size: 1.2rem;"></i>
+                        <span style="display: block; font-size: 0.7rem; color: #e5c158; margin-top: 5px;">Caricamento in corso...</span>
+                    </div>
+                </div>
+
+                <!-- Campo nascosto che salverà l'URL generato da Cloudinary -->
+                <input type="hidden" id="field-pdf-url" value="">
+
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE PREMIUM</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VETRINA</button>
+    </div>
+
 
 
         <!-- ========================================== -->
