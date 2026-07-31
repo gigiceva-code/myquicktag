@@ -627,15 +627,17 @@
             <div class="drawer-title">ASSET BRAND</div>
             <div class="drawer-subtitle">Gestisci i contenuti della tua tag</div>
         </div>
-        <div class="style-list" style="flex-direction: column; gap: 10px;">
+               <div class="style-list" style="flex-direction: column; gap: 10px;">
             <div class="style-bar" onclick="apriDrawer('drawer-live-status')">
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-broadcast-tower" style="color: #10b981;"></i><span style="font-weight: 600; color: #10b981;">Live Status (Semaforo)</span></div>
-                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
             </div>
+            
             <div class="style-bar" onclick="apriDrawer('drawer-flash')">
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-bolt" style="color: #e5c158;"></i><span style="font-weight: 600; color: #e5c158;">MQT Flash (Banner 24h)</span></div>
-                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
             </div>
+
 
 
             <div class="style-bar" onclick="apriDrawer('drawer-bio')">
@@ -1190,6 +1192,18 @@
         }
 
         function apriDrawer(idDrawer) {
+            // --- BLOCCO SICUREZZA INTELLIGENTE ---
+            // Se il cassetto non ha il pannello nero interno, lo blocchiamo direttamente alla porta!
+            if ((idDrawer === 'drawer-live-status' || idDrawer === 'drawer-flash') && userPlan !== 'GOLD') {
+                alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
+                return;
+            }
+            if (idDrawer === 'drawer-quick' && userPlan === 'BASE') {
+                alert("Questa funzione richiede il piano PREMIUM 🚀.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
+                return;
+            }
+            // -------------------------------------
+
             const currentlyOpen = document.querySelector('.drawer-glass.open');
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             const drawer = document.getElementById(idDrawer);
@@ -1217,24 +1231,7 @@
         window.addEventListener('popstate', function(e) {
             if (isDrawerOpen) { chiudiSenzaSalvare(true); }
         });
-       // ==========================================
-        // NUOVO MOTORE: SBLOCCO PIANI IN ANTEPRIMA
-        // ==========================================
-        function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
-            // 1. Aggiorna la variabile in memoria
-            userPlan = nuovoPianoSelezionato; 
-            
-            // 2. Tira giù i lucchetti per permettere di configurare
-            document.querySelectorAll('.premium-lock-overlay').forEach(el => el.style.display = 'none');
-            
-            // 3. Avvisa l'utente in modo chiaro
-            alert(`Fantastico! Hai selezionato il piano ${nuovoPianoSelezionato}.\n\nI lucchetti sono sbloccati. Ora puoi configurare queste funzioni e vedere l'anteprima in tempo reale.\n\nQuando hai terminato, clicca su "ATTIVA TAG" in basso per confermare.`);
-            
-            // 4. Chiude il cassetto per farlo tornare alla plancia
-            chiudiSenzaSalvare(); 
-        }
-        // ==========================================
-
+       
         function apriModalQR() {
             const m = document.getElementById('modal-qr');
             if(m) {
@@ -1249,7 +1246,55 @@
                 chiudiSenzaSalvare();
             }
         }
+        // ==========================================
+        // MOTORE: SBLOCCO PIANI IN ANTEPRIMA
+        // ==========================================
+        function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
+            userPlan = nuovoPianoSelezionato; 
+            
+            aggiornaLucchetti(); // Chiama l'intelligenza artificiale dei lucchetti
+            
+            alert(`Fantastico! Hai selezionato il piano ${nuovoPianoSelezionato}.\n\nI lucchetti del tuo piano sono sbloccati. Ora puoi configurare queste funzioni e vedere l'anteprima in tempo reale.\n\nQuando hai terminato, clicca su "ATTIVA TAG" in basso per confermare.`);
+            chiudiSenzaSalvare(); 
+        }
 
+        function aggiornaLucchetti() {
+            const cassettiGold = ['drawer-showcase', 'drawer-gallery', 'drawer-live-status', 'drawer-flash'];
+            const cassettiPremium = ['drawer-quick']; 
+            
+            // 1. Accende e Spegne dinamicamente le Icone nel Menù
+            document.querySelectorAll('.style-bar').forEach(bar => {
+                const onclick = bar.getAttribute('onclick') || '';
+                const lockIcon = bar.querySelector('.fa-lock');
+                
+                if (lockIcon) {
+                    if (cassettiGold.some(id => onclick.includes(id))) {
+                        lockIcon.style.display = (userPlan === 'GOLD') ? 'none' : 'inline-block';
+                    } else if (cassettiPremium.some(id => onclick.includes(id))) {
+                        lockIcon.style.display = (userPlan === 'PREMIUM' || userPlan === 'GOLD') ? 'none' : 'inline-block';
+                    }
+                }
+            });
+
+            // 2. Aggiorna i pannelli neri dentro PDF e Galleria
+            document.querySelectorAll('.premium-field-container').forEach(container => {
+                const overlay = container.querySelector('.premium-lock-overlay');
+                if (overlay) {
+                    const parentDrawer = container.closest('.drawer-glass');
+                    if (parentDrawer) {
+                        const drawerId = parentDrawer.id;
+                        if (cassettiGold.includes(drawerId)) {
+                            overlay.style.display = (userPlan === 'GOLD') ? 'none' : 'flex';
+                        } else if (cassettiPremium.includes(drawerId)) {
+                            overlay.style.display = (userPlan === 'PREMIUM' || userPlan === 'GOLD') ? 'none' : 'flex';
+                        }
+                    }
+                }
+            });
+            
+            if(typeof aggiornaLimitiSocial === 'function') aggiornaLimitiSocial();
+        }
+        // ==========================================
         function disegnaQRDinamico(temaVal) {
             const container = document.getElementById('qr-container');
             if(!container) return;
@@ -1422,18 +1467,27 @@
                     track.appendChild(contattiBlock);
                 } else { const spanText = contattiBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
             } else { const c = document.getElementById('blocco-contatti-live'); if(c) c.remove(); }
-
+                    
             // AZIONE RAPIDA
             const qaInput = document.getElementById('field-qa-label');
             if (qaInput && qaInput.value.trim() !== "") {
                 let qaBlock = document.getElementById('blocco-qa-live');
+                const testoScelto = qaInput.value.trim().toUpperCase(); // Prende la vera parola digitata
+                
                 if (!qaBlock) {
                     qaBlock = document.createElement('div'); qaBlock.className = 'tag-block'; qaBlock.id = 'blocco-qa-live'; qaBlock.style.cssText = blockStyle;
-                    qaBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-quick')"><span class="dynamic-theme-text" style="${textStyle}">⚡ AZIONE RAPIDA</span></div>`;
+                    qaBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-quick')"><span class="dynamic-theme-text" style="${textStyle}">⚡ ${testoScelto}</span></div>`;
                     track.appendChild(qaBlock);
-                } else { const spanText = qaBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
+                } else { 
+                    const spanText = qaBlock.querySelector('.dynamic-theme-text'); 
+                    if (spanText) {
+                        spanText.style.color = coloreTesto; 
+                        spanText.innerText = `⚡ ${testoScelto}`; // Aggiorna in tempo reale se cambia testo
+                    }
+                }
             } else { const q = document.getElementById('blocco-qa-live'); if(q) q.remove(); }
 
+            
             // SITO WEB
             const sitoInput = document.getElementById('field-sito');
             if (sitoInput && sitoInput.value.trim() !== "") {
@@ -1799,9 +1853,9 @@
                         } catch(e) {}
                     }
 
-                    if (userPlan !== 'BASE') {
-                        document.querySelectorAll('.premium-lock-overlay').forEach(el => el.style.display = 'none');
-                    } else {
+                                        // Richiama l'intelligenza dei lucchetti all'avvio della pagina
+                    aggiornaLucchetti();
+
                         document.querySelectorAll('.premium-field-container').forEach(container => {
                             const overlay = container.querySelector('.premium-lock-overlay');
                             if(overlay) {
