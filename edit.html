@@ -1255,6 +1255,23 @@
             } else {
                 const fb = document.getElementById('blocco-flash-live'); if(fb) fb.remove(); 
             }
+                                // ==========================================
+            // DIGITAL SHOWCASE (VETRINA PDF)
+            // ==========================================
+            const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "Scarica Documento";
+            const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
+            
+            if (pdfUrl !== "") {
+                let pdfBlock = document.getElementById('blocco-pdf-live');
+                if (!pdfBlock) {
+                    pdfBlock = document.createElement('div'); pdfBlock.className = 'tag-block'; pdfBlock.id = 'blocco-pdf-live'; pdfBlock.style.cssText = blockStyle;
+                    track.appendChild(pdfBlock);
+                }
+                pdfBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center; border: 1px dashed rgba(229, 193, 88, 0.4);" onclick="apriDrawer('drawer-showcase')"><i class="fas fa-file-pdf" style="color: #e5c158; margin-right: 8px;"></i><span style="font-size: 0.9rem; font-weight: 600; color: #e5c158; letter-spacing: 1px;">${pdfLabel.toUpperCase()}</span></div>`;
+            } else {
+                const pb = document.getElementById('blocco-pdf-live'); if(pb) pb.remove(); 
+            }
+
 
             // BIO
             const bioInput = document.getElementById('field-bio');
@@ -1549,6 +1566,20 @@
 
                     if (f.flash_text && document.getElementById('field-flash-text')) document.getElementById('field-flash-text').value = f.flash_text;
                     // ==========================================
+                                        // ==========================================
+                    // RICARICA VETRINA PDF (Tre Tap)
+                    // ==========================================
+                    if (f.pdf_label && document.getElementById('field-pdf-label')) document.getElementById('field-pdf-label').value = f.pdf_label;
+                    if (f.pdf_url && document.getElementById('field-pdf-url')) {
+                        document.getElementById('field-pdf-url').value = f.pdf_url;
+                        const pt = document.getElementById('pdf-upload-text');
+                        if (pt) {
+                            pt.innerHTML = 'PDF in memoria ✅<br><span style="font-size: 0.6rem; color: #fff;">Pronto per la vetrina</span>';
+                            pt.style.color = '#10b981';
+                        }
+                    }
+                    // ==========================================
+
 
                     if (f.modulo_vcf) {
                         if (f.avatar_url && document.getElementById('field-avatar-url')) {
