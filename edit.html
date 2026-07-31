@@ -2160,6 +2160,131 @@
             if (f) f.value = '';
             aggiornaAnteprimaLive();
         }
+       
+        // ==========================================
+        // MOTORE CLOUDINARY - GALLERIA IMMAGINI
+        // ==========================================
+        async function gestisciUploadGalleria(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // SICUREZZA: Blocca tutto ciò che non è un'immagine
+            if (!file.type.startsWith('image/')) {
+                alert("Puoi caricare solo immagini (JPG, PNG, ecc.). I video o altri file non sono supportati.");
+                return;
+            }
+
+            const hiddenField = document.getElementById('field-gallery-data');
+            let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
+
+            // Limite massimo di 6 immagini per non appesantire troppo la tag
+            if (arrayAttuale.length >= 6) {
+                alert("Hai raggiunto il limite massimo di 6 immagini per la galleria.");
+                return;
+            }
+
+            // 1. Accende la rotellina
+            document.getElementById('gallery-loader').style.display = 'block';
+
+            // 2. Prepara il file
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'myquicktag_upload');
+
+            try {
+                // 3. Spedisce all'endpoint specifico per IMMAGINI
+                const response = await fetch('https://api.cloudinary.com/v1_1/etgsaztr/image/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.secure_url) {
+                    // SUCCESSO! Aggiungiamo il link all'array e salviamo in JSON
+                    arrayAttuale.push(data.secure_url);
+                    hiddenField.value = JSON.stringify(arrayAttuale);
+                    
+                    // Disegniamo le miniature nel cassetto
+                    disegnaGrigliaGalleria();
+                    
+                    // Rinfreschiamo l'anteprima centrale
+                    aggiornaAnteprimaLive();
+                } else {
+                    console.error("Errore Cloudinary:", data);
+                    alert("Errore dal server Cloudinary. Riprova.");
+                }
+            } catch (error) {
+                console.error("Errore di rete:", error);
+                alert("Errore di connessione. Verifica la tua rete.");
+            } finally {
+                // 4. Spegne la rotellina e resetta l'input
+                document.getElementById('gallery-loader').style.display = 'none';
+                event.target.value = ''; 
+            }
+        }
+
+        // Funzione per mostrare le miniature delle foto nel cassetto
+        function disegnaGrigliaGalleria() {
+            const grid = document.getElementById('gallery-preview-grid');
+            const hiddenField = document.getElementById('field-gallery-data');
+            if (!grid || !hiddenField) return;
+
+            let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
+            grid.innerHTML = ""; // Pulisce prima di ridisegnare
+
+            arrayAttuale.forEach((url, index) => {
+                const div = document.createElement('div');
+                div.style.cssText = `
+                    position: relative; 
+                    width: 100%; 
+                    aspect-ratio: 1; 
+                    border-radius: 8px; 
+                    background-image: url('${url}'); 
+                    background-size: cover; 
+                    background-position: center; 
+                    border: 1px solid rgba(255,255,255,0.2);
+                `;
+                
+                // Bottone rosso per cancellare la foto
+                const btnDelete = document.createElement('div');
+                btnDelete.innerHTML = '<i class="fas fa-times"></i>';
+                btnDelete.style.cssText = `
+                    position: absolute; 
+                    top: 4px; 
+                    right: 4px; 
+                    background: rgba(239, 68, 68, 0.9); 
+                    color: white; 
+                    width: 22px; 
+                    height: 22px; 
+                    border-radius: 50%; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    font-size: 0.7rem; 
+                    cursor: pointer;
+                `;
+                btnDelete.onclick = function(e) {
+                    e.stopPropagation();
+                    rimuoviImmagineGalleria(index);
+                };
+
+                div.appendChild(btnDelete);
+                grid.appendChild(div);
+            });
+        }
+
+        // Funzione per eliminare una foto dalla galleria
+        function rimuoviImmagineGalleria(index) {
+            const hiddenField = document.getElementById('field-gallery-data');
+            let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
+            
+            arrayAttuale.splice(index, 1); // Rimuove quella specifica foto
+            hiddenField.value = JSON.stringify(arrayAttuale); // Salva il nuovo array
+            
+            disegnaGrigliaGalleria(); // Ridisegna il cassetto senza la foto
+            aggiornaAnteprimaLive(); // Aggiorna il finto telefono
+        }
 
     </script>
      
