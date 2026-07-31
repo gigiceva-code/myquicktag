@@ -1038,38 +1038,61 @@
         <!-- ========================================== -->
     <!-- CASSETTO PIANI (Pulito e chiuso correttamente) -->
     <!-- ========================================== -->
+    
     <div class="drawer-glass" id="drawer-piani">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-master')"></i>
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
             <div class="drawer-title">PIANI E ABBONAMENTI</div>
-            <div class="drawer-subtitle">Espandi le potenzialità</div>
+            <div class="drawer-subtitle">Scopri le funzioni di ogni piano</div>
         </div>
 
-        <div class="style-list" style="gap: 12px;">
-            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2);">
-                <div style="display:flex; justify-content: space-between; margin-bottom: 6px;">
-                    <span style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">BASE (Attuale)</span>
-                </div>
-                <div style="color: #888; font-size: 0.65rem; line-height: 1.4;">Identità essenziale. Nome, bio, avatar e QR Code standard.</div>
-            </div>
+        <div class="style-list" style="gap: 12px; margin-top: 10px;">
             
-            <div style="background: rgba(229, 193, 88, 0.08); padding: 16px; border-radius: 14px; border: 1px solid rgba(229, 193, 88, 0.3); cursor: pointer;" onclick="window.location.href = '/checkout.html?u=' + NOME_SISTEMA;">
-                <div style="display:flex; justify-content: space-between; margin-bottom: 6px;">
-                    <span style="color: #e5c158; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">PREMIUM</span>
-                    <i class="fas fa-lock" style="color: #e5c158; font-size: 0.8rem;"></i>
+            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2);">
+                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">PIANO BASE</span>
                 </div>
-                <div style="color: #aaa; font-size: 0.65rem; line-height: 1.4;">Sblocca Download VCF, Quick Actions, Link Social illimitati e Gallery.</div>
+                <ul style="color: rgba(255,255,255,0.7); font-size: 0.7rem; line-height: 1.6; padding-left: 15px; margin: 0;">
+                    <li>Nome, Bio e Avatar / Logo</li>
+                    <li>Stile e Layout Tag</li>
+                    <li>Sito Web Ufficiale</li>
+                    <li>Fino a 3 Link Social</li>
+                    <li>QR Code Ufficiale</li>
+                </ul>
             </div>
-                      <div style="background: linear-gradient(135deg, rgba(229, 193, 88, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 16px; border-radius: 14px; border: 1px solid #e5c158; cursor: pointer; position: relative; overflow: hidden;" onclick="alert('Integrazione Stripe in arrivo per il piano Gold!')">
-                <div style="position: absolute; top: 0; right: 0; background: #e5c158; color: #000; font-size: 0.5rem; font-weight: 800; padding: 4px 12px; border-bottom-left-radius: 10px; letter-spacing: 1px;">VIP</div>
-                <div style="display:flex; justify-content: space-between; margin-bottom: 6px;">
+
+            <div style="background: rgba(16, 185, 129, 0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(16, 185, 129, 0.3); cursor: pointer;" onclick="sbloccaPianoInAnteprima('PREMIUM')">
+                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #10b981; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px;">PREMIUM</span>
+                    <i class="fas fa-unlock" style="color: #10b981; font-size: 0.8rem;"></i>
+                </div>
+                <ul style="color: rgba(255,255,255,0.7); font-size: 0.7rem; line-height: 1.6; padding-left: 15px; margin: 0; margin-bottom: 10px;">
+                    <li><span style="color: #10b981;">Tutto ciò che c'è nel Base, PIÙ:</span></li>
+                    <li>Rubrica Completa (Salvataggio in Rubrica)</li>
+                    <li>Social & Link Illimitati</li>
+                    <li>Azione Rapida (CTA) in evidenza</li>
+                </ul>
+                <div style="text-align: center; background: rgba(16, 185, 129, 0.1); padding: 6px; border-radius: 6px; color: #10b981; font-size: 0.7rem; font-weight: 600;">SELEZIONA PREMIUM</div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(229, 193, 88, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 16px; border-radius: 14px; border: 1px solid #e5c158; cursor: pointer; position: relative; overflow: hidden; margin-top: 12px;" onclick="sbloccaPianoInAnteprima('GOLD')">
+                <div style="position: absolute; top: 0; right: 0; background: #e5c158; color: #000; font-size: 0.5rem; font-weight: 800; padding: 4px 12px; border-bottom-left-radius: 10px; letter-spacing: 1px;">TOP</div>
+                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
                     <span style="color: #e5c158; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px;">GOLD (All-Inclusive)</span>
                     <i class="fas fa-crown" style="color: #e5c158; font-size: 0.9rem;"></i>
                 </div>
-                <div style="color: #fff; font-size: 0.65rem; line-height: 1.4;">L'ecosistema definitivo. Vetrina PDF, Galleria, Live Status, Flash 24h e tutte le Killer Features.</div>
+                <ul style="color: rgba(255,255,255,0.7); font-size: 0.7rem; line-height: 1.6; padding-left: 15px; margin: 0; margin-bottom: 10px;">
+                    <li><span style="color: #e5c158;">Tutto ciò che c'è nel Premium, PIÙ:</span></li>
+                    <li>Vetrina e Menu PDF</li>
+                    <li>Galleria Immagini Portafoglio</li>
+                    <li>MQT Live Status (Semaforo)</li>
+                    <li>MQT Flash (Banner 24h)</li>
+                    <li>VIP Vault (Link protetti da PIN)</li>
+                </ul>
+                <div style="text-align: center; background: #e5c158; padding: 6px; border-radius: 6px; color: #000; font-size: 0.7rem; font-weight: 700;">SELEZIONA GOLD</div>
             </div>
-  
+
         </div>
     </div>
 
