@@ -1217,6 +1217,23 @@
         window.addEventListener('popstate', function(e) {
             if (isDrawerOpen) { chiudiSenzaSalvare(true); }
         });
+       // ==========================================
+        // NUOVO MOTORE: SBLOCCO PIANI IN ANTEPRIMA
+        // ==========================================
+        function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
+            // 1. Aggiorna la variabile in memoria
+            userPlan = nuovoPianoSelezionato; 
+            
+            // 2. Tira giù i lucchetti per permettere di configurare
+            document.querySelectorAll('.premium-lock-overlay').forEach(el => el.style.display = 'none');
+            
+            // 3. Avvisa l'utente in modo chiaro
+            alert(`Fantastico! Hai selezionato il piano ${nuovoPianoSelezionato}.\n\nI lucchetti sono sbloccati. Ora puoi configurare queste funzioni e vedere l'anteprima in tempo reale.\n\nQuando hai terminato, clicca su "ATTIVA TAG" in basso per confermare.`);
+            
+            // 4. Chiude il cassetto per farlo tornare alla plancia
+            chiudiSenzaSalvare(); 
+        }
+        // ==========================================
 
         function apriModalQR() {
             const m = document.getElementById('modal-qr');
