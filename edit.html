@@ -988,6 +988,50 @@
 
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VETRINA</button>
     </div>
+    <!-- ========================================== -->
+    <!-- CASSETTO GALLERIA IMMAGINI -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-gallery">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">GALLERIA</div>
+            <div class="drawer-subtitle">Mostra i tuoi lavori o i tuoi prodotti</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
+                Carica fino a 6 immagini per la tua vetrina.
+            </div>
+
+            <!-- Area Upload Immagini -->
+            <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; position: relative;" class="premium-field-container">
+                <input type="file" id="gallery-upload" accept="image/*" style="display: none;" onchange="gestisciUploadGalleria(event)">
+                <label for="gallery-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
+                    <i class="fas fa-plus-circle" style="font-size: 2rem; color: #e5c158; margin-bottom: 10px;"></i>
+                    <span id="gallery-upload-text" style="color: #fff; font-size: 0.8rem;">Aggiungi Foto</span>
+                </label>
+                
+                <div id="gallery-loader" style="display: none; margin-top: 10px;">
+                    <i class="fas fa-circle-notch fa-spin" style="color: #e5c158;"></i>
+                </div>
+
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem;"></i>
+                </div>
+            </div>
+
+            <!-- Griglia delle immagini caricate -->
+            <div id="gallery-preview-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
+                <!-- Qui appariranno le foto -->
+            </div>
+            
+            <!-- Campo nascosto per salvare il JSON delle immagini -->
+            <input type="hidden" id="field-gallery-data" value="[]">
+        </div>
+
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA GALLERIA</button>
+    </div>
 
 
 
