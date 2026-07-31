@@ -1804,9 +1804,11 @@
         flashExpiry = new Date(Date.now() + 86400000).toISOString();
     }
 
-    // Nuovi campi PDF
     const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "";
     const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
+
+    // Nuova lettura Galleria
+    const hiddenGallery = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
 
     const payloadDati = { 
         username_system: NOME_SISTEMA, username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
@@ -1816,11 +1818,12 @@
         live_status_text: statusText,   
         flash_text: flashText,
         flash_expiry: flashExpiry,
-        pdf_label: pdfLabel, // <--- INVIATO AD AIRTABLE
-        pdf_url: pdfUrl,     // <--- INVIATO AD AIRTABLE
+        pdf_label: pdfLabel, 
+        pdf_url: pdfUrl,     
+        gallery_data: hiddenGallery, // <--- INVIATO AD AIRTABLE
         modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
     }; 
-
+    
            
 
     
