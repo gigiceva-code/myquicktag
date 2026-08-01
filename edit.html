@@ -544,18 +544,49 @@
         </div>
    
 
-            <div id="blocks-track" class="blocks-track">
-
-                <div class="tag-block" data-type="digital-pass">
-                    <div class="drag-handle">⋮⋮</div>
-                    <div class="block-content" onclick="apriModalQR()">
-                        <p class="digital-pass-text">Digital Pass</p>
-                    </div>
-                </div>
+              <!-- =========================================================
+         CAPITOLO 3: CORE ECOSISTEMA - MACRO AREE DI NAVIGAZIONE
+         ========================================================= -->
+    <div id="blocks-track" class="ecosystem-hall">
+        
+        <!-- SEZIONE 3.1: BRAND IDENTITY -->
+        <div class="room-container" id="container-identity">
+            <div class="room-title" onclick="toggleRoom('room-identity')">IDENTITY</div>
+            <div class="room-content" id="room-identity">
+                <!-- Il motore JS inietterà qui: Live Status, MQT Flash, Bio -->
             </div>
+        </div>
+
+        <!-- SEZIONE 3.2: BUSINESS & ASSET -->
+        <div class="room-container" id="container-business">
+            <div class="room-title" onclick="toggleRoom('room-business')">BUSINESS</div>
+            <div class="room-content" id="room-business">
+                <!-- Il motore JS inietterà qui: Digital Pass, Vetrina PDF, VIP Vault -->
+            </div>
+        </div>
+
+        <!-- SEZIONE 3.3: MEDIA GALLERY -->
+        <div class="room-container" id="container-media">
+            <div class="room-title" onclick="toggleRoom('room-media')">MEDIA</div>
+            <div class="room-content" id="room-media">
+                <!-- Il motore JS inietterà qui: Galleria Immagini -->
+            </div>
+        </div>
+
+        <!-- SEZIONE 3.4: NETWORK E CONNESSIONI -->
+        <div class="room-container" id="container-network">
+            <div class="room-title" onclick="toggleRoom('room-network')">NETWORK</div>
+            <div class="room-content" id="room-network">
+                <!-- Il motore JS inietterà qui: Azione Rapida (CTA), Social, Sito Web, Contatti -->
+            </div>
+        </div>
+
+    </div>
+    <!-- ========================================================= -->
+
 
         </div> 
-    </div> 
+    </div>   
 
    <div class="floating-nav-bar">
         <div class="luxury-menu-btn" onclick="apriDrawer('drawer-master')">
