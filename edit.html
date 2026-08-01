@@ -1256,10 +1256,10 @@
             void el.offsetHeight; 
         }
 
-        function apriDrawer(idDrawer) {
+                function apriDrawer(idDrawer) {
             // --- BLOCCO SICUREZZA INTELLIGENTE ---
-            // Se il cassetto non ha il pannello nero interno, lo blocchiamo direttamente alla porta!
-            if ((idDrawer === 'drawer-live-status' || idDrawer === 'drawer-flash') && userPlan !== 'GOLD') {
+            const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery'];
+            if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
                 return;
             }
@@ -1268,6 +1268,7 @@
                 return;
             }
             // -------------------------------------
+
 
             const currentlyOpen = document.querySelector('.drawer-glass.open');
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
