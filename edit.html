@@ -2455,6 +2455,95 @@
             disegnaGrigliaGalleria(); // Ridisegna il cassetto senza la foto
             aggiornaAnteprimaLive(); // Aggiorna il finto telefono
         }
+       
+        // ==========================================
+        // MOTORE CLOUDINARY - UPLOAD PDF
+        // ==========================================
+        async function gestisciUploadPDF(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Controllo sicurezza: solo file PDF
+            if (file.type !== 'application/pdf') {
+                alert("Formato non valido. Seleziona un file PDF.");
+                return;
+            }
+
+            // Accende la rotellina
+            document.getElementById('pdf-loader').style.display = 'block';
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'myquicktag_upload'); 
+
+            try {
+                // Endpoint /auto/upload riconosce automaticamente che è un PDF e lo salva intatto
+                const response = await fetch('https://api.cloudinary.com/v1_1/etgsaztr/auto/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.secure_url) {
+                    document.getElementById('field-pdf-url').value = data.secure_url;
+                    
+                    const testopdf = document.getElementById('pdf-upload-text');
+                    if (testopdf) {
+                        testopdf.innerHTML = 'PDF CARICATO ✅<br><span style="font-size: 0.6rem; color: #fff;">Pronto per la vetrina</span>';
+                        testopdf.style.color = '#10b981';
+                    }
+                    aggiornaAnteprimaLive();
+                } else {
+                    alert("Errore dal server Cloudinary. Riprova.");
+                }
+            } catch (error) {
+                alert("Errore di connessione alla rete.");
+            } finally {
+                document.getElementById('pdf-loader').style.display = 'none';
+            }
+        }
+
+        // ============================================================
+        // MOTORE DI ELIMINAZIONE ASSET (TASTO ROSSO)
+        // ============================================================
+        function eliminaAsset(tipo) {
+            if (tipo === 'sito') {
+                document.getElementById('field-sito').value = '';
+            } else if (tipo === 'quick') {
+                document.getElementById('field-qa-label').value = '';
+                document.getElementById('field-qa-url').value = '';
+                document.getElementById('field-qa-tipo').value = 'whatsapp';
+            } else if (tipo === 'bio') {
+                document.getElementById('field-bio').value = '';
+            } else if (tipo === 'pdf') {
+                document.getElementById('field-pdf-url').value = '';
+                document.getElementById('field-pdf-label').value = '';
+                const testopdf = document.getElementById('pdf-upload-text');
+                if (testopdf) {
+                    testopdf.innerHTML = 'Seleziona un file PDF';
+                    testopdf.style.color = '#fff';
+                }
+            } else if (tipo === 'social') {
+                const track = document.getElementById('social-internal-track');
+                if(track) track.innerHTML = '';
+                if(typeof aggiornaLimitiSocial === 'function') aggiornaLimitiSocial();
+            } else if (tipo === 'contatti') {
+                document.getElementById('field-tel1').value = '';
+                document.getElementById('field-tel2').value = '';
+                document.getElementById('field-email').value = '';
+                document.getElementById('field-indirizzo').value = '';
+            } else if (tipo === 'gallery') {
+                document.getElementById('field-gallery-data').value = '[]';
+                const grid = document.getElementById('gallery-preview-grid');
+                if (grid) grid.innerHTML = '';
+            }
+            
+            // Salva nel database, aggiorna la grafica e chiude il cassetto
+            if(typeof salvaDati === 'function') salvaDati(); 
+            aggiornaAnteprimaLive();
+            chiudiSenzaSalvare();
+        }
 
     </script>
      
