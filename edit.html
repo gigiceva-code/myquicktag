@@ -1404,7 +1404,7 @@
             aggiornaBottoneMaster();
         }
 
-                function aggiornaAnteprimaLive() {
+                      function aggiornaAnteprimaLive() {
             const track = document.getElementById('blocks-track');
             if(!track) return;
 
@@ -1415,166 +1415,129 @@
             };
             const coloreTesto = coloriTema[temaVal] || '#ffffff';
 
-            const blockStyle = "position: relative; display: flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 12px 0; margin-bottom: 0; cursor: pointer;";
-            const textStyle = `font-size: 0.75rem; letter-spacing: 3px; font-weight: 400; color: ${coloreTesto}; text-transform: uppercase; transition: color 0.3s ease; text-align: center; width: 100%;`;
-            const handleHTML = `<div class="drag-handle" style="position: absolute; left: 10px; color: rgba(255,255,255,0.15); font-size: 1.2rem; cursor: grab;">⋮⋮</div>`;
+            // Recupera le 4 Stanze Fisiche
+            const roomIdentity = document.getElementById('room-identity');
+            const roomBusiness = document.getElementById('room-business');
+            const roomMedia = document.getElementById('room-media');
+            const roomNetwork = document.getElementById('room-network');
+            
+            if(!roomIdentity || !roomBusiness || !roomMedia || !roomNetwork) return;
+
+            // Pulisce le stanze prima di riempirle (per non duplicare)
+            roomIdentity.innerHTML = '';
+            roomBusiness.innerHTML = '';
+            roomMedia.innerHTML = '';
+            roomNetwork.innerHTML = '';
+
+            const baseStyle = `font-size: 0.75rem; letter-spacing: 2px; font-weight: 500; color: ${coloreTesto}; text-transform: uppercase; text-align: center; width: 100%; cursor: pointer; transition: opacity 0.3s ease; padding: 5px 0;`;
 
             // ==========================================
-            // SEMAFORO LIVE STATUS (Si piazza in cima)
+            // STANZA 1: IDENTITY (Semaforo, Flash, Bio)
             // ==========================================
+            
+            // 1. Semaforo
             const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
             const statusText = document.getElementById('field-status-text') ? document.getElementById('field-status-text').value.trim() : "";
-            
             if (statusColor !== "") {
-                let statusBlock = document.getElementById('blocco-status-live');
-                if (!statusBlock) {
-                    statusBlock = document.createElement('div'); statusBlock.className = 'tag-block'; statusBlock.id = 'blocco-status-live'; statusBlock.style.cssText = blockStyle;
-                    track.insertBefore(statusBlock, track.firstChild); // Lo mette sempre come primo blocco in alto!
-                }
-                
                 let colorHex = '#10b981'; let icona = '🟢';
                 if (statusColor === 'yellow') { colorHex = '#f59e0b'; icona = '🟡'; }
                 if (statusColor === 'red') { colorHex = '#ef4444'; icona = '🔴'; }
-                
                 const displayTesto = statusText !== "" ? statusText.toUpperCase() : 'LIVE STATUS';
                 
-                statusBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-live-status')"><span style="font-size: 0.75rem; letter-spacing: 2px; font-weight: 700; color: ${colorHex};">${icona} ${displayTesto}</span></div>`;
-            } else {
-                const sb = document.getElementById('blocco-status-live'); if(sb) sb.remove(); 
+                roomIdentity.innerHTML += `<div style="color: ${colorHex}; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 5px 0;" onclick="apriDrawer('drawer-live-status')">${icona} ${displayTesto}</div>`;
             }
-            // ==========================================
-            // MQT FLASH (BANNER 24H)
-            // ==========================================
+
+            // 2. Flash 24H
             const flashText = document.getElementById('field-flash-text') ? document.getElementById('field-flash-text').value.trim() : "";
-            
             if (flashText !== "") {
-                let flashBlock = document.getElementById('blocco-flash-live');
-                if (!flashBlock) {
-                    flashBlock = document.createElement('div'); flashBlock.className = 'tag-block'; flashBlock.id = 'blocco-flash-live'; flashBlock.style.cssText = blockStyle;
-                    // Se c'è il semaforo lo mette al secondo posto, altrimenti in cima
-                    const statusNode = document.getElementById('blocco-status-live');
-                    if (statusNode && statusNode.nextSibling) {
-                        track.insertBefore(flashBlock, statusNode.nextSibling);
-                    } else {
-                        track.insertBefore(flashBlock, track.firstChild);
-                    }
-                }
-                flashBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-flash')"><span style="font-size: 0.7rem; letter-spacing: 1px; font-weight: 700; color: #e5c158;"><i class="fas fa-bolt"></i> FLASH: ${flashText.toUpperCase()}</span></div>`;
-            } else {
-                const fb = document.getElementById('blocco-flash-live'); if(fb) fb.remove(); 
+                roomIdentity.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 5px 0;" onclick="apriDrawer('drawer-flash')">⚡ FLASH: ${flashText.toUpperCase()}</div>`;
             }
-                                // ==========================================
-            // DIGITAL SHOWCASE (VETRINA PDF)
+
+            // 3. Bio
+            const bioInput = document.getElementById('field-bio');
+            if (bioInput && bioInput.value.trim() !== "") {
+                roomIdentity.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-bio')">BIO E PRESENTAZIONE</div>`;
+            }
+
+            // ==========================================
+            // STANZA 2: BUSINESS (Digital Pass PDF)
             // ==========================================
             const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "Scarica Documento";
             const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
-            
             if (pdfUrl !== "") {
-                let pdfBlock = document.getElementById('blocco-pdf-live');
-                if (!pdfBlock) {
-                    pdfBlock = document.createElement('div'); pdfBlock.className = 'tag-block'; pdfBlock.id = 'blocco-pdf-live'; pdfBlock.style.cssText = blockStyle;
-                    track.appendChild(pdfBlock);
-                }
-                pdfBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center; border: 1px dashed rgba(229, 193, 88, 0.4);" onclick="apriDrawer('drawer-showcase')"><i class="fas fa-file-pdf" style="color: #e5c158; margin-right: 8px;"></i><span style="font-size: 0.9rem; font-weight: 600; color: #e5c158; letter-spacing: 1px;">${pdfLabel.toUpperCase()}</span></div>`;
-            } else {
-                const pb = document.getElementById('blocco-pdf-live'); if(pb) pb.remove(); 
+                roomBusiness.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 5px 0;" onclick="apriDrawer('drawer-showcase')">📄 ${pdfLabel.toUpperCase()}</div>`;
             }
-                              // ==========================================
-            // ANTEPRIMA GALLERIA IMMAGINI
+
+            // ==========================================
+            // STANZA 3: MEDIA (Galleria)
             // ==========================================
             const galleryDataStr = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
             let arrayGalleria = [];
             try { arrayGalleria = JSON.parse(galleryDataStr); } catch(e) {}
-
             if (arrayGalleria.length > 0) {
-                let galBlock = document.getElementById('blocco-gallery-live');
-                if (!galBlock) {
-                    galBlock = document.createElement('div'); 
-                    galBlock.className = 'tag-block'; 
-                    galBlock.id = 'blocco-gallery-live'; 
-                    galBlock.style.cssText = blockStyle + " padding: 15px; cursor: default;";
-                    track.appendChild(galBlock);
-                }
-
-                // Disegna la griglietta HTML per il telefono
-                let grigliaHTML = '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; pointer-events: none;">';
+                // Genera la micro-griglietta
+                let grigliaHTML = '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; pointer-events: none; margin-top: 5px;">';
                 arrayGalleria.forEach(url => {
-                    grigliaHTML += `<div style="aspect-ratio: 1; border-radius: 8px; background-image: url('${url}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);"></div>`;
+                    grigliaHTML += `<div style="aspect-ratio: 1; border-radius: 6px; background-image: url('${url}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);"></div>`;
                 });
                 grigliaHTML += '</div>';
 
-                galBlock.innerHTML = `${handleHTML}<div style="width: 100%; text-align: center; margin-bottom: 12px; pointer-events: none;"><span style="font-size: 0.75rem; font-weight: 600; color: #e5c158; letter-spacing: 1px;"><i class="fas fa-images"></i> GALLERIA</span></div>${grigliaHTML}`;
-            } else {
-                const gb = document.getElementById('blocco-gallery-live'); if(gb) gb.remove(); 
+                roomMedia.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; text-align: center; width: 100%; padding: 5px 0; cursor: pointer;" onclick="apriDrawer('drawer-gallery')">🖼️ GALLERIA IMMAGINI${grigliaHTML}</div>`;
             }
-  
 
+            // ==========================================
+            // STANZA 4: NETWORK (Azione Rapida, Contatti, Sito, Social)
+            // ==========================================
+            
+            // 1. Azione Rapida
+            const qaInput = document.getElementById('field-qa-label');
+            if (qaInput && qaInput.value.trim() !== "") {
+                const testoScelto = qaInput.value.trim().toUpperCase();
+                roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-quick')">🚀 ${testoScelto}</div>`;
+            }
 
-            // BIO
-            const bioInput = document.getElementById('field-bio');
-            if (bioInput && bioInput.value.trim() !== "") {
-                let bioBlock = document.getElementById('blocco-bio-live');
-                if (!bioBlock) {
-                    bioBlock = document.createElement('div'); bioBlock.className = 'tag-block'; bioBlock.id = 'blocco-bio-live'; bioBlock.style.cssText = blockStyle;
-                    bioBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-bio')"><span class="dynamic-theme-text" style="${textStyle}">BIO</span></div>`;
-                    track.appendChild(bioBlock); 
-                } else { const spanText = bioBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const b = document.getElementById('blocco-bio-live'); if(b) b.remove(); }
-
-            // CONTATTI E RUBRICA
+            // 2. Contatti (VCF)
             const telInput = document.getElementById('field-tel1');
             const emailInput = document.getElementById('field-email');
             if ((telInput && telInput.value.trim() !== "") || (emailInput && emailInput.value.trim() !== "")) {
-                let contattiBlock = document.getElementById('blocco-contatti-live');
-                if (!contattiBlock) {
-                    contattiBlock = document.createElement('div'); contattiBlock.className = 'tag-block'; contattiBlock.id = 'blocco-contatti-live'; contattiBlock.style.cssText = blockStyle;
-                    contattiBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-contatti')"><span class="dynamic-theme-text" style="${textStyle}">CONTATTI</span></div>`;
-                    track.appendChild(contattiBlock);
-                } else { const spanText = contattiBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const c = document.getElementById('blocco-contatti-live'); if(c) c.remove(); }
-                    
-            // AZIONE RAPIDA
-            const qaInput = document.getElementById('field-qa-label');
-            if (qaInput && qaInput.value.trim() !== "") {
-                let qaBlock = document.getElementById('blocco-qa-live');
-                const testoScelto = qaInput.value.trim().toUpperCase(); // Prende la vera parola digitata
-                
-                if (!qaBlock) {
-                    qaBlock = document.createElement('div'); qaBlock.className = 'tag-block'; qaBlock.id = 'blocco-qa-live'; qaBlock.style.cssText = blockStyle;
-                    qaBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-quick')"><span class="dynamic-theme-text" style="${textStyle}">⚡ ${testoScelto}</span></div>`;
-                    track.appendChild(qaBlock);
-                } else { 
-                    const spanText = qaBlock.querySelector('.dynamic-theme-text'); 
-                    if (spanText) {
-                        spanText.style.color = coloreTesto; 
-                        spanText.innerText = `⚡ ${testoScelto}`; // Aggiorna in tempo reale se cambia testo
-                    }
-                }
-            } else { const q = document.getElementById('blocco-qa-live'); if(q) q.remove(); }
+                roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-contatti')">SALVA CONTATTO (RUBRICA)</div>`;
+            }
 
-            
-            // SITO WEB
+            // 3. Sito Web
             const sitoInput = document.getElementById('field-sito');
             if (sitoInput && sitoInput.value.trim() !== "") {
-                let sitoBlock = document.getElementById('blocco-sito-live');
-                if (!sitoBlock) {
-                    sitoBlock = document.createElement('div'); sitoBlock.className = 'tag-block'; sitoBlock.id = 'blocco-sito-live'; sitoBlock.style.cssText = blockStyle;
-                    sitoBlock.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-sito')"><span class="dynamic-theme-text" style="${textStyle}">SITO WEB</span></div>`;
-                    track.appendChild(sitoBlock);
-                } else { const spanText = sitoBlock.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const s = document.getElementById('blocco-sito-live'); if(s) s.remove(); }
+                roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-sito')">SITO WEB UFFICIALE</div>`;
+            }
 
-            // SOCIAL
+            // 4. Social
             const internalTrack = document.getElementById('social-internal-track');
             if (internalTrack && internalTrack.children.length > 0) {
-                let macroSocial = document.getElementById('blocco-social-macro');
-                if (!macroSocial) {
-                    macroSocial = document.createElement('div'); macroSocial.className = 'tag-block'; macroSocial.id = 'blocco-social-macro'; macroSocial.style.cssText = blockStyle;
-                    macroSocial.innerHTML = `${handleHTML}<div class="block-content" style="width: 100%; text-align: center;" onclick="apriDrawer('drawer-social')"><span class="dynamic-theme-text" style="${textStyle}">SOCIAL</span></div>`;
-                    track.appendChild(macroSocial);
-                } else { const spanText = macroSocial.querySelector('.dynamic-theme-text'); if (spanText) spanText.style.color = coloreTesto; }
-            } else { const m = document.getElementById('blocco-social-macro'); if(m) m.remove(); }
+                roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-social')">COLLEGAMENTI E SOCIAL</div>`;
+            }
+
+            // Controllo Visibilità Stanze: se una stanza è vuota, la nascondiamo per pulizia estrema
+            document.getElementById('container-identity').style.display = roomIdentity.innerHTML === '' ? 'none' : 'flex';
+            document.getElementById('container-business').style.display = roomBusiness.innerHTML === '' ? 'none' : 'flex';
+            document.getElementById('container-media').style.display = roomMedia.innerHTML === '' ? 'none' : 'flex';
+            document.getElementById('container-network').style.display = roomNetwork.innerHTML === '' ? 'none' : 'flex';
         }
+          // ============================================================
+        // MOTORE ECOSISTEMA: APERTURA E CHIUSURA STANZE (ACCORDION)
+        // ============================================================
+        function toggleRoom(roomId) {
+            const room = document.getElementById(roomId);
+            if(!room) return;
+
+            // Se è già aperta, la chiudiamo
+            if(room.classList.contains('open')) {
+                room.classList.remove('open');
+            } else {
+                // Altrimenti, chiudiamo tutte le altre e apriamo questa (effetto Accordion)
+                document.querySelectorAll('.room-content').forEach(r => r.classList.remove('open'));
+                room.classList.add('open');
+            }
+        }
+
 
         // ============================================================
         // CAPITOLO 3: MOTORE SOCIAL, INTELLIGENZA E UPSELLING
