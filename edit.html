@@ -1515,13 +1515,21 @@
             if (internalTrack && internalTrack.children.length > 0) {
                 roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-social')">COLLEGAMENTI E SOCIAL</div>`;
             }
-
-            // Controllo Visibilità Stanze: se una stanza è vuota, la nascondiamo per pulizia estrema
+            // Controllo Visibilità e Apertura Automatica (Anti-Illusione Ottica)
             document.getElementById('container-identity').style.display = roomIdentity.innerHTML === '' ? 'none' : 'flex';
+            if (roomIdentity.innerHTML !== '') roomIdentity.classList.add('open');
+
             document.getElementById('container-business').style.display = roomBusiness.innerHTML === '' ? 'none' : 'flex';
+            if (roomBusiness.innerHTML !== '') roomBusiness.classList.add('open');
+
             document.getElementById('container-media').style.display = roomMedia.innerHTML === '' ? 'none' : 'flex';
+            if (roomMedia.innerHTML !== '') roomMedia.classList.add('open');
+
             document.getElementById('container-network').style.display = roomNetwork.innerHTML === '' ? 'none' : 'flex';
+            if (roomNetwork.innerHTML !== '') roomNetwork.classList.add('open');
         }
+
+            
           // ============================================================
         // MOTORE ECOSISTEMA: APERTURA E CHIUSURA STANZE (ACCORDION)
         // ============================================================
