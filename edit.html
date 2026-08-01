@@ -1853,20 +1853,8 @@
                         } catch(e) {}
                     }
 
-                                        // Richiama l'intelligenza dei lucchetti all'avvio della pagina
+                                            // Richiama l'intelligenza dei lucchetti all'avvio della pagina
                     aggiornaLucchetti();
-
-                        document.querySelectorAll('.premium-field-container').forEach(container => {
-                            const overlay = container.querySelector('.premium-lock-overlay');
-                            if(overlay) {
-                                overlay.style.display = 'flex';
-                                overlay.onclick = function(e) {
-                                    e.stopPropagation(); 
-                                    alert("Questo Asset fa parte dei Piani Premium.\nAccedi a 'Gestione Piano' per sbloccarlo.");
-                                };
-                            }
-                        });
-                    }
 
                     applicaTemaLive(); 
                     aggiornaLimitiSocial(); 
@@ -1878,6 +1866,7 @@
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
             }
         }
+                
 
                   
         
