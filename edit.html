@@ -410,24 +410,58 @@
         .btn-action-primary.ready:active {
             background: rgba(16, 185, 129, 0.25);
         }
-        .blocks-track {
+                /* =========================================================
+           FIX LOGO: ADDIO LAPIDE ROTONDA (SQUIRCLE)
+           ========================================================= */
+        .orbital-sphere {
+            border-radius: 18px !important; /* Trasforma il cerchio in un box morbido */
+        }
+        .orbital-ring {
+            border-radius: 22px !important; /* Adatta l'anello dorato alla nuova forma */
+        }
+
+        /* =========================================================
+           LA NUOVA HALL: ECOSISTEMA VIVO
+           ========================================================= */
+        .ecosystem-hall {
             width: 100%; max-width: 320px; margin: 40px auto 100px auto; 
-            display: flex; flex-direction: column; gap: 15px; min-height: 50px;
+            display: flex; flex-direction: column; gap: 20px;
         }
-        .tag-block {
-            display: flex; align-items: center; padding: 10px 15px; background: transparent; border-radius: 8px; transition: background 0.2s ease;
+        
+        .room-container {
+            display: flex; flex-direction: column; align-items: center; width: 100%;
         }
-        .drag-handle {
-            color: rgba(255, 255, 255, 0.15); font-size: 1.2rem; margin-right: 15px; cursor: grab; padding: 5px; line-height: 1; letter-spacing: -2px; 
+
+        /* I 4 Titoli delle Stanze (Minimal ed Esclusivi) */
+        .room-title {
+            color: #fff; font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; 
+            text-transform: uppercase; cursor: pointer; padding: 10px 0;
+            transition: all 0.3s ease; opacity: 0.8;
+            display: flex; align-items: center; justify-content: center; width: 100%;
         }
-        .drag-handle:active { cursor: grabbing; color: rgba(255,255,255,0.6); }
-        .block-content { flex: 1; cursor: pointer; }
-        .bio-display-text {
-            color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; font-weight: 300; line-height: 1.4; text-align: center; letter-spacing: 0.5px; margin: 0;
+        .room-title:active { opacity: 1; transform: scale(0.98); }
+        .room-title::before {
+            content: '::'; margin-right: 12px; color: rgba(255,255,255,0.2); letter-spacing: 1px;
         }
-        .digital-pass-text {
-            color: rgba(255, 255, 255, 0.9); font-size: 0.65rem; font-weight: 500; text-align: center; letter-spacing: 4px; text-transform: uppercase; margin: 0; padding: 5px 0;
+
+        /* L'interno delle Stanze (Il Dropdown a scomparsa) */
+        .room-content {
+            width: 100%; max-height: 0; overflow: hidden; 
+            transition: max-height 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.4s ease, margin-top 0.4s ease;
+            opacity: 0; display: flex; flex-direction: column; gap: 16px; align-items: center;
         }
+        .room-content.open {
+            max-height: 600px; /* Si apre abbastanza per mostrare tutto */
+            opacity: 1; margin-top: 15px; margin-bottom: 10px;
+        }
+
+        /* Le scritte interne alle stanze (le tue funzioni reali) */
+        .room-item-text {
+            font-size: 0.75rem; letter-spacing: 2px; font-weight: 500; color: rgba(255,255,255,0.7); 
+            text-transform: uppercase; text-align: center; width: 100%; cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
         .sortable-ghost { opacity: 0.4; background: rgba(255, 255, 255, 0.05); }
         .sortable-drag { background: rgba(20, 20, 22, 0.95); box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
         /* --- VIP VAULT SWITCH --- */
