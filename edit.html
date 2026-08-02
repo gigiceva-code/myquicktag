@@ -1053,7 +1053,13 @@
             </div>
         </div>
 
+                <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+            <button type="button" onclick="eliminaAsset('pdf')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-trash-alt"></i> ELIMINA PDF
+            </button>
+        </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VETRINA</button>
+
     </div>
     <!-- ========================================== -->
     <!-- CASSETTO GALLERIA IMMAGINI -->
@@ -1096,8 +1102,14 @@
             <!-- Campo nascosto per salvare il JSON delle immagini -->
             <input type="hidden" id="field-gallery-data" value="[]">
         </div>
-
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+            <button type="button" onclick="eliminaAsset('gallery')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-trash-alt"></i> SVUOTA GALLERIA
+            </button>
+        </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA GALLERIA</button>
+
+        
     </div>
 
 
