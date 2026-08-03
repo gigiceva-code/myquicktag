@@ -1350,11 +1350,14 @@
                 chiudiSenzaSalvare();
             }
         }
-        // ==========================================
-        // MOTORE: SBLOCCO PIANI IN ANTEPRIMA
+      // ==========================================
+        // MOTORE: SBLOCCO PIANI IN ANTEPRIMA (POTENZIATO CON SESSION STORAGE)
         // ==========================================
         function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
             userPlan = nuovoPianoSelezionato; 
+            
+            // LA ROCCAFORTE: Salva la simulazione nella memoria del telefono
+            sessionStorage.setItem('mqt_temp_plan_' + NOME_SISTEMA, userPlan); 
             
             aggiornaLucchetti(); // Chiama l'intelligenza artificiale dei lucchetti
             
@@ -1397,7 +1400,7 @@
             });
             
             if(typeof aggiornaLimitiSocial === 'function') aggiornaLimitiSocial();
-        }
+        } 
         // ==========================================
         function disegnaQRDinamico(temaVal) {
             const container = document.getElementById('qr-container');
@@ -1791,7 +1794,11 @@
 
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
                 userPlan = (data.fields?.plan || 'BASE').toUpperCase().trim();
-
+// Recupera l'eventuale piano simulato salvato nella sessione per resistere al tasto Indietro
+                const pianoSimulato = sessionStorage.getItem('mqt_temp_plan_' + NOME_SISTEMA);
+                if (pianoSimulato) {
+                    userPlan = pianoSimulato;
+                }
                 const f = (() => { if (data.fields?.draft_json) { try { return { ...JSON.parse(data.fields.draft_json) }; } catch(e) {} } return data.fields || data; })();
 
                 if (f) {
