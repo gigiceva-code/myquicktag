@@ -270,25 +270,29 @@
             background: rgba(0,0,0,0.4); z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
         .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
-
         .drawer-glass {
             position: fixed !important; bottom: -100% !important; left: 26px !important; right: 26px !important; width: auto !important; margin: 0 auto !important; max-width: 360px !important; 
             background: rgba(30, 30, 35, 0.4) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; 
             border: 1px solid rgba(255, 255, 255, 0.15) !important; border-radius: 28px !important; padding: 24px !important;
             z-index: 2000 !important; transition: bottom 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; box-sizing: border-box !important; box-shadow: 0 10px 40px rgba(0,0,0,0.9) !important; 
             
-            /* LA CURA PER IL CASSETTO INCASTRATO */
-            max-height: 85vh !important; /* Obbliga il cassetto a non superare l'85% dello schermo */
-            overflow-y: auto !important; /* Se il contenuto sfora, permette di scorrere col dito */
-            scrollbar-width: none !important; /* Nasconde l'antiestetica barra di scorrimento laterale */
+            /* LA CURA PER L'ALTEZZA */
+            max-height: 85vh !important; 
+            overflow-y: auto !important; 
+            scrollbar-width: none !important; 
         }
 
-        /* Nasconde la barra di scorrimento anche sui dispositivi Apple/Chrome */
+        /* IL MOTORE DI APERTURA (Questa è la riga che era saltata!) */
+        .drawer-glass.open { 
+            bottom: 24px !important; 
+        }
+
+        /* Nasconde la barra di scorrimento su Chrome/Apple */
         .drawer-glass::-webkit-scrollbar {
             display: none !important;
         }
-        .drawer-glass.open { bottom: 24px !important; }
 
+        
         .drawer-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; padding: 0; position: relative; width: 100%; }
         .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-align: center; width: 100%; }
         .drawer-subtitle { font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase; text-align: center; }
