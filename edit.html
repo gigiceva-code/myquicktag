@@ -1350,20 +1350,21 @@
                 chiudiSenzaSalvare();
             }
         }
-      // ==========================================
-        // MOTORE: SBLOCCO PIANI IN ANTEPRIMA (POTENZIATO CON SESSION STORAGE)
+      
+     // ==========================================
+        // MOTORE: SBLOCCO PIANI IN ANTEPRIMA (POTENZIATO CON LOCAL STORAGE)
         // ==========================================
         function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
             userPlan = nuovoPianoSelezionato; 
             
-            // LA ROCCAFORTE: Salva la simulazione nella memoria del telefono
-            sessionStorage.setItem('mqt_temp_plan_' + NOME_SISTEMA, userPlan); 
+            // LA ROCCAFORTE BLINDATA: Salviamo in localStorage (sopravvive alla chiusura della scheda)
+            localStorage.setItem('mqt_temp_plan_' + NOME_SISTEMA, userPlan); 
             
             aggiornaLucchetti(); // Chiama l'intelligenza artificiale dei lucchetti
             
             alert(`Fantastico! Hai selezionato il piano ${nuovoPianoSelezionato}.\n\nI lucchetti del tuo piano sono sbloccati. Ora puoi configurare queste funzioni e vedere l'anteprima in tempo reale.\n\nQuando hai terminato, clicca su "ATTIVA TAG" in basso per confermare.`);
             chiudiSenzaSalvare(); 
-        }
+        } 
 
         function aggiornaLucchetti() {
             const cassettiGold = ['drawer-showcase', 'drawer-gallery', 'drawer-live-status', 'drawer-flash'];
@@ -1794,8 +1795,8 @@
 
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
                 userPlan = (data.fields?.plan || 'BASE').toUpperCase().trim();
-// Recupera l'eventuale piano simulato salvato nella sessione per resistere al tasto Indietro
-                const pianoSimulato = sessionStorage.getItem('mqt_temp_plan_' + NOME_SISTEMA);
+// Recupera l'eventuale piano simulato salvato nella sessione per resistere a tutto
+                const pianoSimulato = localStorage.getItem('mqt_temp_plan_' + NOME_SISTEMA);
                 if (pianoSimulato) {
                     userPlan = pianoSimulato;
                 }
