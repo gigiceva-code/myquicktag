@@ -407,14 +407,14 @@ body {
     
     <!-- (Non toccare il tag <script> originale che segue nel tuo file) -->
 
-   <script>
-        
-
- // ============================================================
+  <script>
+// ============================================================
 // GESTIONE VIP VAULT (SICUREZZA ACCESSO LINK)
 // ============================================================
 let urlRiservato = "";
 let pinRiservato = "";
+let cacheDatiUtente = {};
+let usernameCorrente = "";
 
 function apriVipVault(url, pin, event) {
     if (event) {
@@ -432,7 +432,6 @@ function apriVipVault(url, pin, event) {
         input.placeholder = "****";
         input.style.borderColor = "rgba(229, 193, 88, 0.3)";
         overlay.style.display = 'flex';
-        // Auto-focus per agevolare l'inserimento da mobile
         setTimeout(() => input.focus(), 100);
     }
 }
@@ -449,11 +448,9 @@ function verificaPinVip() {
     if (!input) return;
     
     if (input.value === pinRiservato) {
-        // PIN Corretto: Chiude il Vault e apre la destinazione
         chiudiVipVault();
         window.open(urlRiservato, '_blank', 'noopener noreferrer');
     } else {
-        // PIN Errato: Feedback visivo di errore
         input.style.borderColor = "#ff4444";
         input.value = "";
         input.placeholder = "ERRATO";
@@ -464,7 +461,6 @@ function verificaPinVip() {
     }
 }
 
-// Associa la pressione del tasto "Invio" sul tastierino alla verifica del PIN
 document.addEventListener('DOMContentLoaded', () => {
     const pinInput = document.getElementById('vip-pin-input');
     if (pinInput) {
@@ -476,22 +472,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     usernameCorrente = (urlParams.get("u") || "").toLowerCase().trim();
 
-// Fallback: legge username dal percorso /u/username
-if (!usernameCorrente) {
-    const pathParts = window.location.pathname.split('/');
-    const uIndex = pathParts.indexOf('u');
-    if (uIndex !== -1 && pathParts[uIndex + 1]) {
-        usernameCorrente = pathParts[uIndex + 1].toLowerCase().trim();
-    }
-}
- document.getElementById("dynamic-manifest").href = `/api/manifest?u=${usernameCorrente}`;
-    document.getElementById("dynamic-icon").href = `/api/generate-icons?u=${usernameCorrente}`;
     if (!usernameCorrente) {
-        // Nessun username nell'URL → mostra errore generico
+        const pathParts = window.location.pathname.split('/');
+        const uIndex = pathParts.indexOf('u');
+        if (uIndex !== -1 && pathParts[uIndex + 1]) {
+            usernameCorrente = pathParts[uIndex + 1].toLowerCase().trim();
+        }
+    }
+    
+    document.getElementById("dynamic-manifest").href = `/api/manifest?u=${usernameCorrente}`;
+    document.getElementById("dynamic-icon").href = `/api/generate-icons?u=${usernameCorrente}`;
+    
+    if (!usernameCorrente) {
         mostraErrore("Nessun profilo specificato.");
         return;
     }
@@ -500,7 +497,7 @@ if (!usernameCorrente) {
 });
 
 // ============================================================
-// FLUSSO PRINCIPALE — determina lo stato e smista
+// FLUSSO PRINCIPALE
 // ============================================================
 async function avviaFlusso(username) {
     try {
@@ -508,7 +505,6 @@ async function avviaFlusso(username) {
         const mode = (urlParams.get('mode') || '').toLowerCase().trim();
         const modeDraft = mode === 'draft';
 
-        // Sicurezza: solo il proprietario può vedere la bozza esplicita da edit
         if (modeDraft) {
             const loggedUser = localStorage.getItem('loggedUser');
             if (!loggedUser || loggedUser.toLowerCase() !== username.toLowerCase()) {
@@ -520,18 +516,15 @@ async function avviaFlusso(username) {
         const response = await fetch(`/api/get-profile?u=${username}`);
         const data = await response.json();
         if (!data.success || !data.fields) {
-            // Profilo non trovato → showroom (tag libera, acquistabile)
             mostraShowroom(username);
             return;
         }
 
         let fields = data.fields;
         const stato = (fields.stato || "").toLowerCase().trim();
-        
         const loggedUser = localStorage.getItem('loggedUser');
         const isOwner = loggedUser && loggedUser.toLowerCase() === username.toLowerCase();
 
-        // 🎯 FIX: Se siamo in modalità anteprima (draft, new, o public dal profilo), carichiamo i dati da draft_json
         if ((modeDraft || mode === 'new' || mode === 'public' || isOwner) && fields.draft_json) {
             try {
                 const bozza = JSON.parse(fields.draft_json);
@@ -541,28 +534,19 @@ async function avviaFlusso(username) {
             }
         }
 
-        // Salviamo tutto in cache per gli altri blocchi
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
 
-        // --- SMISTAMENTO DEI STATI ---
         if (stato === "attivo") {
-            // Stato 1: tag attiva e pagata → rendering completo pulito pubblico
             renderizzaTagCompleta(fields);
-
-      } else if (stato === "in attesa") {
-            // 🎯 FIX: Sblocchiamo la visione se la richiesta arriva con mode=public dal pannello
+        } else if (stato === "in attesa") {
             if (mode === 'new' || mode === 'draft' || mode === 'public' || isOwner) {
-                // Utente che vede anteprima → rendering + overlay acquisto dedicato
                 renderizzaTagCompleta(fields);
                 mostraOverlayAcquisto();
-                        } else {
-                // Chiunque altro scansiona il QR prima del pagamento → messaggio persuasivo luxury
+            } else {
                 mostraMessaggioPersuasivo(fields);
             }
-
         } else {
-            // Stato 3: showroom
             mostraShowroom(username);
         }
 
@@ -571,13 +555,13 @@ async function avviaFlusso(username) {
         mostraErrore("Errore di connessione. Riprova tra qualche istante.");
     }
 }
+
 // ============================================================
-// FORMATTAZIONE INTELLIGENTE DEL BADGE
+// FORMATTAZIONE BADGE
 // ============================================================
 function formattaBadge(testoBruto) {
     const el = document.getElementById('tag-username');
     if(!el) return;
-
     if (!testoBruto) testoBruto = "TUONOME";
     let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
     if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
@@ -591,7 +575,7 @@ function formattaBadge(testoBruto) {
 }
 
 // ============================================================
-// RENDERING DELLA TAG IN STATO "CHIUSO" (IL RITO)
+// RENDERING DELLA TAG
 // ============================================================
 function renderizzaTagCompleta(fields) {
     const container = document.getElementById('profile-content');
@@ -604,7 +588,6 @@ function renderizzaTagCompleta(fields) {
     const nomeDaMostrare = fields.username_display || fields.username_system;
     formattaBadge(nomeDaMostrare);
 
-    // Innesto dell'immagine nel Sigillo
     const liveContainer = document.getElementById('live-avatar-container');
     const liveImg = document.getElementById('live-avatar-img');
     
@@ -621,7 +604,6 @@ function renderizzaTagCompleta(fields) {
     gestisciVisibilitaCaselle(fields);
     
     if (container) {
-        // Accende lo schermo e innesca la serratura
         container.classList.add('ready');
         container.classList.add('locked');
     }
@@ -639,31 +621,23 @@ function renderizzaTagCompleta(fields) {
 }
 
 // ============================================================
-// LO SBLOCCO (IL MOMENTO "WOW")
+// LO SBLOCCO (IL RITO D'INGRESSO AGGIORNATO)
 // ============================================================
 function sbloccaTag() {
     const container = document.getElementById('profile-content');
     if (!container || !container.classList.contains('locked')) return;
 
-    // Feedback tattile (Vibrazione) se supportato dal telefono
     if (navigator.vibrate) { navigator.vibrate(40); }
 
-    // Rimuove la serratura e avvia la transizione del Sigillo
     container.classList.remove('locked');
     container.classList.add('unlocked');
 
-    // Mette in visibilità i moduli (ancora trasparenti)
     const mainGrid = document.getElementById('mainGrid');
-    const quickAction = document.getElementById('casella-quick-action');
     if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
-    if (quickAction && quickAction.getAttribute('data-active') !== 'false') {
-        // Se c'è la quick action, ripristinala visivamente
-        quickAction.style.setProperty("display", "flex", "important");
-    }
 
-    // Aspetta 600ms che il sigillo si sposti in alto, poi lancia la cascata dei moduli
     setTimeout(() => {
-        const caselle = document.querySelectorAll('#mainGrid .casella');
+        // Cerca le nuove Stanze (Macro-aree)
+        const caselle = document.querySelectorAll('#mainGrid .room-link');
         let moduliVisibili = 0;
         caselle.forEach((casella) => {
             if (window.getComputedStyle(casella).display !== 'none') {
@@ -672,85 +646,60 @@ function sbloccaTag() {
                 moduliVisibili++;
             }
         });
-        
-        if(quickAction && quickAction.style.display !== 'none') {
-            quickAction.classList.add('boot-module-active');
-            quickAction.style.animationDelay = `${(moduliVisibili * 0.12)}s`;
-        }
     }, 600);
 }
+
 // ============================================================
-// QR CODE — generazione reale tramite qrcode.js
+// QR CODE
 // ============================================================
 function generaQR(url) {
     const wrapper = document.querySelector('.qr-wrapper');
-    if (!wrapper) return;
-
-    // Pulisce il placeholder grafico esistente
+    if (!wrapper) return; // Fallback silenzioso se la classe non è nel DOM iniziale
     wrapper.innerHTML = '';
-
-    new QRCode(wrapper, {
-        text: url,
-        width: 84,
-        height: 84,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.M
-    });
+    new QRCode(wrapper, { text: url, width: 84, height: 84, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
 }
 
 // ============================================================
-// SITO WEB — casella dedicata nella griglia
+// SITO WEB
 // ============================================================
 function renderizzaSitoWeb(url) {
     const casella = document.getElementById('casella-sito');
     if (!casella) return;
-
     if (!url || url.trim() === "") {
         casella.style.display = 'none';
         return;
     }
-
     casella.style.display = 'flex';
 }
+
 // ============================================================
-// OVERLAY ACQUISTO — stato "in attesa" (tag visibile ma bloccata)
+// OVERLAY E SHOWROOM (INVARIATI)
 // ============================================================
 function mostraOverlayAcquisto() {
-    // Questo overlay disturba la tag invitando all'acquisto
-    // Il contenuto visivo è gestito dall'HTML esistente (showroom-overlay)
-    // Qui lo attiviamo e personalizziamo il messaggio
     const overlay = document.getElementById("showroom-overlay");
-    const box = document.getElementById("expanding-box");
     const titolo = document.getElementById("conversion-title");
     const btn = document.getElementById("showroom-action-btn");
-
     if (!overlay) return;
-
-   if (titolo) {
+    if (titolo) {
         const nome = (cacheDatiUtente.username_display || usernameCorrente).replace('@', '');
         titolo.innerText = `@${nome} è riservata.\nSolo tu puoi attivarla — gratis per 3 mesi.`;
     }
     if (btn) {
         const nome = (cacheDatiUtente.username_display || usernameCorrente).replace('@', '');
         btn.textContent = `Attiva @${nome}`;
-        btn.onclick = () => {
-            window.location.href = `/checkout.html?u=${usernameCorrente}`;
-        };
+        btn.onclick = () => { window.location.href = `/checkout.html?u=${usernameCorrente}`; };
     }
-   overlay.style.display = "flex";
+    overlay.style.display = "flex";
     document.body.style.overflow = "hidden";
     const appContainer = document.querySelector('.app-container');
     if (appContainer) appContainer.style.overflow = 'hidden';
     const backBtn = document.getElementById('back-to-dashboard');
     if (backBtn) backBtn.style.display = 'block';
- const content = document.querySelector(".conversion-content");
-if (content) content.style.opacity = "1"; 
+    const content = document.querySelector(".conversion-content");
+    if (content) content.style.opacity = "1"; 
 } 
-// ============================================================
-// SHOWROOM — profilo non configurato (tag libera)
-// ============================================================
- function chiudiOverlayAcquisto() {
+
+function chiudiOverlayAcquisto() {
     const backBtn = document.getElementById('back-to-dashboard');
     if (backBtn) backBtn.style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -758,34 +707,24 @@ if (content) content.style.opacity = "1";
     if (appContainer) appContainer.style.overflow = 'auto';
     window.location.href = `/profile.html?u=${usernameCorrente}`;
 }
+
 function mostraShowroom(username) {
     const overlay = document.getElementById("showroom-overlay");
-    const box = document.getElementById("expanding-box");
     const titolo = document.getElementById("conversion-title");
     const btn = document.getElementById("showroom-action-btn");
-
     if (!overlay) return;
-
-    if (titolo) {
-       titolo.innerText = `Nessun altro potrà essere @${username.replace('@', '')}`;
-    }
-
+    if (titolo) { titolo.innerText = `Nessun altro potrà essere @${username.replace('@', '')}`; }
     if (btn) {
         btn.textContent = "Attiva la tua myquicktag";
-        btn.onclick = () => {
-            window.location.href = `/index.html?u=${username}`;
-        };
+        btn.onclick = () => { window.location.href = `/index.html?u=${username}`; };
     }
-
-  overlay.style.display = "flex";
+    overlay.style.display = "flex";
     const container = document.querySelector('.app-container');
     if (container) container.classList.add('ready');
     const content = document.querySelector(".conversion-content");
     if (content) content.style.opacity = "1";
 } 
-// ============================================================
-// ERRORE GENERICO
-// ============================================================
+
 function mostraErrore(messaggio) {
     const container = document.querySelector('.app-container');
     if (container) {
@@ -794,40 +733,30 @@ function mostraErrore(messaggio) {
     }
 }
 
-// ============================================================
-// MESSAGGIO PERSUASIVO (TAG IN ATTESA)
-// ============================================================
 function mostraMessaggioPersuasivo(fields) {
     const container = document.querySelector('.app-container');
     const nomeBrand = fields.username_display || fields.username_system;
-    
     if (container) {
-        // Svuota lo chassis e stampa il messaggio luxury senza bottoni
         container.innerHTML = `
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 20px;">
                 <div style="font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; color: #ffffff; margin-bottom: 24px;">
                     BENVENUTO IN <span style="font-weight: 600;">MYQUICKTAG</span>
                 </div>
-                
                 <div style="width: 30px; height: 1px; background: rgba(212, 175, 55, 0.5); margin-bottom: 24px;"></div>
-                
                 <div style="font-size: 0.95rem; color: #86868b; line-height: 1.8;">
                     La tag <span style="color: #ffffff; font-weight: 500;">@${nomeBrand.replace('@', '')}</span> non è ancora attiva.<br><br>
                     Completa la configurazione per sfruttare tutta la potenza del tuo ecosistema.
                 </div>
             </div>
         `;
-        // Accende l'interfaccia
         container.classList.add('ready');
     }
 }
 
-       // ============================================================
-// TAG.HTML - BLOCCO 2: SOCIAL E CASELLE CONTENUTO
 // ============================================================
-
-// --- DIZIONARIO ICONE SOCIAL ---
-       const quickActionConfig = {
+// DIZIONARI SOCIAL E QUICK ACTION
+// ============================================================
+const quickActionConfig = {
     'appuntamento': { icon: '📅', label: 'Prenota appuntamento' },
     'whatsapp':     { icon: '💬', label: 'Scrivimi su WhatsApp' },
     'preventivo':   { icon: '📋', label: 'Richiedi preventivo' },
@@ -835,41 +764,34 @@ function mostraMessaggioPersuasivo(fields) {
     'maps':         { icon: '📍', label: 'Trovami su Maps' },
     'demo':         { icon: '🎵', label: 'Ascolta demo' }
 };
+
 const socialIcons = {
-    "instagram": "fab fa-instagram", "tiktok": "fab fa-tiktok",
-    "facebook": "fab fa-facebook-f", "linkedin": "fab fa-linkedin-in",
-    "x": "fab fa-x-twitter", "twitter": "fab fa-x-twitter",
-    "youtube": "fab fa-youtube", "whatsapp": "fab fa-whatsapp",
-    "telegram": "fab fa-telegram-plane", "spotify": "fab fa-spotify",
-    "tripadvisor": "fab fa-tripadvisor", "thefork": "fas fa-utensils",
-    "onlyfans": "fas fa-star", "github": "fab fa-github",
-    "twitch": "fab fa-twitch", "strava": "fab fa-strava",
-    "pinterest": "fab fa-pinterest-p", "discord": "fab fa-discord",
-    "snapchat": "fab fa-snapchat-ghost", "threads": "fab fa-threads",
-    "calendly": "far fa-calendar-check", "patreon": "fab fa-patreon",
-    "behance": "fab fa-behance", "dribbble": "fab fa-dribbble",
-    "vimeo": "fab fa-vimeo-v", "reddit": "fab fa-reddit-alien",
-    "medium": "fab fa-medium-m", "soundcloud": "fab fa-soundcloud",
+    "instagram": "fab fa-instagram", "tiktok": "fab fa-tiktok", "facebook": "fab fa-facebook-f", "linkedin": "fab fa-linkedin-in",
+    "x": "fab fa-x-twitter", "twitter": "fab fa-x-twitter", "youtube": "fab fa-youtube", "whatsapp": "fab fa-whatsapp",
+    "telegram": "fab fa-telegram-plane", "spotify": "fab fa-spotify", "tripadvisor": "fab fa-tripadvisor", "thefork": "fas fa-utensils",
+    "onlyfans": "fas fa-star", "github": "fab fa-github", "twitch": "fab fa-twitch", "strava": "fab fa-strava",
+    "pinterest": "fab fa-pinterest-p", "discord": "fab fa-discord", "snapchat": "fab fa-snapchat-ghost", "threads": "fab fa-threads",
+    "calendly": "far fa-calendar-check", "patreon": "fab fa-patreon", "behance": "fab fa-behance", "dribbble": "fab fa-dribbble",
+    "vimeo": "fab fa-vimeo-v", "reddit": "fab fa-reddit-alien", "medium": "fab fa-medium-m", "soundcloud": "fab fa-soundcloud",
     "apple music": "fab fa-apple", "default": "fas fa-link"
 };
 
 // ============================================================
-// RENDERING SOCIAL
+// FUNZIONI QUICK ACTION & VCF
 // ============================================================
-       function renderizzaQuickAction(tipo, url) {
-    const casella = document.getElementById('casella-quick-action');
-    if (!casella) return;
+function renderizzaQuickAction(tipo, url) {
+    const btnQA = document.getElementById('room-quick-action');
+    if (!btnQA) return;
 
     const piano = (cacheDatiUtente.plan || '').toUpperCase();
     if (!tipo || !url || piano === 'BASE') {
-        casella.style.display = 'none';
+        btnQA.style.display = 'none';
         return;
     }
 
-    const cfg = quickActionConfig[tipo.toLowerCase()] || { icon: '⚡', label: 'Azione rapida' };
-    document.getElementById('quick-action-icon').textContent = cfg.icon;
-    document.getElementById('quick-action-label').textContent = cfg.label;
-    casella.style.display = 'flex';
+    const cfg = quickActionConfig[tipo.toLowerCase()] || { icon: '⚡', label: 'AZIONE RAPIDA' };
+    btnQA.textContent = `${cfg.icon} ${cacheDatiUtente.quick_action_label || cfg.label}`;
+    btnQA.style.display = 'flex';
 }
 
 function eseguiQuickAction() {
@@ -889,7 +811,8 @@ function eseguiQuickAction() {
     const destinazione = mappaProtocollo[tipo] || url;
     window.open(destinazione, '_blank', 'noopener noreferrer');
 }
-       function scaricaVCF(vcf, fields) {
+
+function scaricaVCF(vcf, fields) {
     const nome = vcf.nome || fields.username_display || fields.username_system || '';
     const tel1 = vcf.telefono1 || '';
     const tel2 = vcf.telefono2 || '';
@@ -900,17 +823,11 @@ function eseguiQuickAction() {
     const piva = vcf.piva || '';
 
     const vcfContent = [
-        'BEGIN:VCARD',
-        'VERSION:3.0',
-        `FN:${nome}`,
-        tel1 ? `TEL;TYPE=CELL:${tel1}` : '',
-        tel2 ? `TEL;TYPE=WORK:${tel2}` : '',
-        email1 ? `EMAIL;TYPE=WORK:${email1}` : '',
-        email2 ? `EMAIL;TYPE=HOME:${email2}` : '',
-        sito ? `URL:${sito}` : '',
-        indirizzo ? `ADR:;;${indirizzo};;;;` : '',
-        piva ? `NOTE:P.IVA ${piva}` : '',
-        'END:VCARD'
+        'BEGIN:VCARD', 'VERSION:3.0', `FN:${nome}`,
+        tel1 ? `TEL;TYPE=CELL:${tel1}` : '', tel2 ? `TEL;TYPE=WORK:${tel2}` : '',
+        email1 ? `EMAIL;TYPE=WORK:${email1}` : '', email2 ? `EMAIL;TYPE=HOME:${email2}` : '',
+        sito ? `URL:${sito}` : '', indirizzo ? `ADR:;;${indirizzo};;;;` : '',
+        piva ? `NOTE:P.IVA ${piva}` : '', 'END:VCARD'
     ].filter(Boolean).join('\n');
 
     const blob = new Blob([vcfContent], { type: 'text/vcard' });
@@ -921,104 +838,222 @@ function eseguiQuickAction() {
     a.click();
     URL.revokeObjectURL(url);
 }
+
 function renderizzaSocial(configCanali) {
-    const container = document.getElementById("casella-social");
-    if (!container) return;
-
-    if (!configCanali || configCanali.trim() === "") {
-        container.style.display = 'none';
-        return;
-    }
-
-    try {
-        const canali = JSON.parse(configCanali);
-
-        if (!canali || !Array.isArray(canali) || canali.length === 0) {
-            container.style.display = 'none';
-            return;
-        } 
-
-        container.innerHTML = "";
-
-        canali.forEach(canale => {
-            const nomeLower = canale.nome.toLowerCase();
-            const iconClass = socialIcons[nomeLower] || socialIcons["default"];
-            const isVip = (canale.vip === true || canale.vip === 'true');
-
-            const btn = document.createElement("a");
-            btn.className = "btn-social";
-            
-            // Logica condizionale per l'ingaggio VIP Vault
-            if (isVip) {
-                btn.href = "#";
-                btn.onclick = (e) => apriVipVault(canale.url, canale.pin, e);
-                btn.innerHTML = `<i class="${iconClass}"></i> ${canale.nome} <i class="fas fa-lock" style="color: #e5c158; font-size: 0.7rem; margin-left: 5px;"></i>`;
-            } else {
-                btn.href = canale.url;
-                btn.target = "_blank";
-                btn.rel = "noopener noreferrer";
-                btn.innerHTML = `<i class="${iconClass}"></i> ${canale.nome}`;
-            }
-
-            btn.style.cssText = "text-decoration:none; color:inherit; display:flex; align-items:center; gap:8px; justify-content: center;";
-
-            btn.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                _condividi(canale.nome, canale.url);
-            });
-
-            container.appendChild(btn);
-        });
-
-        container.style.display = 'grid';
-
-   } catch (e) {
-        console.error("Errore parsing config_canali:", e);
-        container.style.display = 'none';
-        return;
-    }
+    // Mantenuta intatta per logica interna, l'interfaccia usa apriMacroArea
 }
+
 // ============================================================
-// VISIBILITÀ AUTOMATICA CASELLE
-// Nasconde le caselle senza contenuto
+// IL NUOVO VIGILE URBANO: ACCENDE LE STANZE (MACRO AREE)
 // ============================================================
 function gestisciVisibilitaCaselle(fields) {
-    const mappa = {
-        'casella-bio':      fields.bio,
-        'casella-contatti': fields.email || fields.modulo_vcf,
-        'casella-gallery':  fields.gallery,
-        'casella-cv':       fields.cv,
-        'casella-sito':     fields.sito_web,
-    };
+    // 1. IDENTITY (Sempre accesa per l'Access Tag QR. Conterrà anche Bio, Flash, Status)
+    const elIdentity = document.getElementById('room-identity');
+    if (elIdentity) elIdentity.style.display = 'flex';
 
-    for (const [id, dato] of Object.entries(mappa)) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        el.style.display = (!dato || dato.toString().trim() === "") ? 'none' : 'flex';
-    }
+    // 2. BUSINESS (Accesa se c'è un PDF o un CV)
+    const hasBusiness = !!fields.pdf_url || !!fields.cv;
+    const elBusiness = document.getElementById('room-business');
+    if (elBusiness) elBusiness.style.display = hasBusiness ? 'flex' : 'none';
 
-    // Social: mostra casella solo se ci sono canali configurati
-    const elSocial = document.getElementById('casella-social');
-    if (elSocial) {
-        let canali = [];
-        try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
-        elSocial.style.display = canali.length > 0 ? 'flex' : 'none';
-    }
+    // 3. MEDIA (Accesa se c'è la galleria)
+    let galleryData = [];
+    try { galleryData = JSON.parse(fields.gallery_data || '[]'); } catch(e) {}
+    const hasMedia = galleryData.length > 0;
+    const elMedia = document.getElementById('room-media');
+    if (elMedia) elMedia.style.display = hasMedia ? 'flex' : 'none';
 
+    // 4. NETWORK (Accesa se c'è Sito, Email, VCF o Social)
+    let canali = [];
+    try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
+    const hasNetwork = !!fields.sito_web || !!fields.email || !!fields.modulo_vcf || canali.length > 0;
+    const elNetwork = document.getElementById('room-network');
+    if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
+
+    // 5. QUICK ACTION
     renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
 }
-// ============================================================
-// APERTURA OVERLAY SEZIONE INTERNA
-// ============================================================
-function apriSezione(tipo) {
-    console.log('apriSezione:', tipo);
 
+// ============================================================
+// TEATRO LIQUIDO: APERTURA MACRO AREE E CASCATA SOTTOMENU
+// ============================================================
+function apriMacroArea(area) {
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
-    
-    console.log('overlay:', overlay, 'titolo:', titolo, 'corpo:', corpo);
     if (!overlay || !titolo || !corpo) return;
+
+    corpo.innerHTML = '';
+    let sottomenuHTML = '';
+
+    // IDENTITY
+    if (area === 'identity') {
+        titolo.textContent = 'IDENTITY';
+        sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('qr')"><i class="fas fa-qrcode" style="font-size:1.2rem; width:25px; color:var(--accent-gold);"></i> <span style="flex:1; text-align:left;">ACCESS TAG</span></button>`;
+        
+        if (cacheDatiUtente.live_status_color) {
+            let colorHex = '#10b981';
+            if (cacheDatiUtente.live_status_color === 'yellow') colorHex = '#f59e0b';
+            if (cacheDatiUtente.live_status_color === 'red') colorHex = '#ef4444';
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('status')"><i class="fas fa-broadcast-tower" style="font-size:1.2rem; width:25px; color:${colorHex};"></i> <span style="flex:1; text-align:left;">LIVE STATUS</span></button>`;
+        }
+        
+        if (cacheDatiUtente.flash_text) {
+            const isExpired = cacheDatiUtente.flash_expiry && new Date(cacheDatiUtente.flash_expiry) < new Date();
+            if (!isExpired) {
+                sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('flash')"><i class="fas fa-bolt" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">MQT FLASH</span></button>`;
+            }
+        }
+        
+        if (cacheDatiUtente.bio) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('bio')"><i class="fas fa-pen-nib" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">BIOGRAFIA</span></button>`;
+        }
+    }
+    
+    // BUSINESS
+    else if (area === 'business') {
+        titolo.textContent = 'BUSINESS';
+        if (cacheDatiUtente.pdf_url) {
+            const label = (cacheDatiUtente.pdf_label || 'DOCUMENTO PDF').toUpperCase();
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('pdf')"><i class="fas fa-file-pdf" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">${label}</span></button>`;
+        }
+        if (cacheDatiUtente.cv) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('cv')"><i class="fas fa-file-alt" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">CURRICULUM VITAE</span></button>`;
+        }
+    }
+    
+    // MEDIA
+    else if (area === 'media') {
+        titolo.textContent = 'MEDIA';
+        let foto = [];
+        try { foto = JSON.parse(cacheDatiUtente.gallery_data || '[]'); } catch(e){}
+        if (foto.length > 0) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('gallery')"><i class="fas fa-images" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">GALLERIA IMMAGINI</span></button>`;
+        }
+    }
+    
+    // NETWORK
+    else if (area === 'network') {
+        titolo.textContent = 'NETWORK';
+        if (cacheDatiUtente.sito_web) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('sito')"><i class="fas fa-globe" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">SITO WEB UFFICIALE</span></button>`;
+        }
+        
+        let canali = [];
+        try { canali = JSON.parse(cacheDatiUtente.config_canali || '[]'); } catch(e) {}
+        if (canali.length > 0) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('social')"><i class="fas fa-share-nodes" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">SOCIAL & LINK</span></button>`;
+        }
+        
+        if (cacheDatiUtente.email || cacheDatiUtente.modulo_vcf) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('contatti')"><i class="fas fa-address-card" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">RUBRICA & CONTATTI</span></button>`;
+        }
+    }
+
+    corpo.innerHTML = sottomenuHTML;
+    
+    // Innesca la cascata
+    const items = corpo.querySelectorAll('.cascade-item');
+    items.forEach((item, index) => {
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.classList.add('overlay-boot-active');
+    });
+    
+    const btnCondividiSezione = document.getElementById('btnCondividiLink');
+    if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+    overlay.classList.add('attiva');
+    history.pushState({ overlay: 'macroarea', area: area }, '');
+}
+
+// ============================================================
+// APERTURA SEZIONE INTERNA E CONTENUTI
+// ============================================================
+function apriSezione(tipo) {
+    const overlay = document.getElementById('overlaySezione');
+    const titolo  = document.getElementById('titoloSezione');
+    const corpo   = document.getElementById('corpoSezione');
+    if (!overlay || !titolo || !corpo) return;
+
+    // --- SEZIONE PDF (Apertura nativa senza toccare l'overlay) ---
+    if (tipo === 'pdf') {
+        if (cacheDatiUtente.pdf_url) window.open(cacheDatiUtente.pdf_url, '_blank', 'noopener noreferrer');
+        return;
+    }
+
+    // --- SEZIONE QR CODE (Access Tag) ---
+    if (tipo === 'qr') {
+        titolo.textContent = 'ACCESS TAG';
+        const url = `${window.location.origin}/tag.html?u=${cacheDatiUtente.username_system}`;
+        corpo.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px;">
+                <div class="qr-wrapper" id="qr-container-interno" style="width:190px !important; height:190px !important; border-radius: 20px !important; padding:10px !important; background:#fff !important;"></div>
+                <div style="font-size: 0.8rem; color: #86868b; text-align: center; line-height: 1.5;">Questo è il tuo pass digitale.<br>Inquadralo per salvare il profilo.</div>
+            </div>
+        `;
+        const qrContainer = document.getElementById('qr-container-interno');
+        new QRCode(qrContainer, { text: url, width: 170, height: 170, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+        return;
+    }
+
+    // --- SEZIONE LIVE STATUS ---
+    if (tipo === 'status') {
+        titolo.textContent = 'LIVE STATUS';
+        let colorHex = '#10b981'; let icona = '🟢';
+        if (cacheDatiUtente.live_status_color === 'yellow') { colorHex = '#f59e0b'; icona = '🟡'; }
+        if (cacheDatiUtente.live_status_color === 'red') { colorHex = '#ef4444'; icona = '🔴'; }
+        
+        corpo.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px; text-align:center;">
+                <div style="font-size: 3.5rem;">${icona}</div>
+                <div style="font-size: 1.1rem; color: ${colorHex}; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">${cacheDatiUtente.live_status_color === 'green' ? 'ONLINE' : cacheDatiUtente.live_status_color === 'yellow' ? 'BUSY' : 'OFFLINE'}</div>
+                <div style="font-size: 1rem; color: #fff; line-height: 1.6; padding: 0 10px;">${cacheDatiUtente.live_status_text || 'Attualmente online.'}</div>
+            </div>
+        `;
+        return;
+    }
+
+    // --- SEZIONE FLASH ---
+    if (tipo === 'flash') {
+        titolo.textContent = 'MQT FLASH';
+        corpo.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px; text-align:center;">
+                <i class="fas fa-bolt" style="font-size: 3rem; color: #e5c158; margin-bottom: 10px;"></i>
+                <div style="font-size: 1.05rem; color: #e5c158; font-weight: 600; line-height: 1.6; padding: 25px 20px; background: rgba(229,193,88,0.1); border: 1px solid rgba(229,193,88,0.3); border-radius: 16px; width: 100%;">
+                    ${cacheDatiUtente.flash_text}
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    // --- SEZIONE GALLERY ---
+    if (tipo === 'gallery') {
+        titolo.textContent = 'GALLERY';
+        corpo.innerHTML = '';
+        let arrayFoto = [];
+        try { arrayFoto = JSON.parse(cacheDatiUtente.gallery_data || '[]'); } catch(e) {}
+
+        if (arrayFoto.length === 0) {
+            corpo.textContent = 'Nessuna immagine presente nella galleria.';
+        } else {
+            const griglia = document.createElement('div');
+            griglia.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin-top: 10px;';
+            
+            arrayFoto.forEach(url => {
+                const imgDiv = document.createElement('div');
+                imgDiv.style.cssText = `
+                    width: 100%; aspect-ratio: 1; border-radius: 12px;
+                    background-image: url('${url}'); background-size: cover; background-position: center;
+                    border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer;
+                `;
+                imgDiv.onclick = () => window.open(url, '_blank');
+                griglia.appendChild(imgDiv);
+            });
+            corpo.appendChild(griglia);
+        }
+        return;
+    }
 
     // --- SEZIONE SITO WEB ---
     if (tipo === 'sito') {
@@ -1026,7 +1061,6 @@ function apriSezione(tipo) {
         corpo.innerHTML = '';
 
         const urlSito = cacheDatiUtente.sito_web || '';
-        // Estrae il dominio pulito senza protocollo per l'estetica luxury (es. google.com)
         const dominioPulito = urlSito.replace(/https?:\/\/(www\.)?/, '').split('/')[0];
 
         if (!urlSito) {
@@ -1058,9 +1092,6 @@ function apriSezione(tipo) {
 
         const btnCondividiSezione = document.getElementById('btnCondividiLink');
         if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
-
-        overlay.classList.add('attiva');
-        history.pushState({ overlay: 'sezione', tipo: 'sito' }, '');
         return;
     }
 
@@ -1076,9 +1107,6 @@ function apriSezione(tipo) {
             vcf = typeof raw === 'object' ? raw : JSON.parse(raw || '{}');
         } catch(e) {}
 
-        console.log('piano:', piano);
-        console.log('vcf:', vcf);
-
         const email = cacheDatiUtente.email || vcf.email1 || '';
         const tel1 = vcf.telefono1 || '';
         const tel2 = vcf.telefono2 || '';
@@ -1086,12 +1114,10 @@ function apriSezione(tipo) {
         const indirizzo = vcf.indirizzo || '';
         const piva = vcf.piva || '';
 
-        // Campi BASE — tutti i piani
         const campiBase = [];
         if (tel1) campiBase.push({ icona: 'fas fa-phone', label: tel1, azione: `tel:${tel1}`, copia: tel1 });
         if (email) campiBase.push({ icona: 'fas fa-envelope', label: email, azione: `mailto:${email}`, copia: email });
 
-        // Campi PREMIUM/GOLD
         const campiPremium = [];
         if (tel2) campiPremium.push({ icona: 'fas fa-phone', label: tel2, azione: `tel:${tel2}`, copia: tel2 });
         if (email2) campiPremium.push({ icona: 'fas fa-envelope', label: email2, azione: `mailto:${email2}`, copia: email2 });
@@ -1141,9 +1167,6 @@ function apriSezione(tipo) {
 
         const btnCondividiSezione = document.getElementById('btnCondividiLink');
         if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
-
-        overlay.classList.add('attiva');
-        history.pushState({ overlay: 'sezione', tipo: 'contatti' }, '');
         return;
     }
 
@@ -1169,7 +1192,6 @@ function apriSezione(tipo) {
 
                 const link = document.createElement('a');
                 
-                // Intercettazione del link per i canali protetti
                 if (isVip) {
                     link.href = "#";
                     link.onclick = (e) => apriVipVault(canale.url, canale.pin, e);
@@ -1199,18 +1221,13 @@ function apriSezione(tipo) {
 
         const btnCondividiSezione = document.getElementById('btnCondividiLink');
         if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
-
-        overlay.classList.add('attiva');
-        history.pushState({ overlay: 'sezione', tipo: 'social' }, '');
         return;
     }
 
-    // --- ALTRE SEZIONI TESTUALI (BIO, GALLERY, CV) ---
+    // --- ALTRE SEZIONI TESTUALI (BIO E CV) ---
     const contenuti = {
         'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
-        'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' },
-        'gallery':  { t: 'Gallery',          c: cacheDatiUtente.gallery  || 'Gallery non ancora configurata.' },
-        'futuro':   { t: 'Coming Soon',      c: 'Questo spazio sarà presto disponibile.' }
+        'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' }
     };
 
     if (!contenuti[tipo]) return;
@@ -1222,123 +1239,90 @@ function apriSezione(tipo) {
     if (btnCondividiSezione) {
         btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
     }
-
-    overlay.classList.add('attiva');
-    history.pushState({ overlay: 'sezione', tipo: tipo }, '');
 }
+
 // ============================================================
 // CHIUSURA OVERLAY SEZIONE
 // ============================================================
 function chiudiSezione() {
     const overlay = document.getElementById('overlaySezione');
     if (overlay) overlay.classList.remove('attiva');
-    // Rimuove lo stato dalla history se presente
-    if (history.state && history.state.overlay === 'sezione') {
+    if (history.state && (history.state.overlay === 'sezione' || history.state.overlay === 'macroarea')) {
         history.back();
     }
 }
-       // ============================================================
-// GESTIONE TASTO BACK — intercetta popstate per chiudere overlay
+
+// ============================================================
+// GESTIONE TASTO BACK (Popstate)
 // ============================================================
 window.addEventListener('popstate', (e) => {
-    // Overlay sezione interno aperto → chiudilo
     const overlaySezione = document.getElementById('overlaySezione');
     if (overlaySezione && overlaySezione.classList.contains('attiva')) {
         overlaySezione.classList.remove('attiva');
         return;
     }
 
-    // Overlay acquisto aperto → chiudilo
     const overlayAcquisto = document.getElementById('showroom-overlay');
     if (overlayAcquisto && overlayAcquisto.style.display === 'flex') {
         overlayAcquisto.style.display = 'none';
         return;
     }
 
-    // Welcome overlay aperto → chiudilo
     const welcomeOverlay = document.getElementById('tag-welcome-overlay');
     if (welcomeOverlay && welcomeOverlay.style.display === 'flex') {
         welcomeOverlay.style.display = 'none';
         return;
     }
 });
-       
 
 // ============================================================
-// CONDIVIDI PROFILO COMPLETO (bottone nella smart card)
+// CONDIVISIONE, TOAST E CHECKOUT
 // ============================================================
 function condividiProfilo(event) {
     if (event) event.stopPropagation();
-
-    // Se la tag non è attiva, blocca la condivisione
     const stato = (cacheDatiUtente.stato || '').toLowerCase().trim();
     if (stato === 'in attesa') {
         mostraToast('Attiva la tua tag per condividerla');
         return;
     }
-
     const url = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
     const nome = cacheDatiUtente.username_display || usernameCorrente;
-
     _condividi('myquicktag di @' + nome, url);
 }
-// ============================================================
-// CONDIVIDI SEZIONE SINGOLA (bottone nell'overlay interno)
-// ============================================================
+
 function condividiSezione() {
     const titolo = document.getElementById('titoloSezione').textContent;
     const url = `${window.location.origin}/tag.html?u=${usernameCorrente}&sezione=${encodeURIComponent(titolo)}`;
-
     _condividi('MyQuickTag - ' + titolo, url);
 }
 
-// ============================================================
-// HELPER CONDIVISIONE UNIVERSALE
-// Web Share API su mobile, clipboard su desktop
-// ============================================================
 function _condividi(titolo, url) {
     if (navigator.share) {
-        navigator.share({
-            title: titolo,
-            url: url
-        }).catch(err => {
-            // L'utente ha annullato — non è un errore reale
+        navigator.share({ title: titolo, url: url }).catch(err => {
             if (err.name !== 'AbortError') console.error("Errore condivisione:", err);
         });
     } else {
-        // Fallback desktop: copia negli appunti
         navigator.clipboard.writeText(url)
             .then(() => mostraToast('🔗 Link copiato!'))
             .catch(() => mostraToast('Errore nella copia del link'));
     }
 }
 
-// ============================================================
-// TOAST NOTIFICATION
-// ============================================================
 function mostraToast(messaggio) {
     const toast = document.getElementById('toastNotifica');
     if (!toast) return;
-
     toast.textContent = messaggio;
     toast.classList.add('mostra');
-
     setTimeout(() => toast.classList.remove('mostra'), 2800);
 }
 
-// ============================================================
-// VAI AL CHECKOUT
-// ============================================================
 function vaiAlCheckout() {
     window.location.href = `/checkout.html?u=${usernameCorrente}`;
 }
+
 async function pubblicaBozza() {
-    console.log('pubblicaBozza chiamata');
-    console.log('cacheDatiUtente.draft_json:', cacheDatiUtente.draft_json); 
     try {
         const bozza = JSON.parse(cacheDatiUtente.draft_json || '{}');
-        
-        // Copia i campi della bozza nei campi reali e svuota draft_json
         const response = await fetch('/api/update-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1350,13 +1334,9 @@ async function pubblicaBozza() {
         });
 
         const data = await response.json();
-
         if (data.success) {
             mostraToast('Tag pubblicata');
-            // Torna alla tag in modalità pubblica
-            setTimeout(() => {
-                window.location.href = `/tag.html?u=${usernameCorrente}`;
-            }, 1500);
+            setTimeout(() => { window.location.href = `/tag.html?u=${usernameCorrente}`; }, 1500);
         } else {
             mostraToast('Errore durante la pubblicazione');
         }
@@ -1366,9 +1346,6 @@ async function pubblicaBozza() {
     }
 }
 
-// ============================================================
-// CHIUDI WELCOME E MOSTRA TAG (post attivazione)
-// ============================================================
 function chiudiWelcomeEMostraTag() {
     const welcome = document.getElementById('tag-welcome-overlay');
     if (welcome) welcome.style.display = 'none';
@@ -1376,38 +1353,26 @@ function chiudiWelcomeEMostraTag() {
     if (container) container.classList.add('ready');
     document.body.style.overflow = 'auto';
 }
-       // ============================================================
-// TAG.HTML - BLOCCO 4: INSTALLAZIONE PWA
-// ============================================================
 
-// --- VARIABILE GLOBALE per l'evento di installazione ---
+// ============================================================
+// INSTALLAZIONE PWA E SERVICE WORKER
+// ============================================================
 let pwaInstallEvent = null;
 
-// ============================================================
-// INTERCETTA L'EVENTO DI INSTALLAZIONE
-// Il browser lo lancia quando la PWA è installabile
-// ============================================================
 window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); // Blocca il banner automatico del browser
-    pwaInstallEvent = e; // Lo salviamo per usarlo quando vogliamo noi
-
-    // Mostra il bottone di installazione se presente nella pagina
+    e.preventDefault(); 
+    pwaInstallEvent = e; 
     const btnInstall = document.getElementById('trigger-pwa-install');
     if (btnInstall) btnInstall.style.display = 'block';
 });
 
-// ============================================================
-// INSTALLAZIONE PWA — chiamata dal bottone nel welcome overlay
-// ============================================================
 async function installaPWA() {
-    // iOS — nessun beforeinstallprompt, mostra istruzioni manuali
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     if (isIOS) {
         mostraIstruzioniIOS();
         return;
     }
 
-    // Android/Chrome — evento disponibile
     if (pwaInstallEvent) {
         try {
             pwaInstallEvent.prompt();
@@ -1424,76 +1389,45 @@ async function installaPWA() {
         }
         return;
     }
-    // Android ma evento non disponibile — app già installata o browser non supportato
     mostraToast('Apri dal browser Chrome per installare');
 }
 
-// ============================================================
-// ISTRUZIONI MANUALI PER iOS
-// Safari non supporta beforeinstallprompt
-// ============================================================
 function mostraIstruzioniIOS() {
     const overlay = document.getElementById('tag-welcome-overlay');
     if (!overlay) return;
-
     const corpo = document.getElementById('welcome-corpo');
     if (corpo) corpo.innerHTML = 'Tocca <strong>Condividi</strong> in basso nel browser,<br>poi <strong>"Aggiungi a schermata Home"</strong>.';
-
     const btn = document.getElementById('trigger-pwa-install');
     if (btn) btn.style.display = 'none';
-
     overlay.style.display = 'flex';
 }
-// ============================================================
-// REGISTRAZIONE SERVICE WORKER
-// Necessaria per il funzionamento offline della PWA
-// ============================================================
+
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
-            .then(reg => {
-                console.log('Service Worker registrato:', reg.scope);
-            })
-            .catch(err => {
-                console.error('Errore registrazione Service Worker:', err);
-            });
+            .then(reg => { console.log('Service Worker registrato:', reg.scope); })
+            .catch(err => { console.error('Errore registrazione Service Worker:', err); });
     });
 }
 
-// ============================================================
-// RILEVA SE L'APP È GIÀ INSTALLATA
-// Se l'utente ha già installato la PWA, nasconde il bottone
-// ============================================================
 window.addEventListener('appinstalled', () => {
     pwaInstallEvent = null;
     mostraToast('myquicktag installata');
 });
-      
 
-// ============================================================
-// MOSTRA WELCOME OVERLAY
-// ============================================================
 function mostraWelcomeOverlay() {
-       // Rimuove &welcome=1 dall'URL senza ricaricare la pagina
-    // Così se l'utente ricarica non rivede il welcome
     const urlPulita = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
     window.history.replaceState({}, '', urlPulita);
     
     const overlay = document.getElementById('tag-welcome-overlay');
     if (!overlay) return;
 
-    // Personalizza il messaggio con il nome utente
     const nome = cacheDatiUtente.username_display || usernameCorrente;
     const titoloEl = overlay.querySelector('.titolo-sezione');
-  if (titoloEl) titoloEl.textContent = '@' + nome.replace('@', '') + ' è attiva'; 
+    if (titoloEl) titoloEl.textContent = '@' + nome.replace('@', '') + ' è attiva'; 
 
-    // Mostra l'overlay
     overlay.style.display = 'flex';
-
-
 }
-
-
-   </script>       
+</script>     
 </body>
 </html>
