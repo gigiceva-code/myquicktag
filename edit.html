@@ -1398,13 +1398,13 @@
             }
         });
 
-        // ============================================================
+       // ============================================================
         // 4. PROTEZIONE EXTRA SUL BROWSER (Chiusura scheda / Refresh)
         // ============================================================
-        window.addEventListener('beforeunload', function (e) {
+        window.onbeforeunload = function (e) {
             e.preventDefault();
             e.returnValue = ''; 
-        });
+        };
         function chiudiModalQR(event) {
             if (!event || event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
                 document.getElementById('modal-qr').classList.remove('active');
@@ -2255,9 +2255,11 @@
                     conteggioTap++;
                     tempoUltimoTap = adesso;
 
-                    // Al terzo tap ricarica la pagina
+                   // Al terzo tap ricarica la pagina in sicurezza
                     if (conteggioTap >= 3) {
                         conteggioTap = 0;
+                        window.onbeforeunload = null; // Spegne l'allarme anti-fuga!
+                        
                         const url = new URL(window.location.href); 
                         url.searchParams.set('ts', adesso); 
                         window.location.href = url.toString();
