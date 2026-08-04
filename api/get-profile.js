@@ -17,18 +17,12 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (data.records && data.records.length > 0) {
-      const airtableFields = data.records[0].fields;
-      
       // Creiamo l'oggetto finale da mandare al frontend partendo dai campi nativi
-    if (data.records && data.records.length > 0) {
-    const airtableFields = data.records[0].fields;
-    
-    return res.status(200).json({
+      return res.status(200).json({
         success: true,
         id: data.records[0].id,
-        fields: airtableFields
-    });
-}
+        fields: data.records[0].fields
+      });
     } else {
       return res.status(404).json({ success: false, error: "Profilo non trovato" });
     }
