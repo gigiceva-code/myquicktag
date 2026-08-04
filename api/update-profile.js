@@ -18,45 +18,54 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-// 2. Definizione Campi Nativi
-const fieldsToSave = {};
-const nativeFields = [
-  "username_display", "bio", "plan", "digital_style", "stato", 
-  "password", "email", "modulo_vcf", "sito_web", 
-  "quick_action_tipo", "quick_action_url", "draft_json", "sedi_json" 
-];
-nativeFields.forEach(f => {
-  if (body[f] !== undefined) {
-    if (typeof body[f] === 'string') {
-    let valueClean = f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' 
-    ? body[f].trim() 
-    : body[f].replace(/['"]+/g, '').trim(); 
-      if (f === 'draft_json' || valueClean !== "") {
-        if (f === "digital_style") {
-          const upper = valueClean.toUpperCase();
-          if (upper === "BLACK" || upper === "BLACK DNA") valueClean = "BLACK DNA";
-          else if (upper === "TITANIUM") valueClean = "TITANIUM";
-          else if (upper === "OBSIDIAN" || upper === "OBSIDIAN GOLD") valueClean = "OBSIDIAN GOLD";
-        }
-        if (f === "plan") valueClean = valueClean.toUpperCase();
-        if (f === "stato") valueClean = valueClean.toLowerCase();
-        if (f === "quick_action_tipo") valueClean = valueClean.toLowerCase();
-        fieldsToSave[f] = valueClean;
-      }
-    } else {
-      if (f === 'modulo_vcf' && typeof body[f] === 'object') {
-        fieldsToSave[f] = JSON.stringify(body[f]);
-      } else {
-        fieldsToSave[f] = body[f];
-      }
-    }
-  }
-});
+    // 2. Definizione Campi Nativi (LISTA VIP AGGIORNATA AL MILLIMETRO)
+    const fieldsToSave = {};
+    const nativeFields = [
+      "username_display", "bio", "plan", "digital_style", "digital_layout", "stato", 
+      "password", "email", "modulo_vcf", "sito_web", 
+      "quick_action_tipo", "quick_action_label", "quick_action_url", "avatar_url",
+      "live_status_color", "live_status_text", 
+      "flash_text", "flash_expiry", 
+      "pdf_label", "pdf_url", 
+      "gallery_data", "draft_json", "sedi_json" 
+    ];
 
-// 3. config_canali — usa quello inviato dal client se presente
-if (body.config_canali !== undefined) {
-  fieldsToSave.config_canali = body.config_canali;
-}
+    nativeFields.forEach(f => {
+      if (body[f] !== undefined) {
+        if (typeof body[f] === 'string') {
+          // Non distruggere i campi che contengono JSON o array testuali
+          let valueClean = f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data'
+          ? body[f].trim() 
+          : body[f].replace(/['"]+/g, '').trim(); 
+          
+          if (f === 'draft_json' || valueClean !== "") {
+            if (f === "digital_style") {
+              const upper = valueClean.toUpperCase();
+              if (upper === "BLACK" || upper === "BLACK DNA") valueClean = "BLACK DNA";
+              else if (upper === "TITANIUM") valueClean = "TITANIUM";
+              else if (upper === "OBSIDIAN" || upper === "OBSIDIAN GOLD") valueClean = "OBSIDIAN GOLD";
+            }
+            if (f === "plan") valueClean = valueClean.toUpperCase();
+            if (f === "stato") valueClean = valueClean.toLowerCase();
+            if (f === "quick_action_tipo") valueClean = valueClean.toLowerCase();
+            
+            fieldsToSave[f] = valueClean;
+          }
+        } else {
+          if (f === 'modulo_vcf' && typeof body[f] === 'object') {
+            fieldsToSave[f] = JSON.stringify(body[f]);
+          } else {
+            fieldsToSave[f] = body[f];
+          }
+        }
+      }
+    });
+
+    // 3. config_canali — usa quello inviato dal client se presente
+    if (body.config_canali !== undefined) {
+      fieldsToSave.config_canali = typeof body.config_canali === 'object' ? JSON.stringify(body.config_canali) : body.config_canali;
+    }
+
     if (data.records && data.records.length > 0) {
       // --- LOGICA UPDATE ---
       const recordId = data.records[0].id;
@@ -78,7 +87,7 @@ if (body.config_canali !== undefined) {
     } else {
       // --- LOGICA CREATE ---
       fieldsToSave.username_system = username_system;
-      if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa"; // Default tutto minuscolo coerente con Airtable
+      if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa";
       fieldsToSave.views = 0;
 
       const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
