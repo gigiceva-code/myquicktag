@@ -1309,7 +1309,7 @@
             void el.offsetHeight; 
         }
 // ============================================================
-        // MOTORE CASSETTI E CRONOLOGIA (VERSIONE DEFINITIVA ANTI-BLOCCO)
+        // MOTORE CASSETTI E CRONOLOGIA (VERSIONE ANTI-COMA BROWSER)
         // ============================================================
         function apriDrawer(idDrawer) {
             // --- BLOCCO SICUREZZA INTELLIGENTE ---
@@ -1324,31 +1324,33 @@
             }
             // -------------------------------------
 
-            // 1. Spegne tutti i cassetti aperti
+            // 1. Guarda con i suoi occhi se c'è GIA' un cassetto aperto
+            const cassettoGiaAperto = document.querySelector('.drawer-glass.open') !== null;
+
+            // 2. Spegne tutti i cassetti per sicurezza
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             
             const drawer = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
 
-            // 2. Accende l'ombra
+            // 3. Accende l'ombra e alza il cassetto
             if (backdrop) backdrop.classList.add('active');
-            
-            // 3. LA CURA: Un micro-respiro di 10 millisecondi. 
-            // Separa i comandi e obbliga il telefono ad alzare il nuovo cassetto
             if (drawer) {
                 setTimeout(() => {
                     drawer.classList.add('open');
                 }, 10);
             }
 
-            // 4. Gestisce la cronologia in sicurezza
-            if (!isDrawerOpen) {
-                isDrawerOpen = true;
+            // 4. Salva nella cronologia SOLO se stavamo partendo da tutto chiuso
+            if (!cassettoGiaAperto) {
                 try { history.pushState({ modal: true }, "", ""); } catch(e) {}
             }
         }
 
         function chiudiSenzaSalvare(fromHistory = false) {
+            // Guarda se c'è fisicamente un cassetto aperto
+            const cassettoGiaAperto = document.querySelector('.drawer-glass.open') !== null;
+
             // Chiude le porte
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             const backdrop = document.getElementById('drawer-backdrop');
@@ -1358,21 +1360,32 @@
                 setTimeout(() => backdrop.classList.remove('active'), 300);
             }
 
-            // Torna indietro nella cronologia
-            if (isDrawerOpen && !fromHistory) {
-                isDrawerOpen = false; 
+            // Torna indietro nella cronologia SOLO se c'era davvero un cassetto da chiudere
+            // e SOLO se il comando arriva dal bottone sullo schermo
+            if (cassettoGiaAperto && !fromHistory) {
                 try { history.back(); } catch(e) {}
-            } else { 
-                isDrawerOpen = false; 
             }
         }
-      // ============================================================
-        // MOTORE DI ASCOLTO TASTO INDIETRO (ANDROID BACK BUTTON)
+
         // ============================================================
+        // ASCOLTATORI DI SICUREZZA (TASTO ANDROID E RISVEGLIO)
+        // ============================================================
+        
+        // 1. Intercetta il Tasto Indietro del telefono
         window.addEventListener('popstate', function (event) {
-            // Se l'utente preme indietro e il cassetto è aperto, lo chiudiamo
-            if (isDrawerOpen) {
+            const cassettoGiaAperto = document.querySelector('.drawer-glass.open') !== null;
+            if (cassettoGiaAperto) {
                 chiudiSenzaSalvare(true); 
+            }
+        });
+
+        // 2. IL SALVAVITA: Se il telefono congela la pagina e poi la riapre, 
+        // forza la chiusura visiva di tutto per scongiurare il blocco!
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+                const backdrop = document.getElementById('drawer-backdrop');
+                if (backdrop) backdrop.classList.remove('active');
             }
         });
         function apriModalQR() {
