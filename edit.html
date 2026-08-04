@@ -1309,10 +1309,11 @@
             void el.offsetHeight; 
         }
 // ============================================================
-        // MOTORE CASSETTI E CRONOLOGIA (VERSIONE ANTI-COMA BROWSER)
+        // MOTORE CASSETTI INFALLIBILE (SISTEMA AD ANCORA URL '#menu')
         // ============================================================
+        
         function apriDrawer(idDrawer) {
-            // --- BLOCCO SICUREZZA INTELLIGENTE ---
+            // --- BLOCCO SICUREZZA ---
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery'];
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
@@ -1322,80 +1323,63 @@
                 alert("Questa funzione richiede il piano PREMIUM 🚀.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
                 return;
             }
-            // -------------------------------------
+            // ------------------------
 
-            // 1. Guarda con i suoi occhi se c'è GIA' un cassetto aperto
-            const cassettoGiaAperto = document.querySelector('.drawer-glass.open') !== null;
-
-            // 2. Spegne tutti i cassetti per sicurezza
+            // 1. Spegne fisicamente tutti i cassetti
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             
             const drawer = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
 
-            // 3. Accende l'ombra e alza il cassetto
+            // 2. Accende l'ombra e apre il cassetto
             if (backdrop) backdrop.classList.add('active');
             if (drawer) {
-                setTimeout(() => {
-                    drawer.classList.add('open');
-                }, 10);
+                setTimeout(() => { drawer.classList.add('open'); }, 10);
             }
 
-            // 4. Salva nella cronologia SOLO se stavamo partendo da tutto chiuso
-            if (!cassettoGiaAperto) {
-                try { history.pushState({ modal: true }, "", ""); } catch(e) {}
+            // 3. LA MAGIA: Aggiungiamo #menu all'indirizzo del sito senza ricaricare
+            if (window.location.hash !== '#menu') {
+                history.pushState(null, null, '#menu');
             }
         }
 
-        function chiudiSenzaSalvare(fromHistory = false) {
-            // Guarda se c'è fisicamente un cassetto aperto
-            const cassettoGiaAperto = document.querySelector('.drawer-glass.open') !== null;
+        function chiudiSenzaSalvare() {
+            // Se l'indirizzo ha #menu, diciamo al telefono di fare un passo indietro.
+            // Questo farà sparire il #menu e lancerà la chiusura grafica in automatico!
+            if (window.location.hash === '#menu') {
+                history.back(); 
+            } else {
+                eseguiChiusuraGrafica();
+            }
+        }
 
-            // Chiude le porte
+        // Il "Vigile Urbano" che esegue lo spegnimento fisico delle luci
+        function eseguiChiusuraGrafica() {
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             const backdrop = document.getElementById('drawer-backdrop');
-            
-            // Spegne l'ombra in modo morbido
             if (backdrop) {
                 setTimeout(() => backdrop.classList.remove('active'), 300);
             }
-
-            // Torna indietro nella cronologia SOLO se c'era davvero un cassetto da chiudere
-            // e SOLO se il comando arriva dal bottone sullo schermo
-            if (cassettoGiaAperto && !fromHistory) {
-                try { history.back(); } catch(e) {}
-            }
         }
 
         // ============================================================
-        // ASCOLTATORI DI SICUREZZA (TASTO ANDROID E RISVEGLIO)
+        // ASCOLTATORI DI SICUREZZA (ANTI-COMA ANDROID)
         // ============================================================
         
-        // 1. Intercetta il Tasto Indietro del telefono
-        window.addEventListener('popstate', function (event) {
-            const cassettoGiaAperto = document.querySelector('.drawer-glass.open') !== null;
-            if (cassettoGiaAperto) {
-                chiudiSenzaSalvare(true); 
+        // 1. Intercetta il Tasto Indietro FISICO del telefono
+        window.addEventListener('popstate', function () {
+            // Se l'URL perde l'ancora #menu, significa che dobbiamo chiudere tutto
+            if (window.location.hash !== '#menu') {
+                eseguiChiusuraGrafica();
             }
         });
 
-        // 2. IL SALVAVITA: Se il telefono congela la pagina e poi la riapre, 
-        // forza la chiusura visiva di tutto per scongiurare il blocco!
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
-                const backdrop = document.getElementById('drawer-backdrop');
-                if (backdrop) backdrop.classList.remove('active');
+        // 2. Il Salvavita: Se rientri nell'app dopo che era andata in "Coma"
+        window.addEventListener('pageshow', function() {
+            if (window.location.hash !== '#menu') {
+                eseguiChiusuraGrafica();
             }
         });
-        function apriModalQR() {
-            const m = document.getElementById('modal-qr');
-            if(m) {
-                m.classList.add('active');
-                if(!isDrawerOpen) { history.pushState({ modal: true }, "", ""); isDrawerOpen = true; }
-            }
-        }
-
         function chiudiModalQR(event) {
             if (!event || event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
                 document.getElementById('modal-qr').classList.remove('active');
