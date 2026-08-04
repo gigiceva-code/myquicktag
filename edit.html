@@ -1308,7 +1308,7 @@
             void el.offsetHeight; 
         }
 // ============================================================
-        // MOTORE CASSETTI E CRONOLOGIA (VERSIONE CORAZZATA)
+        // MOTORE CASSETTI E CRONOLOGIA (VERSIONE DEFINITIVA ANTI-BLOCCO)
         // ============================================================
         function apriDrawer(idDrawer) {
             // --- BLOCCO SICUREZZA INTELLIGENTE ---
@@ -1323,20 +1323,24 @@
             }
             // -------------------------------------
 
-            // 1. Spegne tutto per sicurezza
+            // 1. Spegne tutti i cassetti aperti
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             
             const drawer = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
 
-            // 2. Accende l'ombra e forza l'animazione del cassetto
+            // 2. Accende l'ombra
             if (backdrop) backdrop.classList.add('active');
+            
+            // 3. LA CURA: Un micro-respiro di 10 millisecondi. 
+            // Separa i comandi e obbliga il telefono ad alzare il nuovo cassetto
             if (drawer) {
-                void drawer.offsetWidth; // Trucco da maestro: forza il browser a resettare il CSS incantato
-                drawer.classList.add('open');
+                setTimeout(() => {
+                    drawer.classList.add('open');
+                }, 10);
             }
 
-            // 3. Gestisce la cronologia senza bloccare il sistema
+            // 4. Gestisce la cronologia in sicurezza
             if (!isDrawerOpen) {
                 isDrawerOpen = true;
                 try { history.pushState({ modal: true }, "", ""); } catch(e) {}
@@ -1344,15 +1348,16 @@
         }
 
         function chiudiSenzaSalvare(fromHistory = false) {
-            // 1. Chiude le porte e spegne l'ombra istantaneamente
+            // Chiude le porte
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             const backdrop = document.getElementById('drawer-backdrop');
             
+            // Spegne l'ombra in modo morbido
             if (backdrop) {
-                backdrop.classList.remove('active'); 
+                setTimeout(() => backdrop.classList.remove('active'), 300);
             }
 
-            // 2. Torna indietro in sicurezza
+            // Torna indietro nella cronologia
             if (isDrawerOpen && !fromHistory) {
                 isDrawerOpen = false; 
                 try { history.back(); } catch(e) {}
@@ -1360,7 +1365,6 @@
                 isDrawerOpen = false; 
             }
         }
-       
         function apriModalQR() {
             const m = document.getElementById('modal-qr');
             if(m) {
