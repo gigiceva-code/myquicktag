@@ -1309,11 +1309,24 @@
             void el.offsetHeight; 
         }
 // ============================================================
-        // MOTORE CASSETTI INFALLIBILE (SISTEMA AD ANCORA URL '#menu')
+        // MOTORE CASSETTI E SISTEMA ANTI-FUGA (LIVELLO ENTERPRISE)
         // ============================================================
         
+        // 1. INIZIALIZZAZIONE DELLA TRAPPOLA (Appena si carica la pagina)
+        window.addEventListener('load', function() {
+            // Pulisce l'URL da eventuali residui
+            if (window.location.hash) {
+                history.replaceState(null, null, window.location.pathname);
+            }
+            // Mette le fondamenta nella cronologia (Piano Terra)
+            history.replaceState({ level: 'base' }, "", "");
+            // Aggiunge un piano finto per bloccare e intercettare il tasto indietro
+            history.pushState({ level: 'editor_attivo' }, "", "");
+        });
+
+        // 2. FUNZIONI DI APERTURA E CHIUSURA
         function apriDrawer(idDrawer) {
-            // --- BLOCCO SICUREZZA ---
+            // --- BLOCCO SICUREZZA INTELLIGENTE ---
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery'];
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
@@ -1323,29 +1336,27 @@
                 alert("Questa funzione richiede il piano PREMIUM 🚀.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
                 return;
             }
-            // ------------------------
+            // -------------------------------------
 
-            // 1. Spegne fisicamente tutti i cassetti
+            // Spegne fisicamente tutti i cassetti aperti
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             
             const drawer = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
 
-            // 2. Accende l'ombra e apre il cassetto
             if (backdrop) backdrop.classList.add('active');
             if (drawer) {
                 setTimeout(() => { drawer.classList.add('open'); }, 10);
             }
 
-            // 3. LA MAGIA: Aggiungiamo #menu all'indirizzo del sito senza ricaricare
+            // Aggiunge l'ancora all'URL solo se non c'è già
             if (window.location.hash !== '#menu') {
-                history.pushState(null, null, '#menu');
+                history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
             }
         }
 
         function chiudiSenzaSalvare() {
-            // Se l'indirizzo ha #menu, diciamo al telefono di fare un passo indietro.
-            // Questo farà sparire il #menu e lancerà la chiusura grafica in automatico!
+            // Se l'indirizzo ha #menu, ordiniamo ad Android di fare un passo indietro
             if (window.location.hash === '#menu') {
                 history.back(); 
             } else {
@@ -1353,7 +1364,7 @@
             }
         }
 
-        // Il "Vigile Urbano" che esegue lo spegnimento fisico delle luci
+        // Il braccio operativo che spegne visivamente i cassetti
         function eseguiChiusuraGrafica() {
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             const backdrop = document.getElementById('drawer-backdrop');
@@ -1363,22 +1374,36 @@
         }
 
         // ============================================================
-        // ASCOLTATORI DI SICUREZZA (ANTI-COMA ANDROID)
+        // 3. IL CERVELLO CHE ASCOLTA IL TASTO FISICO ANDROID
         // ============================================================
-        
-        // 1. Intercetta il Tasto Indietro FISICO del telefono
-        window.addEventListener('popstate', function () {
-            // Se l'URL perde l'ancora #menu, significa che dobbiamo chiudere tutto
+        window.addEventListener('popstate', function (event) {
+            
+            // CASO A: Ha premuto indietro per chiudere un cassetto
             if (window.location.hash !== '#menu') {
                 eseguiChiusuraGrafica();
+            }
+
+            // CASO B: Ha premuto indietro dal Piano Terra (Vuole uscire o lo ha fatto per sbaglio)
+            if (event.state && event.state.level === 'base') {
+                // 1. Lo ributtiamo subito dentro l'editor per evitare che finisca nella pagina buggata
+                history.pushState({ level: 'editor_attivo' }, "", "");
+                
+                // 2. Facciamo scattare l'allarme
+                const conferma = confirm("⚠️ ATTENZIONE\n\nSei sicuro di voler uscire dall'editor? Le modifiche non salvate andranno perse.");
+                
+                if (conferma) {
+                    // Se dice sì, lo facciamo uscire definitivamente scavalcando la trappola
+                    window.history.go(-2); 
+                }
             }
         });
 
-        // 2. Il Salvavita: Se rientri nell'app dopo che era andata in "Coma"
-        window.addEventListener('pageshow', function() {
-            if (window.location.hash !== '#menu') {
-                eseguiChiusuraGrafica();
-            }
+        // ============================================================
+        // 4. PROTEZIONE EXTRA SUL BROWSER (Chiusura scheda / Refresh)
+        // ============================================================
+        window.addEventListener('beforeunload', function (e) {
+            e.preventDefault();
+            e.returnValue = ''; 
         });
         function chiudiModalQR(event) {
             if (!event || event.target.id === 'modal-qr' || event.target.classList.contains('qr-close-btn')) {
