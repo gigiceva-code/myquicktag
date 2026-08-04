@@ -2020,127 +2020,146 @@
 
                   
         
-            async function salvaDati(azioneRedirect = null) {
-    if(NOME_SISTEMA === "tuonome.it") return; 
+       // ============================================================
+        // MOTORE DI SALVATAGGIO (OTTIMIZZATO E BLINDATO)
+        // ============================================================
 
-    // --- Raccoglie tutti gli input ---
-        const sitoInput = document.getElementById('field-sito');
-    let sitoVal = "";
-    if (sitoInput) {
-        sitoVal = sitoInput.value.trim();
-        if (sitoVal !== "") {
-            // 1. Controllo Anti-Social (Che hai già)
-            const socials = ['instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'x.com', 'twitter.com', 'youtube.com', 'wa.me', 't.me', 'spotify.com', 'tripadvisor', 'thefork', 'onlyfans.com', 'github.com', 'twitch.tv', 'strava.com', 'pinterest.com', 'discord.com', 'discord.gg', 'snapchat.com', 'threads.net', 'calendly.com', 'patreon.com', 'behance.net', 'dribbble.com', 'vimeo.com', 'reddit.com', 'medium.com', 'soundcloud.com', 'apple.com/it/music'];
-            const lowerSito = sitoVal.toLowerCase();
-            let isSocial = false;
-            for (let s of socials) { if (lowerSito.includes(s)) { isSocial = true; break; } }
-            if (isSocial) { alert("⚠️ AZIONE NON CONSENTITA\nHai incollato un link Social nel modulo 'SITO WEB'..."); sitoInput.value = ""; sitoVal = ""; }
+        // Questa funzione raccoglie i dati dallo schermo e crea il pacchetto JSON
+        function raccogliDatiDalForm() {
+            const sitoInput = document.getElementById('field-sito');
+            let sitoVal = sitoInput ? sitoInput.value.trim() : "";
+
+            if (sitoInput && sitoVal !== "") {
+                const socials = ['instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'x.com', 'twitter.com', 'youtube.com', 'wa.me', 't.me', 'spotify.com', 'tripadvisor', 'thefork', 'onlyfans.com', 'github.com', 'twitch.tv', 'strava.com', 'pinterest.com', 'discord.com', 'discord.gg', 'snapchat.com', 'threads.net', 'calendly.com', 'patreon.com', 'behance.net', 'dribbble.com', 'vimeo.com', 'reddit.com', 'medium.com', 'soundcloud.com', 'apple.com/it/music'];
+                const lowerSito = sitoVal.toLowerCase();
+                let isSocial = false;
+                for (let s of socials) { if (lowerSito.includes(s)) { isSocial = true; break; } }
+                if (isSocial) { alert("⚠️ AZIONE NON CONSENTITA\nHai incollato un link Social nel modulo 'SITO WEB'..."); sitoInput.value = ""; sitoVal = ""; }
+                
+                if (sitoVal.includes('@') || lowerSito.startsWith('mailto:')) {
+                    alert("⚠️ AZIONE NON CONSENTITA\nHai inserito un indirizzo Email nel modulo 'SITO WEB'.\nPer le email, usa l'apposito campo nel cassetto 'CONTATTI'.");
+                    sitoInput.value = ""; 
+                    sitoVal = "";
+                }
+            }
+
+            const inputField = document.getElementById("field-username_display");
+            const displayVal = inputField ? inputField.value.trim() : "";
+            const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
+            const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
+            const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
+            const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
+            const qaTipo = document.getElementById('field-qa-tipo') ? document.getElementById('field-qa-tipo').value : "";
+            const qaLabel = document.getElementById('field-qa-label') ? document.getElementById('field-qa-label').value.trim() : "";
+            const qaUrl = document.getElementById('field-qa-url') ? document.getElementById('field-qa-url').value.trim() : "";
+            const coreUrl = document.getElementById('field-avatar-url') ? document.getElementById('field-avatar-url').value : "";
+
+            const vcfObject = {
+                telefono1: document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "",
+                telefono2: document.getElementById('field-tel2') ? document.getElementById('field-tel2').value.trim() : "",
+                indirizzo: document.getElementById('field-indirizzo') ? document.getElementById('field-indirizzo').value.trim() : ""
+            };
+
+            const canaliSocial = [];
+            const internalTrack = document.getElementById('social-internal-track');
+            if (internalTrack) {
+                internalTrack.querySelectorAll('.social-block-live').forEach(block => {
+                    canaliSocial.push({ 
+                        nome: block.getAttribute('data-nome'), url: block.getAttribute('data-url'),
+                        vip: block.getAttribute('data-vip') === 'true', pin: block.getAttribute('data-pin') || "",
+                        official: block.getAttribute('data-official') === 'true', iconClass: block.getAttribute('data-icon') || "fas fa-link"
+                    });
+                });
+            }
             
-            // 2. NUOVO: Controllo Anti-Email
-            if (sitoVal.includes('@') || lowerSito.startsWith('mailto:')) {
-                alert("⚠️ AZIONE NON CONSENTITA\nHai inserito un indirizzo Email nel modulo 'SITO WEB'.\nPer le email, usa l'apposito campo nel cassetto 'CONTATTI'.");
-                sitoInput.value = ""; 
-                sitoVal = "";
+            const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
+            const statusText = document.getElementById('field-status-text') ? document.getElementById('field-status-text').value.trim() : "";
+            
+            const flashText = document.getElementById('field-flash-text') ? document.getElementById('field-flash-text').value.trim() : "";
+            let flashExpiry = "";
+            if (flashText !== "") { flashExpiry = new Date(Date.now() + 86400000).toISOString(); }
+
+            const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "";
+            const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
+            const hiddenGallery = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
+
+            return { 
+                username_system: NOME_SISTEMA, 
+                username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
+                digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
+                quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
+                live_status_color: statusColor, live_status_text: statusText,   
+                flash_text: flashText, flash_expiry: flashExpiry,
+                pdf_label: pdfLabel, pdf_url: pdfUrl,      
+                gallery_data: hiddenGallery, 
+                modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
+            }; 
+        }
+
+        // Questa funzione ora salva SOLAMENTE nella memoria del telefono durante l'editing, 
+        // ed effettua la chiamata reale al server SOLO quando viene passata un'azione (checkout, bozza, pubblica)
+        async function salvaDati(azioneRedirect = null) {
+            if(NOME_SISTEMA === "tuonome.it") return; 
+
+            // 1. Raccoglie i dati dallo schermo
+            const payloadDati = raccogliDatiDalForm();
+
+            // 2. Salva SEMPRE localmente per non perdere il lavoro se l'utente ricarica la pagina
+            localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
+            localStorage.setItem('mqt_theme_' + NOME_SISTEMA, payloadDati.digital_style);
+            localStorage.setItem('mqt_layout_' + NOME_SISTEMA, payloadDati.digital_layout);
+            applicaTemaLive();
+
+            // 3. SE NON C'È AZIONE DI REDIRECT, SI FERMA QUI. (Risparmio enorme per il database!)
+            if (!azioneRedirect) {
+                // Aggiorniamo comunque il bottone Master per sbloccarlo in caso l'utente abbia inserito il primo dato
+                if (typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
+                return;
             }
-        }
-    }
 
+            // 4. SE C'È AZIONE DI REDIRECT (Utente ha premuto Salva/Pubblica o va in Cassa), PARTE LA CHIAMATA API!
+            try {
+                // Se c'è un'azione in corso, modifichiamo il bottone per far capire che stiamo salvando
+                const btnText = document.getElementById('master-action-text');
+                const textOriginale = btnText ? btnText.innerText : "ATTENDI...";
+                if (btnText) btnText.innerText = "SALVATAGGIO...";
 
-    const inputField = document.getElementById("field-username_display");
-    const displayVal = inputField ? inputField.value.trim() : "";
-    const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
-    const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
-    const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
-    const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
-    const qaTipo = document.getElementById('field-qa-tipo') ? document.getElementById('field-qa-tipo').value : "";
-    const qaLabel = document.getElementById('field-qa-label') ? document.getElementById('field-qa-label').value.trim() : "";
-    const qaUrl = document.getElementById('field-qa-url') ? document.getElementById('field-qa-url').value.trim() : "";
-    const coreUrl = document.getElementById('field-avatar-url') ? document.getElementById('field-avatar-url').value : "";
+                let bodyRichiesta = {};
+                if (azioneRedirect === 'pubblica') {
+                    bodyRichiesta = { ...payloadDati, draft_json: "" }; 
+                } else {
+                    bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
+                }
 
-    const vcfObject = {
-        telefono1: document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "",
-        telefono2: document.getElementById('field-tel2') ? document.getElementById('field-tel2').value.trim() : "",
-        indirizzo: document.getElementById('field-indirizzo') ? document.getElementById('field-indirizzo').value.trim() : ""
-    };
+                const response = await fetch('/api/update-profile', { 
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 
+                });
+                
+                const data = await response.json();
+                
+                // 5. LO SMISTAMENTO TRAFFICO
+                if (data.success && azioneRedirect) {
+                    // Libera la gabbia anti-fuga per far uscire l'utente regolarmente
+                    window.onbeforeunload = null; 
 
-    const canaliSocial = [];
-    const internalTrack = document.getElementById('social-internal-track');
-    if (internalTrack) {
-        internalTrack.querySelectorAll('.social-block-live').forEach(block => {
-            canaliSocial.push({ 
-                nome: block.getAttribute('data-nome'), url: block.getAttribute('data-url'),
-                vip: block.getAttribute('data-vip') === 'true', pin: block.getAttribute('data-pin') || "",
-                official: block.getAttribute('data-official') === 'true', iconClass: block.getAttribute('data-icon') || "fas fa-link"
-            });
-        });
-    }
-    
-         const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
-    const statusText = document.getElementById('field-status-text') ? document.getElementById('field-status-text').value.trim() : "";
-    
-    const flashText = document.getElementById('field-flash-text') ? document.getElementById('field-flash-text').value.trim() : "";
-    let flashExpiry = "";
-    if (flashText !== "") {
-        flashExpiry = new Date(Date.now() + 86400000).toISOString();
-    }
-
-    const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "";
-    const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
-
-    // Nuova lettura Galleria
-    const hiddenGallery = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
-
-    const payloadDati = { 
-        username_system: NOME_SISTEMA, username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
-        digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
-        quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
-        live_status_color: statusColor, 
-        live_status_text: statusText,   
-        flash_text: flashText,
-        flash_expiry: flashExpiry,
-        pdf_label: pdfLabel, 
-        pdf_url: pdfUrl,     
-        gallery_data: hiddenGallery, // <--- INVIATO AD AIRTABLE
-        modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
-    }; 
-    
-           
-
-    
-
-    localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
-    localStorage.setItem('mqt_theme_' + NOME_SISTEMA, styleVal);
-    localStorage.setItem('mqt_layout_' + NOME_SISTEMA, layoutVal);
-    applicaTemaLive();
-
-    try {
-        // --- IL MOTORE DI SALVATAGGIO DINAMICO ---
-        let bodyRichiesta = {};
-
-        if (azioneRedirect === 'pubblica') {
-            bodyRichiesta = { ...payloadDati, draft_json: "" }; 
-        } else {
-            bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
-        }
-
-        const response = await fetch('/api/update-profile', { 
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 
-        });
-
-        const data = await response.json();
-      
-        // --- IL MOTORE DEI REDIRECT (RISOLVE IL 404) ---
-        if (data.success && azioneRedirect) {
-            if (azioneRedirect === 'checkout') {
-                window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
-            } else if (azioneRedirect === 'bozza') {
-                window.location.href = `/profile.html`; // Torna al pannello di controllo
-            } else if (azioneRedirect === 'pubblica') {
-                window.location.href = `/tag.html?u=${NOME_SISTEMA}`; // Visualizza la Tag online aggiornata
+                    if (azioneRedirect === 'checkout') {
+                        window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+                    } else if (azioneRedirect === 'bozza') {
+                        window.location.href = `/profile.html`; 
+                    } else if (azioneRedirect === 'pubblica') {
+                        window.location.href = `/tag.html?u=${NOME_SISTEMA}`; 
+                    }
+                } else {
+                    alert("Errore durante il salvataggio. Riprova.");
+                    if (btnText) btnText.innerText = textOriginale; // Ripristina il testo del bottone in caso di errore
+                }
+            } catch (error) { 
+                console.error("Errore di salvataggio:", error); 
+                alert("Errore di rete. Controlla la tua connessione e riprova.");
+                const btnText = document.getElementById('master-action-text');
+                if (btnText) btnText.innerText = "RIPROVA";
             }
-        }
-    } catch (error) { console.error("Errore di salvataggio:", error); }
-}
+        } 
  //============================================================
         // CAPITOLO 5: INIZIALIZZAZIONE E CONTROLLI 
         // ============================================================
@@ -2192,16 +2211,8 @@
             });
         }
 
-        function initDragAndDrop() {
-            const trackMain = document.getElementById('blocks-track');
-            if(trackMain) {
-                new Sortable(trackMain, { 
-                    handle: '.drag-handle', animation: 250, 
-                    easing: "cubic-bezier(1, 0, 0, 1)", ghostClass: 'sortable-ghost', dragClass: 'sortable-drag',
-                    onEnd: function () { salvaDati(); }
-                });
-            }
-
+      function initDragAndDrop() {
+            // Il Drag & Drop rimane ESCLUSIVAMENTE per i link social
             const trackSocial = document.getElementById('social-internal-track');
             if(trackSocial) {
                 new Sortable(trackSocial, { 
@@ -2210,8 +2221,7 @@
                     onEnd: function () { salvaDati(); aggiornaAnteprimaLive(); }
                 });
             }
-        }
-
+        } 
         function avviamyquicktag() {
             const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
             if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
