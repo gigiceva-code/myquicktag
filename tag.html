@@ -11,746 +11,244 @@
     
     <link id="dynamic-manifest" rel="manifest" href="">
     <link id="dynamic-icon" rel="icon" href="">
-    <style>
- 
-
-/* --- CONFIGURAZIONE MONOLITO: TOLLERANZE REALI --- */
+       <style>
+/* --- CONFIGURAZIONE MONOLITO E COLORI --- */
 :root {
     --bg-esterno: #0d0d0f;       
     --bg-chassis: #000000;       
     --accent-gold: #d4af37;      
     --text-main: #f5f5f7;
-    --text-sec: #86868b;         /* 🎯 RIPRISTINATO: Grigio chiaro visibile e leggibile */
+    --text-sec: #86868b;
     --text-disattivato: #3a3a3c;
+    --core-glow: rgba(255, 255, 255, 0.1); 
+    --core-border: rgba(255, 255, 255, 0.2); 
 }
 
 /* --- RESET AEROSPAZIALE --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* --- IL VIEWPORT ESTERNO CON REFRESH REATTIVO --- */
-html {
-    height: 100%;
-    overscroll-behavior-y: auto !important; /* Autorizza il browser al bounce del refresh */
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; overscroll-behavior-y: auto !important; }
 body {
-    background-color: var(--bg-esterno);
-    color: var(--text-main);
-    
-    /* 🎯 Sincronizzato in dvh + pixel fantasma per la molla del refresh */
+    background-color: var(--bg-esterno); color: var(--text-main);
     min-height: calc(100dvh + 1px) !important; 
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
-    overflow-y: auto !important; 
-    -webkit-overflow-scrolling: touch;
-    -webkit-font-smoothing: antialiased;
+    display: flex; align-items: center; justify-content: center;
+    overflow-y: auto !important; -webkit-overflow-scrolling: touch; -webkit-font-smoothing: antialiased;
 }
 
 /* --- APP CONTAINER: CHASSIS DINAMICO BLINDATO --- */
 .app-container {
-    display: none;
-    opacity: 0;
-    position: fixed !important;
-    top: 50%;
-    left: 50%;
+    display: none; opacity: 0; position: fixed !important; top: 50%; left: 50%;
     transform: translate(-50%, -50%) scale(0.99);
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    
-    width: calc(100% - 32px);
-    max-width: 410px;
-    
-    /* 🎯 LA SVOLTA: Usiamo dvh al posto di vh. Lo chassis si rimpicciolisce 
-       da solo se esce la barra di Chrome, tenendo il menu sempre visibile */
-    height: calc(100svh - 32px); 
-    max-height: 840px;
+    width: calc(100% - 32px); max-width: 410px;
+    height: calc(100svh - 32px); max-height: 840px;
     padding: 40px 24px 32px 24px;
-    
-    background-color: var(--bg-chassis);
-    border: 1px solid rgba(212, 175, 55, 0.5); 
-    border-radius: 28px;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 2;
-    box-shadow: 0 30px 70px rgba(0,0,0,0.9);
-    overflow: hidden; 
+    background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.5); 
+    border-radius: 28px; flex-direction: column; justify-content: space-between;
+    z-index: 2; box-shadow: 0 30px 70px rgba(0,0,0,0.9); overflow: hidden; 
 }
+.app-container.ready { display: flex !important; opacity: 1; transform: translate(-50%, -50%) scale(1) !important; }
+.app-container.ready::after { display: none !important; } /* Spegne il testo di attesa */
 
-/* 🎯 INTERRUTTORE ACCENSIONE: Mantiene la centratura assoluta e applica la scala */
-.app-container.ready {
-    display: flex !important;
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1) !important;
-}
-  /* ============================================================
-   🏛️ BLOCCO 3: APPARATO ESTETICO LOGO E QR (MONOLITO VERTICALE)
-   ============================================================ */
-
-/* 🎯 L'AVATAR ADATTIVO - Ripulito dalla griglia orizzontale */
-.avatar-block {
-    display: flex !important; 
-    width: 52px !important;
-    height: 52px !important;
-    
-    /* Taglio a Rounded-Square Executive: perfetto sia per volti che per loghi aziendali */
-    border-radius: 12px !important; 
-    background: #070708 !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    margin-bottom: 5px;
-}
-
-/* 🎯 IL QR CODE D'AUTORE METALLICO CHROMATICO - Svincolato dalla griglia */
-.qr-wrapper {
-    width: 44px !important;
-    height: 44px !important;
-    background: #ffffff !important; /* Sfondo bianco nativo necessario al filtro per riflettere l'oro */
-    border: 1px solid rgba(212, 175, 55, 0.3) !important;
-    border-radius: 10px !important;
-    padding: 4px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-/* Forzatura geometrica e cromatica del QR iniettato da qrcode.js */
-.qr-wrapper canvas, .qr-wrapper img {
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-    object-fit: contain !important; /* Impedisce deformazioni dei pixel */
-    filter: invert(1) sepia(1) saturate(6) hue-rotate(12deg) brightness(0.95);
-}
-/* 🎯 IL TASTO CONDIVIDI PROFILO REINTERPRETATO */
-.btn-share-card {
-    background: rgba(255, 255, 255, 0.02) !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-    color: #86868b !important;
-    width: 38px !important;
-    height: 38px !important;
-    border-radius: 10px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin: 0 !important;
-    transition: all 0.2s;
-}
-
-.btn-share-card:active {
-    color: #ffffff !important;
-    border-color: rgba(255, 255, 255, 0.2) !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-}
-    /* --- GRIGLIA ECOSYSTEM (AUTO-ADATTANTE) --- */
-    .grid-ecosystem {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-    }
-
-        /* --- STILE DINAMICO PER I BOTTONI SOCIAL --- */
-    #casella-social {
-    display: none;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
-    padding: 16px !important;
-    cursor: default !important;
-}
-
-    .btn-social {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 10px;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        transition: all 0.2s ease;
-        text-align: center;
-    }
-
-    .btn-social:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: #10b981; /* Verde smeraldo al passaggio */
-    }
-
-    .contenuto-card {
-        width: 100%;
-        max-width: 420px;
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        margin-top: 20px;
-    }
-
-    .overlay-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        padding-bottom: 16px;
-    }
-
-    .btn-chiudi {
-        background: none;
-        border: none;
-        color: var(--text-sec);
-        font-size: 0.9rem;
-        cursor: pointer;
-    }
-
-    .btn-condividi {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-main);
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        cursor: pointer;
-    }
-
-    .titolo-sezione {
-        font-size: 1.5rem;
-        font-weight: 600;
-    }
-
-    .corpo-sezione {
-        font-size: 0.95rem;
-        color: #e8e8ed;
-        line-height: 1.6;
-    }
-
-  
-
-/* --- TOAST NOTIFICATION --- */
-    .toast {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%) translateY(100px);
-        background: var(--accent-white);
-        color: #000000;
-        padding: 12px 24px;
-        border-radius: 30px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        box-shadow: 0 10px 30px rgba(255,255,255,0.2);
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-        opacity: 0;
-        z-index: 10000; /* ALZATO a 10000 per stare sopra ogni altro elemento */
-        pointer-events: none;
-    }
-
-    .toast.mostra {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-    } 
-    /* --- STILI DI COMPATIBILITÀ LINK DI CONFIGURAZIONE --- */
-    #back-to-config {
-        color: var(--accent-white) !important;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 20px;
-        font-size: 0.9rem;
-    }
-       /* --- SHOWROOM OVERLAY (PRE-CHECKOUT) BLINDATO --- */
-     
-#showroom-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 99998;
-    background: transparent;
-    pointer-events: none;
-    padding: 20px;
-    padding-bottom: 40px;
-    box-sizing: border-box;
-}
-       #tag-welcome-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-    background: rgba(0, 0, 0, 0.85);
-    padding: 20px;
-    box-sizing: border-box;
-} 
-
- /* ============================================================
-   📦 : AUTOMAZIONI PWA, SHOWROOM E TASTI SPECIALI
-   ============================================================ */
-
-#expanding-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    background: rgba(10, 10, 10, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 24px;
-    padding: 32px 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    width: 90%;
-    max-width: 380px;
-    height: auto;
-    overflow: visible;
-    box-sizing: border-box;
-    pointer-events: auto; 
-}  
-
-.conversion-content {
-    opacity: 1;
-    text-align: center;
-    width: 100%;
-    min-height: 150px;
-    padding: 20px;
-} 
-
-#conversion-title {
-    color: var(--text-main);
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin-bottom: 20px;
-    letter-spacing: -0.02em;
-}
-
-#casella-quick-action {
-    border-color: rgba(16, 185, 129, 0.5);
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.1), 0 10px 25px rgba(0,0,0,0.5);
-}
-
-#trigger-pwa-install {
-    border-radius: 12px !important;
-}        
-
-/* 🎯 IL TASTO CONDIVIDI UNIFICATO (Fissato a 40px, perfetto per il dito) */
-.btn-share-card {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: #86868b !important; /* 💡 Lascialo così per l'icona grigia luxury della foto, oppure metti #10b981 se la preferisci verde smeraldo */
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 10px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
-
-.btn-share-card:active {
-    color: #ffffff !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-}
-
-#showroom-action-btn {
-    background: #ffffff;
-    color: #000000;
-    border: none;
-    padding: 14px 24px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    width: 100%;
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-
-#showroom-action-btn:active {
-    transform: scale(0.98);
-    background: #eeeeee;
-}
-/*============================================================
-   🧘 STATO ZERO: CONFIGURAZIONE CENTRALE DI ATTESA (ECLISSE)
-   ============================================================ */
 .app-container::after {
-    content: 'myquicktag';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 0.7rem;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: #1c1c1e;
-    font-weight: 300;
-    pointer-events: none;
-    z-index: 1;
+    content: 'myquicktag'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; color: #1c1c1e; font-weight: 300; pointer-events: none; z-index: 1;
 }
 
 /* ============================================================
-   🎨 IL TEATRO LIQUIDO (MASCHERA ANTERIORE A SPECCHIO)
+   IL SIGILLO ORBITALE E IL RITO D'INGRESSO (ALLINEATO A EDIT)
    ============================================================ */
-#overlaySezione {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    
-    width: calc(100% - 32px) !important;
-    max-width: 410px !important;
-    height: calc(100svh - 32px) !important;
-    max-height: 840px !important;
-    
-    background-color: var(--bg-chassis) !important; 
-    padding: 40px 24px 32px 24px !important;
-    border-radius: 28px !important; 
-    
-    z-index: 100 !important; 
-    overflow-y: auto !important;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-#overlaySezione.attiva {
-    display: flex !important;
-    opacity: 1 !important;
-}
-/* ============================================================
-   🚀 RETTIFICA QUICK ACTION: LA BARRA FLUTTUANTE PREMIUM
-   ============================================================ */
-#casella-quick-action {
-    position: absolute !important;
-    bottom: 70px !important; /* Solleva il calendario sopra la linea dei menu */
-    left: 24px !important;
-    right: 24px !important;
-    width: calc(100% - 48px) !important;
-    height: 46px !important;
-    min-height: 46px !important;
-    
-    /* Stile Luxury coordinato */
-    background: rgba(212, 175, 55, 0.03) !important;
-    border: 1px solid rgba(212, 175, 55, 0.2) !important;
-    border-radius: 10px !important;
-    
-    display: flex !important;
-    flex-direction: row !important; /* Icona e scritta affiancate, pulite */
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 10px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
-}
-
-/* Ripristina l'identità dell'icona e del testo interni alla Quick Action */
-#casella-quick-action #quick-action-icon {
-    font-size: 1.1rem !important;
-    margin-bottom: 0 !important; /* Elimina il vecchio sbalzo verticale */
-}
-
-#casella-quick-action #quick-action-label {
-    font-size: 0.72rem !important; /* Riapre il font per questa specifica funzione */
-    line-height: 1 !important;
-    letter-spacing: 1.5px !important;
-    text-transform: uppercase !important;
-    color: #d4af37 !important; /* Testo stampato in oro liquido */
-}
-
-/* Annulla l'iniezione dei testi automatici della tastiera solo per questo blocco */
-#casella-quick-action #quick-action-label::after {
-    display: none !important;
-}
- /* ============================================================
-   🏆 STRUTTURA BASE BRAND (BADGE POLIGONALE)
-   ============================================================ */
-.username-capsule-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; }
-
-.username-capsule {
-    display: flex; padding: 1.5px; background: rgba(255, 255, 255, 0.3); width: 100%;
-    clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%);
-    box-sizing: border-box;
-}
-
-.username-capsule-inner {
-    display: flex; justify-content: center; align-items: center; width: 100%;
-    background: #0d0d0f; padding: 24px 35px;
-    clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%);
-    box-sizing: border-box;
-}
-            
-.username-display {
-    /* Senza !important su font-size, così il JS lo scala in automatico */
-    font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
-    margin: 0 auto; text-align: center !important; display: block !important; 
-    text-transform: uppercase; white-space: normal !important; 
-    word-break: normal !important; overflow-wrap: break-word !important; 
-    text-wrap: balance !important; width: 100% !important; max-width: 100% !important; 
-    padding: 0 12px !important; box-sizing: border-box !important;
-    line-height: 1.5 !important; transition: font-size 0.3s ease; 
-}
-
-/* =========================================================
-   RESET FLEXBOX PER DIVIDER E PURE (Spegne il poligono)
-   ========================================================= */
-#profile-content[data-layout="divider"] .username-capsule-wrapper,
-#profile-content[data-layout="divider"] .username-capsule,
-#profile-content[data-layout="divider"] .username-capsule-inner,
-#profile-content[data-layout="pure"] .username-capsule-wrapper,
-#profile-content[data-layout="pure"] .username-capsule,
-#profile-content[data-layout="pure"] .username-capsule-inner { 
-    display: block !important; width: 100% !important; background: transparent !important; 
-    clip-path: none !important; padding: 0 !important; min-width: 0 !important;
-}
-
-/* Testo ristretto per forzarlo ad andare su più righe nei layout aperti */
-#profile-content[data-layout="divider"] .username-display,
-#profile-content[data-layout="pure"] .username-display {
-    width: 100% !important; max-width: 280px !important; margin: 0 auto !important;
-    line-height: 2.2 !important; /* Spalanca lo spazio centrale per la riga e il diamante */
-}
-
-/* =========================================================
-   LAYOUT 2: DIVIDER (La linea taglia in mezzo al corridoio)
-   ========================================================= */
-#profile-content[data-layout="divider"] .header-monolith { 
-    display: block !important; width: 100% !important; padding: 20px 0 !important; position: relative; 
-}
-#profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; }
-
-#profile-content[data-layout="divider"] .header-monolith::after {
-    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
-    z-index: 1; pointer-events: none;
-}
-#profile-content[data-layout="divider"] .header-monolith::before {
-    content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2;
-}
-
-/* Colori del Divider in base al tema */
-#profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
-#profile-content[data-theme="emerald"][data-layout="divider"] .header-monolith::before { color: #00E680; }
-#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
-#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .header-monolith::before { color: #e5c158; }
-#profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
-#profile-content[data-theme="satin_rose"][data-layout="divider"] .header-monolith::before { color: #c8968e; }
-
-/* =========================================================
-   LAYOUT 3: PURE (Solo testo)
-   ========================================================= */
-#profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
-
-/* =========================================================
-   LA CHIOCCIOLA (@) E I SUOI COLORI
-   ========================================================= */
-.at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
-.brand-text { font-weight: inherit; }
-
-#profile-content[data-theme="emerald"] .at-symbol { color: #00E680; opacity: 0.9; text-shadow: 0 0 10px rgba(0, 230, 128, 0.3); }
-#profile-content[data-theme="obsidian_gold"] .at-symbol { color: #e5c158; opacity: 0.9; text-shadow: 0 0 10px rgba(229, 193, 88, 0.3); }
-#profile-content[data-theme="satin_rose"] .at-symbol { color: #c8968e; opacity: 0.9; text-shadow: 0 0 10px rgba(200, 150, 142, 0.3); }
-#profile-content[data-theme="titanium"] .at-symbol { color: #b0b0b5; opacity: 0.9; }
-#profile-content[data-theme="black_dna"] .at-symbol { color: #ffffff; opacity: 0.4; }
-
-/* ============================================================
-   🏆 IL TOTEM DINAMICO A PASSO COSTANTE (ANTI-SOVRAPPOSIZIONE)
-   ============================================================ */
-.app-container #mainGrid {
-    display: flex !important;
-    flex-direction: column !important;
-    
-    /* 🎯 LA SVOLTA: Cambiato da center a space-between. Spinge la prima voce in alto 
-       e l'ultima in basso, aprendo la fisarmonica su tutte le tue linee bianche */
-    justify-content: space-between !important; 
-    align-items: center !important;
-    
-    /* Eliminiamo il gap fisso che teneva le scritte incollate */
-    gap: 0 !important; 
-    
-    flex: 1 !important; 
-    width: 100% !important;
-    background: transparent !important;
-    border: none !important;
-    box-sizing: border-box !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-    
-    /* 📐 CALIBRAZIONE SPAZI: 30px di distacco dal nome, 110px di sicurezza dal tastone */
-    padding: 30px 0 110px 0 !important; 
-}
-
-/* Link filiformi ed eleganti */
-.app-container #mainGrid .casella {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    min-height: auto !important;
-    padding: 4px 0 !important; 
-    width: auto !important;
-}
-
-.app-container #mainGrid .casella-invito {
-    font-size: 0 !important; 
-    line-height: 0 !important;
-}
-
-/* Font stile cronografo svizzero */
-.app-container #mainGrid .casella-invito::after {
-    font-size: 0.75rem !important; 
-    letter-spacing: 3px !important; 
-    font-weight: 300 !important;
-    transition: color 0.2s ease;
-}
-
-/* CONTROLLO DELLE SCRITTE (ACCESS TAG d'oro, le altre grigie) */
-#casella-qr .casella-invito::after { content: 'DIGITAL PASS'; color: var(--accent-gold) !important; font-weight: 400; }
-#casella-bio .casella-invito::after { content: 'BIO'; color: var(--text-sec) !important; }
-#casella-gallery .casella-invito::after { content: 'GALLERY'; color: var(--text-sec) !important; }
-#casella-contatti .casella-invito::after { content: 'CONTATTI'; color: var(--text-sec) !important; }
-#casella-social .casella-invito::after { content: 'SOCIAL'; color: var(--text-sec) !important; }
-#casella-sito .casella-invito::after { content: 'SITO'; color: var(--text-sec) !important; }
-#casella-cv .casella-invito::after { content: 'CV'; color: var(--text-sec) !important; }
-
-/* Feedback al tocco */
-.app-container #mainGrid .casella:active .casella-invito::after {
-    color: #ffffff !important;
-}
-/* 🎯 CORREZIONE: Spegne la scritta di sfondo dello Stato Zero appena lo chassis è pronto */
-.app-container.ready::after {
-    display: none !important;
-}
-/* =========================================================
-   TEMI E LAYOUT (MOTORE GRAFICO PWA)
-   ========================================================= */
-/* --- TEMI UFFICIALI (CAPSULA NOME) --- */
-#profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8) !important; }
-#profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.2) !important; border-color: rgba(0, 230, 128, 0.5) !important; box-shadow: 0 0 35px rgba(0, 230, 128, 0.15) !important; }
-
-#profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05) !important; box-shadow: inset 0 0 20px rgba(255,255,255,0.02) !important; } 
-#profile-content[data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.2) !important; box-shadow: 0 0 35px rgba(255, 255, 255, 0.05) !important;}
-
-#profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8) !important; }
-#profile-content[data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.2) !important; border-color: rgba(176, 176, 181, 0.5) !important; box-shadow: 0 0 35px rgba(176, 176, 181, 0.15) !important;}
-
-#profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8) !important; }
-#profile-content[data-theme="obsidian_gold"] .username-capsule { background: rgba(212, 175, 55, 0.05) !important; border-color: rgba(212, 175, 55, 0.25) !important; box-shadow: 0 0 35px rgba(212, 175, 55, 0.15) !important;}
-
-#profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8) !important; }
-#profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.2) !important; border-color: rgba(200, 150, 142, 0.5) !important; box-shadow: 0 0 35px rgba(200, 150, 142, 0.15) !important;}
-
-/* --- LAYOUT DIVIDER E PURE --- */
-#profile-content[data-layout="divider"] .username-capsule-wrapper,
-#profile-content[data-layout="divider"] .username-capsule,
-#profile-content[data-layout="pure"] .username-capsule-wrapper,
-#profile-content[data-layout="pure"] .username-capsule { 
-    display: block !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;
-}
-#profile-content[data-layout="divider"] .header-monolith, #profile-content[data-layout="pure"] .header-monolith {
-    position: relative; padding: 20px 0 !important;
-}
-#profile-content[data-layout="divider"] .header-monolith::after {
-    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
-    z-index: 1; pointer-events: none;
-}
-#profile-content[data-layout="divider"] .username-display { position: relative; z-index: 3; margin: 0 auto !important; max-width: 280px !important; line-height: 2.2 !important; }
-#profile-content[data-layout="pure"] .username-display { margin: 0 auto !important; max-width: 280px !important; line-height: 2.2 !important; }
-
-/* =========================================================
-   IL SIGILLO ORBITALE E IL RITO D'INGRESSO
-   ========================================================= */
-:root { 
-    --core-glow: rgba(255, 255, 255, 0.1); 
-    --core-border: rgba(255, 255, 255, 0.2); 
-}
-#profile-content[data-theme="emerald"] { --core-glow: rgba(0, 230, 128, 0.4); --core-border: rgba(0, 230, 128, 0.8); }
-#profile-content[data-theme="obsidian_gold"] { --core-glow: rgba(229, 193, 88, 0.4); --core-border: rgba(229, 193, 88, 0.8); }
-#profile-content[data-theme="satin_rose"] { --core-glow: rgba(200, 150, 142, 0.4); --core-border: rgba(200, 150, 142, 0.8); }
-#profile-content[data-theme="titanium"] { --core-glow: rgba(176, 176, 181, 0.3); --core-border: rgba(176, 176, 181, 0.6); }
-#profile-content[data-theme="black_dna"] { --core-glow: rgba(255, 255, 255, 0.15); --core-border: rgba(255, 255, 255, 0.3); }
-
-/* --- STATO 0: LA PORTA CHIUSA (LOCKED) --- */
-.app-container.locked .header-monolith {
-    transform: translateY(28vh) scale(1.15);
-    transition: transform 1.2s cubic-bezier(0.25, 1, 0.3, 1);
-}
-.app-container.locked #mainGrid, 
-.app-container.locked #casella-quick-action,
-.app-container.locked #cta-pubblica-container,
-.app-container.locked #cta-sblocco-container {
-    display: none !important;
-}
-
-/* --- STATO 1: L'ECOSISTEMA APERTO (UNLOCKED) --- */
-.app-container.unlocked .header-monolith {
-    transform: translateY(0) scale(1);
-    transition: transform 1s cubic-bezier(0.25, 1, 0.3, 1);
-}
-.app-container.unlocked .entrance-prompt {
-    opacity: 0; transform: translate(-50%, 50px); pointer-events: none;
-}
-
-/* --- LA SFERA VIVA --- */
 .orbital-container {
     position: relative; width: 80px; height: 80px; margin: 0 auto 25px auto;
     display: flex; justify-content: center; align-items: center; z-index: 10;
 }
 .orbital-sphere {
-    width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: #000;
-    position: relative; z-index: 2;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.08);
+    width: 72px; height: 72px; border-radius: 18px !important; overflow: hidden; background: #000;
+    position: relative; z-index: 2; box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.08);
 }
 .orbital-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) brightness(0.95); }
 
-/* --- L'ANELLO ORBITALE --- */
 .orbital-ring {
     position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
-    border-radius: 50%; border: 1px solid transparent;
-    border-top-color: var(--core-border); 
-    border-right-color: rgba(255,255,255,0.02);
-    border-bottom-color: rgba(255,255,255,0.01); 
-    border-left-color: rgba(255,255,255,0.02);
-    animation: orbitSpin 40s linear infinite; z-index: 1;
-    filter: drop-shadow(0 0 12px var(--core-glow));
+    border-radius: 22px !important; border: 1px solid transparent;
+    border-top-color: var(--core-border); border-right-color: rgba(255,255,255,0.02);
+    border-bottom-color: rgba(255,255,255,0.01); border-left-color: rgba(255,255,255,0.02);
+    animation: orbitSpin 40s linear infinite; z-index: 1; filter: drop-shadow(0 0 12px var(--core-glow));
 }
 @keyframes orbitSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-/* --- IL PULSANTE DEL RITO D'INGRESSO --- */
+/* TRANSIZIONI DI STATO (LOCKED / UNLOCKED) */
+.app-container.locked .header-monolith { transform: translateY(28vh) scale(1.15); transition: transform 1.2s cubic-bezier(0.25, 1, 0.3, 1); }
+.app-container.locked #mainGrid, .app-container.locked #cta-pubblica-container, .app-container.locked #cta-sblocco-container { display: none !important; }
+.app-container.unlocked .header-monolith { transform: translateY(0) scale(1); transition: transform 1s cubic-bezier(0.25, 1, 0.3, 1); }
+.app-container.unlocked .entrance-prompt { opacity: 0; transform: translate(-50%, 50px); pointer-events: none; }
+
+/* PULSANTE "TOCCA PER ENTRARE" */
 .entrance-prompt {
-    position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 15px;
+    position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 15px;
     cursor: pointer; z-index: 100; transition: opacity 0.5s ease, transform 0.8s ease;
 }
-.pulse-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: var(--text-sec);
-    animation: pulseDot 2.5s infinite ease-in-out;
-}
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-sec); animation: pulseDot 2.5s infinite ease-in-out; }
 .entrance-prompt span { font-size: 0.6rem; letter-spacing: 6px; text-transform: uppercase; color: var(--text-sec); }
-@keyframes pulseDot { 
-    0% { transform: scale(0.8); opacity: 0.3; } 
-    50% { transform: scale(1.8); opacity: 1; box-shadow: 0 0 20px var(--core-glow); background: #fff;} 
-    100% { transform: scale(0.8); opacity: 0.3; } 
+@keyframes pulseDot { 0% { transform: scale(0.8); opacity: 0.3; } 50% { transform: scale(1.8); opacity: 1; box-shadow: 0 0 20px var(--core-glow); background: #fff;} 100% { transform: scale(0.8); opacity: 0.3; } }
+
+/* ============================================================
+   ARCHITETTURA BADGE E LAYOUT (IMPORTATA DA EDIT.HTML)
+   ============================================================ */
+.header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; position: relative; }
+
+/* 🎯 IL BISTURI APPLICATO AL TESTO */
+.username-display {
+    font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
+    margin: 0 auto; text-align: center !important; display: block !important; 
+    text-transform: uppercase; white-space: normal !important; word-break: normal !important; 
+    overflow-wrap: break-word !important; text-wrap: balance !important; 
+    width: auto !important; max-width: 280px !important; 
+    padding: 0 12px !important; box-sizing: border-box !important;
+    line-height: 1.5 !important; transition: font-size 0.3s ease; 
+    user-select: none !important; -webkit-user-select: none !important; touch-action: manipulation !important; 
 }
 
-/* Moduli invisibili pronti alla discesa a cascata */
-#mainGrid .casella, #casella-quick-action { opacity: 0; transform: translateY(25px); }
+/* LAYOUT 1: BADGE POLIGONALE */
+#profile-content[data-layout="badge"] .username-capsule-wrapper { display: flex !important; justify-content: center !important; align-items: center !important; width: 100% !important; }
+#profile-content[data-layout="badge"] .username-capsule {
+    display: inline-flex !important; width: max-content !important; max-width: 290px !important; margin: 0 auto !important; 
+    padding: 1.5px !important; clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%) !important; box-sizing: border-box !important;
+}
+#profile-content[data-layout="badge"] .username-capsule-inner {
+    display: inline-flex !important; width: 100% !important; justify-content: center !important; align-items: center !important; 
+    background: #0d0d0f !important; padding: 16px 35px !important; clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%) !important; box-sizing: border-box !important;
+}
+
+/* LAYOUT 2 (DIVIDER) E 3 (PURE) */
+#profile-content[data-layout="divider"] .username-capsule, #profile-content[data-layout="divider"] .username-capsule-inner,
+#profile-content[data-layout="pure"] .username-capsule-wrapper, #profile-content[data-layout="pure"] .username-capsule,
+#profile-content[data-layout="pure"] .username-capsule-inner { 
+    display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; min-width: 0 !important;
+}
+#profile-content[data-layout="divider"] .username-capsule-wrapper { position: relative; padding: 20px 0 !important; display: block !important; background: transparent !important; clip-path: none !important; }
+#profile-content[data-layout="divider"] .username-display, #profile-content[data-layout="pure"] .username-display {
+    position: relative; z-index: 3; width: 100% !important; max-width: 220px !important; margin: 0 auto !important; line-height: 2.5 !important; 
+}
+#profile-content[data-layout="divider"] .username-capsule-wrapper::after {
+    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); z-index: 1; pointer-events: none;
+}
+#profile-content[data-layout="divider"] .username-capsule-wrapper::before {
+    content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2;
+}
+
+#profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
+
+/* LA CHIOCCIOLA E I COLORI DEI TEMI (EDIT.HTML) */
+.at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
+.brand-text { font-weight: inherit; }
+
+#profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8) !important; --core-glow: rgba(0, 230, 128, 0.4); --core-border: rgba(0, 230, 128, 0.8); }
+#profile-content[data-layout="badge"][data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.6) !important; }
+#profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::before { color: #00E680; }
+#profile-content[data-theme="emerald"] .at-symbol { color: #00E680; opacity: 0.9; text-shadow: 0 0 10px rgba(0, 230, 128, 0.3); }
+
+#profile-content[data-theme="black_dna"] { border: 1px solid rgba(255, 255, 255, 0.05) !important; box-shadow: inset 0 0 20px rgba(255,255,255,0.02) !important; --core-glow: rgba(255, 255, 255, 0.15); --core-border: rgba(255, 255, 255, 0.3); } 
+#profile-content[data-layout="badge"][data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.35) !important; }
+#profile-content[data-theme="black_dna"] .at-symbol { color: #ffffff; opacity: 0.4; }
+
+#profile-content[data-theme="titanium"] { border: 1px solid rgba(176, 176, 181, 0.8) !important; --core-glow: rgba(176, 176, 181, 0.3); --core-border: rgba(176, 176, 181, 0.6); }
+#profile-content[data-layout="badge"][data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.6) !important; }
+#profile-content[data-theme="titanium"] .at-symbol { color: #b0b0b5; opacity: 0.9; }
+
+#profile-content[data-theme="obsidian_gold"] { border: 1px solid rgba(229, 193, 88, 0.8) !important; --core-glow: rgba(229, 193, 88, 0.4); --core-border: rgba(229, 193, 88, 0.8); }
+#profile-content[data-layout="badge"][data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.6) !important; }
+#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::before { color: #e5c158; }
+#profile-content[data-theme="obsidian_gold"] .at-symbol { color: #e5c158; opacity: 0.9; text-shadow: 0 0 10px rgba(229, 193, 88, 0.3); }
+
+#profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8) !important; --core-glow: rgba(200, 150, 142, 0.4); --core-border: rgba(200, 150, 142, 0.8); }
+#profile-content[data-layout="badge"][data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.6) !important; }
+#profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
+#profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::before { color: #c8968e; }
+#profile-content[data-theme="satin_rose"] .at-symbol { color: #c8968e; opacity: 0.9; text-shadow: 0 0 10px rgba(200, 150, 142, 0.3); }
+
+/* ============================================================
+   IL MENU DELLE STANZE (NUOVO TOTEM)
+   ============================================================ */
+.app-container #mainGrid {
+    display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-items: center !important;
+    gap: 0 !important; flex: 1 !important; width: 100% !important; background: transparent !important;
+    padding: 30px 0 60px 0 !important; /* Ridisegnato lo spazio per l'equilibrio */
+}
+
+/* 🎯 LE STANZE (Identiche per stile, colore e spaziatura) */
+.room-link {
+    background: transparent !important; border: none !important; box-shadow: none !important;
+    padding: 10px 0 !important; width: auto !important; cursor: pointer;
+    font-size: 0.75rem !important; letter-spacing: 4px !important; font-weight: 300 !important;
+    text-transform: uppercase !important; color: var(--text-sec) !important;
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
+}
+.room-link::before {
+    content: '::'; margin-right: 12px; color: rgba(255,255,255,0.2); letter-spacing: 1px; font-weight: 300;
+}
+.room-link:active { color: #ffffff !important; transform: scale(0.98); }
+
+/* Speciale Access Tag e Semaforo, rimangono come prima ma integrati */
+#room-access-tag { color: var(--accent-gold) !important; font-weight: 400 !important; }
+#room-live-status { color: #10b981 !important; font-weight: 500 !important; flex-direction: row; gap: 8px; }
+#room-live-status::before { content: none; } /* Niente :: per il semaforo */
+#room-flash { color: #e5c158 !important; font-weight: 500 !important; }
+#room-flash::before { content: none; }
+
+/* L'animazione di cascata all'ingresso */
+.room-link { opacity: 0; transform: translateY(25px); }
 .boot-module-active { animation: moduleCascade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes moduleCascade { 0% { opacity: 0; transform: translateY(25px); } 100% { opacity: 1; transform: translateY(0); } }
-</style>       
+
+/* ============================================================
+   IL TEATRO LIQUIDO (OVERLAY) E CASCATA INTERNA
+   ============================================================ */
+#overlaySezione {
+    position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important;
+    width: calc(100% - 32px) !important; max-width: 410px !important; height: calc(100svh - 32px) !important; max-height: 840px !important;
+    background-color: var(--bg-chassis) !important; padding: 40px 24px 32px 24px !important; border-radius: 28px !important; 
+    z-index: 100 !important; overflow-y: auto !important;
+    display: none; opacity: 0; transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#overlaySezione.attiva { display: flex !important; opacity: 1 !important; flex-direction: column; }
+
+/* Elementi interni all'overlay pronti a cascare */
+.cascade-item { opacity: 0; transform: translateY(20px); }
+.overlay-boot-active { animation: cascadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+@keyframes cascadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+
+.overlay-nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px; margin-bottom: 24px; }
+.btn-chiudi { background: none; border: none; color: var(--text-sec); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: color 0.2s; }
+.btn-chiudi:active { color: #fff; }
+.titolo-sezione { font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 30px;}
+.corpo-sezione { font-size: 0.95rem; color: #e8e8ed; line-height: 1.6; display: flex; flex-direction: column; gap: 12px; }
+
+/* Bottoni Social Interni */
+.btn-social { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 14px; border-radius: 12px; transition: all 0.2s ease; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; text-decoration: none; font-size: 0.9rem;}
+.btn-social:active { background: rgba(255, 255, 255, 0.1); transform: scale(0.98); border-color: rgba(255, 255, 255, 0.3); }
+
+/* QR Code Modale (Nessun CSS modificato, manteniamo la tua perfezione) */
+.qr-wrapper { width: 44px !important; height: 44px !important; background: #ffffff !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; border-radius: 10px !important; padding: 4px !important; display: flex !important; justify-content: center !important; align-items: center !important; overflow: hidden; }
+.qr-wrapper canvas, .qr-wrapper img { width: 100% !important; height: 100% !important; display: block !important; object-fit: contain !important; filter: invert(1) sepia(1) saturate(6) hue-rotate(12deg) brightness(0.95); }
+
+/* Elementi di servizio, toast, etc rimangono uguali */
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.2); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; opacity: 0; z-index: 10000; pointer-events: none; }
+.toast.mostra { transform: translateX(-50%) translateY(0); opacity: 1; } 
+
+/* Showroom e Welcome (Invariati) */
+#showroom-overlay, #tag-welcome-overlay, #vip-vault-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; display: none; justify-content: center; align-items: center; z-index: 99998; background: rgba(0, 0, 0, 0.85); padding: 20px; box-sizing: border-box; }
+#expanding-box { display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 32px 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); width: 100%; max-width: 380px; box-sizing: border-box; pointer-events: auto; }
+.conversion-content { text-align: center; width: 100%; }
+#conversion-title { color: var(--text-main); font-size: 1.1rem; font-weight: 500; margin-bottom: 20px; letter-spacing: -0.02em; }
+#showroom-action-btn, #btn-sblocca-vip { background: #ffffff; color: #000000; border: none; padding: 14px 24px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; width: 100%; transition: transform 0.2s ease; }
+#showroom-action-btn:active, #btn-sblocca-vip:active { transform: scale(0.98); }
+    </style>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
    <body>
 
