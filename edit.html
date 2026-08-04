@@ -1369,20 +1369,12 @@
       // ============================================================
         // MOTORE DI ASCOLTO TASTO INDIETRO (ANDROID BACK BUTTON)
         // ============================================================
-        
-        // Assicuriamoci che la variabile globale esista
-        if (typeof isDrawerOpen === 'undefined') {
-            var isDrawerOpen = false;
-        }
-
         window.addEventListener('popstate', function (event) {
-            // Quando l'utente preme il tasto fisico "Indietro" del telefono,
-            // intercettiamo il comando e, se c'è un cassetto aperto, lo chiudiamo dolcemente
-            // senza farlo uscire dall'applicazione.
+            // Se l'utente preme indietro e il cassetto è aperto, lo chiudiamo
             if (isDrawerOpen) {
                 chiudiSenzaSalvare(true); 
             }
-        }); 
+        });
         function apriModalQR() {
             const m = document.getElementById('modal-qr');
             if(m) {
