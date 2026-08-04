@@ -264,30 +264,30 @@
         }
 
 
-        /* --- CASSETTI E MODALI --- */
-        .drawer-backdrop { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.4); z-index: 1900; opacity: 0; pointer-events: none; transition: opacity 0.3s;
-        }
-        .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
+       /* 1. LA STRUTTURA DEL CASSETTO */
         .drawer-glass {
-            position: fixed !important; bottom: -100% !important; left: 26px !important; right: 26px !important; width: auto !important; margin: 0 auto !important; max-width: 360px !important; 
+            position: fixed !important; 
+            bottom: 24px !important; /* Posizione fissa in cui deve stare quando è aperto */
+            left: 26px !important; right: 26px !important; width: auto !important; margin: 0 auto !important; max-width: 360px !important; 
             background: rgba(30, 30, 35, 0.4) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; 
             border: 1px solid rgba(255, 255, 255, 0.15) !important; border-radius: 28px !important; padding: 24px !important;
-            z-index: 2000 !important; transition: bottom 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; box-sizing: border-box !important; box-shadow: 0 10px 40px rgba(0,0,0,0.9) !important; 
+            z-index: 2000 !important; 
             
-            /* LA CURA PER L'ALTEZZA */
-            max-height: 85vh !important; 
-            overflow-y: auto !important; 
-            scrollbar-width: none !important; 
+            /* LA VERA MAGIA: Lo spingiamo letteralmente giù del 150% rispetto allo schermo */
+            transform: translateY(150vh) !important; 
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; 
+            
+            box-sizing: border-box !important; box-shadow: 0 10px 40px rgba(0,0,0,0.9) !important; 
+            max-height: 85vh !important; overflow-y: auto !important; scrollbar-width: none !important; 
         }
 
-        /* IL MOTORE DI APERTURA (Questa è la riga che era saltata!) */
+        /* 2. IL MOTORE DI APERTURA */
         .drawer-glass.open { 
-            bottom: 24px !important; 
+            /* Azzera la spinta, facendolo tornare morbidamente alla sua posizione (bottom: 24px) */
+            transform: translateY(0) !important; 
         }
 
-        /* Nasconde la barra di scorrimento su Chrome/Apple */
+        /* 3. ESTETICA DELLA BARRA DI SCORRIMENTO */
         .drawer-glass::-webkit-scrollbar {
             display: none !important;
         }
