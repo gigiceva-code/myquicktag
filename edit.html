@@ -1307,8 +1307,10 @@
 
             void el.offsetHeight; 
         }
-
-                function apriDrawer(idDrawer) {
+// ============================================================
+        // MOTORE CASSETTI E CRONOLOGIA (VERSIONE CORAZZATA)
+        // ============================================================
+        function apriDrawer(idDrawer) {
             // --- BLOCCO SICUREZZA INTELLIGENTE ---
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery'];
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
@@ -1321,34 +1323,43 @@
             }
             // -------------------------------------
 
-
-            const currentlyOpen = document.querySelector('.drawer-glass.open');
+            // 1. Spegne tutto per sicurezza
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+            
             const drawer = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
 
+            // 2. Accende l'ombra e forza l'animazione del cassetto
             if (backdrop) backdrop.classList.add('active');
-            setTimeout(() => { if (drawer) drawer.classList.add('open'); }, 10);
+            if (drawer) {
+                void drawer.offsetWidth; // Trucco da maestro: forza il browser a resettare il CSS incantato
+                drawer.classList.add('open');
+            }
 
-            if (!currentlyOpen && !isDrawerOpen) {
-                history.pushState({ modal: true }, "", "");
+            // 3. Gestisce la cronologia senza bloccare il sistema
+            if (!isDrawerOpen) {
                 isDrawerOpen = true;
+                try { history.pushState({ modal: true }, "", ""); } catch(e) {}
             }
         }
 
         function chiudiSenzaSalvare(fromHistory = false) {
+            // 1. Chiude le porte e spegne l'ombra istantaneamente
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
             const backdrop = document.getElementById('drawer-backdrop');
-            if (backdrop) setTimeout(() => backdrop.classList.remove('active'), 300);
+            
+            if (backdrop) {
+                backdrop.classList.remove('active'); 
+            }
 
+            // 2. Torna indietro in sicurezza
             if (isDrawerOpen && !fromHistory) {
-                isDrawerOpen = false; history.back();
-            } else { isDrawerOpen = false; }
+                isDrawerOpen = false; 
+                try { history.back(); } catch(e) {}
+            } else { 
+                isDrawerOpen = false; 
+            }
         }
-
-        window.addEventListener('popstate', function(e) {
-            if (isDrawerOpen) { chiudiSenzaSalvare(true); }
-        });
        
         function apriModalQR() {
             const m = document.getElementById('modal-qr');
@@ -1365,20 +1376,26 @@
             }
         }
       
-     // ==========================================
-        // MOTORE: SBLOCCO PIANI IN ANTEPRIMA (POTENZIATO CON LOCAL STORAGE)
+     
+        // ==========================================
+        // MOTORE: SBLOCCO PIANI IN ANTEPRIMA (POTENZIATO CON LOCAL STORAGE E ANTI-BLOCCO)
         // ==========================================
         function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
             userPlan = nuovoPianoSelezionato; 
             
-            // LA ROCCAFORTE BLINDATA: Salviamo in localStorage (sopravvive alla chiusura della scheda)
+            // LA ROCCAFORTE BLINDATA
             localStorage.setItem('mqt_temp_plan_' + NOME_SISTEMA, userPlan); 
             
-            aggiornaLucchetti(); // Chiama l'intelligenza artificiale dei lucchetti
+            aggiornaLucchetti(); // Aggiorna la grafica
             
-            alert(`Fantastico! Hai selezionato il piano ${nuovoPianoSelezionato}.\n\nI lucchetti del tuo piano sono sbloccati. Ora puoi configurare queste funzioni e vedere l'anteprima in tempo reale.\n\nQuando hai terminato, clicca su "ATTIVA TAG" in basso per confermare.`);
+            // 1. PRIMA chiudiamo il cassetto
             chiudiSenzaSalvare(); 
-        } 
+            
+            // 2. DOPO mezzo secondo (quando il cassetto è chiuso), mostriamo l'avviso
+            setTimeout(() => {
+                alert(`Fantastico! Hai selezionato il piano ${nuovoPianoSelezionato}.\n\nI lucchetti del tuo piano sono sbloccati. Ora puoi configurare queste funzioni e vedere l'anteprima in tempo reale.`);
+            }, 400);
+        }
 
         function aggiornaLucchetti() {
             const cassettiGold = ['drawer-showcase', 'drawer-gallery', 'drawer-live-status', 'drawer-flash'];
