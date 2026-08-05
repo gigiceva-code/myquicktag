@@ -247,6 +247,32 @@ body {
 #conversion-title { color: var(--text-main); font-size: 1.1rem; font-weight: 500; margin-bottom: 20px; letter-spacing: -0.02em; }
 #showroom-action-btn, #btn-sblocca-vip { background: #ffffff; color: #000000; border: none; padding: 14px 24px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; width: 100%; transition: transform 0.2s ease; }
 #showroom-action-btn:active, #btn-sblocca-vip:active { transform: scale(0.98); }
+           /* ============================================================
+   UPGRADE VISIVO: WIDGET FRONTALI E STANZE ACCESE
+   ============================================================ */
+
+/* Effetto "Respiro" per il Flash Text: attira l'occhio senza essere volgare */
+.pulsing-flash {
+    animation: goldPulse 3.5s infinite ease-in-out;
+}
+@keyframes goldPulse {
+    0% { opacity: 0.7; transform: scale(0.98); filter: drop-shadow(0 0 0px rgba(212, 175, 55, 0)); }
+    50% { opacity: 1; transform: scale(1.02); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4)); }
+    100% { opacity: 0.7; transform: scale(0.98); filter: drop-shadow(0 0 0px rgba(212, 175, 55, 0)); }
+}
+
+/* Correzione Stanze: Da Grigio Spento a Bianco Cliccabile luminoso */
+.app-container #mainGrid .room-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 400 !important;
+}
+.app-container #mainGrid .room-link:active {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Eccezione dorata per l'Azione Rapida */
+#room-quick-action { color: var(--accent-gold) !important; font-weight: 500 !important; }
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -282,10 +308,26 @@ body {
             
         </div>
 
-        <!-- IL RITO D'INGRESSO -->
+      </div>
+
+            <!-- NUOVO: WIDGET LIVE STATUS -->
+            <div id="front-live-status" style="display:none; align-items:center; justify-content:center; gap:8px; margin-top:16px; opacity:0.9;">
+                <div id="front-status-dot" style="font-size:0.55rem; text-shadow: 0 0 8px currentColor;">🟢</div>
+                <div id="front-status-text" style="font-size:0.7rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;">ONLINE</div>
+            </div>
+
+            <!-- NUOVO: WIDGET FLASH 24H -->
+            <div id="front-flash-text" class="pulsing-flash" style="display:none; align-items:center; justify-content:center; gap:8px; margin-top:12px;">
+                <i class="fas fa-bolt" style="color: #d4af37; font-size: 0.8rem;"></i>
+                <div id="front-flash-content" style="color: #d4af37; font-size: 0.75rem; font-weight: 500; letter-spacing: 1px; text-align: center; max-width: 280px; line-height: 1.4;"></div>
+            </div>
+            
+        </div>
+
+        <!-- IL RITO D'INGRESSO CON COPY PERSUASIVO -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
             <div class="pulse-dot"></div>
-            <span>Tocca per entrare</span>
+            <span>ENTRA NELL'ECOSISTEMA</span>
         </div>
 
         <!-- ============================================================ -->
@@ -636,7 +678,7 @@ function sbloccaTag() {
     if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
 
     setTimeout(() => {
-        // Cerca le nuove Stanze (Macro-aree)
+        // Ora cerca le nuove Stanze invece delle vecchie caselle
         const caselle = document.querySelectorAll('#mainGrid .room-link');
         let moduliVisibili = 0;
         caselle.forEach((casella) => {
@@ -648,7 +690,6 @@ function sbloccaTag() {
         });
     }, 600);
 }
-
 // ============================================================
 // QR CODE
 // ============================================================
@@ -844,36 +885,137 @@ function renderizzaSocial(configCanali) {
 }
 
 // ============================================================
-// IL NUOVO VIGILE URBANO: ACCENDE LE STANZE (MACRO AREE)
+// IL NUOVO VIGILE URBANO: ACCENDE STANZE E WIDGET
 // ============================================================
 function gestisciVisibilitaCaselle(fields) {
-    // 1. IDENTITY (Sempre accesa per l'Access Tag QR. Conterrà anche Bio, Flash, Status)
+    
+    // --- 1. GESTIONE WIDGET FRONTALI (VETRINA) ---
+    const frontStatus = document.getElementById('front-live-status');
+    if (frontStatus && fields.live_status_color) {
+        const dot = document.getElementById('front-status-dot');
+        const txt = document.getElementById('front-status-text');
+        
+        let colorHex = '#10b981'; let icona = '🟢'; let label = 'ONLINE';
+        if (fields.live_status_color === 'yellow') { colorHex = '#f59e0b'; icona = '🟡'; label = 'BUSY'; }
+        if (fields.live_status_color === 'red') { colorHex = '#ef4444'; icona = '🔴'; label = 'OFFLINE'; }
+        
+        dot.innerText = icona;
+        dot.style.color = colorHex;
+        
+        let finalMsg = label;
+        if (fields.live_status_text && fields.live_status_text.trim() !== '') {
+            finalMsg = fields.live_status_text.trim();
+        }
+        txt.innerText = finalMsg.toUpperCase();
+        txt.style.color = colorHex;
+        
+        frontStatus.style.display = 'flex';
+    } else if (frontStatus) {
+        frontStatus.style.display = 'none';
+    }
+
+    const frontFlash = document.getElementById('front-flash-text');
+    if (frontFlash && fields.flash_text) {
+        const isExpired = fields.flash_expiry && new Date(fields.flash_expiry) < new Date();
+        if (!isExpired) {
+            document.getElementById('front-flash-content').innerText = fields.flash_text;
+            frontFlash.style.display = 'flex';
+        } else {
+            frontFlash.style.display = 'none';
+        }
+    } else if (frontFlash) {
+        frontFlash.style.display = 'none';
+    }
+
+    // --- 2. GESTIONE MACRO-AREE (STANZE) ---
     const elIdentity = document.getElementById('room-identity');
     if (elIdentity) elIdentity.style.display = 'flex';
 
-    // 2. BUSINESS (Accesa se c'è un PDF o un CV)
     const hasBusiness = !!fields.pdf_url || !!fields.cv;
     const elBusiness = document.getElementById('room-business');
     if (elBusiness) elBusiness.style.display = hasBusiness ? 'flex' : 'none';
 
-    // 3. MEDIA (Accesa se c'è la galleria)
     let galleryData = [];
     try { galleryData = JSON.parse(fields.gallery_data || '[]'); } catch(e) {}
     const hasMedia = galleryData.length > 0;
     const elMedia = document.getElementById('room-media');
     if (elMedia) elMedia.style.display = hasMedia ? 'flex' : 'none';
 
-    // 4. NETWORK (Accesa se c'è Sito, Email, VCF o Social)
     let canali = [];
     try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
     const hasNetwork = !!fields.sito_web || !!fields.email || !!fields.modulo_vcf || canali.length > 0;
     const elNetwork = document.getElementById('room-network');
     if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
 
-    // 5. QUICK ACTION
     renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
 }
+      // ============================================================
+// TEATRO LIQUIDO: APERTURA MACRO AREE E CASCATA SOTTOMENU
+// ============================================================
+function apriMacroArea(area) {
+    const overlay = document.getElementById('overlaySezione');
+    const titolo  = document.getElementById('titoloSezione');
+    const corpo   = document.getElementById('corpoSezione');
+    if (!overlay || !titolo || !corpo) return;
 
+    corpo.innerHTML = '';
+    let sottomenuHTML = '';
+
+    if (area === 'identity') {
+        titolo.textContent = 'IDENTITY';
+        sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('qr')"><i class="fas fa-qrcode" style="font-size:1.2rem; width:25px; color:var(--accent-gold);"></i> <span style="flex:1; text-align:left;">ACCESS TAG</span></button>`;
+        if (cacheDatiUtente.bio) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('bio')"><i class="fas fa-pen-nib" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">BIOGRAFIA</span></button>`;
+        }
+    }
+    else if (area === 'business') {
+        titolo.textContent = 'BUSINESS';
+        if (cacheDatiUtente.pdf_url) {
+            const label = (cacheDatiUtente.pdf_label || 'DOCUMENTO PDF').toUpperCase();
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('pdf')"><i class="fas fa-file-pdf" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">${label}</span></button>`;
+        }
+        if (cacheDatiUtente.cv) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('cv')"><i class="fas fa-file-alt" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">CURRICULUM VITAE</span></button>`;
+        }
+    }
+    else if (area === 'media') {
+        titolo.textContent = 'MEDIA';
+        let foto = [];
+        try { foto = JSON.parse(cacheDatiUtente.gallery_data || '[]'); } catch(e){}
+        if (foto.length > 0) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('gallery')"><i class="fas fa-images" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">GALLERIA IMMAGINI</span></button>`;
+        }
+    }
+    else if (area === 'network') {
+        titolo.textContent = 'NETWORK';
+        if (cacheDatiUtente.sito_web) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('sito')"><i class="fas fa-globe" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">SITO WEB UFFICIALE</span></button>`;
+        }
+        let canali = [];
+        try { canali = JSON.parse(cacheDatiUtente.config_canali || '[]'); } catch(e) {}
+        if (canali.length > 0) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('social')"><i class="fas fa-share-nodes" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">SOCIAL & LINK</span></button>`;
+        }
+        if (cacheDatiUtente.email || cacheDatiUtente.modulo_vcf) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('contatti')"><i class="fas fa-address-card" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">RUBRICA & CONTATTI</span></button>`;
+        }
+    }
+
+    corpo.innerHTML = sottomenuHTML;
+    
+    // Innesca la cascata
+    const items = corpo.querySelectorAll('.cascade-item');
+    items.forEach((item, index) => {
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.classList.add('overlay-boot-active');
+    });
+    
+    const btnCondividiSezione = document.getElementById('btnCondividiLink');
+    if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+    overlay.classList.add('attiva');
+    history.pushState({ overlay: 'macroarea', area: area }, '');
+}
 // ============================================================
 // TEATRO LIQUIDO: APERTURA MACRO AREE E CASCATA SOTTOMENU
 // ============================================================
@@ -882,6 +1024,9 @@ function apriMacroArea(area) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
+    // Salva la stanza corrente in memoria e imposta il testo su Chiudi
+    window.macroAreaCorrente = area;
+    document.querySelector('.btn-chiudi').innerText = '← Chiudi';
 
     corpo.innerHTML = '';
     let sottomenuHTML = '';
@@ -974,6 +1119,56 @@ function apriSezione(tipo) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
+    // Trasforma il bottone in un tasto Indietro
+    document.querySelector('.btn-chiudi').innerText = '← Indietro';
+   // --- SEZIONE PDF (Apertura nativa) ---
+    if (tipo === 'pdf') {
+        if (cacheDatiUtente.pdf_url) window.open(cacheDatiUtente.pdf_url, '_blank', 'noopener noreferrer');
+        return;
+    }
+
+    // --- SEZIONE QR CODE (Access Tag interno) ---
+    if (tipo === 'qr') {
+        titolo.textContent = 'ACCESS TAG';
+        const url = `${window.location.origin}/tag.html?u=${cacheDatiUtente.username_system}`;
+        corpo.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px;">
+                <div class="qr-wrapper" id="qr-container-interno" style="width:190px !important; height:190px !important; border-radius: 20px !important; padding:10px !important; background:#fff !important;"></div>
+                <div style="font-size: 0.8rem; color: #86868b; text-align: center; line-height: 1.5;">Questo è il tuo pass digitale.<br>Inquadralo per salvare il profilo.</div>
+            </div>
+        `;
+        const qrContainer = document.getElementById('qr-container-interno');
+        new QRCode(qrContainer, { text: url, width: 170, height: 170, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+        return;
+    }
+
+    // --- SEZIONE GALLERY ---
+    if (tipo === 'gallery') {
+        titolo.textContent = 'GALLERY';
+        corpo.innerHTML = '';
+        let arrayFoto = [];
+        try { arrayFoto = JSON.parse(cacheDatiUtente.gallery_data || '[]'); } catch(e) {}
+
+        if (arrayFoto.length === 0) {
+            corpo.textContent = 'Nessuna immagine presente nella galleria.';
+        } else {
+            const griglia = document.createElement('div');
+            griglia.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin-top: 10px;';
+            
+            arrayFoto.forEach(url => {
+                const imgDiv = document.createElement('div');
+                imgDiv.style.cssText = `
+                    width: 100%; aspect-ratio: 1; border-radius: 12px;
+                    background-image: url('${url}'); background-size: cover; background-position: center;
+                    border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer;
+                `;
+                imgDiv.onclick = () => window.open(url, '_blank');
+                griglia.appendChild(imgDiv);
+            });
+            corpo.appendChild(griglia);
+        }
+        return;
+    } 
 
     // --- SEZIONE PDF (Apertura nativa senza toccare l'overlay) ---
     if (tipo === 'pdf') {
@@ -1242,11 +1437,24 @@ function apriSezione(tipo) {
 }
 
 // ============================================================
-// CHIUSURA OVERLAY SEZIONE
+// CHIUSURA OVERLAY O TASTO INDIETRO (UX OTTIMIZZATA)
 // ============================================================
 function chiudiSezione() {
     const overlay = document.getElementById('overlaySezione');
-    if (overlay) overlay.classList.remove('attiva');
+    const btnChiudi = document.querySelector('.btn-chiudi');
+    if (!overlay) return;
+
+    // Se il tasto dice "Indietro", significa che siamo al Livello 3 (Sottomenu)
+    if (btnChiudi.innerText.includes('Indietro')) {
+        // Ricarichiamo la stanza (Macro-area) precedente
+        if (window.macroAreaCorrente) {
+            apriMacroArea(window.macroAreaCorrente);
+            return;
+        }
+    }
+
+    // Altrimenti, siamo al Livello 2 e chiudiamo tutto l'Overlay
+    overlay.classList.remove('attiva');
     if (history.state && (history.state.overlay === 'sezione' || history.state.overlay === 'macroarea')) {
         history.back();
     }
