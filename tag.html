@@ -188,9 +188,7 @@ body {
     transition: color 0.2s ease, transform 0.2s ease;
     display: flex; align-items: center; justify-content: center;
 }
-.room-link::before {
-    content: '::'; margin-right: 12px; color: rgba(255,255,255,0.2); letter-spacing: 1px; font-weight: 300;
-}
+
 .room-link:active { color: #ffffff !important; transform: scale(0.98); }
 
 /* Speciale Access Tag e Semaforo, rimangono come prima ma integrati */
@@ -222,16 +220,85 @@ body {
 .overlay-boot-active { animation: cascadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes cascadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
 
-.overlay-nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px; margin-bottom: 24px; }
-.btn-chiudi { background: none; border: none; color: var(--text-sec); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: color 0.2s; }
-.btn-chiudi:active { color: #fff; }
-.titolo-sezione { font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 30px;}
-.corpo-sezione { font-size: 0.95rem; color: #e8e8ed; line-height: 1.6; display: flex; flex-direction: column; gap: 12px; }
+/* ============================================================
+   TEATRO LIQUIDO: MINIMAL LUXURY E ANIMAZIONI
+   ============================================================ */
 
-/* Bottoni Social Interni */
-.btn-social { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 14px; border-radius: 12px; transition: all 0.2s ease; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; text-decoration: none; font-size: 0.9rem;}
-.btn-social:active { background: rgba(255, 255, 255, 0.1); transform: scale(0.98); border-color: rgba(255, 255, 255, 0.3); }
+/* L'Animazione Liquida dell'Overlay */
+#overlaySezione.attiva {
+    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes overlayScivola {
+    0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
 
+.titolo-sezione { font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 10px; }
+
+/* Incolonnamento al centro per le voci interne */
+.corpo-sezione { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+
+/* Voci Sottomenu (Zero sfondi, solo tipografia fluttuante) */
+.cascade-item,
+.btn-social,
+.corpo-sezione > div {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center;
+    align-items: center;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important; /* Riga divisoria quasi invisibile */
+    border-radius: 0 !important;
+    padding: 25px 10px !important; /* Molto spazio vuoto elegante */
+    width: 100%;
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+/* L'ultimo elemento della lista non ha il bordo sotto */
+.cascade-item:last-child,
+.btn-social:last-child,
+.corpo-sezione > div:last-child {
+    border-bottom: none !important;
+}
+
+/* Effetto al tocco */
+.btn-social:active,
+.cascade-item:active {
+    transform: scale(0.97);
+    color: var(--accent-gold) !important;
+}
+
+/* Tipografia: Testo sotto, Icona sopra */
+.btn-social span,
+.cascade-item span,
+.corpo-sezione > div span {
+    font-size: 0.85rem !important;
+    letter-spacing: 3px !important;
+    font-weight: 300 !important;
+    color: #e8e8ed;
+    margin-top: 10px; /* Spazio tra icona e testo */
+}
+
+.btn-social i,
+.cascade-item i,
+.corpo-sezione i {
+    font-size: 1.5rem !important;
+    opacity: 0.9;
+    margin: 0 !important;
+}
+
+/* Allinea anche gli elementi interni strutturati (sito, rubrica) */
+.corpo-sezione > div > a, 
+.corpo-sezione > div > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
 /* QR Code Modale (Nessun CSS modificato, manteniamo la tua perfezione) */
 .qr-wrapper { width: 44px !important; height: 44px !important; background: #ffffff !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; border-radius: 10px !important; padding: 4px !important; display: flex !important; justify-content: center !important; align-items: center !important; overflow: hidden; }
 .qr-wrapper canvas, .qr-wrapper img { width: 100% !important; height: 100% !important; display: block !important; object-fit: contain !important; filter: invert(1) sepia(1) saturate(6) hue-rotate(12deg) brightness(0.95); }
@@ -434,29 +501,32 @@ body {
 
     </div>
 
-    <!-- ============================================================ -->
+  <!-- ============================================================ -->
     <!-- 3. IL TEATRO LIQUIDO (L'OVERLAY A SPECCHIO PER I SOTTOMENU)  -->
     <!-- ============================================================ -->
     <div id="overlaySezione" class="pagine-overlay">
-        <div class="contenuto-card" style="width: 100%; height: 100%;">
-            <div class="overlay-nav">
-                <button class="btn-chiudi" onclick="chiudiSezione()">← Chiudi</button>
+        <div class="contenuto-card" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+            
+            <div id="titoloSezione" class="titolo-sezione" style="margin-bottom: 20px;">TITOLO</div>
+            
+            <!-- Corpo scrollabile (I contenuti) -->
+            <div id="corpoSezione" class="corpo-sezione" style="flex: 1; overflow-y: auto; overflow-x: hidden;"></div>
+
+            <!-- Pulsante Ergonomico in Basso (A portata di pollice) -->
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center;">
+                <button onclick="chiudiSezione()" style="background: none; border: none; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; padding: 15px; display: flex; align-items: center; gap: 10px; transition: color 0.2s;">
+                    <i class="fas fa-times" id="icona-chiudi"></i> <span id="testo-chiudi">CHIUDI</span>
+                </button>
             </div>
-            
-            <div id="titoloSezione" class="titolo-sezione">TITOLO</div>
-            
-            <!-- Qui il JavaScript inietterà i sottomenu a cascata -->
-            <div id="corpoSezione" class="corpo-sezione"></div>
         </div>
     </div>
-
     <!-- Pulsante Dashboard (Invariato) -->
     <div id="back-to-dashboard" style="display:none; position:fixed; bottom:80px; left:32px; z-index:10000;">
         <button onclick="chiudiOverlayAcquisto()" style="background:none; border:none; color:#10b981; font-size:0.85rem; font-weight:600; cursor:pointer; padding:8px; letter-spacing:0.3px;">
             ← Dashboard
         </button>
     </div>
-
+ 
     <!-- ============================================================ -->
     <!-- OVERLAY DI SISTEMA (TUTTI INVARIATI E PROTETTI AL 100%)      -->
     <!-- ============================================================ -->
@@ -1056,6 +1126,8 @@ function apriMacroArea(area) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
+    document.getElementById('testo-chiudi').innerText = 'CHIUDI';
+    document.getElementById('icona-chiudi').className = 'fas fa-times';
 
     corpo.innerHTML = '';
     let sottomenuHTML = '';
@@ -1124,8 +1196,8 @@ function apriSezione(tipo) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
-    // Trasforma il bottone in un tasto Indietro
-    document.querySelector('.btn-chiudi').innerText = '← Indietro';
+   document.getElementById('testo-chiudi').innerText = 'INDIETRO';
+    document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
    // --- SEZIONE PDF (Apertura nativa) ---
     if (tipo === 'pdf') {
         if (cacheDatiUtente.pdf_url) window.open(cacheDatiUtente.pdf_url, '_blank', 'noopener noreferrer');
@@ -1446,25 +1518,22 @@ function apriSezione(tipo) {
 // ============================================================
 function chiudiSezione() {
     const overlay = document.getElementById('overlaySezione');
-    const btnChiudi = document.querySelector('.btn-chiudi');
-    if (!overlay) return;
+    const testoChiudi = document.getElementById('testo-chiudi');
+    if (!overlay || !testoChiudi) return;
 
-    // Se il tasto dice "Indietro", significa che siamo al Livello 3 (Sottomenu)
-    if (btnChiudi.innerText.includes('Indietro')) {
-        // Ricarichiamo la stanza (Macro-area) precedente
+    // Uso toLowerCase() per renderlo immune ai cambi maiuscolo/minuscolo del CSS
+    if (testoChiudi.innerText.toLowerCase().includes('indietro')) {
         if (window.macroAreaCorrente) {
             apriMacroArea(window.macroAreaCorrente);
             return;
         }
     }
 
-    // Altrimenti, siamo al Livello 2 e chiudiamo tutto l'Overlay
     overlay.classList.remove('attiva');
     if (history.state && (history.state.overlay === 'sezione' || history.state.overlay === 'macroarea')) {
         history.back();
     }
 }
-
 // ============================================================
 // GESTIONE TASTO BACK (Popstate)
 // ============================================================
