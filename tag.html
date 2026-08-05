@@ -273,6 +273,67 @@ body {
 
 /* Eccezione dorata per l'Azione Rapida */
 #room-quick-action { color: var(--accent-gold) !important; font-weight: 500 !important; }
+          /* Stile per la freccia di ritorno in vetrina */
+#btn-ritorna-vetrina::before { content: none !important; }
+#btn-ritorna-vetrina:active i { color: #ffffff !important; transform: scale(0.9); transition: all 0.2s; } 
+          /* ============================================================
+   CANTIERE 2: TEATRO LIQUIDO E MINIMAL LUXURY
+   ============================================================ */
+
+/* 1. L'Animazione Liquida dell'Overlay (Fisica coerente con l'ingresso) */
+#overlaySezione.attiva {
+    display: flex !important;
+    animation: overlayScivola 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+@keyframes overlayScivola {
+    0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* 2. Addio Tavolette: Sottomenu Minimal Luxury (Zero sfondi, zero bordi pesanti) */
+#overlaySezione .btn-social,
+#overlaySezione .cascade-item {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; /* Solo un filo di luce */
+    border-radius: 0 !important;
+    padding: 20px 10px !important; /* Più respiro per le dita */
+    font-size: 0.85rem !important;
+    letter-spacing: 2px !important;
+    font-weight: 300 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    transition: all 0.3s ease !important;
+}
+
+/* L'ultimo elemento non ha bisogno della linea di separazione sotto */
+#overlaySezione .btn-social:last-child,
+#overlaySezione .cascade-item:last-child {
+    border-bottom: none !important;
+}
+
+/* Effetto al tocco iper-raffinato */
+#overlaySezione .btn-social:active,
+#overlaySezione .cascade-item:active {
+    background: transparent !important;
+    transform: scale(0.97) !important;
+    color: var(--accent-gold) !important; /* Si accende d'oro al tocco */
+    border-color: transparent !important;
+}
+
+/* Allineamento chirurgico delle icone nei sottomenu */
+#overlaySezione .btn-social i {
+    font-size: 1.15rem !important;
+    width: 32px !important;
+    opacity: 0.8;
+}
+
+/* Tocco di eleganza extra per il tasto "Indietro" */
+.btn-chiudi {
+    font-weight: 300 !important;
+    letter-spacing: 2px !important;
+    opacity: 0.7;
+} 
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -347,6 +408,10 @@ body {
 
             <!-- LA QUICK ACTION (Elevata a Stanza) -->
             <button class="room-link" id="room-quick-action" onclick="eseguiQuickAction()" style="display:none;">⚡ AZIONE RAPIDA</button>
+            <!-- PULSANTE PER TORNARE ALLA VETRINA -->
+            <button class="room-link" id="btn-ritorna-vetrina" onclick="bloccaTag()" style="margin-top: 30px;">
+                <i class="fas fa-chevron-up" style="font-size: 1.2rem; color: rgba(255,255,255,0.3);"></i>
+            </button>
 
         </div>
 
@@ -688,6 +753,42 @@ function sbloccaTag() {
         });
     }, 600);
 }
+     // ============================================================
+// CHIUSURA TAG E RITORNO IN VETRINA
+// ============================================================
+function bloccaTag() {
+    const container = document.getElementById('profile-content');
+    if (!container || !container.classList.contains('unlocked')) return;
+
+    if (navigator.vibrate) { navigator.vibrate(20); }
+
+    // Sfumiamo via i bottoni delle stanze prima di far scendere l'header
+    const caselle = document.querySelectorAll('#mainGrid .boot-module-active');
+    caselle.forEach(c => {
+        c.style.animation = 'none'; // Resetta l'animazione di entrata
+        c.style.opacity = '0';
+        c.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        c.style.transform = 'translateY(10px)';
+        c.classList.remove('boot-module-active');
+    });
+
+    // Dopo un istante (150ms), facciamo ricalare il Monolite (Avatar e Nome)
+    setTimeout(() => {
+        container.classList.remove('unlocked');
+        container.classList.add('locked');
+        
+        // Pulizia: rimettiamo a posto gli stili dopo che l'header è sceso, 
+        // così se l'utente rientra, l'animazione riparte perfetta.
+        setTimeout(() => {
+            caselle.forEach(c => {
+                c.style.animation = '';
+                c.style.opacity = '';
+                c.style.transition = '';
+                c.style.transform = '';
+            });
+        }, 1000);
+    }, 150);
+} 
 // ============================================================
 // QR CODE
 // ============================================================
@@ -994,100 +1095,6 @@ function apriMacroArea(area) {
         if (canali.length > 0) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('social')"><i class="fas fa-share-nodes" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">SOCIAL & LINK</span></button>`;
         }
-        if (cacheDatiUtente.email || cacheDatiUtente.modulo_vcf) {
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('contatti')"><i class="fas fa-address-card" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">RUBRICA & CONTATTI</span></button>`;
-        }
-    }
-
-    corpo.innerHTML = sottomenuHTML;
-    
-    // Innesca la cascata
-    const items = corpo.querySelectorAll('.cascade-item');
-    items.forEach((item, index) => {
-        item.style.animationDelay = `${index * 0.1}s`;
-        item.classList.add('overlay-boot-active');
-    });
-    
-    const btnCondividiSezione = document.getElementById('btnCondividiLink');
-    if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
-
-    overlay.classList.add('attiva');
-    history.pushState({ overlay: 'macroarea', area: area }, '');
-}
-// ============================================================
-// TEATRO LIQUIDO: APERTURA MACRO AREE E CASCATA SOTTOMENU
-// ============================================================
-function apriMacroArea(area) {
-    const overlay = document.getElementById('overlaySezione');
-    const titolo  = document.getElementById('titoloSezione');
-    const corpo   = document.getElementById('corpoSezione');
-    if (!overlay || !titolo || !corpo) return;
-    // Salva la stanza corrente in memoria e imposta il testo su Chiudi
-    window.macroAreaCorrente = area;
-    document.querySelector('.btn-chiudi').innerText = '← Chiudi';
-
-    corpo.innerHTML = '';
-    let sottomenuHTML = '';
-
-    // IDENTITY
-    if (area === 'identity') {
-        titolo.textContent = 'IDENTITY';
-        sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('qr')"><i class="fas fa-qrcode" style="font-size:1.2rem; width:25px; color:var(--accent-gold);"></i> <span style="flex:1; text-align:left;">ACCESS TAG</span></button>`;
-        
-        if (cacheDatiUtente.live_status_color) {
-            let colorHex = '#10b981';
-            if (cacheDatiUtente.live_status_color === 'yellow') colorHex = '#f59e0b';
-            if (cacheDatiUtente.live_status_color === 'red') colorHex = '#ef4444';
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('status')"><i class="fas fa-broadcast-tower" style="font-size:1.2rem; width:25px; color:${colorHex};"></i> <span style="flex:1; text-align:left;">LIVE STATUS</span></button>`;
-        }
-        
-        if (cacheDatiUtente.flash_text) {
-            const isExpired = cacheDatiUtente.flash_expiry && new Date(cacheDatiUtente.flash_expiry) < new Date();
-            if (!isExpired) {
-                sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('flash')"><i class="fas fa-bolt" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">MQT FLASH</span></button>`;
-            }
-        }
-        
-        if (cacheDatiUtente.bio) {
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('bio')"><i class="fas fa-pen-nib" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">BIOGRAFIA</span></button>`;
-        }
-    }
-    
-    // BUSINESS
-    else if (area === 'business') {
-        titolo.textContent = 'BUSINESS';
-        if (cacheDatiUtente.pdf_url) {
-            const label = (cacheDatiUtente.pdf_label || 'DOCUMENTO PDF').toUpperCase();
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('pdf')"><i class="fas fa-file-pdf" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">${label}</span></button>`;
-        }
-        if (cacheDatiUtente.cv) {
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('cv')"><i class="fas fa-file-alt" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">CURRICULUM VITAE</span></button>`;
-        }
-    }
-    
-    // MEDIA
-    else if (area === 'media') {
-        titolo.textContent = 'MEDIA';
-        let foto = [];
-        try { foto = JSON.parse(cacheDatiUtente.gallery_data || '[]'); } catch(e){}
-        if (foto.length > 0) {
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('gallery')"><i class="fas fa-images" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">GALLERIA IMMAGINI</span></button>`;
-        }
-    }
-    
-    // NETWORK
-    else if (area === 'network') {
-        titolo.textContent = 'NETWORK';
-        if (cacheDatiUtente.sito_web) {
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('sito')"><i class="fas fa-globe" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">SITO WEB UFFICIALE</span></button>`;
-        }
-        
-        let canali = [];
-        try { canali = JSON.parse(cacheDatiUtente.config_canali || '[]'); } catch(e) {}
-        if (canali.length > 0) {
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('social')"><i class="fas fa-share-nodes" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">SOCIAL & LINK</span></button>`;
-        }
-        
         if (cacheDatiUtente.email || cacheDatiUtente.modulo_vcf) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('contatti')"><i class="fas fa-address-card" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">RUBRICA & CONTATTI</span></button>`;
         }
