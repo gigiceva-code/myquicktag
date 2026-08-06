@@ -205,24 +205,25 @@ body {
 
 
 /* ============================================================
-   IL TEATRO LIQUIDO E LA CASCATA PERFETTA (UX ECCELSA)
+   IL TEATRO LIQUIDO (FISICA UNIFICATA ALLA HOME)
    ============================================================ */
 #overlaySezione {
     position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important;
     width: calc(100% - 32px) !important; max-width: 410px !important; height: calc(100svh - 32px) !important; max-height: 840px !important;
     background-color: var(--bg-chassis) !important; padding: 40px 24px 32px 24px !important; border-radius: 28px !important; 
-    z-index: 100 !important; overflow-y: hidden !important; /* Niente barre di scorrimento brutte */
+    z-index: 100 !important; overflow-y: hidden !important;
     display: none; opacity: 0; 
 }
 
+/* L'Overlay ora sorge dal basso con la stessa identica lentezza elegante della Home */
 #overlaySezione.attiva { 
     display: flex !important; 
     flex-direction: column;
-    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important; 
+    animation: overlayCinematico 0.8s cubic-bezier(0.25, 1, 0.3, 1) forwards !important; 
 }
-@keyframes overlayScivola {
-    0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
-    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+@keyframes overlayCinematico {
+    0% { opacity: 0; transform: translate(-50%, -45%); }
+    100% { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 .titolo-sezione { 
@@ -231,26 +232,25 @@ body {
     flex-shrink: 0;
 }
 
-/* 1. IL SEGRETO DEL CENTRAGGIO (Risolve il problema dello spostamento in alto) */
+/* LA GRAVITÀ CENTRALE */
 .corpo-sezione { 
     display: flex !important; 
     flex-direction: column !important; 
-    justify-content: center !important; /* La gravità che centra tutto */
+    justify-content: center !important; 
     align-items: center !important; 
-    flex: 1 !important; /* Prende tutto lo spazio per bilanciare i pesi */
+    flex: 1 !important; 
     width: 100%;
-    overflow-y: auto; /* Permette lo scorrimento solo qui dentro se serve */
+    overflow-y: auto; 
     gap: 0; 
 }
 
-/* 2. LA CASCATA ORIGINALE DEL PRIMO VIDEO */
-.cascade-item { opacity: 0; transform: translateY(20px); }
-.overlay-boot-active { animation: cascadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-@keyframes cascadeIn { 
-    0% { opacity: 0; transform: translateY(20px); } 
+/* LA CASCATA (Ora clona esattamente l'inerzia di ".boot-module-active") */
+.cascade-item { opacity: 0; transform: translateY(25px); }
+.overlay-boot-active { animation: cloneHomeCascade 0.8s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
+@keyframes cloneHomeCascade { 
+    0% { opacity: 0; transform: translateY(25px); } 
     100% { opacity: 1; transform: translateY(0); } 
 }
-
 /* 3. LUSSO MINIMALE (Zero sfondi, zero scatole) */
 .cascade-item,
 .btn-social,
