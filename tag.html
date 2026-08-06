@@ -203,10 +203,10 @@ body {
 .boot-module-active { animation: moduleCascade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes moduleCascade { 0% { opacity: 0; transform: translateY(25px); } 100% { opacity: 1; transform: translateY(0); } }
 
+
 /* ============================================================
-   TEATRO LIQUIDO: MINIMAL LUXURY E CASCATA AUTOMATICA
+   IL TEATRO LIQUIDO E LA CASCATA PERFETTA (REPLICA VIDEO 1)
    ============================================================ */
-        /* Le fondamenta dell'Overlay (Sfondo, posizione e livello) */
 #overlaySezione {
     position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important;
     width: calc(100% - 32px) !important; max-width: 410px !important; height: calc(100svh - 32px) !important; max-height: 840px !important;
@@ -214,12 +214,12 @@ body {
     z-index: 100 !important; overflow-y: auto !important;
     display: none; opacity: 0; 
 }
-   
 
-/* L'Animazione Liquida dell'Overlay (Fisica d'ingresso) */
-#overlaySezione.attiva {
-    display: flex !important;
-    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+/* Animazione Liquida dell'Overlay */
+#overlaySezione.attiva { 
+    display: flex !important; 
+    flex-direction: column;
+    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important; 
 }
 @keyframes overlayScivola {
     0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
@@ -228,45 +228,28 @@ body {
 
 .titolo-sezione { 
     font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; 
-    text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 10px; 
+    text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 20px; 
 }
 
-/* 1. CENTRAGGIO VERTICALE ASSOLUTO A GRAVITÀ */
+/* 1. CENTRAGGIO A GRAVITÀ (Equilibrio e Ordine) */
 .corpo-sezione { 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    gap: 8px; /* I bottoni si attirano verso il centro */
-    opacity: 1 !important; 
+    gap: 10px; 
     width: 100%;
+    margin: auto 0; /* Allineamento verticale fluido */
 }
-/* La Magia Flexbox: spinge i contenuti esattamente in mezzo allo schermo */
-.corpo-sezione::before,
-.corpo-sezione::after { content: ''; margin: auto; }
 
-/* 2. LA CASCATA AUTOMATICA (Nessuno scatto, zero Javascript) */
-.corpo-sezione > * {
-    opacity: 0; /* Nascono invisibili */
-    transform: translateY(15px); /* Nascono dal basso */
-    animation: cascadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    width: 100%;
-}
+/* 2. IL RITORNO ALLA CASCATA PERFETTA (Comandata dal tuo Javascript originale) */
+.cascade-item { opacity: 0; transform: translateY(20px); }
+.overlay-boot-active { animation: cascadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes cascadeIn { 
-    0% { opacity: 0; transform: translateY(15px); } 
+    0% { opacity: 0; transform: translateY(20px); } 
     100% { opacity: 1; transform: translateY(0); } 
 }
 
-/* Calcolo matematico del ritardo a cascata per ogni elemento */
-.corpo-sezione > *:nth-child(1) { animation-delay: 0.00s; }
-.corpo-sezione > *:nth-child(2) { animation-delay: 0.08s; }
-.corpo-sezione > *:nth-child(3) { animation-delay: 0.16s; }
-.corpo-sezione > *:nth-child(4) { animation-delay: 0.24s; }
-.corpo-sezione > *:nth-child(5) { animation-delay: 0.32s; }
-.corpo-sezione > *:nth-child(6) { animation-delay: 0.40s; }
-.corpo-sezione > *:nth-child(7) { animation-delay: 0.48s; }
-.corpo-sezione > *:nth-child(8) { animation-delay: 0.56s; }
-
-/* Voci Sottomenu (Design Pulito ed Elegante) */
+/* 3. MINIMAL LUXURY (Niente tavolette, solo icone e tipografia fluttuante) */
 .cascade-item,
 .btn-social,
 .corpo-sezione > div {
@@ -276,14 +259,13 @@ body {
     align-items: center;
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important; /* Divisorio fantasma */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important; /* Divisorio fantasma */
     border-radius: 0 !important;
-    padding: 25px 10px !important;
+    padding: 20px 10px !important;
+    width: 100%;
     text-align: center;
     text-decoration: none;
-    
-    /* 3. IL FEEDBACK FLUIDO (RILASCIO): Torna su morbidamente in 0.4 secondi */
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, color 0.4s ease !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
 }
 
 .cascade-item:last-child,
@@ -292,16 +274,15 @@ body {
     border-bottom: none !important;
 }
 
-/* 3. IL FEEDBACK FLUIDO (TOCCO): Scatta giù istantaneamente in 0.1 secondi */
+/* Feedback tattile fluido */
 .btn-social:active,
 .cascade-item:active {
-    transform: scale(0.93) !important; /* Si ritrae come un bottone di gomma */
-    background: rgba(255, 255, 255, 0.02) !important; /* Lievissimo lampo di luce */
+    transform: scale(0.95) !important; 
+    opacity: 0.6 !important;
     color: var(--accent-gold) !important;
-    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), background 0.1s ease, color 0.1s ease !important;
 }
 
-/* Tipografia: Testo sotto, Icona sopra */
+/* Tipografia chirurgica */
 .btn-social span,
 .cascade-item span,
 .corpo-sezione > div span {
@@ -309,17 +290,18 @@ body {
     letter-spacing: 3px !important;
     font-weight: 300 !important;
     color: #e8e8ed;
-    margin-top: 10px; 
+    margin-top: 12px; 
 }
 
 .btn-social i,
 .cascade-item i,
 .corpo-sezione i {
-    font-size: 1.5rem !important;
+    font-size: 1.6rem !important;
     opacity: 0.9;
     margin: 0 !important;
 }
 
+/* Contenitori per Sito e Rubrica */
 .corpo-sezione > div > a, 
 .corpo-sezione > div > div {
     display: flex;
@@ -327,9 +309,8 @@ body {
     justify-content: center;
     align-items: center;
     gap: 12px;
+    width: 100%;
 }
-
-
 
 
 /* QR Code Modale (Nessun CSS modificato, manteniamo la tua perfezione) */
