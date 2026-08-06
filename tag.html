@@ -220,8 +220,107 @@ body {
 .overlay-boot-active { animation: cascadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes cascadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
 
+/* ============================================================
+   TEATRO LIQUIDO: MINIMAL LUXURY, FEEDBACK FLUIDO E ANIMAZIONI
+   ============================================================ */
 
+/* L'Animazione Liquida dell'Overlay */
+#overlaySezione.attiva {
+    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
+@keyframes overlayScivola {
+    0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.titolo-sezione { font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 10px; }
+
+/* 1. CENTRAGGIO VERTICALE ASSOLUTO A GRAVITÀ */
+.corpo-sezione { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 8px; /* I bottoni si attirano verso il centro */
+    opacity: 0; /* Lo prepariamo per l'animazione */
+}
+/* La Magia Flexbox: spinge i contenuti esattamente in mezzo allo schermo */
+.corpo-sezione::before,
+.corpo-sezione::after { content: ''; margin: auto; }
+
+/* Il motore della nuova transizione morbida dei contenuti (No "A Scatto") */
+.animate-content {
+    animation: fluidContent 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes fluidContent {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Voci Sottomenu (Design Pulito) */
+.cascade-item,
+.btn-social,
+.corpo-sezione > div {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center;
+    align-items: center;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    border-radius: 0 !important;
+    padding: 25px 10px !important;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    
+    /* 2. IL FEEDBACK FLUIDO (RILASCIO): Torna su morbidamente in 0.4s */
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, color 0.4s ease !important;
+}
+
+.cascade-item:last-child,
+.btn-social:last-child,
+.corpo-sezione > div:last-child {
+    border-bottom: none !important;
+}
+
+/* 2. IL FEEDBACK FLUIDO (TOCCO): Scatta subito giù in 0.1s */
+.btn-social:active,
+.cascade-item:active {
+    transform: scale(0.92) !important; /* Si schiaccia leggermente di più */
+    opacity: 0.6 !important; 
+    color: var(--accent-gold) !important;
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease, color 0.1s ease !important;
+}
+
+/* Tipografia: Testo sotto, Icona sopra */
+.btn-social span,
+.cascade-item span,
+.corpo-sezione > div span {
+    font-size: 0.85rem !important;
+    letter-spacing: 3px !important;
+    font-weight: 300 !important;
+    color: #e8e8ed;
+    margin-top: 10px; 
+}
+
+.btn-social i,
+.cascade-item i,
+.corpo-sezione i {
+    font-size: 1.5rem !important;
+    opacity: 0.9;
+    margin: 0 !important;
+}
+
+.corpo-sezione > div > a, 
+.corpo-sezione > div > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+
 /* QR Code Modale (Nessun CSS modificato, manteniamo la tua perfezione) */
 .qr-wrapper { width: 44px !important; height: 44px !important; background: #ffffff !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; border-radius: 10px !important; padding: 4px !important; display: flex !important; justify-content: center !important; align-items: center !important; overflow: hidden; }
 .qr-wrapper canvas, .qr-wrapper img { width: 100% !important; height: 100% !important; display: block !important; object-fit: contain !important; filter: invert(1) sepia(1) saturate(6) hue-rotate(12deg) brightness(0.95); }
