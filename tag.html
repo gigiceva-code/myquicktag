@@ -527,8 +527,8 @@ body {
             <!-- Corpo scrollabile (I contenuti) -->
             <div id="corpoSezione" class="corpo-sezione" style="flex: 1; overflow-y: auto; overflow-x: hidden;"></div>
 
-            <!-- Pulsante Ergonomico in Basso (A portata di pollice) -->
-            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center;">
+           <!-- Pulsante Ergonomico in Basso (Sticky) -->
+            <div class="bottom-action-bar">
                 <button onclick="chiudiSezione()" style="background: none; border: none; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; padding: 15px; display: flex; align-items: center; gap: 10px; transition: color 0.2s;">
                     <i class="fas fa-times" id="icona-chiudi"></i> <span id="testo-chiudi">CHIUDI</span>
                 </button>
@@ -1513,7 +1513,7 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- ALTRE SEZIONI TESTUALI (BIO E CV) ---
+  // --- ALTRE SEZIONI TESTUALI (BIO E CV) ---
     const contenuti = {
         'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
         'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' }
@@ -1522,11 +1522,16 @@ function apriSezione(tipo) {
     if (!contenuti[tipo]) return;
 
     titolo.textContent = contenuti[tipo].t;
-    corpo.textContent  = contenuti[tipo].c;
+    
+    // Trasformando il testo nudo in un blocco HTML, il CSS lo riconosce 
+    // e innesca la cascata fluida annullando per sempre lo "scatto"
+    corpo.innerHTML = `<div class="testo-lettura">${contenuti[tipo].c.replace(/\n/g, '<br>')}</div>`;
 
     const btnCondividiSezione = document.getElementById('btnCondividiLink');
     if (btnCondividiSezione) {
         btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
+    }
+}
        // INNESCA LA CASCATA FLUIDA PER TUTTI I SOTTOMENU (Elimina l'effetto a scatto)
     const elementi = corpo.children;
     Array.from(elementi).forEach((el, index) => {
