@@ -203,6 +203,122 @@ body {
 .boot-module-active { animation: moduleCascade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes moduleCascade { 0% { opacity: 0; transform: translateY(25px); } 100% { opacity: 1; transform: translateY(0); } }
 
+/* ============================================================
+   TEATRO LIQUIDO: MINIMAL LUXURY E CASCATA AUTOMATICA
+   ============================================================ */
+
+/* L'Animazione Liquida dell'Overlay (Fisica d'ingresso) */
+#overlaySezione.attiva {
+    display: flex !important;
+    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+@keyframes overlayScivola {
+    0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.titolo-sezione { 
+    font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; 
+    text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 10px; 
+}
+
+/* 1. CENTRAGGIO VERTICALE ASSOLUTO A GRAVITÀ */
+.corpo-sezione { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 8px; /* I bottoni si attirano verso il centro */
+    opacity: 1 !important; 
+    width: 100%;
+}
+/* La Magia Flexbox: spinge i contenuti esattamente in mezzo allo schermo */
+.corpo-sezione::before,
+.corpo-sezione::after { content: ''; margin: auto; }
+
+/* 2. LA CASCATA AUTOMATICA (Nessuno scatto, zero Javascript) */
+.corpo-sezione > * {
+    opacity: 0; /* Nascono invisibili */
+    transform: translateY(15px); /* Nascono dal basso */
+    animation: cascadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    width: 100%;
+}
+@keyframes cascadeIn { 
+    0% { opacity: 0; transform: translateY(15px); } 
+    100% { opacity: 1; transform: translateY(0); } 
+}
+
+/* Calcolo matematico del ritardo a cascata per ogni elemento */
+.corpo-sezione > *:nth-child(1) { animation-delay: 0.00s; }
+.corpo-sezione > *:nth-child(2) { animation-delay: 0.08s; }
+.corpo-sezione > *:nth-child(3) { animation-delay: 0.16s; }
+.corpo-sezione > *:nth-child(4) { animation-delay: 0.24s; }
+.corpo-sezione > *:nth-child(5) { animation-delay: 0.32s; }
+.corpo-sezione > *:nth-child(6) { animation-delay: 0.40s; }
+.corpo-sezione > *:nth-child(7) { animation-delay: 0.48s; }
+.corpo-sezione > *:nth-child(8) { animation-delay: 0.56s; }
+
+/* Voci Sottomenu (Design Pulito ed Elegante) */
+.cascade-item,
+.btn-social,
+.corpo-sezione > div {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center;
+    align-items: center;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important; /* Divisorio fantasma */
+    border-radius: 0 !important;
+    padding: 25px 10px !important;
+    text-align: center;
+    text-decoration: none;
+    
+    /* 3. IL FEEDBACK FLUIDO (RILASCIO): Torna su morbidamente in 0.4 secondi */
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, color 0.4s ease !important;
+}
+
+.cascade-item:last-child,
+.btn-social:last-child,
+.corpo-sezione > div:last-child {
+    border-bottom: none !important;
+}
+
+/* 3. IL FEEDBACK FLUIDO (TOCCO): Scatta giù istantaneamente in 0.1 secondi */
+.btn-social:active,
+.cascade-item:active {
+    transform: scale(0.93) !important; /* Si ritrae come un bottone di gomma */
+    background: rgba(255, 255, 255, 0.02) !important; /* Lievissimo lampo di luce */
+    color: var(--accent-gold) !important;
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), background 0.1s ease, color 0.1s ease !important;
+}
+
+/* Tipografia: Testo sotto, Icona sopra */
+.btn-social span,
+.cascade-item span,
+.corpo-sezione > div span {
+    font-size: 0.85rem !important;
+    letter-spacing: 3px !important;
+    font-weight: 300 !important;
+    color: #e8e8ed;
+    margin-top: 10px; 
+}
+
+.btn-social i,
+.cascade-item i,
+.corpo-sezione i {
+    font-size: 1.5rem !important;
+    opacity: 0.9;
+    margin: 0 !important;
+}
+
+.corpo-sezione > div > a, 
+.corpo-sezione > div > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
 
 
 
