@@ -1514,26 +1514,28 @@ function apriSezione(tipo) {
 }
 
 // ============================================================
-// CHIUSURA OVERLAY O TASTO INDIETRO (UX OTTIMIZZATA)
+// CHIUSURA OVERLAY O TASTO INDIETRO (LETTURA ICONA INFALLIBILE)
 // ============================================================
 function chiudiSezione() {
     const overlay = document.getElementById('overlaySezione');
-    const testoChiudi = document.getElementById('testo-chiudi');
-    if (!overlay || !testoChiudi) return;
+    const icona = document.getElementById('icona-chiudi');
+    if (!overlay || !icona) return;
 
-    // Uso toLowerCase() per renderlo immune ai cambi maiuscolo/minuscolo del CSS
-    if (testoChiudi.innerText.toLowerCase().includes('indietro')) {
+    // Se l'icona è la freccia (chevron-left), significa che siamo in un sottomenu (Livello 2)
+    if (icona.classList.contains('fa-chevron-left')) {
         if (window.macroAreaCorrente) {
-            apriMacroArea(window.macroAreaCorrente);
+            apriMacroArea(window.macroAreaCorrente); // Torniamo al menu (Livello 1)
             return;
         }
     }
 
+    // Se l'icona è la 'X', chiudiamo definitivamente l'overlay
     overlay.classList.remove('attiva');
     if (history.state && (history.state.overlay === 'sezione' || history.state.overlay === 'macroarea')) {
         history.back();
     }
 }
+
 // ============================================================
 // GESTIONE TASTO BACK (Popstate)
 // ============================================================
