@@ -1126,6 +1126,8 @@ function apriMacroArea(area) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
+      window.macroAreaCorrente = area; 
+    
     document.getElementById('testo-chiudi').innerText = 'CHIUDI';
     document.getElementById('icona-chiudi').className = 'fas fa-times';
 
