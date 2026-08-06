@@ -211,22 +211,14 @@ body {
     width: calc(100% - 32px) !important; max-width: 410px !important; height: calc(100svh - 32px) !important; max-height: 840px !important;
     background-color: var(--bg-chassis) !important; padding: 40px 24px 32px 24px !important; border-radius: 28px !important; 
     z-index: 100 !important; overflow-y: auto !important;
-    display: none; opacity: 0; transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: none; opacity: 0; 
 }
-#overlaySezione.attiva { display: flex !important; opacity: 1 !important; flex-direction: column; }
 
-/* Elementi interni all'overlay pronti a cascare */
-.cascade-item { opacity: 0; transform: translateY(20px); }
-.overlay-boot-active { animation: cascadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-@keyframes cascadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-
-/* ============================================================
-   TEATRO LIQUIDO: MINIMAL LUXURY, FEEDBACK FLUIDO E ANIMAZIONI
-   ============================================================ */
-
-/* L'Animazione Liquida dell'Overlay */
-#overlaySezione.attiva {
-    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+/* Animazione Liquida dell'Overlay */
+#overlaySezione.attiva { 
+    display: flex !important; 
+    flex-direction: column;
+    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important; 
 }
 @keyframes overlayScivola {
     0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
@@ -241,13 +233,13 @@ body {
     flex-direction: column; 
     align-items: center; 
     gap: 8px; /* I bottoni si attirano verso il centro */
-    opacity: 0; /* Lo prepariamo per l'animazione */
+    opacity: 0; /* Lo prepariamo per l'animazione del Regista Automatico */
 }
 /* La Magia Flexbox: spinge i contenuti esattamente in mezzo allo schermo */
 .corpo-sezione::before,
 .corpo-sezione::after { content: ''; margin: auto; }
 
-/* Il motore della nuova transizione morbida dei contenuti (No "A Scatto") */
+/* Il motore della transizione morbida dei contenuti */
 .animate-content {
     animation: fluidContent 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
@@ -319,6 +311,7 @@ body {
     align-items: center;
     gap: 12px;
 }
+
 
 
 /* QR Code Modale (Nessun CSS modificato, manteniamo la tua perfezione) */
