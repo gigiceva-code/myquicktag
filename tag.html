@@ -1531,8 +1531,8 @@ function apriSezione(tipo) {
     if (btnCondividiSezione) {
         btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
     }
-}
-       // INNESCA LA CASCATA FLUIDA PER TUTTI I SOTTOMENU (Elimina l'effetto a scatto)
+
+    // INNESCA LA CASCATA FLUIDA PER TUTTI I SOTTOMENU (Elimina l'effetto a scatto)
     const elementi = corpo.children;
     Array.from(elementi).forEach((el, index) => {
         el.classList.add('cascade-item');
@@ -1541,7 +1541,6 @@ function apriSezione(tipo) {
             el.classList.add('overlay-boot-active');
         }, 10);
     }); 
-    }
 }
 
 // ============================================================
