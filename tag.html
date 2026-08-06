@@ -205,17 +205,16 @@ body {
 
 
 /* ============================================================
-   IL TEATRO LIQUIDO E LA CASCATA PERFETTA (REPLICA VIDEO 1)
+   IL TEATRO LIQUIDO E LA CASCATA PERFETTA (UX ECCELSA)
    ============================================================ */
 #overlaySezione {
     position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important;
     width: calc(100% - 32px) !important; max-width: 410px !important; height: calc(100svh - 32px) !important; max-height: 840px !important;
     background-color: var(--bg-chassis) !important; padding: 40px 24px 32px 24px !important; border-radius: 28px !important; 
-    z-index: 100 !important; overflow-y: auto !important;
+    z-index: 100 !important; overflow-y: hidden !important; /* Niente barre di scorrimento brutte */
     display: none; opacity: 0; 
 }
 
-/* Animazione Liquida dell'Overlay */
 #overlaySezione.attiva { 
     display: flex !important; 
     flex-direction: column;
@@ -229,19 +228,22 @@ body {
 .titolo-sezione { 
     font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; 
     text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 20px; 
+    flex-shrink: 0;
 }
 
-/* 1. CENTRAGGIO A GRAVITÀ (Equilibrio e Ordine) */
+/* 1. IL SEGRETO DEL CENTRAGGIO (Risolve il problema dello spostamento in alto) */
 .corpo-sezione { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 10px; 
+    display: flex !important; 
+    flex-direction: column !important; 
+    justify-content: center !important; /* La gravità che centra tutto */
+    align-items: center !important; 
+    flex: 1 !important; /* Prende tutto lo spazio per bilanciare i pesi */
     width: 100%;
-    margin: auto 0; /* Allineamento verticale fluido */
+    overflow-y: auto; /* Permette lo scorrimento solo qui dentro se serve */
+    gap: 0; 
 }
 
-/* 2. IL RITORNO ALLA CASCATA PERFETTA (Comandata dal tuo Javascript originale) */
+/* 2. LA CASCATA ORIGINALE DEL PRIMO VIDEO */
 .cascade-item { opacity: 0; transform: translateY(20px); }
 .overlay-boot-active { animation: cascadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes cascadeIn { 
@@ -249,7 +251,7 @@ body {
     100% { opacity: 1; transform: translateY(0); } 
 }
 
-/* 3. MINIMAL LUXURY (Niente tavolette, solo icone e tipografia fluttuante) */
+/* 3. LUSSO MINIMALE (Zero sfondi, zero scatole) */
 .cascade-item,
 .btn-social,
 .corpo-sezione > div {
@@ -259,9 +261,9 @@ body {
     align-items: center;
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important; /* Divisorio fantasma */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
     border-radius: 0 !important;
-    padding: 20px 10px !important;
+    padding: 25px 10px !important;
     width: 100%;
     text-align: center;
     text-decoration: none;
@@ -274,7 +276,7 @@ body {
     border-bottom: none !important;
 }
 
-/* Feedback tattile fluido */
+/* 4. FEEDBACK TATTILE MODERNO */
 .btn-social:active,
 .cascade-item:active {
     transform: scale(0.95) !important; 
@@ -282,7 +284,7 @@ body {
     color: var(--accent-gold) !important;
 }
 
-/* Tipografia chirurgica */
+/* Tipografia chirurgica e Icone allineate */
 .btn-social span,
 .cascade-item span,
 .corpo-sezione > div span {
@@ -301,7 +303,7 @@ body {
     margin: 0 !important;
 }
 
-/* Contenitori per Sito e Rubrica */
+/* Impaginazione per sezioni complesse (Rubrica, Sito) */
 .corpo-sezione > div > a, 
 .corpo-sezione > div > div {
     display: flex;
@@ -311,7 +313,6 @@ body {
     gap: 12px;
     width: 100%;
 }
-
 
 /* QR Code Modale (Nessun CSS modificato, manteniamo la tua perfezione) */
 .qr-wrapper { width: 44px !important; height: 44px !important; background: #ffffff !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; border-radius: 10px !important; padding: 4px !important; display: flex !important; justify-content: center !important; align-items: center !important; overflow: hidden; }
@@ -1526,6 +1527,15 @@ function apriSezione(tipo) {
     const btnCondividiSezione = document.getElementById('btnCondividiLink');
     if (btnCondividiSezione) {
         btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
+       // INNESCA LA CASCATA FLUIDA PER TUTTI I SOTTOMENU (Elimina l'effetto a scatto)
+    const elementi = corpo.children;
+    Array.from(elementi).forEach((el, index) => {
+        el.classList.add('cascade-item');
+        el.style.animationDelay = `${index * 0.08}s`; // Ritardo matematico perfetto
+        setTimeout(() => {
+            el.classList.add('overlay-boot-active');
+        }, 10);
+    }); 
     }
 }
 
