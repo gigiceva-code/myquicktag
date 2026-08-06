@@ -203,114 +203,7 @@ body {
 .boot-module-active { animation: moduleCascade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes moduleCascade { 0% { opacity: 0; transform: translateY(25px); } 100% { opacity: 1; transform: translateY(0); } }
 
-/* ============================================================
-   IL TEATRO LIQUIDO (OVERLAY) E CASCATA INTERNA
-   ============================================================ */
-#overlaySezione {
-    position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important;
-    width: calc(100% - 32px) !important; max-width: 410px !important; height: calc(100svh - 32px) !important; max-height: 840px !important;
-    background-color: var(--bg-chassis) !important; padding: 40px 24px 32px 24px !important; border-radius: 28px !important; 
-    z-index: 100 !important; overflow-y: auto !important;
-    display: none; opacity: 0; 
-}
 
-/* Animazione Liquida dell'Overlay */
-#overlaySezione.attiva { 
-    display: flex !important; 
-    flex-direction: column;
-    animation: overlayScivola 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important; 
-}
-@keyframes overlayScivola {
-    0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
-    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-
-.titolo-sezione { font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 10px; }
-
-/* 1. CENTRAGGIO VERTICALE ASSOLUTO A GRAVITÀ */
-.corpo-sezione { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 8px; /* I bottoni si attirano verso il centro */
-    opacity: 0; /* Lo prepariamo per l'animazione del Regista Automatico */
-}
-/* La Magia Flexbox: spinge i contenuti esattamente in mezzo allo schermo */
-.corpo-sezione::before,
-.corpo-sezione::after { content: ''; margin: auto; }
-
-/* Il motore della transizione morbida dei contenuti */
-.animate-content {
-    animation: fluidContent 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-@keyframes fluidContent {
-    0% { opacity: 0; transform: translateY(15px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* Voci Sottomenu (Design Pulito) */
-.cascade-item,
-.btn-social,
-.corpo-sezione > div {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center;
-    align-items: center;
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
-    border-radius: 0 !important;
-    padding: 25px 10px !important;
-    width: 100%;
-    text-align: center;
-    text-decoration: none;
-    
-    /* 2. IL FEEDBACK FLUIDO (RILASCIO): Torna su morbidamente in 0.4s */
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, color 0.4s ease !important;
-}
-
-.cascade-item:last-child,
-.btn-social:last-child,
-.corpo-sezione > div:last-child {
-    border-bottom: none !important;
-}
-
-/* 2. IL FEEDBACK FLUIDO (TOCCO): Scatta subito giù in 0.1s */
-.btn-social:active,
-.cascade-item:active {
-    transform: scale(0.92) !important; /* Si schiaccia leggermente di più */
-    opacity: 0.6 !important; 
-    color: var(--accent-gold) !important;
-    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease, color 0.1s ease !important;
-}
-
-/* Tipografia: Testo sotto, Icona sopra */
-.btn-social span,
-.cascade-item span,
-.corpo-sezione > div span {
-    font-size: 0.85rem !important;
-    letter-spacing: 3px !important;
-    font-weight: 300 !important;
-    color: #e8e8ed;
-    margin-top: 10px; 
-}
-
-.btn-social i,
-.cascade-item i,
-.corpo-sezione i {
-    font-size: 1.5rem !important;
-    opacity: 0.9;
-    margin: 0 !important;
-}
-
-.corpo-sezione > div > a, 
-.corpo-sezione > div > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-}
 
 
 
@@ -1729,28 +1622,7 @@ function mostraWelcomeOverlay() {
 
     overlay.style.display = 'flex';
 }
-      // ============================================================
-// IL REGISTA AUTOMATICO DELLE TRANSIZIONI FLUIDE
-// ============================================================
-document.addEventListener("DOMContentLoaded", () => {
-    let timerAnimazione;
-    const corpo = document.getElementById('corpoSezione');
-    
-    if (corpo) {
-        // L'Osservatore "guarda" il corpo della pagina. 
-        // Ogni volta che i contenuti si aggiornano, innesca la transizione liquida.
-        const osservatoreTeatro = new MutationObserver(() => {
-            clearTimeout(timerAnimazione);
-            timerAnimazione = setTimeout(() => {
-                corpo.classList.remove('animate-content');
-                void corpo.offsetWidth; // Magia di sistema per riavviare la transizione
-                corpo.classList.add('animate-content');
-            }, 10);
-        });
-        
-        osservatoreTeatro.observe(corpo, { childList: true, subtree: true });
-    }
-});
+      
 
 </script>     
 </body>
