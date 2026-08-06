@@ -206,6 +206,15 @@ body {
 /* ============================================================
    TEATRO LIQUIDO: MINIMAL LUXURY E CASCATA AUTOMATICA
    ============================================================ */
+        /* Le fondamenta dell'Overlay (Sfondo, posizione e livello) */
+#overlaySezione {
+    position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important;
+    width: calc(100% - 32px) !important; max-width: 410px !important; height: calc(100svh - 32px) !important; max-height: 840px !important;
+    background-color: var(--bg-chassis) !important; padding: 40px 24px 32px 24px !important; border-radius: 28px !important; 
+    z-index: 100 !important; overflow-y: auto !important;
+    display: none; opacity: 0; 
+}
+   
 
 /* L'Animazione Liquida dell'Overlay (Fisica d'ingresso) */
 #overlaySezione.attiva {
