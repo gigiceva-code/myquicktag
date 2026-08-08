@@ -53,43 +53,43 @@ body {
     content: 'myquicktag'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; color: #1c1c1e; font-weight: 300; pointer-events: none; z-index: 1;
 }
-
 /* ============================================================
-   IL SIGILLO ORBITALE E IL RITO D'INGRESSO (ALLINEATO A EDIT)
+   IL SIGILLO ORBITALE (SUPERELLISSE PREMIUM)
    ============================================================ */
 .orbital-container {
-    position: relative; width: 80px; height: 80px; margin: 0 auto 25px auto;
+    position: relative; width: 84px; height: 84px; margin: 0 auto 30px auto;
     display: flex; justify-content: center; align-items: center; z-index: 10;
 }
 .orbital-sphere {
-    width: 72px; height: 72px; border-radius: 18px !important; overflow: hidden; background: #000;
-    position: relative; z-index: 2; box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.08);
+    width: 76px; height: 76px; 
+    border-radius: 20px !important; /* Forma a Superellisse esatta */
+    overflow: hidden; background: #000;
+    position: relative; z-index: 2; 
+    border: 1px solid rgba(255,255,255,0.08); /* Filo di luce chirurgico */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8);
 }
-.orbital-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) brightness(0.95); }
+.orbital-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) brightness(0.98); }
 
+/* L'Orbita: Abbraccia la forma e fa un "respiro" al caricamento, senza girare */
 .orbital-ring {
-    position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
-    border-radius: 22px !important; border: 1px solid transparent;
-    border-top-color: var(--core-border); border-right-color: rgba(255,255,255,0.02);
-    border-bottom-color: rgba(255,255,255,0.01); border-left-color: rgba(255,255,255,0.02);
-    animation: orbitSpin 40s linear infinite; z-index: 1; filter: drop-shadow(0 0 12px var(--core-glow));
+    position: absolute; top: -3px; left: -3px; right: -3px; bottom: -3px;
+    border-radius: 24px !important; /* Offset millimetrico per seguire la forma interna */
+    border: 1px solid var(--core-border); /* Colore dinamico del tema */
+    background: transparent; z-index: 1;
+    opacity: 0;
+    transform: scale(0.92);
+    animation: ringSettle 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.3s;
 }
-@keyframes orbitSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-/* TRANSIZIONI DI STATO (LOCKED / UNLOCKED) */
-.app-container.locked .header-monolith { transform: translateY(28vh) scale(1.15); transition: transform 1.2s cubic-bezier(0.25, 1, 0.3, 1); }
-.app-container.locked #mainGrid, .app-container.locked #cta-pubblica-container, .app-container.locked #cta-sblocco-container { display: none !important; }
-.app-container.unlocked .header-monolith { transform: translateY(0) scale(1); transition: transform 1s cubic-bezier(0.25, 1, 0.3, 1); }
-.app-container.unlocked .entrance-prompt { opacity: 0; transform: translate(-50%, 50px); pointer-events: none; }
-
-/* PULSANTE "TOCCA PER ENTRARE" */
-.entrance-prompt {
-    position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 15px;
-    cursor: pointer; z-index: 100; transition: opacity 0.5s ease, transform 0.8s ease;
+@keyframes ringSettle {
+    0% { opacity: 0; transform: scale(0.92); }
+    50% { opacity: 1; transform: scale(1.03); box-shadow: 0 0 20px var(--core-glow); }
+    100% { opacity: 1; transform: scale(1); box-shadow: 0 0 12px var(--core-glow); }
 }
-.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-sec); animation: pulseDot 2.5s infinite ease-in-out; }
-.entrance-prompt span { font-size: 0.6rem; letter-spacing: 6px; text-transform: uppercase; color: var(--text-sec); }
-@keyframes pulseDot { 0% { transform: scale(0.8); opacity: 0.3; } 50% { transform: scale(1.8); opacity: 1; box-shadow: 0 0 20px var(--core-glow); background: #fff;} 100% { transform: scale(0.8); opacity: 0.3; } }
+
+/* Regola per l'ingresso sfumato degli elementi sotto il nome */
+.fade-in-widget { opacity: 0; transform: translateY(10px); animation: fadeUpWidget 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 1.3s; }
+@keyframes fadeUpWidget { to { opacity: 1; transform: translateY(0); } }
+
 
 /* ============================================================
    ARCHITETTURA BADGE E LAYOUT (IMPORTATA DA EDIT.HTML)
