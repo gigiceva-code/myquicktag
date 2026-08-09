@@ -937,7 +937,7 @@ function renderizzaTagCompleta(fields) {
 }
 
 // ============================================================
-// LO SBLOCCO (IL RITO D'INGRESSO CINEMATOGRAFICO)
+// LO SBLOCCO E IL RITORNO (IL MORPH CINEMATOGRAFICO)
 // ============================================================
 function sbloccaTag() {
     const container = document.getElementById('profile-content');
@@ -945,64 +945,59 @@ function sbloccaTag() {
 
     if (navigator.vibrate) { navigator.vibrate(40); }
 
-    // 1. Il Monolite inizia a salire e "Entra" si dissolve
+    // 1. Innesca il Morph: Il Monolite scivola in alto, "Esplora" scompare
     container.classList.remove('locked');
     container.classList.add('unlocked');
 
     const mainGrid = document.getElementById('mainGrid');
     if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
 
-    // 2. Orchestrazione: Aspettiamo 300 millisecondi prima di mostrare le stanze.
-    // L'occhio segue il logo che sale, e poi scopre le stanze che emergono.
+    // 2. Le stanze emergono dal buio mettendosi a fuoco
     setTimeout(() => {
         const caselle = document.querySelectorAll('#mainGrid .room-link');
         let moduliVisibili = 0;
         caselle.forEach((casella) => {
-            // Ignoriamo i bottoni nascosti
-            if (window.getComputedStyle(casella).display !== 'none' && casella.id !== 'btn-ritorna-vetrina') {
+            if (window.getComputedStyle(casella).display !== 'none') {
                 casella.classList.add('boot-module-active');
                 casella.style.animationDelay = `${(moduliVisibili * 0.1)}s`;
                 moduliVisibili++;
             }
         });
-    }, 300); 
+    }, 300); // Piccolissimo ritardo per far iniziare prima la salita dell'header
 }
-     // ============================================================
-// CHIUSURA TAG E RITORNO IN VETRINA
-// ============================================================
+
 function bloccaTag() {
     const container = document.getElementById('profile-content');
     if (!container || !container.classList.contains('unlocked')) return;
 
     if (navigator.vibrate) { navigator.vibrate(20); }
 
-    // Sfumiamo via i bottoni delle stanze prima di far scendere l'header
+    // 1. Reverse Morph: Le stanze tornano nel buio e si sfuocano
     const caselle = document.querySelectorAll('#mainGrid .boot-module-active');
     caselle.forEach(c => {
-        c.style.animation = 'none'; // Resetta l'animazione di entrata
+        c.style.animation = 'none'; 
+        c.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.3, 1)';
         c.style.opacity = '0';
-        c.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-        c.style.transform = 'translateY(10px)';
+        c.style.transform = 'translateY(20px) scale(0.95)';
+        c.style.filter = 'blur(5px)';
         c.classList.remove('boot-module-active');
     });
 
-    // Dopo un istante (150ms), facciamo ricalare il Monolite (Avatar e Nome)
+    // 2. Dopo che le stanze sono sparite, il Monolite torna al centro
     setTimeout(() => {
         container.classList.remove('unlocked');
         container.classList.add('locked');
         
-        // Pulizia: rimettiamo a posto gli stili dopo che l'header è sceso, 
-        // così se l'utente rientra, l'animazione riparte perfetta.
+        // Pulizia invisibile per preparare il prossimo ingresso
         setTimeout(() => {
             caselle.forEach(c => {
-                c.style.animation = '';
-                c.style.opacity = '';
-                c.style.transition = '';
-                c.style.transform = '';
+                c.style.transition = ''; c.style.transform = ''; c.style.filter = '';
             });
+            const mainGrid = document.getElementById('mainGrid');
+            if(mainGrid) mainGrid.style.display = 'none';
         }, 1000);
-    }, 150);
-} 
+    }, 300);
+}
 // ============================================================
 // QR CODE
 // ============================================================
