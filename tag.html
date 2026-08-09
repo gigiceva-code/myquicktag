@@ -477,10 +477,9 @@ body {
 
 /* Uccidiamo definitivamente la freccia verso l'alto che suggeriva uno scroll inesistente */
 #btn-ritorna-vetrina { display: none !important; }
-           /* ============================================================
-   IL MORPH CINEMATOGRAFICO (SPAZIALE) E TASTI DI NAVIGAZIONE
+          /* ============================================================
+   IL MORPH CINEMATOGRAFICO (SPAZIALE) 
    ============================================================ */
-/* Posizionamento dei tasti sul fondo (Sticky e sovrapposti) */
 .entrance-prompt, .exit-prompt {
     position: absolute !important; bottom: 40px !important; left: 50% !important; 
     transform: translateX(-50%) !important;
@@ -491,10 +490,10 @@ body {
     font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b;
 }
 
-/* 1. STATO INIZIALE (Copertina) */
+/* 1. STATO INIZIALE (Copertina - Monolite scende fino al centro dello schermo) */
 .app-container.locked .header-monolith {
-    transform: translateY(22vh) scale(1.05); /* Centrato e maestoso */
-    transition: transform 1s cubic-bezier(0.25, 1, 0.3, 1);
+    transform: translateY(28vh) scale(1.05); 
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .app-container.locked .entrance-prompt {
     opacity: 1; transition: opacity 0.8s ease 0.5s;
@@ -503,30 +502,39 @@ body {
     opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
 }
 
-/* 2. STATO SBLOCCATO (Il Morphing: Il monolite sale verso l'alto) */
+/* 2. STATO SBLOCCATO (Il Monolite vola in alto) */
 .app-container.unlocked .header-monolith {
-    transform: translateY(0) scale(1); /* Torna in alto e si ridimensiona */
-    transition: transform 0.8s cubic-bezier(0.25, 1, 0.3, 1);
+    transform: translateY(0) scale(1);
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .app-container.unlocked .entrance-prompt {
     opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
 }
 .app-container.unlocked .exit-prompt {
-    opacity: 1; pointer-events: auto; transition: opacity 0.8s ease 0.8s; /* Appare la Home alla fine */
+    opacity: 1; pointer-events: auto; transition: opacity 1s ease 0.8s;
 }
 
-/* 3. EFFETTO PROFONDITÀ (Asse Z) per l'emersione delle Stanze */
+/* 3. EFFETTO PROFONDITÀ (Le stanze emergono e sprofondano) */
 .room-link { 
     opacity: 0; 
-    transform: translateY(30px) scale(0.95); 
-    filter: blur(8px); /* Nasce fuori fuoco */
+    transform: translateY(40px) scale(0.9); /* Partono da più in basso e più piccole */
+    filter: blur(10px); /* Nebbia profonda */
 }
+/* Animazione di apertura */
 .boot-module-active { 
-    animation: emergeRoom 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+    animation: emergeRoom 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
 }
 @keyframes emergeRoom { 
-    0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(8px); } 
+    0% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px); } 
     100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
+}
+/* Animazione di chiusura (Reverse) */
+.boot-module-closing {
+    animation: hideRoom 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes hideRoom {
+    0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    100% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(5px); }
 }
     </style>
 
@@ -577,22 +585,22 @@ body {
        
         </div>
 
-       <!-- TASTO DI INGRESSO (Visibile solo in Copertina) -->
+       <!-- TASTO DI INGRESSO (Copertina) -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
             <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
                 <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--core-border); border-radius: 50%; box-sizing: border-box; opacity: 0.8;"></div>
-                <div style="position: absolute; width: 2.5px; height: 10px; background: var(--core-border); bottom: 5px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
-                <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 48%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
+                <div style="position: absolute; width: 3px; height: 10px; background: var(--core-border); bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
             </div>
             <span>ESPLORA TAG</span>
         </div>
 
-        <!-- TASTO DI RITORNO HOME (Visibile solo dentro le Stanze) -->
+        <!-- TASTO DI RITORNO HOME -->
         <div id="exit-prompt" class="exit-prompt" onclick="bloccaTag()">
-            <div class="mini-logo-wrapper" style="position: relative; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: transparent; transform: scale(0.8);">
-                <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--text-sec); border-radius: 50%; box-sizing: border-box; opacity: 0.5;"></div>
-                <div style="position: absolute; width: 2.5px; height: 10px; background: var(--text-sec); bottom: 5px; right: 4px; transform: rotate(-45deg); border-radius: 2px; opacity: 0.5;"></div>
-                <div style="position: absolute; color: var(--text-sec); font-family: sans-serif; font-size: 12px; font-weight: 800; top: 48%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
+            <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent; transform: scale(0.7); opacity: 0.5;">
+                <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--text-sec); border-radius: 50%; box-sizing: border-box;"></div>
+                <div style="position: absolute; width: 3px; height: 10px; background: var(--text-sec); bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                <div style="position: absolute; color: var(--text-sec); font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
             </div>
             <span>HOME</span>
         </div>
@@ -945,25 +953,30 @@ function sbloccaTag() {
 
     if (navigator.vibrate) { navigator.vibrate(40); }
 
-    // 1. Innesca il Morph: Il Monolite scivola in alto, "Esplora" scompare
+    // Innesca la salita del Monolite
     container.classList.remove('locked');
     container.classList.add('unlocked');
 
     const mainGrid = document.getElementById('mainGrid');
     if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
 
-    // 2. Le stanze emergono dal buio mettendosi a fuoco
+    // Le stanze emergono dal buio
     setTimeout(() => {
         const caselle = document.querySelectorAll('#mainGrid .room-link');
         let moduliVisibili = 0;
         caselle.forEach((casella) => {
             if (window.getComputedStyle(casella).display !== 'none') {
+                // Rimuoviamo la vecchia classe di chiusura per evitare il bug
+                casella.classList.remove('boot-module-closing');
+                // Forziamo il riavvio dell'animazione
+                void casella.offsetWidth; 
+                
                 casella.classList.add('boot-module-active');
-                casella.style.animationDelay = `${(moduliVisibili * 0.1)}s`;
+                casella.style.animationDelay = `${(moduliVisibili * 0.08)}s`;
                 moduliVisibili++;
             }
         });
-    }, 300); // Piccolissimo ritardo per far iniziare prima la salita dell'header
+    }, 150); 
 }
 
 function bloccaTag() {
@@ -972,30 +985,24 @@ function bloccaTag() {
 
     if (navigator.vibrate) { navigator.vibrate(20); }
 
-    // 1. Reverse Morph: Le stanze tornano nel buio e si sfuocano
-    const caselle = document.querySelectorAll('#mainGrid .boot-module-active');
+    // 1. Facciamo "sprofondare" le stanze in contemporanea
+    const caselle = document.querySelectorAll('#mainGrid .room-link');
     caselle.forEach(c => {
-        c.style.animation = 'none'; 
-        c.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.3, 1)';
-        c.style.opacity = '0';
-        c.style.transform = 'translateY(20px) scale(0.95)';
-        c.style.filter = 'blur(5px)';
         c.classList.remove('boot-module-active');
+        c.classList.add('boot-module-closing');
+        c.style.animationDelay = '0s'; 
     });
 
-    // 2. Dopo che le stanze sono sparite, il Monolite torna al centro
+    // 2. Dopo che le stanze sono sparite, il Monolite torna giù
     setTimeout(() => {
         container.classList.remove('unlocked');
         container.classList.add('locked');
         
-        // Pulizia invisibile per preparare il prossimo ingresso
+        // Nascondiamo il contenitore per completare la pulizia
         setTimeout(() => {
-            caselle.forEach(c => {
-                c.style.transition = ''; c.style.transform = ''; c.style.filter = '';
-            });
             const mainGrid = document.getElementById('mainGrid');
             if(mainGrid) mainGrid.style.display = 'none';
-        }, 1000);
+        }, 800);
     }, 300);
 }
 // ============================================================
