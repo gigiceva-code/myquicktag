@@ -431,107 +431,78 @@ body {
     letter-spacing: 2px !important;
     opacity: 0.7;
 } 
-           /* ============================================================
-   L'INGRESSO IMMERSIVO E IL LAYOUT DELLA HOME
+        
+        /* ============================================================
+   IL MORPH CINEMATOGRAFICO E L'ACTION BAR
    ============================================================ */
-
-/* 1. Blocchiamo "Entra nell'ecosistema" sul fondo assoluto */
-.entrance-prompt {
-    position: absolute !important; 
-    bottom: 40px !important; 
-    left: 50% !important; 
-    transform: translateX(-50%) !important;
-    /* Dissolvenza cinematografica al tocco, zero scatti */
-    opacity: 1; transition: opacity 0.6s ease, transform 0.6s ease !important;
+/* 1. TRANSIZIONI STRUTTURALI DELL'HEADER */
+.header-monolith {
+    width: 100%; display: flex; flex-direction: column; align-items: center; 
+    padding: 10px 0; position: relative; z-index: 10;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.orbital-container {
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center top;
 }
 
-/* Quando l'app si sblocca, il prompt scivola nel buio */
-.app-container.unlocked .entrance-prompt { 
-    opacity: 0 !important; 
-    transform: translate(-50%, 20px) !important; 
-    pointer-events: none; 
+/* 2. STATO INIZIALE (COPERTINA) */
+.app-container.locked .header-monolith {
+    transform: translateY(24vh); 
+}
+.app-container.locked .orbital-container {
+    opacity: 1; transform: scale(1); height: 84px; margin-bottom: 30px;
 }
 
-/* 2. Effetto Profondità (Asse Z) per le Stanze */
-.room-link { 
-    opacity: 0; 
-    /* Nascono leggermente più piccole e sfocate per dare l'illusione della profondità */
-    transform: translateY(25px) scale(0.95); 
-    filter: blur(4px); 
+/* 3. STATO SBLOCCATO (ECOSISTEMA) - L'avatar sparisce, l'header va in cima */
+.app-container.unlocked .header-monolith {
+    transform: translateY(0); 
 }
-.boot-module-active { 
-    animation: immersiveEntrance 0.8s cubic-bezier(0.25, 1, 0.3, 1) forwards; 
-}
-@keyframes immersiveEntrance { 
-    0% { opacity: 0; transform: translateY(25px) scale(0.95); filter: blur(4px); } 
-    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
+.app-container.unlocked .orbital-container {
+    opacity: 0; transform: scale(0.5); height: 0; margin-bottom: 0; pointer-events: none;
 }
 
-/* 3. Isoliamo ed eleviamo la CTA (Prenota Ora) - Niente più icone rosse */
-#room-quick-action {
-    color: var(--accent-gold) !important;
-    font-weight: 400 !important;
-    letter-spacing: 5px !important;
-    margin-top: 15px; /* Più spazio per separarla dal menu */
+/* 4. LA NUOVA ACTION BAR (PILLOLE) */
+.action-bar-container {
+    display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px;
+    margin-top: 15px; width: 100%; flex-wrap: wrap;
 }
+.feature-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer; transition: background 0.2s, transform 0.2s;
+}
+.feature-pill:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.08); }
+.feature-pill span {
+    font-size: 0.65rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: #e8e8ed;
+}
+.led-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-/* Uccidiamo definitivamente la freccia verso l'alto che suggeriva uno scroll inesistente */
-#btn-ritorna-vetrina { display: none !important; }
-          /* ============================================================
-   IL MORPH CINEMATOGRAFICO (SPAZIALE) 
-   ============================================================ */
+/* 5. TASTI DI NAVIGAZIONE (Copertina e Home) */
 .entrance-prompt, .exit-prompt {
     position: absolute !important; bottom: 40px !important; left: 50% !important; 
     transform: translateX(-50%) !important;
     display: flex; flex-direction: column; align-items: center; gap: 12px;
     cursor: pointer; z-index: 100;
 }
-.entrance-prompt span, .exit-prompt span {
-    font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b;
-}
+.entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
 
-/* 1. STATO INIZIALE (Copertina - Monolite scende fino al centro dello schermo) */
-.app-container.locked .header-monolith {
-    transform: translateY(28vh) scale(1.05); 
-    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.app-container.locked .entrance-prompt {
-    opacity: 1; transition: opacity 0.8s ease 0.5s;
-}
-.app-container.locked .exit-prompt {
-    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-}
+.app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition: opacity 0.6s ease 0.4s; }
+.app-container.locked .exit-prompt { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
 
-/* 2. STATO SBLOCCATO (Il Monolite vola in alto) */
-.app-container.unlocked .header-monolith {
-    transform: translateY(0) scale(1);
-    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.app-container.unlocked .entrance-prompt {
-    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-}
-.app-container.unlocked .exit-prompt {
-    opacity: 1; pointer-events: auto; transition: opacity 1s ease 0.8s;
-}
+.app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.app-container.unlocked .exit-prompt { opacity: 1; pointer-events: auto; transition: opacity 0.8s ease 0.6s; }
 
-/* 3. EFFETTO PROFONDITÀ (Le stanze emergono e sprofondano) */
-.room-link { 
-    opacity: 0; 
-    transform: translateY(40px) scale(0.9); /* Partono da più in basso e più piccole */
-    filter: blur(10px); /* Nebbia profonda */
-}
-/* Animazione di apertura */
-.boot-module-active { 
-    animation: emergeRoom 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-}
+/* 6. FISICA DELLE STANZE (Emersione profonda) */
+.room-link { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(8px); }
+.boot-module-active { animation: emergeRoom 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 @keyframes emergeRoom { 
-    0% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px); } 
+    0% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(8px); } 
     100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
 }
-/* Animazione di chiusura (Reverse) */
-.boot-module-closing {
-    animation: hideRoom 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+.boot-module-closing { animation: hideRoom 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 @keyframes hideRoom {
     0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     100% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(5px); }
@@ -569,21 +540,22 @@ body {
                 </div>
             </div>
             
-        
+       <!-- NUOVA ACTION BAR (Pillole Interattive) -->
+<div id="action-bar-features" class="action-bar-container fade-in-widget">
+    
+    <!-- Pillola Live Status -->
+    <div class="feature-pill" id="pill-live-status" style="display:none;" onclick="apriDettaglio('status')">
+        <div class="led-dot" id="pill-status-dot"></div>
+        <span id="pill-status-text">ONLINE</span>
+    </div>
 
-                       <!-- NUOVO: LIVE STATUS MINIMALE (Il puntino LED) -->
-            <div id="front-live-status" class="fade-in-widget" style="display:none; align-items:center; justify-content:center; gap:10px; margin-top:25px;">
-                <div id="front-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background-color: #10b981; box-shadow: 0 0 8px #10b981;"></div>
-                <div id="front-status-text" style="font-size:0.65rem; font-weight:400; letter-spacing:4px; text-transform:uppercase; color: #86868b;">ONLINE</div>
-            </div>
+    <!-- Pillola Flash 24 -->
+    <div class="feature-pill" id="pill-flash" style="display:none;" onclick="apriDettaglio('flash')">
+        <i class="fas fa-bolt" style="color: var(--core-border); font-size: 0.7rem;"></i>
+        <span id="pill-flash-text">PROMO</span>
+    </div>
 
-            <!-- NUOVO: WIDGET FLASH MINIMALE -->
-            <div id="front-flash-text" class="fade-in-widget" style="display:none; align-items:center; justify-content:center; gap:8px; margin-top:12px;">
-                <i class="fas fa-bolt" style="color: var(--accent-gold); font-size: 0.65rem;"></i>
-                <div id="front-flash-content" style="color: #e8e8ed; font-size: 0.65rem; font-weight: 300; letter-spacing: 2px; text-transform: uppercase;"></div>
-            </div>
-       
-        </div>
+</div> 
 
        <!-- TASTO DI INGRESSO (Copertina) -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
@@ -624,11 +596,7 @@ body {
 
             <!-- LA QUICK ACTION (Elevata a Stanza) -->
             <button class="room-link" id="room-quick-action" onclick="eseguiQuickAction()" style="display:none;">⚡ AZIONE RAPIDA</button>
-            <!-- PULSANTE PER TORNARE ALLA VETRINA -->
-            <button class="room-link" id="btn-ritorna-vetrina" onclick="bloccaTag()" style="margin-top: 30px;">
-                <i class="fas fa-chevron-up" style="font-size: 1.2rem; color: rgba(255,255,255,0.3);"></i>
-            </button>
-
+            
         </div>
 
         <!-- ============================================================ -->
