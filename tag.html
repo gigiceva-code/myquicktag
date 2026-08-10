@@ -189,9 +189,10 @@ body {
    IL MENU DELLE STANZE (NUOVO TOTEM)
    ============================================================ */
 .app-container #mainGrid {
-    display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-items: center !important;
-    gap: 0 !important; flex: 1 !important; width: 100% !important; background: transparent !important;
-    padding: 30px 0 60px 0 !important; /* Ridisegnato lo spazio per l'equilibrio */
+    display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important;
+    gap: 5px !important; flex: 1 !important; width: 100% !important; background: transparent !important;
+    padding: 20px 0 110px 0 !important; /* Il 110px finale crea lo spazio vitale per il tasto HOME */
+    overflow-y: auto !important;
 }
 
 /* 🎯 LE STANZE (Identiche per stile, colore e spaziatura) */
@@ -502,6 +503,49 @@ body {
     0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     100% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(5px); }
 }
+           /* ============================================================
+   BOTTOM SHEET (SCHEDA NATIVA PER DETTAGLI PILLOLE)
+   ============================================================ */
+.sheet-backdrop {
+    position: fixed !important; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+    z-index: 10001; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.sheet-backdrop.active { opacity: 1; pointer-events: auto; }
+
+.bottom-sheet {
+    position: fixed !important; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+    width: 100%; max-width: 440px; 
+    background: #0d0d0f; border-top: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px 24px 0 0; padding: 20px 24px 40px 24px;
+    z-index: 10002; display: flex; flex-direction: column; gap: 20px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.9);
+}
+.bottom-sheet.active { transform: translateX(-50%) translateY(0); }
+
+.sheet-handle {
+    width: 40px; height: 4px; background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin: 0 auto; cursor: pointer;
+}
+.sheet-header {
+    display: flex; align-items: center; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;
+}
+.sheet-icon {
+    width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem;
+}
+.sheet-header h3 {
+    font-size: 1rem; font-weight: 500; color: #fff; letter-spacing: 2px; margin: 0; text-transform: uppercase;
+}
+.sheet-body {
+    font-size: 0.95rem; color: #e8e8ed; line-height: 1.6; font-weight: 300;
+}
+.sheet-close-btn {
+    width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; color: #86868b; font-size: 0.8rem; font-weight: 500; letter-spacing: 3px; cursor: pointer; transition: all 0.2s;
+}
+.sheet-close-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.98); color: #fff; }
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -691,6 +735,21 @@ body {
 
     <!-- OVERLAY QR CODE NATIVO -->
     <!-- (Questo lo inietterà il JS se serve nella macro area Identity, non serve averlo fisso qui se usiamo l'overlay a specchio, ma il div container per qrcode.js lo mettiamo nel js) -->
+       <!-- ============================================================ -->
+    <!-- OVERLAY BOTTOM SHEET PER KILLER FEATURES                     -->
+    <!-- ============================================================ -->
+    <div id="feature-backdrop" class="sheet-backdrop" onclick="chiudiDettaglio()"></div>
+    <div id="feature-bottom-sheet" class="bottom-sheet">
+        <div class="sheet-handle" onclick="chiudiDettaglio()"></div>
+        <div class="sheet-header">
+            <div id="sheet-icon" class="sheet-icon"></div>
+            <h3 id="sheet-title">Titolo</h3>
+        </div>
+        <div id="sheet-body" class="sheet-body">
+            <!-- Il contenuto verrà iniettato dal Javascript -->
+        </div>
+        <button class="sheet-close-btn" onclick="chiudiDettaglio()">CHIUDI</button>
+    </div>
     
     <!-- (Non toccare il tag <script> originale che segue nel tuo file) -->
 
@@ -976,10 +1035,59 @@ function gestisciVisibilitaCaselle(fields) {
     renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
 }
 
-// Funzione placeholder per l'apertura futura del dettaglio pillola
+// ============================================================
+// GESTIONE BOTTOM SHEET (DETTAGLIO KILLER FEATURES)
+// ============================================================
 function apriDettaglio(tipo) {
-    console.log("Apertura dettaglio per:", tipo);
-    // Qui andrà la logica per aprire il Bottom Sheet o il Link Esterno
+    const sheet = document.getElementById('feature-bottom-sheet');
+    const backdrop = document.getElementById('feature-backdrop');
+    const title = document.getElementById('sheet-title');
+    const icon = document.getElementById('sheet-icon');
+    const body = document.getElementById('sheet-body');
+
+    if (!sheet || !backdrop) return;
+
+    if (navigator.vibrate) navigator.vibrate(20);
+
+    // Dati dinamici per Live Status
+    if (tipo === 'status') {
+        let colorHex = '#10b981'; let label = 'ONLINE';
+        if (cacheDatiUtente.live_status_color === 'yellow') { colorHex = '#f59e0b'; label = 'BUSY'; }
+        if (cacheDatiUtente.live_status_color === 'red') { colorHex = '#ef4444'; label = 'OFFLINE'; }
+
+        icon.style.background = 'transparent';
+        icon.innerHTML = `<div style="width:14px; height:14px; border-radius:50%; background:${colorHex}; box-shadow:0 0 12px ${colorHex};"></div>`;
+        title.innerText = label;
+        title.style.color = colorHex;
+        
+        const testoEsteso = cacheDatiUtente.live_status_text || 'Attualmente online e disponibile.';
+        body.innerHTML = `<div style="text-align:center; padding:10px 0; font-size:1.05rem; font-weight:400; color:#fff;">${testoEsteso}</div>`;
+    } 
+    // Dati dinamici per Flash 24
+    else if (tipo === 'flash') {
+        icon.style.background = 'rgba(229, 193, 88, 0.1)';
+        icon.innerHTML = `<i class="fas fa-bolt" style="color: #e5c158;"></i>`;
+        title.innerText = cacheDatiUtente.flash_micro || 'PROMO';
+        title.style.color = '#e5c158';
+
+        const testoEsteso = cacheDatiUtente.flash_text || '';
+        body.innerHTML = `
+            <div style="text-align:center; padding:20px 15px; background:rgba(229,193,88,0.05); border:1px solid rgba(229,193,88,0.2); border-radius:16px; color:#e5c158; font-weight:400; font-size:1.05rem; line-height:1.5;">
+                ${testoEsteso}
+            </div>
+        `;
+    }
+
+    // Apertura animata
+    backdrop.classList.add('active');
+    sheet.classList.add('active');
+}
+
+function chiudiDettaglio() {
+    const sheet = document.getElementById('feature-bottom-sheet');
+    const backdrop = document.getElementById('feature-backdrop');
+    if (sheet) sheet.classList.remove('active');
+    if (backdrop) backdrop.classList.remove('active');
 }
 
 // ============================================================
