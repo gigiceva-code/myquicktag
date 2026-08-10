@@ -596,7 +596,7 @@ body {
 </div>
 </div> 
 
-       <!-- TASTO DI INGRESSO (Copertina) -->
+   <!-- TASTO DI INGRESSO (Copertina) -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
             <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
                 <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--core-border); border-radius: 50%; box-sizing: border-box; opacity: 0.8;"></div>
@@ -604,16 +604,6 @@ body {
                 <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
             </div>
             <span>ESPLORA TAG</span>
-        </div>
-
-        <!-- TASTO DI RITORNO HOME -->
-        <div id="exit-prompt" class="exit-prompt" onclick="bloccaTag()">
-            <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent; transform: scale(0.7); opacity: 0.5;">
-                <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--text-sec); border-radius: 50%; box-sizing: border-box;"></div>
-                <div style="position: absolute; width: 3px; height: 10px; background: var(--text-sec); bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
-                <div style="position: absolute; color: var(--text-sec); font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
-            </div>
-            <span>HOME</span>
         </div>
 
         <!-- ============================================================ -->
@@ -636,8 +626,17 @@ body {
             <!-- LA QUICK ACTION (Elevata a Stanza) -->
             <button class="room-link" id="room-quick-action" onclick="eseguiQuickAction()" style="display:none;">⚡ AZIONE RAPIDA</button>
             
-        </div>
+            <!-- TASTO DI RITORNO HOME (Ora integrato nel flusso delle stanze) -->
+            <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
+                <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent; transform: scale(0.7); opacity: 0.5;">
+                    <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--text-sec); border-radius: 50%; box-sizing: border-box;"></div>
+                    <div style="position: absolute; width: 3px; height: 10px; background: var(--text-sec); bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                    <div style="position: absolute; color: var(--text-sec); font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
+                </div>
+                <span>HOME</span>
+            </div>
 
+        </div>
         <!-- ============================================================ -->
         <!-- CTA (Invariate)                                              -->
         <!-- ============================================================ -->
