@@ -913,38 +913,108 @@ function renderizzaTagCompleta(fields) {
 }
 
 // ============================================================
+// GESTIONE VISIBILITÀ E POPOLAMENTO DATI (ACTION BAR E STANZE)
+// ============================================================
+function gestisciVisibilitaCaselle(fields) {
+
+    // --- 1. ACTION BAR (Pillole Interattive) ---
+    const pillStatus = document.getElementById('pill-live-status');
+    if (pillStatus && fields.live_status_color) {
+        const dot = document.getElementById('pill-status-dot');
+        const txt = document.getElementById('pill-status-text');
+
+        let colorHex = '#10b981'; let label = 'ONLINE';
+        if (fields.live_status_color === 'yellow') { colorHex = '#f59e0b'; label = 'BUSY'; }
+        if (fields.live_status_color === 'red') { colorHex = '#ef4444'; label = 'OFFLINE'; }
+
+        dot.style.backgroundColor = colorHex;
+        dot.style.boxShadow = `0 0 8px ${colorHex}`;
+
+        // Micro-copy per la pillola (se l'utente non lo imposta, usiamo quello di default)
+        let microCopy = label;
+        if (fields.live_status_micro && fields.live_status_micro.trim() !== '') {
+            microCopy = fields.live_status_micro.trim();
+        }
+        txt.innerText = microCopy.toUpperCase();
+        txt.style.color = colorHex;
+
+        pillStatus.style.display = 'flex';
+    } else if (pillStatus) {
+        pillStatus.style.display = 'none';
+    }
+
+    const pillFlash = document.getElementById('pill-flash');
+    if (pillFlash && fields.flash_text) {
+        const isExpired = fields.flash_expiry && new Date(fields.flash_expiry) < new Date();
+        if (!isExpired) {
+            const txtFlash = document.getElementById('pill-flash-text');
+            // Micro-copy per il flash (es. "PROMO"). In futuro verrà dal DB.
+            txtFlash.innerText = (fields.flash_micro || 'PROMO').toUpperCase();
+            pillFlash.style.display = 'flex';
+        } else {
+            pillFlash.style.display = 'none';
+        }
+    } else if (pillFlash) {
+        pillFlash.style.display = 'none';
+    }
+
+    // --- 2. GESTIONE MACRO-AREE (STANZE) ---
+    const elIdentity = document.getElementById('room-identity');
+    if (elIdentity) elIdentity.style.display = 'flex';
+
+    const hasBusiness = !!fields.pdf_url || !!fields.cv;
+    const elBusiness = document.getElementById('room-business');
+    if (elBusiness) elBusiness.style.display = hasBusiness ? 'flex' : 'none';
+
+    let galleryData = [];
+    try { galleryData = JSON.parse(fields.gallery_data || '[]'); } catch(e) {}
+    const hasMedia = galleryData.length > 0;
+    const elMedia = document.getElementById('room-media');
+    if (elMedia) elMedia.style.display = hasMedia ? 'flex' : 'none';
+
+    let canali = [];
+    try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
+    const hasNetwork = !!fields.sito_web || !!fields.email || !!fields.modulo_vcf || canali.length > 0;
+    const elNetwork = document.getElementById('room-network');
+    if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
+
+    renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
+}
+
+// Funzione placeholder per l'apertura futura del dettaglio pillola
+function apriDettaglio(tipo) {
+    console.log("Apertura dettaglio per:", tipo);
+    // Qui andrà la logica per aprire il Bottom Sheet o il Link Esterno
+}
+
+// ============================================================
 // LO SBLOCCO E IL RITORNO (IL MORPH CINEMATOGRAFICO)
 // ============================================================
 function sbloccaTag() {
     const container = document.getElementById('profile-content');
     if (!container || !container.classList.contains('locked')) return;
 
-    if (navigator.vibrate) { navigator.vibrate(40); }
+    if (navigator.vibrate) { navigator.vibrate(30); }
 
-    // Innesca la salita del Monolite
     container.classList.remove('locked');
     container.classList.add('unlocked');
 
     const mainGrid = document.getElementById('mainGrid');
     if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
 
-    // Le stanze emergono dal buio
     setTimeout(() => {
         const caselle = document.querySelectorAll('#mainGrid .room-link');
         let moduliVisibili = 0;
         caselle.forEach((casella) => {
             if (window.getComputedStyle(casella).display !== 'none') {
-                // Rimuoviamo la vecchia classe di chiusura per evitare il bug
                 casella.classList.remove('boot-module-closing');
-                // Forziamo il riavvio dell'animazione
                 void casella.offsetWidth; 
-                
                 casella.classList.add('boot-module-active');
                 casella.style.animationDelay = `${(moduliVisibili * 0.08)}s`;
                 moduliVisibili++;
             }
         });
-    }, 150); 
+    }, 200); 
 }
 
 function bloccaTag() {
@@ -953,7 +1023,6 @@ function bloccaTag() {
 
     if (navigator.vibrate) { navigator.vibrate(20); }
 
-    // 1. Facciamo "sprofondare" le stanze in contemporanea
     const caselle = document.querySelectorAll('#mainGrid .room-link');
     caselle.forEach(c => {
         c.classList.remove('boot-module-active');
@@ -961,17 +1030,15 @@ function bloccaTag() {
         c.style.animationDelay = '0s'; 
     });
 
-    // 2. Dopo che le stanze sono sparite, il Monolite torna giù
     setTimeout(() => {
         container.classList.remove('unlocked');
         container.classList.add('locked');
         
-        // Nascondiamo il contenitore per completare la pulizia
         setTimeout(() => {
             const mainGrid = document.getElementById('mainGrid');
             if(mainGrid) mainGrid.style.display = 'none';
-        }, 800);
-    }, 300);
+        }, 700);
+    }, 350);
 }
 // ============================================================
 // QR CODE
@@ -1167,72 +1234,7 @@ function renderizzaSocial(configCanali) {
     // Mantenuta intatta per logica interna, l'interfaccia usa apriMacroArea
 }
 
-// ============================================================
-// IL NUOVO VIGILE URBANO: ACCENDE STANZE E WIDGET
-// ============================================================
-function gestisciVisibilitaCaselle(fields) {
-    
-    // --- 1. GESTIONE WIDGET FRONTALI (VETRINA) ---
-    const frontStatus = document.getElementById('front-live-status');
-    if (frontStatus && fields.live_status_color) {
-        const dot = document.getElementById('front-status-dot');
-        const txt = document.getElementById('front-status-text');
-        
-        let colorHex = '#10b981'; let icona = '🟢'; let label = 'ONLINE';
-        if (fields.live_status_color === 'yellow') { colorHex = '#f59e0b'; icona = '🟡'; label = 'BUSY'; }
-        if (fields.live_status_color === 'red') { colorHex = '#ef4444'; icona = '🔴'; label = 'OFFLINE'; }
-        
-                dot.innerText = ''; /* Nessuna emoji */
-        dot.style.backgroundColor = colorHex;
-        dot.style.boxShadow = `0 0 8px ${colorHex}`;
 
-        let finalMsg = label;
-        if (fields.live_status_text && fields.live_status_text.trim() !== '') {
-            finalMsg = fields.live_status_text.trim();
-        }
-        txt.innerText = finalMsg.toUpperCase();
-        txt.style.color = colorHex;
-        
-        frontStatus.style.display = 'flex';
-    } else if (frontStatus) {
-        frontStatus.style.display = 'none';
-    }
-
-    const frontFlash = document.getElementById('front-flash-text');
-    if (frontFlash && fields.flash_text) {
-        const isExpired = fields.flash_expiry && new Date(fields.flash_expiry) < new Date();
-        if (!isExpired) {
-            document.getElementById('front-flash-content').innerText = fields.flash_text;
-            frontFlash.style.display = 'flex';
-        } else {
-            frontFlash.style.display = 'none';
-        }
-    } else if (frontFlash) {
-        frontFlash.style.display = 'none';
-    }
-
-    // --- 2. GESTIONE MACRO-AREE (STANZE) ---
-    const elIdentity = document.getElementById('room-identity');
-    if (elIdentity) elIdentity.style.display = 'flex';
-
-    const hasBusiness = !!fields.pdf_url || !!fields.cv;
-    const elBusiness = document.getElementById('room-business');
-    if (elBusiness) elBusiness.style.display = hasBusiness ? 'flex' : 'none';
-
-    let galleryData = [];
-    try { galleryData = JSON.parse(fields.gallery_data || '[]'); } catch(e) {}
-    const hasMedia = galleryData.length > 0;
-    const elMedia = document.getElementById('room-media');
-    if (elMedia) elMedia.style.display = hasMedia ? 'flex' : 'none';
-
-    let canali = [];
-    try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
-    const hasNetwork = !!fields.sito_web || !!fields.email || !!fields.modulo_vcf || canali.length > 0;
-    const elNetwork = document.getElementById('room-network');
-    if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
-
-    renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
-}
       // ============================================================
 // TEATRO LIQUIDO: APERTURA MACRO AREE E CASCATA SOTTOMENU
 // ============================================================
