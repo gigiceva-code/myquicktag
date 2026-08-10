@@ -213,10 +213,6 @@ body {
 #room-flash { color: #e5c158 !important; font-weight: 500 !important; }
 #room-flash::before { content: none; }
 
-/* L'animazione di cascata all'ingresso */
-.room-link { opacity: 0; transform: translateY(25px); }
-.boot-module-active { animation: moduleCascade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-@keyframes moduleCascade { 0% { opacity: 0; transform: translateY(25px); } 100% { opacity: 1; transform: translateY(0); } }
 
 
 /* ============================================================
@@ -373,10 +369,9 @@ body {
           /* Stile per la freccia di ritorno in vetrina */
 #btn-ritorna-vetrina::before { content: none !important; }
 #btn-ritorna-vetrina:active i { color: #ffffff !important; transform: scale(0.9); transition: all 0.2s; } 
-          /* ============================================================
-   CANTIERE 2: TEATRO LIQUIDO E MINIMAL LUXURY
-   ============================================================ */
-
+        /* ============================================================
+   MODULO 2: OVERLAY DINAMICO E SOTTOMENU
+   ============================================================ */ 
 /* 1. L'Animazione Liquida dell'Overlay (Fisica coerente con l'ingresso) */
 #overlaySezione.attiva {
     display: flex !important;
@@ -554,7 +549,7 @@ body {
         <i class="fas fa-bolt" style="color: var(--core-border); font-size: 0.7rem;"></i>
         <span id="pill-flash-text">PROMO</span>
     </div>
-
+</div>
 </div> 
 
        <!-- TASTO DI INGRESSO (Copertina) -->
