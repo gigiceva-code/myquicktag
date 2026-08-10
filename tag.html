@@ -476,8 +476,29 @@ body {
 }
 .led-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-/* 5. TASTI DI NAVIGAZIONE (Copertina e Home) */
-.entrance-prompt, .exit-prompt {
+/* 4.1 PILLOLE MAGNETICHE (CRO Upgrade) */
+.feature-pill {
+    position: relative; overflow: hidden; /* Necessario per il radar interno */
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer; transition: background 0.2s, transform 0.2s, border-color 0.2s;
+}
+.feature-pill::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.08) 80%, transparent 100%);
+    animation: radarSweep 4s linear infinite; pointer-events: none; opacity: 0; transition: opacity 0.3s;
+}
+.app-container.unlocked .feature-pill::before { opacity: 1; }
+@keyframes radarSweep { 100% { transform: rotate(360deg); } }
+
+.feature-pill:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.08); border-color: rgba(255,255,255,0.2); }
+.feature-pill span { font-size: 0.65rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: #e8e8ed; position: relative; z-index: 2; }
+.led-dot { width: 6px; height: 6px; border-radius: 50%; position: relative; z-index: 2; }
+
+/* 5. TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
+.entrance-prompt {
     position: absolute !important; bottom: 40px !important; left: 50% !important; 
     transform: translateX(-50%) !important;
     display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -486,10 +507,10 @@ body {
 .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
 
 .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition: opacity 0.6s ease 0.4s; }
-.app-container.locked .exit-prompt { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-
 .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-.app-container.unlocked .exit-prompt { opacity: 1; pointer-events: auto; transition: opacity 0.8s ease 0.6s; }
+
+.exit-prompt { margin-top: 30px !important; opacity: 0.5; transition: opacity 0.3s; }
+.exit-prompt:active { opacity: 1; }
 
 /* 6. FISICA DELLE STANZE (Emersione profonda) */
 .room-link { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(8px); }
@@ -503,37 +524,42 @@ body {
     0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     100% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(5px); }
 }
-           /* ============================================================
-   BOTTOM SHEET (SCHEDA NATIVA PER DETTAGLI PILLOLE)
+        /* ============================================================
+   BOTTOM SHEET (VISION-OS FLOATING GLASS LAYER)
    ============================================================ */
 .sheet-backdrop {
     position: fixed !important; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px);
     z-index: 10001; opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .sheet-backdrop.active { opacity: 1; pointer-events: auto; }
 
 .bottom-sheet {
-    position: fixed !important; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
-    width: 100%; max-width: 440px; 
-    background: #0d0d0f; border-top: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px 24px 0 0; padding: 20px 24px 40px 24px;
+    position: fixed !important; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(120%);
+    width: calc(100% - 32px); max-width: 400px; 
+    background: rgba(18, 18, 20, 0.75); 
+    backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.2);
+    border-radius: 32px; padding: 24px;
     z-index: 10002; display: flex; flex-direction: column; gap: 20px;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.9);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 .bottom-sheet.active { transform: translateX(-50%) translateY(0); }
 
 .sheet-handle {
-    width: 40px; height: 4px; background: rgba(255,255,255,0.2);
-    border-radius: 2px; margin: 0 auto; cursor: pointer;
+    width: 36px; height: 5px; background: rgba(255,255,255,0.25);
+    border-radius: 3px; margin: 0 auto; cursor: pointer; transition: background 0.2s;
 }
+.sheet-handle:active { background: rgba(255,255,255,0.5); }
+
 .sheet-header {
-    display: flex; align-items: center; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;
+    display: flex; align-items: center; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 15px;
 }
 .sheet-icon {
-    width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem;
+    width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.3rem;
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
 }
 .sheet-header h3 {
     font-size: 1rem; font-weight: 500; color: #fff; letter-spacing: 2px; margin: 0; text-transform: uppercase;
@@ -542,10 +568,11 @@ body {
     font-size: 0.95rem; color: #e8e8ed; line-height: 1.6; font-weight: 300;
 }
 .sheet-close-btn {
-    width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px; color: #86868b; font-size: 0.8rem; font-weight: 500; letter-spacing: 3px; cursor: pointer; transition: all 0.2s;
+    width: 100%; padding: 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; color: #fff; font-size: 0.85rem; font-weight: 500; letter-spacing: 3px; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
-.sheet-close-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.98); color: #fff; }
+.sheet-close-btn:active { background: rgba(255,255,255,0.12); transform: scale(0.97); } 
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
