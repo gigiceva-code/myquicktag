@@ -232,7 +232,7 @@
                         </svg>
                         <div style="display: flex; align-items: center; flex-grow: 1;">
                             <span style="color: #ffffff; font-size: 18px; font-weight: 400; line-height: 1; opacity: 0.8;">@</span>
-                            <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 0; margin: 0; background: transparent; border: none; color: #ffffff; font-size: 18px; font-weight: 400; outline: none; line-height: 1;">
+                           <input type="text" id="tag-input" maxlength="30" placeholder="tuonome" autocomplete="off" spellcheck="false" style="..."> 
                         </div>
                     </div>
                     <button id="btn-verifica-principale" onclick="vaiAllaVerifica()" class="btn-verifica" style="width: 100%; padding: 18px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease;">
@@ -596,7 +596,7 @@
     
     <div style="width: 100%; max-width: 360px; text-align: center; border: 1px solid rgba(80, 200, 120, 0.2); background: #0a0a0a; padding: 45px 25px; border-radius: 16px; box-sizing: border-box; position: relative; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);">
         
-        <h2 id="welcome-tag-title" style="color: #50C878; font-size: 24px; font-weight: 800; margin-top: 0; margin-bottom: 8px; letter-spacing: -0.5px;">@nome è disponibile.</h2>
+       <h2 id="welcome-tag-title" style="color: #50C878; font-size: 24px; font-weight: 800; margin-top: 0; margin-bottom: 8px; letter-spacing: -0.5px; overflow-wrap: break-word; word-break: break-word;">@nome è disponibile.</h2>
         <p style="color: #ffffff; font-size: 15px; font-weight: 300; margin-bottom: 35px; opacity: 0.9; line-height: 1.4; letter-spacing: 0.2px;">Ora puoi creare il tuo spazio digitale, vedere l'anteprima e decidere con calma.</p>
 
         <div style="text-align: left; display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; padding: 0 5px;">
