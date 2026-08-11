@@ -518,12 +518,12 @@ body {
 .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition: opacity 0.6s ease 0.4s; }
 .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
 
-/* Il nuovo tasto HOME integrato in griglia */
+/* Il nuovo tasto HOME integrato in griglia e spinto sul fondo */
 .exit-prompt { 
     display: flex !important; flex-direction: column; align-items: center; 
-    gap: 5px !important; /* COMPATTATO: avvicina la scritta "HOME" al minilogo */
-    margin-top: 70px !important; /* SPINTA IN BASSO: allontana il blocco dall'ultima stanza */
-    margin-bottom: 20px !important; 
+    margin-top: auto !important; /* IL SEGRETO: assorbe lo spazio vuoto e si schiaccia sul fondo */
+    margin-bottom: 15px !important; 
+    padding-top: 30px; /* Crea un'ampia zona invisibile cliccabile sopra la scritta */
     opacity: 0.5; transition: opacity 0.3s, transform 0.2s; cursor: pointer;
 }
 .exit-prompt:active { opacity: 1; transform: scale(0.95); }
@@ -668,13 +668,8 @@ body {
             <!-- LA QUICK ACTION (Elevata a Stanza) -->
             <button class="room-link" id="room-quick-action" onclick="eseguiQuickAction()" style="display:none;">⚡ AZIONE RAPIDA</button>
             
-            <!-- TASTO DI RITORNO HOME (Ora integrato nel flusso delle stanze) -->
+           <!-- TASTO DI RITORNO HOME (Spinto sul fondo, senza icona) -->
             <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
-                <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent; transform: scale(0.7); opacity: 0.5;">
-                    <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--text-sec); border-radius: 50%; box-sizing: border-box;"></div>
-                    <div style="position: absolute; width: 3px; height: 10px; background: var(--text-sec); bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
-                    <div style="position: absolute; color: var(--text-sec); font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
-                </div>
                 <span>HOME</span>
             </div>
 
