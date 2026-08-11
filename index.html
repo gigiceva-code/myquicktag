@@ -138,8 +138,6 @@
             align-items: center;
             gap: 60px;
         }
-
-        #s1 > div:nth-child(1) { align-items: flex-start !important; text-align: left !important; }
         
         /* S3: Allineamento orizzontale card */
         #s3 { justify-content: center !important; }
@@ -194,114 +192,62 @@
     </header>
     <div class="container" style="background: #000; font-family: 'Inter', sans-serif; position: relative;">
 
-        <section id="s1" class="section-1" style="display: flex; justify-content: center; align-items: center; padding: 120px 20px 60px 20px; box-sizing: border-box; background: #000000; overflow: hidden; position: relative;">
+       <section id="s1" class="section-1" style="display: flex; justify-content: center; align-items: center; padding: 120px 20px 80px 20px; box-sizing: border-box; background: #000000; overflow: hidden; position: relative; min-height: 100vh;">
             
-            <div style="width: 100%; max-width: 1100px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 50px; z-index: 2;">
+            <!-- GLOW DI SFONDO CENTRALE -->
+            <div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: #50C878; filter: blur(180px); opacity: 0.12; border-radius: 50%; z-index: 1;"></div>
 
-                <div style="flex: 1 1 400px; display: flex; flex-direction: column; align-items: flex-start; max-width: 450px;">
-                    
-                    <h1 class="reveal-item" style="font-size: 32px; font-weight: 300; line-height: 1.2; color: #ffffff; margin: 0 0 15px 0; letter-spacing: -0.5px;">
-                        Il tuo spazio assoluto,<br><span style="font-weight: 700;">senza compromessi.</span>
-                    </h1>
-                    
-                    <p class="reveal-item delay-1" style="color: #A0A0A0; font-size: 15px; font-weight: 300; line-height: 1.6; margin: 0 0 25px 0;">
-                        Il design incontra l'immediatezza. Nessuna app da scaricare, nessuna barriera. Il tuo portale personale, sempre online con un singolo click.
-                    </p> 
+            <div style="width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 2;">
+                
+                <h1 class="reveal-item" style="font-size: 36px; font-weight: 300; line-height: 1.2; color: #ffffff; margin: 0 0 20px 0; letter-spacing: -0.5px;">
+                    Il tuo spazio assoluto,<br><span style="font-weight: 700;">senza compromessi.</span>
+                </h1>
+                
+                <p class="reveal-item delay-1" style="color: #A0A0A0; font-size: 16px; font-weight: 300; line-height: 1.6; margin: 0 0 35px 0; max-width: 550px;">
+                    Il design incontra l'immediatezza. Nessuna app da scaricare, nessuna barriera. Il tuo portale personale, sempre online con un singolo click.
+                </p> 
 
-                    <div class="reveal-item delay-1" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Istantaneo con tecnologia PWA</span>
-                        </div>
-                      <div style="display: flex; align-items: center; gap: 10px;">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-    <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Il tuo @nome unico ed esclusivo</span>
-</div> 
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Aggiornamenti in tempo reale</span>
-                        </div>
+                <!-- SPUNTE VERDI (Allineate orizzontalmente su desktop, a cascata su mobile) -->
+                <div class="reveal-item delay-1" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 50px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Tecnologia PWA nativa</span>
                     </div>
-
-                    <div class="reveal-item delay-2" id="search-widget" style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 6px; display: flex; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: all 0.3s ease; margin-bottom: 12px;">
-                        <div style="display: flex; align-items: center; padding: 12px 15px;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A0A0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-right: 12px; opacity: 0.7;">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                            <div style="display: flex; align-items: center; flex-grow: 1;">
-                                <span style="color: #ffffff; font-size: 18px; font-weight: 400; line-height: 1; opacity: 0.8;">@</span>
-                                <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 0; margin: 0; background: transparent; border: none; color: #ffffff; font-size: 18px; font-weight: 400; outline: none; line-height: 1;">
-                            </div>
-                        </div>
-                        <button id="btn-verifica-principale" onclick="vaiAllaVerifica()" class="btn-verifica" style="width: 100%; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease;">
-    VERIFICA DISPONIBILITÀ
-</button>
-
-                    </div>
-
-                    <div class="reveal-item delay-2" style="display: flex; align-items: center; gap: 8px; opacity: 0.7; padding-left: 5px;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                        <p style="margin: 0; font-size: 11px; color: #ffffff; font-weight: 500; letter-spacing: 0.5px;">Tre mesi di accesso completo, nessuna carta richiesta.</p>
-                    </div>
-
-                </div>
-
-               <div class="reveal-item delay-2" style="flex: 1 1 340px; display: flex; justify-content: center; align-items: center; position: relative;">
-                    
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 300px; background: #50C878; filter: blur(120px); opacity: 0.15; border-radius: 50%; z-index: 1;"></div>
-                    
-                    <div style="transform: scale(0.7); transform-origin: center; width: 100%; display: flex; justify-content: center; z-index: 2;">
-
-                        <div class="glass-panel" style="width: 210px; height: 470px; border-radius: 35px; border: 2px solid #50C878 !important; display: flex; flex-direction: column; align-items: center; padding: 4px 12px 10px 12px; box-sizing: border-box; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 15px rgba(80,200,120,0.15), inset 0 0 20px rgba(80,200,120,0.05) !important; background: #080808 !important;">
-                            
-                            <div style="width: 70px; height: 16px; background: #000000; border-radius: 10px; margin-bottom: 4px; box-shadow: inset 0 1px 3px rgba(255,255,255,0.05); z-index: 2; flex-shrink: 0;"></div>
-                            
-                            <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 6px; box-sizing: border-box;">
-                                
-                                <div style="width: 100%; padding: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; flex-direction: column; flex-shrink: 0; box-sizing: border-box;">
-                                    <div style="display: flex; justify-content: flex-start; align-items: flex-start; margin-bottom: 10px;">
-                                        <div style="width: 35px; height: 35px; background: #ffffff; border-radius: 5px; padding: 3px; box-sizing: border-box; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;">
-                                            <div style="background: #000; border-radius: 2px;"></div><div style="background: #000; border-radius: 2px;"></div>
-                                            <div style="background: #000; border-radius: 2px;"></div><div style="background: #000; border-radius: 2px;"></div>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="width: 60px; height: 5px; background: #ffffff; border-radius: 3px; opacity: 0.9;"></div>
-                                        <div style="width: 22px; height: 22px; background: rgba(80, 200, 120, 0.08); border: 1px solid rgba(80, 200, 120, 0.4); border-radius: 5px; display: flex; justify-content: center; align-items: center;">
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle>
-                                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div style="display: flex; gap: 6px; width: 100%; box-sizing: border-box;">
-                                    <div style="flex: 1 1 0; height: 78px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-sizing: border-box;"><div style="width: 30px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div></div>
-                                    <div style="flex: 1 1 0; height: 78px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-sizing: border-box;"><div style="width: 40px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div></div>
-                                </div>
-                                <div style="display: flex; gap: 6px; width: 100%; box-sizing: border-box;">
-                                    <div style="flex: 1 1 0; height: 78px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-sizing: border-box;"><div style="width: 35px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div></div>
-                                    <div style="flex: 1 1 0; height: 78px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-sizing: border-box;"><div style="width: 25px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div></div>
-                                </div>
-                                <div style="display: flex; gap: 6px; width: 100%; box-sizing: border-box;">
-                                    <div style="flex: 1 1 0; height: 78px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-sizing: border-box;"><div style="width: 20px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div></div>
-                                    <div style="flex: 1 1 0; height: 78px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-sizing: border-box;"><div style="width: 35px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div></div>
-                                </div>
-
-                                <div style="width: 100%; height: 76px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; flex-shrink: 0; box-sizing: border-box;">
-                                    <div style="width: 12px; height: 12px; background: rgba(255, 60, 60, 0.2); border: 1px solid rgba(255, 60, 60, 0.4); border-radius: 3px;"></div>
-                                    <div style="width: 45px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div>
-                                </div>
-
-                            </div>
-                        </div>
-
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">@nome esclusivo</span>
+                    </div> 
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Aggiornamenti in tempo reale</span>
                     </div>
                 </div>
+
+                <!-- WIDGET DI RICERCA -->
+                <div class="reveal-item delay-2" id="search-widget" style="width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 6px; display: flex; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: all 0.3s ease; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; padding: 14px 15px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A0A0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-right: 12px; opacity: 0.7;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <div style="display: flex; align-items: center; flex-grow: 1;">
+                            <span style="color: #ffffff; font-size: 18px; font-weight: 400; line-height: 1; opacity: 0.8;">@</span>
+                            <input type="text" id="tag-input" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 0; margin: 0; background: transparent; border: none; color: #ffffff; font-size: 18px; font-weight: 400; outline: none; line-height: 1;">
+                        </div>
+                    </div>
+                    <button id="btn-verifica-principale" onclick="vaiAllaVerifica()" class="btn-verifica" style="width: 100%; padding: 18px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease;">
+                        VERIFICA DISPONIBILITÀ
+                    </button>
+                </div>
+
+                <!-- MICRO-TESTO -->
+                <div class="reveal-item delay-2" style="display: flex; align-items: center; gap: 8px; opacity: 0.7;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <p style="margin: 0; font-size: 11px; color: #ffffff; font-weight: 500; letter-spacing: 0.5px;">Tre mesi di accesso completo, nessuna carta richiesta.</p>
+                </div>
+
             </div>
-        </section>
+        </section> 
                      <!-- ============================================================ -->
         <!-- SECTION 2: ARCHITETTURA TARGET E CASI D'USO (MINIMAL LUXURY)  -->
         <!-- ============================================================ -->
