@@ -265,26 +265,26 @@
                     </h2>
                 </div>
 
-              <!-- SELETTORE A PILLOLE (TABS) -->
+             <!-- SELETTORE A PILLOLE (TABS) -->
                 <div id="s2-tab-container" style="display: flex; gap: 8px; width: 100%; max-width: 600px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth;">
-                    <!-- Aggiunto lo 0, 1, 2 alla funzione per collegare i bottoni ai trattini -->
-                    <button class="target-tab active-tab" onclick="switchTarget('pro', this, 0)" style="flex: 1 0 auto; padding: 12px 18px; background: rgba(80, 200, 120, 0.1); border: 1px solid rgba(80, 200, 120, 0.4); border-radius: 8px; cursor: pointer; color: #ffffff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
+                    <!-- Nota l'aggiunta del numero (1, 2, 3) alla fine della funzione onclick -->
+                    <button class="target-tab active-tab" onclick="switchTarget('pro', this, 1)" style="flex: 1 0 auto; padding: 12px 18px; background: rgba(80, 200, 120, 0.1); border: 1px solid rgba(80, 200, 120, 0.4); border-radius: 8px; cursor: pointer; color: #ffffff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
                         Professionisti & Aziende
                     </button>
-                    <button class="target-tab" onclick="switchTarget('local', this, 1)" style="flex: 1 0 auto; padding: 12px 18px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; color: #888888; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
+                    <button class="target-tab" onclick="switchTarget('local', this, 2)" style="flex: 1 0 auto; padding: 12px 18px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; color: #888888; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
                         Attività Locali & Retail
                     </button>
-                    <button class="target-tab" onclick="switchTarget('creator', this, 2)" style="flex: 1 0 auto; padding: 12px 18px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; color: #888888; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
+                    <button class="target-tab" onclick="switchTarget('creator', this, 3)" style="flex: 1 0 auto; padding: 12px 18px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; color: #888888; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
                         Creator & Freelance
                     </button>
                 </div>
 
-                <!-- TRATTINI GUIDA (SCROLL INDICATORS) -->
+                <!-- TRATTINI GUIDA CON ID SPECIFICI -->
                 <div style="display: flex; justify-content: center; gap: 6px; margin-top: 5px; margin-bottom: 25px; width: 100%;">
-                    <div class="s2-dot" style="height: 3px; background: rgba(80, 200, 120, 0.8); border-radius: 2px; width: 18px; transition: all 0.3s ease;"></div>
-                    <div class="s2-dot" style="height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px; width: 8px; transition: all 0.3s ease;"></div>
-                    <div class="s2-dot" style="height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px; width: 8px; transition: all 0.3s ease;"></div>
-                </div> 
+                    <div id="s2-dot-1" style="height: 3px; background: rgba(80, 200, 120, 0.8); border-radius: 2px; width: 18px; transition: all 0.3s ease;"></div>
+                    <div id="s2-dot-2" style="height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px; width: 8px; transition: all 0.3s ease;"></div>
+                    <div id="s2-dot-3" style="height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px; width: 8px; transition: all 0.3s ease;"></div>
+                </div>
 
                 <!-- PANNELLO MASTER CASI D'USO -->
                 <div class="glass-panel" style="width: 100%; border-radius: 16px; padding: 35px 30px; box-sizing: border-box; background: rgba(10, 10, 12, 0.8); border: 1px solid rgba(255, 255, 255, 0.06); position: relative;">
@@ -353,9 +353,9 @@
 
             </div>
 
-          <!-- JAVASCRIPT SWITCHER & DOTS -->
+            <!-- JAVASCRIPT SWITCHER INFALLIBILE -->
             <script>
-                function switchTarget(targetId, clickedBtn, dotIndex) {
+                function switchTarget(targetId, clickedBtn, dotNumber) {
                     // 1. Reset stile di tutti i bottoni
                     const tabs = document.querySelectorAll('.target-tab');
                     tabs.forEach(tab => {
@@ -371,26 +371,30 @@
                     clickedBtn.style.color = '#ffffff';
                     clickedBtn.style.fontWeight = '600';
 
-                    // 3. Centra fluidamente il bottone nello schermo (Premium UX)
+                    // 3. Centra fluidamente il bottone nello schermo
                     clickedBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 
-                    // 4. Cambia i contenuti (Testi sotto)
+                    // 4. Cambia i contenuti del pannello master
                     const contents = document.querySelectorAll('.target-content');
                     contents.forEach(content => content.style.display = 'none');
-                    document.getElementById('content-' + targetId).style.display = 'block';
+                    const targetContent = document.getElementById('content-' + targetId);
+                    if (targetContent) targetContent.style.display = 'block';
 
-                    // 5. Aggiorna i trattini (Dots) per coerenza visiva
-                    const dots = document.querySelectorAll('.s2-dot');
-                    if (dots.length > 0) {
-                        dots.forEach(dot => {
-                            dot.style.background = 'rgba(255, 255, 255, 0.15)';
-                            dot.style.width = '8px';
-                        });
-                        dots[dotIndex].style.background = 'rgba(80, 200, 120, 0.8)';
-                        dots[dotIndex].style.width = '18px';
+                    // 5. Aggiornamento chirurgico dei trattini tramite ID
+                    for (let i = 1; i <= 3; i++) {
+                        const dot = document.getElementById('s2-dot-' + i);
+                        if (dot) {
+                            if (i === dotNumber) {
+                                dot.style.background = 'rgba(80, 200, 120, 0.8)';
+                                dot.style.width = '18px';
+                            } else {
+                                dot.style.background = 'rgba(255, 255, 255, 0.15)';
+                                dot.style.width = '8px';
+                            }
+                        }
                     }
                 }
-            </script> 
+            </script>
         </section>
   
 
