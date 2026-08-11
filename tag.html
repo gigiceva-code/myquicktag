@@ -213,7 +213,7 @@ body {
     transition: color 0.2s ease, transform 0.2s ease;
     
     /* Partono da molto in basso, rimpicciolite, sfocate e nel buio totale */
-    opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px) brightness(0);
+    opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px);
 }
 .room-link:active { color: #ffffff !important; transform: scale(0.98); }
 
@@ -228,7 +228,7 @@ body {
     animation: emergeDalBuio 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards; 
 }
 @keyframes emergeDalBuio { 
-    0% { opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px) brightness(0); } 
+    0% { opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px); } 
     100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) brightness(1); } 
 }
 
@@ -237,7 +237,7 @@ body {
     animation: sprofondaNelBuio 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards; 
 }
 @keyframes sprofondaNelBuio {
-    0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) brightness(1); }
+    0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     100% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px) brightness(0); }
 }
 
@@ -1138,6 +1138,7 @@ function chiudiDettaglio() {
 // ============================================================
 // LO SBLOCCO E IL RITORNO (IL MORPH CINEMATOGRAFICO)
 // ============================================================
+
 function sbloccaTag() {
     const container = document.getElementById('profile-content');
     if (!container || !container.classList.contains('locked')) return;
@@ -1150,7 +1151,6 @@ function sbloccaTag() {
     const mainGrid = document.getElementById('mainGrid');
     if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
 
-       // Ritardo aumentato: prima la copertina sale scomparendo e creando il "vuoto", poi emergono le stanze
     setTimeout(() => {
         const caselle = document.querySelectorAll('#mainGrid .room-link');
         let moduliVisibili = 0;
@@ -1159,12 +1159,13 @@ function sbloccaTag() {
                 casella.classList.remove('boot-module-closing');
                 void casella.offsetWidth; 
                 casella.classList.add('boot-module-active');
-                // Effetto cascata (stagger) leggermente più lento per un ingresso più teatrale
-                casella.style.animationDelay = `${(moduliVisibili * 0.12)}s`;
+                // Calcolo sicuro senza caratteri speciali
+                casella.style.animationDelay = (moduliVisibili * 0.12) + 's';
                 moduliVisibili++;
             }
         });
-    }, 400); // Aumentato a 400ms per garantire la suspense
+    }, 400);
+}
 
 
 function bloccaTag() {
