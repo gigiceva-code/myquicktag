@@ -755,7 +755,7 @@ async function vaiAllaVerifica() {
             const scadenza = new Date().getTime() + 900000; // 15 minuti di tempo
             localStorage.setItem('myquicktag_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
 
-            document.getElementById('welcome-tag-title').innerText = `${formattedTag} è disponibile.`;
+          document.getElementById('welcome-tag-name').innerText = formattedTag; 
             apriOverlay('welcome-overlay');
         } else {
             alert(data.message || "Nome non disponibile. Scegli un altro tag.");
@@ -863,12 +863,20 @@ function controllaMemoriaProprieta() {
                 if (searchWidget) {
                     searchWidget.innerHTML = `
                         <div style="padding: 10px; text-align: center;">
-                            <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 2px; margin: 0 0 8px 0; text-transform: uppercase;">Configurazione in sospeso</p>
-                            <p style="color: #fff; font-size: 20px; font-weight: 300; margin: 0 0 15px 0; letter-spacing: 1px;">@${reservedData.tag.toUpperCase()}</p>
-                            <button onclick="window.location.href='edit.html?u=${reservedData.tag}'" style="width: 100%; padding: 16px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 15px rgba(80, 200, 120, 0.2);">
+                            <div style="display: inline-flex; align-items: center; justify-content: center; padding: 4px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; margin-bottom: 15px;">
+                                <span style="width: 6px; height: 6px; background: #e5c158; border-radius: 50%; margin-right: 6px; box-shadow: 0 0 8px rgba(229, 193, 88, 0.5);"></span>
+                                <span style="color: #ffffff; font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">In sospeso</span>
+                            </div>
+                            
+                            <p style="color: #ffffff; font-size: 24px; font-weight: 300; margin: 0 0 20px 0; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 10px; box-sizing: border-box;">
+                                @${reservedData.tag.toLowerCase()}
+                            </p>
+                            
+                            <button onclick="window.location.href='edit.html?u=${reservedData.tag}'" style="width: 100%; padding: 18px 0; background: #ffffff; color: #000000; border: none; border-radius: 8px; font-weight: 800; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s ease;">
                                 RIPRENDI E COMPLETA
                             </button>
-                            <button onclick="localStorage.removeItem('myquicktag_reserved'); location.reload();" style="width: 100%; padding: 10px 0; background: transparent; color: #888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline;">
+                            
+                            <button onclick="localStorage.removeItem('myquicktag_reserved'); location.reload();" style="width: 100%; padding: 12px 0; background: transparent; color: #888888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline; letter-spacing: 0.5px;">
                                 Annulla e cerca un nuovo nome
                             </button>
                         </div>
@@ -882,52 +890,6 @@ function controllaMemoriaProprieta() {
         }
     }
 }
-
-// Scongela la pagina se l'utente preme "Indietro" dal browser
-window.addEventListener('pageshow', (event) => {
-    if (event.persisted) controllaMemoriaProprieta();
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-    const scrollPos = localStorage.getItem('scrollPos');
-    if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
-
-    // Eseguiamo il controllo principale all'avvio
-    controllaMemoriaProprieta();
-
-    const tagInput = document.getElementById('tag-input');
-    if (tagInput) {
-        tagInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') { e.preventDefault(); vaiAllaVerifica(); }
-        });
-    }
-
-    const loginPassword = document.getElementById('login-password');
-    const loginTag = document.getElementById('login-tag');
-    function triggerLoginOnEnter(e) {
-        if (e.key === 'Enter') { e.preventDefault(); checkAccess(); }
-    }
-    if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
-    if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
-
-    setTimeout(() => {
-        const elementiS1 = document.querySelectorAll('#s1 .reveal-item');
-        elementiS1.forEach(el => el.classList.add('active'));
-    }, 50);
-
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target); 
-            }
-        });
-    }, { root: null, rootMargin: '0px', threshold: 0.15 });
-
-    document.querySelectorAll('.reveal-item').forEach(el => {
-        if (!el.closest('#s1')) revealObserver.observe(el);
-    });
-});
 </script>
 </body>
 </html>
