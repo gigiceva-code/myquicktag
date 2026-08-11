@@ -185,44 +185,73 @@ body {
 #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::before { color: #c8968e; }
 #profile-content[data-theme="satin_rose"] .at-symbol { color: #c8968e; opacity: 0.9; text-shadow: 0 0 10px rgba(200, 150, 142, 0.3); }
 
+
 /* ============================================================
    IL MENU DELLE STANZE E BLOCCO DELLO SCROLL
    ============================================================ */
 .app-container #mainGrid {
     flex-direction: column !important; justify-content: center !important; align-items: center !important;
-    gap: 8px !important; flex: 1 !important; width: 100% !important; background: transparent !important;
-    padding: 10px 0 40px 0 !important; 
+    gap: 28px !important; /* Allontana le stanze riempiendo il vuoto in modo elegante */
+    flex: 1 !important; width: 100% !important; background: transparent !important;
+    padding: 20px 0 10px 0 !important; /* Permette al tasto HOME di scendere al massimo */
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain; 
-    /* Uccisione barra laterale (Premium UI) */
-    -ms-overflow-style: none;  /* IE ed Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; scrollbar-width: none;
 }
-/* Uccisione barra laterale per Chrome, Safari e Opera */
-.app-container #mainGrid::-webkit-scrollbar {
-    display: none;
-}
+.app-container #mainGrid::-webkit-scrollbar { display: none; }
 
-/* 🎯 LE STANZE (Identiche per stile, colore e spaziatura) */
+/* ============================================================
+   INGRESSO CINEMATOGRAFICO (DAL BUIO E DAL VUOTO)
+   ============================================================ */
 .room-link {
     background: transparent !important; border: none !important; box-shadow: none !important;
     padding: 10px 0 !important; width: auto !important; cursor: pointer;
     font-size: 0.75rem !important; letter-spacing: 4px !important; font-weight: 300 !important;
     text-transform: uppercase !important; color: var(--text-sec) !important;
-    transition: color 0.2s ease, transform 0.2s ease;
     display: flex; align-items: center; justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+    
+    /* Partono da molto in basso, rimpicciolite, sfocate e nel buio totale */
+    opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px) brightness(0);
 }
-
 .room-link:active { color: #ffffff !important; transform: scale(0.98); }
 
-/* Speciale Access Tag e Semaforo, rimangono come prima ma integrati */
 #room-access-tag { color: var(--accent-gold) !important; font-weight: 400 !important; }
 #room-live-status { color: #10b981 !important; font-weight: 500 !important; flex-direction: row; gap: 8px; }
-#room-live-status::before { content: none; } /* Niente :: per il semaforo */
+#room-live-status::before { content: none; }
 #room-flash { color: #e5c158 !important; font-weight: 500 !important; }
 #room-flash::before { content: none; }
 
+/* L'emersione morbida e drammatica */
+.boot-module-active { 
+    animation: emergeDalBuio 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards; 
+}
+@keyframes emergeDalBuio { 
+    0% { opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px) brightness(0); } 
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) brightness(1); } 
+}
+
+/* La scomparsa rapida */
+.boot-module-closing { 
+    animation: sprofondaNelBuio 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards; 
+}
+@keyframes sprofondaNelBuio {
+    0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) brightness(1); }
+    100% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px) brightness(0); }
+}
+
+/* ============================================================
+   TASTO HOME (FONDO ASSOLUTO)
+   ============================================================ */
+.exit-prompt { 
+    display: flex !important; flex-direction: column; align-items: center; 
+    margin-top: auto !important; 
+    margin-bottom: 0px !important; 
+    padding-top: 30px; padding-bottom: 10px;
+    opacity: 0.5; transition: opacity 0.3s, transform 0.2s; cursor: pointer;
+}
+.exit-prompt:active { opacity: 1; transform: scale(0.95); }
 
 
 /* ============================================================
@@ -518,27 +547,7 @@ body {
 .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition: opacity 0.6s ease 0.4s; }
 .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
 
-/* Il nuovo tasto HOME integrato in griglia e spinto sul fondo */
-.exit-prompt { 
-    display: flex !important; flex-direction: column; align-items: center; 
-    margin-top: auto !important; /* IL SEGRETO: assorbe lo spazio vuoto e si schiaccia sul fondo */
-    margin-bottom: 15px !important; 
-    padding-top: 30px; /* Crea un'ampia zona invisibile cliccabile sopra la scritta */
-    opacity: 0.5; transition: opacity 0.3s, transform 0.2s; cursor: pointer;
-}
-.exit-prompt:active { opacity: 1; transform: scale(0.95); }
-/* 6. FISICA DELLE STANZE (Emersione profonda) */
-.room-link { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(8px); }
-.boot-module-active { animation: emergeRoom 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-@keyframes emergeRoom { 
-    0% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(8px); } 
-    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
-}
-.boot-module-closing { animation: hideRoom 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-@keyframes hideRoom {
-    0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-    100% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(5px); }
-}
+
         /* ============================================================
    BOTTOM SHEET (VISION-OS FLOATING GLASS LAYER)
    ============================================================ */
