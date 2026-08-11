@@ -1150,6 +1150,7 @@ function sbloccaTag() {
     const mainGrid = document.getElementById('mainGrid');
     if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
 
+       // Ritardo aumentato: prima la copertina sale scomparendo e creando il "vuoto", poi emergono le stanze
     setTimeout(() => {
         const caselle = document.querySelectorAll('#mainGrid .room-link');
         let moduliVisibili = 0;
@@ -1158,12 +1159,13 @@ function sbloccaTag() {
                 casella.classList.remove('boot-module-closing');
                 void casella.offsetWidth; 
                 casella.classList.add('boot-module-active');
-                casella.style.animationDelay = `${(moduliVisibili * 0.08)}s`;
+                // Effetto cascata (stagger) leggermente più lento per un ingresso più teatrale
+                casella.style.animationDelay = `${(moduliVisibili * 0.12)}s`;
                 moduliVisibili++;
             }
         });
-    }, 200); 
-}
+    }, 400); // Aumentato a 400ms per garantire la suspense
+
 
 function bloccaTag() {
     const container = document.getElementById('profile-content');
