@@ -617,6 +617,28 @@ body {
     box-sizing: border-box !important;
     letter-spacing: 0.3px !important;
 }
+          /* ============================================================
+   GRIGLIA GALLERIA (Miniature) E BLOCCO REFRESH
+   ============================================================ */
+body.no-pull-refresh { overscroll-behavior-y: none !important; }
+
+.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; padding: 10px 0; }
+.gallery-thumb { aspect-ratio: 1; border-radius: 8px; cursor: pointer; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.2s; }
+.gallery-thumb:active { transform: scale(0.95); }
+
+/* ============================================================
+   LIGHTBOX FULLSCREEN (Modale)
+   ============================================================ */
+.lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 100000; flex-direction: column; overscroll-behavior-y: contain; }
+.lightbox-header { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 10001; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%); }
+#lightbox-counter { color: #fff; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; }
+.lightbox-close { color: #fff; font-size: 1.5rem; cursor: pointer; padding: 10px; margin-right: -10px; }
+.lightbox-track { display: flex; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
+.lightbox-track::-webkit-scrollbar { display: none; }
+.lightbox-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; }
+.lightbox-slide img { max-width: 100%; max-height: 80vh; object-fit: contain; pointer-events: none; }
+.lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 30, 35, 0.6); backdrop-filter: blur(10px); color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 10001; border: 1px solid rgba(255,255,255,0.1); }
+.nav-left { left: 15px; } .nav-right { right: 15px; } 
 
     </style>
 
@@ -815,6 +837,18 @@ body {
             <!-- Il contenuto verrà iniettato dal Javascript -->
         </div>
         <button class="sheet-close-btn" onclick="chiudiDettaglio()">CHIUDI</button>
+    </div>
+       <!-- ============================================================ -->
+    <!-- LIGHTBOX GALLERIA (A schermo intero)                         -->
+    <!-- ============================================================ -->
+    <div id="mqt-lightbox" class="lightbox-overlay" style="display: none;">
+        <div class="lightbox-header">
+            <span id="lightbox-counter">1/6</span>
+            <i class="fas fa-times lightbox-close" onclick="chiudiLightbox()"></i>
+        </div>
+        <div id="lightbox-track" class="lightbox-track" onscroll="aggiornaContatoreLightbox()"></div>
+        <div class="lightbox-nav nav-left" onclick="scorriLightbox(-1)"><i class="fas fa-chevron-left"></i></div>
+        <div class="lightbox-nav nav-right" onclick="scorriLightbox(1)"><i class="fas fa-chevron-right"></i></div>
     </div>
     
     <!-- (Non toccare il tag <script> originale che segue nel tuo file) -->
@@ -1157,18 +1191,20 @@ function chiudiDettaglio() {
 }
 
 // ============================================================
-// LO SBLOCCO E IL RITORNO (IL MORPH CINEMATOGRAFICO)
+// LO SBLOCCO E IL RITORNO (HISTORY API E PULL-TO-REFRESH)
 // ============================================================
 
 function sbloccaTag() {
     const container = document.getElementById('profile-content');
     if (!container || !container.classList.contains('locked')) return;
+    if (navigator.vibrate) navigator.vibrate(30);
 
-    if (navigator.vibrate) { navigator.vibrate(30); }
+    // Blocca il refresh sbadato e spinge la cronologia in avanti
+    document.body.classList.add('no-pull-refresh');
+    history.pushState({ overlay: 'tag_aperta' }, '');
 
     container.classList.remove('locked');
     container.classList.add('unlocked');
-
     const mainGrid = document.getElementById('mainGrid');
     if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
 
@@ -1180,7 +1216,6 @@ function sbloccaTag() {
                 casella.classList.remove('boot-module-closing');
                 void casella.offsetWidth; 
                 casella.classList.add('boot-module-active');
-                // Calcolo sicuro senza caratteri speciali
                 casella.style.animationDelay = (moduliVisibili * 0.12) + 's';
                 moduliVisibili++;
             }
@@ -1188,13 +1223,15 @@ function sbloccaTag() {
     }, 400);
 }
 
-
 function bloccaTag() {
+    history.back(); // Ordina al browser di tornare indietro, innescando il popstate qui sotto
+}
+
+function eseguiBloccoVisivo() {
+    if (navigator.vibrate) navigator.vibrate(20);
+    document.body.classList.remove('no-pull-refresh'); // Riattiva il refresh in copertina
+
     const container = document.getElementById('profile-content');
-    if (!container || !container.classList.contains('unlocked')) return;
-
-    if (navigator.vibrate) { navigator.vibrate(20); }
-
     const caselle = document.querySelectorAll('#mainGrid .room-link');
     caselle.forEach(c => {
         c.classList.remove('boot-module-active');
@@ -1205,13 +1242,77 @@ function bloccaTag() {
     setTimeout(() => {
         container.classList.remove('unlocked');
         container.classList.add('locked');
-        
         setTimeout(() => {
             const mainGrid = document.getElementById('mainGrid');
             if(mainGrid) mainGrid.style.display = 'none';
         }, 700);
     }, 350);
 }
+
+// ============================================================
+// FUNZIONI LIGHTBOX (GALLERIA)
+// ============================================================
+function apriLightbox(indice) {
+    const lightbox = document.getElementById('mqt-lightbox');
+    const track = document.getElementById('lightbox-track');
+    if(!lightbox || !track) return;
+
+    // Crea un nuovo livello nella cronologia
+    history.pushState({ overlay: 'lightbox' }, '');
+    lightbox.style.display = 'flex';
+    document.body.classList.add('no-pull-refresh'); // Massima sicurezza contro il refresh
+    
+    const larghezzaSchermo = track.offsetWidth;
+    track.scrollLeft = larghezzaSchermo * indice;
+    aggiornaContatoreLightbox();
+}
+
+function chiudiLightbox() { history.back(); }
+
+function aggiornaContatoreLightbox() {
+    const track = document.getElementById('lightbox-track');
+    const totale = track.children.length;
+    if(totale === 0) return;
+    const indiceAttuale = Math.round(track.scrollLeft / track.offsetWidth) + 1;
+    document.getElementById('lightbox-counter').innerText = `${indiceAttuale}/${totale}`;
+}
+
+function scorriLightbox(direzione) {
+    const track = document.getElementById('lightbox-track');
+    track.scrollBy({ left: track.offsetWidth * direzione, behavior: 'smooth' });
+}
+
+// ============================================================
+// GESTIONE TASTO BACK (Popstate Android Infallibile)
+// ============================================================
+window.addEventListener('popstate', (e) => {
+    // 1. Priorità: Chiudere foto in Lightbox
+    const lightbox = document.getElementById('mqt-lightbox');
+    if (lightbox && lightbox.style.display === 'flex') {
+        lightbox.style.display = 'none';
+        return;
+    }
+
+    // 2. Chiusura Sottomenu (Teatro Liquido)
+    const overlaySezione = document.getElementById('overlaySezione');
+    if (overlaySezione && overlaySezione.classList.contains('attiva')) {
+        overlaySezione.classList.remove('attiva');
+        return;
+    }
+
+    // 3. Chiusura Ecosistema -> Ritorno in Copertina
+    const container = document.getElementById('profile-content');
+    if (container && container.classList.contains('unlocked')) {
+        eseguiBloccoVisivo();
+        return;
+    }
+
+    // Fallback chiusura vari overlay extra
+    ['showroom-overlay', 'tag-welcome-overlay', 'vip-vault-overlay'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.style.display === 'flex') el.style.display = 'none';
+    });
+});
 // ============================================================
 // QR CODE
 // ============================================================
@@ -1510,7 +1611,7 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- SEZIONE GALLERY ---
+   // --- SEZIONE GALLERY ---
     if (tipo === 'gallery') {
         titolo.textContent = 'GALLERY';
         corpo.innerHTML = '';
@@ -1520,20 +1621,21 @@ function apriSezione(tipo) {
         if (arrayFoto.length === 0) {
             corpo.textContent = 'Nessuna immagine presente nella galleria.';
         } else {
-            const griglia = document.createElement('div');
-            griglia.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin-top: 10px;';
+            let grigliaHTML = '<div class="gallery-grid">';
+            let trackHTML = '';
             
-            arrayFoto.forEach(url => {
-                const imgDiv = document.createElement('div');
-                imgDiv.style.cssText = `
-                    width: 100%; aspect-ratio: 1; border-radius: 12px;
-                    background-image: url('${url}'); background-size: cover; background-position: center;
-                    border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer;
-                `;
-                imgDiv.onclick = () => window.open(url, '_blank');
-                griglia.appendChild(imgDiv);
+            arrayFoto.forEach((urlOriginale, index) => {
+                // Magia Cloudinary per la velocità
+                const urlMiniatura = urlOriginale.replace('/upload/', '/upload/c_fill,w_300,h_300,q_auto,f_auto/');
+                const urlHD = urlOriginale.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
+                
+                grigliaHTML += `<div class="gallery-thumb" style="background-image: url('${urlMiniatura}');" onclick="apriLightbox(${index})"></div>`;
+                trackHTML += `<div class="lightbox-slide"><img src="${urlHD}"></div>`;
             });
-            corpo.appendChild(griglia);
+            grigliaHTML += '</div>';
+            
+            corpo.innerHTML = grigliaHTML;
+            document.getElementById('lightbox-track').innerHTML = trackHTML;
         }
         return;
     } 
@@ -1840,28 +1942,7 @@ function chiudiSezione() {
     }
 }
 
-// ============================================================
-// GESTIONE TASTO BACK (Popstate)
-// ============================================================
-window.addEventListener('popstate', (e) => {
-    const overlaySezione = document.getElementById('overlaySezione');
-    if (overlaySezione && overlaySezione.classList.contains('attiva')) {
-        overlaySezione.classList.remove('attiva');
-        return;
-    }
 
-    const overlayAcquisto = document.getElementById('showroom-overlay');
-    if (overlayAcquisto && overlayAcquisto.style.display === 'flex') {
-        overlayAcquisto.style.display = 'none';
-        return;
-    }
-
-    const welcomeOverlay = document.getElementById('tag-welcome-overlay');
-    if (welcomeOverlay && welcomeOverlay.style.display === 'flex') {
-        welcomeOverlay.style.display = 'none';
-        return;
-    }
-});
 
 // ============================================================
 // CONDIVISIONE, TOAST E CHECKOUT
