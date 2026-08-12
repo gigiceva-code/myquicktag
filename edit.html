@@ -759,7 +759,7 @@
         </div>
         
         <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 10px;">
-            <textarea id="field-bio" placeholder="Scrivi qui la tua bio o la descrizione del tuo business..." style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; resize: none;"></textarea>
+         <textarea id="field-bio" placeholder="Scrivi qui la tua bio o la descrizione del tuo business..." onblur="this.value = pulisciTesto(this.value)" style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; resize: none;"></textarea> 
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center;">
                 Un testo breve e incisivo converte molto di più.
             </div>
@@ -1001,7 +1001,7 @@
             
             <div style="position: relative;">
                 <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">MESSAGGIO (Max 30 caratteri)</label>
-                <input type="text" id="field-status-text" placeholder="Es. In riunione fino alle 15:00" maxlength="30" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+               <input type="text" id="field-status-text" placeholder="Es. In riunione fino alle 15:00" maxlength="30" onblur="this.value = pulisciTesto(this.value)" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
             </div>
 
             <div style="text-align: center; margin-top: 5px;">
