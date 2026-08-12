@@ -282,18 +282,18 @@ body {
     flex-shrink: 0;
 }
 
-/* LA GRAVITÀ CENTRALE */
+/* LA GRAVITÀ CENTRALE CORRETTA */
 .corpo-sezione { 
     display: flex !important; 
     flex-direction: column !important; 
-    justify-content: center !important; 
+    justify-content: flex-start !important; /* Spinge i bottoni in alto */
     align-items: center !important; 
     flex: 1 !important; 
     width: 100%;
     overflow-y: auto; 
     gap: 0; 
+    padding-top: 20px !important; /* Respiro dal titolo */
 }
-
 /* LA CASCATA (Ora clona esattamente l'inerzia di ".boot-module-active") */
 .cascade-item { opacity: 0; transform: translateY(25px); }
 .overlay-boot-active { animation: cloneHomeCascade 0.8s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
@@ -850,10 +850,8 @@ body.no-pull-refresh { overscroll-behavior-y: none !important; }
         <div class="lightbox-nav nav-left" onclick="scorriLightbox(-1)"><i class="fas fa-chevron-left"></i></div>
         <div class="lightbox-nav nav-right" onclick="scorriLightbox(1)"><i class="fas fa-chevron-right"></i></div>
     </div>
-    
-    <!-- (Non toccare il tag <script> originale che segue nel tuo file) -->
 
-  <script>
+<script>
 // ============================================================
 // GESTIONE VIP VAULT (SICUREZZA ACCESSO LINK)
 // ============================================================
@@ -861,7 +859,7 @@ let urlRiservato = "";
 let pinRiservato = "";
 let cacheDatiUtente = {};
 let usernameCorrente = "";
-
+let macroAreaCorrente = ""; 
 function apriVipVault(url, pin, event) {
     if (event) {
         event.preventDefault();
@@ -1516,7 +1514,7 @@ function apriMacroArea(area) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
-      window.macroAreaCorrente = area; 
+      macroAreaCorrente = area; 
     
     document.getElementById('testo-chiudi').innerText = 'CHIUDI';
     document.getElementById('icona-chiudi').className = 'fas fa-times';
@@ -1581,64 +1579,16 @@ function apriMacroArea(area) {
 }
 
 // ============================================================
-// APERTURA SEZIONE INTERNA E CONTENUTI
+// APERTURA SEZIONE INTERNA E CONTENUTI (PULITA E OTTIMIZZATA)
 // ============================================================
 function apriSezione(tipo) {
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
-   document.getElementById('testo-chiudi').innerText = 'INDIETRO';
+
+    document.getElementById('testo-chiudi').innerText = 'INDIETRO';
     document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
-   // --- SEZIONE PDF (Apertura nativa) ---
-    if (tipo === 'pdf') {
-        if (cacheDatiUtente.pdf_url) window.open(cacheDatiUtente.pdf_url, '_blank', 'noopener noreferrer');
-        return;
-    }
-
-    // --- SEZIONE QR CODE (Access Tag interno) ---
-    if (tipo === 'qr') {
-        titolo.textContent = 'ACCESS TAG';
-        const url = `${window.location.origin}/tag.html?u=${cacheDatiUtente.username_system}`;
-        corpo.innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px;">
-                <div class="qr-wrapper" id="qr-container-interno" style="width:190px !important; height:190px !important; border-radius: 20px !important; padding:10px !important; background:#fff !important;"></div>
-                <div style="font-size: 0.8rem; color: #86868b; text-align: center; line-height: 1.5;">Questo è il tuo pass digitale.<br>Inquadralo per salvare il profilo.</div>
-            </div>
-        `;
-        const qrContainer = document.getElementById('qr-container-interno');
-        new QRCode(qrContainer, { text: url, width: 170, height: 170, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
-        return;
-    }
-
-   // --- SEZIONE GALLERY ---
-    if (tipo === 'gallery') {
-        titolo.textContent = 'GALLERY';
-        corpo.innerHTML = '';
-        let arrayFoto = [];
-        try { arrayFoto = JSON.parse(cacheDatiUtente.gallery_data || '[]'); } catch(e) {}
-
-        if (arrayFoto.length === 0) {
-            corpo.textContent = 'Nessuna immagine presente nella galleria.';
-        } else {
-            let grigliaHTML = '<div class="gallery-grid">';
-            let trackHTML = '';
-            
-            arrayFoto.forEach((urlOriginale, index) => {
-                // Magia Cloudinary per la velocità
-                const urlMiniatura = urlOriginale.replace('/upload/', '/upload/c_fill,w_300,h_300,q_auto,f_auto/');
-                const urlHD = urlOriginale.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
-                
-                grigliaHTML += `<div class="gallery-thumb" style="background-image: url('${urlMiniatura}');" onclick="apriLightbox(${index})"></div>`;
-                trackHTML += `<div class="lightbox-slide"><img src="${urlHD}"></div>`;
-            });
-            grigliaHTML += '</div>';
-            
-            corpo.innerHTML = grigliaHTML;
-            document.getElementById('lightbox-track').innerHTML = trackHTML;
-        }
-        return;
-    } 
 
     // --- SEZIONE PDF (Apertura nativa senza toccare l'overlay) ---
     if (tipo === 'pdf') {
@@ -1692,7 +1642,7 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- SEZIONE GALLERY ---
+    // --- SEZIONE GALLERY (Con Ottimizzazione Cloudinary e Lightbox) ---
     if (tipo === 'gallery') {
         titolo.textContent = 'GALLERY';
         corpo.innerHTML = '';
@@ -1702,20 +1652,24 @@ function apriSezione(tipo) {
         if (arrayFoto.length === 0) {
             corpo.textContent = 'Nessuna immagine presente nella galleria.';
         } else {
-            const griglia = document.createElement('div');
-            griglia.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin-top: 10px;';
+            let grigliaHTML = '<div class="gallery-grid">';
+            let trackHTML = '';
             
-            arrayFoto.forEach(url => {
-                const imgDiv = document.createElement('div');
-                imgDiv.style.cssText = `
-                    width: 100%; aspect-ratio: 1; border-radius: 12px;
-                    background-image: url('${url}'); background-size: cover; background-position: center;
-                    border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer;
-                `;
-                imgDiv.onclick = () => window.open(url, '_blank');
-                griglia.appendChild(imgDiv);
+            arrayFoto.forEach((urlOriginale, index) => {
+                // Generazione on-the-fly di miniatura leggera e versione HD
+                const urlMiniatura = urlOriginale.replace('/upload/', '/upload/c_fill,w_300,h_300,q_auto,f_auto/');
+                const urlHD = urlOriginale.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
+                
+                grigliaHTML += `<div class="gallery-thumb" style="background-image: url('${urlMiniatura}');" onclick="apriLightbox(${index})"></div>`;
+                trackHTML += `<div class="lightbox-slide"><img src="${urlHD}"></div>`;
             });
-            corpo.appendChild(griglia);
+            grigliaHTML += '</div>';
+            
+            corpo.innerHTML = grigliaHTML;
+            
+            // Inietta le foto grandi nella pista nascosta della Lightbox
+            const lightboxTrack = document.getElementById('lightbox-track');
+            if(lightboxTrack) lightboxTrack.innerHTML = trackHTML;
         }
         return;
     }
@@ -1732,7 +1686,7 @@ function apriSezione(tipo) {
             corpo.textContent = 'Nessun sito web configurato.';
         } else {
             const riga = document.createElement('div');
-            riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
+            riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); width: 100%;';
 
             const link = document.createElement('a');
             link.href = urlSito;
@@ -1764,7 +1718,6 @@ function apriSezione(tipo) {
     if (tipo === 'contatti') {
         titolo.textContent = 'Contatti';
         corpo.innerHTML = '';
-
         const piano = (cacheDatiUtente.plan || '').toUpperCase();
         let vcf = {};
         try { 
@@ -1796,7 +1749,7 @@ function apriSezione(tipo) {
         } else {
             tuttiCampi.forEach(campo => {
                 const riga = document.createElement('div');
-                riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
+                riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); width: 100%;';
 
                 const sinistro = document.createElement(campo.azione ? 'a' : 'div');
                 if (campo.azione) {
@@ -1853,7 +1806,7 @@ function apriSezione(tipo) {
                 const lockHtml = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.8rem; margin-left: 8px;"></i>` : '';
 
                 const riga = document.createElement('div');
-                riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);';
+                riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); width: 100%;';
 
                 const link = document.createElement('a');
                 
@@ -1889,7 +1842,7 @@ function apriSezione(tipo) {
         return;
     }
 
-  // --- ALTRE SEZIONI TESTUALI (BIO E CV) ---
+    // --- ALTRE SEZIONI TESTUALI (BIO E CV) ---
     const contenuti = {
         'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
         'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' }
@@ -1898,9 +1851,6 @@ function apriSezione(tipo) {
     if (!contenuti[tipo]) return;
 
     titolo.textContent = contenuti[tipo].t;
-    
-    // Trasformando il testo nudo in un blocco HTML, il CSS lo riconosce 
-    // e innesca la cascata fluida annullando per sempre lo "scatto"
     corpo.innerHTML = `<div class="testo-lettura">${contenuti[tipo].c.replace(/\n/g, '<br>')}</div>`;
 
     const btnCondividiSezione = document.getElementById('btnCondividiLink');
@@ -1908,11 +1858,11 @@ function apriSezione(tipo) {
         btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
     }
 
-    // INNESCA LA CASCATA FLUIDA PER TUTTI I SOTTOMENU (Elimina l'effetto a scatto)
+    // INNESCA LA CASCATA FLUIDA PER TUTTI I SOTTOMENU
     const elementi = corpo.children;
     Array.from(elementi).forEach((el, index) => {
         el.classList.add('cascade-item');
-        el.style.animationDelay = `${index * 0.08}s`; // Ritardo matematico perfetto
+        el.style.animationDelay = `${index * 0.08}s`; 
         setTimeout(() => {
             el.classList.add('overlay-boot-active');
         }, 10);
