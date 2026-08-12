@@ -534,6 +534,32 @@
     </style>
 </head>
 <body>
+    <body>
+
+    <!-- ============================================================ -->
+    <!-- BADGE URGENZA ELEGANTE -->
+    <!-- ============================================================ -->
+    <div id="badge-urgenza" style="display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 5000; align-items: center; gap: 12px; background: rgba(10, 10, 12, 0.85); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 30px; padding: 8px 16px 8px 12px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        
+        <!-- Pulsar Dorato -->
+        <div style="display: flex; align-items: center; justify-content: center; position: relative; width: 12px; height: 12px;">
+            <span style="position: absolute; width: 100%; height: 100%; background: #e5c158; border-radius: 50%; opacity: 0.4; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></span>
+            <span style="position: relative; width: 6px; height: 6px; background: #e5c158; border-radius: 50%;"></span>
+        </div>
+
+        <!-- Testo Minimal -->
+        <div style="display: flex; flex-direction: column;">
+            <span id="badge-nome-brand" style="color: #ffffff; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">@nome riservato</span>
+            <span style="color: #A0A0A0; font-size: 10px; font-weight: 300;">Completa setup entro <span id="timer-scadenza" style="color: #e5c158; font-weight: 600;">30:00</span></span>
+        </div>
+        
+        <style>
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); opacity: 0.5; }
+                50% { transform: scale(2); opacity: 0; }
+            }
+        </style>
+    </div>
 
     <div class="configurator-wrapper">
         <div id="profile-content" data-theme="black_dna"> 
@@ -1411,7 +1437,59 @@
                 chiudiSenzaSalvare();
             }
         }
-      
+      // ============================================================
+        // MOTORE SCARCITY: TIMER DI PRENOTAZIONE
+        // ============================================================
+        function avviaTimerUrgenza() {
+            // Se l'utente è già attivo, nascondiamo il badge ed usciamo
+            if (statoUtente === 'attivo') {
+                document.getElementById('badge-urgenza').style.display = 'none';
+                return;
+            }
+
+            const badge = document.getElementById('badge-urgenza');
+            const badgeNome = document.getElementById('badge-nome-brand');
+            const timerSpan = document.getElementById('timer-scadenza');
+
+            if (!badge || !badgeNome || !timerSpan) return;
+
+            // Mostriamo il badge e iniettiamo il nome dinamico
+            badge.style.display = 'flex';
+            badgeNome.innerText = '@' + NOME_SISTEMA.toUpperCase() + ' RISERVATO';
+
+            // Memoria del telefono: controlliamo se il timer era già partito in precedenza
+            const storageKey = 'mqt_timer_scadenza_' + NOME_SISTEMA;
+            let scadenza = localStorage.getItem(storageKey);
+
+            if (!scadenza) {
+                // Imposta la scadenza a 30 minuti dal primo accesso
+                scadenza = new Date().getTime() + (30 * 60 * 1000);
+                localStorage.setItem(storageKey, scadenza);
+            }
+
+            // L'orologio che fa il calcolo ogni secondo
+            const intervallo = setInterval(() => {
+                const oraAttuale = new Date().getTime();
+                const distanza = scadenza - oraAttuale;
+
+                // Quando il tempo scade
+                if (distanza <= 0) {
+                    clearInterval(intervallo);
+                    timerSpan.innerText = "00:00";
+                    timerSpan.style.color = "#ff4444"; 
+                    document.querySelector('#badge-urgenza span:nth-child(2)').style.background = "#ff4444"; 
+                    return;
+                }
+
+                const minuti = Math.floor((distanza % (1000 * 60 * 60)) / (1000 * 60));
+                const secondi = Math.floor((distanza % (1000 * 60)) / 1000);
+
+                const minStr = minuti < 10 ? "0" + minuti : minuti;
+                const secStr = secondi < 10 ? "0" + secondi : secondi;
+
+                timerSpan.innerText = minStr + ":" + secStr;
+            }, 1000);
+        }
      
         // ==========================================
         // MOTORE: SBLOCCO PIANI IN ANTEPRIMA (POTENZIATO CON LOCAL STORAGE E ANTI-BLOCCO)
@@ -2002,12 +2080,14 @@
                             }
                         } catch(e) {}
                     }
-
-                                            // Richiama l'intelligenza dei lucchetti all'avvio della pagina
+// Richiama l'intelligenza dei lucchetti all'avvio della pagina
                     aggiornaLucchetti();
 
                     applicaTemaLive(); 
                     aggiornaLimitiSocial(); 
+                    
+                    // ACCENSIONE TIMER SCARCITY
+                    avviaTimerUrgenza();
                 }
             } catch (e) { 
                 console.error("Errore caricamento", e); 
@@ -2016,7 +2096,6 @@
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
             }
         }
-                
 
                   
         
