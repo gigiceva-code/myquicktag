@@ -480,7 +480,7 @@ body {
     transform-origin: center top;
 }
 
-.qr-luxury-trigger { position: absolute; top: 28px; right: 28px; color: var(--accent-gold); opacity: 0.6; cursor: pointer; z-index: 100; transition: opacity 0.3s ease, transform 0.3s ease; padding: 10px; margin: -10px; }
+.qr-luxury-trigger { position: absolute; top: 28px; right: 28px; color: var(--accent-gold); opacity: 0.9; cursor: pointer; z-index: 100; transition: opacity 0.3s ease, transform 0.3s ease; padding: 10px; margin: -10px; }
 .qr-luxury-trigger:active { opacity: 1; transform: scale(0.9); }
 .app-container.unlocked .qr-luxury-trigger { opacity: 0; pointer-events: none; }
 
@@ -666,7 +666,7 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
     <!-- 1. CHASSIS PRINCIPALE E SIGILLO ORBITALE                     -->
     <!-- ============================================================ -->
     <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
-        <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></div>
+        <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></div>
         <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
             
             <!-- IL SIGILLO ORBITALE (Allineato a edit.html) -->
@@ -700,7 +700,7 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
         <!-- ============================================================ -->
         <!-- 2. IL TOTEM DELLE STANZE (LA NUOVA ARCHITETTURA)             -->
         <!-- ============================================================ -->
-        <div id="mainGrid">
+       <div id="mainGrid" style="display: none;">
             <div id="action-bar-features" class="action-bar-container fade-in-widget">
                 
                 <!-- Pillola Live Status -->
@@ -2023,7 +2023,16 @@ function mostraWelcomeOverlay() {
 
     overlay.style.display = 'flex';
 }
-      
+// ============================================================
+// QUICK QR SCANNER (LUXURY TRIGGER)
+// ============================================================
+function apriQRRapido() {
+    if (navigator.vibrate) navigator.vibrate(15);
+    apriMacroArea('identity', true);
+    setTimeout(() => {
+        apriSezione('qr');
+    }, 50);
+}      
 
 </script>     
 </body>
