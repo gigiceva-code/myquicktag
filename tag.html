@@ -282,18 +282,18 @@ body {
     flex-shrink: 0;
 }
 
-/* LA GRAVITÀ CENTRALE CORRETTA */
+/* LA GRAVITÀ CENTRALE */
 .corpo-sezione { 
     display: flex !important; 
     flex-direction: column !important; 
-    justify-content: flex-start !important; /* Spinge i bottoni in alto */
+    justify-content: center !important; /* Centratura assoluta ripristinata */
     align-items: center !important; 
     flex: 1 !important; 
     width: 100%;
     overflow-y: auto; 
     gap: 0; 
-    padding-top: 20px !important; /* Respiro dal titolo */
 }
+
 /* LA CASCATA (Ora clona esattamente l'inerzia di ".boot-module-active") */
 .cascade-item { opacity: 0; transform: translateY(25px); }
 .overlay-boot-active { animation: cloneHomeCascade 0.8s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
