@@ -617,29 +617,28 @@ body {
     box-sizing: border-box !important;
     letter-spacing: 0.3px !important;
 }
-          /* ============================================================
-   GRIGLIA GALLERIA (Miniature) E BLOCCO REFRESH
+      /* ============================================================
+   GALLERY COMPONENT: GRID LAYOUT & PULL-TO-REFRESH CONTROL
    ============================================================ */
 body.no-pull-refresh { overscroll-behavior-y: none !important; }
 
-.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; padding: 10px 0; }
+.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; padding: 15px 0; }
 .gallery-thumb { aspect-ratio: 1; border-radius: 8px; cursor: pointer; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.2s; }
 .gallery-thumb:active { transform: scale(0.95); }
 
 /* ============================================================
-   LIGHTBOX FULLSCREEN (Modale)
+   FULLSCREEN LIGHTBOX MODAL
    ============================================================ */
-.lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 100000; flex-direction: column; overscroll-behavior-y: contain; }
+.lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 100000; flex-direction: column; overscroll-behavior-y: contain; display: none; }
 .lightbox-header { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 10001; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%); }
-#lightbox-counter { color: #fff; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; }
-.lightbox-close { color: #fff; font-size: 1.5rem; cursor: pointer; padding: 10px; margin-right: -10px; }
+.lightbox-counter { color: #ffffff; font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; }
+.lightbox-close { color: #ffffff; font-size: 1.5rem; cursor: pointer; padding: 10px; margin-right: -10px; }
 .lightbox-track { display: flex; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
 .lightbox-track::-webkit-scrollbar { display: none; }
 .lightbox-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; }
-.lightbox-slide img { max-width: 100%; max-height: 80vh; object-fit: contain; pointer-events: none; }
-.lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 30, 35, 0.6); backdrop-filter: blur(10px); color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 10001; border: 1px solid rgba(255,255,255,0.1); }
-.nav-left { left: 15px; } .nav-right { right: 15px; } 
-
+.lightbox-slide img { max-width: 100%; max-height: 85vh; object-fit: contain; pointer-events: none; }
+.lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 30, 35, 0.6); backdrop-filter: blur(10px); color: #ffffff; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 10001; border: 1px solid rgba(255,255,255,0.1); }
+.nav-left { left: 15px; } .nav-right { right: 15px; }
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -838,18 +837,19 @@ body.no-pull-refresh { overscroll-behavior-y: none !important; }
         </div>
         <button class="sheet-close-btn" onclick="chiudiDettaglio()">CHIUDI</button>
     </div>
-       <!-- ============================================================ -->
-    <!-- LIGHTBOX GALLERIA (A schermo intero)                         -->
+      
+      <!-- ============================================================ -->
+    <!-- LIGHTBOX OVERLAY COMPONENT                                   -->
     <!-- ============================================================ -->
-    <div id="mqt-lightbox" class="lightbox-overlay" style="display: none;">
+    <div id="mqt-lightbox" class="lightbox-overlay">
         <div class="lightbox-header">
-            <span id="lightbox-counter">1/6</span>
+            <span id="lightbox-counter" class="lightbox-counter">1/1</span>
             <i class="fas fa-times lightbox-close" onclick="chiudiLightbox()"></i>
         </div>
         <div id="lightbox-track" class="lightbox-track" onscroll="aggiornaContatoreLightbox()"></div>
         <div class="lightbox-nav nav-left" onclick="scorriLightbox(-1)"><i class="fas fa-chevron-left"></i></div>
         <div class="lightbox-nav nav-right" onclick="scorriLightbox(1)"><i class="fas fa-chevron-right"></i></div>
-    </div>
+    </div> 
 
 <script>
 // ============================================================
@@ -1189,7 +1189,7 @@ function chiudiDettaglio() {
 }
 
 // ============================================================
-// LO SBLOCCO E IL RITORNO (HISTORY API E PULL-TO-REFRESH)
+// STATE MANAGEMENT AND NAVIGATION API
 // ============================================================
 
 function sbloccaTag() {
@@ -1197,9 +1197,9 @@ function sbloccaTag() {
     if (!container || !container.classList.contains('locked')) return;
     if (navigator.vibrate) navigator.vibrate(30);
 
-    // Blocca il refresh sbadato e spinge la cronologia in avanti
+    // State assignment: imposta l'hash a #ecosistema per bloccare il tasto indietro
+    history.pushState(null, null, '#ecosistema');
     document.body.classList.add('no-pull-refresh');
-    history.pushState({ overlay: 'tag_aperta' }, '');
 
     container.classList.remove('locked');
     container.classList.add('unlocked');
@@ -1222,12 +1222,13 @@ function sbloccaTag() {
 }
 
 function bloccaTag() {
-    history.back(); // Ordina al browser di tornare indietro, innescando il popstate qui sotto
+    history.back(); 
 }
 
 function eseguiBloccoVisivo() {
     if (navigator.vibrate) navigator.vibrate(20);
-    document.body.classList.remove('no-pull-refresh'); // Riattiva il refresh in copertina
+    // Ripristino interazioni native per la copertina
+    document.body.classList.remove('no-pull-refresh');
 
     const container = document.getElementById('profile-content');
     const caselle = document.querySelectorAll('#mainGrid .room-link');
@@ -1248,24 +1249,28 @@ function eseguiBloccoVisivo() {
 }
 
 // ============================================================
-// FUNZIONI LIGHTBOX (GALLERIA)
+// LIGHTBOX COMPONENT CONTROLLER
 // ============================================================
 function apriLightbox(indice) {
     const lightbox = document.getElementById('mqt-lightbox');
     const track = document.getElementById('lightbox-track');
     if(!lightbox || !track) return;
 
-    // Crea un nuovo livello nella cronologia
-    history.pushState({ overlay: 'lightbox' }, '');
+    // State assignment: imposta l'hash a #lightbox
+    history.pushState(null, null, '#lightbox');
     lightbox.style.display = 'flex';
-    document.body.classList.add('no-pull-refresh'); // Massima sicurezza contro il refresh
+    document.body.classList.add('no-pull-refresh');
     
-    const larghezzaSchermo = track.offsetWidth;
-    track.scrollLeft = larghezzaSchermo * indice;
-    aggiornaContatoreLightbox();
+    setTimeout(() => {
+        const larghezzaSchermo = track.offsetWidth;
+        track.scrollLeft = larghezzaSchermo * indice;
+        aggiornaContatoreLightbox();
+    }, 50);
 }
 
-function chiudiLightbox() { history.back(); }
+function chiudiLightbox() { 
+    history.back(); 
+}
 
 function aggiornaContatoreLightbox() {
     const track = document.getElementById('lightbox-track');
@@ -1281,35 +1286,34 @@ function scorriLightbox(direzione) {
 }
 
 // ============================================================
-// GESTIONE TASTO BACK (Popstate Android Infallibile)
+// GLOBAL BACK BUTTON HANDLER (POPSTATE EVENTS)
 // ============================================================
 window.addEventListener('popstate', (e) => {
-    // 1. Priorità: Chiudere foto in Lightbox
+    const hash = window.location.hash;
     const lightbox = document.getElementById('mqt-lightbox');
-    if (lightbox && lightbox.style.display === 'flex') {
-        lightbox.style.display = 'none';
-        return;
-    }
-
-    // 2. Chiusura Sottomenu (Teatro Liquido)
     const overlaySezione = document.getElementById('overlaySezione');
-    if (overlaySezione && overlaySezione.classList.contains('attiva')) {
-        overlaySezione.classList.remove('attiva');
-        return;
-    }
-
-    // 3. Chiusura Ecosistema -> Ritorno in Copertina
     const container = document.getElementById('profile-content');
-    if (container && container.classList.contains('unlocked')) {
-        eseguiBloccoVisivo();
-        return;
-    }
 
-    // Fallback chiusura vari overlay extra
-    ['showroom-overlay', 'tag-welcome-overlay', 'vip-vault-overlay'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.style.display === 'flex') el.style.display = 'none';
-    });
+    // Level 2: Ritorno dalla Lightbox al sottomenu (Griglia)
+    if (hash === '#sezione') {
+        if (lightbox && lightbox.style.display === 'flex') lightbox.style.display = 'none';
+    } 
+    // Level 1: Ritorno dal sottomenu all'Ecosistema
+    else if (hash === '#ecosistema') {
+        if (lightbox && lightbox.style.display === 'flex') lightbox.style.display = 'none';
+        if (overlaySezione && overlaySezione.classList.contains('attiva')) overlaySezione.classList.remove('attiva');
+    } 
+    // Level 0: Ritorno dall'Ecosistema alla Copertina iniziale
+    else if (hash === '') {
+        if (lightbox && lightbox.style.display === 'flex') lightbox.style.display = 'none';
+        if (overlaySezione && overlaySezione.classList.contains('attiva')) overlaySezione.classList.remove('attiva');
+        if (container && container.classList.contains('unlocked')) eseguiBloccoVisivo();
+        
+        ['showroom-overlay', 'tag-welcome-overlay', 'vip-vault-overlay'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.style.display === 'flex') el.style.display = 'none';
+        });
+    }
 });
 // ============================================================
 // QR CODE
@@ -1575,9 +1579,8 @@ function apriMacroArea(area) {
     if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
 
     overlay.classList.add('attiva');
-    history.pushState({ overlay: 'macroarea', area: area }, '');
-}
-
+    history.pushState(null, null, '#sezione');
+    }
 // ============================================================
 // APERTURA SEZIONE INTERNA E CONTENUTI (PULITA E OTTIMIZZATA)
 // ============================================================
@@ -1642,7 +1645,7 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- SEZIONE GALLERY (Con Ottimizzazione Cloudinary e Lightbox) ---
+   // --- MEDIA SECTION (GRID AND LIGHTBOX) ---
     if (tipo === 'gallery') {
         titolo.textContent = 'GALLERY';
         corpo.innerHTML = '';
@@ -1656,18 +1659,17 @@ function apriSezione(tipo) {
             let trackHTML = '';
             
             arrayFoto.forEach((urlOriginale, index) => {
-                // Generazione on-the-fly di miniatura leggera e versione HD
+                // Cloudinary Optimization: 300px per le miniature, 1200px per la modale
                 const urlMiniatura = urlOriginale.replace('/upload/', '/upload/c_fill,w_300,h_300,q_auto,f_auto/');
                 const urlHD = urlOriginale.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
                 
                 grigliaHTML += `<div class="gallery-thumb" style="background-image: url('${urlMiniatura}');" onclick="apriLightbox(${index})"></div>`;
-                trackHTML += `<div class="lightbox-slide"><img src="${urlHD}"></div>`;
+                trackHTML += `<div class="lightbox-slide"><img src="${urlHD}" loading="lazy"></div>`;
             });
             grigliaHTML += '</div>';
             
             corpo.innerHTML = grigliaHTML;
             
-            // Inietta le foto grandi nella pista nascosta della Lightbox
             const lightboxTrack = document.getElementById('lightbox-track');
             if(lightboxTrack) lightboxTrack.innerHTML = trackHTML;
         }
@@ -1873,27 +1875,17 @@ function apriSezione(tipo) {
 // CHIUSURA OVERLAY O TASTO INDIETRO (LETTURA ICONA INFALLIBILE)
 // ============================================================
 function chiudiSezione() {
-    const overlay = document.getElementById('overlaySezione');
     const icona = document.getElementById('icona-chiudi');
-    if (!overlay || !icona) return;
-
-    // Se l'icona è la freccia (chevron-left), significa che siamo in un sottomenu (Livello 2)
-    if (icona.classList.contains('fa-chevron-left')) {
-        if (window.macroAreaCorrente) {
-            apriMacroArea(window.macroAreaCorrente); // Torniamo al menu (Livello 1)
+    // Se è attiva la freccia, riportiamo alla macro area precedente
+    if (icona && icona.classList.contains('fa-chevron-left')) {
+        if (macroAreaCorrente) {
+            apriMacroArea(macroAreaCorrente);
             return;
         }
     }
-
-    // Se l'icona è la 'X', chiudiamo definitivamente l'overlay
-    overlay.classList.remove('attiva');
-    if (history.state && (history.state.overlay === 'sezione' || history.state.overlay === 'macroarea')) {
-        history.back();
-    }
+    // Altrimenti deleghiamo la chiusura al gestore globale dello storico
+    history.back();
 }
-
-
-
 // ============================================================
 // CONDIVISIONE, TOAST E CHECKOUT
 // ============================================================
