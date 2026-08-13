@@ -862,13 +862,14 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
 
 <script>
 // ============================================================
-// GESTIONE VIP VAULT (SICUREZZA ACCESSO LINK)
+// GESTIONE VIP VAULT E VARIABILI GLOBALI
 // ============================================================
 let urlRiservato = "";
 let pinRiservato = "";
 let cacheDatiUtente = {};
 let usernameCorrente = "";
-let macroAreaCorrente = ""; 
+let macroAreaCorrente = ""; // Variabile di stato essenziale
+
 function apriVipVault(url, pin, event) {
     if (event) {
         event.preventDefault();
@@ -950,7 +951,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ============================================================
-// FLUSSO PRINCIPALE
+// FLUSSO PRINCIPALE E RENDERING DELLA TAG
 // ============================================================
 async function avviaFlusso(username) {
     try {
@@ -1009,9 +1010,6 @@ async function avviaFlusso(username) {
     }
 }
 
-// ============================================================
-// FORMATTAZIONE BADGE
-// ============================================================
 function formattaBadge(testoBruto) {
     const el = document.getElementById('tag-username');
     if(!el) return;
@@ -1027,9 +1025,6 @@ function formattaBadge(testoBruto) {
     else { el.style.fontSize = "1.05rem"; }
 }
 
-// ============================================================
-// RENDERING DELLA TAG
-// ============================================================
 function renderizzaTagCompleta(fields) {
     const container = document.getElementById('profile-content');
     if (container) {
@@ -1074,11 +1069,9 @@ function renderizzaTagCompleta(fields) {
 }
 
 // ============================================================
-// GESTIONE VISIBILITÀ E POPOLAMENTO DATI (ACTION BAR E STANZE)
+// VISIBILITÀ E POPOLAMENTO DATI (ACTION BAR E STANZE)
 // ============================================================
 function gestisciVisibilitaCaselle(fields) {
-
-    // --- 1. ACTION BAR (Pillole Interattive) ---
     const pillStatus = document.getElementById('pill-live-status');
     if (pillStatus && fields.live_status_color) {
         const dot = document.getElementById('pill-status-dot');
@@ -1091,7 +1084,6 @@ function gestisciVisibilitaCaselle(fields) {
         dot.style.backgroundColor = colorHex;
         dot.style.boxShadow = `0 0 8px ${colorHex}`;
 
-        // Micro-copy per la pillola (se l'utente non lo imposta, usiamo quello di default)
         let microCopy = label;
         if (fields.live_status_micro && fields.live_status_micro.trim() !== '') {
             microCopy = fields.live_status_micro.trim();
@@ -1109,7 +1101,6 @@ function gestisciVisibilitaCaselle(fields) {
         const isExpired = fields.flash_expiry && new Date(fields.flash_expiry) < new Date();
         if (!isExpired) {
             const txtFlash = document.getElementById('pill-flash-text');
-            // Micro-copy per il flash (es. "PROMO"). In futuro verrà dal DB.
             txtFlash.innerText = (fields.flash_micro || 'PROMO').toUpperCase();
             pillFlash.style.display = 'flex';
         } else {
@@ -1119,7 +1110,6 @@ function gestisciVisibilitaCaselle(fields) {
         pillFlash.style.display = 'none';
     }
 
-    // --- 2. GESTIONE MACRO-AREE (STANZE) ---
     const elIdentity = document.getElementById('room-identity');
     if (elIdentity) elIdentity.style.display = 'flex';
 
@@ -1143,7 +1133,7 @@ function gestisciVisibilitaCaselle(fields) {
 }
 
 // ============================================================
-// GESTIONE BOTTOM SHEET (DETTAGLIO KILLER FEATURES)
+// BOTTOM SHEET (KILLER FEATURES)
 // ============================================================
 function apriDettaglio(tipo) {
     const sheet = document.getElementById('feature-bottom-sheet');
@@ -1153,10 +1143,8 @@ function apriDettaglio(tipo) {
     const body = document.getElementById('sheet-body');
 
     if (!sheet || !backdrop) return;
-
     if (navigator.vibrate) navigator.vibrate(20);
 
-    // Dati dinamici per Live Status
     if (tipo === 'status') {
         let colorHex = '#10b981'; let label = 'ONLINE';
         if (cacheDatiUtente.live_status_color === 'yellow') { colorHex = '#f59e0b'; label = 'BUSY'; }
@@ -1170,7 +1158,6 @@ function apriDettaglio(tipo) {
         const testoEsteso = cacheDatiUtente.live_status_text || 'Attualmente online e disponibile.';
         body.innerHTML = `<div style="text-align:center; padding:10px 0; font-size:1.05rem; font-weight:400; color:#fff;">${testoEsteso}</div>`;
     } 
-    // Dati dinamici per Flash 24
     else if (tipo === 'flash') {
         icon.style.background = 'rgba(229, 193, 88, 0.1)';
         icon.innerHTML = `<i class="fas fa-bolt" style="color: #e5c158;"></i>`;
@@ -1185,7 +1172,6 @@ function apriDettaglio(tipo) {
         `;
     }
 
-    // Apertura animata
     backdrop.classList.add('active');
     sheet.classList.add('active');
 }
@@ -1198,15 +1184,14 @@ function chiudiDettaglio() {
 }
 
 // ============================================================
-// STATE MANAGEMENT AND NAVIGATION API
+// SYSTEM NAVIGATION (SBLOCCO E RITORNO)
 // ============================================================
-
 function sbloccaTag() {
     const container = document.getElementById('profile-content');
     if (!container || !container.classList.contains('locked')) return;
     if (navigator.vibrate) navigator.vibrate(30);
 
-    // State assignment: imposta l'hash a #ecosistema per bloccare il tasto indietro
+    // Registra lo stato Ecosistema
     history.pushState(null, null, '#ecosistema');
     document.documentElement.classList.add('no-pull-refresh');
     document.body.classList.add('no-pull-refresh');
@@ -1237,7 +1222,6 @@ function bloccaTag() {
 
 function eseguiBloccoVisivo() {
     if (navigator.vibrate) navigator.vibrate(20);
-    // Ripristino interazioni native per la copertina
     document.documentElement.classList.remove('no-pull-refresh');
     document.body.classList.remove('no-pull-refresh');
 
@@ -1260,14 +1244,14 @@ function eseguiBloccoVisivo() {
 }
 
 // ============================================================
-// LIGHTBOX COMPONENT CONTROLLER
+// LIGHTBOX COMPONENT
 // ============================================================
 function apriLightbox(indice) {
     const lightbox = document.getElementById('mqt-lightbox');
     const track = document.getElementById('lightbox-track');
     if(!lightbox || !track) return;
 
-    // State assignment: imposta l'hash a #lightbox
+    // Registra lo stato Lightbox (Livello Profondo)
     history.pushState(null, null, '#lightbox');
     lightbox.style.display = 'flex';
     document.documentElement.classList.add('no-pull-refresh');
@@ -1298,56 +1282,15 @@ function scorriLightbox(direzione) {
 }
 
 // ============================================================
-// GLOBAL BACK BUTTON HANDLER (POPSTATE EVENTS)
-// ============================================================
-window.addEventListener('popstate', (e) => {
-    const hash = window.location.hash;
-    const lightbox = document.getElementById('mqt-lightbox');
-    const overlaySezione = document.getElementById('overlaySezione');
-    const container = document.getElementById('profile-content');
-
-    // Livello Prioritario: Chiusura della modale fotografica
-    if (lightbox && lightbox.style.display === 'flex') {
-        lightbox.style.display = 'none';
-        return; 
-    }
-
-    // Livello 2: Ritorno dal dettaglio interno (es. QR/Gallery) al sottomenu
-    if (hash === '#sezione') {
-        if (macroAreaCorrente) {
-            apriMacroArea(macroAreaCorrente, true); // true evita un loop di pushState
-        }
-    } 
-    // Livello 1: Ritorno dal sottomenu all'Ecosistema principale
-    else if (hash === '#ecosistema') {
-        if (overlaySezione && overlaySezione.classList.contains('attiva')) {
-            overlaySezione.classList.remove('attiva');
-        }
-    } 
-    // Livello 0: Ritorno dall'Ecosistema alla Copertina
-    else if (hash === '') {
-        if (overlaySezione && overlaySezione.classList.contains('attiva')) overlaySezione.classList.remove('attiva');
-        if (container && container.classList.contains('unlocked')) eseguiBloccoVisivo();
-        
-        ['showroom-overlay', 'tag-welcome-overlay', 'vip-vault-overlay'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el && el.style.display === 'flex') el.style.display = 'none';
-        });
-    }
-});
-// ============================================================
-// QR CODE
+// QR CODE & SITO WEB
 // ============================================================
 function generaQR(url) {
     const wrapper = document.querySelector('.qr-wrapper');
-    if (!wrapper) return; // Fallback silenzioso se la classe non è nel DOM iniziale
+    if (!wrapper) return;
     wrapper.innerHTML = '';
     new QRCode(wrapper, { text: url, width: 84, height: 84, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
 }
 
-// ============================================================
-// SITO WEB
-// ============================================================
 function renderizzaSitoWeb(url) {
     const casella = document.getElementById('casella-sito');
     if (!casella) return;
@@ -1359,7 +1302,7 @@ function renderizzaSitoWeb(url) {
 }
 
 // ============================================================
-// OVERLAY E SHOWROOM (INVARIATI)
+// OVERLAY DI SISTEMA
 // ============================================================
 function mostraOverlayAcquisto() {
     const overlay = document.getElementById("showroom-overlay");
@@ -1440,7 +1383,7 @@ function mostraMessaggioPersuasivo(fields) {
 }
 
 // ============================================================
-// DIZIONARI SOCIAL E QUICK ACTION
+// SOCIAL, QUICK ACTION & VCF
 // ============================================================
 const quickActionConfig = {
     'appuntamento': { icon: '📅', label: 'Prenota appuntamento' },
@@ -1462,9 +1405,6 @@ const socialIcons = {
     "apple music": "fab fa-apple", "default": "fas fa-link"
 };
 
-// ============================================================
-// FUNZIONI QUICK ACTION & VCF
-// ============================================================
 function renderizzaQuickAction(tipo, url) {
     const btnQA = document.getElementById('room-quick-action');
     if (!btnQA) return;
@@ -1525,20 +1465,17 @@ function scaricaVCF(vcf, fields) {
     URL.revokeObjectURL(url);
 }
 
-function renderizzaSocial(configCanali) {
-    // Mantenuta intatta per logica interna, l'interfaccia usa apriMacroArea
-}
-
-
-      // ============================================================
-// TEATRO LIQUIDO: APERTURA MACRO AREE E CASCATA SOTTOMENU
+// ============================================================
+// APERTURA MACRO AREE E CASCATA SOTTOMENU
 // ============================================================
 function apriMacroArea(area, skipHistory = false) {
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
-      macroAreaCorrente = area; 
+    
+    // Salva il riferimento per il tasto indietro
+    macroAreaCorrente = area; 
     
     document.getElementById('testo-chiudi').innerText = 'CHIUDI';
     document.getElementById('icona-chiudi').className = 'fas fa-times';
@@ -1588,7 +1525,6 @@ function apriMacroArea(area, skipHistory = false) {
 
     corpo.innerHTML = sottomenuHTML;
     
-    // Innesca la cascata
     const items = corpo.querySelectorAll('.cascade-item');
     items.forEach((item, index) => {
         item.style.animationDelay = `${index * 0.1}s`;
@@ -1599,12 +1535,15 @@ function apriMacroArea(area, skipHistory = false) {
     if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
 
     overlay.classList.add('attiva');
+    
+    // Registra lo stato Sottomenu (Livello 1)
     if (!skipHistory) {
         history.pushState(null, null, '#sezione');
     }
-    }
+}
+
 // ============================================================
-// APERTURA SEZIONE INTERNA E CONTENUTI (PULITA E OTTIMIZZATA)
+// APERTURA SEZIONE INTERNA E CONTENUTI
 // ============================================================
 function apriSezione(tipo) {
     const overlay = document.getElementById('overlaySezione');
@@ -1612,19 +1551,17 @@ function apriSezione(tipo) {
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
 
-    // Registrazione del terzo livello di navigazione
+    // Registra lo stato Dettaglio (Livello 2)
     history.pushState(null, null, '#dettaglio');
 
     document.getElementById('testo-chiudi').innerText = 'INDIETRO';
     document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
 
-    // --- SEZIONE PDF (Apertura nativa senza toccare l'overlay) ---
     if (tipo === 'pdf') {
         if (cacheDatiUtente.pdf_url) window.open(cacheDatiUtente.pdf_url, '_blank', 'noopener noreferrer');
         return;
     }
 
-    // --- SEZIONE QR CODE (Access Tag) ---
     if (tipo === 'qr') {
         titolo.textContent = 'ACCESS TAG';
         const url = `${window.location.origin}/tag.html?u=${cacheDatiUtente.username_system}`;
@@ -1639,7 +1576,6 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- SEZIONE LIVE STATUS ---
     if (tipo === 'status') {
         titolo.textContent = 'LIVE STATUS';
         let colorHex = '#10b981'; let icona = '🟢';
@@ -1656,7 +1592,6 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- SEZIONE FLASH ---
     if (tipo === 'flash') {
         titolo.textContent = 'MQT FLASH';
         corpo.innerHTML = `
@@ -1670,7 +1605,6 @@ function apriSezione(tipo) {
         return;
     }
 
-   // --- MEDIA SECTION (GRID AND LIGHTBOX) ---
     if (tipo === 'gallery') {
         titolo.textContent = 'GALLERY';
         corpo.innerHTML = '';
@@ -1684,7 +1618,6 @@ function apriSezione(tipo) {
             let trackHTML = '';
             
             arrayFoto.forEach((urlOriginale, index) => {
-                // Cloudinary Optimization: 300px per le miniature, 1200px per la modale
                 const urlMiniatura = urlOriginale.replace('/upload/', '/upload/c_fill,w_300,h_300,q_auto,f_auto/');
                 const urlHD = urlOriginale.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
                 
@@ -1701,7 +1634,6 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- SEZIONE SITO WEB ---
     if (tipo === 'sito') {
         titolo.textContent = 'Sito Web';
         corpo.innerHTML = '';
@@ -1741,7 +1673,6 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- SEZIONE CONTATTI ---
     if (tipo === 'contatti') {
         titolo.textContent = 'Contatti';
         corpo.innerHTML = '';
@@ -1815,7 +1746,6 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- SEZIONE SOCIAL ---
     if (tipo === 'social') {
         titolo.textContent = 'Canali social';
         corpo.innerHTML = '';
@@ -1869,7 +1799,6 @@ function apriSezione(tipo) {
         return;
     }
 
-    // --- ALTRE SEZIONI TESTUALI (BIO E CV) ---
     const contenuti = {
         'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
         'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' }
@@ -1885,7 +1814,6 @@ function apriSezione(tipo) {
         btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
     }
 
-    // INNESCA LA CASCATA FLUIDA PER TUTTI I SOTTOMENU
     const elementi = corpo.children;
     Array.from(elementi).forEach((el, index) => {
         el.classList.add('cascade-item');
@@ -1896,12 +1824,49 @@ function apriSezione(tipo) {
     }); 
 }
 
-// ============================================================
-// CHIUSURA OVERLAY O TASTO INDIETRO (LETTURA ICONA INFALLIBILE)
-// ============================================================
 function chiudiSezione() {
     history.back();
 }
+
+// ============================================================
+// GESTIONE GLOBALE DEL TASTO INDIETRO E DELLA CRONOLOGIA
+// ============================================================
+window.addEventListener('popstate', (e) => {
+    const hash = window.location.hash;
+    const lightbox = document.getElementById('mqt-lightbox');
+    const overlaySezione = document.getElementById('overlaySezione');
+    const container = document.getElementById('profile-content');
+
+    // Livello 3 (Profondo): Modale Foto o Dettaglio Features
+    if (lightbox && lightbox.style.display === 'flex') {
+        lightbox.style.display = 'none';
+        return; 
+    }
+
+    // Livello 2: Ritorno dal dettaglio interno (es. QR/Gallery) al sottomenu
+    if (hash === '#sezione') {
+        if (macroAreaCorrente) {
+            apriMacroArea(macroAreaCorrente, true); // Riapre la stanza senza duplicare l'hash
+        }
+    } 
+    // Livello 1: Ritorno dal sottomenu all'Ecosistema principale
+    else if (hash === '#ecosistema') {
+        if (overlaySezione && overlaySezione.classList.contains('attiva')) {
+            overlaySezione.classList.remove('attiva');
+        }
+    } 
+    // Livello 0: Ritorno dall'Ecosistema alla Copertina
+    else if (hash === '') {
+        if (overlaySezione && overlaySezione.classList.contains('attiva')) overlaySezione.classList.remove('attiva');
+        if (container && container.classList.contains('unlocked')) eseguiBloccoVisivo();
+        
+        ['showroom-overlay', 'tag-welcome-overlay', 'vip-vault-overlay'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.style.display === 'flex') el.style.display = 'none';
+        });
+    }
+});
+
 // ============================================================
 // CONDIVISIONE, TOAST E CHECKOUT
 // ============================================================
@@ -2055,6 +2020,7 @@ function mostraWelcomeOverlay() {
 
     overlay.style.display = 'flex';
 }
+</script>
       
 
 </script>     
