@@ -480,9 +480,13 @@ body {
     transform-origin: center top;
 }
 
+.qr-luxury-trigger { position: absolute; top: 28px; right: 28px; color: var(--accent-gold); opacity: 0.6; cursor: pointer; z-index: 100; transition: opacity 0.3s ease, transform 0.3s ease; padding: 10px; margin: -10px; }
+.qr-luxury-trigger:active { opacity: 1; transform: scale(0.9); }
+.app-container.unlocked .qr-luxury-trigger { opacity: 0; pointer-events: none; }
+
 /* 2. STATO INIZIALE (COPERTINA) */
 .app-container.locked .header-monolith {
-    transform: translateY(24vh); 
+    transform: translateY(30vh); 
 }
 .app-container.locked .orbital-container {
     opacity: 1; transform: scale(1); height: 84px; margin-bottom: 30px;
@@ -499,7 +503,7 @@ body {
 /* 4. LA NUOVA ACTION BAR (PILLOLE) */
 .action-bar-container {
     display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px;
-    margin-top: 15px; width: 100%; flex-wrap: wrap;
+    width: 100%; flex-wrap: wrap; margin-bottom: 20px; padding-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;
 }
 .feature-pill {
     display: flex; align-items: center; gap: 8px;
@@ -662,6 +666,7 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
     <!-- 1. CHASSIS PRINCIPALE E SIGILLO ORBITALE                     -->
     <!-- ============================================================ -->
     <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
+        <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></div>
         <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
             
             <!-- IL SIGILLO ORBITALE (Allineato a edit.html) -->
@@ -680,23 +685,7 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
                     </div>
                 </div>
             </div>
-            
-       <!-- NUOVA ACTION BAR (Pillole Interattive) -->
-<div id="action-bar-features" class="action-bar-container fade-in-widget">
-    
-    <!-- Pillola Live Status -->
-    <div class="feature-pill" id="pill-live-status" style="display:none;" onclick="apriDettaglio('status')">
-        <div class="led-dot" id="pill-status-dot"></div>
-        <span id="pill-status-text">ONLINE</span>
-    </div>
-
-    <!-- Pillola Flash 24 -->
-    <div class="feature-pill" id="pill-flash" style="display:none;" onclick="apriDettaglio('flash')">
-        <i class="fas fa-bolt" style="color: var(--core-border); font-size: 0.7rem;"></i>
-        <span id="pill-flash-text">PROMO</span>
-    </div>
-</div>
-</div> 
+        </div> 
 
    <!-- TASTO DI INGRESSO (Copertina) -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
@@ -712,6 +701,20 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
         <!-- 2. IL TOTEM DELLE STANZE (LA NUOVA ARCHITETTURA)             -->
         <!-- ============================================================ -->
         <div id="mainGrid">
+            <div id="action-bar-features" class="action-bar-container fade-in-widget">
+                
+                <!-- Pillola Live Status -->
+                <div class="feature-pill" id="pill-live-status" style="display:none;" onclick="apriDettaglio('status')">
+                    <div class="led-dot" id="pill-status-dot"></div>
+                    <span id="pill-status-text">ONLINE</span>
+                </div>
+
+                <!-- Pillola Flash 24 -->
+                <div class="feature-pill" id="pill-flash" style="display:none;" onclick="apriDettaglio('flash')">
+                    <i class="fas fa-bolt" style="color: var(--core-border); font-size: 0.7rem;"></i>
+                    <span id="pill-flash-text">PROMO</span>
+                </div>
+            </div>
             
             <!-- IDENTITY: Live Status, Flash, Bio, Access Tag -->
             <button class="room-link" id="room-identity" onclick="apriMacroArea('identity')" style="display:none;">IDENTITY</button>
@@ -2020,17 +2023,8 @@ function mostraWelcomeOverlay() {
 
     overlay.style.display = 'flex';
 }
-   // ============================================================
-// QUICK QR SCANNER (LUXURY TRIGGER)
-// ============================================================
-function apriQRRapido() {
-    if (navigator.vibrate) navigator.vibrate(15);
-    // Apre silenziosamente il contenitore padre e innesca la sezione QR
-    apriMacroArea('identity', true);
-    setTimeout(() => {
-        apriSezione('qr');
-    }, 50);
-} 
-</script>    
+      
+
+</script>     
 </body>
 </html>
