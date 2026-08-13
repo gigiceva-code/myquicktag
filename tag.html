@@ -282,11 +282,11 @@ body {
     flex-shrink: 0;
 }
 
-/* LA GRAVITÀ CENTRALE */
+/* LA GRAVITÀ CENTRALE CORRETTA */
 .corpo-sezione { 
     display: flex !important; 
     flex-direction: column !important; 
-    justify-content: center !important; /* Centratura assoluta ripristinata */
+    justify-content: center !important; /* Ripristinata la centratura assoluta */
     align-items: center !important; 
     flex: 1 !important; 
     width: 100%;
@@ -617,12 +617,21 @@ body {
     box-sizing: border-box !important;
     letter-spacing: 0.3px !important;
 }
-      /* ============================================================
+/* ============================================================
    GALLERY COMPONENT: GRID LAYOUT & PULL-TO-REFRESH CONTROL
    ============================================================ */
-body.no-pull-refresh { overscroll-behavior-y: none !important; }
+/* Estensione del blocco refresh al tag html */
+html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !important; }
 
-.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; padding: 15px 0; }
+/* Protezione specifica per la griglia contro le regole genitore */
+.corpo-sezione > .gallery-grid { 
+    display: grid !important; 
+    grid-template-columns: repeat(3, 1fr) !important; 
+    gap: 8px !important; 
+    width: 100% !important; 
+    padding: 15px 0 !important; 
+    border: none !important;
+}
 .gallery-thumb { aspect-ratio: 1; border-radius: 8px; cursor: pointer; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.2s; }
 .gallery-thumb:active { transform: scale(0.95); }
 
@@ -1199,6 +1208,7 @@ function sbloccaTag() {
 
     // State assignment: imposta l'hash a #ecosistema per bloccare il tasto indietro
     history.pushState(null, null, '#ecosistema');
+    document.documentElement.classList.add('no-pull-refresh');
     document.body.classList.add('no-pull-refresh');
 
     container.classList.remove('locked');
@@ -1228,6 +1238,7 @@ function bloccaTag() {
 function eseguiBloccoVisivo() {
     if (navigator.vibrate) navigator.vibrate(20);
     // Ripristino interazioni native per la copertina
+    document.documentElement.classList.remove('no-pull-refresh');
     document.body.classList.remove('no-pull-refresh');
 
     const container = document.getElementById('profile-content');
@@ -1259,6 +1270,7 @@ function apriLightbox(indice) {
     // State assignment: imposta l'hash a #lightbox
     history.pushState(null, null, '#lightbox');
     lightbox.style.display = 'flex';
+    document.documentElement.classList.add('no-pull-refresh');
     document.body.classList.add('no-pull-refresh');
     
     setTimeout(() => {
@@ -1294,18 +1306,26 @@ window.addEventListener('popstate', (e) => {
     const overlaySezione = document.getElementById('overlaySezione');
     const container = document.getElementById('profile-content');
 
-    // Level 2: Ritorno dalla Lightbox al sottomenu (Griglia)
+    // Livello Prioritario: Chiusura della modale fotografica
+    if (lightbox && lightbox.style.display === 'flex') {
+        lightbox.style.display = 'none';
+        return; 
+    }
+
+    // Livello 2: Ritorno dal dettaglio interno (es. QR/Gallery) al sottomenu
     if (hash === '#sezione') {
-        if (lightbox && lightbox.style.display === 'flex') lightbox.style.display = 'none';
+        if (macroAreaCorrente) {
+            apriMacroArea(macroAreaCorrente, true); // true evita un loop di pushState
+        }
     } 
-    // Level 1: Ritorno dal sottomenu all'Ecosistema
+    // Livello 1: Ritorno dal sottomenu all'Ecosistema principale
     else if (hash === '#ecosistema') {
-        if (lightbox && lightbox.style.display === 'flex') lightbox.style.display = 'none';
-        if (overlaySezione && overlaySezione.classList.contains('attiva')) overlaySezione.classList.remove('attiva');
+        if (overlaySezione && overlaySezione.classList.contains('attiva')) {
+            overlaySezione.classList.remove('attiva');
+        }
     } 
-    // Level 0: Ritorno dall'Ecosistema alla Copertina iniziale
+    // Livello 0: Ritorno dall'Ecosistema alla Copertina
     else if (hash === '') {
-        if (lightbox && lightbox.style.display === 'flex') lightbox.style.display = 'none';
         if (overlaySezione && overlaySezione.classList.contains('attiva')) overlaySezione.classList.remove('attiva');
         if (container && container.classList.contains('unlocked')) eseguiBloccoVisivo();
         
@@ -1513,7 +1533,7 @@ function renderizzaSocial(configCanali) {
       // ============================================================
 // TEATRO LIQUIDO: APERTURA MACRO AREE E CASCATA SOTTOMENU
 // ============================================================
-function apriMacroArea(area) {
+function apriMacroArea(area, skipHistory = false) {
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
@@ -1579,7 +1599,9 @@ function apriMacroArea(area) {
     if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
 
     overlay.classList.add('attiva');
-    history.pushState(null, null, '#sezione');
+    if (!skipHistory) {
+        history.pushState(null, null, '#sezione');
+    }
     }
 // ============================================================
 // APERTURA SEZIONE INTERNA E CONTENUTI (PULITA E OTTIMIZZATA)
@@ -1589,6 +1611,9 @@ function apriSezione(tipo) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
+
+    // Registrazione del terzo livello di navigazione
+    history.pushState(null, null, '#dettaglio');
 
     document.getElementById('testo-chiudi').innerText = 'INDIETRO';
     document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
@@ -1875,15 +1900,6 @@ function apriSezione(tipo) {
 // CHIUSURA OVERLAY O TASTO INDIETRO (LETTURA ICONA INFALLIBILE)
 // ============================================================
 function chiudiSezione() {
-    const icona = document.getElementById('icona-chiudi');
-    // Se è attiva la freccia, riportiamo alla macro area precedente
-    if (icona && icona.classList.contains('fa-chevron-left')) {
-        if (macroAreaCorrente) {
-            apriMacroArea(macroAreaCorrente);
-            return;
-        }
-    }
-    // Altrimenti deleghiamo la chiusura al gestore globale dello storico
     history.back();
 }
 // ============================================================
