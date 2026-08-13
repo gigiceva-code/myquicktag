@@ -2020,9 +2020,17 @@ function mostraWelcomeOverlay() {
 
     overlay.style.display = 'flex';
 }
-</script>
-      
-
-</script>     
+   // ============================================================
+// QUICK QR SCANNER (LUXURY TRIGGER)
+// ============================================================
+function apriQRRapido() {
+    if (navigator.vibrate) navigator.vibrate(15);
+    // Apre silenziosamente il contenitore padre e innesca la sezione QR
+    apriMacroArea('identity', true);
+    setTimeout(() => {
+        apriSezione('qr');
+    }, 50);
+} 
+</script>    
 </body>
 </html>
