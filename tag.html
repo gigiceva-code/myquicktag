@@ -772,6 +772,42 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
     padding-top: 15px !important;
     padding-bottom: 15px !important;
 }
+           /* ============================================================
+   CORREZIONE DIVIDER: NOMI CORTI (SOTTO IL TESTO)
+   ============================================================ */
+#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto {
+    padding-bottom: 25px !important; /* Diamo spazio per far respirare il divider sotto */
+}
+#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before,
+#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after {
+    top: 100% !important; /* Sposta linea e diamante fisicamente sotto la parola */
+}
+
+/* ============================================================
+   MODULO BIO: CLONAZIONE ESATTA CORNICE COPERTINA
+   ============================================================ */
+.corpo-sezione > .testo-lettura {
+    display: block !important;
+    text-align: left !important;
+    
+    /* REGOLE CLONATE AL MILLIMETRO DALLA VOSTRA APP-CONTAINER */
+    background-color: var(--bg-chassis) !important; 
+    border: 1px solid var(--core-border) !important; 
+    border-radius: 28px !important; 
+    box-shadow: 0 30px 70px rgba(0,0,0,0.9) !important;
+    
+    padding: 24px !important;
+    margin: 15px auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    
+    /* Tipografia e Colore Testo */
+    color: var(--text-main) !important;
+    font-size: 0.95rem !important;
+    line-height: 1.8 !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.3px !important;
+}
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -1147,6 +1183,16 @@ function formattaBadge(testoBruto) {
     if (testo.length > 25) { el.style.fontSize = "0.85rem"; } 
     else if (testo.length > 18) { el.style.fontSize = "0.95rem"; } 
     else { el.style.fontSize = "1.05rem"; }
+    
+    // IL BISTURI PER IL DIVIDER: Riconosce i nomi corti (una sola riga)
+    const wrapper = document.getElementById('name-capsule-wrapper');
+    if (wrapper) {
+        if (testo.length < 16) {
+            wrapper.classList.add('nome-corto');
+        } else {
+            wrapper.classList.remove('nome-corto');
+        }
+    }
 }
 function renderizzaTagCompleta(fields) {
     const container = document.getElementById('profile-content');
