@@ -381,10 +381,30 @@ body {
     width: 100%;
 }
 
-/* QR Code Modale (Nessun CSS modificato, manteniamo la tua perfezione) */
-.qr-wrapper { width: 44px !important; height: 44px !important; background: #ffffff !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; border-radius: 10px !important; padding: 4px !important; display: flex !important; justify-content: center !important; align-items: center !important; overflow: hidden; }
-.qr-wrapper canvas, .qr-wrapper img { width: 100% !important; height: 100% !important; display: block !important; object-fit: contain !important; filter: invert(1) sepia(1) saturate(6) hue-rotate(12deg) brightness(0.95); }
-
+/* ============================================================
+   QR CODE PREMIUM (OBSIDIAN GOLD)
+   ============================================================ */
+.qr-wrapper { 
+    width: 44px !important; 
+    height: 44px !important; 
+    background: #ffffff !important; 
+    border: 2px solid var(--accent-gold) !important; 
+    border-radius: 16px !important; 
+    padding: 6px !important; 
+    display: flex !important; 
+    justify-content: center !important; 
+    align-items: center !important; 
+    overflow: hidden; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+}
+.qr-wrapper canvas, .qr-wrapper img { 
+    width: 100% !important; 
+    height: 100% !important; 
+    display: block !important; 
+    object-fit: contain !important; 
+    filter: none !important; /* Rimuove l'effetto verde fluo acido */
+    border-radius: 4px !important; 
+}
 /* Elementi di servizio, toast, etc rimangono uguali */
 .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.2); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; opacity: 0; z-index: 10000; pointer-events: none; }
 .toast.mostra { transform: translateX(-50%) translateY(0); opacity: 1; } 
