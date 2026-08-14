@@ -382,45 +382,39 @@ body {
 }
 
 /* ============================================================
-   QR CODE PREMIUM (OBSIDIAN GOLD)
+   QR CODE PREMIUM (DINAMICO SUL TEMA)
    ============================================================ */
+/* Estendiamo i colori del tema all'intero body per l'overlay */
+body[data-qr-theme="emerald"] { --theme-border: rgba(0, 230, 128, 0.8); }
+body[data-qr-theme="black_dna"] { --theme-border: rgba(255, 255, 255, 0.3); }
+body[data-qr-theme="titanium"] { --theme-border: rgba(176, 176, 181, 0.6); }
+body[data-qr-theme="obsidian_gold"] { --theme-border: rgba(229, 193, 88, 0.8); }
+body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
+
 .qr-wrapper { 
     width: 44px !important; 
     height: 44px !important; 
     background: #ffffff !important; 
-    border: 2px solid var(--accent-gold) !important; 
-    border-radius: 16px !important; 
+    border: 2px solid var(--theme-border, #d4af37) !important; 
+    border-radius: 12px !important; 
     padding: 6px !important; 
     display: flex !important; 
     justify-content: center !important; 
     align-items: center !important; 
     overflow: hidden; 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5) !important; 
 }
 
-/* Lasciamo la gestione della visibilità alla libreria, forziamo solo filtri e centratura */
+/* Gestione pulita della libreria: zero filtri, zero display:none */
 .qr-wrapper canvas, 
 .qr-wrapper img { 
     max-width: 100% !important; 
     max-height: 100% !important; 
     object-fit: contain !important; 
-    filter: none !important; /* Via il verde acido */
-    border-radius: 4px !important; 
-    margin: auto !important; 
-}
-/* Spegniamo il canvas fantasma generato dalla libreria */
-.qr-wrapper canvas { 
-    display: none !important; 
-}
-/* Centratura millimetrica dell'immagine QR */
-.qr-wrapper img { 
-    width: 100% !important; 
-    height: 100% !important; 
-    display: block !important; 
-    object-fit: contain !important; 
     filter: none !important; 
     border-radius: 4px !important; 
     margin: auto !important; 
+    display: block !important;
 }
 /* Elementi di servizio, toast, etc rimangono uguali */
 .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.2); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; opacity: 0; z-index: 10000; pointer-events: none; }
@@ -554,45 +548,40 @@ body {
     opacity: 0; transform: scale(0.5); height: 0; margin-bottom: 0; pointer-events: none;
 }
 
-/* 4. LA NUOVA ACTION BAR (PILLOLE) */
+/* ============================================================
+   4. DATA BLOCK (EX PILLOLE) - ESTETICA LUXURY MINIMAL
+   ============================================================ */
 .action-bar-container {
-    display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px;
-    width: 100%; flex-wrap: wrap; margin-bottom: 20px; padding-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;
+    display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 12px;
+    width: 100%; margin-bottom: 20px; padding-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;
+    opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px);
 }
+
 .feature-pill {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 16px; border-radius: 20px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    cursor: pointer; transition: background 0.2s, transform 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px 20px; 
+    border-radius: 6px; /* Forma geometrica e rigorosa */
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer; 
+    transition: all 0.3s ease;
+    /* Blindatura testo contro gli scatti */
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+    min-width: max-content !important;
 }
-.feature-pill:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.08); }
+
+/* Niente radar, solo feedback tattile elegante */
+.feature-pill::before { display: none !important; }
+.feature-pill:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.3); }
+
 .feature-pill span {
-    font-size: 0.65rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: #e8e8ed;
+    font-size: 0.65rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: #e8e8ed;
 }
-.led-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-/* 4.1 PILLOLE MAGNETICHE (CRO Upgrade) */
-.feature-pill {
-    position: relative; overflow: hidden; /* Necessario per il radar interno */
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 16px; border-radius: 20px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    cursor: pointer; transition: background 0.2s, transform 0.2s, border-color 0.2s;
+.led-dot { 
+    width: 6px; height: 6px; border-radius: 50%; 
 }
-.feature-pill::before {
-    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.08) 80%, transparent 100%);
-    animation: radarSweep 4s linear infinite; pointer-events: none; opacity: 0; transition: opacity 0.3s;
-}
-.app-container.unlocked .feature-pill::before { opacity: 1; }
-@keyframes radarSweep { 100% { transform: rotate(360deg); } }
-
-.feature-pill:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.08); border-color: rgba(255,255,255,0.2); }
-.feature-pill span { font-size: 0.65rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: #e8e8ed; position: relative; z-index: 2; }
-.led-dot { width: 6px; height: 6px; border-radius: 50%; position: relative; z-index: 2; }
-
 /* 5. TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
 .entrance-prompt {
     position: absolute !important; bottom: 40px !important; left: 50% !important; 
