@@ -404,6 +404,27 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     overflow: hidden; 
     box-shadow: 0 15px 35px rgba(0,0,0,0.5) !important; 
 }
+         /* ============================================================
+   CENTRATURA ASSOLUTA QR CODE
+   ============================================================ */
+   .qr-wrapper {    
+    position: relative !important; 
+   .qr-wrapper canvas, 
+   .qr-wrapper img { 
+    /* Centratura forzata millimetrica per ignorare i doppioni della libreria */
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    
+    max-width: 100% !important; 
+    max-height: 100% !important; 
+    object-fit: contain !important; 
+    filter: none !important; 
+    border-radius: 4px !important; 
+    display: block !important;
+}  
 
 /* Gestione pulita della libreria: zero filtri, zero display:none */
 .qr-wrapper canvas, 
@@ -540,12 +561,44 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     opacity: 1; transform: scale(1); height: 84px; margin-bottom: 30px;
 }
 
-/* 3. STATO SBLOCCATO (ECOSISTEMA) - L'avatar sparisce, l'header va in cima */
+/* ============================================================
+   3. STATO SBLOCCATO (ECOSISTEMA) - MOTORE 100% GPU
+   ============================================================ */
 .app-container.unlocked .header-monolith {
-    transform: translateY(0); 
+    transform: translateY(0);
+    pointer-events: none; /* Impedisce che il contenitore invisibile blocchi i click sulla griglia */
 }
+
+/* Blocchiamo le dimensioni dell'avatar, MAI usare height: 0 per le animazioni */
+.orbital-container {
+    height: 84px !important;
+    margin-bottom: 30px !important;
+    transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.app-container.locked .orbital-container {
+    opacity: 1 !important; 
+    transform: scale(1) !important;
+}
+
 .app-container.unlocked .orbital-container {
-    opacity: 0; transform: scale(0.5); height: 0; margin-bottom: 0; pointer-events: none;
+    opacity: 0 !important; 
+    transform: scale(0.5) !important;
+}
+
+/* Tiriamo su il nome con la GPU (translateY) invece di restringere l'avatar fisicamente */
+.username-capsule-wrapper {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    pointer-events: auto; /* Mantiene il testo cliccabile */
+}
+
+.app-container.unlocked .username-capsule-wrapper {
+    /* 84px (avatar) + 30px (margine) = 114px. Lo tiriamo su riempiendo il vuoto morbidamente */
+    transform: translateY(-114px) !important; 
+}
+
+.app-container.locked .username-capsule-wrapper {
+    transform: translateY(0) !important;
 }
 
 /* ============================================================
