@@ -1122,7 +1122,11 @@ async function avviaFlusso(username) {
             }
         }
 
-        const response = await fetch(`/api/get-profile?u=${username}`);
+        // IL BISTURI: Aggiunto "&_cb=" con la data al millisecondo per forzare il download fresco
+        // bypassando qualsiasi blocco di cache del Service Worker o del telefono.
+        const cacheBuster = Date.now();
+        const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}`);
+        
         const data = await response.json();
         if (!data.success || !data.fields) {
             mostraShowroom(username);
@@ -1164,7 +1168,6 @@ async function avviaFlusso(username) {
         mostraErrore("Errore di connessione. Riprova tra qualche istante.");
     }
 }
-
 function formattaBadge(testoBruto) {
     const el = document.getElementById('tag-username');
     if(!el) return;
