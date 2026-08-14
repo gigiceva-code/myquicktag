@@ -772,42 +772,40 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
     padding-top: 15px !important;
     padding-bottom: 15px !important;
 }
-           /* ============================================================
-   CORREZIONE DIVIDER: NOMI CORTI (SOTTO IL TESTO)
+       /* ============================================================
+   1. CORREZIONE DIVIDER: PIU' VICINO E LINEE PIU' LUNGHE
    ============================================================ */
 #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto {
-    padding-bottom: 25px !important; /* Diamo spazio per far respirare il divider sotto */
+    padding-bottom: 6px !important; /* Avvicina la linea al testo (prima era 25px) */
 }
-#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before,
 #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after {
-    top: 100% !important; /* Sposta linea e diamante fisicamente sotto la parola */
+    /* Allunghiamo la linea del 130% e la centriamo, così i lati sono molto più lunghi */
+    width: 130% !important; 
+    left: -15% !important; 
 }
 
 /* ============================================================
-   MODULO BIO: CLONAZIONE ESATTA CORNICE COPERTINA
+   2. LA CORNICE LUXURY IN TUTTE LE SEZIONI DELLA TAG
    ============================================================ */
-.corpo-sezione > .testo-lettura {
-    display: block !important;
-    text-align: left !important;
-    
-    /* REGOLE CLONATE AL MILLIMETRO DALLA VOSTRA APP-CONTAINER */
-    background-color: var(--bg-chassis) !important; 
-    border: 1px solid var(--core-border) !important; 
-    border-radius: 28px !important; 
+/* Riapplichiamo la cornice della copertina all'overlay interno in base al tema scelto */
+body[data-qr-theme="emerald"] #overlaySezione { border: 1px solid rgba(0, 230, 128, 0.8) !important; }
+body[data-qr-theme="black_dna"] #overlaySezione { border: 1px solid rgba(255, 255, 255, 0.15) !important; }
+body[data-qr-theme="titanium"] #overlaySezione { border: 1px solid rgba(176, 176, 181, 0.8) !important; }
+body[data-qr-theme="obsidian_gold"] #overlaySezione { border: 1px solid rgba(229, 193, 88, 0.8) !important; }
+body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 150, 142, 0.8) !important; }
+
+/* Diamo all'overlay la stessa ombra profonda della copertina */
+#overlaySezione {
     box-shadow: 0 30px 70px rgba(0,0,0,0.9) !important;
-    
-    padding: 24px !important;
-    margin: 15px auto !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    
-    /* Tipografia e Colore Testo */
-    color: var(--text-main) !important;
-    font-size: 0.95rem !important;
-    line-height: 1.8 !important;
-    font-weight: 300 !important;
-    letter-spacing: 0.3px !important;
 }
+
+/* Dato che ora l'intera sezione ha la cornice, rimuoviamo lo scatolo dalla bio per non fare "cornice nella cornice" */
+.corpo-sezione > .testo-lettura {
+    background: transparent !important; 
+    border: none !important; 
+    box-shadow: none !important;
+    padding: 10px 15px !important;
+} 
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
