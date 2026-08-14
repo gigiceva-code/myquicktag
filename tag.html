@@ -397,6 +397,17 @@ body {
     overflow: hidden; 
     box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
 }
+
+/* Lasciamo la gestione della visibilità alla libreria, forziamo solo filtri e centratura */
+.qr-wrapper canvas, 
+.qr-wrapper img { 
+    max-width: 100% !important; 
+    max-height: 100% !important; 
+    object-fit: contain !important; 
+    filter: none !important; /* Via il verde acido */
+    border-radius: 4px !important; 
+    margin: auto !important; 
+}
 /* Spegniamo il canvas fantasma generato dalla libreria */
 .qr-wrapper canvas { 
     display: none !important; 
