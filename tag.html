@@ -690,6 +690,18 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
     overflow-y: auto !important; 
     transition: max-height 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; 
 }
+          /* BLINDA IL TESTO DELLE PILLOLE CONTRO GLI SCATTI E PREPARA IL CONTENITORE */
+.feature-pill {
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+    min-width: max-content !important;
+}
+
+.action-bar-container {
+    opacity: 0; 
+    transform: translateY(80px) scale(0.85); 
+    filter: blur(15px);
+} 
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -1236,20 +1248,21 @@ function sbloccaTag() {
     document.documentElement.classList.add('no-pull-refresh');
     document.body.classList.add('no-pull-refresh');
 
-    // Il CSS si occupa di far scivolare il nome ed espandere la griglia
     container.classList.remove('locked');
     container.classList.add('unlocked');
 
-    // Innesco animazioni interne in sequenza perfetta
+    // Anima la riga intera delle pillole seguita dalle stanze
     setTimeout(() => {
-        const caselle = document.querySelectorAll('#mainGrid .room-link, #mainGrid .feature-pill');
+        const caselle = document.querySelectorAll('#action-bar-features, #mainGrid .room-link');
         let moduliVisibili = 0;
         caselle.forEach((casella) => {
-            casella.classList.remove('boot-module-closing');
-            void casella.offsetWidth; // Forza il rendering fluido
-            casella.classList.add('boot-module-active');
-            casella.style.animationDelay = (moduliVisibili * 0.1) + 's';
-            moduliVisibili++;
+            if (window.getComputedStyle(casella).display !== 'none') {
+                casella.classList.remove('boot-module-closing');
+                void casella.offsetWidth; // Forza il rendering fluido
+                casella.classList.add('boot-module-active');
+                casella.style.animationDelay = (moduliVisibili * 0.1) + 's';
+                moduliVisibili++;
+            }
         });
     }, 150); 
 }
@@ -1265,15 +1278,15 @@ function eseguiBloccoVisivo() {
 
     const container = document.getElementById('profile-content');
     
-    // Fai sprofondare tutti gli elementi nel buio
-    const caselle = document.querySelectorAll('#mainGrid .room-link, #mainGrid .feature-pill');
+    // Fai sprofondare nel buio il blocco pillole e le stanze
+    const caselle = document.querySelectorAll('#action-bar-features, #mainGrid .room-link');
     caselle.forEach(c => {
         c.classList.remove('boot-module-active');
         c.classList.add('boot-module-closing');
         c.style.animationDelay = '0s'; 
     });
 
-    // Ritira la griglia e fa scendere il nome
+    // Attendi l'uscita di scena, poi scende il brand
     setTimeout(() => {
         container.classList.remove('unlocked');
         container.classList.add('locked');
