@@ -693,7 +693,7 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     box-shadow: none !important;
 }
 .sheet-close-btn:active { color: #ffffff !important; transform: scale(0.98) !important; }
-        /* ============================================================
+       /* ============================================================
    MODULO TESTI LUNGHI: CORNICE LUXURY (BIO E CV)
    ============================================================ */
 .corpo-sezione > .testo-lettura {
@@ -1561,7 +1561,6 @@ function renderizzaQuickAction(tipo, url) {
     btnQA.innerHTML = `${cfg.icon} &nbsp; ${cacheDatiUtente.quick_action_label || cfg.label}`;
     btnQA.style.display = 'flex';
 }
-
 function eseguiQuickAction() {
     const tipo = (cacheDatiUtente.quick_action_tipo || '').toLowerCase();
     const url  = cacheDatiUtente.quick_action_url || '';
