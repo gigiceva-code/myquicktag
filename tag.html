@@ -601,53 +601,50 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     transform: translateY(0) !important;
 }
 
-/* ============================================================
-   4. DATA BLOCK (EX PILLOLE) - ESTETICA LUXURY MINIMAL
-   ============================================================ */
+/* 4. LA NUOVA ACTION BAR (DATA BLOCK MINIMAL) */
 .action-bar-container {
     display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 12px;
-    width: 100%; margin-bottom: 20px; padding-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;
-    opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px);
+    width: 100%; flex-wrap: wrap; margin-bottom: 20px; padding-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;
 }
 
 .feature-pill {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 10px 20px; 
-    border-radius: 6px; /* Forma geometrica e rigorosa */
-    background: rgba(255, 255, 255, 0.02);
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: 8px; /* Design squadrato e rigoroso */
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer; 
-    transition: all 0.3s ease;
-    /* Blindatura testo contro gli scatti */
+    cursor: pointer; transition: all 0.2s ease;
     white-space: nowrap !important;
     flex-wrap: nowrap !important;
     min-width: max-content !important;
 }
-
-/* Niente radar, solo feedback tattile elegante */
-.feature-pill::before { display: none !important; }
-.feature-pill:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.3); }
+.feature-pill:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.3); }
 
 .feature-pill span {
-    font-size: 0.65rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: #e8e8ed;
+    font-size: 0.65rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: #e8e8ed;
 }
+.led-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-.led-dot { 
-    width: 6px; height: 6px; border-radius: 50%; 
-}
 /* 5. TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
 .entrance-prompt {
     position: absolute !important; bottom: 40px !important; left: 50% !important; 
     transform: translateX(-50%) !important;
     display: flex; flex-direction: column; align-items: center; gap: 12px;
     cursor: pointer; z-index: 100;
+    transition: opacity 0.6s ease;
 }
 .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
 
-.app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition: opacity 0.6s ease 0.4s; }
-.app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
+.app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; }
 
-
+.exit-prompt { 
+    display: flex !important; flex-direction: column; align-items: center; 
+    margin-top: auto !important; 
+    margin-bottom: 0px !important; 
+    padding-top: 30px; padding-bottom: 10px;
+    opacity: 0.5; transition: opacity 0.3s, transform 0.2s; cursor: pointer;
+}
+.exit-prompt:active { opacity: 1; transform: scale(0.95); }
         /* ============================================================
    BOTTOM SHEET (VISION-OS FLOATING GLASS LAYER)
    ============================================================ */
@@ -748,6 +745,7 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
 .lightbox-slide img { max-width: 100%; max-height: 85vh; object-fit: contain; pointer-events: none; }
 .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 30, 35, 0.6); backdrop-filter: blur(10px); color: #ffffff; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 10001; border: 1px solid rgba(255,255,255,0.1); }
 .nav-left { left: 15px; } .nav-right { right: 15px; }
+       
      /* MOTORE LIQUIDO (STABILITÀ ASSOLUTA SENZA SALTI) */
 #mainGrid { 
     display: flex !important; /* Sempre attivo, gestiamo l'ingombro fluidamente */
