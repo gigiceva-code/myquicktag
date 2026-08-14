@@ -382,9 +382,8 @@ body {
 }
 
 /* ============================================================
-   QR CODE PREMIUM (DINAMICO SUL TEMA)
+   QR CODE PREMIUM (DINAMICO SUL TEMA E CENTRATURA ASSOLUTA)
    ============================================================ */
-/* Estendiamo i colori del tema all'intero body per l'overlay */
 body[data-qr-theme="emerald"] { --theme-border: rgba(0, 230, 128, 0.8); }
 body[data-qr-theme="black_dna"] { --theme-border: rgba(255, 255, 255, 0.3); }
 body[data-qr-theme="titanium"] { --theme-border: rgba(176, 176, 181, 0.6); }
@@ -403,38 +402,22 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     align-items: center !important; 
     overflow: hidden; 
     box-shadow: 0 15px 35px rgba(0,0,0,0.5) !important; 
+    position: relative !important; /* Ancoraggio fondamentale */
 }
-         /* ============================================================
-   CENTRATURA ASSOLUTA QR CODE
-   ============================================================ */
-   .qr-wrapper {    
-    position: relative !important; 
-   .qr-wrapper canvas, 
-   .qr-wrapper img { 
-    /* Centratura forzata millimetrica per ignorare i doppioni della libreria */
+
+/* Blindatura e centratura assoluta contro i cloni della libreria */
+.qr-wrapper canvas, 
+.qr-wrapper img { 
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
     margin: 0 !important;
-    
     max-width: 100% !important; 
     max-height: 100% !important; 
     object-fit: contain !important; 
     filter: none !important; 
     border-radius: 4px !important; 
-    display: block !important;
-}  
-
-/* Gestione pulita della libreria: zero filtri, zero display:none */
-.qr-wrapper canvas, 
-.qr-wrapper img { 
-    max-width: 100% !important; 
-    max-height: 100% !important; 
-    object-fit: contain !important; 
-    filter: none !important; 
-    border-radius: 4px !important; 
-    margin: auto !important; 
     display: block !important;
 }
 /* Elementi di servizio, toast, etc rimangono uguali */
@@ -745,28 +728,7 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
 .lightbox-slide img { max-width: 100%; max-height: 85vh; object-fit: contain; pointer-events: none; }
 .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 30, 35, 0.6); backdrop-filter: blur(10px); color: #ffffff; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 10001; border: 1px solid rgba(255,255,255,0.1); }
 .nav-left { left: 15px; } .nav-right { right: 15px; }
-       
-     /* MOTORE LIQUIDO (STABILITÀ ASSOLUTA SENZA SALTI) */
-#mainGrid { 
-    display: flex !important; /* Sempre attivo, gestiamo l'ingombro fluidamente */
-}
-
-.app-container.locked #mainGrid { 
-    max-height: 0 !important; 
-    padding: 0 !important; 
-    opacity: 0; 
-    pointer-events: none; 
-    overflow: hidden; 
-}
-
-.app-container.unlocked #mainGrid { 
-    max-height: 1000px !important; /* Spazio infinito per far respirare le stanze */
-    padding: 20px 0 10px 0 !important; 
-    opacity: 1; 
-    pointer-events: auto; 
-    overflow-y: auto !important; 
-    transition: max-height 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; 
-}
+     
           /* BLINDA IL TESTO DELLE PILLOLE CONTRO GLI SCATTI E PREPARA IL CONTENITORE */
 .feature-pill {
     white-space: nowrap !important;
