@@ -628,7 +628,7 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     opacity: 0.5; transition: opacity 0.3s, transform 0.2s; cursor: pointer;
 }
 .exit-prompt:active { opacity: 1; transform: scale(0.95); }
-        /* ============================================================
+     /* ============================================================
    BOTTOM SHEET (VISION-OS FLOATING GLASS LAYER)
    ============================================================ */
 .sheet-backdrop {
@@ -668,30 +668,51 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
 .sheet-header h3 {
     font-size: 1rem; font-weight: 500; color: #fff; letter-spacing: 2px; margin: 0; text-transform: uppercase;
 }
+
+/* Modifica per impedire i testi mozzati nelle modali (es. PROMO) */
 .sheet-body {
     font-size: 0.95rem; color: #e8e8ed; line-height: 1.6; font-weight: 300;
+    word-break: break-word !important; 
+    overflow-wrap: break-word !important; 
+    white-space: normal !important;
 }
+
+/* Modifica per rimuovere il bottone tozzo e renderlo minimalista */
 .sheet-close-btn {
-    width: 100%; padding: 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px; color: #fff; font-size: 0.85rem; font-weight: 500; letter-spacing: 3px; cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    width: 100% !important; 
+    padding: 15px !important; 
+    background: transparent !important; 
+    border: none !important;
+    color: var(--text-sec) !important; 
+    font-size: 0.8rem !important; 
+    font-weight: 400 !important; 
+    letter-spacing: 4px !important; 
+    text-transform: uppercase !important;
+    cursor: pointer !important; 
+    transition: color 0.2s, transform 0.2s !important;
+    box-shadow: none !important;
 }
-.sheet-close-btn:active { background: rgba(255,255,255,0.12); transform: scale(0.97); } 
-           /* ============================================================
-   MODULO TESTI LUNGHI: TIPOGRAFIA EDITORIALE (BIO E CV)
+.sheet-close-btn:active { color: #ffffff !important; transform: scale(0.98) !important; }
+        /* ============================================================
+   MODULO TESTI LUNGHI: CORNICE LUXURY (BIO E CV)
    ============================================================ */
 .corpo-sezione > .testo-lettura {
     display: block !important;
     text-align: left !important;
     font-size: 0.95rem !important;
-    line-height: 1.8 !important; /* Crea respiro tra le righe */
+    line-height: 1.8 !important;
     font-weight: 300 !important;
     color: #e8e8ed !important;
-    background: rgba(255, 255, 255, 0.02) !important; /* Leggerissimo stacco ottico dal fondo nero */
-    border: none !important;
-    border-left: 2px solid var(--accent-gold) !important; /* Filo conduttore estetico */
-    border-radius: 0 12px 12px 0 !important;
-    padding: 20px 24px !important;
+    
+    /* La nuova cornice glassmorphism */
+    background: rgba(20, 20, 22, 0.6) !important; 
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important; /* Riflesso luce */
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    
+    padding: 24px !important;
     margin: 15px auto !important;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -1505,12 +1526,12 @@ function mostraMessaggioPersuasivo(fields) {
 // SOCIAL, QUICK ACTION & VCF
 // ============================================================
 const quickActionConfig = {
-    'appuntamento': { icon: '📅', label: 'Prenota appuntamento' },
-    'whatsapp':     { icon: '💬', label: 'Scrivimi su WhatsApp' },
-    'preventivo':   { icon: '📋', label: 'Richiedi preventivo' },
-    'chiamata':     { icon: '📞', label: 'Chiama ora' },
-    'maps':         { icon: '📍', label: 'Trovami su Maps' },
-    'demo':         { icon: '🎵', label: 'Ascolta demo' }
+    'appuntamento': { icon: '<i class="far fa-calendar-alt"></i>', label: 'Prenota appuntamento' },
+    'whatsapp':     { icon: '<i class="fab fa-whatsapp"></i>', label: 'Scrivimi su WhatsApp' },
+    'preventivo':   { icon: '<i class="fas fa-file-signature"></i>', label: 'Richiedi preventivo' },
+    'chiamata':     { icon: '<i class="fas fa-phone-alt"></i>', label: 'Chiama ora' },
+    'maps':         { icon: '<i class="fas fa-map-marker-alt"></i>', label: 'Trovami su Maps' },
+    'demo':         { icon: '<i class="fas fa-music"></i>', label: 'Ascolta demo' }
 };
 
 const socialIcons = {
@@ -1534,8 +1555,10 @@ function renderizzaQuickAction(tipo, url) {
         return;
     }
 
-    const cfg = quickActionConfig[tipo.toLowerCase()] || { icon: '⚡', label: 'AZIONE RAPIDA' };
-    btnQA.textContent = `${cfg.icon} ${cacheDatiUtente.quick_action_label || cfg.label}`;
+    const cfg = quickActionConfig[tipo.toLowerCase()] || { icon: '<i class="fas fa-bolt"></i>', label: 'AZIONE RAPIDA' };
+    
+    // Usiamo innerHTML per far leggere l'icona FontAwesome mantenendo i colori del tema
+    btnQA.innerHTML = `${cfg.icon} &nbsp; ${cacheDatiUtente.quick_action_label || cfg.label}`;
     btnQA.style.display = 'flex';
 }
 
