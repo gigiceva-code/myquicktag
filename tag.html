@@ -772,14 +772,16 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
     padding-top: 15px !important;
     padding-bottom: 15px !important;
 }
-     /* ============================================================
-   1. DIVIDER PER NOMI CORTI (SOTTO IL TESTO SENZA DISTORSIONI)
+    /* ============================================================
+   1. DIVIDER PER NOMI CORTI (STESSE PROPORZIONI ORIGINALI)
    ============================================================ */
+#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto {
+    width: 220px !important; /* Forza l'ingombro esatto per mantenere la linea lunga originale */
+}
 #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before,
 #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after {
-    top: calc(50% + 24px) !important; 
+    top: calc(50% + 18px) !important; /* Lo avvicina al testo per non farlo sembrare staccato */
 }
-
 /* ============================================================
    2. LA CORNICE LUXURY IN TUTTE LE SEZIONI DELLA TAG
    ============================================================ */
