@@ -187,20 +187,37 @@ body {
 
 
 /* ============================================================
-   IL MENU DELLE STANZE E BLOCCO DELLO SCROLL
+   IL VERO MOTORE LIQUIDO (100% GPU ACCELERATED)
    ============================================================ */
 .app-container #mainGrid {
-    flex-direction: column !important; justify-content: center !important; align-items: center !important;
-    gap: 28px !important; /* Allontana le stanze riempiendo il vuoto in modo elegante */
-    flex: 1 !important; width: 100% !important; background: transparent !important;
-    padding: 20px 0 10px 0 !important; /* Permette al tasto HOME di scendere al massimo */
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain; 
-    -ms-overflow-style: none; scrollbar-width: none;
+    flex-direction: column !important; 
+    justify-content: center !important; 
+    align-items: center !important;
+    gap: 28px !important; 
+    flex: 1 !important; /* Spinge il tasto HOME in fondo */
+    width: 100% !important; 
+    background: transparent !important;
+    padding: 20px 0 10px 0 !important; 
+    
+    /* GESTIONE DELLA VISIBILITA' FANTASMA */
+    display: flex !important;
+    opacity: 0;
+    pointer-events: none;
+    overflow-y: hidden !important;
+    transition: opacity 0.5s ease !important;
+    
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
 }
 .app-container #mainGrid::-webkit-scrollbar { display: none; }
 
+.app-container.unlocked #mainGrid {
+    opacity: 1;
+    pointer-events: auto;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain; 
+}
 /* ============================================================
    INGRESSO CINEMATOGRAFICO (DAL BUIO E DAL VUOTO)
    ============================================================ */
@@ -1234,7 +1251,7 @@ function sbloccaTag() {
             casella.style.animationDelay = (moduliVisibili * 0.1) + 's';
             moduliVisibili++;
         });
-    }, 100); 
+    }, 150); 
 }
 
 function bloccaTag() {
@@ -1260,7 +1277,7 @@ function eseguiBloccoVisivo() {
     setTimeout(() => {
         container.classList.remove('unlocked');
         container.classList.add('locked');
-    }, 450); 
+    }, 600); 
 }
 // ============================================================
 // LIGHTBOX COMPONENT
