@@ -652,6 +652,18 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
 .lightbox-slide img { max-width: 100%; max-height: 85vh; object-fit: contain; pointer-events: none; }
 .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 30, 35, 0.6); backdrop-filter: blur(10px); color: #ffffff; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 10001; border: 1px solid rgba(255,255,255,0.1); }
 .nav-left { left: 15px; } .nav-right { right: 15px; }
+          /* ======================================= */
+/* MOTORE LIQUIDO (STABILITÀ ASSOLUTA)     */
+/* ======================================= */
+.app-container { justify-content: flex-start !important; }
+
+.app-container.locked #mainGrid { opacity: 0; pointer-events: none; overflow: hidden; }
+.app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; overflow-y: auto; transition: opacity 0.4s ease; }
+
+/* Inizializza le pillole per l'ingresso in sincrono con le stanze */
+.action-bar-container {
+    opacity: 0; transform: translateY(80px) scale(0.85); filter: blur(15px);
+} 
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -1187,7 +1199,7 @@ function chiudiDettaglio() {
 }
 
 // ============================================================
-// SYSTEM NAVIGATION (SBLOCCO E RITORNO)
+// SYSTEM NAVIGATION (MOTORE LIQUIDO E SINCRONIZZATO)
 // ============================================================
 function sbloccaTag() {
     const container = document.getElementById('profile-content');
@@ -1199,24 +1211,24 @@ function sbloccaTag() {
     document.documentElement.classList.add('no-pull-refresh');
     document.body.classList.add('no-pull-refresh');
 
+    // Transizione strutturale (solo CSS, zero salti layout)
     container.classList.remove('locked');
     container.classList.add('unlocked');
-    const mainGrid = document.getElementById('mainGrid');
-    if (mainGrid) mainGrid.style.setProperty("display", "flex", "important");
 
+    // Innesco a cascata sincronizzato per Pillole E Stanze
     setTimeout(() => {
-        const caselle = document.querySelectorAll('#mainGrid .room-link');
-        let moduliVisibili = 0;
-        caselle.forEach((casella) => {
-            if (window.getComputedStyle(casella).display !== 'none') {
-                casella.classList.remove('boot-module-closing');
-                void casella.offsetWidth; 
-                casella.classList.add('boot-module-active');
-                casella.style.animationDelay = (moduliVisibili * 0.12) + 's';
-                moduliVisibili++;
+        const elementi = document.querySelectorAll('#mainGrid > *');
+        let delay = 0;
+        elementi.forEach((el) => {
+            if (window.getComputedStyle(el).display !== 'none') {
+                el.classList.remove('boot-module-closing');
+                void el.offsetWidth; // Forza il reflow grafico del browser
+                el.classList.add('boot-module-active');
+                el.style.animationDelay = (delay * 0.1) + 's';
+                delay++;
             }
         });
-    }, 400);
+    }, 50); // Micro-ritardo per innescare l'accelerazione hardware
 }
 
 function bloccaTag() {
@@ -1229,23 +1241,21 @@ function eseguiBloccoVisivo() {
     document.body.classList.remove('no-pull-refresh');
 
     const container = document.getElementById('profile-content');
-    const caselle = document.querySelectorAll('#mainGrid .room-link');
-    caselle.forEach(c => {
-        c.classList.remove('boot-module-active');
-        c.classList.add('boot-module-closing');
-        c.style.animationDelay = '0s'; 
+    
+    // 1. Fai affondare tutti gli elementi contemporaneamente
+    const elementi = document.querySelectorAll('#mainGrid > *');
+    elementi.forEach(el => {
+        el.classList.remove('boot-module-active');
+        el.classList.add('boot-module-closing');
+        el.style.animationDelay = '0s'; 
     });
 
+    // 2. Solo DOPO che sono spariti, fai scendere il Nome e riapparire "Esplora Tag"
     setTimeout(() => {
         container.classList.remove('unlocked');
         container.classList.add('locked');
-        setTimeout(() => {
-            const mainGrid = document.getElementById('mainGrid');
-            if(mainGrid) mainGrid.style.display = 'none';
-        }, 700);
-    }, 350);
+    }, 450); 
 }
-
 // ============================================================
 // LIGHTBOX COMPONENT
 // ============================================================
