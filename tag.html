@@ -772,16 +772,12 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
     padding-top: 15px !important;
     padding-bottom: 15px !important;
 }
-       /* ============================================================
-   1. CORREZIONE DIVIDER: PIU' VICINO E LINEE PIU' LUNGHE
+     /* ============================================================
+   1. DIVIDER PER NOMI CORTI (SOTTO IL TESTO SENZA DISTORSIONI)
    ============================================================ */
-#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto {
-    padding-bottom: 6px !important; /* Avvicina la linea al testo (prima era 25px) */
-}
+#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before,
 #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after {
-    /* Allunghiamo la linea del 130% e la centriamo, così i lati sono molto più lunghi */
-    width: 130% !important; 
-    left: -15% !important; 
+    top: calc(50% + 24px) !important; 
 }
 
 /* ============================================================
