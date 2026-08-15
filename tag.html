@@ -1943,7 +1943,7 @@ function apriSezione(tipo) {
                 corpo.appendChild(riga);
             });
 
-           if (piano !== 'BASE') {
+          if (piano !== 'BASE') {
                 const btnVcf = document.createElement('button');
                 
                 // Architettura Ghost Button: si aggancia alla variabile CSS del tema dinamico
@@ -1961,7 +1961,6 @@ function apriSezione(tipo) {
                 btnVcf.onclick = () => scaricaVCF(vcf, cacheDatiUtente);
                 corpo.appendChild(btnVcf);
             }
-        }
 
         const btnCondividiSezione = document.getElementById('btnCondividiLink');
         if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
