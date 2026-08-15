@@ -1781,11 +1781,9 @@ function apriSezione(tipo) {
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
 
-    // 1. BISTURI: GESTIONE PDF (Prima di toccare l'interfaccia e la cronologia)
     if (tipo === 'pdf') {
         let pdfLink = cacheDatiUtente.pdf_url;
         if (pdfLink) {
-            // Pulizia URL: Forza HTTPS per evitare blocchi di sicurezza della PWA
             if (pdfLink.startsWith('http://')) {
                 pdfLink = pdfLink.replace('http://', 'https://');
             } else if (!pdfLink.startsWith('https://') && !pdfLink.startsWith('/')) {
@@ -1793,10 +1791,9 @@ function apriSezione(tipo) {
             }
             window.open(pdfLink, '_blank', 'noopener noreferrer');
         }
-        return; // Interrompe l'esecuzione qui, proteggendo la cronologia dell'app
+        return;
     }
 
-    // 2. Registra lo stato Dettaglio SOLO per le sezioni interne (es. QR, Bio, Gallery)
     history.pushState(null, null, '#dettaglio');
 
     document.getElementById('testo-chiudi').innerText = 'INDIETRO';
@@ -1972,13 +1969,15 @@ function apriSezione(tipo) {
                 corpo.appendChild(riga);
             });
 
-         if (piano !== 'BASE') {
-              const btnVcf = document.createElement('button');
-              btnVcf.className = 'btn-salva-rubrica';
-              btnVcf.innerHTML = '<i class="fas fa-address-book"></i> Salva in rubrica';
-              btnVcf.onclick = () => scaricaVCF(vcf, cacheDatiUtente);
-              corpo.appendChild(btnVcf);
-          }
+            if (piano !== 'BASE') {
+                const btnVcf = document.createElement('button');
+                btnVcf.className = 'btn-salva-rubrica';
+                btnVcf.innerHTML = '<i class="fas fa-address-book"></i> Salva in rubrica';
+                btnVcf.onclick = () => scaricaVCF(vcf, cacheDatiUtente);
+                corpo.appendChild(btnVcf);
+            }
+        }
+
         const btnCondividiSezione = document.getElementById('btnCondividiLink');
         if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
         return;
@@ -2004,7 +2003,6 @@ function apriSezione(tipo) {
                 riga.style.cssText = 'display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); width: 100%;';
 
                 const link = document.createElement('a');
-                
                 if (isVip) {
                     link.href = "#";
                     link.onclick = (e) => apriVipVault(canale.url, canale.pin, e);
@@ -2038,8 +2036,8 @@ function apriSezione(tipo) {
     }
 
     const contenuti = {
-        'bio':      { t: 'Biografia',        c: cacheDatiUtente.bio      || 'Nessuna bio disponibile.' },
-        'cv':       { t: 'Curriculum Vitae', c: cacheDatiUtente.cv       || 'CV non ancora configurato.' }
+        'bio': { t: 'Biografia', c: cacheDatiUtente.bio || 'Nessuna bio disponibile.' },
+        'cv':  { t: 'Curriculum Vitae', c: cacheDatiUtente.cv || 'CV non ancora configurato.' }
     };
 
     if (!contenuti[tipo]) return;
@@ -2061,7 +2059,6 @@ function apriSezione(tipo) {
         }, 10);
     }); 
 }
-
 function chiudiSezione() {
     history.back();
 }
