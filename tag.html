@@ -724,6 +724,15 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     box-sizing: border-box !important;
     letter-spacing: 0.3px !important;
 }
+           /* ============================================================
+   FORZA L'ALLINEAMENTO IN ALTO PER BIO E CV (Disattiva la centratura del padre)
+   ============================================================ */
+#corpoSezione:has(.testo-lettura) {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important; /* Spinge fisicamente il contenuto in cima */
+    height: 100% !important; 
+}
 /* ============================================================
    GALLERY COMPONENT: GRID LAYOUT & PULL-TO-REFRESH CONTROL
    ============================================================ */
