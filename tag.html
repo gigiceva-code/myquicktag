@@ -840,6 +840,35 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
     box-shadow: none !important;
     padding: 10px 15px !important;
 } 
+           /* ============================================================
+   BOTTONE SALVA IN RUBRICA (GHOST BUTTON DINAMICO)
+   ============================================================ */
+.btn-salva-rubrica {
+    width: 100% !important;
+    margin-top: 25px !important;
+    padding: 16px !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2)) !important;
+    border-radius: 12px !important;
+    color: #e8e8ed !important;
+    font-size: 0.8rem !important;
+    font-weight: 300 !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+}
+.btn-salva-rubrica i {
+    font-size: 1.15rem !important;
+    color: var(--theme-border, #ffffff) !important;
+}
+.btn-salva-rubrica:active {
+    transform: scale(0.96) !important;
+}
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -1943,25 +1972,13 @@ function apriSezione(tipo) {
                 corpo.appendChild(riga);
             });
 
-          if (piano !== 'BASE') {
-                const btnVcf = document.createElement('button');
-                
-                // Architettura Ghost Button: si aggancia alla variabile CSS del tema dinamico
-                btnVcf.style.cssText = 'width:100%; margin-top:25px; padding:16px; background:rgba(255,255,255,0.03); border:1px solid var(--theme-border, rgba(255,255,255,0.2)); border-radius:12px; color:#e8e8ed; font-size:0.8rem; font-weight:300; letter-spacing:3px; text-transform:uppercase; cursor:pointer; display:flex; justify-content:center; align-items:center; gap:12px; transition:transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s; box-shadow:0 10px 20px rgba(0,0,0,0.2);';
-                
-                // Aggiungiamo un'icona elegante e leghiamo il suo colore al tema
-                btnVcf.innerHTML = '<i class="fas fa-address-book" style="font-size:1.15rem; color:var(--theme-border, #ffffff);"></i> Salva in rubrica';
-                
-                // Effetto tattile di pressione fluido
-                btnVcf.onmousedown = () => btnVcf.style.transform = 'scale(0.96)';
-                btnVcf.onmouseup = () => btnVcf.style.transform = 'scale(1)';
-                btnVcf.ontouchstart = () => btnVcf.style.transform = 'scale(0.96)';
-                btnVcf.ontouchend = () => btnVcf.style.transform = 'scale(1)';
-
-                btnVcf.onclick = () => scaricaVCF(vcf, cacheDatiUtente);
-                corpo.appendChild(btnVcf);
-            }
-
+         if (piano !== 'BASE') {
+              const btnVcf = document.createElement('button');
+              btnVcf.className = 'btn-salva-rubrica';
+              btnVcf.innerHTML = '<i class="fas fa-address-book"></i> Salva in rubrica';
+              btnVcf.onclick = () => scaricaVCF(vcf, cacheDatiUtente);
+              corpo.appendChild(btnVcf);
+          }
         const btnCondividiSezione = document.getElementById('btnCondividiLink');
         if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
         return;
