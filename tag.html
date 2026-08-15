@@ -1752,16 +1752,26 @@ function apriSezione(tipo) {
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
 
-    // Registra lo stato Dettaglio (Livello 2)
+    // 1. BISTURI: GESTIONE PDF (Prima di toccare l'interfaccia e la cronologia)
+    if (tipo === 'pdf') {
+        let pdfLink = cacheDatiUtente.pdf_url;
+        if (pdfLink) {
+            // Pulizia URL: Forza HTTPS per evitare blocchi di sicurezza della PWA
+            if (pdfLink.startsWith('http://')) {
+                pdfLink = pdfLink.replace('http://', 'https://');
+            } else if (!pdfLink.startsWith('https://') && !pdfLink.startsWith('/')) {
+                pdfLink = 'https://' + pdfLink;
+            }
+            window.open(pdfLink, '_blank', 'noopener noreferrer');
+        }
+        return; // Interrompe l'esecuzione qui, proteggendo la cronologia dell'app
+    }
+
+    // 2. Registra lo stato Dettaglio SOLO per le sezioni interne (es. QR, Bio, Gallery)
     history.pushState(null, null, '#dettaglio');
 
     document.getElementById('testo-chiudi').innerText = 'INDIETRO';
     document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
-
-    if (tipo === 'pdf') {
-        if (cacheDatiUtente.pdf_url) window.open(cacheDatiUtente.pdf_url, '_blank', 'noopener noreferrer');
-        return;
-    }
 
     if (tipo === 'qr') {
         titolo.textContent = 'ACCESS TAG';
