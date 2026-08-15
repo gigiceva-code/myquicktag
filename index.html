@@ -723,21 +723,21 @@ async function checkAccess() {
             // ==========================================
             // GESTIONE SESSIONI PWA MULTIPLE: ARRAY DI AUTORIZZAZIONE
             // ==========================================
-            const username = data.username.replace('@', '');
+            const nuovoUtente = data.username.replace('@', '').toLowerCase().trim();
             
-            // 1. Recupera l'array degli account autorizzati dal local storage
-            let savedKeys = JSON.parse(localStorage.getItem('myquicktag_keys')) || [];
-            
-            // 2. Verifica e inserisce il nuovo tag nell'array se non presente
-            if (!savedKeys.includes(username)) {
-                savedKeys.push(username);
+            let chiaviSalvate = [];
+            try {
+                chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+            } catch(e) {
+                chiaviSalvate = [];
             }
             
-            // 3. Aggiorna lo stato delle autorizzazioni nel local storage
-            localStorage.setItem('myquicktag_keys', JSON.stringify(savedKeys));
+            if (!chiaviSalvate.includes(nuovoUtente)) {
+                chiaviSalvate.push(nuovoUtente);
+            }
             
-            // Mantiene temporaneamente la variabile loggedUser per retrocompatibilità
-            localStorage.setItem('loggedUser', username);
+            localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviSalvate));
+            localStorage.setItem('loggedUser', nuovoUtente);
             // ==========================================
             
             // L'utente è ufficiale, puliamo eventuali bozze in sospeso
