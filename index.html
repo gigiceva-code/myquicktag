@@ -719,7 +719,26 @@ async function checkAccess() {
             btn.style.background = "#ffffff";
             btn.innerText = "IDENTITÀ CONFERMATA";
             btn.style.opacity = "1";
-            localStorage.setItem('loggedUser', data.username.replace('@', ''));
+            
+            // ==========================================
+            // GESTIONE SESSIONI PWA MULTIPLE: ARRAY DI AUTORIZZAZIONE
+            // ==========================================
+            const username = data.username.replace('@', '');
+            
+            // 1. Recupera l'array degli account autorizzati dal local storage
+            let savedKeys = JSON.parse(localStorage.getItem('myquicktag_keys')) || [];
+            
+            // 2. Verifica e inserisce il nuovo tag nell'array se non presente
+            if (!savedKeys.includes(username)) {
+                savedKeys.push(username);
+            }
+            
+            // 3. Aggiorna lo stato delle autorizzazioni nel local storage
+            localStorage.setItem('myquicktag_keys', JSON.stringify(savedKeys));
+            
+            // Mantiene temporaneamente la variabile loggedUser per retrocompatibilità
+            localStorage.setItem('loggedUser', username);
+            // ==========================================
             
             // L'utente è ufficiale, puliamo eventuali bozze in sospeso
             localStorage.removeItem('myquicktag_reserved'); 
@@ -741,7 +760,6 @@ async function checkAccess() {
         btn.style.opacity = "1";
     }
 }
-
 async function vaiAllaVerifica() {
     const inputField = document.getElementById('tag-input');
     const tagValue = inputField.value.trim().toLowerCase();
@@ -756,7 +774,7 @@ async function vaiAllaVerifica() {
     const formattedTag = '@' + rawTag;
 
     // ==========================================
-    // 1. BLACKLIST (Muro di cemento - Nessuna pietà)
+    // 1. BLACKLIST 
     // ==========================================
     const blacklist = [
         "admin", "administrator", "root", "support", "info", "help", "api", 
