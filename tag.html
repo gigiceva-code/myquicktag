@@ -1179,9 +1179,19 @@ async function avviaFlusso(username) {
         const mode = (urlParams.get('mode') || '').toLowerCase().trim();
         const modeDraft = mode === 'draft';
 
+        // GESTIONE PORTACHIAVI MULTI-TAG: Legge l'array dal LocalStorage
+        let chiaviSalvate = [];
+        try {
+            chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+        } catch(e) {
+            chiaviSalvate = [];
+        }
+        
+        // Verifica se questa specifica tag è tra quelle autorizzate sul dispositivo
+        const isOwner = chiaviSalvate.some(u => u.toLowerCase() === username.toLowerCase());
+
         if (modeDraft) {
-            const loggedUser = localStorage.getItem('loggedUser');
-            if (!loggedUser || loggedUser.toLowerCase() !== username.toLowerCase()) {
+            if (!isOwner) {
                 window.location.href = `/profile.html?u=${username}`;
                 return;
             }
