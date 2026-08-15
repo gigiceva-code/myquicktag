@@ -449,8 +449,32 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-/* Eccezione dorata per l'Azione Rapida */
-#room-quick-action { color: var(--accent-gold) !important; font-weight: 500 !important; }
+/* Eccezione: Azione Rapida (Call to Action Premium Ghost Button) */
+#room-quick-action {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid var(--theme-border, #d4af37) !important;
+    border-radius: 14px !important;
+    padding: 16px 32px !important;
+    margin-top: 20px !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    letter-spacing: 3px !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+    transition: transform 0.2s ease, background 0.2s ease !important;
+}
+#room-quick-action i {
+    color: var(--theme-border, #d4af37) !important;
+    margin-right: 6px !important;
+    transition: color 0.2s ease !important;
+}
+#room-quick-action:active {
+    background: var(--theme-border, #d4af37) !important;
+    color: #000000 !important;
+    transform: scale(0.96) !important;
+}
+#room-quick-action:active i {
+    color: #000000 !important;
+}
           /* Stile per la freccia di ritorno in vetrina */
 #btn-ritorna-vetrina::before { content: none !important; }
 #btn-ritorna-vetrina:active i { color: #ffffff !important; transform: scale(0.9); transition: all 0.2s; } 
@@ -672,7 +696,7 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 .sheet-close-btn:active { background: rgba(255,255,255,0.12); transform: scale(0.97); }
-       /* ============================================================
+    /* ============================================================
    MODULO TESTI LUNGHI: CORNICE LUXURY (BIO E CV)
    ============================================================ */
 .corpo-sezione > .testo-lettura {
@@ -681,7 +705,7 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     font-size: 0.95rem !important;
     line-height: 1.8 !important;
     font-weight: 300 !important;
-    color: #e8e8ed !important;
+    color: #e8e8ed !important; 
     
     /* La nuova cornice glassmorphism */
     background: rgba(20, 20, 22, 0.6) !important; 
@@ -692,7 +716,10 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
     
     padding: 24px !important;
-    margin: 15px auto !important;
+    
+    /* IL BISTURI: Spinge la Bio verso l'alto annullando la centratura verticale */
+    margin: 15px auto auto auto !important; 
+    
     width: 100% !important;
     box-sizing: border-box !important;
     letter-spacing: 0.3px !important;
