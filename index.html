@@ -592,6 +592,38 @@
         </button>
     </div>
 </div>
+        <!-- OVERLAY NOMI PREMIUM (GOLDLIST) -->
+<div id="premium-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+    
+    <!-- Tasto Chiudi X -->
+    <div onclick="chiudiOverlay('premium-overlay')" style="position: absolute; top: 25px; right: 25px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e5c158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </div>
+
+    <div style="width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(229, 193, 88, 0.2); background: linear-gradient(145deg, #0a0a0c 0%, #000000 100%); padding: 45px 25px; border-radius: 16px; box-sizing: border-box; position: relative; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(229, 193, 88, 0.1);">
+        
+        <!-- BADGE GOLD -->
+        <div style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.15); border-radius: 20px; margin-bottom: 20px;">
+            <span style="width: 6px; height: 6px; background: #e5c158; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px rgba(229, 193, 88, 0.5);"></span>
+            <span style="color: #e5c158; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Global Premium Tag</span>
+        </div>
+
+        <h2 id="premium-tag-name" style="color: #ffffff; font-size: 26px; font-weight: 300; margin: 0 0 15px 0; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 10px; box-sizing: border-box;">
+            @nome
+        </h2>
+
+        <p style="color: #A0A0A0; font-size: 14px; font-weight: 300; margin-bottom: 35px; line-height: 1.6; padding: 0 10px;">
+            Questa identità digitale è classificata come <strong style="color: #e5c158; font-weight: 600;">Premium</strong>. L'assegnazione è trattata privatamente dal nostro team per garantirne la tutela.
+        </p>
+
+        <!-- BOTTONE MAILTO -->
+        <button id="btn-premium-mail" style="width: 100%; padding: 20px; background: #e5c158; color: #000000; border: none; font-weight: 800; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; box-shadow: 0 5px 20px rgba(229, 193, 88, 0.2);">
+            CONTATTA IL TEAM VIP
+        </button> 
+    </div>
+</div>
 <div id="welcome-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
     
     <div style="width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); background: #08080a; padding: 45px 25px; border-radius: 16px; box-sizing: border-box; position: relative; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);">
@@ -710,7 +742,6 @@ async function checkAccess() {
     }
 }
 
-// 3. VERIFICA DISPONIBILITÀ TAG (POTENZIATA CON INTERCETTORE)
 async function vaiAllaVerifica() {
     const inputField = document.getElementById('tag-input');
     const tagValue = inputField.value.trim().toLowerCase();
@@ -724,7 +755,50 @@ async function vaiAllaVerifica() {
     const rawTag = tagValue.replace(/\s+/g, '').replace(/@/g, '');
     const formattedTag = '@' + rawTag;
 
-    // 🔥 L'INTERCETTORE: Se l'utente ha già prenotato questo nome, lo facciamo passare senza chiamare l'API!
+    // ==========================================
+    // 1. BLACKLIST (Muro di cemento - Nessuna pietà)
+    // ==========================================
+    const blacklist = [
+        "admin", "administrator", "root", "support", "info", "help", "api", 
+        "login", "logout", "register", "index", "home", "mail", "test",
+        "error", "null", "undefined"
+    ];
+
+    if (blacklist.includes(rawTag)) {
+        alert("Questo nome è riservato per funzioni di sistema o non è valido. Scegli un altro tag.");
+        return; 
+    }
+
+    // ==========================================
+    // 2. GOLDLIST (Tappeto Rosso - Trattativa VIP)
+    // ==========================================
+    const goldlist = [
+        "myquicktag", "quicktag", "mqt", "official", "team", "staff", "security",
+        "vip", "pro", "premium", "business", "agency", "brand", "creator", "shop", "store",
+        "cocacola", "ferrari", "nike", "apple" // <-- Aggiungi qui VIP e Brand
+    ];
+
+    if (goldlist.includes(rawTag) || rawTag.length < 3) {
+        // Mostra il nome nel popup dorato
+        document.getElementById('premium-tag-name').innerText = formattedTag;
+        
+        // Costruisci l'email precompilata
+        const oggettoMail = encodeURIComponent(`Richiesta sblocco nome Premium: ${formattedTag}`);
+        const corpoMail = encodeURIComponent(`Salve Team myquicktag,\n\nVorrei richiedere informazioni per lo sblocco e l'assegnazione dell'identità digitale ${formattedTag}.\n\nDati di contatto:\nNome/Azienda: \nTelefono: \n\nIn attesa di un vostro riscontro.\nCordiali saluti.`);
+        
+        const mailtoLink = `mailto:vip@myquicktag.it?subject=${oggettoMail}&body=${corpoMail}`;
+        
+        // Attacca il link al bottone
+        document.getElementById('btn-premium-mail').setAttribute('onclick', `window.location.href='${mailtoLink}'`);
+        
+        // Apri il popup VIP
+        apriOverlay('premium-overlay');
+        return; // Ferma l'esecuzione (non chiama il server)
+    }
+
+    // ==========================================
+    // SE PASSA I CONTROLLI, PROCEDIAMO NORMALMENTE
+    // ==========================================
     const reservedDataStr = localStorage.getItem('myquicktag_reserved');
     if (reservedDataStr) {
         try {
@@ -752,11 +826,10 @@ async function vaiAllaVerifica() {
         const data = await response.json();
 
         if (data.success) {
-            // 🔥 IL SALVATAGGIO: Diamo il gettone SUBITO, appena il server dice OK
-            const scadenza = new Date().getTime() + 900000; // 15 minuti di tempo
+            const scadenza = new Date().getTime() + 1800000; // 30 minuti di tempo
             localStorage.setItem('myquicktag_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
 
-          document.getElementById('welcome-tag-name').innerText = formattedTag; 
+            document.getElementById('welcome-tag-name').innerText = formattedTag; 
             apriOverlay('welcome-overlay');
         } else {
             alert(data.message || "Nome non disponibile. Scegli un altro tag.");
@@ -769,7 +842,6 @@ async function vaiAllaVerifica() {
         btn.style.opacity = "1";
     }
 }
-
 // 4. REGISTRAZIONE & SCUDO ANTI-RITORNO PERFETTO
 function procediAllaRegistrazione() {
     const inputField = document.getElementById('tag-input');
