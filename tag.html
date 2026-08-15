@@ -1210,8 +1210,7 @@ async function avviaFlusso(username) {
 
         let fields = data.fields;
         const stato = (fields.stato || "").toLowerCase().trim();
-        const loggedUser = localStorage.getItem('loggedUser');
-        const isOwner = loggedUser && loggedUser.toLowerCase() === username.toLowerCase();
+       
 
         if ((modeDraft || mode === 'new' || mode === 'public' || isOwner) && fields.draft_json) {
             try {
