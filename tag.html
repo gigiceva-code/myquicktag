@@ -1376,7 +1376,6 @@ function gestisciVisibilitaCaselle(fields) {
 
     renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
 }
-
 // ============================================================
 // BOTTOM SHEET (KILLER FEATURES)
 // ============================================================
@@ -1403,55 +1402,20 @@ function apriDettaglio(tipo) {
         const testoEsteso = cacheDatiUtente.live_status_text || 'Attualmente online e disponibile.';
         body.innerHTML = `<div style="text-align:center; padding:10px 0; font-size:1.05rem; font-weight:400; color:#fff;">${testoEsteso}</div>`;
     } 
-  // ============================================================
-// 🎁 KILLER FEATURE: VIRAL LOOP (REFERRAL SYSTEM)
-// ============================================================
-function innescaViralLoop() {
-    // Generiamo il link unico con parametro ?ref=viral per tracciare
-    const urlCondivisione = `${window.location.origin}/tag.html?u=${usernameCorrente}&ref=viral`;
-    const nomeTitolare = cacheDatiUtente.username_display || usernameCorrente;
-    const messaggio = `Guarda questa offerta esclusiva di @${nomeTitolare}: ${urlCondivisione}`;
-    
-    if (navigator.share) {
-        // API Condivisione Nativa dello Smartphone
-        navigator.share({ 
-            title: 'Offerta Esclusiva', 
-            url: urlCondivisione, 
-            text: messaggio 
-        }).then(() => {
-            sbloccaPremioVirale();
-        }).catch(err => {
-            // Se l'utente annulla la condivisione, non lo puniamo (ottima UX), sblocchiamo comunque
-            sbloccaPremioVirale(); 
-        });
-    } else {
-        // Fallback per PC o browser vecchi: apre direttamente WhatsApp Web/App
-        window.open(`https://wa.me/?text=${encodeURIComponent(messaggio)}`, '_blank');
-        setTimeout(sbloccaPremioVirale, 1500); // Simula il tempo di condivisione
-    }
-}
+    else if (tipo === 'flash') {
+        icon.style.background = 'rgba(229, 193, 88, 0.1)';
+        icon.innerHTML = `<i class="fas fa-bolt" style="color: #e5c158;"></i>`;
+        title.innerText = cacheDatiUtente.flash_micro || 'PROMO';
+        title.style.color = '#e5c158';
 
-function sbloccaPremioVirale() {
-    const btnShare = document.getElementById('btn-viral-share');
-    const helperText = document.getElementById('viral-helper-text');
-    const rewardBox = document.getElementById('viral-reward-box');
-    const couponText = document.getElementById('viral-coupon-code');
-    
-    // Sparisce la CTA, appare il bottino
-    if(btnShare) btnShare.style.display = 'none';
-    if(helperText) helperText.style.display = 'none';
-    
-    if(rewardBox) {
-        // Se nel database aggiungerai un campo 'flash_coupon', lo mostrerà, altrimenti usa un testo demo
-        const codicePremio = cacheDatiUtente.flash_coupon || 'SCONTO-VIP-10';
-        couponText.innerText = codicePremio;
-        rewardBox.style.display = 'block';
-        
-        // Feedback sensoriale
-        if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
-        mostraToast('🎁 Premio sbloccato con successo!');
+        const testoEsteso = cacheDatiUtente.flash_text || '';
+        body.innerHTML = `
+            <div style="text-align:center; padding:20px 15px; background:rgba(229,193,88,0.05); border:1px solid rgba(229,193,88,0.2); border-radius:16px; color:#e5c158; font-weight:400; font-size:1.05rem; line-height:1.5;">
+                ${testoEsteso}
+            </div>
+        `;
     }
-} 
+
     backdrop.classList.add('active');
     sheet.classList.add('active');
 }
