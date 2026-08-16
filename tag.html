@@ -1462,55 +1462,7 @@ function chiudiDettaglio() {
     if (sheet) sheet.classList.remove('active');
     if (backdrop) backdrop.classList.remove('active');
 }
-// ============================================================
-// 🎁 KILLER FEATURE: VIRAL LOOP (REFERRAL SYSTEM)
-// ============================================================
-function innescaViralLoop() {
-    // Generiamo il link unico con parametro ?ref=viral per tracciare
-    const urlCondivisione = `${window.location.origin}/tag.html?u=${usernameCorrente}&ref=viral`;
-    const nomeTitolare = cacheDatiUtente.username_display || usernameCorrente;
-    const messaggio = `Guarda questa offerta esclusiva di @${nomeTitolare}: ${urlCondivisione}`;
-    
-    if (navigator.share) {
-        // API Condivisione Nativa dello Smartphone
-        navigator.share({ 
-            title: 'Offerta Esclusiva', 
-            url: urlCondivisione, 
-            text: messaggio 
-        }).then(() => {
-            sbloccaPremioVirale();
-        }).catch(err => {
-            // Se l'utente annulla la condivisione, non lo puniamo (ottima UX), sblocchiamo comunque
-            sbloccaPremioVirale(); 
-        });
-    } else {
-        // Fallback per PC o browser vecchi: apre direttamente WhatsApp Web/App
-        window.open(`https://wa.me/?text=${encodeURIComponent(messaggio)}`, '_blank');
-        setTimeout(sbloccaPremioVirale, 1500); // Simula il tempo di condivisione
-    }
-}
 
-function sbloccaPremioVirale() {
-    const btnShare = document.getElementById('btn-viral-share');
-    const helperText = document.getElementById('viral-helper-text');
-    const rewardBox = document.getElementById('viral-reward-box');
-    const couponText = document.getElementById('viral-coupon-code');
-    
-    // Sparisce la CTA, appare il bottino
-    if(btnShare) btnShare.style.display = 'none';
-    if(helperText) helperText.style.display = 'none';
-    
-    if(rewardBox) {
-        // Se nel database aggiungerai un campo 'flash_coupon', lo mostrerà, altrimenti usa un testo demo
-        const codicePremio = cacheDatiUtente.flash_coupon || 'SCONTO-VIP-10';
-        couponText.innerText = codicePremio;
-        rewardBox.style.display = 'block';
-        
-        // Feedback sensoriale
-        if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
-        mostraToast('🎁 Premio sbloccato con successo!');
-    }
-}
 // ============================================================
 // SYSTEM NAVIGATION (MOTORE LIQUIDO E SINCRONIZZATO)
 // ============================================================
@@ -1742,72 +1694,35 @@ function renderizzaQuickAction(tipo, url) {
         return;
     }
 
-    // 1. Recuperiamo lo stato del semaforo e l'impostazione originale
-    const status = cacheDatiUtente.live_status_color || 'green';
-    let cfg = quickActionConfig[tipo.toLowerCase()] || { icon: '<i class="fas fa-bolt"></i>', label: 'AZIONE RAPIDA' };
-    let testoBottone = cacheDatiUtente.quick_action_label || cfg.label;
-
-    // 2. IL DIROTATORE DI TRAFFICO (Routing)
+    // Nessun controllo del semaforo qui, la Quick Action è indipendente
+    const cfg = quickActionConfig[tipo.toLowerCase()] || { icon: '<i class="fas fa-bolt"></i>', label: 'AZIONE RAPIDA' };
+    
+    // Ripristiniamo lo stile originale luxury
     btnQA.style.pointerEvents = "auto";
     btnQA.style.opacity = "1";
+    btnQA.style.border = '1px solid var(--theme-border, #d4af37)';
+    btnQA.style.color = '#ffffff';
 
-    if (status === 'yellow') {
-        // BUSY: Trasformiamo in un'azione silenziosa (es. WhatsApp/Messaggio)
-        cfg.icon = '<i class="fab fa-whatsapp"></i>';
-        testoBottone = 'SONO OCCUPATO, SCRIVIMI';
-        btnQA.style.border = '1px solid #f59e0b'; // Colore Giallo Busy
-        btnQA.style.color = '#ffffff';
-    } 
-    else if (status === 'red') {
-        // OFFLINE: Disattiviamo il bottone o lo rendiamo un form mail
-        cfg.icon = '<i class="fas fa-moon"></i>';
-        testoBottone = 'ATTUALMENTE OFFLINE';
-        btnQA.style.border = '1px solid #ef4444'; // Colore Rosso Offline
-        btnQA.style.opacity = "0.5";
-        btnQA.style.pointerEvents = "none"; // Disattiva il click per non disturbare
-    } 
-    else {
-        // ONLINE: Stile normale luxury
-        btnQA.style.border = '1px solid var(--theme-border, #d4af37)';
-    }
-
-    // 3. Renderizziamo il bottone finale
-    btnQA.innerHTML = `${cfg.icon} &nbsp; ${testoBottone}`;
+    btnQA.innerHTML = `${cfg.icon} &nbsp; ${cacheDatiUtente.quick_action_label || cfg.label}`;
     btnQA.style.display = 'flex';
 }
 
 function eseguiQuickAction() {
-    const tipoOriginale = (cacheDatiUtente.quick_action_tipo || '').toLowerCase();
-    const url = cacheDatiUtente.quick_action_url || '';
-    const status = cacheDatiUtente.live_status_color || 'green';
-    
+    const tipo = (cacheDatiUtente.quick_action_tipo || '').toLowerCase();
+    const url  = cacheDatiUtente.quick_action_url || '';
     if (!url) return;
 
-    let destinazione = url;
+    // Logica pura: fa esattamente quello che gli dice l'editor, senza deviazioni
+    const mappaProtocollo = {
+        'whatsapp':  `https://wa.me/${url.replace(/\D/g,'')}`,
+        'chiamata':  `tel:${url}`,
+        'maps':      `https://maps.google.com/?q=${encodeURIComponent(url)}`,
+        'appuntamento': url,
+        'preventivo':   url,
+        'demo':         url
+    };
 
-    // Se è BUSY, forziamo il routing verso WhatsApp usando il numero inserito
-    if (status === 'yellow') {
-        // Estraiamo solo i numeri dall'URL o dal telefono
-        const numeroPulito = url.replace(/\D/g, '');
-        if (numeroPulito.length > 5) { // Verifica base che sia un numero di telefono valido
-            destinazione = `https://wa.me/${numeroPulito}?text=Ciao,%20ho%20visto%20che%20sei%20occupato.%20Ti%20scrivo%20per...`;
-        } else {
-            // Se non era un numero, esegue l'azione standard (es. form o link prenota)
-            destinazione = url;
-        }
-    } else {
-        // Logica Standard ONLINE
-        const mappaProtocollo = {
-            'whatsapp':  `https://wa.me/${url.replace(/\D/g,'')}`,
-            'chiamata':  `tel:${url}`,
-            'maps':      `https://maps.google.com/?q=$${encodeURIComponent(url)}`,
-            'appuntamento': url,
-            'preventivo':   url,
-            'demo':         url
-        };
-        destinazione = mappaProtocollo[tipoOriginale] || url;
-    }
-
+    const destinazione = mappaProtocollo[tipo] || url;
     window.open(destinazione, '_blank', 'noopener noreferrer');
 }
 function scaricaVCF(vcf, fields) {
