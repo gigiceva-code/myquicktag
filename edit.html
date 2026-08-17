@@ -534,25 +534,14 @@
     </style>
 </head>
 <body>
-    <body>
-
-    <!-- ============================================================ -->
-    <!-- BADGE URGENZA ELEGANTE -->
-    <!-- ============================================================ -->
-    <div id="badge-urgenza" style="display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 5000; align-items: center; gap: 12px; background: rgba(10, 10, 12, 0.85); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 30px; padding: 8px 16px 8px 12px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-        
-        <!-- Pulsar Dorato -->
-        <div style="display: flex; align-items: center; justify-content: center; position: relative; width: 12px; height: 12px;">
-            <span style="position: absolute; width: 100%; height: 100%; background: #e5c158; border-radius: 50%; opacity: 0.4; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></span>
-            <span style="position: relative; width: 6px; height: 6px; background: #e5c158; border-radius: 50%;"></span>
-        </div>
-
-        <!-- Testo Minimal -->
-        <div style="display: flex; flex-direction: column;">
-            <span id="badge-nome-brand" style="color: #ffffff; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">@nome riservato</span>
-            <span style="color: #A0A0A0; font-size: 10px; font-weight: 300;">Completa setup entro <span id="timer-scadenza" style="color: #e5c158; font-weight: 600;">30:00</span></span>
-        </div>
-        
+   
+<!-- UI COMPONENT: Session Identity Reservation Badge -->
+<div id="reservation-badge" style="display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 5000; align-items: center; gap: 10px; background: rgba(10, 10, 12, 0.85); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 30px; padding: 8px 16px; backdrop-filter: blur(15px); box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+    <div style="width: 8px; height: 8px; background: #e5c158; border-radius: 50%; box-shadow: 0 0 8px #e5c158;"></div>
+    <div style="color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.5px;">
+        Identità <span id="badge-target-name">@brand</span> riservata: <span id="timer-ui" style="color: #e5c158; font-weight: 700;">30:00</span>
+    </div>
+</div> 
         <style>
             @keyframes pulse {
                 0%, 100% { transform: scale(1); opacity: 0.5; }
@@ -2086,9 +2075,9 @@
                     applicaTemaLive(); 
                     aggiornaLimitiSocial(); 
                     
-                    // ACCENSIONE TIMER SCARCITY
-                    avviaTimerUrgenza();
-                }
+                    // INIZIALIZZAZIONE MONITOR PRENOTAZIONE
+                    initReservationMonitor();
+                    
             } catch (e) { 
                 console.error("Errore caricamento", e); 
             } finally {
@@ -2222,6 +2211,8 @@
                     window.onbeforeunload = null; 
 
                     if (azioneRedirect === 'checkout') {
+                        // Sblocca definitivamente l'identità perché l'utente sta andando a pagare
+                        localStorage.removeItem('mqt_res_expiry_' + NOME_SISTEMA);
                         window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
                     } else if (azioneRedirect === 'bozza') {
                         window.location.href = `/profile.html`; 
@@ -2301,53 +2292,55 @@
                 });
             }
         } 
-        function avviamyquicktag() {
-            const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
-            if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
+       function avviamyquicktag() {
+    const temaInCache = localStorage.getItem('mqt_theme_' + NOME_SISTEMA);
+    if (temaInCache) { const radioTheme = document.querySelector(`input[name="digital_style"][value="${temaInCache}"]`); if(radioTheme) radioTheme.checked = true; }
 
-            const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
-            if (layoutInCache) { const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`); if(radioLayout) radioLayout.checked = true; }
+    const layoutInCache = localStorage.getItem('mqt_layout_' + NOME_SISTEMA);
+    if (layoutInCache) { const radioLayout = document.querySelector(`input[name="digital_layout"][value="${layoutInCache}"]`); if(radioLayout) radioLayout.checked = true; }
 
-            applicaTemaLive();
+    applicaTemaLive();
 
-            const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
-            if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
+    const nomeInCache = localStorage.getItem('mqt_cache_' + NOME_SISTEMA);
+    if (nomeInCache) formattaBadge(nomeInCache); else formattaBadge(NOME_SISTEMA);
 
-            accendiIControlli(); inizializzaPagina(); initDragAndDrop();
+    accendiIControlli(); 
+    inizializzaPagina(); 
+    initDragAndDrop();
+    
+    let conteggioTap = 0;
+    let tempoUltimoTap = 0;
 
-            let conteggioTap = 0;
-            let tempoUltimoTap = 0;
+    const badgeDiv = document.getElementById('tag-username');
 
-            const badgeDiv = document.getElementById('tag-username');
+    if (badgeDiv) {
+        badgeDiv.addEventListener('click', function(e) {
+            if(e.target.closest('.drawer-glass')) return;
 
-            if (badgeDiv) {
-                badgeDiv.addEventListener('click', function(e) {
-                    if(e.target.closest('.drawer-glass')) return;
+            const adesso = new Date().getTime();
 
-                    const adesso = new Date().getTime();
-
-                    // Se passa quasi 1 secondo tra un tap e l'altro, si azzera
-                    if (adesso - tempoUltimoTap > 800) {
-                        conteggioTap = 0;
-                    }
-
-                    conteggioTap++;
-                    tempoUltimoTap = adesso;
-
-                   // Al terzo tap ricarica la pagina in sicurezza
-                    if (conteggioTap >= 3) {
-                        conteggioTap = 0;
-                        window.onbeforeunload = null; // Spegne l'allarme anti-fuga!
-                        
-                        const url = new URL(window.location.href); 
-                        url.searchParams.set('ts', adesso); 
-                        window.location.href = url.toString();
-                    }
-                });
+            // Se passa quasi 1 secondo tra un tap e l'altro, si azzera
+            if (adesso - tempoUltimoTap > 800) {
+                conteggioTap = 0;
             }
-        }
 
-        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); }
+            conteggioTap++;
+            tempoUltimoTap = adesso;
+
+            // Al terzo tap ricarica la pagina in sicurezza
+            if (conteggioTap >= 3) {
+                conteggioTap = 0;
+                window.onbeforeunload = null; // Spegne l'allarme anti-fuga!
+                
+                const url = new URL(window.location.href); 
+                url.searchParams.set('ts', adesso); 
+                window.location.href = url.toString();
+            }
+        });
+    }
+}
+
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); } 
     // 1. Controlla se l'utente ha inserito almeno un dato utile
         function verificaCompletamentoBase() {
             const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
@@ -2748,6 +2741,56 @@
             aggiornaAnteprimaLive();
             chiudiSenzaSalvare();
         }
+     
+/**
+ * Reservation Lifecycle Monitor
+ * Gestisce il window-time per la prenotazione dell'identità digitale.
+ */
+function initReservationMonitor() {
+    const badge = document.getElementById('reservation-badge');
+    const timerUI = document.getElementById('timer-ui');
+    const nameUI = document.getElementById('badge-target-name');
+
+    if (!badge || !timerUI) return;
+
+    // Se l'utente ha già attivato la tag (ha pagato), spegniamo il timer per sempre
+    if (statoUtente === 'attivo') {
+        badge.style.display = 'none';
+        localStorage.removeItem('mqt_res_expiry_' + NOME_SISTEMA);
+        return;
+    }
+
+    // Altrimenti, logica di prenotazione
+    const RES_STORAGE_KEY = 'mqt_res_expiry_' + NOME_SISTEMA;
+    let expiry = localStorage.getItem(RES_STORAGE_KEY);
+    
+    if (!expiry) {
+        expiry = new Date().getTime() + (30 * 60 * 1000); // 30 minuti
+        localStorage.setItem(RES_STORAGE_KEY, expiry);
+    }
+
+    nameUI.innerText = '@' + NOME_SISTEMA.toUpperCase();
+    badge.style.display = 'flex';
+
+    const monitorInterval = setInterval(() => {
+        const remaining = expiry - new Date().getTime();
+
+        if (remaining <= 0) {
+            clearInterval(monitorInterval);
+            timerUI.innerText = "00:00";
+            timerUI.style.color = "#ef4444"; // Diventa rosso, ma non blocca l'utente
+            return;
+        }
+
+        const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((remaining % (1000 * 60)) / 1000);
+        
+        const minStr = mins < 10 ? "0" + mins : mins;
+        const secStr = secs < 10 ? "0" + secs : secs;
+        
+        timerUI.innerText = minStr + ":" + secStr;
+    }, 1000);
+}
 
     </script>
      
