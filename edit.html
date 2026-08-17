@@ -1345,6 +1345,17 @@
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO NUOVO CLIENTE (Utente B)</label>
                     <input type="text" id="field-qp-premio-b" placeholder="Es. 1 Caffè sul primo ordine" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
+                <!-- Limite Utilizzi (Opzionale) -->
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">LIMITE COUPON (Opzionale)</label>
+                    <input type="number" id="field-qp-limite" placeholder="Es. 100" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+
+                <!-- Scadenza (Opzionale) -->
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">DATA SCADENZA (Opzionale)</label>
+                    <input type="datetime-local" id="field-qp-scadenza" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; color-scheme: dark;">
+                </div>
 
                 <!-- Lucchetto per utenti non paganti -->
                 <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
@@ -2099,12 +2110,13 @@
                     }
                     // ==========================================
 
-                    // ==========================================
+                   // ==========================================
                     // RICARICA QUICK PASS
                     // ==========================================
                     if (f.quickpass_premio_a && document.getElementById('field-qp-premio-a')) document.getElementById('field-qp-premio-a').value = f.quickpass_premio_a;
                     if (f.quickpass_premio_b && document.getElementById('field-qp-premio-b')) document.getElementById('field-qp-premio-b').value = f.quickpass_premio_b;
- 
+                    if (f.quickpass_limite && document.getElementById('field-qp-limite')) document.getElementById('field-qp-limite').value = f.quickpass_limite;
+                    if (f.quickpass_scadenza && document.getElementById('field-qp-scadenza')) document.getElementById('field-qp-scadenza').value = f.quickpass_scadenza;
 
                     if (f.modulo_vcf) {
                         if (f.avatar_url && document.getElementById('field-avatar-url')) {
@@ -2275,9 +2287,11 @@
             const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
             const hiddenGallery = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
 
-            // --- RACCOLTA DATI QUICK PASS ---
+           // --- RACCOLTA DATI QUICK PASS ---
             const qpPremioA = document.getElementById('field-qp-premio-a') ? document.getElementById('field-qp-premio-a').value.trim() : "";
             const qpPremioB = document.getElementById('field-qp-premio-b') ? document.getElementById('field-qp-premio-b').value.trim() : "";
+            const qpLimite = document.getElementById('field-qp-limite') ? document.getElementById('field-qp-limite').value : "";
+            const qpScadenza = document.getElementById('field-qp-scadenza') ? document.getElementById('field-qp-scadenza').value : "";
 
             return { 
                 username_system: NOME_SISTEMA, 
@@ -2298,6 +2312,8 @@
                 // --- NUOVI CAMPI QUICK PASS ---
                 quickpass_premio_a: qpPremioA,
                 quickpass_premio_b: qpPremioB,
+                quickpass_limite: qpLimite,
+                quickpass_scadenza: qpScadenza,
 
                 modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
             }; 
@@ -2935,9 +2951,11 @@ if (document.readyState === 'loading') { document.addEventListener('DOMContentLo
                 document.getElementById('field-gallery-data').value = '[]';
                 const grid = document.getElementById('gallery-preview-grid');
                 if (grid) grid.innerHTML = '';
-            } else if (tipo === 'quickpass') {
+           } else if (tipo === 'quickpass') {
                 document.getElementById('field-qp-premio-a').value = '';
                 document.getElementById('field-qp-premio-b').value = '';
+                document.getElementById('field-qp-limite').value = '';
+                document.getElementById('field-qp-scadenza').value = '';
             }
             
             // Salva nel database, aggiorna la grafica e chiude il cassetto
