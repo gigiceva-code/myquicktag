@@ -1389,7 +1389,7 @@ function apriDettaglio(tipo) {
     if (!sheet || !backdrop) return;
     if (navigator.vibrate) navigator.vibrate(20);
 
-    if (tipo === 'status') {
+  if (tipo === 'status') {
         let colorHex = '#10b981'; let label = 'ONLINE';
         if (cacheDatiUtente.live_status_color === 'yellow') { colorHex = '#f59e0b'; label = 'BUSY'; }
         if (cacheDatiUtente.live_status_color === 'red') { colorHex = '#ef4444'; label = 'OFFLINE'; }
@@ -1400,7 +1400,52 @@ function apriDettaglio(tipo) {
         title.style.color = colorHex;
         
         const testoEsteso = cacheDatiUtente.live_status_text || 'Attualmente online e disponibile.';
-        body.innerHTML = `<div style="text-align:center; padding:10px 0; font-size:1.05rem; font-weight:400; color:#fff;">${testoEsteso}</div>`;
+        
+        // --- MOTORE AZIONE CONTESTUALE DINAMICA ---
+        let bottoneAzioneHTML = '';
+        const actionType = cacheDatiUtente.live_status_action_type || 'nessuna';
+        const actionLabel = cacheDatiUtente.live_status_action_label || 'CONTATTA ORA';
+        const actionUrl = cacheDatiUtente.live_status_action_url || '';
+
+        // Se l'utente ha configurato un'azione reale per questo stato
+        if (actionType !== 'nessuna' && actionUrl !== '') {
+            let destinazione = actionUrl;
+            let iconaBottone = '<i class="fas fa-link"></i>';
+
+            // Mappatura dei protocolli in base alla scelta dell'editor
+            if (actionType === 'whatsapp') {
+                destinazione = `https://wa.me/${actionUrl.replace(/\D/g,'')}`;
+                iconaBottone = '<i class="fab fa-whatsapp"></i>';
+            } else if (actionType === 'chiamata') {
+                destinazione = `tel:${actionUrl}`;
+                iconaBottone = '<i class="fas fa-phone-alt"></i>';
+            } else if (actionType === 'email') {
+                destinazione = `mailto:${actionUrl}`;
+                iconaBottone = '<i class="far fa-envelope"></i>';
+            } else if (actionType === 'link') {
+                if (!destinazione.startsWith('http://') && !destinazione.startsWith('https://')) {
+                    destinazione = 'https://' + destinazione;
+                }
+                iconaBottone = '<i class="fas fa-external-link-alt"></i>';
+            }
+
+            // Generazione del Ghost Button Luxury perfettamente integrato nel design
+            bottoneAzioneHTML = `
+                <a href="${destinazione}" target="_blank" rel="noopener noreferrer" style="width: 100%; margin-top: 20px; padding: 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid ${colorHex}; border-radius: 12px; color: #fff; font-size: 0.8rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.2s;">
+                    ${iconaBottone} ${actionLabel.toUpperCase()}
+                </a>
+            `;
+        }
+
+        // Iniettiamo l'avviso testuale ed il bottone dinamico (se presente)
+        body.innerHTML = `
+            <div style="display: flex; flex-direction: column; width: 100%; align-items: center;">
+                <div style="text-align:center; padding:10px 0; font-size:1.05rem; font-weight:400; color:#fff; line-height:1.6;">
+                    ${testoEsteso}
+                </div>
+                ${bottoneAzioneHTML}
+            </div>
+        `;
     } 
     else if (tipo === 'flash') {
         icon.style.background = 'rgba(229, 193, 88, 0.1)';
