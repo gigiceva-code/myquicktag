@@ -651,6 +651,10 @@
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-layer-group" style="color: rgba(255,255,255,0.5);"></i><span>Asset Brand</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
             </div>
+            <div class="style-bar" onclick="apriDrawer('drawer-killer')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-rocket" style="color: #e5c158;"></i><span style="color: #e5c158; font-weight: 600;">Killer Features</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
             <div class="style-bar" onclick="apriDrawer('drawer-piani')">
                 <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-gem" style="color: rgba(229, 193, 88, 0.8);"></i><span style="color: #e5c158;">Gestione Piano</span></div>
                 <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
@@ -1289,7 +1293,76 @@
             </div>
         </div>
     </div>
+<!-- ========================================== -->
+    <!-- CASSETTO KILLER FEATURES (Sub-menu) -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-killer">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-master')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">KILLER FEATURES</div>
+            <div class="drawer-subtitle">Strumenti avanzati di conversione</div>
+        </div>
+        <div class="style-list" style="flex-direction: column; gap: 10px; margin-top: 10px;">
+            
+            <div class="style-bar" onclick="apriDrawer('drawer-quickpass')">
+                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-ticket-alt" style="color: #e5c158;"></i><span style="font-weight: 600; color: #e5c158;">Quick Pass (Referral)</span></div>
+                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
+            </div>
 
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                I moduli Live Status e Flash 24h verranno spostati qui a breve.
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- CASSETTO CONFIGURAZIONE QUICK PASS -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-quickpass">
+        <div class="drawer-header" style="flex-direction: column;">
+            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-killer')"></i>
+            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
+            <div class="drawer-title">QUICK PASS</div>
+            <div class="drawer-subtitle">Il tuo sistema passaparola</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px; line-height: 1.5;">
+                Imposta le regole. Il sistema genererà un coupon automatico per acquisire nuovi clienti.
+            </div>
+
+            <div style="position: relative;" class="premium-field-container">
+                <!-- Premio per il Portatore (Utente A) -->
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO PER CHI INVITA (Utente A)</label>
+                    <input type="text" id="field-qp-premio-a" placeholder="Es. 1 Cappuccino omaggio" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+
+                <!-- Premio per il Nuovo Cliente (Utente B) -->
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO NUOVO CLIENTE (Utente B)</label>
+                    <input type="text" id="field-qp-premio-b" placeholder="Es. 1 Caffè sul primo ordine" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+
+                <!-- Lucchetto per utenti non paganti -->
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE GOLD</span>
+                </div>
+            </div>
+
+            <!-- Tasto Eliminazione -->
+            <div style="text-align: center; margin-top: 5px;">
+                <button type="button" onclick="eliminaAsset('quickpass')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-trash-alt"></i> ELIMINA QUICK PASS
+                </button>
+            </div>
+        </div>
+
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA QUICK PASS</button>
+    </div>
     <!-- ========================================== -->
     <!-- MODALE QR CODE (Intatto) -->
     <!-- ========================================== -->
