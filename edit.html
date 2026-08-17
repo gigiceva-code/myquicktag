@@ -1984,11 +1984,23 @@
                     if (f.quick_action_label && document.getElementById('field-qa-label')) document.getElementById('field-qa-label').value = f.quick_action_label;
                     if (f.quick_action_url && document.getElementById('field-qa-url')) document.getElementById('field-qa-url').value = f.quick_action_url;
 
-                    // ==========================================
+                   // ==========================================
                     // RICARICA LIVE STATUS E FLASH (Tre Tap)
                     // ==========================================
                     if (f.live_status_color) selezionaStatus(f.live_status_color);
                     if (f.live_status_text && document.getElementById('field-status-text')) document.getElementById('field-status-text').value = f.live_status_text;
+
+                    // --- RICARICA MODULO AVANZATO AZIONE ---
+                    if (f.live_status_action_type && document.getElementById('field-status-action-type')) {
+                        document.getElementById('field-status-action-type').value = f.live_status_action_type;
+                        
+                        if (f.live_status_action_type !== 'nessuna') {
+                            document.getElementById('status-action-container').style.display = 'flex';
+                            document.getElementById('status-action-details').style.display = 'flex';
+                            if (f.live_status_action_label) document.getElementById('field-status-action-label').value = f.live_status_action_label;
+                            if (f.live_status_action_url) document.getElementById('field-status-action-url').value = f.live_status_action_url;
+                        }
+                    }
 
                     if (f.flash_text && document.getElementById('field-flash-text')) document.getElementById('field-flash-text').value = f.flash_text;
                     // ==========================================
@@ -2168,8 +2180,14 @@
                 });
             }
             
+         // --- RACCOLTA DATI LIVE STATUS ---
             const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
             const statusText = document.getElementById('field-status-text') ? document.getElementById('field-status-text').value.trim() : "";
+            
+            // --- NUOVI CAMPI AZIONE CONTESTUALE ---
+            const statusActionType = document.getElementById('field-status-action-type') ? document.getElementById('field-status-action-type').value : "nessuna";
+            const statusActionLabel = document.getElementById('field-status-action-label') ? document.getElementById('field-status-action-label').value.trim() : "";
+            const statusActionUrl = document.getElementById('field-status-action-url') ? document.getElementById('field-status-action-url').value.trim() : "";
             
             const flashText = document.getElementById('field-flash-text') ? document.getElementById('field-flash-text').value.trim() : "";
             let flashExpiry = "";
@@ -2184,14 +2202,20 @@
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
                 digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
                 quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
-                live_status_color: statusColor, live_status_text: statusText,   
+                
+                // --- INSERIMENTO NEL PACCHETTO DATABASE ---
+                live_status_color: statusColor, 
+                live_status_text: statusText,   
+                live_status_action_type: statusActionType,
+                live_status_action_label: statusActionLabel,
+                live_status_action_url: statusActionUrl,
+                
                 flash_text: flashText, flash_expiry: flashExpiry,
                 pdf_label: pdfLabel, pdf_url: pdfUrl,      
                 gallery_data: hiddenGallery, 
                 modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
             }; 
-        }
-
+        } 
         // Questa funzione ora salva SOLAMENTE nella memoria del telefono durante l'editing, 
         // ed effettua la chiamata reale al server SOLO quando viene passata un'azione (checkout, bozza, pubblica)
         async function salvaDati(azioneRedirect = null) {
