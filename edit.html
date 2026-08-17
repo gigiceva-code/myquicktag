@@ -1602,7 +1602,7 @@
         }
 
         function aggiornaLucchetti() {
-            const cassettiGold = ['drawer-showcase', 'drawer-gallery', 'drawer-live-status', 'drawer-flash'];
+           const cassettiGold = ['drawer-showcase', 'drawer-gallery', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass'];
             const cassettiPremium = ['drawer-quick']; 
             
             // 1. Accende e Spegne dinamicamente le Icone nel Menù
@@ -2089,8 +2089,8 @@
                             pt.style.color = '#10b981';
                         }
                     }
-                    // ==========================================
-                                        // ==========================================
+                  
+// ==========================================
                     // RICARICA GALLERIA (Tre Tap)
                     // ==========================================
                     if (f.gallery_data && document.getElementById('field-gallery-data')) {
@@ -2099,6 +2099,11 @@
                     }
                     // ==========================================
 
+                    // ==========================================
+                    // RICARICA QUICK PASS
+                    // ==========================================
+                    if (f.quickpass_premio_a && document.getElementById('field-qp-premio-a')) document.getElementById('field-qp-premio-a').value = f.quickpass_premio_a;
+                    if (f.quickpass_premio_b && document.getElementById('field-qp-premio-b')) document.getElementById('field-qp-premio-b').value = f.quickpass_premio_b;
  
 
                     if (f.modulo_vcf) {
@@ -2270,13 +2275,16 @@
             const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
             const hiddenGallery = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
 
+            // --- RACCOLTA DATI QUICK PASS ---
+            const qpPremioA = document.getElementById('field-qp-premio-a') ? document.getElementById('field-qp-premio-a').value.trim() : "";
+            const qpPremioB = document.getElementById('field-qp-premio-b') ? document.getElementById('field-qp-premio-b').value.trim() : "";
+
             return { 
                 username_system: NOME_SISTEMA, 
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
                 digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
                 quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
                 
-                // --- INSERIMENTO NEL PACCHETTO DATABASE ---
                 live_status_color: statusColor, 
                 live_status_text: statusText,   
                 live_status_action_type: statusActionType,
@@ -2286,9 +2294,14 @@
                 flash_text: flashText, flash_expiry: flashExpiry,
                 pdf_label: pdfLabel, pdf_url: pdfUrl,      
                 gallery_data: hiddenGallery, 
+                
+                // --- NUOVI CAMPI QUICK PASS ---
+                quickpass_premio_a: qpPremioA,
+                quickpass_premio_b: qpPremioB,
+
                 modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
             }; 
-        } 
+        }
         // Questa funzione ora salva SOLAMENTE nella memoria del telefono durante l'editing, 
         // ed effettua la chiamata reale al server SOLO quando viene passata un'azione (checkout, bozza, pubblica)
         async function salvaDati(azioneRedirect = null) {
@@ -2918,10 +2931,13 @@ if (document.readyState === 'loading') { document.addEventListener('DOMContentLo
                 document.getElementById('field-tel2').value = '';
                 document.getElementById('field-email').value = '';
                 document.getElementById('field-indirizzo').value = '';
-            } else if (tipo === 'gallery') {
+           } else if (tipo === 'gallery') {
                 document.getElementById('field-gallery-data').value = '[]';
                 const grid = document.getElementById('gallery-preview-grid');
                 if (grid) grid.innerHTML = '';
+            } else if (tipo === 'quickpass') {
+                document.getElementById('field-qp-premio-a').value = '';
+                document.getElementById('field-qp-premio-b').value = '';
             }
             
             // Salva nel database, aggiorna la grafica e chiude il cassetto
