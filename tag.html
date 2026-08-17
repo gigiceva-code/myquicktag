@@ -1399,19 +1399,12 @@ function gestisciVisibilitaCaselle(fields) {
             }
 
             if (quickPassValido) {
-                // Costruiamo il bottone incorporando la classe "room-link" per farlo animare col motore liquido
+              // Costruiamo un bottone gemello della Quick Action, ma con bordo tratteggiato (stile Coupon)
                 qpContainer.innerHTML = `
-                    <button class="room-link" onclick="apriDettaglio('quickpass')" style="display:flex; justify-content:space-between; align-items:center; width: 100%; padding: 16px 20px !important; background: rgba(255, 255, 255, 0.02) !important; border: 1px solid var(--theme-border, #d4af37) !important; border-radius: 14px !important; color: #ffffff !important; box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important; margin-bottom: 25px;">
-                        <div style="display: flex; align-items: center; gap: 14px;">
-                            <i class="fas fa-ticket-alt" style="color: var(--theme-border, #d4af37); font-size: 1.2rem; margin:0 !important;"></i>
-                            <div style="display: flex; flex-direction: column; text-align: left;">
-                                <span style="font-size: 0.85rem !important; font-weight: 600 !important; letter-spacing: 3px !important; margin: 0; color: #fff !important;">QUICK PASS</span>
-                                <span style="font-size: 0.6rem !important; font-weight: 300 !important; letter-spacing: 1px !important; color: rgba(255,255,255,0.5) !important; margin-top: 4px; text-transform: uppercase;">Passaparola & Premi</span>
-                            </div>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.3); font-size: 0.8rem; margin:0 !important;"></i>
+                    <button class="room-link" onclick="apriDettaglio('quickpass')" style="display:flex; justify-content:center; align-items:center; width: 100%; background: rgba(255, 255, 255, 0.02) !important; border: 1px dashed var(--theme-border, #d4af37) !important; border-radius: 14px !important; padding: 16px 32px !important; margin-top: 20px !important; color: #ffffff !important; font-weight: 500 !important; letter-spacing: 3px !important; box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important; transition: transform 0.2s ease, background 0.2s ease !important;">
+                        <i class="fas fa-gift" style="color: var(--theme-border, #d4af37) !important; margin-right: 8px !important;"></i> QUICK PASS
                     </button>
-                `;
+                `; 
                 qpContainer.style.display = 'block';
             } else {
                 qpContainer.style.display = 'none';
