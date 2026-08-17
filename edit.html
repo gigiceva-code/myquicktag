@@ -984,7 +984,7 @@
     <!-- ========================================== -->
     <!-- CASSETTO MQT LIVE STATUS (SEMAFORO) -->
     <!-- ========================================== -->
-    <div class="drawer-glass" id="drawer-live-status">
+   <div class="drawer-glass" id="drawer-live-status">
         <div class="drawer-header" style="flex-direction: column;">
             <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
             <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
@@ -998,7 +998,6 @@
                 Il badge luminoso apparirà in cima alla tua Tag pubblica.
             </div>
 
-            <!-- I Tre Bottoni del Semaforo -->
             <div style="display: flex; gap: 10px;">
                 <div class="status-btn" id="btn-status-green" onclick="selezionaStatus('green')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); color:#10b981; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">
                     🟢 ONLINE
@@ -1011,15 +1010,44 @@
                 </div>
             </div>
 
-            <!-- Il campo di testo e la memoria nascosta -->
             <input type="hidden" id="field-status-color" value="">
             
             <div style="position: relative;">
                 <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">MESSAGGIO (Max 30 caratteri)</label>
-               <input type="text" id="field-status-text" placeholder="Es. In riunione fino alle 15:00" maxlength="30" onblur="this.value = pulisciTesto(this.value)" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                <input type="text" id="field-status-text" placeholder="Seleziona uno stato per iniziare..." maxlength="30" onblur="this.value = pulisciTesto(this.value)" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; transition: all 0.3s;">
             </div>
 
-            <div style="text-align: center; margin-top: 5px;">
+            <div id="status-action-toggle" onclick="toggleStatusAction()" style="font-size: 0.65rem; color: #d4af37; text-align: center; cursor: pointer; letter-spacing: 1px; margin-top: 5px; text-transform: uppercase;">
+                <i class="fas fa-plus-circle"></i> Aggiungi un'azione a questo stato
+            </div>
+
+            <div id="status-action-container" style="display: none; flex-direction: column; gap: 15px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-top: 5px;">
+                
+                <div>
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TIPO DI AZIONE</label>
+                    <select id="field-status-action-type" onchange="autoCompilaAzioneStatus()" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; outline: none; appearance: none; font-size: 0.85rem;">
+                        <option value="nessuna" style="color: #000;">Nessuna Azione (Solo Avviso testuale)</option>
+                        <option value="whatsapp" style="color: #000;">Invia Messaggio WhatsApp</option>
+                        <option value="chiamata" style="color: #000;">Chiamata Diretta</option>
+                        <option value="email" style="color: #000;">Invia Email</option>
+                        <option value="link" style="color: #000;">Apri Link Esterno</option>
+                    </select>
+                </div>
+
+                <div id="status-action-details" style="display: none; flex-direction: column; gap: 10px;">
+                    <div>
+                        <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO BOTTONE</label>
+                        <input type="text" id="field-status-action-label" placeholder="Es. Scrivimi ora" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">NUMERO / EMAIL / LINK</label>
+                        <input type="text" id="field-status-action-url" placeholder="Destinazione..." style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="text-align: center; margin-top: 10px;">
                 <button type="button" onclick="spegniStatus()" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fas fa-power-off"></i> SPEGNI SEMAFORO
                 </button>
@@ -2487,9 +2515,9 @@ if (document.readyState === 'loading') { document.addEventListener('DOMContentLo
                 document.getElementById('avatar-loader').style.display = 'none';
             }
         }
-        // ==========================================
-        // MOTORE MQT LIVE STATUS (SEMAFORO)
-        // ==========================================
+       // ============================================================
+        // MOTORE MQT LIVE STATUS (INTELLIGENZA UI E AUTO-COMPILAZIONE)
+        // ============================================================
         function selezionaStatus(colore) {
             // Abbassa l'opacità di tutti i bottoni
             document.getElementById('btn-status-green').style.opacity = '0.3';
@@ -2500,34 +2528,97 @@ if (document.readyState === 'loading') { document.addEventListener('DOMContentLo
             const btnSelezionato = document.getElementById('btn-status-' + colore);
             if (btnSelezionato) btnSelezionato.style.opacity = '1';
 
-            // Salva il colore nella memoria nascosta
             const fieldColor = document.getElementById('field-status-color');
             if (fieldColor) fieldColor.value = colore;
+
+            // --- EDUCAZIONE UTENTE: Placeholders Dinamici ---
+            const fieldText = document.getElementById('field-status-text');
+            if (fieldText && fieldText.value.trim() === '') {
+                if (colore === 'green') fieldText.placeholder = "Es. In ufficio, contattami pure";
+                if (colore === 'yellow') fieldText.placeholder = "Es. In cantiere, lasciami un vocale";
+                if (colore === 'red') fieldText.placeholder = "Es. In ferie fino al 20 Agosto";
+            }
             
             aggiornaAnteprimaLive();
         }
 
         function spegniStatus() {
-            // Riaccende tutti i bottoni in stato di riposo
+            // Riaccende i bottoni in stato riposo
             document.getElementById('btn-status-green').style.opacity = '1';
             document.getElementById('btn-status-yellow').style.opacity = '1';
             document.getElementById('btn-status-red').style.opacity = '1';
 
-            // Svuota i campi
-            const fieldColor = document.getElementById('field-status-color');
-            if (fieldColor) fieldColor.value = '';
+            // Svuota i campi principali
+            if (document.getElementById('field-status-color')) document.getElementById('field-status-color').value = '';
             
             const fieldText = document.getElementById('field-status-text');
-            if (fieldText) fieldText.value = '';
+            if (fieldText) {
+                fieldText.value = '';
+                fieldText.placeholder = "Seleziona uno stato per iniziare...";
+            }
+
+            // Svuota i campi del modulo avanzato e lo chiude
+            if (document.getElementById('field-status-action-type')) document.getElementById('field-status-action-type').value = 'nessuna';
+            if (document.getElementById('field-status-action-label')) document.getElementById('field-status-action-label').value = '';
+            if (document.getElementById('field-status-action-url')) document.getElementById('field-status-action-url').value = '';
+            
+            if (document.getElementById('status-action-details')) document.getElementById('status-action-details').style.display = 'none';
+            if (document.getElementById('status-action-container')) document.getElementById('status-action-container').style.display = 'none';
 
             aggiornaAnteprimaLive();
         }
-        function spegniFlash() {
-            const f = document.getElementById('field-flash-text');
-            if (f) f.value = '';
-            aggiornaAnteprimaLive();
+
+        // --- GESTIONE PANNELLO AVANZATO ---
+        function toggleStatusAction() {
+            const container = document.getElementById('status-action-container');
+            if (!container) return;
+            container.style.display = (container.style.display === 'none') ? 'flex' : 'none';
         }
-       
+
+        function autoCompilaAzioneStatus() {
+            const selectType = document.getElementById('field-status-action-type');
+            const detailsContainer = document.getElementById('status-action-details');
+            const labelInput = document.getElementById('field-status-action-label');
+            const urlInput = document.getElementById('field-status-action-url');
+
+            if (!selectType || !detailsContainer || !labelInput || !urlInput) return;
+
+            const tipo = selectType.value;
+
+            if (tipo === 'nessuna') {
+                detailsContainer.style.display = 'none';
+                return;
+            }
+
+            // Mostra i campi per inserire testo e destinazione
+            detailsContainer.style.display = 'flex';
+
+            // --- MAGIA: Auto-compilazione da Rubrica per limitare lo sforzo dell'utente ---
+            if (tipo === 'whatsapp') {
+                labelInput.placeholder = "Es. Mandami un vocale";
+                if (labelInput.value === '') labelInput.value = "Scrivimi su WhatsApp";
+                const telRubrica = document.getElementById('field-tel1') ? document.getElementById('field-tel1').value : '';
+                if (urlInput.value === '') urlInput.value = telRubrica;
+            } 
+            else if (tipo === 'chiamata') {
+                labelInput.placeholder = "Es. Chiamami ora";
+                if (labelInput.value === '') labelInput.value = "Chiama il mio studio";
+                const telRubrica = document.getElementById('field-tel1') ? document.getElementById('field-tel1').value : '';
+                if (urlInput.value === '') urlInput.value = telRubrica;
+            }
+            else if (tipo === 'email') {
+                labelInput.placeholder = "Es. Inviami una richiesta";
+                if (labelInput.value === '') labelInput.value = "Mandami un'email";
+                const emailRubrica = document.getElementById('field-email') ? document.getElementById('field-email').value : '';
+                if (urlInput.value === '') urlInput.value = emailRubrica;
+            }
+            else if (tipo === 'link') {
+                labelInput.placeholder = "Es. Guarda la diretta su Twitch";
+                labelInput.value = "";
+                urlInput.placeholder = "https://...";
+                urlInput.value = "";
+            }
+        }
         // ==========================================
         // MOTORE CLOUDINARY - GALLERIA IMMAGINI
         // ==========================================
