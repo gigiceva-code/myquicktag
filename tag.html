@@ -1944,6 +1944,9 @@ function apriSezione(tipo) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
+    
+    document.getElementById('testo-chiudi').innerText = 'INDIETRO';
+    document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
 
     if (tipo === 'pdf') {
         let pdfLink = cacheDatiUtente.pdf_url;
