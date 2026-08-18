@@ -449,32 +449,7 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-/* Eccezione: Azione Rapida e Quick Pass (Call to Action Premium) */
-#room-quick-action, #room-quick-pass {
-    background: rgba(255, 255, 255, 0.02) !important;
-    border: 1px solid var(--theme-border, #d4af37) !important;
-    border-radius: 14px !important;
-    padding: 16px 32px !important;
-    margin-top: 20px !important;
-    color: #ffffff !important;
-    font-weight: 500 !important;
-    letter-spacing: 3px !important;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
-    transition: transform 0.2s ease, background 0.2s ease !important;
-}
-#room-quick-action i, #room-quick-pass i {
-    color: var(--theme-border, #d4af37) !important;
-    margin-right: 6px !important;
-    transition: color 0.2s ease !important;
-}
-#room-quick-action:active, #room-quick-pass:active {
-    background: var(--theme-border, #d4af37) !important;
-    color: #000000 !important;
-    transform: scale(0.96) !important;
-}
-#room-quick-action:active i, #room-quick-pass:active i {
-    color: #000000 !important;
-}
+
           /* Stile per la freccia di ritorno in vetrina */
 #btn-ritorna-vetrina::before { content: none !important; }
 #btn-ritorna-vetrina:active i { color: #ffffff !important; transform: scale(0.9); transition: all 0.2s; } 
@@ -920,19 +895,14 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
       <div id="mainGrid">
            <div id="action-bar-features" class="action-bar-container">
                 
-                <!-- Pillola Live Status -->
+              <div id="action-bar-features" class="action-bar-container">
+                
                 <div class="feature-pill" id="pill-live-status" style="display:none;" onclick="apriDettaglio('status')">
                     <div class="led-dot" id="pill-status-dot"></div>
                     <span id="pill-status-text">ONLINE</span>
                 </div>
 
-                <!-- Pillola Flash 24 -->
-                <div class="feature-pill" id="pill-flash" style="display:none;" onclick="apriDettaglio('flash')">
-                    <i class="fas fa-bolt" style="color: var(--core-border); font-size: 0.7rem;"></i>
-                    <span id="pill-flash-text">PROMO</span>
-                </div>
-            </div>
-         
+            </div> 
             
             <!-- IDENTITY: Live Status, Flash, Bio, Access Tag -->
             <button class="room-link" id="room-identity" onclick="apriMacroArea('identity')" style="display:none;">IDENTITY</button>
@@ -945,11 +915,13 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
             
             <!-- NETWORK: Sito Web, Social, Contatti -->
             <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
-          <!-- 🎁 IL NUOVO QUICK PASS (Innato, stile gemello) -->
-<button class="room-link" id="room-quick-pass" onclick="apriDettaglio('quickpass')" style="display:none;"><i class="fas fa-gift"></i> QUICK PASS</button>
+         <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
 
-            <!-- LA QUICK ACTION (Elevata a Stanza) -->
-            <button class="room-link" id="room-quick-action" onclick="eseguiQuickAction()" style="display:none;">⚡ AZIONE RAPIDA</button>
+            <button class="room-link" id="room-action-center" onclick="apriMacroArea('action_center')" style="display:none; color: var(--theme-border, #d4af37) !important; font-weight: 500 !important; letter-spacing: 4px !important;">ACTION CENTER</button>
+            
+           <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
+                <span>HOME</span>
+            </div>
             
            <!-- TASTO DI RITORNO HOME (Spinto sul fondo, senza icona) -->
             <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
@@ -1352,11 +1324,11 @@ function renderizzaTagCompleta(fields) {
     }
     controllaInvitoQuickPass(fields);
 }
-
 // ============================================================
-// VISIBILITÀ E POPOLAMENTO DATI (ACTION BAR E STANZE)
+// MOTORE VISIVO: VISIBILITÀ STANZE E ACTION CENTER
 // ============================================================
 function gestisciVisibilitaCaselle(fields) {
+    // 1. GESTIONE LIVE STATUS (Rimane in alto, unico e centrato)
     const pillStatus = document.getElementById('pill-live-status');
     if (pillStatus && fields.live_status_color) {
         const dot = document.getElementById('pill-status-dot');
@@ -1381,20 +1353,7 @@ function gestisciVisibilitaCaselle(fields) {
         pillStatus.style.display = 'none';
     }
 
-    const pillFlash = document.getElementById('pill-flash');
-    if (pillFlash && fields.flash_text) {
-        const isExpired = fields.flash_expiry && new Date(fields.flash_expiry) < new Date();
-        if (!isExpired) {
-            const txtFlash = document.getElementById('pill-flash-text');
-            txtFlash.innerText = (fields.flash_micro || 'PROMO').toUpperCase();
-            pillFlash.style.display = 'flex';
-        } else {
-            pillFlash.style.display = 'none';
-        }
-    } else if (pillFlash) {
-        pillFlash.style.display = 'none';
-    }
-
+    // 2. GESTIONE STANZE STANDARD
     const elIdentity = document.getElementById('room-identity');
     if (elIdentity) elIdentity.style.display = 'flex';
 
@@ -1414,30 +1373,41 @@ function gestisciVisibilitaCaselle(fields) {
     const elNetwork = document.getElementById('room-network');
     if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
 
-    renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
-   // ==========================================
-    // MOTORE QUICK PASS (CONTROLLO E STAMPA)
     // ==========================================
-    const btnQP = document.getElementById('room-quick-pass');
-    if (btnQP) {
-        const qpA = fields.quickpass_premio_a;
-        const qpB = fields.quickpass_premio_b;
-        
-        if (qpA && qpB && qpA.trim() !== '' && qpB.trim() !== '') {
-            let quickPassValido = true;
-            if (fields.quickpass_scadenza && fields.quickpass_scadenza.trim() !== '') {
-                if (new Date() > new Date(fields.quickpass_scadenza)) quickPassValido = false; 
-            }
-            if (fields.quickpass_limite && parseInt(fields.quickpass_limite) <= 0) {
-                quickPassValido = false;
-            }
-            // Accende il bottone nativo (lo stile gemello farà il resto)
-            btnQP.style.display = quickPassValido ? 'flex' : 'none';
-        } else {
-            btnQP.style.display = 'none';
-        }
+    // 3. CONTROLLO QUINTA STANZA (ACTION CENTER)
+    // ==========================================
+    let hasActionCenter = false;
+
+    // Controllo A: Azione Rapida
+    const piano = (fields.plan || '').toUpperCase();
+    if (fields.quick_action_tipo && fields.quick_action_url && piano !== 'BASE') {
+        hasActionCenter = true;
     }
-   } 
+
+    // Controllo B: Quick Pass
+    const qpA = fields.quickpass_premio_a;
+    const qpB = fields.quickpass_premio_b;
+    if (qpA && qpB && qpA.trim() !== '' && qpB.trim() !== '') {
+        let quickPassValido = true;
+        if (fields.quickpass_scadenza && fields.quickpass_scadenza.trim() !== '') {
+            if (new Date() > new Date(fields.quickpass_scadenza)) quickPassValido = false; 
+        }
+        if (fields.quickpass_limite && parseInt(fields.quickpass_limite) <= 0) {
+            quickPassValido = false;
+        }
+        if (quickPassValido) hasActionCenter = true;
+    }
+
+    // Controllo C: Flash Promo
+    const isFlashExpired = fields.flash_expiry && new Date(fields.flash_expiry) < new Date();
+    if (fields.flash_text && !isFlashExpired) {
+        hasActionCenter = true;
+    }
+
+    // Accensione Action Center
+    const elActionCenter = document.getElementById('room-action-center');
+    if (elActionCenter) elActionCenter.style.display = hasActionCenter ? 'flex' : 'none';
+}
 // ============================================================
 // BOTTOM SHEET (KILLER FEATURES)
 // ============================================================
@@ -1522,42 +1492,50 @@ function apriDettaglio(tipo) {
             </div>
         `;
     }
-   else if (tipo === 'quickpass') {
+ if (tipo === 'quickpass') {
+        titolo.textContent = 'QUICK PASS';
         const premioA = cacheDatiUtente.quickpass_premio_a;
         const premioB = cacheDatiUtente.quickpass_premio_b;
-
-        icon.style.background = 'transparent';
-        icon.style.border = 'none';
-        icon.innerHTML = `<i class="fas fa-gift" style="color: var(--theme-border, #d4af37); font-size: 1.4rem;"></i>`;
-        title.innerText = 'QUICK PASS';
-        title.style.color = 'var(--theme-border, #d4af37)';
-
+        
         const urlTagCorrente = window.location.href.split('?')[0]; 
         const linkCondivisione = `${urlTagCorrente}?qp_ref=invito`;
         const testoWhatsApp = encodeURIComponent(`Ti ho regalato: ${premioB}! 🎁\n\nMostra questo Quick Pass alla cassa per sbloccarlo: ${linkCondivisione}`);
         const apiWhatsApp = `https://wa.me/?text=${testoWhatsApp}`;
 
-        body.innerHTML = `
-            <div style="display: flex; flex-direction: column; width: 100%; align-items: center; gap: 24px; padding-top: 10px;">
+        corpo.innerHTML = `
+            <div style="display: flex; flex-direction: column; width: 100%; align-items: center; gap: 30px; padding-top: 15px;">
+                <i class="fas fa-gift" style="font-size: 3.5rem; color: var(--theme-border, #d4af37); filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2));"></i>
                 
-                <div style="text-align:center; font-size:0.95rem; font-weight:300; color:#e8e8ed; line-height:1.6;">
+                <div style="text-align:center; font-size:1rem; font-weight:300; color:#e8e8ed; line-height:1.6; padding: 0 10px;">
                     Regala <strong style="color:#fff; font-weight: 500;">${premioB}</strong> a un amico.<br>
                     Quando lo utilizzerà, tu sbloccherai:
                 </div>
 
-                <!-- Box Premio Luxury (Vetro Scuro con accento) -->
-                <div style="width: 100%; padding: 24px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-left: 2px solid var(--theme-border, #d4af37); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                    <span style="font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px;">IL TUO PREMIO</span>
-                    <span style="font-size: 1rem; font-weight: 600; color: #fff; letter-spacing: 1px; text-align: center; text-transform: uppercase;">${premioA}</span>
+                <div style="width: 100%; max-width: 320px; padding: 35px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-left: 2px solid var(--theme-border, #d4af37); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
+                    <span style="font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;">IL TUO PREMIO</span>
+                    <span style="font-size: 1.25rem; font-weight: 600; color: #fff; letter-spacing: 2px; text-align: center; text-transform: uppercase;">${premioA}</span>
                 </div>
                 
-                <!-- Bottone Ghost WhatsApp -->
-                <a href="${apiWhatsApp}" target="_blank" rel="noopener noreferrer" style="width: 100%; padding: 18px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--theme-border, #d4af37); border-radius: 12px; color: #fff; font-size: 0.85rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.2s;">
-                    <i class="fab fa-whatsapp" style="font-size: 1.2rem; color: var(--theme-border, #d4af37);"></i> INVITA E SBLOCCA
+                <a href="${apiWhatsApp}" target="_blank" rel="noopener noreferrer" style="width: 100%; max-width: 320px; padding: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--theme-border, #d4af37); border-radius: 14px; color: #fff; font-size: 0.9rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: transform 0.2s; margin-top: 15px;">
+                    <i class="fab fa-whatsapp" style="font-size: 1.4rem; color: var(--theme-border, #d4af37);"></i> INVITA E SBLOCCA
                 </a>
             </div>
         `;
-    }
+        
+        const btnCondividiSezione = document.getElementById('btnCondividiLink');
+        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
+
+        const elementi = corpo.children;
+        Array.from(elementi).forEach((el, index) => {
+            el.classList.add('cascade-item');
+            el.style.animationDelay = `${index * 0.08}s`; 
+            setTimeout(() => {
+                el.classList.add('overlay-boot-active');
+            }, 10);
+        });
+
+        return;
+    } 
     backdrop.classList.add('active');
     sheet.classList.add('active');
 }
@@ -1913,6 +1891,41 @@ function apriMacroArea(area, skipHistory = false) {
         }
         if (cacheDatiUtente.email || cacheDatiUtente.modulo_vcf) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('contatti')"><i class="fas fa-address-card" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">RUBRICA & CONTATTI</span></button>`;
+        }
+    }
+   else if (area === 'action_center') {
+        titolo.textContent = 'ACTION CENTER';
+        
+        // 1. Inserimento Azione Rapida
+        const piano = (cacheDatiUtente.plan || '').toUpperCase();
+        if (cacheDatiUtente.quick_action_tipo && cacheDatiUtente.quick_action_url && piano !== 'BASE') {
+            const qaTipo = cacheDatiUtente.quick_action_tipo.toLowerCase();
+            const cfg = quickActionConfig[qaTipo] || { icon: '<i class="fas fa-bolt"></i>', label: 'Azione Rapida' };
+            const label = cacheDatiUtente.quick_action_label || cfg.label;
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="eseguiQuickAction()"><span style="font-size:1.2rem; width:25px; text-align:center; color:var(--theme-border, #d4af37);">${cfg.icon}</span> <span style="flex:1; text-align:left;">${label.toUpperCase()}</span></button>`;
+        }
+
+        // 2. Inserimento Quick Pass
+        const qpA = cacheDatiUtente.quickpass_premio_a;
+        const qpB = cacheDatiUtente.quickpass_premio_b;
+        if (qpA && qpB && qpA.trim() !== '' && qpB.trim() !== '') {
+            let quickPassValido = true;
+            if (cacheDatiUtente.quickpass_scadenza && cacheDatiUtente.quickpass_scadenza.trim() !== '') {
+                if (new Date() > new Date(cacheDatiUtente.quickpass_scadenza)) quickPassValido = false; 
+            }
+            if (cacheDatiUtente.quickpass_limite && parseInt(cacheDatiUtente.quickpass_limite) <= 0) {
+                quickPassValido = false;
+            }
+            if (quickPassValido) {
+                sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('quickpass')"><i class="fas fa-gift" style="font-size:1.2rem; width:25px; text-align:center; color:var(--theme-border, #d4af37);"></i> <span style="flex:1; text-align:left;">QUICK PASS</span></button>`;
+            }
+        }
+
+        // 3. Inserimento Flash Promo (Ora è DENTRO la stanza giusta!)
+        const isFlashExpired = cacheDatiUtente.flash_expiry && new Date(cacheDatiUtente.flash_expiry) < new Date();
+        if (cacheDatiUtente.flash_text && !isFlashExpired) {
+            const flashLabel = (cacheDatiUtente.flash_micro || 'PROMO FLASH').toUpperCase();
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('flash')"><i class="fas fa-bolt" style="font-size:1.2rem; width:25px; text-align:center; color:#e5c158;"></i> <span style="flex:1; text-align:left;">${flashLabel}</span></button>`;
         }
     }
 
