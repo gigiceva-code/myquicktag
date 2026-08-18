@@ -1022,12 +1022,6 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
                 <h2 style="color: #fff; font-size: 1.2rem; font-weight: 500; letter-spacing: 1px; margin-bottom: 5px;">Hai un regalo!</h2>
                 <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">Mostra questo pass in cassa per ritirarlo</p>
             </div>
-            
-            <!-- Il Premio e il QR Code -->
-            <div style="padding: 30px 20px;">
-                <div id="qp-landing-premio" style="color: var(--theme-border, #d4af37); font-size: 1.3rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 25px; line-height: 1.4;">
-                    --
-                </div>
                 
                 <!-- Il QR Code su fondo bianco per massima leggibilità dai lettori -->
                 <div style="background: #fff; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
@@ -1995,7 +1989,7 @@ function apriSezione(tipo) {
         `;
         return;
     }
-  if (tipo === 'quickpass') {
+ if (tipo === 'quickpass') {
         titolo.textContent = 'QUICK PASS';
         const premioA = cacheDatiUtente.quickpass_premio_a;
         const premioB = cacheDatiUtente.quickpass_premio_b;
@@ -2014,8 +2008,8 @@ function apriSezione(tipo) {
                     Quando lo utilizzerà, tu sbloccherai:
                 </div>
 
-                <!-- Box Premio Luxury a tutto schermo -->
-                <div style="width: 100%; max-width: 320px; padding: 35px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-left: 2px solid var(--theme-border, #d4af37); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
+                <!-- Box Premio Luxury a tutto schermo (Cornice unificata) -->
+                <div style="width: 100%; max-width: 320px; padding: 35px 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--theme-border, #d4af37); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
                     <span style="font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;">IL TUO PREMIO</span>
                     <span style="font-size: 1.25rem; font-weight: 600; color: #fff; letter-spacing: 2px; text-align: center; text-transform: uppercase;">${premioA}</span>
                 </div>
@@ -2039,8 +2033,7 @@ function apriSezione(tipo) {
         });
 
         return;
-    }  
-
+    }
     if (tipo === 'flash') {
         titolo.textContent = 'MQT FLASH';
         corpo.innerHTML = `
