@@ -1378,43 +1378,28 @@ function gestisciVisibilitaCaselle(fields) {
     if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
 
     renderizzaQuickAction(fields.quick_action_tipo, fields.quick_action_url);
-    // ==========================================
+   // ==========================================
     // MOTORE QUICK PASS (CONTROLLO E STAMPA)
     // ==========================================
-    const qpContainer = document.getElementById('quickpass-container');
-    if (qpContainer) {
+    const btnQP = document.getElementById('room-quick-pass');
+    if (btnQP) {
         const qpA = fields.quickpass_premio_a;
         const qpB = fields.quickpass_premio_b;
         
         if (qpA && qpB && qpA.trim() !== '' && qpB.trim() !== '') {
             let quickPassValido = true;
-            
-            // 1. Controllo Scadenza
             if (fields.quickpass_scadenza && fields.quickpass_scadenza.trim() !== '') {
-                const dataScadenza = new Date(fields.quickpass_scadenza);
-                if (new Date() > dataScadenza) quickPassValido = false; 
+                if (new Date() > new Date(fields.quickpass_scadenza)) quickPassValido = false; 
             }
-            // 2. Controllo Limite
             if (fields.quickpass_limite && parseInt(fields.quickpass_limite) <= 0) {
                 quickPassValido = false;
             }
-
-            if (quickPassValido) {
-              // Costruiamo un bottone gemello della Quick Action, ma con bordo tratteggiato (stile Coupon)
-                qpContainer.innerHTML = `
-                    <button class="room-link" onclick="apriDettaglio('quickpass')" style="display:flex; justify-content:center; align-items:center; width: 100%; background: rgba(255, 255, 255, 0.02) !important; border: 1px dashed var(--theme-border, #d4af37) !important; border-radius: 14px !important; padding: 16px 32px !important; margin-top: 20px !important; color: #ffffff !important; font-weight: 500 !important; letter-spacing: 3px !important; box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important; transition: transform 0.2s ease, background 0.2s ease !important;">
-                        <i class="fas fa-gift" style="color: var(--theme-border, #d4af37) !important; margin-right: 8px !important;"></i> QUICK PASS
-                    </button>
-                `; 
-                qpContainer.style.display = 'block';
-            } else {
-                qpContainer.style.display = 'none';
-            }
+            // Accende il bottone nativo (lo stile gemello farà il resto)
+            btnQP.style.display = quickPassValido ? 'flex' : 'none';
         } else {
-            qpContainer.style.display = 'none';
+            btnQP.style.display = 'none';
         }
     }
-}
 // ============================================================
 // BOTTOM SHEET (KILLER FEATURES)
 // ============================================================
