@@ -903,7 +903,12 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
+        
+        !-- TASTO SALVA TAG IN COPERTINA (Sopra Esplora Tag) -->
+        <div id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="margin-bottom: 30px; cursor: pointer; text-align: center; z-index: 10;">
+            <span style="color: var(--text-sec, #86868b); font-size: 0.85rem; letter-spacing: 4px; font-weight: 400; text-transform: uppercase; transition: color 0.3s;">SALVA TAG</span>
+        </div>
 
    <!-- TASTO DI INGRESSO (Copertina) -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
@@ -929,7 +934,7 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
         
         <div class="feature-pill" id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="display: flex; gap: 6px; cursor: pointer; color: #f5f5f7; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
                 <i class="far fa-bookmark"></i>
-                <span style="font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">SALVA POCKET</span>
+                <span style="font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">SALVA TAG</span>
             </div>
 
         </div>
@@ -2362,14 +2367,12 @@ function salvaNelPocketCorrente() {
             dataSalvataggio: new Date().toISOString()
         });
         localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
-        mostraToast("Aggiunto al tuo Pocket ✓");
+        mostraToast("Tag salvata nel Pocket ✓");
         
-        // Cambia visivamente il bottone se esiste sulla pagina
+       // Cambia visivamente il bottone se esiste sulla pagina
         const btnPocket = document.getElementById('btn-salva-pocket');
         if (btnPocket) {
-            btnPocket.style.color = "var(--theme-border, #d4af37)";
-            btnPocket.style.borderColor = "var(--theme-border, #d4af37)";
-            btnPocket.innerHTML = '<i class="fas fa-bookmark"></i> SALVATO';
+            btnPocket.innerHTML = '<span style="color: var(--theme-border, #d4af37); font-size: 0.85rem; letter-spacing: 4px; font-weight: 400; text-transform: uppercase;">SALVATO ✓</span>';
         }
     } else {
         mostraToast("Tag già presente nel Pocket");
