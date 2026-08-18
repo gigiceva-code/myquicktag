@@ -1051,6 +1051,42 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
             </button>
         </div>
     </div>
+      <!-- OVERLAY QUICK PASS LANDING (PER IL NUOVO CLIENTE) -->
+    <div id="qp-landing-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 100000; background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(15px);">
+        <div style="background: #111; padding: 0; border-radius: 24px; text-align: center; border: 1px solid var(--theme-border, #d4af37); box-shadow: 0 20px 50px rgba(0,0,0,0.8); width: 100%; max-width: 360px; position: relative; overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- Header colorato -->
+            <div style="background: rgba(255,255,255,0.05); padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <button onclick="chiudiQPLanding()" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">&times;</button>
+                <i class="fas fa-gift" style="color: var(--theme-border, #d4af37); font-size: 2.5rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));"></i>
+                <h2 style="color: #fff; font-size: 1.2rem; font-weight: 500; letter-spacing: 1px; margin-bottom: 5px;">Hai un regalo!</h2>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">Mostra questo pass in cassa per ritirarlo</p>
+            </div>
+            
+            <!-- Il Premio e il QR Code -->
+            <div style="padding: 30px 20px;">
+                <div id="qp-landing-premio" style="color: var(--theme-border, #d4af37); font-size: 1.3rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 25px; line-height: 1.4;">
+                    --
+                </div>
+                
+                <!-- Il QR Code su fondo bianco per massima leggibilità dai lettori -->
+                <div style="background: #fff; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+                    <div id="qp-landing-qr" style="width: 160px; height: 160px;"></div>
+                </div>
+                <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 3px;">SCANSIONA PER VALIDARE</div>
+            </div>
+
+            <!-- La tua esca NON invasiva -->
+            <a href="https://myquicktag.com" target="_blank" rel="noopener noreferrer" style="display: block; padding: 18px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: background 0.2s;">
+                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; font-weight: 300;">
+                    Powered by <strong style="color: #fff; font-weight: 600;">myquicktag</strong>
+                </div>
+                <div style="font-size: 0.65rem; color: var(--theme-border, #d4af37); margin-top: 6px; letter-spacing: 1px; font-weight: 500;">
+                    CREA LA TUA TAG GRATIS &rarr;
+                </div>
+            </a>
+        </div>
+    </div> 
 
     <!-- OVERLAY QR CODE NATIVO -->
     <!-- (Questo lo inietterà il JS se serve nella macro area Identity, non serve averlo fisso qui se usiamo l'overlay a specchio, ma il div container per qrcode.js lo mettiamo nel js) -->
@@ -1314,6 +1350,7 @@ function renderizzaTagCompleta(fields) {
             mostraOverlayAcquisto();
         }
     }
+    controllaInvitoQuickPass(fields);
 }
 
 // ============================================================
@@ -2380,6 +2417,49 @@ function mostraWelcomeOverlay() {
     if (titoloEl) titoloEl.textContent = '@' + nome.replace('@', '') + ' è attiva'; 
 
     overlay.style.display = 'flex';
+}
+    // ============================================================
+// GESTIONE ATTERRAGGIO QUICK PASS (Nuovo Cliente B)
+// ============================================================
+function controllaInvitoQuickPass(fields) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('qp_ref') === 'invito') {
+        const qpB = fields.quickpass_premio_b;
+        
+        // Se c'è un premio B configurato dal titolare
+        if (qpB && qpB.trim() !== '') {
+            
+            // Controlli di sicurezza (Scadenza e Limite)
+            if (fields.quickpass_scadenza && new Date() > new Date(fields.quickpass_scadenza)) return;
+            if (fields.quickpass_limite && parseInt(fields.quickpass_limite) <= 0) return;
+
+            const overlay = document.getElementById('qp-landing-overlay');
+            const txtPremio = document.getElementById('qp-landing-premio');
+            const qrContainer = document.getElementById('qp-landing-qr');
+            
+            if (overlay && txtPremio && qrContainer) {
+                txtPremio.innerText = qpB;
+                
+                // Pulisce e Genera il QR Code. 
+                // NOTA: Per ora inseriamo nel QR un link fittizio "action=valida". 
+                // Nella fase successiva collegheremo questo link alla funzione di validazione del barista.
+                qrContainer.innerHTML = '';
+                const scanUrl = `${window.location.origin}/tag.html?u=${fields.username_system}&action=valida`;
+                new QRCode(qrContainer, { text: scanUrl, width: 160, height: 160, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+                
+                overlay.style.display = 'flex';
+                
+                // Impediamo lo scroll dietro la modale
+                document.body.style.overflow = 'hidden';
+            }
+        }
+    }
+}
+
+function chiudiQPLanding() {
+    const overlay = document.getElementById('qp-landing-overlay');
+    if (overlay) overlay.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Ripristiniamo lo scroll
 }
 // ============================================================
 // QUICK QR SCANNER (LUXURY TRIGGER)
