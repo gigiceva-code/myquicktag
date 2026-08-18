@@ -1513,7 +1513,7 @@ function apriDettaglio(tipo) {
         const btnCondividiSezione = document.getElementById('btnCondividiLink');
         if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
 
-        const elementi = corpo.children;
+      const elementi = corpo.children;
         Array.from(elementi).forEach((el, index) => {
             el.classList.add('cascade-item');
             el.style.animationDelay = `${index * 0.08}s`; 
@@ -1522,11 +1522,11 @@ function apriDettaglio(tipo) {
             }, 10);
         });
 
-        return;
-    } 
+    }
+    
     backdrop.classList.add('active');
     sheet.classList.add('active');
-}
+} 
 
 function chiudiDettaglio() {
     const sheet = document.getElementById('feature-bottom-sheet');
