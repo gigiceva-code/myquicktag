@@ -889,46 +889,34 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
             <span>ESPLORA TAG</span>
         </div>
 
-        <!-- ============================================================ -->
-        <!-- 2. IL TOTEM DELLE STANZE (LA NUOVA ARCHITETTURA)             -->
-        <!-- ============================================================ -->
-      <div id="mainGrid">
-           <div id="action-bar-features" class="action-bar-container">
-                
-              <div id="action-bar-features" class="action-bar-container">
-                
-                <div class="feature-pill" id="pill-live-status" style="display:none;" onclick="apriDettaglio('status')">
-                    <div class="led-dot" id="pill-status-dot"></div>
-                    <span id="pill-status-text">ONLINE</span>
-                </div>
-
-            </div> 
-            
-            <!-- IDENTITY: Live Status, Flash, Bio, Access Tag -->
-            <button class="room-link" id="room-identity" onclick="apriMacroArea('identity')" style="display:none;">IDENTITY</button>
-            
-            <!-- BUSINESS: Documento PDF (Vetrina) -->
-            <button class="room-link" id="room-business" onclick="apriMacroArea('business')" style="display:none;">BUSINESS</button>
-            
-            <!-- MEDIA: Galleria Immagini -->
-            <button class="room-link" id="room-media" onclick="apriMacroArea('media')" style="display:none;">MEDIA</button>
-            
-            <!-- NETWORK: Sito Web, Social, Contatti -->
-            <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
-         <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
-
-            <button class="room-link" id="room-action-center" onclick="apriMacroArea('action_center')" style="display:none; color: var(--theme-border, #d4af37) !important; font-weight: 500 !important; letter-spacing: 4px !important;">ACTION CENTER</button>
-            
-           <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
-                <span>HOME</span>
+       <!-- ============================================================ -->
+    <!-- 2. IL TOTEM DELLE STANZE                                     -->
+    <!-- ============================================================ -->
+    <div id="mainGrid">
+        
+        <!-- CONTENITORE PILLOLE IN ALTO -->
+        <div id="action-bar-features" class="action-bar-container">
+            <div class="feature-pill" id="pill-live-status" style="display:none;" onclick="apriDettaglio('status')">
+                <div class="led-dot" id="pill-status-dot"></div>
+                <span id="pill-status-text">ONLINE</span>
             </div>
-            
-           <!-- TASTO DI RITORNO HOME (Spinto sul fondo, senza icona) -->
-            <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
-                <span>HOME</span>
-            </div>
-
         </div>
+        
+        <!-- STANZE STANDARD -->
+        <button class="room-link" id="room-identity" onclick="apriMacroArea('identity')" style="display:none;">IDENTITY</button>
+        <button class="room-link" id="room-business" onclick="apriMacroArea('business')" style="display:none;">BUSINESS</button>
+        <button class="room-link" id="room-media" onclick="apriMacroArea('media')" style="display:none;">MEDIA</button>
+        <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
+
+        <!-- QUINTA STANZA: ACTION CENTER -->
+        <button class="room-link" id="room-action-center" onclick="apriMacroArea('action_center')" style="display:none; color: var(--theme-border, #d4af37) !important; font-weight: 500 !important; letter-spacing: 4px !important;">ACTION CENTER</button>
+        
+        <!-- TASTO DI RITORNO HOME -->
+        <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
+            <span>HOME</span>
+        </div>
+
+    </div>
         <!-- ============================================================ -->
         <!-- CTA (Invariate)                                              -->
         <!-- ============================================================ -->
