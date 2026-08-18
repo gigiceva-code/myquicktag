@@ -449,8 +449,8 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-/* Eccezione: Azione Rapida (Call to Action Premium Ghost Button) */
-#room-quick-action {
+/* Eccezione: Azione Rapida e Quick Pass (Call to Action Premium) */
+#room-quick-action, #room-quick-pass {
     background: rgba(255, 255, 255, 0.02) !important;
     border: 1px solid var(--theme-border, #d4af37) !important;
     border-radius: 14px !important;
@@ -462,17 +462,17 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
     transition: transform 0.2s ease, background 0.2s ease !important;
 }
-#room-quick-action i {
+#room-quick-action i, #room-quick-pass i {
     color: var(--theme-border, #d4af37) !important;
     margin-right: 6px !important;
     transition: color 0.2s ease !important;
 }
-#room-quick-action:active {
+#room-quick-action:active, #room-quick-pass:active {
     background: var(--theme-border, #d4af37) !important;
     color: #000000 !important;
     transform: scale(0.96) !important;
 }
-#room-quick-action:active i {
+#room-quick-action:active i, #room-quick-pass:active i {
     color: #000000 !important;
 }
           /* Stile per la freccia di ritorno in vetrina */
@@ -932,8 +932,7 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
                     <span id="pill-flash-text">PROMO</span>
                 </div>
             </div>
-          <!-- CONTENITORE QUICK PASS (Si anima insieme agli altri) -->
-            <div id="quickpass-container" style="width: 100%; display: none;"></div>
+         
             
             <!-- IDENTITY: Live Status, Flash, Bio, Access Tag -->
             <button class="room-link" id="room-identity" onclick="apriMacroArea('identity')" style="display:none;">IDENTITY</button>
@@ -946,6 +945,8 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
             
             <!-- NETWORK: Sito Web, Social, Contatti -->
             <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
+          <!-- 🎁 IL NUOVO QUICK PASS (Innato, stile gemello) -->
+<button class="room-link" id="room-quick-pass" onclick="apriDettaglio('quickpass')" style="display:none;"><i class="fas fa-gift"></i> QUICK PASS</button>
 
             <!-- LA QUICK ACTION (Elevata a Stanza) -->
             <button class="room-link" id="room-quick-action" onclick="eseguiQuickAction()" style="display:none;">⚡ AZIONE RAPIDA</button>
@@ -1498,48 +1499,42 @@ function apriDettaglio(tipo) {
             </div>
         `;
     }
-    else if (tipo === 'quickpass') {
+   else if (tipo === 'quickpass') {
         const premioA = cacheDatiUtente.quickpass_premio_a;
         const premioB = cacheDatiUtente.quickpass_premio_b;
 
-        // Header Modale in tinta unita con il tema dinamico
-        icon.style.background = 'rgba(255, 255, 255, 0.03)';
-        icon.style.border = '1px solid var(--theme-border, #d4af37)';
-        icon.innerHTML = `<i class="fas fa-ticket-alt" style="color: var(--theme-border, #d4af37);"></i>`;
+        icon.style.background = 'transparent';
+        icon.style.border = 'none';
+        icon.innerHTML = `<i class="fas fa-gift" style="color: var(--theme-border, #d4af37); font-size: 1.4rem;"></i>`;
         title.innerText = 'QUICK PASS';
         title.style.color = 'var(--theme-border, #d4af37)';
 
-        // Generazione del Link WhatsApp
         const urlTagCorrente = window.location.href.split('?')[0]; 
         const linkCondivisione = `${urlTagCorrente}?qp_ref=invito`;
-        const testoWhatsApp = encodeURIComponent(`Ho un regalo per te: ${premioB}! 🎁\n\nMostra questo Quick Pass alla cassa per sbloccarlo: ${linkCondivisione}`);
+        const testoWhatsApp = encodeURIComponent(`Ti ho regalato: ${premioB}! 🎁\n\nMostra questo Quick Pass alla cassa per sbloccarlo: ${linkCondivisione}`);
         const apiWhatsApp = `https://wa.me/?text=${testoWhatsApp}`;
 
-        // Corpo Modale Luxury
         body.innerHTML = `
-            <div style="display: flex; flex-direction: column; width: 100%; align-items: center;">
+            <div style="display: flex; flex-direction: column; width: 100%; align-items: center; gap: 24px; padding-top: 10px;">
                 
-                <div style="text-align:center; padding:10px 0 15px 0; font-size:0.95rem; font-weight:300; color:rgba(255,255,255,0.7); line-height:1.6;">
-                    Condividi la tag con un amico e regalagli <strong style="color:#fff; font-weight: 500;">${premioB}</strong>.
-                    <br><br>Quando lui lo utilizzerà, tu sbloccherai:
+                <div style="text-align:center; font-size:0.95rem; font-weight:300; color:#e8e8ed; line-height:1.6;">
+                    Regala <strong style="color:#fff; font-weight: 500;">${premioB}</strong> a un amico.<br>
+                    Quando lo utilizzerà, tu sbloccherai:
                 </div>
 
-                <!-- Box Premio (Design Tratteggiato / Coupon) -->
-                <div style="width: 100%; margin: 5px 0 20px 0; padding: 20px; border: 1px dashed var(--theme-border, rgba(212, 175, 55, 0.5)); border-radius: 12px; background: rgba(255, 255, 255, 0.02); text-align: center; box-shadow: inset 0 0 15px rgba(0,0,0,0.5);">
-                    <i class="fas fa-gift" style="color: var(--theme-border, #d4af37); margin-bottom: 12px; font-size: 1.2rem;"></i>
-                    <div style="color: var(--theme-border, #d4af37); font-size: 0.95rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">
-                        ${premioA}
-                    </div>
+                <!-- Box Premio Luxury (Vetro Scuro con accento) -->
+                <div style="width: 100%; padding: 24px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-left: 2px solid var(--theme-border, #d4af37); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    <span style="font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px;">IL TUO PREMIO</span>
+                    <span style="font-size: 1rem; font-weight: 600; color: #fff; letter-spacing: 1px; text-align: center; text-transform: uppercase;">${premioA}</span>
                 </div>
                 
                 <!-- Bottone Ghost WhatsApp -->
-                <a href="${apiWhatsApp}" target="_blank" rel="noopener noreferrer" style="width: 100%; padding: 18px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--theme-border, #d4af37); border-radius: 12px; color: #fff; font-size: 0.85rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.2s;">
+                <a href="${apiWhatsApp}" target="_blank" rel="noopener noreferrer" style="width: 100%; padding: 18px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--theme-border, #d4af37); border-radius: 12px; color: #fff; font-size: 0.85rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.2s;">
                     <i class="fab fa-whatsapp" style="font-size: 1.2rem; color: var(--theme-border, #d4af37);"></i> INVITA E SBLOCCA
                 </a>
             </div>
         `;
     }
-
     backdrop.classList.add('active');
     sheet.classList.add('active');
 }
