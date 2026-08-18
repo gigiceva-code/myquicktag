@@ -844,6 +844,32 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
 .btn-salva-rubrica:active {
     transform: scale(0.96) !important;
 }
+    .logo-animato path, 
+.logo-animato circle, 
+.logo-animato line {
+    stroke: var(--theme-border, #d4af37);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: disegnaLogo 2.5s ease-in-out infinite;
+}
+/* ========================================================== */
+/* ANIMAZIONE LOGO MYQUICKTAG (TRACCIAMENTO Q + @)              */
+/* ========================================================== */
+@keyframes disegnaLogo {
+    0% {
+        stroke-dashoffset: 500;
+    }
+    50% {
+        stroke-dashoffset: 0;
+        fill: transparent;
+    }
+    100% {
+        stroke-dashoffset: 0;
+        fill: var(--theme-border, #d4af37);
+    }
+}       
     </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>  
@@ -900,6 +926,12 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
                 <div class="led-dot" id="pill-status-dot"></div>
                 <span id="pill-status-text">ONLINE</span>
             </div>
+        
+        <div class="feature-pill" id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="display: flex; gap: 6px; cursor: pointer; color: #f5f5f7; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                <i class="far fa-bookmark"></i>
+                <span style="font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">SALVA POCKET</span>
+            </div>
+
         </div>
         
         <!-- STANZE STANDARD -->
@@ -2306,6 +2338,43 @@ window.addEventListener('popstate', (e) => {
         });
     }
 });
+    // ============================================================
+// GESTIONE TAG POCKET (LOCAL STORAGE PER GUEST E VISITATORI)
+// ============================================================
+function salvaNelPocketCorrente() {
+    const usernameTag = cacheDatiUtente.username_system || window.location.pathname.split('u=')[1] || "Sconosciuto";
+    const nomeVisualizzato = cacheDatiUtente.username_display || cacheDatiUtente.username_system || "MyQuickTag";
+    
+    let pocketLocale = [];
+    try {
+        pocketLocale = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
+    } catch(e) {
+        pocketLocale = [];
+    }
+    
+    const giaEsistente = pocketLocale.find(item => item.username === usernameTag);
+    
+    if (!giaEsistente) {
+        pocketLocale.push({
+            username: usernameTag,
+            nome: nomeVisualizzato,
+            url: window.location.href.split('?')[0] + '?u=' + usernameTag,
+            dataSalvataggio: new Date().toISOString()
+        });
+        localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
+        mostraToast("Aggiunto al tuo Pocket ✓");
+        
+        // Cambia visivamente il bottone se esiste sulla pagina
+        const btnPocket = document.getElementById('btn-salva-pocket');
+        if (btnPocket) {
+            btnPocket.style.color = "var(--theme-border, #d4af37)";
+            btnPocket.style.borderColor = "var(--theme-border, #d4af37)";
+            btnPocket.innerHTML = '<i class="fas fa-bookmark"></i> SALVATO';
+        }
+    } else {
+        mostraToast("Tag già presente nel Pocket");
+    }
+}
 
 // ============================================================
 // CONDIVISIONE, TOAST E CHECKOUT
