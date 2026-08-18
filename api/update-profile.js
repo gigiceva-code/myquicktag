@@ -18,23 +18,24 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-    // 2. Definizione Campi Nativi (LISTA VIP AGGIORNATA AL MILLIMETRO)
+    // 2. Definizione Campi Nativi (LA LISTA VIP ORA CONTIENE TUTTO)
     const fieldsToSave = {};
     const nativeFields = [
-      "username_display", "bio", "plan", "digital_style", "digital_layout", "stato", 
+      "username_display", "bio", "cv", "plan", "digital_style", "digital_layout", "stato", 
       "password", "email", "modulo_vcf", "sito_web", 
       "quick_action_tipo", "quick_action_label", "quick_action_url", "avatar_url",
-      "live_status_color", "live_status_text", 
+      "live_status_color", "live_status_text", "live_status_action_type", "live_status_action_label", "live_status_action_url",
       "flash_text", "flash_expiry", 
       "pdf_label", "pdf_url", 
-      "gallery_data", "draft_json", "sedi_json" 
+      "gallery_data", "draft_json", "sedi_json",
+      "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza"
     ];
 
     nativeFields.forEach(f => {
-      if (body[f] !== undefined) {
+      if (body[f] !== undefined && body[f] !== null) {
         if (typeof body[f] === 'string') {
           // Non distruggere i campi che contengono JSON o array testuali
-          let valueClean = f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data'
+          let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data')
           ? body[f].trim() 
           : body[f].replace(/['"]+/g, '').trim(); 
           
@@ -49,7 +50,13 @@ export default async function handler(req, res) {
             if (f === "stato") valueClean = valueClean.toLowerCase();
             if (f === "quick_action_tipo") valueClean = valueClean.toLowerCase();
             
-            fieldsToSave[f] = valueClean;
+            // Regola di sicurezza: Airtable vuole numeri puri in questo campo, non stringhe
+            if (f === "quickpass_limite") {
+                const parsed = parseInt(valueClean, 10);
+                if (!isNaN(parsed)) fieldsToSave[f] = parsed;
+            } else {
+                fieldsToSave[f] = valueClean;
+            }
           }
         } else {
           if (f === 'modulo_vcf' && typeof body[f] === 'object') {
@@ -62,7 +69,7 @@ export default async function handler(req, res) {
     });
 
     // 3. config_canali — usa quello inviato dal client se presente
-    if (body.config_canali !== undefined) {
+    if (body.config_canali !== undefined && body.config_canali !== null) {
       fieldsToSave.config_canali = typeof body.config_canali === 'object' ? JSON.stringify(body.config_canali) : body.config_canali;
     }
 
