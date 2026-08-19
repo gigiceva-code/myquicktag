@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- CONFIGURAZIONE MONOLITO E COLORI --- */
         :root {
             --bg-esterno: #0d0d0f;       
             --bg-chassis: #000000;       
@@ -19,85 +18,81 @@
             --text-sec: #86868b;
         }
 
-        /* --- RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         html { height: 100%; overscroll-behavior-y: none; }
         body { background-color: var(--bg-esterno); color: var(--text-main); display: flex; align-items: center; justify-content: center; min-height: 100dvh; overflow: hidden; }
 
-        /* --- CHASSIS IDENTICO ALLA TAG --- */
+        /* LO CHASSIS (Identico alla Tag) */
         .app-container {
             width: calc(100% - 32px); max-width: 410px; height: calc(100svh - 32px); max-height: 840px;
-            background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.4); 
-            border-radius: 28px; padding: 35px 24px 20px 24px; display: flex; flex-direction: column;
+            background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.3); 
+            border-radius: 28px; padding: 40px 24px 20px 24px; display: flex; flex-direction: column;
             box-shadow: 0 30px 70px rgba(0,0,0,0.9); position: relative;
             animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.98) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-        /* --- HEADER & RICERCA LUXURY --- */
+        /* HEADER & SEARCH (Solo linee e testo) */
         .pocket-header { text-align: center; margin-bottom: 25px; flex-shrink: 0; }
-        .pocket-header h1 { font-size: 0.8rem; font-weight: 300; letter-spacing: 5px; color: #fff; text-transform: uppercase; margin-bottom: 25px; }
+        .pocket-header h1 { font-size: 0.7rem; font-weight: 300; letter-spacing: 6px; color: #fff; text-transform: uppercase; margin-bottom: 30px; opacity: 0.8; }
         
-        .search-wrapper { position: relative; width: 100%; }
-        .search-wrapper i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 0.9rem; }
+        .search-wrapper { position: relative; width: 100%; padding-bottom: 10px; }
+        .search-wrapper i { position: absolute; left: 0; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 0.8rem; font-weight: 300; }
         .search-input {
-            width: 100%; background: rgba(20, 20, 22, 0.8); border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 16px 16px 16px 45px; border-radius: 16px; color: #fff; font-size: 0.9rem; font-weight: 300;
-            outline: none; transition: all 0.3s ease; letter-spacing: 1px;
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 10px 12px 30px; color: #fff; font-size: 0.85rem; font-weight: 300;
+            outline: none; transition: border-color 0.3s ease; letter-spacing: 1px;
         }
-        .search-input:focus { border-color: rgba(212, 175, 55, 0.5); background: rgba(255, 255, 255, 0.05); }
-        .search-input::placeholder { color: var(--text-sec); font-weight: 300; letter-spacing: 1px; }
+        .search-input:focus { border-bottom-color: rgba(212, 175, 55, 0.5); }
+        .search-input::placeholder { color: var(--text-sec); font-weight: 300; letter-spacing: 1px; font-size: 0.8rem; }
 
-        /* --- LISTA CONTATTI (MOTORE LIQUIDO) --- */
+        /* LISTA FLUIDA */
         .pocket-list {
-            flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+            flex: 1; overflow-y: auto; display: flex; flex-direction: column;
             padding-bottom: 20px; -ms-overflow-style: none; scrollbar-width: none;
             mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
             -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
         }
         .pocket-list::-webkit-scrollbar { display: none; }
 
-        /* --- CARD CONTATTO (GLASSMORPHISM MINIMAL) --- */
-        .contact-card {
-            display: flex; align-items: center; gap: 15px; padding: 14px 16px;
-            background: rgba(20, 20, 22, 0.4); backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 16px;
-            text-decoration: none; cursor: pointer; transition: transform 0.2s, background 0.2s, border-color 0.2s;
-            animation: scivolaSu 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(15px);
+        /* LA RIGA DEL CONTATTO (Niente scatole) */
+        .contact-row {
+            display: flex; align-items: center; gap: 18px; padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            text-decoration: none; cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+            animation: scivolaSu 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(15px);
         }
-        .contact-card:active { transform: scale(0.96); background: rgba(255, 255, 255, 0.05); border-color: rgba(212, 175, 55, 0.3); }
+        .contact-row:active { transform: scale(0.97); opacity: 0.6; }
+        .contact-row:last-child { border-bottom: none; }
 
+        /* AVATAR MINIMALE */
         .avatar-ring {
-            width: 46px; height: 46px; border-radius: 50%; background: #000;
+            width: 44px; height: 44px; border-radius: 50%; background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center;
             overflow: hidden; flex-shrink: 0;
         }
-        .avatar-ring img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar-ring i { font-size: 1.2rem; color: rgba(255,255,255,0.2); }
+        .avatar-ring img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%) contrast(1.1); }
+        .avatar-ring span { font-size: 1rem; font-weight: 300; color: #fff; letter-spacing: 0; }
 
-        .contact-data { flex: 1; display: flex; flex-direction: column; overflow: hidden; justify-content: center; }
-        .contact-name { font-size: 0.95rem; font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
-        .contact-username { font-size: 0.75rem; font-weight: 300; color: var(--text-sec); letter-spacing: 1px; margin-top: 4px; }
+        /* TESTI CHIRURGICI */
+        .contact-data { flex: 1; display: flex; flex-direction: column; overflow: hidden; justify-content: center; gap: 4px; }
+        .contact-name { font-size: 0.9rem; font-weight: 400; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 1px; }
+        .contact-username { font-size: 0.65rem; font-weight: 300; color: var(--text-sec); letter-spacing: 2px; text-transform: uppercase; }
 
-        .contact-icon { color: rgba(255, 255, 255, 0.15); font-size: 0.85rem; padding-left: 10px; transition: color 0.3s; }
-        .contact-card:active .contact-icon { color: var(--accent-gold); }
+        .contact-icon { color: rgba(255, 255, 255, 0.1); font-size: 0.75rem; font-weight: 300; transition: color 0.3s; }
+        .contact-row:active .contact-icon { color: var(--accent-gold); }
 
-        /* Animazione a cascata per i contatti */
         @keyframes scivolaSu { to { opacity: 1; transform: translateY(0); } }
-        .contact-card:nth-child(1) { animation-delay: 0.1s; }
-        .contact-card:nth-child(2) { animation-delay: 0.15s; }
-        .contact-card:nth-child(3) { animation-delay: 0.2s; }
-        .contact-card:nth-child(4) { animation-delay: 0.25s; }
 
-        /* --- STATO VUOTO (EMPTY STATE) --- */
-        .empty-state { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; animation: fadeStatoVuoto 1s ease forwards 0.3s; }
-        @keyframes fadeStatoVuoto { to { opacity: 0.6; } }
-        .empty-state i { font-size: 2.5rem; margin-bottom: 20px; color: var(--text-sec); opacity: 0.5; }
-        .empty-state p { font-size: 0.8rem; font-weight: 300; line-height: 1.6; letter-spacing: 1.5px; color: var(--text-sec); padding: 0 30px; text-transform: uppercase; }
+        /* EMPTY STATE */
+        .empty-state { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; animation: fadeStatoVuoto 1.5s ease forwards 0.4s; }
+        @keyframes fadeStatoVuoto { to { opacity: 1; } }
+        .empty-state i { font-size: 2rem; margin-bottom: 24px; color: var(--text-sec); font-weight: 300; opacity: 0.3; }
+        .empty-state p { font-size: 0.7rem; font-weight: 300; line-height: 1.8; letter-spacing: 3px; color: var(--text-sec); text-transform: uppercase; opacity: 0.7; }
 
-        /* --- ACTION BAR INFERIORE --- */
-        .bottom-bar { flex-shrink: 0; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center; align-items: center; }
-        .btn-chiudi { background: transparent; border: none; color: var(--text-sec); font-size: 0.7rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; padding: 15px; cursor: pointer; transition: color 0.2s; }
+        /* BOTTOM BAR */
+        .bottom-bar { flex-shrink: 0; padding-top: 10px; display: flex; justify-content: center; align-items: center; }
+        .btn-chiudi { background: transparent; border: none; color: var(--text-sec); font-size: 0.65rem; font-weight: 300; letter-spacing: 5px; text-transform: uppercase; padding: 15px; cursor: pointer; transition: color 0.2s; }
         .btn-chiudi:active { color: #fff; }
 
     </style>
@@ -106,57 +101,30 @@
 
     <div class="app-container">
         
-        <!-- HEADER POCKET -->
         <div class="pocket-header">
             <h1>IL MIO POCKET</h1>
             <div class="search-wrapper">
                 <i class="fas fa-search"></i>
-                <input type="text" class="search-input" id="cerca-contatto" placeholder="Cerca nel pocket..." autocomplete="off">
+                <input type="text" class="search-input" id="cerca-contatto" placeholder="Cerca un contatto..." autocomplete="off">
             </div>
         </div>
 
-        <!-- LISTA CONTATTI DINAMICA -->
         <div class="pocket-list" id="lista-pocket">
-            
-            <!-- ESEMPIO 1 (Con Immagine) -->
-            <a href="#" class="contact-card">
-                <div class="avatar-ring">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=150&h=150" alt="Avatar">
-                </div>
-                <div class="contact-data">
-                    <span class="contact-name">Giuseppe Rossi</span>
-                    <span class="contact-username">@GIUSEPPEROSSI</span>
-                </div>
-                <i class="fas fa-chevron-right contact-icon"></i>
-            </a>
-
-            <!-- ESEMPIO 2 (Senza Immagine, icona di default) -->
-            <a href="#" class="contact-card">
-                <div class="avatar-ring">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="contact-data">
-                    <span class="contact-name">Le Camere della Nonna</span>
-                    <span class="contact-username">@LECAMEREDELLANONNA</span>
-                </div>
-                <i class="fas fa-chevron-right contact-icon"></i>
-            </a>
-
+            <!-- I contatti verranno iniettati qui dal JS -->
         </div>
 
-        <!-- STATO VUOTO (Nascosto di default) -->
         <div class="empty-state" id="pocket-vuoto">
-            <i class="far fa-address-book"></i>
-            <p>Il tuo pocket<br>è attualmente vuoto</p>
+            <i class="far fa-bookmark"></i>
+            <p>Il tuo archivio<br>è vuoto</p>
         </div>
 
-        <!-- TASTO CHIUSURA -->
         <div class="bottom-bar">
             <button class="btn-chiudi" onclick="history.back()">CHIUDI</button>
         </div>
 
     </div>
-    <script>
+
+<script>
     document.addEventListener("DOMContentLoaded", () => {
         caricaPocket();
         configuraRicerca();
@@ -166,47 +134,39 @@
         const contenitoreLista = document.getElementById('lista-pocket');
         const statoVuoto = document.getElementById('pocket-vuoto');
         
-        // Pulisce l'HTML statico di esempio
         contenitoreLista.innerHTML = '';
-        
         let contattiSalvati = [];
+        
         try {
-            // Peschiamo i dati salvati dal telefono
             contattiSalvati = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
         } catch(e) {
             console.error("Errore lettura pocket:", e);
         }
 
-        // SE IL POCKET E' VUOTO
         if (contattiSalvati.length === 0) {
             statoVuoto.style.display = 'flex';
             return;
         }
 
-        // SE CI SONO CONTATTI, NASCONDI LO STATO VUOTO E CREA LE CARD
         statoVuoto.style.display = 'none';
-
-        // Ordina alfabeticamente per nome (dettaglio di classe)
         contattiSalvati.sort((a, b) => a.nome.localeCompare(b.nome));
 
         contattiSalvati.forEach((contatto, index) => {
             const card = document.createElement('a');
             card.href = contatto.url;
-            card.className = 'contact-card';
-            
-            // Animazione a cascata fluida per ogni card
-            card.style.animationDelay = `${index * 0.05}s`;
+            card.className = 'contact-row'; 
+            card.style.animationDelay = `${index * 0.08}s`; // Ritardo per l'effetto cascata morbido
 
-            // Creiamo un'icona monogramma elegante con l'iniziale del nome
-            const iniziale = contatto.nome ? contatto.nome.charAt(0).toUpperCase() : '<i class="fas fa-user"></i>';
+            // Iniziale pulitissima (bianca su sfondo nero) se manca la foto
+            const iniziale = contatto.nome ? contatto.nome.charAt(0).toUpperCase() : '';
 
             card.innerHTML = `
                 <div class="avatar-ring">
-                    <span style="font-size: 1.25rem; font-weight: 400; color: var(--accent-gold);">${iniziale}</span>
+                    <span>${iniziale}</span>
                 </div>
                 <div class="contact-data">
                     <span class="contact-name">${contatto.nome}</span>
-                    <span class="contact-username">@${contatto.username.toUpperCase()}</span>
+                    <span class="contact-username">@${contatto.username}</span>
                 </div>
                 <i class="fas fa-chevron-right contact-icon"></i>
             `;
@@ -221,22 +181,20 @@
 
         inputRicerca.addEventListener('input', (e) => {
             const termine = e.target.value.toLowerCase().trim();
-            const cards = document.querySelectorAll('.contact-card');
+            const righe = document.querySelectorAll('.contact-row');
             
-            cards.forEach(card => {
-                const nome = card.querySelector('.contact-name').textContent.toLowerCase();
-                const username = card.querySelector('.contact-username').textContent.toLowerCase();
+            righe.forEach(riga => {
+                const nome = riga.querySelector('.contact-name').textContent.toLowerCase();
+                const username = riga.querySelector('.contact-username').textContent.toLowerCase();
                 
-                // Cerca sia nel nome che nell'username
                 if (nome.includes(termine) || username.includes(termine)) {
-                    card.style.display = 'flex';
+                    riga.style.display = 'flex';
                 } else {
-                    card.style.display = 'none';
+                    riga.style.display = 'none';
                 }
             });
         });
     }
 </script>
-
 </body>
 </html>
