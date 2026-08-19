@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050505">
+    <title>Il mio Pocket - MyQuickTag</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- CONFIGURAZIONE MONOLITO E COLORI --- */
+        :root {
+            --bg-esterno: #0d0d0f;       
+            --bg-chassis: #000000;       
+            --accent-gold: #d4af37;      
+            --text-main: #f5f5f7;
+            --text-sec: #86868b;
+        }
+
+        /* --- RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        html { height: 100%; overscroll-behavior-y: none; }
+        body { background-color: var(--bg-esterno); color: var(--text-main); display: flex; align-items: center; justify-content: center; min-height: 100dvh; overflow: hidden; }
+
+        /* --- CHASSIS IDENTICO ALLA TAG --- */
+        .app-container {
+            width: calc(100% - 32px); max-width: 410px; height: calc(100svh - 32px); max-height: 840px;
+            background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.4); 
+            border-radius: 28px; padding: 35px 24px 20px 24px; display: flex; flex-direction: column;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.9); position: relative;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.98) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+        /* --- HEADER & RICERCA LUXURY --- */
+        .pocket-header { text-align: center; margin-bottom: 25px; flex-shrink: 0; }
+        .pocket-header h1 { font-size: 0.8rem; font-weight: 300; letter-spacing: 5px; color: #fff; text-transform: uppercase; margin-bottom: 25px; }
+        
+        .search-wrapper { position: relative; width: 100%; }
+        .search-wrapper i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 0.9rem; }
+        .search-input {
+            width: 100%; background: rgba(20, 20, 22, 0.8); border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px 16px 16px 45px; border-radius: 16px; color: #fff; font-size: 0.9rem; font-weight: 300;
+            outline: none; transition: all 0.3s ease; letter-spacing: 1px;
+        }
+        .search-input:focus { border-color: rgba(212, 175, 55, 0.5); background: rgba(255, 255, 255, 0.05); }
+        .search-input::placeholder { color: var(--text-sec); font-weight: 300; letter-spacing: 1px; }
+
+        /* --- LISTA CONTATTI (MOTORE LIQUIDO) --- */
+        .pocket-list {
+            flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+            padding-bottom: 20px; -ms-overflow-style: none; scrollbar-width: none;
+            mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+        }
+        .pocket-list::-webkit-scrollbar { display: none; }
+
+        /* --- CARD CONTATTO (GLASSMORPHISM MINIMAL) --- */
+        .contact-card {
+            display: flex; align-items: center; gap: 15px; padding: 14px 16px;
+            background: rgba(20, 20, 22, 0.4); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 16px;
+            text-decoration: none; cursor: pointer; transition: transform 0.2s, background 0.2s, border-color 0.2s;
+            animation: scivolaSu 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(15px);
+        }
+        .contact-card:active { transform: scale(0.96); background: rgba(255, 255, 255, 0.05); border-color: rgba(212, 175, 55, 0.3); }
+
+        .avatar-ring {
+            width: 46px; height: 46px; border-radius: 50%; background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center;
+            overflow: hidden; flex-shrink: 0;
+        }
+        .avatar-ring img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-ring i { font-size: 1.2rem; color: rgba(255,255,255,0.2); }
+
+        .contact-data { flex: 1; display: flex; flex-direction: column; overflow: hidden; justify-content: center; }
+        .contact-name { font-size: 0.95rem; font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
+        .contact-username { font-size: 0.75rem; font-weight: 300; color: var(--text-sec); letter-spacing: 1px; margin-top: 4px; }
+
+        .contact-icon { color: rgba(255, 255, 255, 0.15); font-size: 0.85rem; padding-left: 10px; transition: color 0.3s; }
+        .contact-card:active .contact-icon { color: var(--accent-gold); }
+
+        /* Animazione a cascata per i contatti */
+        @keyframes scivolaSu { to { opacity: 1; transform: translateY(0); } }
+        .contact-card:nth-child(1) { animation-delay: 0.1s; }
+        .contact-card:nth-child(2) { animation-delay: 0.15s; }
+        .contact-card:nth-child(3) { animation-delay: 0.2s; }
+        .contact-card:nth-child(4) { animation-delay: 0.25s; }
+
+        /* --- STATO VUOTO (EMPTY STATE) --- */
+        .empty-state { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; animation: fadeStatoVuoto 1s ease forwards 0.3s; }
+        @keyframes fadeStatoVuoto { to { opacity: 0.6; } }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 20px; color: var(--text-sec); opacity: 0.5; }
+        .empty-state p { font-size: 0.8rem; font-weight: 300; line-height: 1.6; letter-spacing: 1.5px; color: var(--text-sec); padding: 0 30px; text-transform: uppercase; }
+
+        /* --- ACTION BAR INFERIORE --- */
+        .bottom-bar { flex-shrink: 0; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center; align-items: center; }
+        .btn-chiudi { background: transparent; border: none; color: var(--text-sec); font-size: 0.7rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; padding: 15px; cursor: pointer; transition: color 0.2s; }
+        .btn-chiudi:active { color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- HEADER POCKET -->
+        <div class="pocket-header">
+            <h1>IL MIO POCKET</h1>
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-input" id="cerca-contatto" placeholder="Cerca nel pocket..." autocomplete="off">
+            </div>
+        </div>
+
+        <!-- LISTA CONTATTI DINAMICA -->
+        <div class="pocket-list" id="lista-pocket">
+            
+            <!-- ESEMPIO 1 (Con Immagine) -->
+            <a href="#" class="contact-card">
+                <div class="avatar-ring">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=150&h=150" alt="Avatar">
+                </div>
+                <div class="contact-data">
+                    <span class="contact-name">Giuseppe Rossi</span>
+                    <span class="contact-username">@GIUSEPPEROSSI</span>
+                </div>
+                <i class="fas fa-chevron-right contact-icon"></i>
+            </a>
+
+            <!-- ESEMPIO 2 (Senza Immagine, icona di default) -->
+            <a href="#" class="contact-card">
+                <div class="avatar-ring">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="contact-data">
+                    <span class="contact-name">Le Camere della Nonna</span>
+                    <span class="contact-username">@LECAMEREDELLANONNA</span>
+                </div>
+                <i class="fas fa-chevron-right contact-icon"></i>
+            </a>
+
+        </div>
+
+        <!-- STATO VUOTO (Nascosto di default) -->
+        <div class="empty-state" id="pocket-vuoto">
+            <i class="far fa-address-book"></i>
+            <p>Il tuo pocket<br>è attualmente vuoto</p>
+        </div>
+
+        <!-- TASTO CHIUSURA -->
+        <div class="bottom-bar">
+            <button class="btn-chiudi" onclick="history.back()">CHIUDI</button>
+        </div>
+
+    </div>
+
+</body>
+</html>
