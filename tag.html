@@ -2377,8 +2377,8 @@ window.addEventListener('popstate', (e) => {
         });
     }
 });
-    // ============================================================
-// GESTIONE TAG POCKET (LOCAL STORAGE PER GUEST E VISITATORI)
+ // ============================================================
+// GESTIONE TAG POCKET CON PROMPT ESPLICITO
 // ============================================================
 function salvaNelPocketCorrente() {
     const usernameTag = cacheDatiUtente.username_system || window.location.pathname.split('u=')[1] || "Sconosciuto";
@@ -2394,6 +2394,7 @@ function salvaNelPocketCorrente() {
     const giaEsistente = pocketLocale.find(item => item.username === usernameTag);
     
     if (!giaEsistente) {
+        // 1. NON ESISTE: LO SALVIAMO IN MEMORIA
         pocketLocale.push({
             username: usernameTag,
             nome: nomeVisualizzato,
@@ -2401,25 +2402,68 @@ function salvaNelPocketCorrente() {
             dataSalvataggio: new Date().toISOString()
         });
         localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
-        mostraToast("Tag salvata nel Pocket ✓");
         
-       // Cambia visivamente il bottone in alto a destra
+        // Aggiorniamo visivamente il led
         const btnPocketText = document.getElementById('testo-salva-top');
         const dotSalva = document.getElementById('dot-salva');
-        
         if (btnPocketText && dotSalva) {
             btnPocketText.innerHTML = 'SALVATO ✓';
             btnPocketText.style.color = 'var(--theme-border, #d4af37)';
-            
-            // Ferma la pulsazione e accende il led d'oro fisso
             dotSalva.style.animation = 'none';
             dotSalva.style.backgroundColor = 'var(--theme-border, #d4af37)';
             dotSalva.style.boxShadow = '0 0 8px var(--theme-border, #d4af37)';
         }
+        
+        // Chiediamo se vuole vederlo
+        mostraPromptPocket("TAG SALVATA", "Contatto salvato con successo. Vuoi aprire il tuo Pocket?");
     } else {
-        mostraToast("Tag già presente nel Pocket");
+        // 2. ESISTE GIA': CHIEDIAMO COSA VUOLE FARE
+        mostraPromptPocket("TAG GIÀ PRESENTE", "Questa tag è già nel tuo archivio. Vuoi aprire il Pocket?");
     }
 }
+
+// MOTORE DEL POPUP LUXURY (Generato dinamicamente)
+function mostraPromptPocket(titolo, messaggio) {
+    let prompt = document.getElementById('pocket-prompt-overlay');
+    
+    // Se non esiste ancora, lo creiamo al volo
+    if (!prompt) {
+        prompt = document.createElement('div');
+        prompt.id = 'pocket-prompt-overlay';
+        prompt.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; z-index: 99999; opacity: 0; transition: opacity 0.3s ease; padding: 20px; box-sizing: border-box;';
+        prompt.innerHTML = `
+            <div style="background: rgba(15, 15, 18, 0.95); border: 1px solid var(--theme-border, #d4af37); border-radius: 24px; padding: 32px 24px; text-align: center; width: 100%; max-width: 340px; box-shadow: 0 25px 50px rgba(0,0,0,0.6); transform: scale(0.95); transition: transform 0.3s ease; display: flex; flex-direction: column; align-items: center;">
+                <i class="far fa-address-book" style="font-size: 3rem; color: var(--theme-border, #d4af37); margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));"></i>
+                <h3 id="pocket-prompt-titolo" style="color: #fff; font-size: 1.05rem; font-weight: 500; margin-bottom: 12px; letter-spacing: 2px; text-transform: uppercase;"></h3>
+                <p id="pocket-prompt-msg" style="color: #86868b; font-size: 0.95rem; font-weight: 300; line-height: 1.6; margin-bottom: 28px;"></p>
+                <div style="display: flex; gap: 12px; width: 100%;">
+                    <button onclick="chiudiPromptPocket()" style="flex: 1; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 0.85rem; font-weight: 400; letter-spacing: 2px; cursor: pointer; transition: background 0.2s;">CHIUDI</button>
+                    <button onclick="window.location.href='/pocket.html'" style="flex: 1; padding: 14px; background: #fff; border: none; border-radius: 12px; color: #000; font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; transition: transform 0.2s;">APRI</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(prompt);
+    }
+    
+    // Inseriamo il testo dinamico
+    document.getElementById('pocket-prompt-titolo').innerText = titolo;
+    document.getElementById('pocket-prompt-msg').innerText = messaggio;
+    
+    // Lo mostriamo con una transizione fluida
+    prompt.style.display = 'flex';
+    void prompt.offsetWidth; // Forza il browser a registrare il display:flex prima di animare
+    prompt.style.opacity = '1';
+    prompt.querySelector('div').style.transform = 'scale(1)';
+}
+
+function chiudiPromptPocket() {
+    const prompt = document.getElementById('pocket-prompt-overlay');
+    if (prompt) {
+        prompt.style.opacity = '0';
+        prompt.querySelector('div').style.transform = 'scale(0.95)';
+        setTimeout(() => { prompt.style.display = 'none'; }, 300);
+    }
+} 
 
 // ============================================================
 // CONDIVISIONE, TOAST E CHECKOUT
