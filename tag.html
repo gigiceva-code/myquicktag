@@ -886,7 +886,7 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
    <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
         
         <!-- TOP RIGHT BAR: SALVA TAG + QR -->
-        <div style="position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 15px; z-index: 100;">
+       <div id="mqt-top-bar" style="position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 15px; z-index: 9999;">
             
             <style>
             @keyframes pulseWhiteDot {
@@ -1878,6 +1878,9 @@ function apriMacroArea(area, skipHistory = false) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
+    // --- ACCENDI LA TOP BAR ---
+    const topBar = document.getElementById('mqt-top-bar');
+    if (topBar) topBar.style.display = 'flex';
     
     // Salva il riferimento per il tasto indietro
     macroAreaCorrente = area; 
@@ -1990,6 +1993,10 @@ function apriSezione(tipo) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
+    
+    // --- SPEGNI LA TOP BAR NEL LIVELLO PROFONDO ---
+    const topBar = document.getElementById('mqt-top-bar');
+    if (topBar) topBar.style.display = 'none';
     
     document.getElementById('testo-chiudi').innerText = 'INDIETRO';
     document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
@@ -2328,6 +2335,12 @@ window.addEventListener('popstate', (e) => {
     const lightbox = document.getElementById('mqt-lightbox');
     const overlaySezione = document.getElementById('overlaySezione');
     const container = document.getElementById('profile-content');
+    
+    // --- RIACCENDI LA TOP BAR SE NON SIAMO NEL LIVELLO PROFONDO ---
+    const topBar = document.getElementById('mqt-top-bar');
+    if (topBar && hash !== '#dettaglio' && hash !== '#lightbox') {
+        topBar.style.display = 'flex';
+    }
 
     // Livello 3 (Profondo): Modale Foto o Dettaglio Features
     if (lightbox && lightbox.style.display === 'flex') {
