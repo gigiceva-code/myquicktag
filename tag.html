@@ -882,11 +882,12 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
     <!-- ============================================================ -->
     <!-- 1. CHASSIS PRINCIPALE E SIGILLO ORBITALE                     -->
     <!-- ============================================================ -->
-   <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
+  <!-- ============================================================ -->
+    <!-- LAYER VETRO PER LA TOP BAR (Galleggia fisso sopra le animazioni) -->
+    <!-- ============================================================ -->
+    <div id="mqt-top-bar-layer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: calc(100% - 32px); max-width: 410px; height: calc(100svh - 32px); max-height: 840px; pointer-events: none; z-index: 10000;">
         
-        <!-- TOP RIGHT BAR: SALVA TAG + QR -->
-       <div id="mqt-top-bar" style="position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 15px; z-index: 9999;">
-            
+        <div id="mqt-top-bar" style="position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 15px; pointer-events: auto;">
             <style>
             @keyframes pulseWhiteDot {
                 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); }
@@ -901,12 +902,18 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
                 <span id="testo-salva-top" style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
             </div>
 
-           <!-- Trigger QR Originale (Icona aggiornata) -->
+            <!-- Trigger QR Originale -->
             <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()" style="position: static; margin: 0; padding: 0;">
                 <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
             </div> 
         </div>
 
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 1. CHASSIS PRINCIPALE E SIGILLO ORBITALE                     -->
+    <!-- ============================================================ -->
+    <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
         <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
             
             <!-- IL SIGILLO ORBITALE (Allineato a edit.html) -->
@@ -1877,12 +1884,10 @@ function apriMacroArea(area, skipHistory = false) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
-    // --- ACCENDI LA TOP BAR E SPOSTALA NELL'OVERLAY ---
-    const topBar = document.getElementById('mqt-top-bar');
-    if (topBar) {
-        topBar.style.display = 'flex';
-        overlay.appendChild(topBar); // La teletrasporta fisicamente sopra la stanza
-    }
+    
+    // --- ACCENDI LA TOP BAR (Livello Vetro) ---
+    const topBar = document.getElementById('mqt-top-bar-layer');
+    if (topBar) topBar.style.display = 'block';
     
     // Salva il riferimento per il tasto indietro
     macroAreaCorrente = area; 
@@ -1997,7 +2002,7 @@ function apriSezione(tipo) {
     if (!overlay || !titolo || !corpo) return;
     
     // --- SPEGNI LA TOP BAR NEL LIVELLO PROFONDO ---
-    const topBar = document.getElementById('mqt-top-bar');
+    const topBar = document.getElementById('mqt-top-bar-layer');
     if (topBar) topBar.style.display = 'none';
     
     document.getElementById('testo-chiudi').innerText = 'INDIETRO';
@@ -2338,16 +2343,11 @@ window.addEventListener('popstate', (e) => {
     const overlaySezione = document.getElementById('overlaySezione');
     const container = document.getElementById('profile-content');
     
-  // --- RIACCENDI E RIPOSIZIONA LA TOP BAR NEL LIVELLO CORRETTO ---
-    const topBar = document.getElementById('mqt-top-bar');
+// --- RIACCENDI LA TOP BAR SE NON SIAMO NEL LIVELLO PROFONDO ---
+    const topBar = document.getElementById('mqt-top-bar-layer');
     if (topBar && hash !== '#dettaglio' && hash !== '#lightbox') {
-        topBar.style.display = 'flex';
-        if (hash === '#sezione') {
-            overlaySezione.appendChild(topBar); // Se torni a una Stanza
-        } else {
-            container.appendChild(topBar); // Se torni alla Copertina/Home
-        }
-    }
+        topBar.style.display = 'block';
+    } 
     // Livello 3 (Profondo): Modale Foto o Dettaglio Features
     if (lightbox && lightbox.style.display === 'flex') {
         lightbox.style.display = 'none';
