@@ -156,6 +156,87 @@
         </div>
 
     </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        caricaPocket();
+        configuraRicerca();
+    });
+
+    function caricaPocket() {
+        const contenitoreLista = document.getElementById('lista-pocket');
+        const statoVuoto = document.getElementById('pocket-vuoto');
+        
+        // Pulisce l'HTML statico di esempio
+        contenitoreLista.innerHTML = '';
+        
+        let contattiSalvati = [];
+        try {
+            // Peschiamo i dati salvati dal telefono
+            contattiSalvati = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
+        } catch(e) {
+            console.error("Errore lettura pocket:", e);
+        }
+
+        // SE IL POCKET E' VUOTO
+        if (contattiSalvati.length === 0) {
+            statoVuoto.style.display = 'flex';
+            return;
+        }
+
+        // SE CI SONO CONTATTI, NASCONDI LO STATO VUOTO E CREA LE CARD
+        statoVuoto.style.display = 'none';
+
+        // Ordina alfabeticamente per nome (dettaglio di classe)
+        contattiSalvati.sort((a, b) => a.nome.localeCompare(b.nome));
+
+        contattiSalvati.forEach((contatto, index) => {
+            const card = document.createElement('a');
+            card.href = contatto.url;
+            card.className = 'contact-card';
+            
+            // Animazione a cascata fluida per ogni card
+            card.style.animationDelay = `${index * 0.05}s`;
+
+            // Creiamo un'icona monogramma elegante con l'iniziale del nome
+            const iniziale = contatto.nome ? contatto.nome.charAt(0).toUpperCase() : '<i class="fas fa-user"></i>';
+
+            card.innerHTML = `
+                <div class="avatar-ring">
+                    <span style="font-size: 1.25rem; font-weight: 400; color: var(--accent-gold);">${iniziale}</span>
+                </div>
+                <div class="contact-data">
+                    <span class="contact-name">${contatto.nome}</span>
+                    <span class="contact-username">@${contatto.username.toUpperCase()}</span>
+                </div>
+                <i class="fas fa-chevron-right contact-icon"></i>
+            `;
+            
+            contenitoreLista.appendChild(card);
+        });
+    }
+
+    function configuraRicerca() {
+        const inputRicerca = document.getElementById('cerca-contatto');
+        if (!inputRicerca) return;
+
+        inputRicerca.addEventListener('input', (e) => {
+            const termine = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.contact-card');
+            
+            cards.forEach(card => {
+                const nome = card.querySelector('.contact-name').textContent.toLowerCase();
+                const username = card.querySelector('.contact-username').textContent.toLowerCase();
+                
+                // Cerca sia nel nome che nell'username
+                if (nome.includes(termine) || username.includes(termine)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+</script>
 
 </body>
 </html>
