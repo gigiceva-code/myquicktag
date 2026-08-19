@@ -2384,10 +2384,18 @@ function salvaNelPocketCorrente() {
         localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
         mostraToast("Tag salvata nel Pocket ✓");
         
-       // Cambia visivamente il bottone se esiste sulla pagina
-        const btnPocket = document.getElementById('btn-salva-pocket');
-        if (btnPocket) {
-            btnPocket.innerHTML = '<span style="color: var(--theme-border, #d4af37); font-size: 0.85rem; letter-spacing: 4px; font-weight: 400; text-transform: uppercase;">SALVATO ✓</span>';
+       // Cambia visivamente il bottone in alto a destra
+        const btnPocketText = document.getElementById('testo-salva-top');
+        const dotSalva = document.getElementById('dot-salva');
+        
+        if (btnPocketText && dotSalva) {
+            btnPocketText.innerHTML = 'SALVATO ✓';
+            btnPocketText.style.color = 'var(--theme-border, #d4af37)';
+            
+            // Ferma la pulsazione e accende il led d'oro fisso
+            dotSalva.style.animation = 'none';
+            dotSalva.style.backgroundColor = 'var(--theme-border, #d4af37)';
+            dotSalva.style.boxShadow = '0 0 8px var(--theme-border, #d4af37)';
         }
     } else {
         mostraToast("Tag già presente nel Pocket");
