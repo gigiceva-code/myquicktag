@@ -883,8 +883,31 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
     <!-- ============================================================ -->
     <!-- 1. CHASSIS PRINCIPALE E SIGILLO ORBITALE                     -->
     <!-- ============================================================ -->
-    <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
-        <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></div>
+   <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
+        
+        <!-- TOP RIGHT BAR: SALVA TAG + QR -->
+        <div style="position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 15px; z-index: 100;">
+            
+            <style>
+            @keyframes pulseWhiteDot {
+                0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); }
+                70% { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+            }
+            </style>
+
+            <!-- Bottone Salva Tag con LED pulsante -->
+            <div id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); transition: all 0.3s;">
+                <div id="dot-salva" style="width: 6px; height: 6px; background-color: #fff; border-radius: 50%; animation: pulseWhiteDot 2s infinite;"></div>
+                <span id="testo-salva-top" style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
+            </div>
+
+            <!-- Trigger QR Originale -->
+            <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()" style="position: static; margin: 0; padding: 0;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </div>
+        </div>
+
         <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
             
             <!-- IL SIGILLO ORBITALE (Allineato a edit.html) -->
@@ -905,10 +928,7 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
             </div>
         </div>
         
-        <!-- TASTO SALVA TAG IN COPERTINA (Sopra Esplora Tag) -->
-        <div id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="margin-bottom: 30px; cursor: pointer; text-align: center; z-index: 10;">
-            <span style="color: var(--text-sec, #86868b); font-size: 0.85rem; letter-spacing: 4px; font-weight: 400; text-transform: uppercase; transition: color 0.3s;">SALVA TAG</span>
-        </div>
+       
 
    <!-- TASTO DI INGRESSO (Copertina) -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
