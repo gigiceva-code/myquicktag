@@ -1877,9 +1877,12 @@ function apriMacroArea(area, skipHistory = false) {
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
     if (!overlay || !titolo || !corpo) return;
-    // --- ACCENDI LA TOP BAR ---
+    // --- ACCENDI LA TOP BAR E SPOSTALA NELL'OVERLAY ---
     const topBar = document.getElementById('mqt-top-bar');
-    if (topBar) topBar.style.display = 'flex';
+    if (topBar) {
+        topBar.style.display = 'flex';
+        overlay.appendChild(topBar); // La teletrasporta fisicamente sopra la stanza
+    }
     
     // Salva il riferimento per il tasto indietro
     macroAreaCorrente = area; 
@@ -2335,12 +2338,16 @@ window.addEventListener('popstate', (e) => {
     const overlaySezione = document.getElementById('overlaySezione');
     const container = document.getElementById('profile-content');
     
-    // --- RIACCENDI LA TOP BAR SE NON SIAMO NEL LIVELLO PROFONDO ---
+  // --- RIACCENDI E RIPOSIZIONA LA TOP BAR NEL LIVELLO CORRETTO ---
     const topBar = document.getElementById('mqt-top-bar');
     if (topBar && hash !== '#dettaglio' && hash !== '#lightbox') {
         topBar.style.display = 'flex';
+        if (hash === '#sezione') {
+            overlaySezione.appendChild(topBar); // Se torni a una Stanza
+        } else {
+            container.appendChild(topBar); // Se torni alla Copertina/Home
+        }
     }
-
     // Livello 3 (Profondo): Modale Foto o Dettaglio Features
     if (lightbox && lightbox.style.display === 'flex') {
         lightbox.style.display = 'none';
