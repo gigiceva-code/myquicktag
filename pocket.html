@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#050505">
-    <title>Il mio Pocket - MyQuickTag</title>
+    <title>il mio pocket - myquicktag</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,7 +22,6 @@
         html { height: 100%; overscroll-behavior-y: none; }
         body { background-color: var(--bg-esterno); color: var(--text-main); display: flex; align-items: center; justify-content: center; min-height: 100dvh; overflow: hidden; }
 
-        /* LO CHASSIS (Identico alla Tag) */
         .app-container {
             width: calc(100% - 32px); max-width: 410px; height: calc(100svh - 32px); max-height: 840px;
             background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.3); 
@@ -32,10 +31,15 @@
         }
         @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.98) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-        /* HEADER & SEARCH (Solo linee e testo) */
-        .pocket-header { text-align: center; margin-bottom: 25px; flex-shrink: 0; }
-        .pocket-header h1 { font-size: 0.7rem; font-weight: 300; letter-spacing: 6px; color: #fff; text-transform: uppercase; margin-bottom: 30px; opacity: 0.8; }
+        /* HEADER & SEARCH */
+        .pocket-header { margin-bottom: 25px; flex-shrink: 0; }
+        .header-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header-top-row h1 { font-size: 0.7rem; font-weight: 300; letter-spacing: 6px; color: #fff; text-transform: uppercase; margin: 0; opacity: 0.8; }
         
+        /* Tasto Condividi Pocket Globale */
+        .btn-share-pocket { color: var(--accent-gold); font-size: 1.1rem; cursor: pointer; padding: 5px; opacity: 0.8; transition: opacity 0.2s, transform 0.2s; }
+        .btn-share-pocket:active { opacity: 1; transform: scale(0.9); }
+
         .search-wrapper { position: relative; width: 100%; padding-bottom: 10px; }
         .search-wrapper i { position: absolute; left: 0; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 0.8rem; font-weight: 300; }
         .search-input {
@@ -55,46 +59,43 @@
         }
         .pocket-list::-webkit-scrollbar { display: none; }
 
-        /* LA RIGA DEL CONTATTO (Niente scatole) */
+        /* LA RIGA DEL CONTATTO */
         .contact-row {
-            display: flex; align-items: center; gap: 18px; padding: 20px 0;
+            display: flex; align-items: center; justify-content: space-between; padding: 20px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            text-decoration: none; cursor: pointer; transition: opacity 0.2s, transform 0.2s;
             animation: scivolaSu 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(15px);
         }
-        .contact-row:active { transform: scale(0.97); opacity: 0.6; }
         .contact-row:last-child { border-bottom: none; }
 
-        /* AVATAR MINIMALE */
-        .avatar-ring {
-            width: 44px; height: 44px; border-radius: 50%; background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center;
-            overflow: hidden; flex-shrink: 0;
-        }
-        .avatar-ring img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%) contrast(1.1); }
-        .avatar-ring span { font-size: 1rem; font-weight: 300; color: #fff; letter-spacing: 0; }
+        .contact-link { display: flex; align-items: center; gap: 18px; flex: 1; text-decoration: none; overflow: hidden; transition: opacity 0.2s; }
+        .contact-link:active { opacity: 0.5; }
 
-        /* TESTI CHIRURGICI */
-        .contact-data { flex: 1; display: flex; flex-direction: column; overflow: hidden; justify-content: center; gap: 4px; }
+        .avatar-ring { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .avatar-ring span { font-size: 1rem; font-weight: 300; color: #fff; }
+
+        .contact-data { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; overflow: hidden; }
         .contact-name { font-size: 0.9rem; font-weight: 400; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 1px; }
         .contact-username { font-size: 0.65rem; font-weight: 300; color: var(--text-sec); letter-spacing: 2px; text-transform: uppercase; }
 
-        .contact-icon { color: rgba(255, 255, 255, 0.1); font-size: 0.75rem; font-weight: 300; transition: color 0.3s; }
-        .contact-row:active .contact-icon { color: var(--accent-gold); }
+        /* Tasto Condividi Singolo */
+        .share-single-btn { color: rgba(255, 255, 255, 0.3); font-size: 1rem; padding: 10px; cursor: pointer; transition: color 0.2s, transform 0.2s; flex-shrink: 0; margin-left: 10px; }
+        .share-single-btn:active { color: #fff; transform: scale(0.9); }
 
         @keyframes scivolaSu { to { opacity: 1; transform: translateY(0); } }
 
-        /* EMPTY STATE */
+        /* EMPTY STATE E BOTTOM BAR */
         .empty-state { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; animation: fadeStatoVuoto 1.5s ease forwards 0.4s; }
         @keyframes fadeStatoVuoto { to { opacity: 1; } }
         .empty-state i { font-size: 2rem; margin-bottom: 24px; color: var(--text-sec); font-weight: 300; opacity: 0.3; }
         .empty-state p { font-size: 0.7rem; font-weight: 300; line-height: 1.8; letter-spacing: 3px; color: var(--text-sec); text-transform: uppercase; opacity: 0.7; }
-
-        /* BOTTOM BAR */
+        
         .bottom-bar { flex-shrink: 0; padding-top: 10px; display: flex; justify-content: center; align-items: center; }
         .btn-chiudi { background: transparent; border: none; color: var(--text-sec); font-size: 0.65rem; font-weight: 300; letter-spacing: 5px; text-transform: uppercase; padding: 15px; cursor: pointer; transition: color 0.2s; }
         .btn-chiudi:active { color: #fff; }
 
+        /* TOAST NOTIFICA */
+        .toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(50px); background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.2); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; z-index: 10000; pointer-events: none; }
+        .toast.mostra { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
@@ -102,7 +103,10 @@
     <div class="app-container">
         
         <div class="pocket-header">
-            <h1>IL MIO POCKET</h1>
+            <div class="header-top-row">
+                <div style="width: 24px;"></div> <h1>IL MIO POCKET</h1>
+                <i class="fas fa-arrow-up-right-from-square btn-share-pocket" onclick="condividiInteroPocket()" title="Condividi intero pocket"></i>
+            </div>
             <div class="search-wrapper">
                 <i class="fas fa-search"></i>
                 <input type="text" class="search-input" id="cerca-contatto" placeholder="Cerca un contatto..." autocomplete="off">
@@ -110,8 +114,7 @@
         </div>
 
         <div class="pocket-list" id="lista-pocket">
-            <!-- I contatti verranno iniettati qui dal JS -->
-        </div>
+            </div>
 
         <div class="empty-state" id="pocket-vuoto">
             <i class="far fa-bookmark"></i>
@@ -123,6 +126,8 @@
         </div>
 
     </div>
+    
+    <div id="toastNotifica" class="toast"></div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -145,34 +150,89 @@
 
         if (contattiSalvati.length === 0) {
             statoVuoto.style.display = 'flex';
+            document.querySelector('.btn-share-pocket').style.display = 'none';
             return;
         }
 
         statoVuoto.style.display = 'none';
+        
         contattiSalvati.sort((a, b) => a.nome.localeCompare(b.nome));
 
         contattiSalvati.forEach((contatto, index) => {
-            const card = document.createElement('a');
-            card.href = contatto.url;
-            card.className = 'contact-row'; 
-            card.style.animationDelay = `${index * 0.08}s`; // Ritardo per l'effetto cascata morbido
+            const row = document.createElement('div');
+            row.className = 'contact-row'; 
+            row.style.animationDelay = `${index * 0.08}s`;
 
-            // Iniziale pulitissima (bianca su sfondo nero) se manca la foto
             const iniziale = contatto.nome ? contatto.nome.charAt(0).toUpperCase() : '';
 
-            card.innerHTML = `
-                <div class="avatar-ring">
-                    <span>${iniziale}</span>
-                </div>
-                <div class="contact-data">
-                    <span class="contact-name">${contatto.nome}</span>
-                    <span class="contact-username">@${contatto.username}</span>
-                </div>
-                <i class="fas fa-chevron-right contact-icon"></i>
+            row.innerHTML = `
+                <a href="${contatto.url}" class="contact-link">
+                    <div class="avatar-ring">
+                        <span>${iniziale}</span>
+                    </div>
+                    <div class="contact-data">
+                        <span class="contact-name">${contatto.nome}</span>
+                        <span class="contact-username">@${contatto.username}</span>
+                    </div>
+                </a>
+                <i class="fas fa-share-nodes share-single-btn" onclick="condividiSingolo('${contatto.nome}', '${contatto.url}', event)"></i>
             `;
             
-            contenitoreLista.appendChild(card);
+            contenitoreLista.appendChild(row);
         });
+    }
+
+    // ============================================================
+    // MOTORE DI CONDIVISIONE
+    // ============================================================
+    function condividiSingolo(nome, url, event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const testo = `Guarda la tag di ${nome} su myquicktag!`;
+        _eseguiCondivisione(testo, url);
+    }
+
+    function condividiInteroPocket() {
+        let contattiSalvati = [];
+        try { contattiSalvati = JSON.parse(localStorage.getItem('mqt_pocket') || '[]'); } catch(e) {}
+        
+        if (contattiSalvati.length === 0) return;
+
+        contattiSalvati.sort((a, b) => a.nome.localeCompare(b.nome));
+
+        let testoCondivisione = "Ecco i miei contatti salvati su myquicktag:\n\n";
+        contattiSalvati.forEach(c => {
+            testoCondivisione += `▪ ${c.nome}\n${c.url}\n\n`;
+        });
+        testoCondivisione += "Crea la tua tag gratis su myquicktag.it";
+
+        _eseguiCondivisione("il mio pocket myquicktag", "", testoCondivisione);
+    }
+
+    function _eseguiCondivisione(titolo, url, testoPuro = null) {
+        if (navigator.share) {
+            const shareData = testoPuro 
+                ? { title: titolo, text: testoPuro } 
+                : { title: titolo, url: url };
+                
+            navigator.share(shareData).catch(err => {
+                if (err.name !== 'AbortError') console.error("Errore condivisione:", err);
+            });
+        } else {
+            const testoDaCopiare = testoPuro || `${titolo} - ${url}`;
+            navigator.clipboard.writeText(testoDaCopiare)
+                .then(() => mostraToast('🔗 Copiato negli appunti!'))
+                .catch(() => mostraToast('Errore nella copia'));
+        }
+    }
+
+    function mostraToast(messaggio) {
+        const toast = document.getElementById('toastNotifica');
+        if (!toast) return;
+        toast.textContent = messaggio;
+        toast.classList.add('mostra');
+        setTimeout(() => toast.classList.remove('mostra'), 2800);
     }
 
     function configuraRicerca() {
