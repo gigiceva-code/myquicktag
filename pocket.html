@@ -165,7 +165,9 @@ function caricaPocket() {
             row.className = 'contact-row'; 
             row.style.animationDelay = `${index * 0.08}s`;
 
-            const iniziale = contatto.nome ? contatto.nome.charAt(0).toUpperCase() : '';
+            // Rimuove la @ iniziale se presente e prende la vera prima lettera
+            let nomePulito = contatto.nome.replace(/^@/, '').trim();
+            const iniziale = nomePulito ? nomePulito.charAt(0).toUpperCase() : '';
 
             row.innerHTML = `
                 <a href="${contatto.url}" class="contact-link">
