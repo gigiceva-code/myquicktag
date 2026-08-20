@@ -17,20 +17,17 @@ export default function handler(req, res) {
     const icon192 = `/api/generate-icons?u=${utenteMinuscolo}`;
     const icon512 = `/api/generate-icons?u=${utenteMinuscolo}`;
 
-    // Costruiamo il manifest dinamico con Pretty URL isolati per utente
+  // Costruiamo il manifest dinamico con Pretty URL isolati per utente
     const manifest = {
-      // L'ID ora punta al percorso pulito
       "id": `/u/${utenteMinuscolo}`,
-     "name": `myquicktag ${displayUtente}`,
-      "short_name": displayUtente, // Questo mantiene il nome utente (es. @GIGI) SOTTO l'icona sul telefono!
+      "name": `myquicktag ${displayUtente}`,
+      "short_name": displayUtente,
       "description": "Luxury Digital Identity",
-      // Lo start_url si apre sul percorso pulito
       "start_url": `/u/${utenteMinuscolo}`,
-      // Lo scope isolato blocca la sovrascrittura delle icone sulla home!
       "scope": `/u/${utenteMinuscolo}`,
-      "display": "fullscreen",
-      "background_color": "#000000",
-      "theme_color": "#000000",
+      "display": "standalone",       // <-- RISOLVE LA BARRA BIANCA
+      "background_color": "#050505", // <-- SPLASH SCREEN BLACK LUXURY
+      "theme_color": "#050505",      // <-- COLORA LA BARRA DI STATO DI NERO
       "orientation": "portrait",
       "icons": [
         { "src": icon192, "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
