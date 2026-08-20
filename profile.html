@@ -772,6 +772,48 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
                 </a>
 
             </div>
+            <!-- 3. ACCOUNT E PIANO -->
+                <a href="#" id="link-account" class="action-btn btn-main" style="margin-bottom: 0;">
+                    <i class="fas fa-user-shield btn-icon"></i>
+                    <div class="btn-text-box">
+                        <span>Account & Piano</span>
+                        <small>Gestisci abbonamento e sicurezza</small>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
+                </a>
+
+            </div>
+        </section>
+<!-- ========================================== -->
+<!-- OVERLAY UPSELL ANALYTICS (SaaS Model)      -->
+<!-- ========================================== -->
+<div id="upsell-analytics-modal" class="qr-modal-overlay" style="display: none; z-index: 9999;">
+    <div class="qr-modal-content" style="max-width: 340px; padding: 35px 25px;">
+        <button onclick="document.getElementById('upsell-analytics-modal').style.display='none'" class="close-modal-btn">&times;</button>
+        
+        <div style="color: #d4af37; font-size: 2.5rem; margin-bottom: 15px;">
+            <i class="fas fa-chart-pie"></i>
+        </div>
+        
+        <h3 class="modal-title" style="font-size: 1.3rem;">Analisi Avanzata</h3>
+        <p class="modal-subtitle" style="margin-bottom: 20px; font-size: 0.85rem; line-height: 1.5;">
+            Scopri da quali città ti scansionano, quali link cliccano di più e i dispositivi usati.
+        </p>
+        
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 15px; text-align: left; margin-bottom: 25px;">
+            <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 8px;"><i class="fas fa-check" style="color: #50C878; margin-right: 5px;"></i> Traffico Unico vs Totale</div>
+            <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 8px;"><i class="fas fa-check" style="color: #50C878; margin-right: 5px;"></i> Mappa Geografica Scansioni</div>
+            <div style="font-size: 0.75rem; color: #aaa;"><i class="fas fa-check" style="color: #50C878; margin-right: 5px;"></i> Tracciamento click sui Link</div>
+        </div>
+        
+        <a href="#" id="btn-upsell-checkout" style="display: block; width: 100%; background: var(--accent-smeraldo); color: #000; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Sblocca con Premium</a>
+    </div>
+</div>
+       
+    <script>
+// ====================================================
+// 🟩 BLOCCO 1 — FUNZIONI DI SUPPORTO & LUXURY NAVIGATE
+// ...
         </section>
 <script>
 // ====================================================
@@ -1085,6 +1127,34 @@ function aggiornaContatoriDashboard(record) {
             btnRinnova.href = `checkout.html?u=${utenteCorrente}`;
         }
     }
+   // ====================================================
+    // 📊 4. LOGICA ANALYTICS: Click sulle scansioni
+    // ====================================================
+    const statScansioni = document.getElementById("stat-scansioni");
+    if (statScansioni) {
+        statScansioni.onclick = function() {
+            // Legge il piano da Airtable. Se è vuoto, assume sia "base"
+            const userPlan = (record.plan || "base").toLowerCase().trim();
+            const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
+
+            if (userPlan === "base" || userPlan === "trial" || userPlan === "") {
+                // UTENTE BASE: Apre l'overlay di Upsell
+                const upsellModal = document.getElementById("upsell-analytics-modal");
+                const btnUpsellCheckout = document.getElementById("btn-upsell-checkout");
+                
+                if (btnUpsellCheckout) {
+                    btnUpsellCheckout.href = `checkout.html?u=${utenteCorrente}`;
+                }
+                if (upsellModal) {
+                    upsellModal.style.display = "flex";
+                }
+            } else {
+                // UTENTE PREMIUM / GOLD: Viene mandato alla pagina Analytics
+                // (Che costruiremo nel prossimo step!)
+                luxuryNavigate(null, `analytics.html?u=${utenteCorrente}`);
+            }
+        };
+    } 
 }
     // ====================================================
 // 🟪 BLOCCO 4 — GESTIONE LOGICA MODAL QR CODE
