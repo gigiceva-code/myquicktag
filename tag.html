@@ -2602,10 +2602,15 @@ function vaiAlCheckout() {
     window.location.href = `/checkout.html?u=${usernameCorrente}`;
 }
 
+// ============================================================
+// PUBBLICAZIONE BOZZA (VERSIONE LUXURY DEFINITIVA)
+// ============================================================
 async function pubblicaBozza() {
-    // Troviamo il bottone e lo mettiamo in caricamento
     const btn = document.querySelector('button[onclick="pubblicaBozza()"]');
-    if(btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Pubblicazione...';
+    const originalText = btn ? btn.innerHTML : 'Pubblica la tua tag';
+    
+    // Feedback visivo immediato (Lusso)
+    if(btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Pubblicazione in corso...';
     
     try {
         const bozza = JSON.parse(cacheDatiUtente.draft_json || '{}');
@@ -2623,29 +2628,21 @@ async function pubblicaBozza() {
         
         if (data.success) {
             if(btn) {
-                btn.innerHTML = 'Pubblicato! ✓';
+                btn.innerHTML = 'PUBBLICATA ✓';
                 btn.style.background = '#10b981';
+                btn.style.color = '#000';
             }
-            mostraToast('Tag pubblicata');
-            setTimeout(() => { window.location.href = `/tag.html?u=${usernameCorrente}`; }, 1500);
+            mostraToast('Tag pubblicata con successo!');
+            // Ricarica la pagina dopo un istante
+            setTimeout(() => { window.location.href = `/tag.html?u=${usernameCorrente}`; }, 1200);
         } else {
-            // IL BISTURI: Stampiamo l'errore crudo di Airtable a schermo!
-            const errorMsg = data.dettagli ? JSON.stringify(data.dettagli) : JSON.stringify(data.error);
-            const container = document.getElementById('cta-pubblica-container');
-            
-            // Pulisce vecchi messaggi di errore
-            const oldErr = document.getElementById('errore-airtable');
-            if(oldErr) oldErr.remove();
-            
-            // Inietta un box rosso con l'errore esatto
-            container.innerHTML += `<div id="errore-airtable" style="color: #ff4444; font-size: 0.85rem; margin-top: 15px; background: rgba(255,0,0,0.1); padding: 12px; border-radius: 8px; border: 1px solid #ff4444; word-break: break-word; text-align: left; line-height: 1.5;"><b>ERRORE AIRTABLE:</b><br>${errorMsg}</div>`;
-            
-            if(btn) btn.innerHTML = 'Riprova la pubblicazione';
-            mostraToast('Errore durante la pubblicazione');
+            console.error("Errore Airtable nascosto:", data);
+            if(btn) btn.innerHTML = originalText;
+            mostraToast('Errore di salvataggio');
         }
     } catch (err) {
-        console.error("Errore pubblicaBozza:", err);
-        if(btn) btn.innerHTML = 'Riprova';
+        console.error("Errore di rete:", err);
+        if(btn) btn.innerHTML = originalText;
         mostraToast('Errore di connessione al server');
     }
 }
