@@ -137,8 +137,7 @@
         caricaPocket();
         configuraRicerca();
     });
-
-    function caricaPocket() {
+function caricaPocket() {
         const contenitoreLista = document.getElementById('lista-pocket');
         const statoVuoto = document.getElementById('pocket-vuoto');
         
@@ -178,13 +177,15 @@
                         <span class="contact-username">@${contatto.username}</span>
                     </div>
                 </a>
-                <i class="fas fa-share-nodes share-single-btn" onclick="condividiSingolo('${contatto.nome}', '${contatto.url}', event)"></i>
+                <div style="display: flex; gap: 5px; align-items: center; padding-left: 10px;">
+                    <i class="fas fa-share-nodes share-single-btn" onclick="condividiSingolo('${contatto.nome}', '${contatto.url}', event)"></i>
+                    <i class="far fa-trash-can delete-single-btn" onclick="eliminaContatto('${contatto.username}', this, event)"></i>
+                </div>
             `;
-            
             contenitoreLista.appendChild(row);
-        });
-    }
-
+         });
+     }
+    
     // ============================================================
     // MOTORE DI CONDIVISIONE
     // ============================================================
@@ -258,6 +259,29 @@
             });
         });
     }
+           function eliminaContatto(username, elementoIcona, event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Trova la riga HTML del contatto
+        const rigaContatto = elementoIcona.closest('.contact-row');
+        
+        // Animazione di uscita elegante
+        rigaContatto.style.transition = "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)";
+        rigaContatto.style.opacity = "0";
+        rigaContatto.style.transform = "translateX(-20px)";
+        
+        setTimeout(() => {
+            // Rimuovi dalla memoria del telefono
+            let pocketLocale = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
+            pocketLocale = pocketLocale.filter(c => c.username !== username);
+            localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
+            
+            // Ricarica la grafica
+            caricaPocket();
+            mostraToast('Contatto rimosso');
+        }, 300);
+    } 
 </script>
 </body>
 </html>
