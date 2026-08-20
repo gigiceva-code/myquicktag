@@ -1018,36 +1018,72 @@ async function caricaDatiDashboard(nomeMinuto) {
         aggiornaBadge("offline");
     }
 }
-    // ====================================================
-// 📊 FUNZIONE SATELLITE — AGGIORNAMENTO CONTATORI & TRIAL
+   // ====================================================
+// 📊 FUNZIONE SATELLITE — AGGIORNAMENTO CONTATORI & PAYWALL
 // ====================================================
 function aggiornaContatoriDashboard(record) {
-    // 1. Aggiornamento Scansioni reali (ID: count-visits)
+    // 1. Aggiornamento Scansioni
     const scansEl = document.getElementById("count-visits");
     if (scansEl) {
-        // Prende il valore 'views' dal DB (o 'scans'). Fallback a 0.
         const totaleScansioni = record.views || record.scans || 0;
         scansEl.innerText = totaleScansioni;
-        console.log("[myquicktag] Contatore visite aggiornato su DOM:", totaleScansioni);
     }
 
-    // 2. Aggiornamento Giorni di Trial Rimanenti (ID: days-left)
+    // 2. Calcolo Scadenza
     const trialEl = document.getElementById("days-left");
-    if (trialEl) {
-        let giorniRimanenti = 90; // Fallback di sicurezza standard a 90 giorni
+    const paywallBanner = document.getElementById("paywall-banner");
+    const btnEdit = document.getElementById("link-edit");
+    const btnRinnova = document.getElementById("btn-rinnova");
 
-        if (record.data_scadenza) {
-            const dataScadenza = new Date(record.data_scadenza);
-            const oggi = new Date();
-            
-            const diffTempo = dataScadenza - oggi;
-            giorniRimanenti = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
-            
-            if (giorniRimanenti < 0) giorniRimanenti = 0;
+    let giorniRimanenti = 90; // Fallback se la data manca
+
+    if (record.data_scadenza) {
+        const dataScadenza = new Date(record.data_scadenza);
+        const oggi = new Date();
+        const diffTempo = dataScadenza - oggi;
+        giorniRimanenti = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+    }
+    
+    // Testo e colore della scadenza
+    if (trialEl) {
+        if (giorniRimanenti > 0) {
+            trialEl.innerText = giorniRimanenti + " gg";
+            if (giorniRimanenti <= 7) {
+                trialEl.style.color = "#ffab00"; // Allarme arancione a 7 giorni
+            } else {
+                trialEl.style.color = "#ffffff";
+            }
+        } else {
+            trialEl.innerText = "Scaduto";
+            trialEl.style.color = "#ff4444"; // Allarme rosso
         }
+    }
+
+    // ====================================================
+    // 🛑 3. LOGICA PAYWALL: Blocco alla Scadenza
+    // ====================================================
+    if (giorniRimanenti <= 0) {
         
-        trialEl.innerText = giorniRimanenti + " gg";
-        console.log("[myquicktag] Giorni trial aggiornati su DOM:", giorniRimanenti);
+        // 3a. Mostra il banner rosso gigante
+        if (paywallBanner) paywallBanner.style.display = "block";
+        
+        // 3b. Disattiva il bottone "Configura la tua Tag"
+        if (btnEdit) {
+            btnEdit.style.opacity = "0.4"; // Lo rende visivamente spento
+            btnEdit.style.pointerEvents = "none"; // Disattiva il click del mouse/dito
+            
+            // Per sicurezza, scavalchiamo il link
+            btnEdit.onclick = function(e) {
+                e.preventDefault();
+                mostraToast("Piano scaduto. Rinnova per modificare la Tag.");
+            };
+        }
+
+        // 3c. Prepara il link per andare diretti al Checkout
+        if (btnRinnova) {
+            const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
+            btnRinnova.href = `checkout.html?u=${utenteCorrente}`;
+        }
     }
 }
     // ====================================================
