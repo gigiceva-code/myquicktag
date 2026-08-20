@@ -19,11 +19,19 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        html { height: 100%; overscroll-behavior-y: none; }
-        body { background-color: var(--bg-esterno); color: var(--text-main); display: flex; align-items: center; justify-content: center; min-height: 100dvh; overflow: hidden; }
+       html { height: 100%; width: 100%; overscroll-behavior-y: none; }
+        
+        /* Inchioda il body ai 4 angoli reali dello schermo */
+        body { 
+            background-color: var(--bg-esterno); color: var(--text-main); 
+            display: flex; align-items: center; justify-content: center; 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            overflow: hidden; margin: 0; padding: 0;
+        }
 
+        /* Usa 100% normale invece di svh */
         .app-container {
-            width: calc(100% - 32px); max-width: 410px; height: calc(100svh - 32px); max-height: 840px;
+            width: calc(100% - 32px); max-width: 410px; height: calc(100% - 32px); max-height: 840px;
             background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.3); 
             border-radius: 28px; padding: 40px 24px 20px 24px; display: flex; flex-direction: column;
             box-shadow: 0 30px 70px rgba(0,0,0,0.9); position: relative;
