@@ -708,8 +708,8 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
             </a>
         </section>
 
-        <!-- ========================================== -->
-        <!-- 1. BARRA STATISTICHE DINAMICA              -->
+                <!-- ========================================== -->
+        <!-- BARRA STATISTICHE (Pulita)                 -->
         <!-- ========================================== -->
         <div class="stats-grid-clean" id="dashboard-stats">
             <div class="stat-inline" id="stat-scansioni" style="cursor: pointer;">
@@ -729,17 +729,17 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
         </div> 
 
         <!-- ========================================== -->
-        <!-- 2. BANNER PAYWALL (Invisibile di default)  -->
+        <!-- BANNER PAYWALL (Invisibile di default)     -->
         <!-- ========================================== -->
         <div id="paywall-banner" style="display: none; background: linear-gradient(135deg, #1a1a1a 0%, #2d0000 100%); border: 1px solid #ff4444; border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: center; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.15);">
             <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ff4444; margin-bottom: 12px;"></i>
             <h3 style="margin: 0 0 6px 0; color: #ffffff; font-size: 1.1rem; font-weight: 600;">Intervento Richiesto</h3>
-            <p id="paywall-text" style="margin: 0 0 16px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; line-height: 1.4;">Il tuo piano è scaduto. Rinnova subito per mantenere attiva la tua Digital Identity e riabilitare le modifiche.</p>
-            <a href="#" id="btn-rinnova" style="display: inline-block; background: #ff4444; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; transition: transform 0.2s ease; margin-top: 5px;">Scegli un Piano</a>
+            <p id="paywall-text" style="margin: 0 0 16px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; line-height: 1.4;">Il tuo piano è scaduto. Rinnova subito per mantenere attiva la tua Digital Identity.</p>
+            <a href="#" id="btn-rinnova" style="display: inline-block; background: #ff4444; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; transition: transform 0.2s ease;">Scegli un Piano</a>
         </div>
 
         <!-- ========================================== -->
-        <!-- 3. BLOCCO GESTIONE (I tre tastoni)         -->
+        <!-- BLOCCO GESTIONE (I soli 3 tasti giusti)    -->
         <!-- ========================================== -->
         <section id="block-gestione" style="width: 100%; margin-top: 10px;">
             <div class="core-grid" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 0;">
@@ -772,43 +772,21 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
                 </a>
 
             </div>
-            <!-- 3. ACCOUNT E PIANO -->
-                <a href="#" id="link-account" class="action-btn btn-main" style="margin-bottom: 0;">
-                    <i class="fas fa-user-shield btn-icon"></i>
-                    <div class="btn-text-box">
-                        <span>Account & Piano</span>
-                        <small>Gestisci abbonamento e sicurezza</small>
-                    </div>
-                    <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
-                </a>
-
-            </div>
         </section>
-<!-- ========================================== -->
-<!-- OVERLAY UPSELL ANALYTICS (SaaS Model)      -->
-<!-- ========================================== -->
-<div id="upsell-analytics-modal" class="qr-modal-overlay" style="display: none; z-index: 9999;">
-    <div class="qr-modal-content" style="max-width: 340px; padding: 35px 25px;">
-        <button onclick="document.getElementById('upsell-analytics-modal').style.display='none'" class="close-modal-btn">&times;</button>
-        
-        <div style="color: #d4af37; font-size: 2.5rem; margin-bottom: 15px;">
-            <i class="fas fa-chart-pie"></i>
+
+        <!-- ========================================== -->
+        <!-- OVERLAY UPSELL ANALYTICS                   -->
+        <!-- ========================================== -->
+        <div id="upsell-analytics-modal" class="qr-modal-overlay" style="display: none; z-index: 9999;">
+            <div class="qr-modal-content" style="max-width: 340px; padding: 35px 25px;">
+                <button onclick="document.getElementById('upsell-analytics-modal').style.display='none'" class="close-modal-btn">&times;</button>
+                <div style="color: #d4af37; font-size: 2.5rem; margin-bottom: 15px;"><i class="fas fa-chart-pie"></i></div>
+                <h3 class="modal-title" style="font-size: 1.3rem;">Analisi Avanzata</h3>
+                <p class="modal-subtitle" style="margin-bottom: 20px; font-size: 0.85rem; line-height: 1.5;">Scopri da quali città ti scansionano, quali link cliccano di più e i dispositivi usati.</p>
+                <a href="#" id="btn-upsell-checkout" style="display: block; width: 100%; background: var(--accent-smeraldo); color: #000; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Sblocca con Premium</a>
+            </div>
         </div>
-        
-        <h3 class="modal-title" style="font-size: 1.3rem;">Analisi Avanzata</h3>
-        <p class="modal-subtitle" style="margin-bottom: 20px; font-size: 0.85rem; line-height: 1.5;">
-            Scopri da quali città ti scansionano, quali link cliccano di più e i dispositivi usati.
-        </p>
-        
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 15px; text-align: left; margin-bottom: 25px;">
-            <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 8px;"><i class="fas fa-check" style="color: #50C878; margin-right: 5px;"></i> Traffico Unico vs Totale</div>
-            <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 8px;"><i class="fas fa-check" style="color: #50C878; margin-right: 5px;"></i> Mappa Geografica Scansioni</div>
-            <div style="font-size: 0.75rem; color: #aaa;"><i class="fas fa-check" style="color: #50C878; margin-right: 5px;"></i> Tracciamento click sui Link</div>
-        </div>
-        
-        <a href="#" id="btn-upsell-checkout" style="display: block; width: 100%; background: var(--accent-smeraldo); color: #000; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Sblocca con Premium</a>
-    </div>
-</div>
+
        
     <script>
 // ====================================================
