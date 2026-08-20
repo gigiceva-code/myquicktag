@@ -24,7 +24,7 @@ export default function handler(req, res) {
       "short_name": displayUtente,
       "description": "Luxury Digital Identity",
       "start_url": `/u/${utenteMinuscolo}`,
-      "scope": `/u/${utenteMinuscolo}`,
+      "scope": "/",
       "display": "standalone",       // <-- RISOLVE LA BARRA BIANCA
       "background_color": "#050505", // <-- SPLASH SCREEN BLACK LUXURY
       "theme_color": "#050505",      // <-- COLORA LA BARRA DI STATO DI NERO
