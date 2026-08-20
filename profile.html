@@ -718,76 +718,41 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
             </div>
         </div>
 
-                 <section id="block-gestione">
-            <div class="core-grid">
-                <a href="#" id="link-edit" class="action-btn btn-main">
+            <section id="block-gestione" style="width: 100%; margin-top: 30px;">
+            <div class="core-grid" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 0;">
+                
+                <!-- 1. CONFIGURE -->
+                <a href="#" id="link-edit" class="action-btn btn-main" style="margin-bottom: 0;">
                     <i class="fas fa-sliders-h btn-icon"></i>
                     <div class="btn-text-box">
                         <span>Configure</span>
                         <small>Configura le tue informazioni esclusive</small>
                     </div>
-                    <i class="fas fa-chevron-right chevron"></i>
+                    <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
                 </a>
                 
-                <div class="core-row">
-                    <a href="#" id="link-qr" class="action-btn btn-square">
-                        <i class="fas fa-qrcode btn-icon"></i>
-                        <span>QR Identity</span>
-                    </a>
-                    <a href="#" id="link-account" class="action-btn btn-square">
-                        <i class="fas fa-user-shield btn-icon"></i>
-                        <span>Account</span>
-                    </a>
-                </div>
-            </div>
+                <!-- 2. IL MIO POCKET (Punta di diamante dorata) -->
+                <a href="#" id="link-pocket" class="action-btn btn-main" style="margin-bottom: 0; border: 1px solid rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.03);">
+                    <i class="far fa-address-book btn-icon" style="color: #d4af37;"></i>
+                    <div class="btn-text-box">
+                        <span style="color: #d4af37;">Il Mio Pocket</span>
+                        <small style="color: rgba(212, 175, 55, 0.6);">La tua collezione privata di connessioni</small>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: #d4af37; font-size: 0.85rem; opacity: 0.8;"></i>
+                </a>
 
-            <div class="utility-dock">
-                <a href="#" id="link-upgrade" class="dock-item" title="Upgrade">
-                    <i class="fas fa-rocket" style="color: var(--accent-smeraldo); opacity: 1;"></i>
-                    <span style="color: #ffffff; font-weight: 600;">Upgrade</span>
+                <!-- 3. ACCOUNT E PIANO -->
+                <a href="#" id="link-account" class="action-btn btn-main" style="margin-bottom: 0;">
+                    <i class="fas fa-user-shield btn-icon"></i>
+                    <div class="btn-text-box">
+                        <span>Account & Piano</span>
+                        <small>Gestisci abbonamento e sicurezza</small>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
                 </a>
-                <a href="#" class="dock-item" title="Settings">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                </a>
-                <a href="#" class="dock-item" title="Actions">
-                    <i class="fas fa-bolt"></i>
-                    <span>Actions</span>
-                </a>
-                <a href="javascript:void(0)" class="dock-item" title="Help">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Help</span>
-                </a>
-            </div>
-        </section>
-      <div id="qr-modal" class="qr-modal-overlay" style="display: none;">
-    <div class="qr-modal-content">
-        <button id="close-qr-modal" class="close-modal-btn">&times;</button>
-        
-        <div id="qr-wrap-active" style="display: none;">
-            <h3 class="modal-title">Il tuo QR myquicktag</h3>
-            <p class="modal-subtitle">Inquadra per visualizzare la Digital Identity</p>
-            <div class="qr-frame">
-                <img id="qr-code-image" src="" alt="QR Code myquicktag">
-            </div>
-            <span id="qr-username" class="qr-username-label">@username</span>
-        </div>
 
-        <div id="qr-wrap-pending" style="display: none;">
-            <div class="modal-icon-lock">🔒</div>
-            <h3 class="modal-title" style="color: #50C878;">Funzionalità Esclusiva</h3>
-            <p class="modal-text-pending">
-                Il tuo QR code personale sarà attivo subito dopo l'attivazione della tua tag.
-            </p>
-            <p style="color: #666666; font-size: 0.8rem; margin-top: 15px;">
-                Completa il checkout per sbloccare il tuo profilo e tutte le funzioni.
-            </p>
-        </div>
-    </div>
-</div>
- 
-
-    </div>      
+            </div>
+        </section>   
 <script>
 // ====================================================
 // 🟩 BLOCCO 1 — FUNZIONI DI SUPPORTO & LUXURY NAVIGATE
@@ -976,8 +941,10 @@ console.log("haBozza:", haBozza);
     aggiornaBadge("bozza");
     return;
 }
-   // ====================================================
-// 🟨 BLOCCO 3 — CARICAMENTO DATI DA DATABASE (API)
+  
+
+// ====================================================
+// 🟨 BLOCCO 3 — CARICAMENTO DATI DA DATABASE (API) E CLOUD SYNC
 // ====================================================
 
 async function caricaDatiDashboard(nomeMinuto) {
@@ -992,6 +959,21 @@ async function caricaDatiDashboard(nomeMinuto) {
 
         if (data && data.success) {
             console.log("[myquicktag] Dati ricevuti con successo:", data.fields);
+            
+            // ====================================================
+            // ☁️ RAGGIO TRAENTE CLOUD SYNC: Ripristino Pocket
+            // ====================================================
+            if (data.fields.pocket_cloud && data.fields.pocket_cloud.trim() !== "") {
+                try {
+                    const pocketDalCloud = JSON.parse(data.fields.pocket_cloud);
+                    // Sovrascrive (o ripristina) la memoria del telefono con il backup di Airtable
+                    localStorage.setItem('mqt_pocket', JSON.stringify(pocketDalCloud));
+                    console.log("[myquicktag] Pocket ripristinato dal Cloud con successo!");
+                } catch (e) {
+                    console.error("Errore durante il parsing del pocket dal cloud", e);
+                }
+            }
+            // ====================================================
             
             // 1. Attiva il cervello decisionale della card principale
             determinaModalitaAnteprima(data.fields, nomeMinuto);
@@ -1118,7 +1100,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Avvio del recupero dati dal database
     caricaDatiDashboard(nomeMinuto);
 
-    // --- CABLAGGIO PULSANTI DELLA CONSOLE ---
+   // --- CABLAGGIO PULSANTI DELLA CONSOLE (MINIMAL LUXURY) ---
 
     // 1. Tasto Anteprima (Card Principale)
     const linkView = document.getElementById("link-view");
@@ -1139,7 +1121,17 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // 3. Tasto Account (id: link-account)
+    // 3. NUOVO TASTO: Il Mio Pocket
+    const linkPocket = document.getElementById("link-pocket");
+    if (linkPocket) {
+        linkPocket.addEventListener("click", function(e) {
+            e.preventDefault();
+            // Lo porta direttamente alla pagina del suo Pocket
+            luxuryNavigate(e, `/pocket.html`);
+        });
+    }
+
+    // 4. Tasto Account & Piano (id: link-account)
     const linkAccount = document.getElementById("link-account");
     if (linkAccount) {
         linkAccount.addEventListener("click", function(e) {
@@ -1148,61 +1140,24 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // 4. Tasto Upgrade (id: link-upgrade)
-    const linkUpgrade = document.getElementById("link-upgrade");
-    if (linkUpgrade) {
-        linkUpgrade.addEventListener("click", function(e) {
-            e.preventDefault();
-            luxuryNavigate(e, `checkout.html?u=${nomeMinuto}`);
-        });
-    }
     // 5. Gestione Pannello Notifiche (Campanellina)
     const btnNotifications = document.getElementById("btn-notifications");
     const notifDropdown = document.getElementById("notif-dropdown");
 
     if (btnNotifications && notifDropdown) {
-        // Apri/Chiudi al click sulla campanella
         btnNotifications.addEventListener("click", function(e) {
             e.preventDefault();
-            e.stopPropagation(); // Evita che il click chiuda subito il pannello
+            e.stopPropagation(); 
             notifDropdown.classList.toggle("active");
         });
 
-        // Chiudi il pannello in modo fluido se l'utente clicca fuori
         document.addEventListener("click", function(e) {
             if (!notifDropdown.contains(e.target) && !btnNotifications.contains(e.target)) {
                 notifDropdown.classList.remove("active");
             }
         });
     }
-    // --- GESTIONE POPUP MODAL QR ---
-    const qrModal = document.getElementById("qr-modal");
-    const linkQR = document.getElementById("link-qr");
-    const closeQRModal = document.getElementById("close-qr-modal");
-
-    if (linkQR && qrModal) {
-        linkQR.addEventListener("click", function(e) {
-            e.preventDefault();
-            qrModal.style.display = "flex";
-            console.log("[myquicktag] Modal QR aperto.");
-        });
-    }
-
-    if (closeQRModal && qrModal) {
-        closeQRModal.addEventListener("click", function() {
-            qrModal.style.display = "none";
-        });
-    }
-
-    if (qrModal) {
-        qrModal.addEventListener("click", function(e) {
-            if (e.target === qrModal) {
-                qrModal.style.display = "none";
-            }
-        });
-    }
 });
-
 </script>
 </body>
 </html>
