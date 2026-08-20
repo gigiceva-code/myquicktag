@@ -2603,6 +2603,10 @@ function vaiAlCheckout() {
 }
 
 async function pubblicaBozza() {
+    // Troviamo il bottone e lo mettiamo in caricamento
+    const btn = document.querySelector('button[onclick="pubblicaBozza()"]');
+    if(btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Pubblicazione...';
+    
     try {
         const bozza = JSON.parse(cacheDatiUtente.draft_json || '{}');
         const response = await fetch('/api/update-profile', {
@@ -2616,18 +2620,35 @@ async function pubblicaBozza() {
         });
 
         const data = await response.json();
+        
         if (data.success) {
+            if(btn) {
+                btn.innerHTML = 'Pubblicato! ✓';
+                btn.style.background = '#10b981';
+            }
             mostraToast('Tag pubblicata');
             setTimeout(() => { window.location.href = `/tag.html?u=${usernameCorrente}`; }, 1500);
         } else {
+            // IL BISTURI: Stampiamo l'errore crudo di Airtable a schermo!
+            const errorMsg = data.dettagli ? JSON.stringify(data.dettagli) : JSON.stringify(data.error);
+            const container = document.getElementById('cta-pubblica-container');
+            
+            // Pulisce vecchi messaggi di errore
+            const oldErr = document.getElementById('errore-airtable');
+            if(oldErr) oldErr.remove();
+            
+            // Inietta un box rosso con l'errore esatto
+            container.innerHTML += `<div id="errore-airtable" style="color: #ff4444; font-size: 0.85rem; margin-top: 15px; background: rgba(255,0,0,0.1); padding: 12px; border-radius: 8px; border: 1px solid #ff4444; word-break: break-word; text-align: left; line-height: 1.5;"><b>ERRORE AIRTABLE:</b><br>${errorMsg}</div>`;
+            
+            if(btn) btn.innerHTML = 'Riprova la pubblicazione';
             mostraToast('Errore durante la pubblicazione');
         }
     } catch (err) {
         console.error("Errore pubblicaBozza:", err);
-        mostraToast('Errore durante la pubblicazione');
+        if(btn) btn.innerHTML = 'Riprova';
+        mostraToast('Errore di connessione al server');
     }
 }
-
 function chiudiWelcomeEMostraTag() {
     const welcome = document.getElementById('tag-welcome-overlay');
     if (welcome) welcome.style.display = 'none';
