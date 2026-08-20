@@ -879,9 +879,6 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
         <i class="fas fa-arrow-left"></i> Torna alla configurazione
     </a>
 
-    <!-- ============================================================ -->
-    <!-- 1. CHASSIS PRINCIPALE E SIGILLO ORBITALE                     -->
-    <!-- ============================================================ -->
   <!-- ============================================================ -->
     <!-- LAYER VETRO PER LA TOP BAR (Galleggia fisso sopra le animazioni) -->
     <!-- ============================================================ -->
@@ -2396,11 +2393,10 @@ window.addEventListener('popstate', (e) => {
 });
 
 // ============================================================
-// GESTIONE TAG POCKET CON OVERLAY IMMERSIVO (No Popup)
+// GESTIONE TAG POCKET (IBRIDA: LOCALE + CLOUD SYNC)
 // ============================================================
 function salvaNelPocketCorrente() {
     const usernameTag = cacheDatiUtente.username_system || window.location.pathname.split('u=')[1] || "Sconosciuto";
-    // Corretto il brand name in minuscolo
     const nomeVisualizzato = cacheDatiUtente.username_display || cacheDatiUtente.username_system || "myquicktag";
     
     let pocketLocale = [];
@@ -2413,7 +2409,7 @@ function salvaNelPocketCorrente() {
     const giaEsistente = pocketLocale.find(item => item.username === usernameTag);
     
     if (!giaEsistente) {
-        // 1. NON ESISTE: LO SALVIAMO IN MEMORIA
+        // 1. NON ESISTE: LO SALVIAMO IN MEMORIA LOCALE (Veloce)
         pocketLocale.push({
             username: usernameTag,
             nome: nomeVisualizzato,
@@ -2422,7 +2418,13 @@ function salvaNelPocketCorrente() {
         });
         localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
         
-        // Aggiorniamo visivamente il led
+        // 2. CLOUD SYNC: Se c'è un utente loggato, salva su Airtable in background
+        const utenteLoggato = localStorage.getItem('loggedUser');
+        if (utenteLoggato) {
+            sincronizzaPocketCloud(utenteLoggato, pocketLocale);
+        }
+        
+        // 3. Aggiorniamo visivamente il led
         const btnPocketText = document.getElementById('testo-salva-top');
         const dotSalva = document.getElementById('dot-salva');
         if (btnPocketText && dotSalva) {
@@ -2433,14 +2435,27 @@ function salvaNelPocketCorrente() {
             dotSalva.style.boxShadow = '0 0 8px var(--theme-border, #d4af37)';
         }
         
-        // Chiediamo se vuole vederlo con l'overlay immersivo
         mostraOverlayPocket("TAG SALVATA", "Contatto salvato con successo nel tuo archivio.");
     } else {
-        // 2. ESISTE GIA': OVERLAY IMMERSIVO
         mostraOverlayPocket("TAG PRESENTE", "Questa tag si trova già nel tuo archivio.");
     }
 }
 
+// MOTORE DI SINCRONIZZAZIONE SILENZIOSA (Lusso)
+async function sincronizzaPocketCloud(utente, pocketArray) {
+    try {
+        await fetch('/api/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username_system: utente,
+                pocket_cloud: JSON.stringify(pocketArray) // Inietta l'intero archivio nella colonna
+            })
+        });
+    } catch (error) {
+        console.error("Cloud Sync fallito, il dato resta comunque al sicuro sul telefono.", error);
+    }
+}
 // MOTORE DELL'OVERLAY IMMERSIVO (Puro lusso fluttuante)
 function mostraOverlayPocket(titolo, messaggio) {
     let overlay = document.getElementById('pocket-immersive-overlay');
