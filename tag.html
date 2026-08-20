@@ -1889,8 +1889,15 @@ function apriMacroArea(area, skipHistory = false) {
     const topBar = document.getElementById('mqt-top-bar-layer');
     if (topBar) topBar.style.display = 'block';
     
+    // --- NASCONDI TASTO SALVA (Dissolvenza per non coprire il titolo) ---
+    const btnSalva = document.getElementById('btn-salva-pocket');
+    if (btnSalva) {
+        btnSalva.style.opacity = '0';
+        btnSalva.style.pointerEvents = 'none';
+    }
+    
     // Salva il riferimento per il tasto indietro
-    macroAreaCorrente = area; 
+    macroAreaCorrente = area;
     
     document.getElementById('testo-chiudi').innerText = 'CHIUDI';
     document.getElementById('icona-chiudi').className = 'fas fa-times';
@@ -2343,11 +2350,21 @@ window.addEventListener('popstate', (e) => {
     const overlaySezione = document.getElementById('overlaySezione');
     const container = document.getElementById('profile-content');
     
-// --- RIACCENDI LA TOP BAR SE NON SIAMO NEL LIVELLO PROFONDO ---
+    // --- RIACCENDI LA TOP BAR SE NON SIAMO NEL LIVELLO PROFONDO ---
     const topBar = document.getElementById('mqt-top-bar-layer');
     if (topBar && hash !== '#dettaglio' && hash !== '#lightbox') {
         topBar.style.display = 'block';
     } 
+    
+    // --- MOSTRA TASTO SALVA AL RITORNO IN HOME ---
+    const btnSalva = document.getElementById('btn-salva-pocket');
+    if (btnSalva) {
+        if (hash === '' || hash === '#ecosistema') {
+            btnSalva.style.opacity = '1';
+            btnSalva.style.pointerEvents = 'auto';
+        }
+    }
+
     // Livello 3 (Profondo): Modale Foto o Dettaglio Features
     if (lightbox && lightbox.style.display === 'flex') {
         lightbox.style.display = 'none';
