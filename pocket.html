@@ -281,16 +281,38 @@ function caricaPocket() {
         rigaContatto.style.opacity = "0";
         rigaContatto.style.transform = "translateX(-20px)";
         
-        setTimeout(() => {
+     setTimeout(() => {
             // Rimuovi dalla memoria del telefono
             let pocketLocale = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
             pocketLocale = pocketLocale.filter(c => c.username !== username);
             localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
             
+            // AGGIUNTA CLOUD SYNC: Se elimino dal telefono, elimino da Airtable
+            const utenteLoggato = localStorage.getItem('loggedUser');
+            if (utenteLoggato) {
+                sincronizzaPocketCloud(utenteLoggato, pocketLocale);
+            }
+            
             // Ricarica la grafica
             caricaPocket();
             mostraToast('Contatto rimosso');
         }, 300);
+    }
+
+    // Motore di Sync (Da incollare sotto eliminaContatto)
+    async function sincronizzaPocketCloud(utente, pocketArray) {
+        try {
+            await fetch('/api/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username_system: utente,
+                    pocket_cloud: JSON.stringify(pocketArray)
+                })
+            });
+        } catch (error) {
+            console.error("Cloud Sync fallito");
+        }
     } 
 </script>
 </body>
