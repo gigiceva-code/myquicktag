@@ -264,26 +264,26 @@
         }
 
 
-     /* 1. LA STRUTTURA DELL'OVERLAY LIQUIDO */
+   /* 1. LA STRUTTURA DELL'OVERLAY LIQUIDO */
         .drawer-glass {
             position: fixed !important; 
             top: 50% !important; 
             left: 50% !important; 
-            transform: translate(-50%, -45%) scale(0.95) !important; 
+            transform: translate(-50%, -40%) scale(0.9) !important; /* Parte più in basso e più piccolo */
             width: calc(100% - 32px) !important; 
             max-width: 410px !important; 
             
             height: auto !important; 
-            max-height: calc(100svh - 32px) !important;
+            max-height: calc(100svh - 40px) !important;
             
-            /* Effetto Vetro Ultra-Premium */
-            background: rgba(15, 15, 18, 0.85) !important; 
-            backdrop-filter: blur(35px) saturate(180%) !important; 
-            -webkit-backdrop-filter: blur(35px) saturate(180%) !important;
+            /* Vetro più liquido e meno "scatola" */
+            background: rgba(20, 20, 25, 0.65) !important; 
+            backdrop-filter: blur(40px) saturate(200%) !important; 
+            -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
             
             border: 1px solid rgba(255, 255, 255, 0.08) !important; 
-            border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-radius: 28px !important; 
+            border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 36px !important; /* Bordi molto più morbidi */
             padding: 32px 24px !important;
             z-index: 2000 !important; 
             
@@ -293,22 +293,30 @@
             overflow-y: auto !important; 
             scrollbar-width: none !important;
             box-sizing: border-box !important; 
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 10px 20px rgba(255,255,255,0.02) !important;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8), inset 0 10px 20px rgba(255,255,255,0.03) !important;
             
-            /* IL SALVAVITA DELLA GPU: visibility: hidden spegne i calcoli grafici */
+            /* IL MOTORE DI FLUIDITÀ RIPARATO */
             opacity: 0; 
             visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s !important;
+            /* In chiusura: aspetta 0.5s prima di togliere la visibility, così l'opacità fa in tempo a svanire */
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        visibility 0s linear 0.5s !important; 
         }
 
         /* 2. IL MOTORE DI EMERSIONE */
         .drawer-glass.open { 
             opacity: 1 !important; 
-            visibility: visible !important; /* Riaccende la GPU solo per questo blocco */
+            visibility: visible !important; 
             pointer-events: auto !important;
-            transform: translate(-50%, -50%) scale(1) !important; 
-        }
+            transform: translate(-50%, -50%) scale(1) !important; /* Raggiunge il centro ingrandendosi */
+            
+            /* In apertura: la visibility scatta a 'visible' a zero secondi, permettendo all'animazione di esplodere fluida */
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        visibility 0s linear 0s !important; 
+        } 
         /* 3. ESTETICA DELLA BARRA DI SCORRIMENTO */
         .drawer-glass::-webkit-scrollbar {
             display: none !important;
