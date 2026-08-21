@@ -77,7 +77,7 @@
         }
 
         /* ====================================================
-           HERO STATS (Dato Reale da Airtable)
+           HERO STATS
            ==================================================== */
         .hero-stats {
             display: flex;
@@ -101,7 +101,7 @@
             font-weight: 300;
             color: var(--text-main);
             line-height: 1;
-            text-shadow: 0 0 30px rgba(80, 200, 120, 0.15); /* Leggero alone smeraldo */
+            text-shadow: 0 0 30px rgba(80, 200, 120, 0.15);
             margin-bottom: 5px;
             display: flex;
             align-items: center;
@@ -122,7 +122,7 @@
         }
 
         /* ====================================================
-           CARDS E METRICHE AVANZATE (Layout)
+           CARDS E METRICHE AVANZATE
            ==================================================== */
         .analytics-card {
             background: var(--card-bg);
@@ -150,10 +150,10 @@
         .bar-labels strong { color: var(--text-main); font-weight: 500; }
         
         .bar-track { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; }
-        .bar-fill { height: 100%; background: var(--accent-smeraldo); border-radius: 10px; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); width: 0%; }
+        .bar-fill { height: 100%; background: var(--accent-smeraldo); border-radius: 10px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); width: 0%; }
         
-        .bar-fill.apple { background: #ffffff; } /* Bianco luminoso per Apple */
-        .bar-fill.android { background: var(--accent-smeraldo); } /* Smeraldo per Android */
+        .bar-fill.apple { background: #ffffff; } 
+        .bar-fill.android { background: var(--accent-smeraldo); }
 
         /* Lista Località */
         .geo-list { display: flex; flex-direction: column; gap: 12px; }
@@ -163,7 +163,7 @@
         .geo-views { font-size: 0.85rem; font-weight: 600; color: var(--accent-smeraldo); }
 
         /* ====================================================
-           ACTION BUTTONS (Effetto Velluto)
+           ACTION BUTTONS
            ==================================================== */
         .btn-action {
             width: 100%;
@@ -196,7 +196,7 @@
         }
 
         /* ====================================================
-           OVERLAY MODALS (Niente cassetti!)
+           OVERLAY MODALS
            ==================================================== */
         .modal-overlay {
             position: fixed;
@@ -222,7 +222,7 @@
         .modal-box {
             background: #0d0d0f;
             border: 1px solid var(--border-light);
-            border-top: 1px solid rgba(80, 200, 120, 0.3); /* Luce smeraldo in cima */
+            border-top: 1px solid rgba(80, 200, 120, 0.3);
             border-radius: 24px;
             padding: 30px 24px;
             width: 100%;
@@ -267,7 +267,7 @@
         <div class="brand-logo">myquicktag</div>
     </header>
 
-    <!-- METRICA PRINCIPALE (REALE) -->
+    <!-- METRICA PRINCIPALE -->
     <section class="hero-stats">
         <h2>Total Scans</h2>
         <div class="total-views">
@@ -278,7 +278,7 @@
         </div>
     </section>
 
-    <!-- METRICHE AVANZATE (SCHELETRO UI) -->
+    <!-- METRICHE AVANZATE DISPOSITIVI -->
     <section class="analytics-card">
         <div class="card-header">
             <i class="fas fa-mobile-alt"></i>
@@ -288,43 +288,33 @@
         <div class="bar-group">
             <div class="bar-labels">
                 <span>iOS (Apple)</span>
-                <strong>65%</strong>
+                <strong id="os-apple-perc">0%</strong>
             </div>
             <div class="bar-track">
-                <div class="bar-fill apple" style="width: 65%;"></div>
+                <div class="bar-fill apple" id="os-apple-bar" style="width: 0%;"></div>
             </div>
         </div>
 
         <div class="bar-group" style="margin-top: 5px;">
             <div class="bar-labels">
-                <span>Android</span>
-                <strong>35%</strong>
+                <span>Android / Altri</span>
+                <strong id="os-android-perc">0%</strong>
             </div>
             <div class="bar-track">
-                <div class="bar-fill android" style="width: 35%;"></div>
+                <div class="bar-fill android" id="os-android-bar" style="width: 0%;"></div>
             </div>
         </div>
     </section>
 
+    <!-- METRICHE AVANZATE LOCALITÀ -->
     <section class="analytics-card">
         <div class="card-header">
             <i class="fas fa-map-marker-alt"></i>
             <h3>Top Località</h3>
         </div>
         
-        <div class="geo-list">
-            <div class="geo-item">
-                <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.7rem;"></i> Milano, IT</div>
-                <div class="geo-views">42</div>
-            </div>
-            <div class="geo-item">
-                <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.7rem;"></i> Roma, IT</div>
-                <div class="geo-views">18</div>
-            </div>
-            <div class="geo-item">
-                <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.7rem;"></i> Torino, IT</div>
-                <div class="geo-views">7</div>
-            </div>
+        <div class="geo-list" id="geo-list-container">
+            <div style="font-size:0.8rem; color:var(--text-sec); text-align:center; padding: 10px 0;">Analisi dati in corso...</div>
         </div>
     </section>
 
@@ -338,9 +328,7 @@
 
 </div>
 
-<!-- ====================================================
-     OVERLAY 1: ESPORTAZIONE
-     ==================================================== -->
+<!-- OVERLAY ESPORTAZIONE -->
 <div id="overlay-export" class="modal-overlay" onclick="chiudiOverlayClickEsterno(event, 'overlay-export')">
     <div class="modal-box">
         <button class="modal-close" onclick="chiudiOverlay('overlay-export')"><i class="fas fa-times"></i></button>
@@ -351,9 +339,7 @@
     </div>
 </div>
 
-<!-- ====================================================
-     OVERLAY 2: PIXEL
-     ==================================================== -->
+<!-- OVERLAY PIXEL -->
 <div id="overlay-pixel" class="modal-overlay" onclick="chiudiOverlayClickEsterno(event, 'overlay-pixel')">
     <div class="modal-box">
         <button class="modal-close" onclick="chiudiOverlay('overlay-pixel')"><i class="fas fa-times"></i></button>
@@ -392,13 +378,12 @@
         }
     }
 
-    // Effetto di conteggio animato per il Lusso
     function animaContatore(idElemento, valoreFinale) {
         const el = document.getElementById(idElemento);
         if (!el) return;
         
         let start = 0;
-        const duration = 1200; // 1.2 secondi
+        const duration = 1200; 
         const frameRate = 30;
         const totalFrames = Math.round(duration / frameRate);
         const increment = valoreFinale / totalFrames;
@@ -407,7 +392,7 @@
             start += increment;
             if (start >= valoreFinale) {
                 clearInterval(timer);
-                el.innerText = valoreFinale; // Assicura numero esatto
+                el.innerText = valoreFinale;
             } else {
                 el.innerText = Math.floor(start);
             }
@@ -421,12 +406,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         let usernameCorrente = urlParams.get("u") || localStorage.getItem("loggedUser");
 
-        // Cablaggio tasto indietro
         const btnBack = document.getElementById('btn-back-console');
         if(btnBack) {
             btnBack.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Transizione vellutata al tocco prima del redirect
                 setTimeout(() => {
                     window.location.href = usernameCorrente ? `/profile.html?u=${usernameCorrente}` : '/profile.html';
                 }, 200);
@@ -441,13 +424,64 @@
 
             if (data.success && data.fields) {
                 const viewsReali = data.fields.views || 0;
-                
-                // Anima il contatore gigante
                 animaContatore('counter-views', viewsReali);
 
-                // Mostra il badge di trend se ci sono almeno 10 visite
                 if (viewsReali > 10) {
                     document.getElementById('trend-badge').style.display = 'flex';
+                }
+
+                // ====================================================
+                // ELABORAZIONE DATI AVANZATI (JSON)
+                // ====================================================
+                if (data.fields.analytics_data) {
+                    try {
+                        const analytics = JSON.parse(data.fields.analytics_data);
+                        
+                        // 1. Calcolo Dispositivi (iOS vs Android/Other)
+                        const os = analytics.os || { iOS: 0, Android: 0, Other: 0 };
+                        const appleViews = os.iOS || 0;
+                        const androidViews = (os.Android || 0) + (os.Other || 0);
+                        const totalOsViews = appleViews + androidViews;
+
+                        if (totalOsViews > 0) {
+                            const applePerc = Math.round((appleViews / totalOsViews) * 100);
+                            const androidPerc = Math.round((androidViews / totalOsViews) * 100);
+                            
+                            document.getElementById('os-apple-perc').innerText = applePerc + '%';
+                            document.getElementById('os-android-perc').innerText = androidPerc + '%';
+                            
+                            // Animazione fluida delle barre
+                            setTimeout(() => {
+                                document.getElementById('os-apple-bar').style.width = applePerc + '%';
+                                document.getElementById('os-android-bar').style.width = androidPerc + '%';
+                            }, 300);
+                        }
+
+                        // 2. Classifica Città (Top 4)
+                        const geo = analytics.geo || {};
+                        const geoArray = Object.entries(geo).map(([city, count]) => ({ city, count }));
+                        
+                        // Ordina dalla città con più visite a quella con meno
+                        geoArray.sort((a, b) => b.count - a.count);
+                        const topGeo = geoArray.slice(0, 4);
+                        
+                        const geoListEl = document.getElementById('geo-list-container');
+                        if (geoListEl) {
+                            if (topGeo.length > 0) {
+                                geoListEl.innerHTML = topGeo.map(item => `
+                                    <div class="geo-item">
+                                        <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.7rem;"></i> ${item.city}</div>
+                                        <div class="geo-views">${item.count}</div>
+                                    </div>
+                                `).join('');
+                            } else {
+                                geoListEl.innerHTML = '<div style="font-size:0.8rem; color:var(--text-sec); text-align:center; padding: 10px 0;">Nessun dato geografico registrato.</div>';
+                            }
+                        }
+
+                    } catch(e) {
+                        console.error("Errore durante il parsing di analytics_data:", e);
+                    }
                 }
             }
         } catch (error) {
