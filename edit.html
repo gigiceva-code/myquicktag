@@ -600,7 +600,7 @@
             <div class="username-capsule-wrapper">
                 <div class="username-capsule">
                     <div class="username-capsule-inner">
-                        <div class="username-display" id="tag-username">@TUONOME.IT</div>
+                      <div class="username-display" id="tag-username"></div> 
                     </div>
                 </div>
             </div>
@@ -2250,12 +2250,20 @@
               }      
             } catch (e) { 
                 console.error("Errore caricamento", e); 
-            } finally {
+         } finally {
                 isLoadingDati = false;
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
+                
+                // Dissolvenza incrociata del sipario
+                setTimeout(() => {
+                    const loader = document.getElementById('luxury-loader');
+                    if(loader) {
+                        loader.style.opacity = '0';
+                        setTimeout(() => loader.style.display = 'none', 600); // Lo rimuove dopo l'animazione
+                    }
+                }, 150); // Piccolo ritardo per far respirare la grafica
             }
-        }
-
+        } 
                   
         
        // ============================================================
