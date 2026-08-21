@@ -264,35 +264,45 @@
         }
 
 
-       /* 1. LA STRUTTURA DEL CASSETTO */
+       /* 1. LA STRUTTURA DELL'OVERLAY LIQUIDO (Ex-Cassetto) */
         .drawer-glass {
-            position: fixed !important; 
-            bottom: 24px !important; /* Posizione fissa in cui deve stare quando è aperto */
-            left: 26px !important; right: 26px !important; width: auto !important; margin: 0 auto !important; max-width: 360px !important; 
-            background: rgba(30, 30, 35, 0.4) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; 
-            border: 1px solid rgba(255, 255, 255, 0.15) !important; border-radius: 28px !important; padding: 24px !important;
+            position: fixed !important; top: 50% !important; left: 50% !important; 
+            transform: translate(-50%, -45%) scale(0.95) !important;
+            width: calc(100% - 32px) !important; max-width: 410px !important; 
+            height: calc(100svh - 32px) !important; max-height: 840px !important;
+            
+            /* Effetto Vetro Ultra-Premium */
+            background: rgba(15, 15, 18, 0.75) !important; 
+            backdrop-filter: blur(35px) saturate(180%) !important; 
+            -webkit-backdrop-filter: blur(35px) saturate(180%) !important;
+            
+            border: 1px solid rgba(255, 255, 255, 0.08) !important; 
+            border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 28px !important; 
+            padding: 40px 24px 32px 24px !important;
             z-index: 2000 !important; 
             
-            /* LA VERA MAGIA: Lo spingiamo letteralmente giù del 150% rispetto allo schermo */
-            transform: translateY(150vh) !important; 
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important; 
+            display: flex !important; flex-direction: column;
+            overflow-y: auto !important; scrollbar-width: none !important;
+            box-sizing: border-box !important; 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 10px 20px rgba(255,255,255,0.02) !important;
             
-            box-sizing: border-box !important; box-shadow: 0 10px 40px rgba(0,0,0,0.9) !important; 
-            max-height: 85vh !important; overflow-y: auto !important; scrollbar-width: none !important; 
+            /* IL MOTORE LIQUIDO (Sostituisce il display:none per poter animare) */
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
 
-        /* 2. IL MOTORE DI APERTURA */
+        /* 2. IL MOTORE DI EMERSIONE */
         .drawer-glass.open { 
-            /* Azzera la spinta, facendolo tornare morbidamente alla sua posizione (bottom: 24px) */
-            transform: translateY(0) !important; 
+            opacity: 1 !important; 
+            pointer-events: auto !important;
+            transform: translate(-50%, -50%) scale(1) !important; 
         }
 
         /* 3. ESTETICA DELLA BARRA DI SCORRIMENTO */
         .drawer-glass::-webkit-scrollbar {
             display: none !important;
         }
-
-        
         .drawer-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; padding: 0; position: relative; width: 100%; }
         .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-align: center; width: 100%; }
         .drawer-subtitle { font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase; text-align: center; }
