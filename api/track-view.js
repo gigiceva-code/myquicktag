@@ -14,12 +14,14 @@ export default async function handler(req, res) {
     const city = req.headers['x-vercel-ip-city'] || 'Sconosciuta';
     const country = req.headers['x-vercel-ip-country'] || 'XX';
 
-    // Riconoscimento Dispositivo
+   // Riconoscimento Dispositivo Avanzato
     let os = 'Other';
-    if (/iPad|iPhone|iPod|Mac/.test(userAgent)) {
-        os = 'iOS'; // Raggruppiamo l'ecosistema Apple
+    if (/windows|macintosh|linux/i.test(userAgent) && !/ipad|iphone|ipod/i.test(userAgent) && !/android/i.test(userAgent)) {
+        os = 'Desktop'; // Computer fissi o portatili
+    } else if (/ipad|iphone|ipod/.test(userAgent)) {
+        os = 'iOS'; // Ecosistema mobile Apple
     } else if (/android/i.test(userAgent)) {
-        os = 'Android';
+        os = 'Android'; // Ecosistema mobile Google
     }
 
     // Formattazione stringa località (Es. "Milano, IT")
