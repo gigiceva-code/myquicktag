@@ -264,32 +264,42 @@
         }
 
 
-       /* 1. LA STRUTTURA DELL'OVERLAY LIQUIDO (Ex-Cassetto) */
+     /* 1. LA STRUTTURA DELL'OVERLAY LIQUIDO */
         .drawer-glass {
-            position: fixed !important; top: 50% !important; left: 50% !important; 
-            transform: translate(-50%, -45%) scale(0.95) !important;
-            width: calc(100% - 32px) !important; max-width: 410px !important; 
-            height: calc(100svh - 32px) !important; max-height: 840px !important;
+            position: fixed !important; 
+            top: 50% !important; 
+            left: 50% !important; 
+            transform: translate(-50%, -45%) scale(0.95) !important; /* Partenza rimpicciolita e un po' in alto */
+            width: calc(100% - 32px) !important; 
+            max-width: 410px !important; 
+            
+            /* LA CORREZIONE MAGICA: Altezza automatica, si adatta al contenuto! */
+            height: auto !important; 
+            max-height: calc(100svh - 32px) !important;
             
             /* Effetto Vetro Ultra-Premium */
-            background: rgba(15, 15, 18, 0.75) !important; 
+            background: rgba(15, 15, 18, 0.85) !important; 
             backdrop-filter: blur(35px) saturate(180%) !important; 
             -webkit-backdrop-filter: blur(35px) saturate(180%) !important;
             
             border: 1px solid rgba(255, 255, 255, 0.08) !important; 
             border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
             border-radius: 28px !important; 
-            padding: 40px 24px 32px 24px !important;
+            padding: 32px 24px !important;
             z-index: 2000 !important; 
             
-            display: flex !important; flex-direction: column;
-            overflow-y: auto !important; scrollbar-width: none !important;
+            display: flex !important; 
+            flex-direction: column;
+            justify-content: flex-start !important; /* Tiene i contenuti compatti in alto */
+            overflow-y: auto !important; 
+            scrollbar-width: none !important;
             box-sizing: border-box !important; 
             box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 10px 20px rgba(255,255,255,0.02) !important;
             
-            /* IL MOTORE LIQUIDO (Sostituisce il display:none per poter animare) */
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            /* IL MOTORE LIQUIDO */
+            opacity: 0; 
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
 
         /* 2. IL MOTORE DI EMERSIONE */
@@ -303,6 +313,21 @@
         .drawer-glass::-webkit-scrollbar {
             display: none !important;
         }
+
+        /* 4. LO SFONDO SCURO (Backdrop) */
+        .drawer-backdrop {
+            position: fixed !important;
+            top: 0 !important; left: 0 !important;
+            width: 100% !important; height: 100% !important;
+            background: rgba(0, 0, 0, 0.6) !important; /* Scuro ed elegante, non nero totale */
+            z-index: 1999 !important; /* Appena sotto il vetro */
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease !important;
+        }
+        .drawer-backdrop.active {
+            opacity: 1 !important; 
+            pointer-events: auto !important;
+        } 
         .drawer-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; padding: 0; position: relative; width: 100%; }
         .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-align: center; width: 100%; }
         .drawer-subtitle { font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase; text-align: center; }
@@ -1418,6 +1443,11 @@
                 const params = new URLSearchParams(window.location.search);
                 const nomeUrl = params.get('u') || params.get('user');
                 if (nomeUrl) return nomeUrl.replace('@', '').trim().toLowerCase();
+                
+                // LA MAGIA: Se manca l'URL, chiediamo alla memoria del Login!
+                const utenteLoggato = localStorage.getItem('loggedUser');
+                if (utenteLoggato) return utenteLoggato.replace('@', '').trim().toLowerCase();
+                
                 if (typeof nomeUtente !== 'undefined' && nomeUtente) return nomeUtente.replace('@', '').trim().toLowerCase();
             } catch(e) {}
             return "tuonome.it";
