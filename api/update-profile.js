@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     
     // 1. LA LISTA VIP (Aggiunti pocket_cloud, flash_micro e live_status_micro)
     const nativeFields = [
-      "username_display", "bio", "cv", "plan", "digital_style", "digital_layout", "stato", 
+      "username_display", "bio", "cv", "digital_style", "digital_layout", "stato", 
       "password", "email", "modulo_vcf", "sito_web", 
       "quick_action_tipo", "quick_action_label", "quick_action_url", "avatar_url",
       "live_status_color", "live_status_text", "live_status_micro", "live_status_action_type", "live_status_action_label", "live_status_action_url",
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
               else if (upper === "TITANIUM") valueClean = "TITANIUM";
               else if (upper === "OBSIDIAN" || upper === "OBSIDIAN GOLD") valueClean = "OBSIDIAN GOLD";
             }
-            if (f === "plan") valueClean = valueClean.toUpperCase();
+           
             if (f === "stato") valueClean = valueClean.toLowerCase();
             if (f === "quick_action_tipo") valueClean = valueClean.toLowerCase();
             
