@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Business Intelligence - myquicktag</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ====================================================
+           CORE: BLACK LUXURY MINIMAL
+           ==================================================== */
+        :root {
+            --bg-color: #000000;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --border-light: rgba(255, 255, 255, 0.05);
+            --accent-smeraldo: #50C878;
+            --text-main: #ffffff;
+            --text-sec: #6c6c70; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px 16px 40px 16px;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ====================================================
+           HEADER & NAVIGAZIONE
+           ==================================================== */
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .btn-back {
+            color: var(--text-sec);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-back:active { color: var(--text-main); }
+        .btn-back span { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
+        .brand-logo {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--accent-smeraldo);
+        }
+
+        /* ====================================================
+           HERO STATS (Dato Reale da Airtable)
+           ==================================================== */
+        .hero-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .hero-stats h2 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-sec);
+            margin-bottom: 10px;
+        }
+
+        .total-views {
+            font-size: 4rem;
+            font-weight: 300;
+            color: var(--text-main);
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(80, 200, 120, 0.15); /* Leggero alone smeraldo */
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trend-badge {
+            background: rgba(80, 200, 120, 0.1);
+            color: var(--accent-smeraldo);
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(80, 200, 120, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ====================================================
+           CARDS E METRICHE AVANZATE (Layout)
+           ==================================================== */
+        .analytics-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .card-header i { color: var(--accent-smeraldo); font-size: 1rem; }
+        .card-header h3 { font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
+
+        /* Progress Bars Eleganti per Dispositivi */
+        .bar-group { display: flex; flex-direction: column; gap: 6px; }
+        .bar-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-sec); }
+        .bar-labels strong { color: var(--text-main); font-weight: 500; }
+        
+        .bar-track { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--accent-smeraldo); border-radius: 10px; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); width: 0%; }
+        
+        .bar-fill.apple { background: #ffffff; } /* Bianco luminoso per Apple */
+        .bar-fill.android { background: var(--accent-smeraldo); } /* Smeraldo per Android */
+
+        /* Lista Località */
+        .geo-list { display: flex; flex-direction: column; gap: 12px; }
+        .geo-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+        .geo-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .geo-city { font-size: 0.85rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .geo-views { font-size: 0.85rem; font-weight: 600; color: var(--accent-smeraldo); }
+
+        /* ====================================================
+           ACTION BUTTONS (Effetto Velluto)
+           ==================================================== */
+        .btn-action {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-action:active {
+            transform: scale(0.97);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-action.primary {
+            background: rgba(80, 200, 120, 0.1);
+            border-color: rgba(80, 200, 120, 0.3);
+            color: var(--accent-smeraldo);
+        }
+
+        /* ====================================================
+           OVERLAY MODALS (Niente cassetti!)
+           ==================================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #0d0d0f;
+            border: 1px solid var(--border-light);
+            border-top: 1px solid rgba(80, 200, 120, 0.3); /* Luce smeraldo in cima */
+            border-radius: 24px;
+            padding: 30px 24px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            transform: scale(0.95) translateY(10px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: none; border: none;
+            color: var(--text-sec);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .modal-icon { font-size: 2.5rem; color: var(--accent-smeraldo); margin-bottom: 15px; }
+        .modal-title { font-size: 1.1rem; color: #fff; letter-spacing: 1px; margin-bottom: 10px; font-weight: 500; }
+        .modal-text { font-size: 0.85rem; color: var(--text-sec); line-height: 1.5; margin-bottom: 25px; }
+
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <!-- HEADER -->
+    <header class="nav-header">
+        <a href="#" id="btn-back-console" class="btn-back">
+            <i class="fas fa-chevron-left"></i>
+            <span>Console</span>
+        </a>
+        <div class="brand-logo">myquicktag</div>
+    </header>
+
+    <!-- METRICA PRINCIPALE (REALE) -->
+    <section class="hero-stats">
+        <h2>Total Scans</h2>
+        <div class="total-views">
+            <span id="counter-views">0</span>
+        </div>
+        <div class="trend-badge" id="trend-badge" style="display: none;">
+            <i class="fas fa-arrow-up"></i> <span>+12% vs mese scorso</span>
+        </div>
+    </section>
+
+    <!-- METRICHE AVANZATE (SCHELETRO UI) -->
+    <section class="analytics-card">
+        <div class="card-header">
+            <i class="fas fa-mobile-alt"></i>
+            <h3>Dispositivi</h3>
+        </div>
+        
+        <div class="bar-group">
+            <div class="bar-labels">
+                <span>iOS (Apple)</span>
+                <strong>65%</strong>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill apple" style="width: 65%;"></div>
+            </div>
+        </div>
+
+        <div class="bar-group" style="margin-top: 5px;">
+            <div class="bar-labels">
+                <span>Android</span>
+                <strong>35%</strong>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill android" style="width: 35%;"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="analytics-card">
+        <div class="card-header">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Top Località</h3>
+        </div>
+        
+        <div class="geo-list">
+            <div class="geo-item">
+                <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.7rem;"></i> Milano, IT</div>
+                <div class="geo-views">42</div>
+            </div>
+            <div class="geo-item">
+                <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.7rem;"></i> Roma, IT</div>
+                <div class="geo-views">18</div>
+            </div>
+            <div class="geo-item">
+                <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.7rem;"></i> Torino, IT</div>
+                <div class="geo-views">7</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AZIONI -->
+    <button class="btn-action primary" onclick="apriOverlay('overlay-export')">
+        <i class="fas fa-download"></i> Esporta Report CSV
+    </button>
+    <button class="btn-action" onclick="apriOverlay('overlay-pixel')">
+        <i class="fas fa-code"></i> Pixel & Tracking
+    </button>
+
+</div>
+
+<!-- ====================================================
+     OVERLAY 1: ESPORTAZIONE
+     ==================================================== -->
+<div id="overlay-export" class="modal-overlay" onclick="chiudiOverlayClickEsterno(event, 'overlay-export')">
+    <div class="modal-box">
+        <button class="modal-close" onclick="chiudiOverlay('overlay-export')"><i class="fas fa-times"></i></button>
+        <i class="fas fa-file-csv modal-icon"></i>
+        <h3 class="modal-title">Esporta Dati</h3>
+        <p class="modal-text">Riceverai un'email con il file CSV contenente l'elenco completo delle scansioni e i dati demografici.</p>
+        <button class="btn-action primary" onclick="simulaAzione('overlay-export')">Invia al mio indirizzo</button>
+    </div>
+</div>
+
+<!-- ====================================================
+     OVERLAY 2: PIXEL
+     ==================================================== -->
+<div id="overlay-pixel" class="modal-overlay" onclick="chiudiOverlayClickEsterno(event, 'overlay-pixel')">
+    <div class="modal-box">
+        <button class="modal-close" onclick="chiudiOverlay('overlay-pixel')"><i class="fas fa-times"></i></button>
+        <i class="fas fa-bullseye modal-icon" style="color: #fff;"></i>
+        <h3 class="modal-title">Retargeting</h3>
+        <p class="modal-text">Vuoi tracciare chi scansiona la tua tag per fargli vedere le tue pubblicità su Facebook o Google?</p>
+        <button class="btn-action" onclick="chiudiOverlay('overlay-pixel')">Configura Pixel</button>
+    </div>
+</div>
+
+<script>
+    // ====================================================
+    // FUNZIONI DI NAVIGAZIONE E UI
+    // ====================================================
+    function apriOverlay(id) {
+        document.getElementById(id).classList.add('active');
+    }
+
+    function chiudiOverlay(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    function chiudiOverlayClickEsterno(event, id) {
+        if (event.target.id === id) {
+            chiudiOverlay(id);
+        }
+    }
+
+    function simulaAzione(idOverlay) {
+        const btn = document.querySelector(`#${idOverlay} .btn-action.primary`);
+        if(btn) {
+            btn.innerHTML = '<i class="fas fa-check"></i> Inviato';
+            btn.style.background = '#10b981';
+            btn.style.color = '#000';
+            setTimeout(() => chiudiOverlay(idOverlay), 1500);
+        }
+    }
+
+    // Effetto di conteggio animato per il Lusso
+    function animaContatore(idElemento, valoreFinale) {
+        const el = document.getElementById(idElemento);
+        if (!el) return;
+        
+        let start = 0;
+        const duration = 1200; // 1.2 secondi
+        const frameRate = 30;
+        const totalFrames = Math.round(duration / frameRate);
+        const increment = valoreFinale / totalFrames;
+        
+        const timer = setInterval(() => {
+            start += increment;
+            if (start >= valoreFinale) {
+                clearInterval(timer);
+                el.innerText = valoreFinale; // Assicura numero esatto
+            } else {
+                el.innerText = Math.floor(start);
+            }
+        }, frameRate);
+    }
+
+    // ====================================================
+    // FETCH DEI DATI REALI DA AIRTABLE
+    // ====================================================
+    document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        let usernameCorrente = urlParams.get("u") || localStorage.getItem("loggedUser");
+
+        // Cablaggio tasto indietro
+        const btnBack = document.getElementById('btn-back-console');
+        if(btnBack) {
+            btnBack.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Transizione vellutata al tocco prima del redirect
+                setTimeout(() => {
+                    window.location.href = usernameCorrente ? `/profile.html?u=${usernameCorrente}` : '/profile.html';
+                }, 200);
+            });
+        }
+
+        if (!usernameCorrente) return;
+
+        try {
+            const response = await fetch(`/api/get-profile?u=${usernameCorrente}`);
+            const data = await response.json();
+
+            if (data.success && data.fields) {
+                const viewsReali = data.fields.views || 0;
+                
+                // Anima il contatore gigante
+                animaContatore('counter-views', viewsReali);
+
+                // Mostra il badge di trend se ci sono almeno 10 visite
+                if (viewsReali > 10) {
+                    document.getElementById('trend-badge').style.display = 'flex';
+                }
+            }
+        } catch (error) {
+            console.error("Errore nel caricamento delle statistiche:", error);
+            document.getElementById('counter-views').innerText = "-";
+        }
+    });
+</script>
+
+</body>
+</html>
