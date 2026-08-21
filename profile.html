@@ -773,20 +773,32 @@ margin-top: 40px; /* Questo crea la separazione netta che cerchi */
 
             </div>
         </section>
-
-        <!-- ========================================== -->
-        <!-- OVERLAY UPSELL ANALYTICS                   -->
+<!-- ========================================== -->
+        <!-- OVERLAY UPSELL ANALYTICS (ELITE EDITION)   -->
         <!-- ========================================== -->
         <div id="upsell-analytics-modal" class="qr-modal-overlay" style="display: none; z-index: 9999;">
-            <div class="qr-modal-content" style="max-width: 340px; padding: 35px 25px;">
-                <button onclick="document.getElementById('upsell-analytics-modal').style.display='none'" class="close-modal-btn">&times;</button>
-                <div style="color: #d4af37; font-size: 2.5rem; margin-bottom: 15px;"><i class="fas fa-chart-pie"></i></div>
-                <h3 class="modal-title" style="font-size: 1.3rem;">Analisi Avanzata</h3>
-                <p class="modal-subtitle" style="margin-bottom: 20px; font-size: 0.85rem; line-height: 1.5;">Scopri da quali città ti scansionano, quali link cliccano di più e i dispositivi usati.</p>
-                <a href="#" id="btn-upsell-checkout" style="display: block; width: 100%; background: var(--accent-smeraldo); color: #000; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Sblocca con Premium</a>
+            <div class="qr-modal-content" style="max-width: 360px; padding: 40px 30px; background: #0a0a0a; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
+                <button onclick="document.getElementById('upsell-analytics-modal').style.display='none'" class="close-modal-btn" style="color: #888;">&times;</button>
+                
+                <div style="width: 50px; height: 50px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: #d4af37; font-size: 1.3rem;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 600; color: #fff; letter-spacing: -0.3px; margin-bottom: 8px;">Business Intelligence</h3>
+                <p class="modal-subtitle" style="color: #999; font-size: 0.85rem; line-height: 1.5; margin-bottom: 24px;">
+                    L'accesso ai dati geografici, ai flussi di traffico e al tracciamento dei click è riservato ai profili <strong>Premium</strong> e <strong>Gold</strong>.
+                </p>
+                
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 16px; text-align: left; margin-bottom: 25px;">
+                    <div style="font-size: 0.78rem; color: #ccc; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-shield-alt" style="color: var(--accent-smeraldo);"></i> Geolocalizzazione Scansioni</div>
+                    <div style="font-size: 0.78rem; color: #ccc; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-shield-alt" style="color: var(--accent-smeraldo);"></i> Analisi Dispositivi (iOS / Android)</div>
+                    <div style="font-size: 0.78rem; color: #ccc; display: flex; align-items: center; gap: 8px;"><i class="fas fa-shield-alt" style="color: var(--accent-smeraldo);"></i> Heatmap Click sui Link</div>
+                </div>
+                
+                <a href="#" id="btn-upsell-checkout" style="display: block; width: 100%; background: #ffffff; color: #000000; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.8px; text-align: center; transition: all 0.2s ease;">Fai l'Upgrade</a>
             </div>
         </div>
-        </section>
+       
 <script>
 // ====================================================
 // 🟩 BLOCCO 1 — FUNZIONI DI SUPPORTO & LUXURY NAVIGATE
