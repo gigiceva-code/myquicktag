@@ -269,11 +269,10 @@
             position: fixed !important; 
             top: 50% !important; 
             left: 50% !important; 
-            transform: translate(-50%, -45%) scale(0.95) !important; /* Partenza rimpicciolita e un po' in alto */
+            transform: translate(-50%, -45%) scale(0.95) !important; 
             width: calc(100% - 32px) !important; 
             max-width: 410px !important; 
             
-            /* LA CORREZIONE MAGICA: Altezza automatica, si adatta al contenuto! */
             height: auto !important; 
             max-height: calc(100svh - 32px) !important;
             
@@ -290,25 +289,26 @@
             
             display: flex !important; 
             flex-direction: column;
-            justify-content: flex-start !important; /* Tiene i contenuti compatti in alto */
+            justify-content: flex-start !important; 
             overflow-y: auto !important; 
             scrollbar-width: none !important;
             box-sizing: border-box !important; 
             box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 10px 20px rgba(255,255,255,0.02) !important;
             
-            /* IL MOTORE LIQUIDO */
+            /* IL SALVAVITA DELLA GPU: visibility: hidden spegne i calcoli grafici */
             opacity: 0; 
+            visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s !important;
         }
 
         /* 2. IL MOTORE DI EMERSIONE */
         .drawer-glass.open { 
             opacity: 1 !important; 
+            visibility: visible !important; /* Riaccende la GPU solo per questo blocco */
             pointer-events: auto !important;
             transform: translate(-50%, -50%) scale(1) !important; 
         }
-
         /* 3. ESTETICA DELLA BARRA DI SCORRIMENTO */
         .drawer-glass::-webkit-scrollbar {
             display: none !important;
