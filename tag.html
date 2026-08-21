@@ -1275,8 +1275,19 @@ async function avviaFlusso(username) {
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
 
-        if (stato === "attivo") {
+      if (stato === "attivo") {
             renderizzaTagCompleta(fields);
+            
+            // ============================================================
+            // 📊 MOTORE TRACCIAMENTO VISITE (SILENZIOSO)
+            // ============================================================
+            // Se NON è il proprietario a guardare e NON siamo in modalità anteprima
+            if (!isOwner && !modeDraft && mode !== 'public' && mode !== 'new') {
+                // Spara il ping al server in background senza usare await (Zero lag per l'utente)
+                fetch(`/api/track-view?u=${usernameCorrente}`, { method: 'POST' })
+                    .catch(e => console.error("Tracking invisibile fallito:", e));
+            }
+
         } else if (stato === "in attesa") {
             if (mode === 'new' || mode === 'draft' || mode === 'public' || isOwner) {
                 renderizzaTagCompleta(fields);
@@ -1292,7 +1303,7 @@ async function avviaFlusso(username) {
         console.error("Errore critico avviaFlusso:", err);
         mostraErrore("Errore di connessione. Riprova tra qualche istante.");
     }
-}
+} 
 function formattaBadge(testoBruto) {
     const el = document.getElementById('tag-username');
     if(!el) return;
