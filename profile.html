@@ -1111,18 +1111,23 @@ function aggiornaContatoriDashboard(record) {
             btnRinnova.href = `checkout.html?u=${utenteCorrente}`;
         }
     }
-   // ====================================================
+// ====================================================
     // 📊 4. LOGICA ANALYTICS: Click sulle scansioni
     // ====================================================
     const statScansioni = document.getElementById("stat-scansioni");
     if (statScansioni) {
         statScansioni.onclick = function() {
-            // Legge il piano da Airtable. Se è vuoto, assume sia "base"
-            const userPlan = (record.plan || "base").toLowerCase().trim();
+            // Prende ESATTAMENTE la colonna 'plan' stabilita su Airtable.
+            // String() ci protegge nel caso in cui Airtable invii il dato come Array [ "Gold" ].
+            const userPlan = String(record.plan || "base").toLowerCase().trim();
             const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
 
-            if (userPlan === "base" || userPlan === "trial" || userPlan === "") {
-                // UTENTE BASE: Apre l'overlay di Upsell
+            // Il gatekeeper: se il piano è gold o premium, porte aperte.
+            if (userPlan.includes("gold") || userPlan.includes("premium")) {
+                window.location.href = `analytics.html?u=${utenteCorrente}`;
+            } 
+            // Se è base, trial o vuoto, scatta il paywall elitè.
+            else {
                 const upsellModal = document.getElementById("upsell-analytics-modal");
                 const btnUpsellCheckout = document.getElementById("btn-upsell-checkout");
                 
@@ -1132,14 +1137,9 @@ function aggiornaContatoriDashboard(record) {
                 if (upsellModal) {
                     upsellModal.style.display = "flex";
                 }
-            } else {
-                // UTENTE PREMIUM / GOLD: Viene mandato alla pagina Analytics
-                // (Che costruiremo nel prossimo step!)
-                luxuryNavigate(null, `analytics.html?u=${utenteCorrente}`);
             }
         };
     } 
-}
     // ====================================================
 // 🟪 BLOCCO 4 — GESTIONE LOGICA MODAL QR CODE
 // ====================================================
