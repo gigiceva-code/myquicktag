@@ -732,13 +732,12 @@
         </div>
 
     </div>
-    <!-- ========================================================= -->
-
-
         </div> 
     </div>   
-
-   <div class="floating-nav-bar">
+<!-- ========================================== -->
+    <!-- DOCK MYQUICKTAG (NAV BAR)                  -->
+    <!-- ========================================== -->
+    <div class="floating-nav-bar">
         <div class="luxury-menu-btn" onclick="apriDrawer('drawer-master')">
             <i class="fas fa-bars"></i>
             <span>MENU</span>
@@ -751,60 +750,89 @@
             <span id="master-action-text">COMPLETA TAG</span>
         </div>
     </div>
+    
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
-<!-- ========================================== -->
-    <!-- PLANCIA COMANDI (MENU PRINCIPALE NERO)     -->
+
+    <!-- ========================================== -->
+    <!-- 0. PLANCIA COMANDI (MENU PRINCIPALE NERO)  -->
     <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-master">
-        
-        <!-- Header Pulito (Titolo e X) copiato da tag -->
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back"></div>
             <div class="header-title" style="font-weight: 400;">PLANCIA COMANDI</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
-        <!-- I 7 AMBIENTI (Linea di separazione sottile, zero bordi laterali) -->
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
-            
             <div class="edit-menu-item" onclick="apriDrawer('env-identity')">
-                <i class="fas fa-fingerprint pillar-icon"></i>
-                <span class="pillar-text">IDENTITY</span>
+                <i class="fas fa-fingerprint pillar-icon"></i><span class="pillar-text">IDENTITY</span>
             </div>
-
             <div class="edit-menu-item" onclick="apriDrawer('env-business')">
-                <i class="fas fa-briefcase pillar-icon"></i>
-                <span class="pillar-text">BUSINESS</span>
+                <i class="fas fa-briefcase pillar-icon"></i><span class="pillar-text">BUSINESS</span>
             </div>
-
             <div class="edit-menu-item" onclick="apriDrawer('env-media')">
-                <i class="fas fa-images pillar-icon"></i>
-                <span class="pillar-text">MEDIA</span>
+                <i class="fas fa-images pillar-icon"></i><span class="pillar-text">MEDIA</span>
             </div>
-
             <div class="edit-menu-item" onclick="apriDrawer('env-network')">
-                <i class="fas fa-globe pillar-icon"></i>
-                <span class="pillar-text">NETWORK</span>
+                <i class="fas fa-globe pillar-icon"></i><span class="pillar-text">NETWORK</span>
             </div>
-
             <div class="edit-menu-item emerald-text" onclick="apriDrawer('env-action')">
-                <i class="fas fa-bolt pillar-icon"></i>
-                <span class="pillar-text">ACTION CENTER</span>
+                <i class="fas fa-bolt pillar-icon"></i><span class="pillar-text">ACTION CENTER</span>
             </div>
-
-            <div class="edit-menu-item" onclick="apriDrawer('env-stile')" style="margin-top: 15px !important;">
-                <i class="fas fa-palette pillar-icon"></i>
-                <span class="pillar-text">STILE & DESIGN</span>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-style')" style="margin-top: 15px !important;">
+                <i class="fas fa-palette pillar-icon"></i><span class="pillar-text">STILE & DESIGN</span>
             </div>
-
-            <div class="edit-menu-item" onclick="apriDrawer('env-piani')">
-                <i class="fas fa-gem pillar-icon" style="color: #e5c158 !important;"></i>
-                <span class="pillar-text" style="color: #e5c158 !important;">GESTIONE PIANO</span>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-piani')">
+                <i class="fas fa-gem pillar-icon" style="color: #e5c158 !important;"></i><span class="pillar-text" style="color: #e5c158 !important;">GESTIONE PIANO</span>
             </div>
-
         </div>
     </div>
+
+    <!-- ========================================== -->
+    <!-- 1. AMBIENTE: IDENTITY (Sottomenu)          -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="env-identity">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">IDENTITY</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-identita')">
+                <i class="fas fa-id-badge pillar-icon"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text">NOME E AVATAR</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Gestisci il tuo Brand</span>
+                </div>
+            </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-bio')">
+                <i class="fas fa-pen-nib pillar-icon"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text">BIOGRAFIA</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">La tua presentazione</span>
+                </div>
+            </div>
+            <div class="edit-menu-item" onclick="document.getElementById('modal-qr').classList.add('active');">
+                <i class="fas fa-qrcode pillar-icon" style="color: #d4af37;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #d4af37;">ACCESS TAG</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il tuo pass digitale</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 1.1 MODULO: NOME E AVATAR                  -->
+    <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-identita">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-identity')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">NOME E AVATAR</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        
         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; margin-top: 10px;">
             <input type="file" id="avatar-upload" accept="image/*" style="display: none;" onchange="gestisciUploadAvatar(event)">
             <label for="avatar-upload" id="avatar-preview-box" style="width: 84px; height: 84px; border-radius: 22px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; position: relative; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
@@ -814,14 +842,7 @@
                 </div>
             </label>
             <span style="font-size: 0.65rem; color: #86868b; margin-top: 12px; letter-spacing: 2px; text-transform: uppercase;">Logo / Foto Profilo</span>
-            
             <input type="hidden" id="field-avatar-url" value="">
-        </div>
-        <div class="drawer-header" style="flex-direction: column; margin-bottom: 15px;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-master')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">NOME BRAND</div>
-            <div class="drawer-subtitle">Aggiungi gli spazi al nome</div>
         </div>
         
         <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
@@ -832,92 +853,17 @@
             
             <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.9rem;">
         </div>
-        <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME</button>
+        <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME E LOGO</button>
     </div>
-    <div class="drawer-glass" id="drawer-style">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-master')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">DIGITAL STYLE</div>
-            <div class="drawer-subtitle">Definisci il tuo stile</div>
-        </div>
-        <div class="style-list">
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
-        </div>
-        
-        <div class="drawer-header" style="flex-direction: column; margin-top: 25px; margin-bottom: 15px;">
-            <div class="drawer-title">BRAND LAYOUT</div>
-            <div class="drawer-subtitle">La forma della tua tag</div> 
-        </div>
-        
-        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div></label>
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div></label>
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="pure" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Pure</span></div></label>
-        </div>
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()" style="margin-top: 10px;">CONFERMA STILE</button>
-    </div>
-    <div class="drawer-glass" id="drawer-asset">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-master')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">ASSET BRAND</div>
-            <div class="drawer-subtitle">Gestisci i contenuti della tua tag</div>
-        </div>
-               <div class="style-list" style="flex-direction: column; gap: 10px;">
-            <div class="style-bar" onclick="apriDrawer('drawer-live-status')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-broadcast-tower" style="color: #10b981;"></i><span style="font-weight: 600; color: #10b981;">Live Status (Semaforo)</span></div>
-                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
-            </div>
-            
-            <div class="style-bar" onclick="apriDrawer('drawer-flash')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-bolt" style="color: #e5c158;"></i><span style="font-weight: 600; color: #e5c158;">MQT Flash (Banner 24h)</span></div>
-                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
-            </div>
 
-
-
-            <div class="style-bar" onclick="apriDrawer('drawer-bio')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-pen-nib" style="color: rgba(255,255,255,0.5);"></i><span>Presentazione (Bio)</span></div>
-                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
-            </div>
-            <div class="style-bar" onclick="apriDrawer('drawer-contatti')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-address-card" style="color: rgba(255,255,255,0.5);"></i><span>Rubrica & Contatti</span></div>
-                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
-            </div>
-            <div class="style-bar" onclick="apriDrawer('drawer-social')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-share-nodes" style="color: rgba(255,255,255,0.5);"></i><span>Social & Link</span></div>
-                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
-            </div>
-            <div class="style-bar" onclick="apriDrawer('drawer-sito')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-globe" style="color: rgba(255,255,255,0.5);"></i><span>Sito Web Ufficiale</span></div>
-                <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: rgba(255,255,255,0.3);"></i>
-            </div>
-             <div class="style-bar" onclick="apriDrawer('drawer-quick')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-bolt" style="color: rgba(255,255,255,0.5);"></i><span>Azione Rapida (CTA)</span></div>
-                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
-            </div>
-                         <div class="style-bar" onclick="apriDrawer('drawer-showcase')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-file-pdf" style="color: #e5c158;"></i><span style="color: #e5c158; font-weight: 600;">Vetrina & PDF</span></div>
-                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
-            </div>
-                         <div class="style-bar" onclick="apriDrawer('drawer-gallery')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-images" style="color: #e5c158;"></i><span style="color: #e5c158; font-weight: 600;">Galleria Immagini</span></div>
-                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
-            </div>
-
-        </div>
-    </div>
+    <!-- ========================================== -->
+    <!-- 1.2 MODULO: BIOGRAFIA                      -->
+    <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-bio">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">PRESENTAZIONE</div>
-            <div class="drawer-subtitle">Racconta chi sei</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-identity')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">PRESENTAZIONE</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         
         <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 10px;">
@@ -932,23 +878,55 @@
                 <i class="fas fa-trash-alt"></i> ELIMINA BIO
             </button>
         </div>
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA BIO</button>
     </div>
+
+    <!-- ========================================== -->
+    <!-- I VECCHI MODULI (Aggiornati allo Stile Nero)-->
+    <!-- Le frecce indietro punteranno al giusto ambiente appena lo creeremo! -->
+    <!-- ========================================== -->
+    
+    <div class="drawer-glass" id="drawer-style">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">DIGITAL STYLE</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        
+        <div class="style-list">
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
+        </div>
+        
+        <div class="drawer-header-liquido" style="margin-top: 25px; margin-bottom: 15px;">
+            <div class="header-back"></div>
+            <div class="header-title" style="font-weight: 400;">BRAND LAYOUT</div>
+            <div class="header-close"></div>
+        </div>
+        
+        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div></label>
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div></label>
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="pure" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Pure</span></div></label>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">CONFERMA STILE</button>
+    </div>
+
     <div class="drawer-glass" id="drawer-contatti">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">RUBRICA & CONTATTI</div>
-            <div class="drawer-subtitle">I dati del tuo file VCF</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">CONTATTI</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            
             <div style="position: relative;">
                 <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TELEFONO PRINCIPALE</label>
                 <input type="tel" id="field-tel1" placeholder="+39 333 1234567" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
             </div>
-
             <div style="position: relative;">
                 <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">EMAIL</label>
                 <input type="email" id="field-email" placeholder="info@tuobrand.it" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
@@ -960,7 +938,6 @@
             <div style="position: relative;" class="premium-field-container">
                 <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TELEFONO SECONDARIO</label>
                 <input type="tel" id="field-tel2" placeholder="+39 02 123456" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
-                
                 <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
                     <i class="fas fa-lock" style="color: #d4af37; font-size: 1.2rem;"></i>
                 </div>
@@ -969,12 +946,10 @@
             <div style="position: relative;" class="premium-field-container">
                 <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">INDIRIZZO (MAPS)</label>
                 <input type="text" id="field-indirizzo" placeholder="Via Roma 1, Milano" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
-                
                 <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
                     <i class="fas fa-lock" style="color: #d4af37; font-size: 1.2rem;"></i>
                 </div>
             </div>
-
         </div>
         
         <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
@@ -983,25 +958,23 @@
             </button>
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
-         </div>
-  <div class="drawer-glass" id="drawer-social">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">SOCIAL & LINK</div>
-            <div class="drawer-subtitle">Gestisci il tuo ecosistema</div>
+    </div>
+
+    <div class="drawer-glass" id="drawer-social">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">SOCIAL & LINK</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="flex: 1; overflow-y: auto; padding: 0 5px 20px 5px;">
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
-                
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                     <div style="font-size: 0.65rem; color: #d4af37; letter-spacing: 1px;">I TUOI CANALI</div>
                     <div id="social-counter" style="font-size: 0.65rem; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px;">0/3 (Piano Base)</div>
                 </div>
 
-                <div id="social-internal-track" style="display: flex; flex-direction: column; gap: 8px; min-height: 10px; margin-bottom: 10px;">
-                </div>
+                <div id="social-internal-track" style="display: flex; flex-direction: column; gap: 8px; min-height: 10px; margin-bottom: 10px;"></div>
 
                 <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px; margin-top: 10px;">AGGIUNGI NUOVO LINK</div>
 
@@ -1018,7 +991,6 @@
                     </div>
                 </div>
 
-                <!-- Modulo VIP Vault (Esclusiva Gold) -->
                 <div style="margin-top: 5px; padding: 14px 16px; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -1034,9 +1006,7 @@
                     </div>
                 </div>
 
-                <button id="btn-add-social" class="btn-crea" style="background: #10b981; color: #000; margin-top: 10px; margin-bottom: 10px; font-weight: 700; border-radius: 12px;" onclick="aggiungiLinkSmart()">
-                    + AGGIUNGI AL PROFILO
-                </button>
+                <button id="btn-add-social" class="btn-crea" style="background: #10b981; color: #000; margin-top: 10px; margin-bottom: 10px; font-weight: 700; border-radius: 12px;" onclick="aggiungiLinkSmart()">+ AGGIUNGI AL PROFILO</button>
             </div>
         </div>
         <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
@@ -1048,11 +1018,10 @@
     </div> 
         
     <div class="drawer-glass" id="drawer-sito">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">SITO WEB</div>
-            <div class="drawer-subtitle">Il tuo dominio principale</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">SITO WEB</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
@@ -1067,30 +1036,26 @@
                 Il sito web gode di massima priorità visiva su myquicktag.
             </div>
         </div>
-               <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
             <button type="button" onclick="eliminaAsset('sito')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-trash-alt"></i> ELIMINA SITO WEB
             </button>
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA SITO</button>
- 
-        
     </div>
+
     <div class="drawer-glass" id="drawer-quick">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">AZIONE RAPIDA</div>
-            <div class="drawer-subtitle">Il bottone ad alta conversione</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-action')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">AZIONE RAPIDA</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
                 Crea un bottone in evidenza sulla tua tag per spingere i clienti all'azione.
             </div>
-
             <div style="position: relative;" class="premium-field-container">
-                
                 <div style="margin-bottom: 15px;">
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TIPO DI AZIONE</label>
                     <select id="field-qa-tipo" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; appearance: none;">
@@ -1102,61 +1067,44 @@
                         <option value="demo" style="color: #000;">Richiedi Demo</option>
                     </select>
                 </div>
-
                 <div style="margin-bottom: 15px;">
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO DEL BOTTONE</label>
                     <input type="text" id="field-qa-label" placeholder="Es. Prenota una consulenza" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
-
                 <div>
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">URL O NUMERO</label>
                     <input type="text" id="field-qa-url" placeholder="Es. https://calendly.com/... o +39333..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
-
                 <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
                     <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
                     <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE PREMIUM</span>
                 </div>
             </div>
         </div>
-        
-                <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
             <button type="button" onclick="eliminaAsset('quick')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-trash-alt"></i> ELIMINA AZIONE
             </button>
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA AZIONE</button>
+    </div>
 
-      </div>
-    <!-- ========================================== -->
-    <!-- CASSETTO MQT LIVE STATUS (SEMAFORO) -->
-    <!-- ========================================== -->
-   <div class="drawer-glass" id="drawer-live-status">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">LIVE STATUS</div>
-            <div class="drawer-subtitle">Cosa stai facendo in tempo reale</div>
+    <div class="drawer-glass" id="drawer-live-status">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-action')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">LIVE STATUS</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px;">
                 Il badge luminoso apparirà in cima alla tua Tag pubblica.
             </div>
-
             <div style="display: flex; gap: 10px;">
-                <div class="status-btn" id="btn-status-green" onclick="selezionaStatus('green')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); color:#10b981; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">
-                    🟢 ONLINE
-                </div>
-                <div class="status-btn" id="btn-status-yellow" onclick="selezionaStatus('yellow')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); color:#f59e0b; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">
-                    🟡 BUSY
-                </div>
-                <div class="status-btn" id="btn-status-red" onclick="selezionaStatus('red')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); color:#ef4444; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">
-                    🔴 OFFLINE
-                </div>
+                <div class="status-btn" id="btn-status-green" onclick="selezionaStatus('green')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); color:#10b981; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">🟢 ONLINE</div>
+                <div class="status-btn" id="btn-status-yellow" onclick="selezionaStatus('yellow')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); color:#f59e0b; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">🟡 BUSY</div>
+                <div class="status-btn" id="btn-status-red" onclick="selezionaStatus('red')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); color:#ef4444; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">🔴 OFFLINE</div>
             </div>
-
             <input type="hidden" id="field-status-color" value="">
             
             <div style="position: relative;">
@@ -1169,7 +1117,6 @@
             </div>
 
             <div id="status-action-container" style="display: none; flex-direction: column; gap: 15px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-top: 5px;">
-                
                 <div>
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TIPO DI AZIONE</label>
                     <select id="field-status-action-type" onchange="autoCompilaAzioneStatus()" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; outline: none; appearance: none; font-size: 0.85rem;">
@@ -1180,7 +1127,6 @@
                         <option value="link" style="color: #000;">Apri Link Esterno</option>
                     </select>
                 </div>
-
                 <div id="status-action-details" style="display: none; flex-direction: column; gap: 10px;">
                     <div>
                         <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO BOTTONE</label>
@@ -1191,146 +1137,108 @@
                         <input type="text" id="field-status-action-url" placeholder="Destinazione..." style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
                     </div>
                 </div>
-
             </div>
-
             <div style="text-align: center; margin-top: 10px;">
                 <button type="button" onclick="spegniStatus()" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fas fa-power-off"></i> SPEGNI SEMAFORO
                 </button>
             </div>
         </div>
-
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA STATUS</button>
     </div>
-    <!-- ========================================== -->
-    <!-- CASSETTO MQT FLASH (STORIE 24H) -->
-    <!-- ========================================== -->
+
     <div class="drawer-glass" id="drawer-flash">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">MQT FLASH (24H)</div>
-            <div class="drawer-subtitle">Un annuncio che si autodistrugge</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-action')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">MQT FLASH</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px;">
                 Il messaggio apparirà come banner dorato e sparirà da solo tra 24 ore esatte.
             </div>
-
             <div style="position: relative;">
                 <label style="font-size: 0.7rem; color: #e5c158; margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO DELL'ANNUNCIO (Max 40 caratteri)</label>
                 <input type="text" id="field-flash-text" placeholder="Es. -20% su tutto solo per oggi!" maxlength="40" style="width: 100%; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.3); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;" oninput="aggiornaAnteprimaLive()">
             </div>
-
             <div style="text-align: center; margin-top: 5px;">
                 <button type="button" onclick="spegniFlash()" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fas fa-trash-alt"></i> ELIMINA FLASH
                 </button>
             </div>
         </div>
-
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA FLASH</button>
     </div>
-    <!-- ========================================== -->
-    <!-- CASSETTO DIGITAL SHOWCASE (VETRINA PDF) -->
-    <!-- ========================================== -->
+
     <div class="drawer-glass" id="drawer-showcase">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">DIGITAL SHOWCASE</div>
-            <div class="drawer-subtitle">Carica il tuo Menu, Listino o CV</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">VETRINA PDF</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
                 I file verranno ospitati in cloud ad altissima velocità.
             </div>
-
             <div style="position: relative;" class="premium-field-container">
-                
-                <!-- Nome del Bottone PDF -->
                 <div style="margin-bottom: 15px;">
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO BOTTONE</label>
                     <input type="text" id="field-pdf-label" placeholder="Es. Scarica il nostro Menu" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
-
-                <!-- Area di Upload PDF -->
                 <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px;">
                     <input type="file" id="pdf-upload" accept="application/pdf" style="display: none;" onchange="gestisciUploadPDF(event)">
-                    
                     <label for="pdf-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
                         <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #e5c158; margin-bottom: 10px;"></i>
                         <span id="pdf-upload-text" style="color: #fff; font-size: 0.8rem; font-weight: 600;">Seleziona un file PDF</span>
                         <span style="font-size: 0.6rem; color: rgba(255,255,255,0.4); margin-top: 5px;">Max 5 MB</span>
                     </label>
-
                     <div id="pdf-loader" style="display: none; margin-top: 15px; width: 100%; text-align: center;">
                         <i class="fas fa-circle-notch fa-spin" style="color: #e5c158; font-size: 1.2rem;"></i>
                         <span style="display: block; font-size: 0.7rem; color: #e5c158; margin-top: 5px;">Caricamento in corso...</span>
                     </div>
                 </div>
-
-                <!-- Campo nascosto che salverà l'URL generato da Cloudinary -->
                 <input type="hidden" id="field-pdf-url" value="">
-
                 <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
                     <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
                     <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE PREMIUM</span>
                 </div>
             </div>
         </div>
-
-                <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
             <button type="button" onclick="eliminaAsset('pdf')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-trash-alt"></i> ELIMINA PDF
             </button>
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VETRINA</button>
-
     </div>
-    <!-- ========================================== -->
-    <!-- CASSETTO GALLERIA IMMAGINI -->
-    <!-- ========================================== -->
+
     <div class="drawer-glass" id="drawer-gallery">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-asset')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">GALLERIA</div>
-            <div class="drawer-subtitle">Mostra i tuoi lavori o i tuoi prodotti</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-media')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">GALLERIA</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
                 Carica fino a 6 immagini per la tua vetrina.
             </div>
-
-            <!-- Area Upload Immagini -->
             <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; position: relative;" class="premium-field-container">
                 <input type="file" id="gallery-upload" accept="image/*" style="display: none;" onchange="gestisciUploadGalleria(event)">
                 <label for="gallery-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
                     <i class="fas fa-plus-circle" style="font-size: 2rem; color: #e5c158; margin-bottom: 10px;"></i>
                     <span id="gallery-upload-text" style="color: #fff; font-size: 0.8rem;">Aggiungi Foto</span>
                 </label>
-                
                 <div id="gallery-loader" style="display: none; margin-top: 10px;">
                     <i class="fas fa-circle-notch fa-spin" style="color: #e5c158;"></i>
                 </div>
-
                 <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
                     <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem;"></i>
                 </div>
             </div>
-
-            <!-- Griglia delle immagini caricate -->
-            <div id="gallery-preview-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
-                <!-- Qui appariranno le foto -->
-            </div>
-            
-            <!-- Campo nascosto per salvare il JSON delle immagini -->
+            <div id="gallery-preview-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;"></div>
             <input type="hidden" id="field-gallery-data" value="[]">
         </div>
         <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
@@ -1339,26 +1247,16 @@
             </button>
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA GALLERIA</button>
-
-        
     </div>
 
-
-
-        <!-- ========================================== -->
-    <!-- CASSETTO PIANI (Pulito e chiuso correttamente) -->
-    <!-- ========================================== -->
-    
     <div class="drawer-glass" id="drawer-piani">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-master')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">PIANI E ABBONAMENTI</div>
-            <div class="drawer-subtitle">Scopri le funzioni di ogni piano</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">PIANI E ABBONAMENTI</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div class="style-list" style="gap: 12px; margin-top: 10px;">
-            
             <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2);">
                 <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
                     <span style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">PIANO BASE</span>
@@ -1371,7 +1269,6 @@
                     <li>QR Code Ufficiale</li>
                 </ul>
             </div>
-
             <div style="background: rgba(16, 185, 129, 0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(16, 185, 129, 0.3); cursor: pointer;" onclick="sbloccaPianoInAnteprima('PREMIUM')">
                 <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
                     <span style="color: #10b981; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px;">PREMIUM</span>
@@ -1385,7 +1282,6 @@
                 </ul>
                 <div style="text-align: center; background: rgba(16, 185, 129, 0.1); padding: 6px; border-radius: 6px; color: #10b981; font-size: 0.7rem; font-weight: 600;">SELEZIONA PREMIUM</div>
             </div>
-
             <div style="background: linear-gradient(135deg, rgba(229, 193, 88, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 16px; border-radius: 14px; border: 1px solid #e5c158; cursor: pointer; position: relative; overflow: hidden; margin-top: 12px;" onclick="sbloccaPianoInAnteprima('GOLD')">
                 <div style="position: absolute; top: 0; right: 0; background: #e5c158; color: #000; font-size: 0.5rem; font-weight: 800; padding: 4px 12px; border-bottom-left-radius: 10px; letter-spacing: 1px;">TOP</div>
                 <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
@@ -1402,18 +1298,14 @@
                 </ul>
                 <div style="text-align: center; background: #e5c158; padding: 6px; border-radius: 6px; color: #000; font-size: 0.7rem; font-weight: 700;">SELEZIONA GOLD</div>
             </div>
-
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- CASSETTO SALVATAGGIO (Ricostruito e Indipendente) -->
-    <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-salvataggio">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">OPZIONI DI SALVATAGGIO</div>
-            <div class="drawer-subtitle">Scegli come procedere</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div>
+            <div class="header-title" style="font-weight: 400;">OPZIONI DI SALVATAGGIO</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
@@ -1425,7 +1317,6 @@
                 </div>
                 <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.2); font-size: 0.8rem;"></i>
             </div>
-
             <div onclick="salvaEDirigi('pubblica')" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
                 <i class="fas fa-globe" style="color: #10b981; font-size: 1.2rem;"></i>
                 <div style="flex: 1;">
@@ -1436,89 +1327,51 @@
             </div>
         </div>
     </div>
-<!-- ========================================== -->
-    <!-- CASSETTO KILLER FEATURES (Sub-menu) -->
-    <!-- ========================================== -->
-    <div class="drawer-glass" id="drawer-killer">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-master')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">KILLER FEATURES</div>
-            <div class="drawer-subtitle">Strumenti avanzati di conversione</div>
-        </div>
-        <div class="style-list" style="flex-direction: column; gap: 10px; margin-top: 10px;">
-            
-            <div class="style-bar" onclick="apriDrawer('drawer-quickpass')">
-                <div style="display:flex; align-items:center; gap: 12px;"><i class="fas fa-ticket-alt" style="color: #e5c158;"></i><span style="font-weight: 600; color: #e5c158;">Quick Pass (Referral)</span></div>
-                <i class="fas fa-lock" style="font-size: 0.7rem; color: #d4af37;"></i>
-            </div>
 
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
-                I moduli Live Status e Flash 24h verranno spostati qui a breve.
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- CASSETTO CONFIGURAZIONE QUICK PASS -->
-    <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-quickpass">
-        <div class="drawer-header" style="flex-direction: column;">
-            <i class="fas fa-chevron-down drawer-back" onclick="apriDrawer('drawer-killer')"></i>
-            <i class="fas fa-times drawer-close" onclick="chiudiSenzaSalvare()"></i>
-            <div class="drawer-title">QUICK PASS</div>
-            <div class="drawer-subtitle">Il tuo sistema passaparola</div>
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-action')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">QUICK PASS</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px; line-height: 1.5;">
                 Imposta le regole. Il sistema genererà un coupon automatico per acquisire nuovi clienti.
             </div>
-
             <div style="position: relative;" class="premium-field-container">
-                <!-- Premio per il Portatore (Utente A) -->
                 <div style="margin-bottom: 15px;">
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO PER CHI INVITA (Utente A)</label>
                     <input type="text" id="field-qp-premio-a" placeholder="Es. 1 Cappuccino omaggio" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
-
-                <!-- Premio per il Nuovo Cliente (Utente B) -->
                 <div style="margin-bottom: 15px;">
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO NUOVO CLIENTE (Utente B)</label>
                     <input type="text" id="field-qp-premio-b" placeholder="Es. 1 Caffè sul primo ordine" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
-                <!-- Limite Utilizzi (Opzionale) -->
                 <div style="margin-bottom: 15px;">
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">LIMITE COUPON (Opzionale)</label>
                     <input type="number" id="field-qp-limite" placeholder="Es. 100" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
-
-                <!-- Scadenza (Opzionale) -->
                 <div style="margin-bottom: 15px;">
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">DATA SCADENZA (Opzionale)</label>
                     <input type="datetime-local" id="field-qp-scadenza" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; color-scheme: dark;">
                 </div>
-
-                <!-- Lucchetto per utenti non paganti -->
                 <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
                     <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
                     <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE GOLD</span>
                 </div>
             </div>
-
-            <!-- Tasto Eliminazione -->
             <div style="text-align: center; margin-top: 5px;">
                 <button type="button" onclick="eliminaAsset('quickpass')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fas fa-trash-alt"></i> ELIMINA QUICK PASS
                 </button>
             </div>
         </div>
-
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA QUICK PASS</button>
     </div>
+
     <!-- ========================================== -->
-    <!-- MODALE QR CODE (Intatto) -->
+    <!-- MODALE QR CODE (Intatto)                   -->
     <!-- ========================================== -->
     <div class="qr-modal-overlay" id="modal-qr" onclick="chiudiModalQR(event)">
         <div class="qr-card">
@@ -1531,8 +1384,6 @@
            </div>
        </div>
     </div>
-
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
