@@ -107,30 +107,37 @@
 
        
 /* =========================================================
-   IL SIGILLO ORBITALE (Allineato a tag.html)
-   ========================================================= */
-.orbital-container {
-    position: relative; width: 80px; height: 80px; margin: 0 auto 25px auto;
-    display: flex; justify-content: center; align-items: center; z-index: 10;
-}
-.orbital-sphere {
-    width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: #000;
-    position: relative; z-index: 2;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.08);
-}
-.orbital-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) brightness(0.95); }
+           BLOCCO LOGO / AVATAR (STATIC LUXURY MINIMAL)
+           ========================================================= */
+        .orbital-container {
+            position: relative; 
+            width: 80px; 
+            height: 80px; 
+            margin: 0 auto 25px auto;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 10;
+        }
 
-.orbital-ring {
-    position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
-    border-radius: 50%; border: 1px solid transparent;
-    border-top-color: var(--core-border); 
-    border-right-color: rgba(255,255,255,0.02);
-    border-bottom-color: rgba(255,255,255,0.01); 
-    border-left-color: rgba(255,255,255,0.02);
-    animation: orbitSpin 40s linear infinite; z-index: 1;
-    filter: drop-shadow(0 0 12px var(--core-glow));
-}
-@keyframes orbitSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .orbital-sphere {
+            width: 76px; 
+            height: 76px; 
+            border-radius: 18px; /* Forma a casella morbida (Squircle) */
+            overflow: hidden; 
+            background: #0d0d0f;
+            position: relative; 
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.03);
+        }
+
+        .orbital-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            filter: contrast(1.1) brightness(0.95); 
+        }
 
 /* =========================================================
    LAYOUT 2 (DIVIDER) E 3 (PURE): TESTO SBLOCCATO E A CAPO
@@ -395,7 +402,9 @@
         body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(200, 150, 142, 0.25); box-shadow: 0 0 35px rgba(200, 150, 142, 0.15); }
         body[data-qr-theme="satin_rose"] .qr-svg { fill: #c8968e; filter: drop-shadow(0 0 8px rgba(200, 150, 142, 0.35)); }
 
-       /* --- MENU FLOATTANTE E STRUTTURA BARRA DI NAVIGAZIONE --- */
+       /* =========================================================
+           BOTTOM NAV BAR (DOCK MYQUICKTAG)
+           ========================================================= */
         .floating-nav-bar {
             position: fixed; 
             bottom: 35px; 
@@ -405,67 +414,80 @@
             align-items: center; 
             z-index: 1500; 
             
-            /* La singola capsula in vetro scuro unificata */
-            background: rgba(20, 20, 25, 0.7); 
-            backdrop-filter: blur(30px); 
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 50px; 
-            padding: 6px; /* Margine interno per l'effetto incastonato */
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.05);
+            /* Il Vetro MyQuickTag: Più scuro, riflesso tagliente in alto */
+            background: rgba(12, 12, 15, 0.85) !important; 
+            backdrop-filter: blur(25px) saturate(180%) !important; 
+            -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important; 
+            border-top: 1px solid rgba(255, 255, 255, 0.15) !important; 
+            border-radius: 40px !important; 
+            padding: 6px !important; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9) !important;
         }
 
         .luxury-menu-btn {
             display: flex; 
             gap: 10px; 
-            padding: 12px 20px; 
+            padding: 14px 24px !important; 
             justify-content: center; 
             align-items: center;
             cursor: pointer; 
-            border-radius: 40px;
-            transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
-            background: transparent;
+            border-radius: 34px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            background: transparent !important;
         }
 
         .luxury-menu-btn:active { 
-            transform: scale(0.96); 
-            background: rgba(255,255,255,0.08); 
+            transform: scale(0.95) !important; 
+            background: rgba(255,255,255,0.05) !important; 
         }
         
-        .luxury-menu-btn i { font-size: 1rem; color: #fff; }
-        .luxury-menu-btn span { font-size: 0.75rem; letter-spacing: 2px; font-weight: 600; color: #fff; text-transform: uppercase; white-space: nowrap; }
+        .luxury-menu-btn i { 
+            font-size: 0.85rem !important; 
+            color: rgba(255,255,255,0.6) !important; 
+        }
+        
+        .luxury-menu-btn span { 
+            font-size: 0.65rem !important; 
+            letter-spacing: 2px !important; 
+            font-weight: 600 !important; 
+            color: #fff !important; 
+            text-transform: uppercase !important; 
+            white-space: nowrap !important; 
+        }
 
-
-        /* Divisore verticale elegante tra i due comandi */
         .nav-divider {
-            width: 1px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            margin: 0 2px;
+            width: 1px !important;
+            height: 18px !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            margin: 0 4px !important;
         }
 
-       /* Stili specifici per il pulsante Master di conversione */
+        /* --- STATI DEL TASTO MASTER (SALVA/ATTIVA) --- */
         .btn-action-primary {
-            /* STATO 1: Spento / Bloccato (Grigio scuro vetro) */
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-        }
-        .btn-action-primary i, .btn-action-primary span {
-            color: rgba(255, 255, 255, 0.4) !important;
-            transition: all 0.3s ease;
+            /* Stato Spento (Grigio vetro) */
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid transparent !important;
         }
         
-        /* STATO 2 & 3: Acceso / Pronto (Il Verde della tua Index) */
+        .btn-action-primary i, .btn-action-primary span {
+            color: rgba(255, 255, 255, 0.3) !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        /* Stato Acceso (Il Verde Smeraldo di MyQuickTag) */
         .btn-action-primary.ready {
-            background: rgba(16, 185, 129, 0.15); /* Verde myquicktag incastonato */
-            border: 1px solid rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.1) !important; 
+            border: 1px solid rgba(16, 185, 129, 0.25) !important;
+            box-shadow: inset 0 0 15px rgba(16, 185, 129, 0.05) !important;
         }
+        
         .btn-action-primary.ready i, .btn-action-primary.ready span {
-            color: #10b981 !important; /* Verde neon acceso */
+            color: #10b981 !important; 
         }
+        
         .btn-action-primary.ready:active {
-            background: rgba(16, 185, 129, 0.25);
+            background: rgba(16, 185, 129, 0.2) !important;
         }
                 /* =========================================================
            FIX LOGO: ADDIO LAPIDE ROTONDA (SQUIRCLE)
@@ -598,13 +620,15 @@
 
                              <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
             
+           <!-- ================================================= -->
+            <!-- STRUTTURA LOGO / IMMAGINE PROFILO (STATICA)       -->
+            <!-- ================================================= -->
             <div id="live-avatar-container" class="orbital-container" style="display: none;">
-                <div class="orbital-ring" id="dna-core-ring"></div>
                 <div class="orbital-sphere">
-                    <img id="live-avatar-img" class="orbital-img" src="" alt="Core">
+                    <img id="live-avatar-img" class="orbital-img" src="" alt="Brand Logo">
                 </div>
             </div>
-
+                                 
             <div class="username-capsule-wrapper">
                 <div class="username-capsule">
                     <div class="username-capsule-inner">
@@ -2665,20 +2689,16 @@ if (document.readyState === 'loading') { document.addEventListener('DOMContentLo
                     box.style.border = '1px solid #10b981'; 
                     document.getElementById('avatar-icon').style.display = 'none';
 
-                    // ACCENSIONE DEL DNA CORE CENTRALE
+                   // =========================================================
+                    // AGGIORNAMENTO IMMAGINE PROFILO (STATICA)
+                    // =========================================================
                     const liveContainer = document.getElementById('live-avatar-container');
                     const liveImg = document.getElementById('live-avatar-img');
-                    const coreRing = document.getElementById('dna-core-ring');
                     
-                    if(liveImg && liveContainer && coreRing) {
+                    if(liveImg && liveContainer) {
                         liveImg.src = imageUrl;
                         liveContainer.style.display = 'flex';
-                        
-                        // Rimuove e rimette la classe per forzare l'animazione di materializzazione
-                        coreRing.classList.remove('materialize-effect');
-                        void coreRing.offsetWidth; // Trucco per resettare l'animazione CSS
-                        coreRing.classList.add('materialize-effect');
-                    }
+                    } 
 
                     // Facciamo scattare il lucchetto verde intelligente
                     if(typeof aggiornaBottoneMaster === 'function') {
