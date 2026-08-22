@@ -141,7 +141,31 @@
         .luxury-pillar-btn.emerald-glow i.arrow-icon {
             color: rgba(16, 185, 129, 0.4);
         }    
-
+/* =========================================================
+           HEADER VETRO LIQUIDO (Intestazione fissa per gli ambienti)
+           ========================================================= */
+        .drawer-header-liquido { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: relative; 
+            margin-bottom: 25px;
+        }
+        .drawer-header-liquido .header-back { 
+            flex: 1; display: flex; justify-content: flex-start; 
+            color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s;
+        }
+        .drawer-header-liquido .header-title { 
+            flex: 3; font-size: 0.7rem; font-weight: 600; letter-spacing: 4px; 
+            color: #fff; text-transform: uppercase; text-align: center; white-space: nowrap;
+        }
+        .drawer-header-liquido .header-close { 
+            flex: 1; display: flex; justify-content: flex-end; 
+            color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s;
+        }
+        .drawer-header-liquido .header-back:active, .drawer-header-liquido .header-close:active {
+            color: #ffffff;
+        }
         /* =========================================================
            RESET FLEXBOX PER DIVIDER E PURE
            ========================================================= */
@@ -757,55 +781,61 @@
     </div>
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
 
-   <!-- ========================================== -->
+  <!-- ========================================== -->
     <!-- PLANCIA COMANDI (MENU LIQUIDO PRINCIPALE)  -->
     <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-master">
         
-        <!-- Header Pulito (Solo Titolo e X) -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; position: relative;">
-            <div style="flex: 1;"></div> <!-- Spaziatore invisibile per centrare -->
-            <div style="font-size: 0.7rem; font-weight: 600; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-align: center;">
-                PLANCIA COMANDI
-            </div>
-            <div style="flex: 1; display: flex; justify-content: flex-end;">
-                <i class="fas fa-times" onclick="chiudiSenzaSalvare()" style="color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; padding: 5px;"></i>
-            </div>
+        <!-- Header Pulito (Titolo e X) -->
+        <div class="drawer-header-liquido">
+            <div class="header-back"></div> <!-- Spazio vuoto per centrare il titolo -->
+            <div class="header-title">PLANCIA COMANDI</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
-        <!-- I 5 PILASTRI (Niente più liste a tendina) -->
-        <div style="display: flex; flex-direction: column; gap: 15px;">
+        <!-- I 7 AMBIENTI (Speculari alla Tag) -->
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
             
-            <!-- Pilastro 1 -->
-            <div class="luxury-pillar-btn" onclick="apriDrawer('drawer-identita')">
+            <div class="luxury-pillar-btn" onclick="apriDrawer('env-identity')">
                 <i class="fas fa-fingerprint pillar-icon"></i>
-                <span class="pillar-text">IDENTITÀ & DESIGN</span>
+                <span class="pillar-text">IDENTITY</span>
                 <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <!-- Pilastro 2 -->
-            <div class="luxury-pillar-btn" onclick="apriDrawer('drawer-contatti')">
+            <div class="luxury-pillar-btn" onclick="apriDrawer('env-business')">
+                <i class="fas fa-briefcase pillar-icon"></i>
+                <span class="pillar-text">BUSINESS</span>
+                <i class="fas fa-chevron-right arrow-icon"></i>
+            </div>
+
+            <div class="luxury-pillar-btn" onclick="apriDrawer('env-media')">
+                <i class="fas fa-images pillar-icon"></i>
+                <span class="pillar-text">MEDIA</span>
+                <i class="fas fa-chevron-right arrow-icon"></i>
+            </div>
+
+            <div class="luxury-pillar-btn" onclick="apriDrawer('env-network')">
                 <i class="fas fa-globe pillar-icon"></i>
-                <span class="pillar-text">CONNESSIONI & NETWORK</span>
+                <span class="pillar-text">NETWORK</span>
                 <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <!-- Pilastro 3 -->
-            <div class="luxury-pillar-btn" onclick="apriDrawer('drawer-showcase')">
-                <i class="fas fa-layer-group pillar-icon"></i>
-                <span class="pillar-text">VETRINA & MEDIA</span>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </div>
-
-            <!-- Pilastro 4 (Accento Verde Smeraldo MyQuickTag) -->
-            <div class="luxury-pillar-btn emerald-glow" onclick="apriDrawer('drawer-killer')">
+            <div class="luxury-pillar-btn emerald-glow" onclick="apriDrawer('env-action')">
                 <i class="fas fa-bolt pillar-icon"></i>
-                <span class="pillar-text">KILLER FEATURES</span>
+                <span class="pillar-text">ACTION CENTER</span>
                 <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <!-- Pilastro 5 -->
-            <div class="luxury-pillar-btn" onclick="apriDrawer('drawer-piani')">
+            <!-- REGIE DELL'EDITOR -->
+            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 10px 0;"></div>
+
+            <div class="luxury-pillar-btn" onclick="apriDrawer('env-stile')">
+                <i class="fas fa-palette pillar-icon"></i>
+                <span class="pillar-text">STILE & DESIGN</span>
+                <i class="fas fa-chevron-right arrow-icon"></i>
+            </div>
+
+            <div class="luxury-pillar-btn" onclick="apriDrawer('env-piani')" style="border-color: rgba(229, 193, 88, 0.3);">
                 <i class="fas fa-gem pillar-icon" style="color: #e5c158;"></i>
                 <span class="pillar-text" style="color: #e5c158;">GESTIONE PIANO</span>
                 <i class="fas fa-chevron-right arrow-icon" style="color: rgba(229, 193, 88, 0.4);"></i>
