@@ -178,7 +178,16 @@
             margin: 0 auto !important;
             line-height: 2.2 !important; /* Spalanca lo spazio centrale per la riga e il diamante */
         }
-
+/* ============================================================
+           DIVIDER PER NOMI CORTI (Copiato da tag.html)
+           ============================================================ */
+        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto {
+            width: 220px !important; 
+        }
+        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before,
+        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after {
+            top: calc(50% + 18px) !important; 
+        }
        
 /* =========================================================
            BLOCCO LOGO / AVATAR (STATIC LUXURY MINIMAL)
@@ -1552,7 +1561,7 @@
             return "tuonome.it";
         }
 
-        function formattaBadge(testoBruto) {
+      function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
 
@@ -1563,7 +1572,6 @@
             // Il JS si arrende: il controllo geometrico e la larghezza spettano al CSS
             el.style.cssText = ""; 
 
-
             if (testo.length > 35) {
                 el.style.fontSize = "0.85rem";
             } else if (testo.length > 22) {
@@ -1572,24 +1580,18 @@
                 el.style.fontSize = "1.05rem"; 
             }
 
+            // 🎯 IL BISTURI PER IL DIVIDER: Riconosce i nomi corti per la linea
+            const wrapper = document.getElementById('name-capsule-wrapper');
+            if (wrapper) {
+                if (testo.length < 16 && !testo.includes(' ')) {
+                    wrapper.classList.add('nome-corto');
+                } else {
+                    wrapper.classList.remove('nome-corto');
+                }
+            }
+
             void el.offsetHeight; 
         }
-// ============================================================
-        // MOTORE CASSETTI E SISTEMA ANTI-FUGA (LIVELLO ENTERPRISE)
-        // ============================================================
-        
-        // 1. INIZIALIZZAZIONE DELLA TRAPPOLA (Appena si carica la pagina)
-        window.addEventListener('load', function() {
-            // Pulisce l'URL da eventuali residui
-            if (window.location.hash) {
-                history.replaceState(null, null, window.location.pathname);
-            }
-            // Mette le fondamenta nella cronologia (Piano Terra)
-            history.replaceState({ level: 'base' }, "", "");
-            // Aggiunge un piano finto per bloccare e intercettare il tasto indietro
-            history.pushState({ level: 'editor_attivo' }, "", "");
-        });
-
         // 2. FUNZIONI DI APERTURA E CHIUSURA
         function apriDrawer(idDrawer) {
             // --- BLOCCO SICUREZZA INTELLIGENTE ---
