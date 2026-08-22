@@ -1270,8 +1270,33 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VETRINA</button>
     </div>
 
+   <!-- ========================================== -->
+    <!-- 3. AMBIENTE: MEDIA (Sottomenu)             -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="env-media">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">MEDIA</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-gallery')">
+                <i class="fas fa-images pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">GALLERIA IMMAGINI</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Mostra i tuoi lavori o prodotti</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3.1 MODULO: GALLERIA IMMAGINI              -->
+    <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-gallery">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <!-- La freccia ora punta correttamente al sottomenù MEDIA -->
             <div class="header-back" onclick="apriDrawer('env-media')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">GALLERIA</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
@@ -1304,7 +1329,6 @@
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA GALLERIA</button>
     </div>
-
     <div class="drawer-glass" id="drawer-piani">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
