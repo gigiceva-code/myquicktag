@@ -83,64 +83,56 @@
 }
          
     /* =========================================================
-           BOTTONI PLANCIA (LUXURY PILLARS)
+           VOCI MENU (NIENTE AGENDA, STILE TAG.HTML MINIMAL)
            ========================================================= */
-        .luxury-pillar-btn {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px; /* Bordo morbido ed elegante */
-            padding: 20px 24px;
+        .edit-menu-item {
+            display: flex !important;
+            align-items: center !important;
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: 0 !important;
+            padding: 22px 10px !important;
+            width: 100%;
+            text-align: left;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease !important;
+            margin: 0 !important;
         }
         
-        .luxury-pillar-btn:active {
-            transform: scale(0.97);
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
+        .edit-menu-item:last-child {
+            border-bottom: none !important;
         }
         
-        .luxury-pillar-btn i.pillar-icon {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.4);
-            width: 30px;
-            text-align: center;
-            transition: color 0.3s ease;
+        .edit-menu-item:active {
+            background: transparent !important;
+            transform: scale(0.97) !important;
+            color: #d4af37 !important;
         }
         
-        .luxury-pillar-btn span.pillar-text {
-            flex: 1;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 2.5px;
+        .edit-menu-item i.pillar-icon {
+            font-size: 1.15rem !important;
+            width: 32px !important;
+            opacity: 0.8;
             color: #ffffff;
-            margin-left: 15px;
+            margin: 0 !important;
+        }
+        
+        .edit-menu-item span.pillar-text {
+            flex: 1;
+            font-size: 0.85rem !important;
+            letter-spacing: 2px !important;
+            font-weight: 300 !important;
+            color: #e8e8ed;
+            margin-top: 0 !important;
             text-transform: uppercase;
         }
-        
-        .luxury-pillar-btn i.arrow-icon {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.15);
-        }
 
-        /* --- VARIANTE SMERALDO (MYQUICKTAG BRAND) --- */
-        .luxury-pillar-btn.emerald-glow {
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            background: rgba(16, 185, 129, 0.05);
-            box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.02);
+        .edit-menu-item.emerald-text span.pillar-text,
+        .edit-menu-item.emerald-text i.pillar-icon {
+            color: #10b981 !important;
+            font-weight: 500 !important;
         }
-        .luxury-pillar-btn.emerald-glow i.pillar-icon {
-            color: #10b981;
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-        }
-        .luxury-pillar-btn.emerald-glow span.pillar-text {
-            color: #10b981;
-        }
-        .luxury-pillar-btn.emerald-glow i.arrow-icon {
-            color: rgba(16, 185, 129, 0.4);
-        }    
 /* =========================================================
            HEADER VETRO LIQUIDO (Intestazione fissa per gli ambienti)
            ========================================================= */
@@ -353,78 +345,49 @@
         }
 
 
-   /* 1. LA STRUTTURA DELL'OVERLAY LIQUIDO */
+   /* =========================================================
+           IL VERO OVERLAY NERO PROFONDO (ZERO LAG, COPIATO DA TAG)
+           ========================================================= */
         .drawer-glass {
-            position: fixed !important; 
-            top: 50% !important; 
-            left: 50% !important; 
-            transform: translate(-50%, -40%) scale(0.9) !important; /* Parte più in basso e più piccolo */
-            width: calc(100% - 32px) !important; 
-            max-width: 410px !important; 
+            position: fixed !important; top: 50% !important; left: 50% !important; 
+            transform: translate(-50%, -45%) scale(1.02); 
+            width: calc(100% - 32px) !important; max-width: 410px !important; 
+            height: calc(100svh - 32px) !important; max-height: 840px !important;
             
-            height: auto !important; 
-            max-height: calc(100svh - 40px) !important;
-            
-            /* Vetro più liquido e meno "scatola" */
-            background: rgba(20, 20, 25, 0.65) !important; 
-            backdrop-filter: blur(40px) saturate(200%) !important; 
-            -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
-            
-            border: 1px solid rgba(255, 255, 255, 0.08) !important; 
-            border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 36px !important; /* Bordi molto più morbidi */
-            padding: 32px 24px !important;
+            background-color: #000000 !important; /* IL NERO DELLA TAG */
+            padding: 40px 24px 32px 24px !important; 
+            border-radius: 28px !important; 
             z-index: 2000 !important; 
+            box-sizing: border-box !important; 
+            box-shadow: 0 30px 70px rgba(0,0,0,0.9) !important;
             
+            /* RIMOZIONE BLUR PER FLUIDITÀ ASSOLUTA */
+            backdrop-filter: none !important; 
+            -webkit-backdrop-filter: none !important;
+
+            display: none; opacity: 0; pointer-events: none; overflow-y: hidden !important;
+        }
+
+        .drawer-glass.open { 
             display: flex !important; 
             flex-direction: column;
-            justify-content: flex-start !important; 
-            overflow-y: auto !important; 
-            scrollbar-width: none !important;
-            box-sizing: border-box !important; 
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8), inset 0 10px 20px rgba(255,255,255,0.03) !important;
-            
-            /* IL MOTORE DI FLUIDITÀ RIPARATO */
-            opacity: 0; 
-            visibility: hidden;
-            pointer-events: none;
-            /* In chiusura: aspetta 0.5s prima di togliere la visibility, così l'opacità fa in tempo a svanire */
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                        visibility 0s linear 0.5s !important; 
-        }
-
-        /* 2. IL MOTORE DI EMERSIONE */
-        .drawer-glass.open { 
-            opacity: 1 !important; 
-            visibility: visible !important; 
             pointer-events: auto !important;
-            transform: translate(-50%, -50%) scale(1) !important; /* Raggiunge il centro ingrandendosi */
-            
-            /* In apertura: la visibility scatta a 'visible' a zero secondi, permettendo all'animazione di esplodere fluida */
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                        visibility 0s linear 0s !important; 
-        } 
-        /* 3. ESTETICA DELLA BARRA DI SCORRIMENTO */
-        .drawer-glass::-webkit-scrollbar {
-            display: none !important;
+            animation: overlayScivola 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important; 
         }
 
-        /* 4. LO SFONDO SCURO (Backdrop) */
+        @keyframes overlayScivola {
+            0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        
         .drawer-backdrop {
-            position: fixed !important;
-            top: 0 !important; left: 0 !important;
+            position: fixed !important; top: 0 !important; left: 0 !important;
             width: 100% !important; height: 100% !important;
-            background: rgba(0, 0, 0, 0.6) !important; /* Scuro ed elegante, non nero totale */
-            z-index: 1999 !important; /* Appena sotto il vetro */
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease !important;
+            background: rgba(0, 0, 0, 0.6) !important; 
+            z-index: 1999 !important; 
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease !important;
         }
-        .drawer-backdrop.active {
-            opacity: 1 !important; 
-            pointer-events: auto !important;
-        } 
+        .drawer-backdrop.active { opacity: 1 !important; pointer-events: auto !important; }
         .drawer-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; padding: 0; position: relative; width: 100%; }
         .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-align: center; width: 100%; }
         .drawer-subtitle { font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase; text-align: center; }
@@ -780,65 +743,54 @@
         </div>
     </div>
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
-
-  <!-- ========================================== -->
-    <!-- PLANCIA COMANDI (MENU LIQUIDO PRINCIPALE)  -->
+<!-- ========================================== -->
+    <!-- PLANCIA COMANDI (MENU PRINCIPALE NERO)     -->
     <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-master">
         
-        <!-- Header Pulito (Titolo e X) -->
-        <div class="drawer-header-liquido">
-            <div class="header-back"></div> <!-- Spazio vuoto per centrare il titolo -->
-            <div class="header-title">PLANCIA COMANDI</div>
+        <!-- Header Pulito (Titolo e X) copiato da tag -->
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div>
+            <div class="header-title" style="font-weight: 400;">PLANCIA COMANDI</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
 
-        <!-- I 7 AMBIENTI (Speculari alla Tag) -->
-        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+        <!-- I 7 AMBIENTI (Linea di separazione sottile, zero bordi laterali) -->
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
             
-            <div class="luxury-pillar-btn" onclick="apriDrawer('env-identity')">
+            <div class="edit-menu-item" onclick="apriDrawer('env-identity')">
                 <i class="fas fa-fingerprint pillar-icon"></i>
                 <span class="pillar-text">IDENTITY</span>
-                <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <div class="luxury-pillar-btn" onclick="apriDrawer('env-business')">
+            <div class="edit-menu-item" onclick="apriDrawer('env-business')">
                 <i class="fas fa-briefcase pillar-icon"></i>
                 <span class="pillar-text">BUSINESS</span>
-                <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <div class="luxury-pillar-btn" onclick="apriDrawer('env-media')">
+            <div class="edit-menu-item" onclick="apriDrawer('env-media')">
                 <i class="fas fa-images pillar-icon"></i>
                 <span class="pillar-text">MEDIA</span>
-                <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <div class="luxury-pillar-btn" onclick="apriDrawer('env-network')">
+            <div class="edit-menu-item" onclick="apriDrawer('env-network')">
                 <i class="fas fa-globe pillar-icon"></i>
                 <span class="pillar-text">NETWORK</span>
-                <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <div class="luxury-pillar-btn emerald-glow" onclick="apriDrawer('env-action')">
+            <div class="edit-menu-item emerald-text" onclick="apriDrawer('env-action')">
                 <i class="fas fa-bolt pillar-icon"></i>
                 <span class="pillar-text">ACTION CENTER</span>
-                <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <!-- REGIE DELL'EDITOR -->
-            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 10px 0;"></div>
-
-            <div class="luxury-pillar-btn" onclick="apriDrawer('env-stile')">
+            <div class="edit-menu-item" onclick="apriDrawer('env-stile')" style="margin-top: 15px !important;">
                 <i class="fas fa-palette pillar-icon"></i>
                 <span class="pillar-text">STILE & DESIGN</span>
-                <i class="fas fa-chevron-right arrow-icon"></i>
             </div>
 
-            <div class="luxury-pillar-btn" onclick="apriDrawer('env-piani')" style="border-color: rgba(229, 193, 88, 0.3);">
-                <i class="fas fa-gem pillar-icon" style="color: #e5c158;"></i>
-                <span class="pillar-text" style="color: #e5c158;">GESTIONE PIANO</span>
-                <i class="fas fa-chevron-right arrow-icon" style="color: rgba(229, 193, 88, 0.4);"></i>
+            <div class="edit-menu-item" onclick="apriDrawer('env-piani')">
+                <i class="fas fa-gem pillar-icon" style="color: #e5c158 !important;"></i>
+                <span class="pillar-text" style="color: #e5c158 !important;">GESTIONE PIANO</span>
             </div>
 
         </div>
