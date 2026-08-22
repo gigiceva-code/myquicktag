@@ -667,7 +667,7 @@
                 50% { transform: scale(2); opacity: 0; }
             }
         </style>
-    </div>
+    
 
     <div class="configurator-wrapper">
         <div id="profile-content" data-theme="black_dna"> 
@@ -879,6 +879,62 @@
             </button>
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA BIO</button>
+    </div>
+    <!-- ========================================== -->
+    <!-- 2. AMBIENTE: BUSINESS (Sottomenu)          -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="env-business">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <!-- La freccia torna alla Plancia Comandi -->
+            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">BUSINESS</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
+            
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-showcase')">
+                <i class="fas fa-file-pdf pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">VETRINA PDF</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Carica Menu, Listini o Brochure</span>
+                </div>
+            </div>
+
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-cv')">
+                <i class="fas fa-file-alt pillar-icon"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text">CURRICULUM VITAE</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il tuo percorso professionale</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2.1 MODULO: CURRICULUM VITAE               -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-cv">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">CURRICULUM VITAE</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 10px;">
+         <textarea id="field-cv" placeholder="Scrivi o incolla qui il tuo percorso professionale, le tue esperienze o la storia della tua azienda..." style="width: 100%; height: 180px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; resize: none;"></textarea> 
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center;">
+                Il testo verrà formattato con un'elegante cornice nella tua Tag.
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+            <button type="button" onclick="eliminaAsset('cv')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-trash-alt"></i> ELIMINA CV
+            </button>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA CV</button>
     </div>
 
     <!-- ========================================== -->
@@ -1748,7 +1804,11 @@
             if (pdfUrl !== "") {
                 roomBusiness.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 5px 0;" onclick="apriDrawer('drawer-showcase')">📄 ${pdfLabel.toUpperCase()}</div>`;
             }
-
+           // 2. Curriculum
+            const cvInput = document.getElementById('field-cv');
+            if (cvInput && cvInput.value.trim() !== "") {
+                roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-cv')">CURRICULUM VITAE</div>`;
+            }
             // ==========================================
             // STANZA 3: MEDIA (Galleria)
             // ==========================================
@@ -2053,6 +2113,7 @@
                     }
 
                     if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
+                    if (f.cv && document.getElementById('field-cv')) document.getElementById('field-cv').value = f.cv;
                     if (f.sito_web && document.getElementById('field-sito')) document.getElementById('field-sito').value = f.sito_web;
                     if (f.email && document.getElementById('field-email')) document.getElementById('field-email').value = f.email;
 
@@ -2246,6 +2307,8 @@
             const styleVal = document.querySelector('input[name="digital_style"]:checked')?.value || "black_dna";
             const layoutVal = document.querySelector('input[name="digital_layout"]:checked')?.value || "badge";
             const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
+            const cvVal = document.getElementById('field-cv') ? document.getElementById('field-cv').value.trim() : "";
+            const cvVal = document.getElementById('field-cv') ? document.getElementById('field-cv').value.trim() : "";
             const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
             const qaTipo = document.getElementById('field-qa-tipo') ? document.getElementById('field-qa-tipo').value : "";
             const qaLabel = document.getElementById('field-qa-label') ? document.getElementById('field-qa-label').value.trim() : "";
@@ -2296,7 +2359,7 @@
             return { 
                 username_system: NOME_SISTEMA, 
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
-                digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
+                digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, cv: cvVal,  sito_web: sitoVal, email: emailVal,
                 quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
                 
                 live_status_color: statusColor, 
@@ -2926,6 +2989,8 @@ if (document.readyState === 'loading') { document.addEventListener('DOMContentLo
                 document.getElementById('field-qa-tipo').value = 'whatsapp';
             } else if (tipo === 'bio') {
                 document.getElementById('field-bio').value = '';
+                } else if (tipo === 'cv') {
+                document.getElementById('field-cv').value = '';
             } else if (tipo === 'pdf') {
                 document.getElementById('field-pdf-url').value = '';
                 document.getElementById('field-pdf-label').value = '';
