@@ -2314,7 +2314,7 @@ async function gestisciUploadGalleria(event) {
             const hiddenField = document.getElementById('field-gallery-data');
             let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
 
-            // Limite esclusivo GOLD: 9 foto
+            // Limite esclusivo GOLD
             if (arrayAttuale.length + files.length > 9) {
                 alert(`Attenzione: Il piano GOLD consente un massimo di 9 foto. Ne hai già ${arrayAttuale.length} e stai cercando di aggiungerne ${files.length}.`);
                 event.target.value = '';
@@ -2331,8 +2331,20 @@ async function gestisciUploadGalleria(event) {
 
             document.getElementById('gallery-loader').style.display = 'block';
 
-            // Upload multiplo in parallelo
-            const uploadPromises = Array.from(files).map(async (file) => {
+            // 🚀 MAGIA: ANTEPRIMA ISTANTANEA (Zero attesa)
+            const arrayOriginale = [...arrayAttuale]; // Salviamo lo stato in caso di errore di rete
+            const fileArray = Array.from(files);
+            
+            // Creiamo link finti locali per le nuove foto
+            const localUrls = fileArray.map(file => URL.createObjectURL(file));
+            
+            // Le spariamo a schermo immediatamente prima ancora di caricarle
+            hiddenField.value = JSON.stringify([...arrayAttuale, ...localUrls]);
+            disegnaGrigliaGalleria();
+            aggiornaAnteprimaLive();
+
+            // ☁️ Ora, in background e senza disturbare, le mandiamo a Cloudinary
+            const uploadPromises = fileArray.map(async (file) => {
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('upload_preset', 'myquicktag_upload');
@@ -2349,22 +2361,30 @@ async function gestisciUploadGalleria(event) {
             });
 
             try {
+                // Aspettiamo che il server finisca
                 const risultati = await Promise.all(uploadPromises);
+                
+                // Sostituiamo i link finti con i link ufficiali e definitivi del cloud
+                let finalArray = [...arrayOriginale];
                 risultati.forEach(url => {
-                    if (url) arrayAttuale.push(url);
+                    if (url) finalArray.push(url);
                 });
 
-                hiddenField.value = JSON.stringify(arrayAttuale);
+                hiddenField.value = JSON.stringify(finalArray);
+                // Aggiorniamo di nuovo (visivamente non cambia nulla, ma sotto il cofano i link ora sono quelli veri)
                 disegnaGrigliaGalleria();
                 aggiornaAnteprimaLive();
             } catch (error) {
-                alert("Errore globale durante l'upload.");
+                alert("Errore durante l'upload definitivo. Verifica la connessione.");
+                // Se salta la rete, togliamo le foto finte
+                hiddenField.value = JSON.stringify(arrayOriginale);
+                disegnaGrigliaGalleria();
+                aggiornaAnteprimaLive();
             } finally {
                 document.getElementById('gallery-loader').style.display = 'none';
                 event.target.value = ''; 
             }
         }
-
         function disegnaGrigliaGalleria() {
             const grid = document.getElementById('gallery-preview-grid');
             const hiddenField = document.getElementById('field-gallery-data');
