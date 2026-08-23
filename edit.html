@@ -39,7 +39,6 @@
             transition: all 0.4s ease; 
         }
 
-        /* --- TEMI UFFICIALI --- */
         #profile-content[data-theme="emerald"] { border: 1px solid rgba(0, 230, 128, 0.8); }
         #profile-content[data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.5); }
         
@@ -55,36 +54,26 @@
         #profile-content[data-theme="satin_rose"] { border: 1px solid rgba(200, 150, 142, 0.8); }
         #profile-content[data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.5); }
 
-        /* --- STRUTTURA BASE BRAND (BADGE) --- */
         .header-monolith { width: 100%; display: flex; justify-content: center; align-items: center; padding: 10px 0; position: relative; }
         
-            
-  .username-display {
-    font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
-    margin: 0 auto; text-align: center !important; display: block !important; 
-    text-transform: uppercase; 
-    white-space: normal !important; 
-    word-break: normal !important; 
-    overflow-wrap: break-word !important; 
-    text-wrap: balance !important; 
-    
-    /* 🎯 IL BISTURI: Tolto il 100% e messo 'auto'. Ora il poligono si stringerà attorno al testo! */
-    width: auto !important; 
-    max-width: 280px !important; /* Aiuta ad andare a capo in modo armonico se il nome è lungo */
-    
-    padding: 0 12px !important; box-sizing: border-box !important;
-    line-height: 1.5 !important; 
-    transition: font-size 0.3s ease; 
-    
-    /* 🛡️ LO SCUDO PER IL TRIPLO TAP */
-    user-select: none !important; 
-    -webkit-user-select: none !important; 
-    touch-action: manipulation !important; 
-}
+        .username-display {
+            font-size: 1.05rem; font-weight: 500; letter-spacing: 1px; color: #fff;
+            margin: 0 auto; text-align: center !important; display: block !important; 
+            text-transform: uppercase; 
+            white-space: normal !important; 
+            word-break: normal !important; 
+            overflow-wrap: break-word !important; 
+            text-wrap: balance !important; 
+            width: auto !important; 
+            max-width: 280px !important;
+            padding: 0 12px !important; box-sizing: border-box !important;
+            line-height: 1.5 !important; 
+            transition: font-size 0.3s ease; 
+            user-select: none !important; 
+            -webkit-user-select: none !important; 
+            touch-action: manipulation !important; 
+        }
          
-    /* =========================================================
-           VOCI MENU (NIENTE AGENDA, STILE TAG.HTML MINIMAL)
-           ========================================================= */
         .edit-menu-item {
             display: flex !important;
             align-items: center !important;
@@ -100,9 +89,7 @@
             margin: 0 !important;
         }
         
-        .edit-menu-item:last-child {
-            border-bottom: none !important;
-        }
+        .edit-menu-item:last-child { border-bottom: none !important; }
         
         .edit-menu-item:active {
             background: transparent !important;
@@ -111,56 +98,35 @@
         }
         
         .edit-menu-item i.pillar-icon {
-            font-size: 1.15rem !important;
-            width: 32px !important;
-            opacity: 0.8;
-            color: #ffffff;
-            margin: 0 !important;
+            font-size: 1.15rem !important; width: 32px !important; opacity: 0.8; color: #ffffff; margin: 0 !important;
         }
         
         .edit-menu-item span.pillar-text {
-            flex: 1;
-            font-size: 0.85rem !important;
-            letter-spacing: 2px !important;
-            font-weight: 300 !important;
-            color: #e8e8ed;
-            margin-top: 0 !important;
-            text-transform: uppercase;
+            flex: 1; font-size: 0.85rem !important; letter-spacing: 2px !important;
+            font-weight: 300 !important; color: #e8e8ed; margin-top: 0 !important; text-transform: uppercase;
         }
 
         .edit-menu-item.emerald-text span.pillar-text,
         .edit-menu-item.emerald-text i.pillar-icon {
-            color: #10b981 !important;
-            font-weight: 500 !important;
+            color: #10b981 !important; font-weight: 500 !important;
         }
-/* =========================================================
-           HEADER VETRO LIQUIDO (Intestazione fissa per gli ambienti)
-           ========================================================= */
+
         .drawer-header-liquido { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: relative; 
-            margin-bottom: 25px;
+            display: flex; justify-content: space-between; align-items: center; position: relative; margin-bottom: 25px;
         }
         .drawer-header-liquido .header-back { 
-            flex: 1; display: flex; justify-content: flex-start; 
-            color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s;
+            flex: 1; display: flex; justify-content: flex-start; color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s;
         }
         .drawer-header-liquido .header-title { 
-            flex: 3; font-size: 0.7rem; font-weight: 600; letter-spacing: 4px; 
-            color: #fff; text-transform: uppercase; text-align: center; white-space: nowrap;
+            flex: 3; font-size: 0.7rem; font-weight: 600; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-align: center; white-space: nowrap;
         }
         .drawer-header-liquido .header-close { 
-            flex: 1; display: flex; justify-content: flex-end; 
-            color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s;
+            flex: 1; display: flex; justify-content: flex-end; color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s;
         }
         .drawer-header-liquido .header-back:active, .drawer-header-liquido .header-close:active {
             color: #ffffff;
         }
-        /* =========================================================
-           RESET FLEXBOX PER DIVIDER E PURE
-           ========================================================= */
+
         #profile-content[data-layout="divider"] .username-capsule-wrapper,
         #profile-content[data-layout="divider"] .username-capsule,
         #profile-content[data-layout="divider"] .username-capsule-inner,
@@ -170,197 +136,58 @@
             display: block !important; width: 100% !important; background: transparent !important; clip-path: none !important; padding: 0 !important; min-width: 0 !important;
         }
 
-        /* Testo ristretto per forzarlo ad andare su più righe nei layout aperti */
         #profile-content[data-layout="divider"] .username-display,
         #profile-content[data-layout="pure"] .username-display {
-            width: 100% !important;
-            max-width: 280px !important; 
-            margin: 0 auto !important;
-            line-height: 2.2 !important; /* Spalanca lo spazio centrale per la riga e il diamante */
+            width: 100% !important; max-width: 280px !important; margin: 0 auto !important; line-height: 2.2 !important; 
         }
-/* ============================================================
-           DIVIDER PER NOMI CORTI (Copiato da tag.html)
-           ============================================================ */
-        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto {
-            width: 220px !important; 
-        }
+
+        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto { width: 220px !important; }
         #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before,
-        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after {
-            top: calc(50% + 18px) !important; 
-        }
+        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after { top: calc(50% + 18px) !important; }
        
-/* =========================================================
-           BLOCCO LOGO / AVATAR (STATIC LUXURY MINIMAL)
-           ========================================================= */
         .orbital-container {
-            position: relative; 
-            width: 80px; 
-            height: 80px; 
-            margin: 0 auto 25px auto;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 10;
+            position: relative; width: 80px; height: 80px; margin: 0 auto 25px auto; display: flex; justify-content: center; align-items: center; z-index: 10;
         }
 
         .orbital-sphere {
-            width: 76px; 
-            height: 76px; 
-            border-radius: 18px; /* Forma a casella morbida (Squircle) */
-            overflow: hidden; 
-            background: #0d0d0f;
-            position: relative; 
-            z-index: 2;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.03);
+            width: 76px; height: 76px; border-radius: 18px !important; overflow: hidden; background: #0d0d0f; position: relative; z-index: 2; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.03);
         }
+        .orbital-ring { border-radius: 22px !important; }
 
-        .orbital-img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            filter: contrast(1.1) brightness(0.95); 
+        .orbital-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) brightness(0.95); }
+
+        #profile-content[data-layout="divider"] .username-capsule-wrapper { 
+            position: relative; padding: 20px 0 !important; display: block !important; background: transparent !important; clip-path: none !important; 
         }
+        #profile-content[data-layout="divider"] .username-display,
+        #profile-content[data-layout="pure"] .username-display { position: relative; z-index: 3; width: 100% !important; max-width: 220px !important; margin: 0 auto !important; line-height: 2.5 !important; }
 
-/* =========================================================
-   LAYOUT 2 (DIVIDER) E 3 (PURE): TESTO SBLOCCATO E A CAPO
-   ========================================================= */
+        #profile-content[data-layout="divider"] .username-capsule-wrapper::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%); background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); z-index: 1; pointer-events: none; }
+        #profile-content[data-layout="divider"] .username-capsule-wrapper::before { content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2; }
 
-/* 1. Spegne il poligono e sblocca i contenitori interni */
-#profile-content[data-layout="divider"] .username-capsule,
-#profile-content[data-layout="divider"] .username-capsule-inner,
-#profile-content[data-layout="pure"] .username-capsule-wrapper,
-#profile-content[data-layout="pure"] .username-capsule,
-#profile-content[data-layout="pure"] .username-capsule-inner { 
-    display: block !important; width: 100% !important; background: transparent !important; 
-    clip-path: none !important; padding: 0 !important; min-width: 0 !important;
-}
+        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
+        #profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::before { color: #00E680; }
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
+        #profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::before { color: #e5c158; }
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
+        #profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::before { color: #c8968e; }
 
-/* 2. Imposta il wrapper specifico per il Divider (crea lo spazio per la linea) */
-#profile-content[data-layout="divider"] .username-capsule-wrapper { 
-    position: relative; padding: 20px 0 !important; display: block !important;
-    background: transparent !important; clip-path: none !important; 
-}
+        #profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
 
-/* 3. 🎯 LA REGOLA SALVA-VITA PER L'A CAPO E LO SPAZIO */
-#profile-content[data-layout="divider"] .username-display,
-#profile-content[data-layout="pure"] .username-display {
-    position: relative; z-index: 3;
-    width: 100% !important; 
-    max-width: 220px !important; /* Misura perfetta per forzare l'a capo di due parole */
-    margin: 0 auto !important;
-    line-height: 2.5 !important; /* Spalanca lo spazio esatto in mezzo alle righe */
-}
+        .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
+        .brand-text { font-weight: inherit; }
 
-/* 4. La linea magica e il diamante che passano nel corridoio */
-#profile-content[data-layout="divider"] .username-capsule-wrapper::after {
-    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%);
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); 
-    z-index: 1; pointer-events: none;
-}
-#profile-content[data-layout="divider"] .username-capsule-wrapper::before {
-    content: '◆'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 11px; color: rgba(255, 255, 255, 0.6); background: transparent; padding: 0; z-index: 2;
-}
-
-/* 5. Colori del Divider in base al tema */
-#profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(0, 230, 128, 0.6) 25%, transparent 40%, transparent 60%, rgba(0, 230, 128, 0.6) 75%, transparent 100%); }
-#profile-content[data-theme="emerald"][data-layout="divider"] .username-capsule-wrapper::before { color: #00E680; }
-#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(229, 193, 88, 0.6) 25%, transparent 40%, transparent 60%, rgba(229, 193, 88, 0.6) 75%, transparent 100%); }
-#profile-content[data-theme="obsidian_gold"][data-layout="divider"] .username-capsule-wrapper::before { color: #e5c158; }
-#profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::after { background: linear-gradient(90deg, transparent 0%, rgba(200, 150, 142, 0.6) 25%, transparent 40%, transparent 60%, rgba(200, 150, 142, 0.6) 75%, transparent 100%); }
-#profile-content[data-theme="satin_rose"][data-layout="divider"] .username-capsule-wrapper::before { color: #c8968e; }
-
-/* =========================================================
-   LAYOUT 3: PURE E SIMBOLI CHIOCCIOLA
-   ========================================================= */
-#profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
-
-.at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
-.brand-text { font-weight: inherit; }
-
-        /* =========================================================
-           PUNTO LUCE E ACCENTI
-           ========================================================= */
         #profile-content[data-theme="emerald"] .at-symbol { color: #00E680; opacity: 0.9; text-shadow: 0 0 10px rgba(0, 230, 128, 0.3); }
         #profile-content[data-theme="obsidian_gold"] .at-symbol { color: #e5c158; opacity: 0.9; text-shadow: 0 0 10px rgba(229, 193, 88, 0.3); }
         #profile-content[data-theme="satin_rose"] .at-symbol { color: #c8968e; opacity: 0.9; text-shadow: 0 0 10px rgba(200, 150, 142, 0.3); }
         #profile-content[data-theme="titanium"] .at-symbol { color: #b0b0b5; opacity: 0.9; }
         #profile-content[data-theme="black_dna"] .at-symbol { color: #ffffff; opacity: 0.4; }
-                /* =========================================================
-           DNA CORE - L'OGGETTO IDENTITARIO
-           ========================================================= */
-        :root {
-            --core-glow: rgba(255, 255, 255, 0.1);
-            --core-border: rgba(255, 255, 255, 0.2);
-        }
 
-        #profile-content[data-theme="emerald"] { --core-glow: rgba(0, 230, 128, 0.4); --core-border: rgba(0, 230, 128, 0.8); }
-        #profile-content[data-theme="obsidian_gold"] { --core-glow: rgba(229, 193, 88, 0.4); --core-border: rgba(229, 193, 88, 0.8); }
-        #profile-content[data-theme="satin_rose"] { --core-glow: rgba(200, 150, 142, 0.4); --core-border: rgba(200, 150, 142, 0.8); }
-        #profile-content[data-theme="titanium"] { --core-glow: rgba(176, 176, 181, 0.3); --core-border: rgba(176, 176, 181, 0.6); }
-        #profile-content[data-theme="black_dna"] { --core-glow: rgba(255, 255, 255, 0.15); --core-border: rgba(255, 255, 255, 0.3); }
-
-        .dna-core-container {
-            display: none; 
-            justify-content: center; 
-            align-items: center;
-            margin-bottom: 25px; 
-            margin-top: 15px; 
-            position: relative; 
-            z-index: 10;
-        }
-
-        /* L'anello esterno che respira */
-        .dna-core-ring {
-            width: 82px; 
-            height: 82px; 
-            border-radius: 22px; /* Forma a casella morbida, non rotonda */
-            padding: 3px;
-            background: linear-gradient(135deg, var(--core-border), transparent 60%, var(--core-border));
-            box-shadow: 0 0 20px var(--core-glow), inset 0 0 10px var(--core-glow);
-            animation: coreBreathe 6s ease-in-out infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        /* L'immagine vera e propria incastonata */
-        .dna-core-img {
-            width: 100%; 
-            height: 100%; 
-            border-radius: 19px; 
-            object-fit: cover; 
-            background: #0d0d0f;
-            z-index: 2;
-        }
-
-        /* Effetto materializzazione al caricamento */
-        .materialize-effect {
-            animation: coreMaterialize 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes coreBreathe {
-            0% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); }
-            50% { transform: scale(1.04); box-shadow: 0 0 30px var(--core-glow), inset 0 0 15px var(--core-glow); }
-            100% { transform: scale(1); box-shadow: 0 0 15px var(--core-glow), inset 0 0 5px var(--core-glow); }
-        }
-
-        @keyframes coreMaterialize {
-            0% { transform: scale(0.5) translateY(-20px); opacity: 0; filter: blur(10px) brightness(2); }
-            50% { transform: scale(1.1); opacity: 1; filter: blur(0px) brightness(1.5); box-shadow: 0 0 50px #fff; }
-            100% { transform: scale(1); opacity: 1; filter: blur(0px) brightness(1); }
-        }
-
-
-/* =========================================================
-           MOTORE TRANSIZIONI: DISSOLVENZA INCROCIATA (STILE iOS)
+        /* =========================================================
+           MOTORE TRANSIZIONI INCROCIATE PERFETTE (ZERO BUCHI)
            ========================================================= */
         .drawer-glass {
             position: fixed !important; top: 50% !important; left: 50% !important; 
-            
-            /* Movimento impercettibile: parte leggermente più in basso */
             transform: translate(-50%, -48%) scale(0.98) !important; 
             width: calc(100% - 32px) !important; max-width: 410px !important; 
             height: calc(100svh - 32px) !important; max-height: 840px !important;
@@ -383,7 +210,6 @@
             visibility: hidden;
             pointer-events: none;
             
-            /* TRANSIZIONE USCITA: Molto veloce (0.2s), sparisce mentre l'altro entra */
             transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s !important; 
         }
 
@@ -391,11 +217,7 @@
             opacity: 1 !important; 
             visibility: visible !important; 
             pointer-events: auto !important;
-            
-            /* Al centro esatto */
             transform: translate(-50%, -50%) scale(1) !important; 
-            
-            /* TRANSIZIONE ENTRATA: Immediata e fluida (0.25s) */
             transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0s !important; 
         }
         
@@ -407,12 +229,6 @@
             opacity: 0; pointer-events: none; transition: opacity 0.4s ease !important;
         }
         .drawer-backdrop.active { opacity: 1 !important; pointer-events: auto !important; }
-        .drawer-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; padding: 0; position: relative; width: 100%; }
-        .drawer-title { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-align: center; width: 100%; }
-        .drawer-subtitle { font-size: 0.55rem; color: #86868b; letter-spacing: 1px; margin-top: 6px; text-transform: uppercase; text-align: center; }
-        .drawer-close { color: rgba(255, 255, 255, 0.6); font-size: 1.1rem; cursor: pointer; padding: 5px; position: absolute; right: -5px; top: -5px; }
-        .drawer-back { color: rgba(255, 255, 255, 0.6); font-size: 1.1rem; cursor: pointer; padding: 5px; position: absolute; left: -5px; top: -5px; }
-        .drawer-close:active, .drawer-back:active { color: #ffffff; }
 
         .style-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
         .style-bar-label { cursor: pointer; display: block; }
@@ -455,306 +271,110 @@
         .qr-svg-wrapper { width: 190px; height: 190px; padding: 20px; border-radius: 24px; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; transition: all 0.5s ease; }
         .qr-svg { width: 100%; height: 100%; transition: all 0.5s ease; }
 
-        body[data-qr-theme="emerald"] .qr-svg-wrapper { border: 1px solid rgba(0, 230, 128, 0.25); box-shadow: 0 0 35px rgba(0, 230, 128, 0.15); }
-        body[data-qr-theme="emerald"] .qr-svg { fill: #00E680; filter: drop-shadow(0 0 8px rgba(0, 230, 128, 0.4)); }
-        body[data-qr-theme="black_dna"] .qr-svg-wrapper { border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 35px rgba(255, 255, 255, 0.03); }
-        body[data-qr-theme="black_dna"] .qr-svg { fill: #ffffff; filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25)); }
-        body[data-qr-theme="titanium"] .qr-svg-wrapper { border: 1px solid rgba(176, 176, 181, 0.2); box-shadow: 0 0 35px rgba(176, 176, 181, 0.1); }
-        body[data-qr-theme="titanium"] .qr-svg { fill: #b0b0b5; }
-        body[data-qr-theme="obsidian_gold"] .qr-svg-wrapper { border: 1px solid rgba(229, 193, 88, 0.25); box-shadow: 0 0 35px rgba(229, 193, 88, 0.15); }
-        body[data-qr-theme="obsidian_gold"] .qr-svg { fill: #e5c158; filter: drop-shadow(0 0 8px rgba(229, 193, 88, 0.35)); }
-        body[data-qr-theme="satin_rose"] .qr-svg-wrapper { border: 1px solid rgba(200, 150, 142, 0.25); box-shadow: 0 0 35px rgba(200, 150, 142, 0.15); }
-        body[data-qr-theme="satin_rose"] .qr-svg { fill: #c8968e; filter: drop-shadow(0 0 8px rgba(200, 150, 142, 0.35)); }
-
-       /* =========================================================
-           BOTTOM NAV BAR (DOCK MYQUICKTAG)
-           ========================================================= */
         .floating-nav-bar {
-            position: fixed; 
-            bottom: 35px; 
-            left: 50%; 
-            transform: translateX(-50%);
-            display: flex; 
-            align-items: center; 
-            z-index: 1500; 
-            
-            /* Il Vetro MyQuickTag: Più scuro, riflesso tagliente in alto */
+            position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; z-index: 1500; 
             background: rgba(12, 12, 15, 0.85) !important; 
             backdrop-filter: blur(25px) saturate(180%) !important; 
             -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
             border: 1px solid rgba(255, 255, 255, 0.05) !important; 
             border-top: 1px solid rgba(255, 255, 255, 0.15) !important; 
-            border-radius: 40px !important; 
-            padding: 6px !important; 
+            border-radius: 40px !important; padding: 6px !important; 
             box-shadow: 0 25px 50px rgba(0,0,0,0.9) !important;
         }
 
         .luxury-menu-btn {
-            display: flex; 
-            gap: 10px; 
-            padding: 14px 24px !important; 
-            justify-content: center; 
-            align-items: center;
-            cursor: pointer; 
-            border-radius: 34px !important;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            background: transparent !important;
+            display: flex; gap: 10px; padding: 14px 24px !important; justify-content: center; align-items: center;
+            cursor: pointer; border-radius: 34px !important; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important; background: transparent !important;
         }
+        .luxury-menu-btn:active { transform: scale(0.95) !important; background: rgba(255,255,255,0.05) !important; }
+        .luxury-menu-btn i { font-size: 0.85rem !important; color: rgba(255,255,255,0.6) !important; }
+        .luxury-menu-btn span { font-size: 0.65rem !important; letter-spacing: 2px !important; font-weight: 600 !important; color: #fff !important; text-transform: uppercase !important; white-space: nowrap !important; }
+        .nav-divider { width: 1px !important; height: 18px !important; background: rgba(255, 255, 255, 0.1) !important; margin: 0 12px !important; }
 
-        .luxury-menu-btn:active { 
-            transform: scale(0.95) !important; 
-            background: rgba(255,255,255,0.05) !important; 
-        }
-        
-        .luxury-menu-btn i { 
-            font-size: 0.85rem !important; 
-            color: rgba(255,255,255,0.6) !important; 
-        }
-        
-        .luxury-menu-btn span { 
-            font-size: 0.65rem !important; 
-            letter-spacing: 2px !important; 
-            font-weight: 600 !important; 
-            color: #fff !important; 
-            text-transform: uppercase !important; 
-            white-space: nowrap !important; 
-        }
+        .btn-action-primary { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid transparent !important; }
+        .btn-action-primary i, .btn-action-primary span { color: rgba(255, 255, 255, 0.3) !important; transition: color 0.3s ease !important; }
+        .btn-action-primary.ready { background: rgba(16, 185, 129, 0.1) !important;  border: 1px solid rgba(16, 185, 129, 0.25) !important; box-shadow: inset 0 0 15px rgba(16, 185, 129, 0.05) !important; }
+        .btn-action-primary.ready i, .btn-action-primary.ready span { color: #10b981 !important; }
+        .btn-action-primary.ready:active { background: rgba(16, 185, 129, 0.2) !important; }
 
-        .nav-divider {
-            width: 1px !important;
-            height: 18px !important;
-            background: rgba(255, 255, 255, 0.1) !important;
-            margin: 0 12px !important;
-        }
-
-        /* --- STATI DEL TASTO MASTER (SALVA/ATTIVA) --- */
-        .btn-action-primary {
-            /* Stato Spento (Grigio vetro) */
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid transparent !important;
-        }
-        
-        .btn-action-primary i, .btn-action-primary span {
-            color: rgba(255, 255, 255, 0.3) !important;
-            transition: color 0.3s ease !important;
-        }
-        
-        /* Stato Acceso (Il Verde Smeraldo di MyQuickTag) */
-        .btn-action-primary.ready {
-            background: rgba(16, 185, 129, 0.1) !important; 
-            border: 1px solid rgba(16, 185, 129, 0.25) !important;
-            box-shadow: inset 0 0 15px rgba(16, 185, 129, 0.05) !important;
-        }
-        
-        .btn-action-primary.ready i, .btn-action-primary.ready span {
-            color: #10b981 !important; 
-        }
-        
-        .btn-action-primary.ready:active {
-            background: rgba(16, 185, 129, 0.2) !important;
-        }
-                /* =========================================================
-           FIX LOGO: ADDIO LAPIDE ROTONDA (SQUIRCLE)
-           ========================================================= */
-        .orbital-sphere {
-            border-radius: 18px !important; /* Trasforma il cerchio in un box morbido */
-        }
-        .orbital-ring {
-            border-radius: 22px !important; /* Adatta l'anello dorato alla nuova forma */
-        }
-
-        /* =========================================================
-           LA NUOVA HALL: ECOSISTEMA VIVO
-           ========================================================= */
-        .ecosystem-hall {
-            width: 100%; max-width: 320px; margin: 40px auto 100px auto; 
-            display: flex; flex-direction: column; gap: 20px;
-        }
-        
-        .room-container {
-            display: flex; flex-direction: column; align-items: center; width: 100%;
-        }
-
-        /* I 4 Titoli delle Stanze (Minimal ed Esclusivi) */
-        .room-title {
-            color: #fff; font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; 
-            text-transform: uppercase; cursor: pointer; padding: 10px 0;
-            transition: all 0.3s ease; opacity: 0.8;
-            display: flex; align-items: center; justify-content: center; width: 100%;
-        }
+        .ecosystem-hall { width: 100%; max-width: 320px; margin: 40px auto 100px auto; display: flex; flex-direction: column; gap: 20px; }
+        .room-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .room-title { color: #fff; font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; padding: 10px 0; transition: all 0.3s ease; opacity: 0.8; display: flex; align-items: center; justify-content: center; width: 100%; }
         .room-title:active { opacity: 1; transform: scale(0.98); }
-        .room-title::before {
-            content: '::'; margin-right: 12px; color: rgba(255,255,255,0.2); letter-spacing: 1px;
-        }
-
-        /* L'interno delle Stanze (Il Dropdown a scomparsa) */
-        .room-content {
-            width: 100%; max-height: 0; overflow: hidden; 
-            transition: max-height 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.4s ease, margin-top 0.4s ease;
-            opacity: 0; display: flex; flex-direction: column; gap: 16px; align-items: center;
-        }
-        .room-content.open {
-            max-height: 600px; /* Si apre abbastanza per mostrare tutto */
-            opacity: 1; margin-top: 15px; margin-bottom: 10px;
-        }
-
-        /* Le scritte interne alle stanze (le tue funzioni reali) */
-        .room-item-text {
-            font-size: 0.75rem; letter-spacing: 2px; font-weight: 500; color: rgba(255,255,255,0.7); 
-            text-transform: uppercase; text-align: center; width: 100%; cursor: pointer;
-            transition: color 0.3s ease;
-        }
+        .room-title::before { content: '::'; margin-right: 12px; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
+        .room-content { width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.4s ease, margin-top 0.4s ease; opacity: 0; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+        .room-content.open { max-height: 600px; opacity: 1; margin-top: 15px; margin-bottom: 10px; }
+        .room-item-text { font-size: 0.75rem; letter-spacing: 2px; font-weight: 500; color: rgba(255,255,255,0.7); text-transform: uppercase; text-align: center; width: 100%; cursor: pointer; transition: color 0.3s ease; }
 
         .sortable-ghost { opacity: 0.4; background: rgba(255, 255, 255, 0.05); }
         .sortable-drag { background: rgba(20, 20, 22, 0.95); box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
-        /* --- VIP VAULT SWITCH --- */
         .vip-switch { position: relative; width: 40px; height: 22px; -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.1); border-radius: 24px; outline: none; cursor: pointer; transition: 0.3s; margin: 0; }
         .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
         .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; }
-/* ============================================================
-   LAYOUT 1: BADGE (RISOLUZIONE DEFINITIVA LARGHEZZA E COLORI)
-   ============================================================ */
-#profile-content[data-layout="badge"] .username-capsule-wrapper { 
-    display: flex !important; 
-    justify-content: center !important; 
-    align-items: center !important;
-    width: 100% !important; 
-}
 
-#profile-content[data-layout="badge"] .username-capsule {
-    display: inline-flex !important; 
-    width: max-content !important; /* 🎯 Il muro di cemento contro l'allargamento */
-    max-width: 290px !important; 
-    margin: 0 auto !important; 
-    padding: 1.5px !important; 
-    clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%) !important;
-    box-sizing: border-box !important;
-    /* Rimosso il background bianco fisso: ora i temi possono funzionare! */
-}
+        #profile-content[data-layout="badge"] .username-capsule-wrapper { display: flex !important; justify-content: center !important; align-items: center !important; width: 100% !important; }
+        #profile-content[data-layout="badge"] .username-capsule { display: inline-flex !important; width: max-content !important; max-width: 290px !important; margin: 0 auto !important; padding: 1.5px !important; clip-path: polygon(25px 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0 50%) !important; box-sizing: border-box !important; }
+        #profile-content[data-layout="badge"] .username-capsule-inner { display: inline-flex !important; width: 100% !important; justify-content: center !important; align-items: center !important; background: #0d0d0f !important; padding: 16px 35px !important; clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%) !important; box-sizing: border-box !important; }
+        #profile-content[data-layout="badge"] .username-display { display: block !important; width: max-content !important; max-width: 100% !important; margin: 0 auto !important; text-align: center !important; }
 
-#profile-content[data-layout="badge"] .username-capsule-inner {
-    display: inline-flex !important; 
-    width: 100% !important; /* Si adatta alla restrizione del padre */
-    justify-content: center !important; 
-    align-items: center !important; 
-    background: #0d0d0f !important; 
-    padding: 16px 35px !important; 
-    clip-path: polygon(23px 0, calc(100% - 23px) 0, 100% 50%, calc(100% - 23px) 100%, 23px 100%, 0 50%) !important;
-    box-sizing: border-box !important;
-}
-
-#profile-content[data-layout="badge"] .username-display {
-    display: block !important; 
-    width: max-content !important; /* Costringe il testo a non spingere i bordi */
-    max-width: 100% !important; 
-    margin: 0 auto !important;
-    text-align: center !important;
-}
-
-/* --- RIPRISTINO FORZATO DEI COLORI DEL TEMA SUL BADGE --- */
-#profile-content[data-layout="badge"][data-theme="emerald"] .username-capsule { background: rgba(0, 230, 128, 0.6) !important; }
-#profile-content[data-layout="badge"][data-theme="obsidian_gold"] .username-capsule { background: rgba(229, 193, 88, 0.6) !important; }
-#profile-content[data-layout="badge"][data-theme="satin_rose"] .username-capsule { background: rgba(200, 150, 142, 0.6) !important; }
-#profile-content[data-layout="badge"][data-theme="titanium"] .username-capsule { background: rgba(176, 176, 181, 0.6) !important; }
-#profile-content[data-layout="badge"][data-theme="black_dna"] .username-capsule { background: rgba(255, 255, 255, 0.35) !important; }
-
-
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(2); opacity: 0; } }
     </style>
 </head>
 <body>
    
-<!-- UI COMPONENT: Session Identity Reservation Badge -->
 <div id="reservation-badge" style="display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 5000; align-items: center; gap: 10px; background: rgba(10, 10, 12, 0.85); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 30px; padding: 8px 16px; backdrop-filter: blur(15px); box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
     <div style="width: 8px; height: 8px; background: #e5c158; border-radius: 50%; box-shadow: 0 0 8px #e5c158;"></div>
     <div style="color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.5px;">
         Identità <span id="badge-target-name">@brand</span> riservata: <span id="timer-ui" style="color: #e5c158; font-weight: 700;">30:00</span>
     </div>
 </div> 
-        <style>
-            @keyframes pulse {
-                0%, 100% { transform: scale(1); opacity: 0.5; }
-                50% { transform: scale(2); opacity: 0; }
-            }
-        </style>
-    
 
     <div class="configurator-wrapper">
         <div id="profile-content" data-theme="black_dna"> 
-
-                             <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
-            
-           <!-- ================================================= -->
-            <!-- STRUTTURA LOGO / IMMAGINE PROFILO (STATICA)       -->
-            <!-- ================================================= -->
-            <div id="live-avatar-container" class="orbital-container" style="display: none;">
-                <div class="orbital-sphere">
-                    <img id="live-avatar-img" class="orbital-img" src="" alt="Brand Logo">
+            <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
+                <div id="live-avatar-container" class="orbital-container" style="display: none;">
+                    <div class="orbital-sphere">
+                        <img id="live-avatar-img" class="orbital-img" src="" alt="Brand Logo">
+                    </div>
                 </div>
-            </div>
-                                 
-            <div class="username-capsule-wrapper">
-                <div class="username-capsule">
-                    <div class="username-capsule-inner">
-                      <div class="username-display" id="tag-username"></div> 
+                <div class="username-capsule-wrapper">
+                    <div class="username-capsule">
+                        <div class="username-capsule-inner">
+                          <div class="username-display" id="tag-username"></div> 
+                        </div>
                     </div>
                 </div>
             </div>
             
-        </div>
-   
-
-              <!-- =========================================================
-         CAPITOLO 3: CORE ECOSISTEMA - MACRO AREE DI NAVIGAZIONE
-         ========================================================= -->
-    <div id="blocks-track" class="ecosystem-hall">
-        
-        <!-- SEZIONE 3.1: BRAND IDENTITY -->
-        <div class="room-container" id="container-identity">
-            <div class="room-title" onclick="toggleRoom('room-identity')">IDENTITY</div>
-            <div class="room-content" id="room-identity">
-                <!-- Il motore JS inietterà qui: Live Status, MQT Flash, Bio -->
+            <div id="blocks-track" class="ecosystem-hall">
+                <div class="room-container" id="container-identity">
+                    <div class="room-title" onclick="toggleRoom('room-identity')">IDENTITY</div>
+                    <div class="room-content" id="room-identity"></div>
+                </div>
+                <div class="room-container" id="container-business">
+                    <div class="room-title" onclick="toggleRoom('room-business')">BUSINESS</div>
+                    <div class="room-content" id="room-business"></div>
+                </div>
+                <div class="room-container" id="container-media">
+                    <div class="room-title" onclick="toggleRoom('room-media')">MEDIA</div>
+                    <div class="room-content" id="room-media"></div>
+                </div>
+                <div class="room-container" id="container-network">
+                    <div class="room-title" onclick="toggleRoom('room-network')">NETWORK</div>
+                    <div class="room-content" id="room-network"></div>
+                </div>
             </div>
-        </div>
-
-        <!-- SEZIONE 3.2: BUSINESS & ASSET -->
-        <div class="room-container" id="container-business">
-            <div class="room-title" onclick="toggleRoom('room-business')">BUSINESS</div>
-            <div class="room-content" id="room-business">
-                <!-- Il motore JS inietterà qui: Digital Pass, Vetrina PDF, VIP Vault -->
-            </div>
-        </div>
-
-        <!-- SEZIONE 3.3: MEDIA GALLERY -->
-        <div class="room-container" id="container-media">
-            <div class="room-title" onclick="toggleRoom('room-media')">MEDIA</div>
-            <div class="room-content" id="room-media">
-                <!-- Il motore JS inietterà qui: Galleria Immagini -->
-            </div>
-        </div>
-
-        <!-- SEZIONE 3.4: NETWORK E CONNESSIONI -->
-        <div class="room-container" id="container-network">
-            <div class="room-title" onclick="toggleRoom('room-network')">NETWORK</div>
-            <div class="room-content" id="room-network">
-                <!-- Il motore JS inietterà qui: Azione Rapida (CTA), Social, Sito Web, Contatti -->
-            </div>
-        </div>
-
-    </div>
         </div> 
     </div>   
-<!-- ========================================== -->
-    <!-- DOCK MYQUICKTAG (NAV BAR)                  -->
-    <!-- ========================================== -->
+
     <div class="floating-nav-bar">
         <div class="luxury-menu-btn" onclick="apriDrawer('drawer-master')">
             <i class="fas fa-bars"></i>
             <span>MENU</span>
         </div>
-        
         <div class="nav-divider"></div>
-        
         <div id="master-action-btn" class="luxury-menu-btn btn-action-primary" onclick="gestisciAzioneMaster()">
             <i class="fas fa-lock" id="master-action-icon"></i>
             <span id="master-action-text">COMPLETA TAG</span>
@@ -764,7 +384,7 @@
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
 
     <!-- ========================================== -->
-    <!-- 0. PLANCIA COMANDI (MENU PRINCIPALE NERO)  -->
+    <!-- 0. PLANCIA COMANDI                         -->
     <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-master">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
@@ -772,7 +392,6 @@
             <div class="header-title" style="font-weight: 400;">PLANCIA COMANDI</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
             <div class="edit-menu-item" onclick="apriDrawer('env-identity')">
                 <i class="fas fa-fingerprint pillar-icon"></i><span class="pillar-text">IDENTITY</span>
@@ -799,7 +418,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 1. AMBIENTE: IDENTITY (Sottomenu)          -->
+    <!-- 1. ENV IDENTITY E SUOI MODULI              -->
     <!-- ========================================== -->
     <div class="drawer-glass" id="env-identity">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
@@ -807,7 +426,6 @@
             <div class="header-title" style="font-weight: 400;">IDENTITY</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
             <div class="edit-menu-item" onclick="apriDrawer('drawer-identita')">
                 <i class="fas fa-id-badge pillar-icon"></i>
@@ -833,16 +451,12 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 1.1 MODULO: NOME E AVATAR                  -->
-    <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-identita">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-identity')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">NOME E AVATAR</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        
         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; margin-top: 10px;">
             <input type="file" id="avatar-upload" accept="image/*" style="display: none;" onchange="gestisciUploadAvatar(event)">
             <label for="avatar-upload" id="avatar-preview-box" style="width: 84px; height: 84px; border-radius: 22px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; position: relative; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
@@ -854,35 +468,28 @@
             <span style="font-size: 0.65rem; color: #86868b; margin-top: 12px; letter-spacing: 2px; text-transform: uppercase;">Logo / Foto Profilo</span>
             <input type="hidden" id="field-avatar-url" value="">
         </div>
-        
         <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
             <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; text-align: center; display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 0.55rem; color: rgba(255,255,255,0.5); letter-spacing: 1.5px; text-transform: uppercase;">La tua Tag Originaria</span>
                 <span id="label-nome-sistema" style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px; word-break: break-word;">@...</span>
             </div>
-            
             <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.9rem;">
         </div>
         <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME E LOGO</button>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 1.2 MODULO: BIOGRAFIA                      -->
-    <!-- ========================================== -->
     <div class="drawer-glass" id="drawer-bio">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-identity')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">PRESENTAZIONE</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        
         <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 10px;">
          <textarea id="field-bio" placeholder="Scrivi qui la tua bio o la descrizione del tuo business..." onblur="this.value = pulisciTesto(this.value)" style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; resize: none;"></textarea> 
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center;">
                 Un testo breve e incisivo converte molto di più.
             </div>
         </div>
-        
         <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
             <button type="button" onclick="eliminaAsset('bio')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-trash-alt"></i> ELIMINA BIO
@@ -890,19 +497,17 @@
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA BIO</button>
     </div>
+
     <!-- ========================================== -->
-    <!-- 2. AMBIENTE: BUSINESS (Sottomenu)          -->
+    <!-- 2. ENV BUSINESS E SUOI MODULI              -->
     <!-- ========================================== -->
     <div class="drawer-glass" id="env-business">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <!-- La freccia torna alla Plancia Comandi -->
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">BUSINESS</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
-            
             <div class="edit-menu-item" onclick="apriDrawer('drawer-showcase')">
                 <i class="fas fa-file-pdf pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
@@ -910,7 +515,6 @@
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Carica Menu, Listini o Brochure</span>
                 </div>
             </div>
-
             <div class="edit-menu-item" onclick="apriDrawer('drawer-cv')">
                 <i class="fas fa-file-alt pillar-icon"></i>
                 <div style="display: flex; flex-direction: column;">
@@ -918,27 +522,63 @@
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il tuo percorso professionale</span>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 2.1 MODULO: CURRICULUM VITAE               -->
-    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-showcase">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">VETRINA PDF</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
+                I file verranno ospitati in cloud ad altissima velocità.
+            </div>
+            <div style="position: relative;" class="premium-field-container">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO BOTTONE</label>
+                    <input type="text" id="field-pdf-label" placeholder="Es. Scarica il nostro Menu" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px;">
+                    <input type="file" id="pdf-upload" accept="application/pdf" style="display: none;" onchange="gestisciUploadPDF(event)">
+                    <label for="pdf-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #e5c158; margin-bottom: 10px;"></i>
+                        <span id="pdf-upload-text" style="color: #fff; font-size: 0.8rem; font-weight: 600;">Seleziona un file PDF</span>
+                        <span style="font-size: 0.6rem; color: rgba(255,255,255,0.4); margin-top: 5px;">Max 5 MB</span>
+                    </label>
+                    <div id="pdf-loader" style="display: none; margin-top: 15px; width: 100%; text-align: center;">
+                        <i class="fas fa-circle-notch fa-spin" style="color: #e5c158; font-size: 1.2rem;"></i>
+                        <span style="display: block; font-size: 0.7rem; color: #e5c158; margin-top: 5px;">Caricamento in corso...</span>
+                    </div>
+                </div>
+                <input type="hidden" id="field-pdf-url" value="">
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE PREMIUM</span>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+            <button type="button" onclick="eliminaAsset('pdf')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-trash-alt"></i> ELIMINA PDF
+            </button>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VETRINA</button>
+    </div>
+
     <div class="drawer-glass" id="drawer-cv">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">CURRICULUM VITAE</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        
         <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 10px;">
          <textarea id="field-cv" placeholder="Scrivi o incolla qui il tuo percorso professionale, le tue esperienze o la storia della tua azienda..." style="width: 100%; height: 180px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; resize: none;"></textarea> 
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center;">
                 Il testo verrà formattato con un'elegante cornice nella tua Tag.
             </div>
         </div>
-        
         <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
             <button type="button" onclick="eliminaAsset('cv')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-trash-alt"></i> ELIMINA CV
@@ -948,148 +588,99 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- I VECCHI MODULI (Aggiornati allo Stile Nero)-->
-    <!-- Le frecce indietro punteranno al giusto ambiente appena lo creeremo! -->
+    <!-- 3. ENV MEDIA E SUOI MODULI                 -->
     <!-- ========================================== -->
-    
-    <div class="drawer-glass" id="drawer-style">
+    <div class="drawer-glass" id="env-media">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">DIGITAL STYLE</div>
+            <div class="header-title" style="font-weight: 400;">MEDIA</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        
-        <div class="style-list">
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-gallery')">
+                <i class="fas fa-images pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">GALLERIA IMMAGINI</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Mostra i tuoi lavori o prodotti</span>
+                </div>
+            </div>
         </div>
-        
-        <div class="drawer-header-liquido" style="margin-top: 25px; margin-bottom: 15px;">
-            <div class="header-back"></div>
-            <div class="header-title" style="font-weight: 400;">BRAND LAYOUT</div>
-            <div class="header-close"></div>
-        </div>
-        
-        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div></label>
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div></label>
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="pure" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Pure</span></div></label>
-        </div>
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()">CONFERMA STILE</button>
     </div>
 
-    <div class="drawer-glass" id="drawer-contatti">
+    <div class="drawer-glass" id="drawer-gallery">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">CONTATTI</div>
+            <div class="header-back" onclick="apriDrawer('env-media')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">GALLERIA</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            <div style="position: relative;">
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TELEFONO PRINCIPALE</label>
-                <input type="tel" id="field-tel1" placeholder="+39 333 1234567" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
+                Carica fino a 6 immagini per la tua vetrina.
             </div>
-            <div style="position: relative;">
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">EMAIL</label>
-                <input type="email" id="field-email" placeholder="info@tuobrand.it" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
-            </div>
-
-            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 5px 0;"></div>
-            <div style="font-size: 0.65rem; color: #d4af37; text-align: center; letter-spacing: 1px;">FUNZIONI AVANZATE</div>
-
-            <div style="position: relative;" class="premium-field-container">
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TELEFONO SECONDARIO</label>
-                <input type="tel" id="field-tel2" placeholder="+39 02 123456" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
-                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
-                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.2rem;"></i>
+            <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; position: relative;" class="premium-field-container">
+                <input type="file" id="gallery-upload" accept="image/*" style="display: none;" onchange="gestisciUploadGalleria(event)">
+                <label for="gallery-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
+                    <i class="fas fa-plus-circle" style="font-size: 2rem; color: #e5c158; margin-bottom: 10px;"></i>
+                    <span id="gallery-upload-text" style="color: #fff; font-size: 0.8rem;">Aggiungi Foto</span>
+                </label>
+                <div id="gallery-loader" style="display: none; margin-top: 10px;">
+                    <i class="fas fa-circle-notch fa-spin" style="color: #e5c158;"></i>
+                </div>
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem;"></i>
                 </div>
             </div>
-
-            <div style="position: relative;" class="premium-field-container">
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">INDIRIZZO (MAPS)</label>
-                <input type="text" id="field-indirizzo" placeholder="Via Roma 1, Milano" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
-                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
-                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.2rem;"></i>
-                </div>
-            </div>
+            <div id="gallery-preview-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;"></div>
+            <input type="hidden" id="field-gallery-data" value="[]">
         </div>
-        
         <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
-            <button type="button" onclick="eliminaAsset('contatti')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <i class="fas fa-trash-alt"></i> ELIMINA CONTATTI
+            <button type="button" onclick="eliminaAsset('gallery')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-trash-alt"></i> SVUOTA GALLERIA
             </button>
         </div>
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA GALLERIA</button>
     </div>
 
-    <div class="drawer-glass" id="drawer-social">
+    <!-- ========================================== -->
+    <!-- 4. ENV NETWORK E SUOI MODULI               -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="env-network">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">SOCIAL & LINK</div>
+            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">NETWORK</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
-        <div style="flex: 1; overflow-y: auto; padding: 0 5px 20px 5px;">
-            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <div style="font-size: 0.65rem; color: #d4af37; letter-spacing: 1px;">I TUOI CANALI</div>
-                    <div id="social-counter" style="font-size: 0.65rem; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px;">0/3 (Piano Base)</div>
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-sito')">
+                <i class="fas fa-globe pillar-icon"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text">SITO WEB</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il tuo dominio principale</span>
                 </div>
-
-                <div id="social-internal-track" style="display: flex; flex-direction: column; gap: 8px; min-height: 10px; margin-bottom: 10px;"></div>
-
-                <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px; margin-top: 10px;">AGGIUNGI NUOVO LINK</div>
-
-                <div style="position: relative;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">URL DEL COLLEGAMENTO</label>
-                    <input type="url" id="smart-link-url" placeholder="Incolla qui il link..." oninput="rilevaSocialAutomatico()" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+            </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-social')">
+                <i class="fas fa-share-nodes pillar-icon"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text">SOCIAL & LINK</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il tuo ecosistema</span>
                 </div>
-
-                <div style="position: relative;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">NOME DEL CANALE</label>
-                    <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
-                        <i id="smart-link-icon" class="fas fa-link" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
-                        <input type="text" id="smart-link-name" placeholder="Es. Il mio Instagram" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
-                    </div>
+            </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-contatti')">
+                <i class="fas fa-address-card pillar-icon"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text">RUBRICA E CONTATTI</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">File VCF e Info Base</span>
                 </div>
-
-                <div style="margin-top: 5px; padding: 14px 16px; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-size: 0.7rem; color: #e5c158; font-weight: 600; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fas fa-lock"></i> VIP VAULT
-                            </div>
-                            <div style="font-size: 0.55rem; color: rgba(255,255,255,0.4); margin-top: 4px; letter-spacing: 0.5px;">Proteggi con PIN (Solo Gold)</div>
-                        </div>
-                        <input type="checkbox" id="smart-link-vip" class="vip-switch" onchange="gestisciVIPSwitch(this)">
-                    </div>
-                    <div id="vip-pin-container" style="display: none; margin-top: 15px;">
-                        <input type="number" id="smart-link-pin" placeholder="Inserisci PIN (es. 1234)" style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.85rem; letter-spacing: 2px;">
-                    </div>
-                </div>
-
-                <button id="btn-add-social" class="btn-crea" style="background: #10b981; color: #000; margin-top: 10px; margin-bottom: 10px; font-weight: 700; border-radius: 12px;" onclick="aggiungiLinkSmart()">+ AGGIUNGI AL PROFILO</button>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
-            <button type="button" onclick="eliminaAsset('social')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <i class="fas fa-trash-alt"></i> ELIMINA TUTTI I LINK
-            </button>
-        </div>
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
-    </div> 
-        
+    </div>
+
     <div class="drawer-glass" id="drawer-sito">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">SITO WEB</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="position: relative;">
                 <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">URL DEL SITO</label>
@@ -1110,13 +701,143 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA SITO</button>
     </div>
 
+    <div class="drawer-glass" id="drawer-social">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">SOCIAL & LINK</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="flex: 1; overflow-y: auto; padding: 0 5px 20px 5px;">
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <div style="font-size: 0.65rem; color: #d4af37; letter-spacing: 1px;">I TUOI CANALI</div>
+                    <div id="social-counter" style="font-size: 0.65rem; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px;">0/3 (Piano Base)</div>
+                </div>
+                <div id="social-internal-track" style="display: flex; flex-direction: column; gap: 8px; min-height: 10px; margin-bottom: 10px;"></div>
+                <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px; margin-top: 10px;">AGGIUNGI NUOVO LINK</div>
+                <div style="position: relative;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">URL DEL COLLEGAMENTO</label>
+                    <input type="url" id="smart-link-url" placeholder="Incolla qui il link..." oninput="rilevaSocialAutomatico()" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+                <div style="position: relative;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">NOME DEL CANALE</label>
+                    <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 16px;">
+                        <i id="smart-link-icon" class="fas fa-link" style="color: #86868b; font-size: 1rem; width: 24px; text-align: center;"></i>
+                        <input type="text" id="smart-link-name" placeholder="Es. Il mio Instagram" style="width: 100%; background: transparent; border: none; color: #fff; padding: 14px 10px; font-family: 'Inter', sans-serif; outline: none;">
+                    </div>
+                </div>
+                <div style="margin-top: 5px; padding: 14px 16px; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.7rem; color: #e5c158; font-weight: 600; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fas fa-lock"></i> VIP VAULT
+                            </div>
+                            <div style="font-size: 0.55rem; color: rgba(255,255,255,0.4); margin-top: 4px; letter-spacing: 0.5px;">Proteggi con PIN (Solo Gold)</div>
+                        </div>
+                        <input type="checkbox" id="smart-link-vip" class="vip-switch" onchange="gestisciVIPSwitch(this)">
+                    </div>
+                    <div id="vip-pin-container" style="display: none; margin-top: 15px;">
+                        <input type="number" id="smart-link-pin" placeholder="Inserisci PIN (es. 1234)" style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.85rem; letter-spacing: 2px;">
+                    </div>
+                </div>
+                <button id="btn-add-social" class="btn-crea" style="background: #10b981; color: #000; margin-top: 10px; margin-bottom: 10px; font-weight: 700; border-radius: 12px;" onclick="aggiungiLinkSmart()">+ AGGIUNGI AL PROFILO</button>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+            <button type="button" onclick="eliminaAsset('social')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-trash-alt"></i> ELIMINA TUTTI I LINK
+            </button>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
+    </div> 
+
+    <div class="drawer-glass" id="drawer-contatti">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">CONTATTI</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="position: relative;">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TELEFONO PRINCIPALE</label>
+                <input type="tel" id="field-tel1" placeholder="+39 333 1234567" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+            </div>
+            <div style="position: relative;">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">EMAIL</label>
+                <input type="email" id="field-email" placeholder="info@tuobrand.it" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+            </div>
+            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 5px 0;"></div>
+            <div style="font-size: 0.65rem; color: #d4af37; text-align: center; letter-spacing: 1px;">FUNZIONI AVANZATE</div>
+            <div style="position: relative;" class="premium-field-container">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TELEFONO SECONDARIO</label>
+                <input type="tel" id="field-tel2" placeholder="+39 02 123456" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.2rem;"></i>
+                </div>
+            </div>
+            <div style="position: relative;" class="premium-field-container">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">INDIRIZZO (MAPS)</label>
+                <input type="text" id="field-indirizzo" placeholder="Via Roma 1, Milano" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.2rem;"></i>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+            <button type="button" onclick="eliminaAsset('contatti')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-trash-alt"></i> ELIMINA CONTATTI
+            </button>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA ASSET</button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 5. ENV ACTION CENTER E SUOI MODULI         -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="env-action">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400; color: #10b981;">ACTION CENTER</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-quick')">
+                <i class="fas fa-bolt pillar-icon" style="color: #10b981;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #10b981;">AZIONE RAPIDA</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Bottone CTA in evidenza</span>
+                </div>
+            </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-live-status')">
+                <i class="fas fa-broadcast-tower pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">LIVE STATUS</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il semaforo sulla tua Tag</span>
+                </div>
+            </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-flash')">
+                <i class="fas fa-bolt pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">MQT FLASH</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Annuncio a tempo (24h)</span>
+                </div>
+            </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-quickpass')">
+                <i class="fas fa-ticket-alt pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">QUICK PASS</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Sistema di passaparola</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="drawer-glass" id="drawer-quick">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-action')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">AZIONE RAPIDA</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
                 Crea un bottone in evidenza sulla tua tag per spingere i clienti all'azione.
@@ -1161,7 +882,6 @@
             <div class="header-title" style="font-weight: 400;">LIVE STATUS</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px;">
                 Il badge luminoso apparirà in cima alla tua Tag pubblica.
@@ -1172,16 +892,13 @@
                 <div class="status-btn" id="btn-status-red" onclick="selezionaStatus('red')" style="flex:1; text-align:center; padding:14px 5px; background:rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); color:#ef4444; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.7rem; transition: all 0.2s;">🔴 OFFLINE</div>
             </div>
             <input type="hidden" id="field-status-color" value="">
-            
             <div style="position: relative;">
                 <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">MESSAGGIO (Max 30 caratteri)</label>
                 <input type="text" id="field-status-text" placeholder="Seleziona uno stato per iniziare..." maxlength="30" onblur="this.value = pulisciTesto(this.value)" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; transition: all 0.3s;">
             </div>
-
             <div id="status-action-toggle" onclick="toggleStatusAction()" style="font-size: 0.65rem; color: #d4af37; text-align: center; cursor: pointer; letter-spacing: 1px; margin-top: 5px; text-transform: uppercase;">
                 <i class="fas fa-plus-circle"></i> Aggiungi un'azione a questo stato
             </div>
-
             <div id="status-action-container" style="display: none; flex-direction: column; gap: 15px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-top: 5px;">
                 <div>
                     <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TIPO DI AZIONE</label>
@@ -1219,7 +936,6 @@
             <div class="header-title" style="font-weight: 400;">MQT FLASH</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px;">
                 Il messaggio apparirà come banner dorato e sparirà da solo tra 24 ore esatte.
@@ -1237,115 +953,82 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA FLASH</button>
     </div>
 
-    <div class="drawer-glass" id="drawer-showcase">
+    <div class="drawer-glass" id="drawer-quickpass">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">VETRINA PDF</div>
+            <div class="header-back" onclick="apriDrawer('env-action')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">QUICK PASS</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
-                I file verranno ospitati in cloud ad altissima velocità.
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px; line-height: 1.5;">
+                Imposta le regole. Il sistema genererà un coupon automatico per acquisire nuovi clienti.
             </div>
             <div style="position: relative;" class="premium-field-container">
                 <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO BOTTONE</label>
-                    <input type="text" id="field-pdf-label" placeholder="Es. Scarica il nostro Menu" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO PER CHI INVITA (Utente A)</label>
+                    <input type="text" id="field-qp-premio-a" placeholder="Es. 1 Cappuccino omaggio" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
-                <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px;">
-                    <input type="file" id="pdf-upload" accept="application/pdf" style="display: none;" onchange="gestisciUploadPDF(event)">
-                    <label for="pdf-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #e5c158; margin-bottom: 10px;"></i>
-                        <span id="pdf-upload-text" style="color: #fff; font-size: 0.8rem; font-weight: 600;">Seleziona un file PDF</span>
-                        <span style="font-size: 0.6rem; color: rgba(255,255,255,0.4); margin-top: 5px;">Max 5 MB</span>
-                    </label>
-                    <div id="pdf-loader" style="display: none; margin-top: 15px; width: 100%; text-align: center;">
-                        <i class="fas fa-circle-notch fa-spin" style="color: #e5c158; font-size: 1.2rem;"></i>
-                        <span style="display: block; font-size: 0.7rem; color: #e5c158; margin-top: 5px;">Caricamento in corso...</span>
-                    </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO NUOVO CLIENTE (Utente B)</label>
+                    <input type="text" id="field-qp-premio-b" placeholder="Es. 1 Caffè sul primo ordine" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
-                <input type="hidden" id="field-pdf-url" value="">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">LIMITE COUPON (Opzionale)</label>
+                    <input type="number" id="field-qp-limite" placeholder="Es. 100" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">DATA SCADENZA (Opzionale)</label>
+                    <input type="datetime-local" id="field-qp-scadenza" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; color-scheme: dark;">
+                </div>
                 <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
                     <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
-                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE PREMIUM</span>
+                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE GOLD</span>
                 </div>
             </div>
+            <div style="text-align: center; margin-top: 5px;">
+                <button type="button" onclick="eliminaAsset('quickpass')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-trash-alt"></i> ELIMINA QUICK PASS
+                </button>
+            </div>
         </div>
-        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
-            <button type="button" onclick="eliminaAsset('pdf')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <i class="fas fa-trash-alt"></i> ELIMINA PDF
-            </button>
-        </div>
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VETRINA</button>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA QUICK PASS</button>
     </div>
 
-   <!-- ========================================== -->
-    <!-- 3. AMBIENTE: MEDIA (Sottomenu)             -->
     <!-- ========================================== -->
-    <div class="drawer-glass" id="env-media">
+    <!-- ALTRI MODULI DI CONFIGURAZIONE             -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-style">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">MEDIA</div>
+            <div class="header-title" style="font-weight: 400;">DIGITAL STYLE</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
-        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
-            <div class="edit-menu-item" onclick="apriDrawer('drawer-gallery')">
-                <i class="fas fa-images pillar-icon" style="color: #e5c158;"></i>
-                <div style="display: flex; flex-direction: column;">
-                    <span class="pillar-text" style="color: #e5c158;">GALLERIA IMMAGINI</span>
-                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Mostra i tuoi lavori o prodotti</span>
-                </div>
-            </div>
+        <div class="style-list">
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
+            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
         </div>
+        <div class="drawer-header-liquido" style="margin-top: 25px; margin-bottom: 15px;">
+            <div class="header-back"></div>
+            <div class="header-title" style="font-weight: 400;">BRAND LAYOUT</div>
+            <div class="header-close"></div>
+        </div>
+        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div></label>
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div></label>
+            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="pure" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Pure</span></div></label>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">CONFERMA STILE</button>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 3.1 MODULO: GALLERIA IMMAGINI              -->
-    <!-- ========================================== -->
-    <div class="drawer-glass" id="drawer-gallery">
-        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <!-- La freccia ora punta correttamente al sottomenù MEDIA -->
-            <div class="header-back" onclick="apriDrawer('env-media')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">GALLERIA</div>
-            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
-                Carica fino a 6 immagini per la tua vetrina.
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; position: relative;" class="premium-field-container">
-                <input type="file" id="gallery-upload" accept="image/*" style="display: none;" onchange="gestisciUploadGalleria(event)">
-                <label for="gallery-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
-                    <i class="fas fa-plus-circle" style="font-size: 2rem; color: #e5c158; margin-bottom: 10px;"></i>
-                    <span id="gallery-upload-text" style="color: #fff; font-size: 0.8rem;">Aggiungi Foto</span>
-                </label>
-                <div id="gallery-loader" style="display: none; margin-top: 10px;">
-                    <i class="fas fa-circle-notch fa-spin" style="color: #e5c158;"></i>
-                </div>
-                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
-                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem;"></i>
-                </div>
-            </div>
-            <div id="gallery-preview-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;"></div>
-            <input type="hidden" id="field-gallery-data" value="[]">
-        </div>
-        <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
-            <button type="button" onclick="eliminaAsset('gallery')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <i class="fas fa-trash-alt"></i> SVUOTA GALLERIA
-            </button>
-        </div>
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA GALLERIA</button>
-    </div>
     <div class="drawer-glass" id="drawer-piani">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">PIANI E ABBONAMENTI</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-
         <div class="style-list" style="gap: 12px; margin-top: 10px;">
             <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2);">
                 <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
@@ -1397,7 +1080,6 @@
             <div class="header-title" style="font-weight: 400;">OPZIONI DI SALVATAGGIO</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
             <div onclick="salvaEDirigi('bozza')" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
                 <i class="fas fa-inbox" style="color: rgba(255,255,255,0.4); font-size: 1.2rem;"></i>
@@ -1418,48 +1100,6 @@
         </div>
     </div>
 
-    <div class="drawer-glass" id="drawer-quickpass">
-        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <div class="header-back" onclick="apriDrawer('env-action')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">QUICK PASS</div>
-            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px; line-height: 1.5;">
-                Imposta le regole. Il sistema genererà un coupon automatico per acquisire nuovi clienti.
-            </div>
-            <div style="position: relative;" class="premium-field-container">
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO PER CHI INVITA (Utente A)</label>
-                    <input type="text" id="field-qp-premio-a" placeholder="Es. 1 Cappuccino omaggio" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO NUOVO CLIENTE (Utente B)</label>
-                    <input type="text" id="field-qp-premio-b" placeholder="Es. 1 Caffè sul primo ordine" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">LIMITE COUPON (Opzionale)</label>
-                    <input type="number" id="field-qp-limite" placeholder="Es. 100" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">DATA SCADENZA (Opzionale)</label>
-                    <input type="datetime-local" id="field-qp-scadenza" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; color-scheme: dark;">
-                </div>
-                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
-                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
-                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE GOLD</span>
-                </div>
-            </div>
-            <div style="text-align: center; margin-top: 5px;">
-                <button type="button" onclick="eliminaAsset('quickpass')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <i class="fas fa-trash-alt"></i> ELIMINA QUICK PASS
-                </button>
-            </div>
-        </div>
-        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA QUICK PASS</button>
-    </div>
-
     <!-- ========================================== -->
     <!-- MODALE QR CODE (Intatto)                   -->
     <!-- ========================================== -->
@@ -1474,14 +1114,11 @@
            </div>
        </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
-   <script>
-        // ============================================================
-        // CAPITOLO 1: SETUP E FUNZIONI DI BASE (UI, Cassetti, QR)
-        // ============================================================
-
+    <script>
         const NOME_SISTEMA = getNomeBrandReale();
         let isDrawerOpen = false;
         let statoUtente = 'in attesa'; 
@@ -1505,10 +1142,8 @@
         function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
-
             let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
             if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
-
             el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
             el.style.cssText = ""; 
 
@@ -1520,7 +1155,6 @@
                 el.style.fontSize = "1.05rem"; 
             }
 
-            // 🎯 IL BISTURI PER IL DIVIDER: Riconosce i nomi corti per la linea
             const wrapper = document.getElementById('name-capsule-wrapper');
             if (wrapper) {
                 if (testo.length < 16 && !testo.includes(' ')) {
@@ -1532,10 +1166,6 @@
             void el.offsetHeight; 
         }
 
-        // ============================================================
-        // MOTORE CASSETTI E SISTEMA ANTI-FUGA (LIVELLO ENTERPRISE)
-        // ============================================================
-        
         window.addEventListener('load', function() {
             if (window.location.hash) {
                 history.replaceState(null, null, window.location.pathname);
@@ -1544,9 +1174,8 @@
             history.pushState({ level: 'editor_attivo' }, "", "");
         });
 
-      function apriDrawer(idDrawer) {
-            // 1. Controlli Piani
-            const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery'];
+        function apriDrawer(idDrawer) {
+            const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery', 'drawer-quickpass'];
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
                 return;
@@ -1561,16 +1190,21 @@
 
             if (backdrop) backdrop.classList.add('active');
 
-            // 2. MOTORE INCROCIATO ISTANTANEO (Zero lag, zero flash)
-            // Togliamo la classe 'open' a tutti tranne a quello che stiamo aprendo
-            document.querySelectorAll('.drawer-glass').forEach(d => {
-                if (d.id !== idDrawer) d.classList.remove('open');
-            });
-
-            // Apriamo immediatamente il nuovo (il CSS farà la magia dell'incrocio)
+            // IL MOTORE A STRATI: Mettiamo il nuovo cassetto in cima e lo accendiamo
             if (drawerTarget) {
+                drawerTarget.style.zIndex = "2005"; 
                 setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
             }
+
+            // Spegniamo tutti gli altri cassetti SOLO DOPO che il nuovo ha finito l'animazione (300ms)
+            setTimeout(() => {
+                document.querySelectorAll('.drawer-glass').forEach(d => {
+                    if (d.id !== idDrawer) {
+                        d.classList.remove('open');
+                        d.style.zIndex = "2000"; 
+                    }
+                });
+            }, 300);
 
             if (window.location.hash !== '#menu') {
                 history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
@@ -1586,7 +1220,10 @@
         }
 
         function eseguiChiusuraGrafica() {
-            document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+            document.querySelectorAll('.drawer-glass').forEach(d => {
+                d.classList.remove('open');
+                d.style.zIndex = "2000";
+            });
             const backdrop = document.getElementById('drawer-backdrop');
             if (backdrop) {
                 setTimeout(() => backdrop.classList.remove('active'), 300);
@@ -1597,7 +1234,6 @@
             if (window.location.hash !== '#menu') {
                 eseguiChiusuraGrafica();
             }
-
             if (event.state && event.state.level === 'base') {
                 history.pushState({ level: 'editor_attivo' }, "", "");
                 const conferma = confirm("⚠️ ATTENZIONE\n\nSei sicuro di voler uscire dall'editor? Le modifiche non salvate andranno perse.");
@@ -1624,7 +1260,6 @@
                 document.getElementById('badge-urgenza').style.display = 'none';
                 return;
             }
-
             const badge = document.getElementById('badge-urgenza');
             const badgeNome = document.getElementById('badge-nome-brand');
             const timerSpan = document.getElementById('timer-scadenza');
@@ -1636,12 +1271,10 @@
 
             const storageKey = 'mqt_timer_scadenza_' + NOME_SISTEMA;
             let scadenza = localStorage.getItem(storageKey);
-
             if (!scadenza) {
                 scadenza = new Date().getTime() + (30 * 60 * 1000);
                 localStorage.setItem(storageKey, scadenza);
             }
-
             const intervallo = setInterval(() => {
                 const oraAttuale = new Date().getTime();
                 const distanza = scadenza - oraAttuale;
@@ -1653,13 +1286,10 @@
                     document.querySelector('#badge-urgenza span:nth-child(2)').style.background = "#ff4444"; 
                     return;
                 }
-
                 const minuti = Math.floor((distanza % (1000 * 60 * 60)) / (1000 * 60));
                 const secondi = Math.floor((distanza % (1000 * 60)) / 1000);
-
                 const minStr = minuti < 10 ? "0" + minuti : minuti;
                 const secStr = secondi < 10 ? "0" + secondi : secondi;
-
                 timerSpan.innerText = minStr + ":" + secStr;
             }, 1000);
         }
@@ -1681,7 +1311,6 @@
             document.querySelectorAll('.style-bar').forEach(bar => {
                 const onclick = bar.getAttribute('onclick') || '';
                 const lockIcon = bar.querySelector('.fa-lock');
-                
                 if (lockIcon) {
                     if (cassettiGold.some(id => onclick.includes(id))) {
                         lockIcon.style.display = (userPlan === 'GOLD') ? 'none' : 'inline-block';
@@ -1705,7 +1334,6 @@
                     }
                 }
             });
-            
             if(typeof aggiornaLimitiSocial === 'function') aggiornaLimitiSocial();
         } 
 
@@ -1730,10 +1358,6 @@
                 if(qrCanvas) { qrCanvas.style.margin = "0 auto"; qrCanvas.style.display = "block"; }
             }, 50);
         }
-
-        // ============================================================
-        // CAPITOLO 2: MOTORE VISIVO
-        // ============================================================
 
         function applicaTemaLive() {
             const temaInput = document.querySelector('input[name="digital_style"]:checked');
@@ -1871,9 +1495,6 @@
             }
         }
 
-        // ============================================================
-        // CAPITOLO 3: MOTORE SOCIAL E VIP VAULT
-        // ============================================================
         function aggiornaLimitiSocial() {
             const internalTrack = document.getElementById('social-internal-track');
             if (!internalTrack) return;
@@ -2049,10 +1670,6 @@
             if(block) block.remove();
             aggiornaLimitiSocial(); salvaDati(); aggiornaAnteprimaLive();
         }
-
-        // ============================================================
-        // CAPITOLO 4: DATABASE E SALVATAGGIO
-        // ============================================================
 
         function confermaEChiudiCassetto() { salvaDati(); chiudiSenzaSalvare(); }
 
@@ -2545,54 +2162,6 @@
             setTimeout(() => salvaDati(azione), 200); 
         }
 
-        // ==========================================
-        // MOTORE DI UPLOAD IMMAGINI (CLOUDINARY)
-        // ==========================================
-        async function gestisciUploadAvatar(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            document.getElementById('avatar-loader').style.display = 'flex';
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'myquicktag_upload'); 
-
-            try {
-                const response = await fetch('https://api.cloudinary.com/v1_1/etgsaztr/image/upload', { method: 'POST', body: formData });
-                const data = await response.json();
-
-                if (data.secure_url) {                                    
-                    const imageUrl = data.secure_url;
-                    document.getElementById('field-avatar-url').value = imageUrl;
-
-                    const box = document.getElementById('avatar-preview-box');
-                    box.style.backgroundImage = `url('${imageUrl}')`;
-                    box.style.backgroundSize = 'cover';
-                    box.style.backgroundPosition = 'center';
-                    box.style.border = '1px solid #10b981'; 
-                    document.getElementById('avatar-icon').style.display = 'none';
-
-                    const liveContainer = document.getElementById('live-avatar-container');
-                    const liveImg = document.getElementById('live-avatar-img');
-                    
-                    if(liveImg && liveContainer) {
-                        liveImg.src = imageUrl;
-                        liveContainer.style.display = 'flex';
-                    } 
-
-                    if(typeof aggiornaBottoneMaster === 'function') { aggiornaBottoneMaster(); }
-                } else {
-                    console.error("Errore Cloudinary:", data);
-                    alert("Errore dal server Cloudinary. Riprova.");
-                }
-            } catch (error) {
-                console.error("Errore di rete:", error);
-                alert("Errore di connessione. Verifica la tua rete.");
-            } finally {
-                document.getElementById('avatar-loader').style.display = 'none';
-            }
-        }
-
         function selezionaStatus(colore) {
             document.getElementById('btn-status-green').style.opacity = '0.3';
             document.getElementById('btn-status-yellow').style.opacity = '0.3';
@@ -2686,165 +2255,6 @@
             }
         }
 
-        async function gestisciUploadGalleria(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (!file.type.startsWith('image/')) {
-                alert("Puoi caricare solo immagini (JPG, PNG, ecc.). I video o altri file non sono supportati.");
-                return;
-            }
-
-            const hiddenField = document.getElementById('field-gallery-data');
-            let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
-
-            if (arrayAttuale.length >= 6) {
-                alert("Hai raggiunto il limite massimo di 6 immagini per la galleria.");
-                return;
-            }
-
-            document.getElementById('gallery-loader').style.display = 'block';
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'myquicktag_upload');
-
-            try {
-                const response = await fetch('https://api.cloudinary.com/v1_1/etgsaztr/image/upload', {
-                    method: 'POST', body: formData
-                });
-                const data = await response.json();
-
-                if (data.secure_url) {
-                    arrayAttuale.push(data.secure_url);
-                    hiddenField.value = JSON.stringify(arrayAttuale);
-                    disegnaGrigliaGalleria();
-                    aggiornaAnteprimaLive();
-                } else {
-                    console.error("Errore Cloudinary:", data);
-                    alert("Errore dal server Cloudinary. Riprova.");
-                }
-            } catch (error) {
-                console.error("Errore di rete:", error);
-                alert("Errore di connessione. Verifica la tua rete.");
-            } finally {
-                document.getElementById('gallery-loader').style.display = 'none';
-                event.target.value = ''; 
-            }
-        }
-
-        function disegnaGrigliaGalleria() {
-            const grid = document.getElementById('gallery-preview-grid');
-            const hiddenField = document.getElementById('field-gallery-data');
-            if (!grid || !hiddenField) return;
-
-            let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
-            grid.innerHTML = ""; 
-
-            arrayAttuale.forEach((url, index) => {
-                const div = document.createElement('div');
-                div.style.cssText = `position: relative; width: 100%; aspect-ratio: 1; border-radius: 8px; background-image: url('${url}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.2);`;
-                
-                const btnDelete = document.createElement('div');
-                btnDelete.innerHTML = '<i class="fas fa-times"></i>';
-                btnDelete.style.cssText = `position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.9); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; cursor: pointer;`;
-                btnDelete.onclick = function(e) { e.stopPropagation(); rimuoviImmagineGalleria(index); };
-
-                div.appendChild(btnDelete);
-                grid.appendChild(div);
-            });
-        }
-
-        function rimuoviImmagineGalleria(index) {
-            const hiddenField = document.getElementById('field-gallery-data');
-            let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
-            arrayAttuale.splice(index, 1); 
-            hiddenField.value = JSON.stringify(arrayAttuale); 
-            disegnaGrigliaGalleria(); 
-            aggiornaAnteprimaLive(); 
-        }
-       
-        async function gestisciUploadPDF(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.type !== 'application/pdf') {
-                alert("Formato non valido. Seleziona un file PDF.");
-                return;
-            }
-
-            document.getElementById('pdf-loader').style.display = 'block';
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'myquicktag_upload'); 
-
-            try {
-                const response = await fetch('https://api.cloudinary.com/v1_1/etgsaztr/auto/upload', {
-                    method: 'POST', body: formData
-                });
-                const data = await response.json();
-
-                if (data.secure_url) {
-                    document.getElementById('field-pdf-url').value = data.secure_url;
-                    const testopdf = document.getElementById('pdf-upload-text');
-                    if (testopdf) {
-                        testopdf.innerHTML = 'PDF CARICATO ✅<br><span style="font-size: 0.6rem; color: #fff;">Pronto per la vetrina</span>';
-                        testopdf.style.color = '#10b981';
-                    }
-                    aggiornaAnteprimaLive();
-                } else {
-                    alert("Errore dal server Cloudinary. Riprova.");
-                }
-            } catch (error) {
-                alert("Errore di connessione alla rete.");
-            } finally {
-                document.getElementById('pdf-loader').style.display = 'none';
-            }
-        }
-
-        function eliminaAsset(tipo) {
-            if (tipo === 'sito') {
-                document.getElementById('field-sito').value = '';
-            } else if (tipo === 'quick') {
-                document.getElementById('field-qa-label').value = '';
-                document.getElementById('field-qa-url').value = '';
-                document.getElementById('field-qa-tipo').value = 'whatsapp';
-            } else if (tipo === 'bio') {
-                document.getElementById('field-bio').value = '';
-            } else if (tipo === 'pdf') {
-                document.getElementById('field-pdf-url').value = '';
-                document.getElementById('field-pdf-label').value = '';
-                const testopdf = document.getElementById('pdf-upload-text');
-                if (testopdf) {
-                    testopdf.innerHTML = 'Seleziona un file PDF';
-                    testopdf.style.color = '#fff';
-                }
-            } else if (tipo === 'cv') {
-                document.getElementById('field-cv').value = '';
-            } else if (tipo === 'social') {
-                const track = document.getElementById('social-internal-track');
-                if(track) track.innerHTML = '';
-                if(typeof aggiornaLimitiSocial === 'function') aggiornaLimitiSocial();
-            } else if (tipo === 'contatti') {
-                document.getElementById('field-tel1').value = '';
-                document.getElementById('field-tel2').value = '';
-                document.getElementById('field-email').value = '';
-                document.getElementById('field-indirizzo').value = '';
-            } else if (tipo === 'gallery') {
-                document.getElementById('field-gallery-data').value = '[]';
-                const grid = document.getElementById('gallery-preview-grid');
-                if (grid) grid.innerHTML = '';
-            } else if (tipo === 'quickpass') {
-                document.getElementById('field-qp-premio-a').value = '';
-                document.getElementById('field-qp-premio-b').value = '';
-                document.getElementById('field-qp-limite').value = '';
-                document.getElementById('field-qp-scadenza').value = '';
-            }
-            
-            if(typeof salvaDati === 'function') salvaDati(); 
-            aggiornaAnteprimaLive();
-            chiudiSenzaSalvare();
-        }
-      
         function initReservationMonitor() {
             const badge = document.getElementById('reservation-badge');
             const timerUI = document.getElementById('timer-ui');
@@ -2862,7 +2272,7 @@
             let expiry = localStorage.getItem(RES_STORAGE_KEY);
             
             if (!expiry) {
-                expiry = new Date().getTime() + (30 * 60 * 1000); // 30 minuti
+                expiry = new Date().getTime() + (30 * 60 * 1000); 
                 localStorage.setItem(RES_STORAGE_KEY, expiry);
             }
 
@@ -2889,7 +2299,5 @@
             }, 1000);
         }
     </script>
-     
-    
 </body>
 </html>
