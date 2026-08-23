@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const tableId = process.env.AIRTABLE_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
 
-    // 1. Verifica se il tag è già occupato
+    // 1. Verifica se il tag è già occupato o prenotato
     const checkUrl = `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={username_system}='${tag}'`;
 
     try {
@@ -25,10 +25,42 @@ export default async function handler(req, res) {
         const checkData = await checkRes.json();
 
         if (checkData.records && checkData.records.length > 0) {
-            return res.status(400).json({ success: false, message: 'Spiacente, questo @tag è già occupato' });
+            const record = checkData.records[0];
+            const stato = record.fields.stato ? record.fields.stato.toLowerCase() : "";
+            
+            // Airtable fornisce sempre il 'createdTime' nativo in ogni record
+            const createdTime = new Date(record.createdTime).getTime();
+            const now = new Date().getTime();
+            const ageInMinutes = (now - createdTime) / (1000 * 60);
+
+            if (stato === "attivo") {
+                // Muro di cemento: Tag acquistato e ufficiale
+                return res.status(400).json({ success: false, message: 'Spiacente, questo @tag è già occupato' });
+            }
+
+            if (stato === "in attesa") {
+                if (ageInMinutes < 30) {
+                    // Muro temporaneo: Qualcuno lo sta configurando ora
+                    return res.status(400).json({ success: false, message: 'Tag temporaneamente riservato (un altro utente lo sta configurando)' });
+                } else {
+                    // ==========================================
+                    // IL NETTURBINO: Riciclo Carrello Abbandonato
+                    // ==========================================
+                    console.log(`♻️ Riciclo tag abbandonato: ${tag} (Età: ${Math.round(ageInMinutes)} min)`);
+                    
+                    const deleteUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${record.id}`;
+                    await fetch(deleteUrl, {
+                        method: 'DELETE',
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    
+                    // Il vecchio record è distrutto. Il codice ora proseguirà verso il basso 
+                    // e ne creerà uno completamente nuovo e pulito per il nuovo utente.
+                }
+            }
         }
 
-        // 2. Prenotazione: crea il record con stato "in attesa"
+        // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer)
         const createUrl = `https://api.airtable.com/v0/${baseId}/${tableId}`;
         const createRes = await fetch(createUrl, {
             method: 'POST',
@@ -39,7 +71,7 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 fields: {
                     "username_system": tag,
-                    "stato": "in attesa" // Come da tua foto 1000029312.jpg
+                    "stato": "in attesa"
                 }
             })
         });
