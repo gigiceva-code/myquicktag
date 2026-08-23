@@ -354,12 +354,12 @@
         }
 
 
-   /* =========================================================
-           IL VERO OVERLAY NERO PROFONDO (ZERO LAG, COPIATO DA TAG)
+  /* =========================================================
+           IL VERO OVERLAY NERO PROFONDO (ZERO LAG + DISSOLVENZA INCROCIATA)
            ========================================================= */
         .drawer-glass {
             position: fixed !important; top: 50% !important; left: 50% !important; 
-            transform: translate(-50%, -45%) scale(1.02); 
+            transform: translate(-50%, -40%) scale(0.95) !important; /* Parte appena più in basso e piccolo */
             width: calc(100% - 32px) !important; max-width: 410px !important; 
             height: calc(100svh - 32px) !important; max-height: 840px !important;
             
@@ -370,23 +370,34 @@
             box-sizing: border-box !important; 
             box-shadow: 0 30px 70px rgba(0,0,0,0.9) !important;
             
-            /* RIMOZIONE BLUR PER FLUIDITÀ ASSOLUTA */
             backdrop-filter: none !important; 
             -webkit-backdrop-filter: none !important;
 
-            display: none; opacity: 0; pointer-events: none; overflow-y: hidden !important;
+            /* RIPRISTINO DEL MOTORE LIQUIDO */
+            display: flex !important; 
+            flex-direction: column;
+            overflow-y: hidden !important;
+            
+            opacity: 0; 
+            visibility: hidden;
+            pointer-events: none;
+            
+            /* IN USCITA: Sfuma e si rimpicciolisce morbidamente prima di spegnersi */
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        visibility 0s linear 0.4s !important; 
         }
 
         .drawer-glass.open { 
-            display: flex !important; 
-            flex-direction: column;
+            opacity: 1 !important; 
+            visibility: visible !important; 
             pointer-events: auto !important;
-            animation: overlayScivola 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important; 
-        }
-
-        @keyframes overlayScivola {
-            0% { opacity: 0; transform: translate(-50%, -35%) scale(1.02); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            transform: translate(-50%, -50%) scale(1) !important; 
+            
+            /* IN ENTRATA: Appare subito e sfuma verso l'alto ingrandendosi */
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        visibility 0s linear 0s !important; 
         }
         
         .drawer-backdrop {
