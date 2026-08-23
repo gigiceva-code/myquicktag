@@ -355,13 +355,13 @@
 
 
 /* =========================================================
-           MOTORE TRANSIZIONI: IMMERSIONE IN PROFONDITÀ (OPZIONE B)
+           MOTORE TRANSIZIONI: DISSOLVENZA INCROCIATA (STILE iOS)
            ========================================================= */
         .drawer-glass {
             position: fixed !important; top: 50% !important; left: 50% !important; 
             
-            /* STATO CHIUSO: Rimpicciolito (0.92) e invisibile */
-            transform: translate(-50%, -50%) scale(0.92) !important; 
+            /* Movimento impercettibile: parte leggermente più in basso */
+            transform: translate(-50%, -48%) scale(0.98) !important; 
             width: calc(100% - 32px) !important; max-width: 410px !important; 
             height: calc(100svh - 32px) !important; max-height: 840px !important;
             
@@ -383,10 +383,8 @@
             visibility: hidden;
             pointer-events: none;
             
-            /* TRANSIZIONE DI USCITA: Svanisce velocemente nel buio (0.2s) */
-            transition: opacity 0.2s ease-in-out, 
-                        transform 0.2s ease-in-out, 
-                        visibility 0s linear 0.2s !important; 
+            /* TRANSIZIONE USCITA: Molto veloce (0.2s), sparisce mentre l'altro entra */
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s !important; 
         }
 
         .drawer-glass.open { 
@@ -394,13 +392,11 @@
             visibility: visible !important; 
             pointer-events: auto !important;
             
-            /* STATO APERTO: Dimensione normale (1) al centro esatto */
+            /* Al centro esatto */
             transform: translate(-50%, -50%) scale(1) !important; 
             
-            /* TRANSIZIONE DI ENTRATA: Emerge morbidamente dal buio (0.3s) */
-            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
-                        visibility 0s linear 0s !important; 
+            /* TRANSIZIONE ENTRATA: Immediata e fluida (0.25s) */
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0s !important; 
         }
         
         .drawer-backdrop {
@@ -1548,8 +1544,8 @@
             history.pushState({ level: 'editor_attivo' }, "", "");
         });
 
-       function apriDrawer(idDrawer) {
-            // 1. Controlli per i piani (Intatti)
+      function apriDrawer(idDrawer) {
+            // 1. Controlli Piani
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery'];
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
@@ -1562,28 +1558,18 @@
 
             const drawerTarget = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
-            
-            // Cerchiamo se c'è un cassetto attualmente già aperto
-            const cassettiAperti = document.querySelectorAll('.drawer-glass.open');
-            
+
             if (backdrop) backdrop.classList.add('active');
 
-            // 2. IL MOTORE COREOGRAFICO (La magia del respiro)
-            if (cassettiAperti.length > 0) {
-                // A) Chiude i cassetti aperti (Effetto sgonfiamento e buio)
-                cassettiAperti.forEach(d => d.classList.remove('open'));
-                
-                // B) Aspetta che il buio sia totale (200 ms) prima di far emergere il nuovo
-                if (drawerTarget) {
-                    setTimeout(() => { 
-                        drawerTarget.classList.add('open'); 
-                    }, 200); 
-                }
-            } else {
-                // Se non c'era nulla di aperto (prima apertura in assoluto), si apre subito
-                if (drawerTarget) {
-                    setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
-                }
+            // 2. MOTORE INCROCIATO ISTANTANEO (Zero lag, zero flash)
+            // Togliamo la classe 'open' a tutti tranne a quello che stiamo aprendo
+            document.querySelectorAll('.drawer-glass').forEach(d => {
+                if (d.id !== idDrawer) d.classList.remove('open');
+            });
+
+            // Apriamo immediatamente il nuovo (il CSS farà la magia dell'incrocio)
+            if (drawerTarget) {
+                setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
             }
 
             if (window.location.hash !== '#menu') {
