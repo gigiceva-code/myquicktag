@@ -614,8 +614,8 @@
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
-                Carica fino a 6 immagini per la tua vetrina.
+           <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
+                Carica fino a 3 immagini (Premium) o 9 immagini (Gold).
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; position: relative;" class="premium-field-container">
                <input type="file" id="gallery-upload" accept="image/*" multiple style="display: none;" onchange="gestisciUploadGalleria(event)">
@@ -1175,15 +1175,16 @@
         });
 
         function apriDrawer(idDrawer) {
-            const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery', 'drawer-quickpass'];
+          // 1. Controlli Piani (Galleria passata a Premium)
+            const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass']; // Tolto drawer-gallery
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
                 return;
             }
-            if (idDrawer === 'drawer-quick' && userPlan === 'BASE') {
-                alert("Questa funzione richiede il piano PREMIUM 🚀.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
+            if ((idDrawer === 'drawer-quick' || idDrawer === 'drawer-gallery') && userPlan === 'BASE') {
+                alert("Questa funzione richiede almeno il piano PREMIUM 🚀.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
                 return;
-            }
+            } 
 
             const drawerTarget = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
@@ -1304,9 +1305,9 @@
             }, 400);
         }
 
-        function aggiornaLucchetti() {
-           const cassettiGold = ['drawer-showcase', 'drawer-gallery', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass'];
-            const cassettiPremium = ['drawer-quick']; 
+       function aggiornaLucchetti() {
+           const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass'];
+           const cassettiPremium = ['drawer-quick', 'drawer-gallery']; 
             
             document.querySelectorAll('.style-bar').forEach(bar => {
                 const onclick = bar.getAttribute('onclick') || '';
@@ -2315,9 +2316,11 @@
             const hiddenField = document.getElementById('field-gallery-data');
             let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
 
-            // Limite esclusivo GOLD
-            if (arrayAttuale.length + files.length > 9) {
-                alert(`Attenzione: Il piano GOLD consente un massimo di 9 foto. Ne hai già ${arrayAttuale.length} e stai cercando di aggiungerne ${files.length}.`);
+           // Limiti Dinamici per Piano
+            const limiteMax = userPlan === 'GOLD' ? 9 : 3;
+
+            if (arrayAttuale.length + files.length > limiteMax) {
+                alert(`Attenzione: Il piano ${userPlan} consente un massimo di ${limiteMax} foto.\nNe hai già caricate ${arrayAttuale.length} e stai cercando di aggiungerne ${files.length}.`);
                 event.target.value = '';
                 return;
             }
