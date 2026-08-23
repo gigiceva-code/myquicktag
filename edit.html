@@ -354,16 +354,18 @@
         }
 
 
-  /* =========================================================
-           IL VERO OVERLAY NERO PROFONDO (ZERO LAG + DISSOLVENZA INCROCIATA)
+/* =========================================================
+           MOTORE TRANSIZIONI: IMMERSIONE IN PROFONDITÀ (OPZIONE B)
            ========================================================= */
         .drawer-glass {
             position: fixed !important; top: 50% !important; left: 50% !important; 
-            transform: translate(-50%, -40%) scale(0.95) !important; /* Parte appena più in basso e piccolo */
+            
+            /* STATO CHIUSO: Rimpicciolito (0.92) e invisibile */
+            transform: translate(-50%, -50%) scale(0.92) !important; 
             width: calc(100% - 32px) !important; max-width: 410px !important; 
             height: calc(100svh - 32px) !important; max-height: 840px !important;
             
-            background-color: #000000 !important; /* IL NERO DELLA TAG */
+            background-color: #000000 !important; 
             padding: 40px 24px 32px 24px !important; 
             border-radius: 28px !important; 
             z-index: 2000 !important; 
@@ -373,7 +375,6 @@
             backdrop-filter: none !important; 
             -webkit-backdrop-filter: none !important;
 
-            /* RIPRISTINO DEL MOTORE LIQUIDO */
             display: flex !important; 
             flex-direction: column;
             overflow-y: hidden !important;
@@ -382,21 +383,23 @@
             visibility: hidden;
             pointer-events: none;
             
-            /* IN USCITA: Sfuma e si rimpicciolisce morbidamente prima di spegnersi */
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                        visibility 0s linear 0.4s !important; 
+            /* TRANSIZIONE DI USCITA: Svanisce velocemente nel buio (0.2s) */
+            transition: opacity 0.2s ease-in-out, 
+                        transform 0.2s ease-in-out, 
+                        visibility 0s linear 0.2s !important; 
         }
 
         .drawer-glass.open { 
             opacity: 1 !important; 
             visibility: visible !important; 
             pointer-events: auto !important;
+            
+            /* STATO APERTO: Dimensione normale (1) al centro esatto */
             transform: translate(-50%, -50%) scale(1) !important; 
             
-            /* IN ENTRATA: Appare subito e sfuma verso l'alto ingrandendosi */
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+            /* TRANSIZIONE DI ENTRATA: Emerge morbidamente dal buio (0.3s) */
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
                         visibility 0s linear 0s !important; 
         }
         
@@ -1545,7 +1548,8 @@
             history.pushState({ level: 'editor_attivo' }, "", "");
         });
 
-        function apriDrawer(idDrawer) {
+       function apriDrawer(idDrawer) {
+            // 1. Controlli per i piani (Intatti)
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-gallery'];
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
@@ -1556,14 +1560,30 @@
                 return;
             }
 
-            document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
-            
-            const drawer = document.getElementById(idDrawer);
+            const drawerTarget = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
-
+            
+            // Cerchiamo se c'è un cassetto attualmente già aperto
+            const cassettiAperti = document.querySelectorAll('.drawer-glass.open');
+            
             if (backdrop) backdrop.classList.add('active');
-            if (drawer) {
-                setTimeout(() => { drawer.classList.add('open'); }, 10);
+
+            // 2. IL MOTORE COREOGRAFICO (La magia del respiro)
+            if (cassettiAperti.length > 0) {
+                // A) Chiude i cassetti aperti (Effetto sgonfiamento e buio)
+                cassettiAperti.forEach(d => d.classList.remove('open'));
+                
+                // B) Aspetta che il buio sia totale (200 ms) prima di far emergere il nuovo
+                if (drawerTarget) {
+                    setTimeout(() => { 
+                        drawerTarget.classList.add('open'); 
+                    }, 200); 
+                }
+            } else {
+                // Se non c'era nulla di aperto (prima apertura in assoluto), si apre subito
+                if (drawerTarget) {
+                    setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
+                }
             }
 
             if (window.location.hash !== '#menu') {
