@@ -32,6 +32,7 @@ export default async function handler(req, res) {
       "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza",
       "pocket_cloud", "review_url", "review_contact",
       "video_url", "video_cta_text", "video_cta_url"
+     "partners_data" 
     ];
 
     nativeFields.forEach(f => {
@@ -39,7 +40,7 @@ export default async function handler(req, res) {
         if (typeof body[f] === 'string') {
           
           // 2. PROTEZIONE JSON (Aggiunto pocket_cloud per non far distruggere le virgolette)
-          let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud')
+         let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud' || f === 'partners_data')
           ? body[f].trim() 
           : body[f].replace(/['"]+/g, '').trim(); 
           
