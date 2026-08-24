@@ -654,9 +654,16 @@
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Mostra i tuoi lavori o prodotti</span>
                 </div>
             </div>
+            <!-- NUOVO TASTO: SMART VIDEO VAULT -->
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-video')">
+                <i class="fas fa-play-circle pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">SMART VIDEO VAULT</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Video immersivo con tasto Azione</span>
+                </div>
+            </div>
         </div>
     </div>
-
     <div class="drawer-glass" id="drawer-gallery">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-media')"><i class="fas fa-chevron-left"></i></div>
@@ -690,7 +697,44 @@
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA GALLERIA</button>
     </div>
-
+    
+<div class="drawer-glass" id="drawer-video">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-media')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">SMART VIDEO</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px; line-height: 1.5;">
+                Inserisci un link YouTube o Vimeo. Si aprirà a tutto schermo senza far uscire il cliente dalla tua Tag.
+            </div>
+            <div style="position: relative;" class="premium-field-container">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">LINK DEL VIDEO</label>
+                    <input type="url" id="field-video-url" placeholder="Es. https://www.youtube.com/watch?v=..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;" oninput="aggiornaAnteprimaLive()">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO BOTTONE (Sotto il video)</label>
+                    <input type="text" id="field-video-cta-text" placeholder="Es. Acquista Ora" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">LINK DEL BOTTONE</label>
+                    <input type="url" id="field-video-cta-url" placeholder="Es. https://tuoshop.it/prodotto" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                </div>
+                <!-- LUCCHETTO PREMIUM -->
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE GOLD</span>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 5px;">
+                <button type="button" onclick="eliminaAsset('video')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-trash-alt"></i> RIMUOVI VIDEO
+                </button>
+            </div>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VIDEO</button>
+    </div>
     <!-- ========================================== -->
     <!-- 4. ENV NETWORK E SUOI MODULI               -->
     <!-- ========================================== -->
@@ -1363,7 +1407,7 @@
         }
 
        function aggiornaLucchetti() {
-         const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass', 'drawer-review'];
+       const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass', 'drawer-review', 'drawer-video']; 
            const cassettiPremium = ['drawer-quick', 'drawer-gallery']; 
             
             document.querySelectorAll('.style-bar').forEach(bar => {
@@ -1498,7 +1542,12 @@
                 roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-cv')">CURRICULUM VITAE</div>`;
             }
 
-            // STANZA 3: MEDIA
+           // STANZA 3: MEDIA
+            const videoUrl = document.getElementById('field-video-url') ? document.getElementById('field-video-url').value.trim() : "";
+            if (videoUrl !== "") {
+                roomMedia.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-video')">▶️ SMART VIDEO</div>`;
+            }
+
             const galleryDataStr = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
             let arrayGalleria = [];
             try { arrayGalleria = JSON.parse(galleryDataStr); } catch(e) {}
@@ -1783,10 +1832,16 @@
             const qpPremioB = document.getElementById('field-qp-premio-b') ? document.getElementById('field-qp-premio-b').value.trim() : "";
             const qpLimite = document.getElementById('field-qp-limite') ? document.getElementById('field-qp-limite').value : "";
             const qpScadenza = document.getElementById('field-qp-scadenza') ? document.getElementById('field-qp-scadenza').value : "";
-           const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
-const reviewContact = document.getElementById('field-review-contact') ? document.getElementById('field-review-contact').value.trim() : ""; 
+            
+            const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
+            const reviewContact = document.getElementById('field-review-contact') ? document.getElementById('field-review-contact').value.trim() : ""; 
+            
+            // NUOVI CAMPI VIDEO
+            const videoUrl = document.getElementById('field-video-url') ? document.getElementById('field-video-url').value.trim() : "";
+            const videoCtaText = document.getElementById('field-video-cta-text') ? document.getElementById('field-video-cta-text').value.trim() : "";
+            const videoCtaUrl = document.getElementById('field-video-cta-url') ? document.getElementById('field-video-cta-url').value.trim() : "";
 
-           return { 
+            return { 
                 username_system: NOME_SISTEMA, 
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
                 digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
@@ -1808,9 +1863,12 @@ const reviewContact = document.getElementById('field-review-contact') ? document
                 quickpass_limite: qpLimite,
                 quickpass_scadenza: qpScadenza,
                 modulo_vcf: JSON.stringify(vcfObject), 
-                config_canali: JSON.stringify(canaliSocial),
+                config_canali: JSON.stringify(canaliSocial), 
                 review_url: reviewUrl,
-                review_contact: reviewContact
+                review_contact: reviewContact,
+                video_url: videoUrl,
+                video_cta_text: videoCtaText,
+                video_cta_url: videoCtaUrl
             }; 
         }
         async function salvaDati(azioneRedirect = null) {
@@ -1921,9 +1979,14 @@ const reviewContact = document.getElementById('field-review-contact') ? document
                         }
                     }
 
-                    // Scudo Reputazione sganciato dal Semaforo
+                  // Scudo Reputazione sganciato dal Semaforo
                     if (f.review_url && document.getElementById('field-review-url')) document.getElementById('field-review-url').value = f.review_url;
                     if (f.review_contact && document.getElementById('field-review-contact')) document.getElementById('field-review-contact').value = f.review_contact;
+                    
+                    // Smart Video Vault
+                    if (f.video_url && document.getElementById('field-video-url')) document.getElementById('field-video-url').value = f.video_url;
+                    if (f.video_cta_text && document.getElementById('field-video-cta-text')) document.getElementById('field-video-cta-text').value = f.video_cta_text;
+                    if (f.video_cta_url && document.getElementById('field-video-cta-url')) document.getElementById('field-video-cta-url').value = f.video_cta_url; 
 
                     if (f.flash_text && document.getElementById('field-flash-text')) document.getElementById('field-flash-text').value = f.flash_text;
                     
@@ -2564,9 +2627,13 @@ async function gestisciAzioneMaster() {
                 document.getElementById('field-qp-premio-b').value = '';
                 document.getElementById('field-qp-limite').value = '';
                 document.getElementById('field-qp-scadenza').value = '';
-            } else if (tipo === 'review') {
+           } else if (tipo === 'review') {
                 if(document.getElementById('field-review-url')) document.getElementById('field-review-url').value = '';
                 if(document.getElementById('field-review-contact')) document.getElementById('field-review-contact').value = '';
+            } else if (tipo === 'video') {
+                if(document.getElementById('field-video-url')) document.getElementById('field-video-url').value = '';
+                if(document.getElementById('field-video-cta-text')) document.getElementById('field-video-cta-text').value = '';
+                if(document.getElementById('field-video-cta-url')) document.getElementById('field-video-cta-url').value = '';
             }
             
             if(typeof salvaDati === 'function') salvaDati(); 
