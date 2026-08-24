@@ -1100,9 +1100,9 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
     <!-- ⚡ SMART VIDEO VAULT (PLAYER IMMERSIVO)    -->
     <!-- ========================================== -->
     <div id="video-vault-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(15px); opacity: 0; transition: opacity 0.3s ease;">
-        <div style="position: absolute; top: 25px; right: 25px; color: #fff; font-size: 2rem; cursor: pointer; text-shadow: 0 2px 10px rgba(0,0,0,0.5);" onclick="chiudiSmartVideo()">
+      <div style="position: absolute; top: 20px; left: 20px; width: 42px; height: 42px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 1.2rem; cursor: pointer; z-index: 999999; backdrop-filter: blur(10px);" onclick="chiudiSmartVideo()">
             <i class="fas fa-times"></i>
-        </div>
+        </div> 
         <div id="video-vault-container" style="width: 90%; max-width: 600px; aspect-ratio: 16/9; background: #000; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(229, 193, 88, 0.15); border: 1px solid rgba(229, 193, 88, 0.4);">
             <iframe id="video-vault-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
         </div>
