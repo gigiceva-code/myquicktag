@@ -1435,7 +1435,7 @@
             aggiornaBottoneMaster();
         }
 
-        function aggiornaAnteprimaLive() {
+       function aggiornaAnteprimaLive() {
             const track = document.getElementById('blocks-track');
             if(!track) return;
 
@@ -1483,9 +1483,10 @@
 
             // STANZA 2: BUSINESS
             const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
-if (reviewUrl !== "") {
-    roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-review')">⭐ FEEDBACK CLIENTI</div>`;
-}
+            if (reviewUrl !== "") {
+                roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-review')">⭐ FEEDBACK CLIENTI</div>`;
+            }
+            
             const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "Scarica Documento";
             const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
             if (pdfUrl !== "") {
@@ -1533,22 +1534,11 @@ if (reviewUrl !== "") {
                 roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-social')">COLLEGAMENTI E SOCIAL</div>`;
             }
 
-           document.getElementById('container-identity').style.display = roomIdentity.innerHTML === '' ? 'none' : 'flex';
+            document.getElementById('container-identity').style.display = roomIdentity.innerHTML === '' ? 'none' : 'flex';
             document.getElementById('container-business').style.display = roomBusiness.innerHTML === '' ? 'none' : 'flex';
             document.getElementById('container-media').style.display = roomMedia.innerHTML === '' ? 'none' : 'flex';
             document.getElementById('container-network').style.display = roomNetwork.innerHTML === '' ? 'none' : 'flex';
-        } 
-        function toggleRoom(roomId) {
-            const room = document.getElementById(roomId);
-            if(!room) return;
-            if(room.classList.contains('open')) {
-                room.classList.remove('open');
-            } else {
-                document.querySelectorAll('.room-content').forEach(r => r.classList.remove('open'));
-                room.classList.add('open');
-            }
         }
-
         function aggiornaLimitiSocial() {
             const internalTrack = document.getElementById('social-internal-track');
             if (!internalTrack) return;
@@ -1879,7 +1869,7 @@ const reviewContact = document.getElementById('field-review-contact') ? document
             }
         } 
 
-        async function inizializzaPagina() { 
+      async function inizializzaPagina() { 
             if(NOME_SISTEMA === "tuonome.it") {
                 isLoadingDati = false;
                 if(typeof aggiornaBottoneMaster === 'function') aggiornaBottoneMaster();
@@ -1928,10 +1918,12 @@ const reviewContact = document.getElementById('field-review-contact') ? document
                             document.getElementById('status-action-details').style.display = 'flex';
                             if (f.live_status_action_label) document.getElementById('field-status-action-label').value = f.live_status_action_label;
                             if (f.live_status_action_url) document.getElementById('field-status-action-url').value = f.live_status_action_url;
-                            if (f.review_url && document.getElementById('field-review-url')) document.getElementById('field-review-url').value = f.review_url;
-               if (f.review_contact && document.getElementById('field-review-contact')) document.getElementById('field-review-contact').value = f.review_contact;
                         }
                     }
+
+                    // Scudo Reputazione sganciato dal Semaforo
+                    if (f.review_url && document.getElementById('field-review-url')) document.getElementById('field-review-url').value = f.review_url;
+                    if (f.review_contact && document.getElementById('field-review-contact')) document.getElementById('field-review-contact').value = f.review_contact;
 
                     if (f.flash_text && document.getElementById('field-flash-text')) document.getElementById('field-flash-text').value = f.flash_text;
                     
@@ -2053,7 +2045,7 @@ const reviewContact = document.getElementById('field-review-contact') ? document
                     }
                 }, 150); 
             }
-        } 
+        }
                   
         // ============================================================
         // CAPITOLO 5: INIZIALIZZAZIONE E CONTROLLI 
