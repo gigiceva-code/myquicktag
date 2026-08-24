@@ -39,27 +39,25 @@ export default async function handler(req, res) {
             }
 
             if (stato === "in attesa") {
-                if (ageInMinutes < 30) {
-                    // Muro temporaneo: Qualcuno lo sta configurando ora
-                    return res.status(400).json({ success: false, message: 'Tag temporaneamente riservato (un altro utente lo sta configurando)' });
+                // 1440 minuti = 24 ore esatte
+                if (ageInMinutes < 1440) {
+                    // Muro temporaneo: Blindato per 24 ore
+                    return res.status(400).json({ success: false, message: 'Tag riservato temporaneamente. Riprova tra 24 ore.' });
                 } else {
                     // ==========================================
-                    // IL NETTURBINO: Riciclo Carrello Abbandonato
+                    // IL NETTURBINO: Riciclo dopo 24 Ore
                     // ==========================================
-                    console.log(`♻️ Riciclo tag abbandonato: ${tag} (Età: ${Math.round(ageInMinutes)} min)`);
+                    console.log(`♻️ Riciclo tag scaduto (>24h): ${tag} (Età: ${Math.round(ageInMinutes / 60)} ore)`);
                     
                     const deleteUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${record.id}`;
                     await fetch(deleteUrl, {
                         method: 'DELETE',
                         headers: { Authorization: `Bearer ${token}` }
                     });
-                    
-                    // Il vecchio record è distrutto. Il codice ora proseguirà verso il basso 
-                    // e ne creerà uno completamente nuovo e pulito per il nuovo utente.
+                    // Il vecchio record è distrutto. Il codice prosegue per assegnarlo al nuovo utente.
                 }
             }
         }
-
         // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer)
         const createUrl = `https://api.airtable.com/v0/${baseId}/${tableId}`;
         const createRes = await fetch(createUrl, {
