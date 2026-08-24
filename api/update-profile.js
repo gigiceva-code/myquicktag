@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
     const fieldsToSave = {};
     
-    // 1. LA LISTA VIP (Aggiunti pocket_cloud, flash_micro e live_status_micro)
+   // 1. LA LISTA VIP (Inclusi SMART REVIEW GATE e SMART VIDEO VAULT)
     const nativeFields = [
       "username_display", "bio", "cv", "digital_style", "digital_layout", "stato", 
       "password", "email", "modulo_vcf", "sito_web", 
@@ -30,7 +30,8 @@ export default async function handler(req, res) {
       "pdf_label", "pdf_url", 
       "gallery_data", "draft_json", "sedi_json",
       "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza",
-      "pocket_cloud", "review_url", "review_contact"
+      "pocket_cloud", "review_url", "review_contact",
+      "video_url", "video_cta_text", "video_cta_url"
     ];
 
     nativeFields.forEach(f => {
