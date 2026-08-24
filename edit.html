@@ -2154,18 +2154,25 @@
             }
         }
 
-        function gestisciAzioneMaster() {
+       
+async function gestisciAzioneMaster() {
             if (statoUtente === 'attivo') {
                 apriDrawer('drawer-salvataggio');
             } else {
                 if (verificaCompletamentoBase()) {
-                    salvaEDirigi('checkout');
+                    
+                    // 🛡️ SECURITY CHECK: Verifica col server se le 24 ore sono scadute
+                    const puoProcedere = await verificaCoperturaPrenotazione();
+                    
+                    if (puoProcedere) {
+                        salvaEDirigi('checkout');
+                    }
+                    
                 } else {
                     alert("⚠️ Profilo Incompleto\n\nPer attivare la tua Tag, devi inserire almeno un collegamento o un testo.");
                 }
             }
         }
-
         function salvaEDirigi(azione) {
             document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open')); 
             setTimeout(() => salvaDati(azione), 200); 
@@ -2580,6 +2587,48 @@
             localStorage.removeItem('mqt_theme_' + NOME_SISTEMA);
             localStorage.removeItem('mqt_layout_' + NOME_SISTEMA);
         } 
+        /**
+         * Security Check: Verifica validità temporale sul DB prima del Checkout
+         * @returns {boolean} true se può pagare, false se la tag è scaduta
+         */
+        async function verificaCoperturaPrenotazione() {
+            if (NOME_SISTEMA === "tuonome.it") return true; // Evita blocchi nella modalità di test Sandbox
+
+            try {
+                // Diamo un feedback visivo sul bottone
+                const btnText = document.getElementById('master-action-text');
+                if(btnText) btnText.innerText = "VERIFICA IN CORSO...";
+
+                // Interroga il database per sapere l'età reale della Tag
+                const res = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
+                const data = await res.json();
+                
+                // Estrae la data di creazione vera fornita da Airtable
+                const createdTime = new Date(data.createdTime).getTime();
+                const now = new Date().getTime();
+                const ageInMinutes = (now - createdTime) / (1000 * 60);
+
+                // Se è in attesa ed è più vecchia di 24 ore (1440 min)
+                if (data.fields && data.fields.stato === 'in attesa' && ageInMinutes >= 1440) {
+                    alert("⚠️ Prenotazione Scaduta\n\nSono trascorse oltre 24 ore dalla riserva iniziale. Questa identità digitale è stata liberata o riassegnata.");
+                    
+                    // Fa scendere il muro nero
+                    eseguiSfrattoScadenza();
+                    return false; // Blocca inesorabilmente il passaggio al checkout
+                }
+                
+                // Ripristina il testo del bottone se tutto va bene
+                if(btnText) btnText.innerText = "ATTIVA TAG";
+                return true; 
+                
+            } catch(e) {
+                console.error("Errore controllo prenotazione:", e);
+                alert("Errore di connessione col server. Riprova tra poco.");
+                const btnText = document.getElementById('master-action-text');
+                if(btnText) btnText.innerText = "ATTIVA TAG";
+                return false;
+            }
+        }
     </script>
 </body>
 </html>
