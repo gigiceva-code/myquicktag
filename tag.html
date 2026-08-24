@@ -1405,7 +1405,7 @@ function gestisciVisibilitaCaselle(fields) {
     const elIdentity = document.getElementById('room-identity');
     if (elIdentity) elIdentity.style.display = 'flex';
 
-    const hasBusiness = !!fields.pdf_url || !!fields.cv;
+    const hasBusiness = !!fields.pdf_url || !!fields.cv || !!fields.review_url;
     const elBusiness = document.getElementById('room-business');
     if (elBusiness) elBusiness.style.display = hasBusiness ? 'flex' : 'none';
 
