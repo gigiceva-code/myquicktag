@@ -511,7 +511,7 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA BIO</button>
     </div>
 
-    <!-- ========================================== -->
+   <!-- ========================================== -->
     <!-- 2. ENV BUSINESS E SUOI MODULI              -->
     <!-- ========================================== -->
     <div class="drawer-glass" id="env-business">
@@ -535,9 +535,15 @@
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il tuo percorso professionale</span>
                 </div>
             </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-review')">
+                <i class="fas fa-star pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">SCUDO REPUTAZIONE</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Filtra recensioni in privato</span>
+                </div>
+            </div>
         </div>
     </div>
-
     <div class="drawer-glass" id="drawer-showcase">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
@@ -599,7 +605,38 @@
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA CV</button>
     </div>
-
+<div class="drawer-glass" id="drawer-review">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">SCUDO REPUTAZIONE</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px; line-height: 1.5;">
+                4 e 5 stelle andranno online, 1-3 stelle arriveranno a te in privato.
+            </div>
+            <div style="position: relative;" class="premium-field-container">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">LINK PUBBLICO (Es. Google Maps)</label>
+                    <input type="url" id="field-review-url" placeholder="https://g.page/r/..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;" oninput="aggiornaAnteprimaLive()">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">CONTATTO EMERGENZA (Num o Email)</label>
+                    <input type="text" id="field-review-contact" placeholder="Es. 3331234567 o info@tuomail.it" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;" oninput="aggiornaAnteprimaLive()">
+                </div>
+                <div class="premium-lock-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 12px; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); z-index: 10;">
+                    <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
+                    <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE GOLD</span>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 5px;">
+                <button type="button" onclick="eliminaAsset('review')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-trash-alt"></i> DISATTIVA SCUDO
+                </button>
+            </div>
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA SCUDO</button>
+    </div>
     <!-- ========================================== -->
     <!-- 3. ENV MEDIA E SUOI MODULI                 -->
     <!-- ========================================== -->
@@ -1326,7 +1363,7 @@
         }
 
        function aggiornaLucchetti() {
-           const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass'];
+         const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass', 'drawer-review'];
            const cassettiPremium = ['drawer-quick', 'drawer-gallery']; 
             
             document.querySelectorAll('.style-bar').forEach(bar => {
@@ -1445,6 +1482,10 @@
             }
 
             // STANZA 2: BUSINESS
+            const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
+if (reviewUrl !== "") {
+    roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-review')">⭐ FEEDBACK CLIENTI</div>`;
+}
             const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "Scarica Documento";
             const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
             if (pdfUrl !== "") {
@@ -1752,8 +1793,10 @@
             const qpPremioB = document.getElementById('field-qp-premio-b') ? document.getElementById('field-qp-premio-b').value.trim() : "";
             const qpLimite = document.getElementById('field-qp-limite') ? document.getElementById('field-qp-limite').value : "";
             const qpScadenza = document.getElementById('field-qp-scadenza') ? document.getElementById('field-qp-scadenza').value : "";
+           const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
+const reviewContact = document.getElementById('field-review-contact') ? document.getElementById('field-review-contact').value.trim() : ""; 
 
-            return { 
+           return { 
                 username_system: NOME_SISTEMA, 
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
                 digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
@@ -1774,11 +1817,12 @@
                 quickpass_premio_b: qpPremioB,
                 quickpass_limite: qpLimite,
                 quickpass_scadenza: qpScadenza,
-
-                modulo_vcf: JSON.stringify(vcfObject), config_canali: JSON.stringify(canaliSocial) 
+                modulo_vcf: JSON.stringify(vcfObject), 
+                config_canali: JSON.stringify(canaliSocial),
+                review_url: reviewUrl,
+                review_contact: reviewContact
             }; 
         }
-
         async function salvaDati(azioneRedirect = null) {
             if(NOME_SISTEMA === "tuonome.it") return; 
 
@@ -1884,6 +1928,8 @@
                             document.getElementById('status-action-details').style.display = 'flex';
                             if (f.live_status_action_label) document.getElementById('field-status-action-label').value = f.live_status_action_label;
                             if (f.live_status_action_url) document.getElementById('field-status-action-url').value = f.live_status_action_url;
+                            if (f.review_url && document.getElementById('field-review-url')) document.getElementById('field-review-url').value = f.review_url;
+               if (f.review_contact && document.getElementById('field-review-contact')) document.getElementById('field-review-contact').value = f.review_contact;
                         }
                     }
 
@@ -2526,6 +2572,9 @@ async function gestisciAzioneMaster() {
                 document.getElementById('field-qp-premio-b').value = '';
                 document.getElementById('field-qp-limite').value = '';
                 document.getElementById('field-qp-scadenza').value = '';
+            } else if (tipo === 'review') {
+                if(document.getElementById('field-review-url')) document.getElementById('field-review-url').value = '';
+                if(document.getElementById('field-review-contact')) document.getElementById('field-review-contact').value = '';
             }
             
             if(typeof salvaDati === 'function') salvaDati(); 
