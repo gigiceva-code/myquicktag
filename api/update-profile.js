@@ -30,7 +30,7 @@ export default async function handler(req, res) {
       "pdf_label", "pdf_url", 
       "gallery_data", "draft_json", "sedi_json",
       "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza",
-      "pocket_cloud"
+      "pocket_cloud", "review_url", "review_contact"
     ];
 
     nativeFields.forEach(f => {
