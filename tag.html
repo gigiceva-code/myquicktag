@@ -1920,7 +1920,7 @@ function apriMacroArea(area, skipHistory = false) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('bio')"><i class="fas fa-pen-nib" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">BIOGRAFIA</span></button>`;
         }
     }
-    else if (area === 'business') {
+   else if (area === 'business') {
         titolo.textContent = 'BUSINESS';
         if (cacheDatiUtente.pdf_url) {
             const label = (cacheDatiUtente.pdf_label || 'DOCUMENTO PDF').toUpperCase();
@@ -1928,6 +1928,10 @@ function apriMacroArea(area, skipHistory = false) {
         }
         if (cacheDatiUtente.cv) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('cv')"><i class="fas fa-file-alt" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">CURRICULUM VITAE</span></button>`;
+        }
+        // NUOVO TASTO SCUDO REPUTAZIONE (Mostrato solo se c'è il link configurato)
+        if (cacheDatiUtente.review_url) {
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriScudoReputazione()"><i class="fas fa-star" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">LASCIA UN FEEDBACK</span></button>`;
         }
     }
     else if (area === 'media') {
@@ -2792,7 +2796,97 @@ function apriQRRapido() {
         apriSezione('qr');
     }, 50);
 }      
+// ============================================================
+// ⚡ KILLER FEATURE: SCUDO REPUTAZIONE (SMART REVIEW GATE)
+// ============================================================
+function apriScudoReputazione() {
+    const sheet = document.getElementById('feature-bottom-sheet');
+    const backdrop = document.getElementById('feature-backdrop');
+    const title = document.getElementById('sheet-title');
+    const icon = document.getElementById('sheet-icon');
+    const body = document.getElementById('sheet-body');
 
+    if (!sheet || !backdrop) return;
+    if (navigator.vibrate) navigator.vibrate(20);
+
+    icon.style.background = 'rgba(229, 193, 88, 0.1)';
+    icon.innerHTML = `<i class="fas fa-star" style="color: #e5c158;"></i>`;
+    title.innerText = 'IL TUO FEEDBACK';
+    title.style.color = '#e5c158';
+
+    // Generiamo l'interfaccia a 5 stelle vergini
+    let htmlStelle = `
+        <div style="text-align:center; padding:10px 0; font-size:1.05rem; font-weight:300; color:#fff; line-height:1.6;">
+            Come valuti la tua esperienza?
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 15px; margin-bottom: 25px;" id="star-container">
+    `;
+    for(let i=1; i<=5; i++) {
+        htmlStelle += `<i class="far fa-star star-rating" onclick="selezionaStelle(${i})" style="font-size: 2.2rem; color: #86868b; cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s;"></i>`;
+    }
+    htmlStelle += `</div><div id="feedback-action-container" style="min-height: 80px; display: flex; flex-direction: column; justify-content: flex-end;"></div>`;
+
+    body.innerHTML = htmlStelle;
+
+    backdrop.classList.add('active');
+    sheet.classList.add('active');
+}
+
+function selezionaStelle(valore) {
+    if (navigator.vibrate) navigator.vibrate(15);
+    
+    // Anima e colora le stelle
+    const stars = document.querySelectorAll('.star-rating');
+    stars.forEach((s, index) => {
+        if(index < valore) {
+            s.className = 'fas fa-star star-rating'; // Stella piena
+            s.style.color = '#e5c158';
+            s.style.transform = 'scale(1.15)';
+        } else {
+            s.className = 'far fa-star star-rating'; // Stella vuota
+            s.style.color = 'rgba(255,255,255,0.2)';
+            s.style.transform = 'scale(1)';
+        }
+    });
+
+    const actionContainer = document.getElementById('feedback-action-container');
+    
+    // LOGICA DI SMISTAMENTO (IL VERO SCUDO)
+    if(valore <= 3) {
+        // RECENSIONE NEGATIVA -> Deviazione in privato
+        const contatto = cacheDatiUtente.review_contact || '';
+        let destinazione = '';
+        let iconaBtn = '';
+        let testoBtn = '';
+        
+        // Capisce automaticamente se è un'email o un numero di telefono
+        if(contatto.includes('@')) {
+            destinazione = `mailto:${contatto}`;
+            iconaBtn = '<i class="fas fa-envelope"></i>';
+            testoBtn = 'INVIACI UN MESSAGGIO';
+        } else {
+            destinazione = `https://wa.me/${contatto.replace(/\D/g,'')}`;
+            iconaBtn = '<i class="fab fa-whatsapp"></i>';
+            testoBtn = 'SCRIVICI SU WHATSAPP';
+        }
+        
+        actionContainer.innerHTML = `
+            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); text-align: center; margin-bottom: 15px; font-weight: 300; line-height: 1.5;">Ci dispiace che l'esperienza non sia stata a 5 stelle.<br>Contattaci per permetterci di rimediare.</div>
+            <a href="${destinazione}" target="_blank" rel="noopener noreferrer" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: #fff; font-size: 0.85rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; transition: transform 0.2s;">
+                ${iconaBtn} ${testoBtn}
+            </a>
+        `;
+    } else {
+        // RECENSIONE POSITIVA (4 o 5) -> Via libera a Google
+        const linkPubblico = cacheDatiUtente.review_url || '#';
+        actionContainer.innerHTML = `
+            <div style="font-size: 0.85rem; color: #10b981; text-align: center; margin-bottom: 15px; font-weight: 400; line-height: 1.5;">Fantastico! Grazie mille.<br>Se ti va, condividi la tua esperienza pubblicamente.</div>
+            <a href="${linkPubblico}" target="_blank" rel="noopener noreferrer" style="width: 100%; padding: 16px; background: #10b981; border: none; border-radius: 12px; color: #000; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); transition: transform 0.2s;">
+                <i class="fab fa-google"></i> LASCIA UNA RECENSIONE
+            </a>
+        `;
+    }
+}
 </script>     
 </body>
 </html>
