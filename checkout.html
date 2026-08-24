@@ -377,7 +377,7 @@
 
                     // Se è corretto e in attesa, riempiamo i campi e accendiamo lo Step 1
                   document.getElementById("display-username").innerText = `Registrazione @${usernameDisplay.replace('@', '')}`;
-document.getElementById("receipt-username").innerText = `@${usernameDisplay.replace('@', '')}`;
+                  document.getElementById("receipt-username").innerText = `@${usernameDisplay.replace('@', '')}`;
                     
                     document.getElementById("loading-screen").style.display = "none";
                     document.getElementById("step-payment").style.display = "block";
@@ -390,11 +390,62 @@ document.getElementById("receipt-username").innerText = `@${usernameDisplay.repl
             }
         }
 
+        // ============================================================
+        // IL BUTTAFUORI: CONTROLLO SCADENZA 24H PRIMA DEL PAGAMENTO
+        // ============================================================
+        async function verificaCoperturaPrenotazione() {
+            if (!targetUserClean) return false;
+
+            try {
+                // Interroga il database per sapere l'età reale della Tag
+                const res = await fetch(`/api/get-profile?u=${targetUserClean}`);
+                const data = await res.json();
+                
+                // Cerca la data di creazione nel database
+                const baseTime = data.createdTime || (data.record && data.record.createdTime) || new Date().toISOString();
+                const createdTime = new Date(baseTime).getTime();
+                const now = new Date().getTime();
+                const ageInMinutes = (now - createdTime) / (1000 * 60);
+
+                // Se è in attesa ed è più vecchia di 24 ore (1440 min)
+                if (data.fields && data.fields.stato === 'in attesa' && ageInMinutes >= 1440) {
+                    alert("⚠️ Prenotazione Scaduta\n\nSono trascorse oltre 24 ore dalla riserva iniziale. Questa identità digitale potrebbe essere stata liberata o riassegnata.\n\nVerrai reindirizzato alla Home per verificarne la disponibilità.");
+                    
+                    // Pulizia locale e reindirizzamento
+                    localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
+                    window.location.href = '/'; 
+                    return false; // Blocca il pagamento
+                }
+                
+                return true; // La prenotazione è valida, può pagare
+            } catch(e) {
+                console.error("Errore controllo prenotazione:", e);
+                alert("Errore di connessione. Riprova tra poco.");
+                return false;
+            }
+        }
+
         // 2. SIMULAZIONE DELLA TRANSAZIONE SUL GATEWAY BANCARIO
-        function eseguiTransazione() {
+        async function eseguiTransazione() {
+            // ---> PRIMA DI APRIRE STRIPE, FACCIAMO LAVORARE IL BUTTAFUORI <---
+            const btn = document.querySelector('button[onclick="eseguiTransazione()"]');
+            const testoOriginale = btn ? btn.innerText : "";
+            if(btn) { btn.innerText = "VERIFICA IN CORSO..."; btn.disabled = true; }
+
+            const puoPagare = await verificaCoperturaPrenotazione();
+            
+            if (!puoPagare) {
+                // Se la prenotazione è scaduta, si ferma tutto!
+                if(btn) { btn.innerText = testoOriginale; btn.disabled = false; }
+                return; 
+            }
+
+            // --- DA QUI IN POI, IL PAGAMENTO PARTE REGOLARMENTE ---
             // Qui in futuro aggancerai la chiamata per aprire Stripe (es. stripe.redirectToCheckout)
             console.log("Transazione avviata per l'utente: " + targetUserClean);
             
+            if(btn) { btn.innerText = testoOriginale; btn.disabled = false; }
+
             // Successo transazione -> Passaggio allo Step 2 (Password)
             document.getElementById("step-payment").style.display = "none";
             document.getElementById("step-password").style.display = "block";
@@ -402,13 +453,14 @@ document.getElementById("receipt-username").innerText = `@${usernameDisplay.repl
 
         // 3. CHIAMATA fetch AL DATABASE PER SALVARE LA PASSWORD ED ATTIVARE IL PROFILO
         async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
-}
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
         async function salvaCredenzialiEAttiva() {
             const passwordSelezionata = document.getElementById("checkout-pwd").value;
             
@@ -432,6 +484,9 @@ document.getElementById("receipt-username").innerText = `@${usernameDisplay.repl
                 const resData = await response.json();
                 
                 if (resData.success) {
+                    // Pulizia finale del lucchetto della sessione
+                    localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
+
                     // Successo totale -> Mostriamo lo Step 3 di conferma
                     document.getElementById("step-password").style.display = "none";
                     document.getElementById("step-success").style.display = "block";
@@ -445,11 +500,11 @@ document.getElementById("receipt-username").innerText = `@${usernameDisplay.repl
         }
 
      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
-function vaiAllaTag() {
-    if (!targetUserClean) return;
-    localStorage.setItem('loggedUser', targetUserClean);
-    window.location.href = `/tag.html?u=${targetUserClean}&welcome=1`;
-}   
+        function vaiAllaTag() {
+            if (!targetUserClean) return;
+            localStorage.setItem('loggedUser', targetUserClean);
+            window.location.href = `/tag.html?u=${targetUserClean}&welcome=1`;
+        }   
 </script>
 </body>
 </html>
