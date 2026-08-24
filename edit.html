@@ -744,6 +744,14 @@
             <div class="header-title" style="font-weight: 400;">NETWORK</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
+        <!-- NUOVO TASTO: TAG-TO-TAG NETWORK (PARTNER) -->
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-partners')">
+                <i class="fas fa-handshake pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">CERCHIA DI FIDUCIA (PARTNERS)</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Collega le Tag dei tuoi partner commerciali</span>
+                </div>
+            </div>
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
             <div class="edit-menu-item" onclick="apriDrawer('drawer-sito')">
                 <i class="fas fa-globe pillar-icon"></i>
@@ -1215,7 +1223,41 @@
            </div>
        </div>
     </div>
+<div class="drawer-glass" id="drawer-partners">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('env-network')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">CERCHIA DI FIDUCIA</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px; line-height: 1.5;">
+                Aggiungi i link alle Tag dei tuoi partner. Appariranno come bottoni VIP verificati nella tua stanza Network.
+            </div>
+            
+            <!-- Box di inserimento nuovo partner -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; gap: 10px;">
+                <div>
+                    <label style="font-size: 0.65rem; color: rgba(255,255,255,0.5); margin-bottom: 3px; display: block; letter-spacing: 1px;">NOME ATTIVITÀ / PARTNER</label>
+                    <input type="text" id="input-partner-nome" placeholder="Es. Ristorante Da Mario" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.65rem; color: rgba(255,255,255,0.5); margin-bottom: 3px; display: block; letter-spacing: 1px;">LINK DELLA TAG DEL PARTNER</label>
+                    <input type="url" id="input-partner-url" placeholder="Es. https://myquicktag.it/damario" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
+                </div>
+                <button type="button" onclick="aggiungiPartner()" style="margin-top: 5px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.3); color: #e5c158; padding: 12px; border-radius: 10px; cursor: pointer; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-plus">></i> AGGIUNGI ALLA CERCHIA
+                </button>
+            </div>
 
+            <!-- Lista dei partner inseriti (Dinamica) -->
+            <div id="partners-internal-track" style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
+                <!-- I blocchi dei partner verranno iniettati qui -->
+            </div>
+
+            <input type="hidden" id="field-partners-data" value="[]">
+        </div>
+        <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA CERCHIA</button>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
@@ -1560,7 +1602,7 @@
                 roomMedia.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; text-align: center; width: 100%; padding: 5px 0; cursor: pointer;" onclick="apriDrawer('drawer-gallery')">🖼️ GALLERIA IMMAGINI${grigliaHTML}</div>`;
             }
 
-            // STANZA 4: NETWORK
+           // STANZA 4: NETWORK
             const qaInput = document.getElementById('field-qa-label');
             if (qaInput && qaInput.value.trim() !== "") {
                 const testoScelto = qaInput.value.trim().toUpperCase();
@@ -1582,6 +1624,15 @@
             if (internalTrack && internalTrack.children.length > 0) {
                 roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-social')">COLLEGAMENTI E SOCIAL</div>`;
             }
+
+            // --- INSERITO QUI: CERCHIA DI FIDUCIA (PARTNERS) ---
+            const partnersStr = document.getElementById('field-partners-data') ? document.getElementById('field-partners-data').value : "[]";
+            let arrayP = [];
+            try { arrayP = JSON.parse(partnersStr); } catch(e) {}
+            if (arrayP.length > 0) {
+                roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-partners')">🤝 CERCHIA DI FIDUCIA (${arrayP.length})</div>`;
+            }
+            // ---------------------------------------------------
 
             document.getElementById('container-identity').style.display = roomIdentity.innerHTML === '' ? 'none' : 'flex';
             document.getElementById('container-business').style.display = roomBusiness.innerHTML === '' ? 'none' : 'flex';
@@ -1835,6 +1886,7 @@
             
             const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
             const reviewContact = document.getElementById('field-review-contact') ? document.getElementById('field-review-contact').value.trim() : ""; 
+            const partnersData = document.getElementById('field-partners-data') ? document.getElementById('field-partners-data').value : "[]";
             
             // NUOVI CAMPI VIDEO
             const videoUrl = document.getElementById('field-video-url') ? document.getElementById('field-video-url').value.trim() : "";
@@ -1846,7 +1898,7 @@
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
                 digital_style: styleVal, digital_layout: layoutVal, bio: bioVal, sito_web: sitoVal, email: emailVal,
                 quick_action_tipo: qaTipo, quick_action_label: qaLabel, quick_action_url: qaUrl, avatar_url: coreUrl,
-                
+                partners_data: partnersData,
                 live_status_color: statusColor, 
                 live_status_text: statusText,   
                 live_status_action_type: statusActionType,
@@ -1999,6 +2051,13 @@
                             pt.style.color = '#10b981';
                         }
                     }
+                    if (f.partners_data && document.getElementById('field-partners-data')) {
+    document.getElementById('field-partners-data').value = f.partners_data;
+    try {
+        const arrP = JSON.parse(f.partners_data);
+        disegnaListaPartners(arrP);
+    } catch(e) {}
+}
                     if (f.gallery_data && document.getElementById('field-gallery-data')) {
                         document.getElementById('field-gallery-data').value = f.gallery_data;
                         disegnaGrigliaGalleria();
@@ -2634,6 +2693,10 @@ async function gestisciAzioneMaster() {
                 if(document.getElementById('field-video-url')) document.getElementById('field-video-url').value = '';
                 if(document.getElementById('field-video-cta-text')) document.getElementById('field-video-cta-text').value = '';
                 if(document.getElementById('field-video-cta-url')) document.getElementById('field-video-cta-url').value = '';
+                } else if (tipo === 'partners') {
+    document.getElementById('field-partners-data').value = '[]';
+    const trackP = document.getElementById('partners-internal-track');
+    if (trackP) trackP.innerHTML = '';
             }
             
             if(typeof salvaDati === 'function') salvaDati(); 
@@ -2767,6 +2830,84 @@ function toggleRoom(roomId) {
     
     // Feedback tattile se sei da cellulare
     if (navigator.vibrate) navigator.vibrate(10);
+} 
+       // ============================================================
+// ⚡ TAG-TO-TAG NETWORK (GESTIONE PARTNER)
+// ============================================================
+function aggiungiPartner() {
+    const nomeInput = document.getElementById('input-partner-nome');
+    const urlInput = document.getElementById('input-partner-url');
+    const hiddenData = document.getElementById('field-partners-data');
+    const track = document.getElementById('partners-internal-track');
+
+    if (!nomeInput || !urlInput || !hiddenData || !track) return;
+
+    const nome = nomeInput.value.trim();
+    let url = urlInput.value.trim();
+
+    if (nome === '' || url === '') {
+        alert('Inserisci sia il nome del partner che il link della sua Tag.');
+        return;
+    }
+
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+    }
+
+    let partners = [];
+    try {
+        partners = JSON.parse(hiddenData.value || '[]');
+    } catch(e) {
+        partners = [];
+    }
+
+    partners.push({ nome: nome, url: url });
+    hiddenData.value = JSON.stringify(partners);
+
+    // Pulisce i campi di input
+    nomeInput.value = '';
+    urlInput.value = '';
+
+    disegnaListaPartners(partners);
+    aggiornaAnteprimaLive();
+}
+
+function rimuoviPartner(index) {
+    const hiddenData = document.getElementById('field-partners-data');
+    if (!hiddenData) return;
+
+    let partners = [];
+    try {
+        partners = JSON.parse(hiddenData.value || '[]');
+    } catch(e) {}
+
+    partners.splice(index, 1);
+    hiddenData.value = JSON.stringify(partners);
+
+    disegnaListaPartners(partners);
+    aggiornaAnteprimaLive();
+}
+
+function disegnaListaPartners(partners) {
+    const track = document.getElementById('partners-internal-track');
+    if (!track) return;
+
+    track.innerHTML = '';
+    partners.forEach((p, idx) => {
+        const item = document.createElement('div');
+        item.style.cssText = "display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 12px 14px; border-radius: 10px;";
+        item.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+                <i class="fas fa-handshake" style="color: #e5c158; font-size: 1rem;"></i>
+                <div style="display: flex; flex-direction: column; overflow: hidden;">
+                    <span style="color: #fff; font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.nome}</span>
+                    <span style="color: rgba(255,255,255,0.4); font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.url}</span>
+                </div>
+            </div>
+            <i class="fas fa-trash" style="color: #ff4444; cursor: pointer; font-size: 1rem; opacity: 0.8; padding: 5px;" onclick="rimuoviPartner(${idx})"></i>
+        `;
+        track.appendChild(item);
+    });
 } 
     </script>
 </body>
