@@ -2674,6 +2674,33 @@ async function gestisciAzioneMaster() {
                 return false;
             }
         }
+       // ============================================================
+// MOTORE FISARMONICA ANTEPRIMA LIVE (STANZE)
+// ============================================================
+function toggleRoom(roomId) {
+    const roomSelezionata = document.getElementById(roomId);
+    
+    // Se la stanza non esiste o è vuota, non fa nulla
+    if (!roomSelezionata || roomSelezionata.innerHTML.trim() === '') return;
+
+    // Se la stanza è già aperta, la chiude semplicemente
+    if (roomSelezionata.classList.contains('open')) {
+        roomSelezionata.classList.remove('open');
+        return;
+    }
+
+    // Effetto lusso: chiude prima tutte le altre stanze aperte
+    const tutteLeStanze = document.querySelectorAll('.room-content');
+    tutteLeStanze.forEach(stanza => {
+        stanza.classList.remove('open');
+    });
+
+    // Apre la stanza che hai appena toccato
+    roomSelezionata.classList.add('open');
+    
+    // Feedback tattile se sei da cellulare
+    if (navigator.vibrate) navigator.vibrate(10);
+} 
     </script>
 </body>
 </html>
