@@ -324,12 +324,13 @@
 </head>
 <body>
    
+<!-- UI COMPONENT: Session Identity Reservation Badge (Luxury Vault) -->
 <div id="reservation-badge" style="display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 5000; align-items: center; gap: 10px; background: rgba(10, 10, 12, 0.85); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 30px; padding: 8px 16px; backdrop-filter: blur(15px); box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
-    <div style="width: 8px; height: 8px; background: #e5c158; border-radius: 50%; box-shadow: 0 0 8px #e5c158;"></div>
+    <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.8rem;"></i>
     <div style="color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.5px;">
-        Identità <span id="badge-target-name">@brand</span> riservata: <span id="timer-ui" style="color: #e5c158; font-weight: 700;">30:00</span>
+        <span id="badge-target-name" style="font-weight: 700;">@brand</span> protetto per 24h
     </div>
-</div> 
+</div>
 
     <div class="configurator-wrapper">
         <div id="profile-content" data-theme="black_dna"> 
@@ -2520,13 +2521,13 @@
             aggiornaAnteprimaLive();
             chiudiSenzaSalvare();
         }
-        function initReservationMonitor() {
+      function initReservationMonitor() {
             const badge = document.getElementById('reservation-badge');
-            const timerUI = document.getElementById('timer-ui');
             const nameUI = document.getElementById('badge-target-name');
 
-            if (!badge || !timerUI) return;
+            if (!badge || !nameUI) return;
 
+            // Se l'utente ha già pagato, spegne tutto
             if (statoUtente === 'attivo') {
                 badge.style.display = 'none';
                 localStorage.removeItem('mqt_res_expiry_' + NOME_SISTEMA);
@@ -2536,33 +2537,49 @@
             const RES_STORAGE_KEY = 'mqt_res_expiry_' + NOME_SISTEMA;
             let expiry = localStorage.getItem(RES_STORAGE_KEY);
             
+            // Imposta la scadenza a 24 ORE dal primo ingresso
             if (!expiry) {
-                expiry = new Date().getTime() + (30 * 60 * 1000); 
+                expiry = new Date().getTime() + (24 * 60 * 60 * 1000); 
                 localStorage.setItem(RES_STORAGE_KEY, expiry);
             }
 
             nameUI.innerText = '@' + NOME_SISTEMA.toUpperCase();
             badge.style.display = 'flex';
 
+            // Controllo immediato: se apri il link dopo 24h, ti sbatte fuori subito
+            if ((expiry - new Date().getTime()) <= 0) {
+                eseguiSfrattoScadenza();
+                return;
+            }
+
+            // Controllo silenzioso ogni 10 secondi in background
             const monitorInterval = setInterval(() => {
                 const remaining = expiry - new Date().getTime();
-
                 if (remaining <= 0) {
                     clearInterval(monitorInterval);
-                    timerUI.innerText = "00:00";
-                    timerUI.style.color = "#ef4444"; 
-                    return;
+                    eseguiSfrattoScadenza();
                 }
-
-                const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                const secs = Math.floor((remaining % (1000 * 60)) / 1000);
-                
-                const minStr = mins < 10 ? "0" + mins : mins;
-                const secStr = secs < 10 ? "0" + secs : secs;
-                
-                timerUI.innerText = minStr + ":" + secStr;
-            }, 1000);
+            }, 10000);
         }
+
+        function eseguiSfrattoScadenza() {
+            // Crea un muro visivo nero che impedisce di fare clic sull'editor
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#fff; font-family:"Inter", sans-serif;';
+            overlay.innerHTML = `
+                <i class="fas fa-lock" style="font-size: 3rem; color: #ff4444; margin-bottom: 20px;"></i>
+                <h2 style="font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Tempo Scaduto</h2>
+                <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); text-align: center; max-width: 250px; line-height: 1.6;">Le 24 ore riservate per configurare questa identità sono terminate. Il nome è stato rilasciato.</p>
+                <button onclick="window.location.href='index.html'" style="margin-top: 30px; background: #fff; color: #000; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px; cursor: pointer;">TORNA ALLA HOME</button>
+            `;
+            document.body.appendChild(overlay);
+            
+            // Radere al suolo i dati in modo che il telefono si dimentichi del nome
+            localStorage.removeItem('mqt_res_expiry_' + NOME_SISTEMA);
+            localStorage.removeItem('mqt_cache_' + NOME_SISTEMA);
+            localStorage.removeItem('mqt_theme_' + NOME_SISTEMA);
+            localStorage.removeItem('mqt_layout_' + NOME_SISTEMA);
+        } 
     </script>
 </body>
 </html>
