@@ -1867,13 +1867,13 @@ function scaricaVCF(vcf, fields) {
     const indirizzo = vcf.indirizzo || '';
     const piva = vcf.piva || '';
 
-    const vcfContent = [
-        'BEGIN:VCARD', 'VERSION:3.0', `FN:${nome}`,
+   const vcfContent = [
+        'BEGIN:VCARD', 'VERSION:3.0', `N:;${nome};;;`, `FN:${nome}`,
         tel1 ? `TEL;TYPE=CELL:${tel1}` : '', tel2 ? `TEL;TYPE=WORK:${tel2}` : '',
         email1 ? `EMAIL;TYPE=WORK:${email1}` : '', email2 ? `EMAIL;TYPE=HOME:${email2}` : '',
         sito ? `URL:${sito}` : '', indirizzo ? `ADR:;;${indirizzo};;;;` : '',
         piva ? `NOTE:P.IVA ${piva}` : '', 'END:VCARD'
-    ].filter(Boolean).join('\n');
+    ].filter(Boolean).join('\r\n');
 
     const blob = new Blob([vcfContent], { type: 'text/vcard' });
     const url = URL.createObjectURL(blob);
