@@ -1950,6 +1950,23 @@ function apriMacroArea(area, skipHistory = false) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriScudoReputazione()"><i class="fas fa-star" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">LASCIA UN FEEDBACK</span></button>`;
         }
     }
+      // --- LEAD CAPTURE (IL VASETTO PUBBLICO) ---
+        if (cacheDatiUtente.lead_capture_attivo === 'true' || cacheDatiUtente.lead_capture_attivo === true) {
+            const titoloVasetto = cacheDatiUtente.lead_capture_titolo || "Lascia il tuo contatto per essere ricontattato";
+            sottomenuHTML += `
+                <div style="margin-top: 25px; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.3); padding: 20px; border-radius: 16px; text-align: left; box-shadow: inset 0 0 20px rgba(229, 193, 88, 0.02);">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: #e5c158; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;">
+                        <i class="fas fa-bullseye"></i> Richiesta Contatto
+                    </div>
+                    <div style="font-size: 0.8rem; color: #fff; margin-bottom: 16px; line-height: 1.5;">${titoloVasetto}</div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <input type="text" id="visitor-lead-nome" placeholder="Il tuo Nome" style="width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 14px 16px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none;">
+                        <input type="text" id="visitor-lead-contatto" placeholder="Email o Telefono" style="width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 14px 16px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none;">
+                        <button type="button" onclick="inviaLeadVisitatore()" style="margin-top: 5px; background: #e5c158; color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">INVIA ORA</button>
+                    </div>
+                </div>
+            `;
+        } 
  else if (area === 'media') {
         titolo.textContent = 'MEDIA';
         
@@ -2984,6 +3001,85 @@ function chiudiSmartVideo() {
         overlay.style.display = 'none';
         iframe.src = ''; // Questo blocca l'audio del video in background!
     }, 300);
+}
+    // ============================================================
+// ⚡ INVIO LEAD DA PARTE DEL VISITATORE (VASETTO)
+// ============================================================
+async function inviaLeadVisitatore() {
+    if (navigator.vibrate) navigator.vibrate(20);
+    const nomeInput = document.getElementById('visitor-lead-nome');
+    const contattoInput = document.getElementById('visitor-lead-contatto');
+    
+    if (!nomeInput || !contattoInput) return;
+    const nome = nomeInput.value.trim();
+    const contatto = contattoInput.value.trim();
+
+    if (!nome || !contatto) {
+        alert('Inserisci sia il nome che un recapito valido per continuare.');
+        return;
+    }
+
+    // Blocca il bottone per evitare doppi invii
+    const btn = event.currentTarget;
+    const testoOriginale = btn.innerText;
+    btn.innerText = "INVIO IN CORSO...";
+    btn.style.pointerEvents = "none";
+    btn.style.opacity = "0.7";
+
+    let leads = [];
+    try {
+        leads = JSON.parse(cacheDatiUtente.lead_capture_leads || '[]');
+    } catch(e) {
+        leads = [];
+    }
+
+    const nuovoLead = {
+        nome: nome,
+        contatto: contatto,
+        data: new Date().toLocaleDateString('it-IT') + ' ' + new Date().toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'})
+    };
+
+    leads.unshift(nuovoLead); // Aggiunge il nuovo contatto in cima alla lista
+    cacheDatiUtente.lead_capture_leads = JSON.stringify(leads);
+
+    // Salva i dati aggiornati sul server usando l'API di update-profile
+    try {
+        const response = await fetch('/api/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username_system: cacheDatiUtente.username_system || getNomeBrandReale(),
+                lead_capture_leads: cacheDatiUtente.lead_capture_leads
+                // Nota: In un'app normale qui andrebbe gestita la sicurezza (es. un endpoint separato /api/add-lead) 
+                // ma per ora sfruttiamo update-profile per salvare la stringa JSON diretta su Airtable come hai richiesto.
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success || response.ok) {
+            btn.innerText = "CONTATTO INVIATO ✅";
+            btn.style.background = "#10b981";
+            btn.style.color = "#fff";
+            nomeInput.value = '';
+            contattoInput.value = '';
+            setTimeout(() => {
+                btn.innerText = testoOriginale;
+                btn.style.background = "#e5c158";
+                btn.style.color = "#000";
+                btn.style.pointerEvents = "auto";
+                btn.style.opacity = "1";
+            }, 3000);
+        } else {
+            throw new Error("Risposta server non ok");
+        }
+    } catch(err) {
+        console.error("Errore salvataggio lead:", err);
+        alert('Si è verificato un errore di connessione. Riprova tra poco.');
+        btn.innerText = testoOriginale;
+        btn.style.pointerEvents = "auto";
+        btn.style.opacity = "1";
+    }
 }
 </script>     
 </body>
