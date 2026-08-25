@@ -33,7 +33,8 @@ export default async function handler(req, res) {
       "pocket_cloud", "review_url", "review_contact",
       "video_url", "video_cta_text", "video_cta_url",
      "partners_data",
-     "lead_capture_attivo", "lead_capture_titolo", "lead_capture_leads" 
+     "lead_capture_attivo", "lead_capture_titolo", "lead_capture_leads",
+      "shop_attivo", "shop_titolo", "shop_prezzo", "shop_link", "shop_scadenza"
     ];
 
     nativeFields.forEach(f => {
