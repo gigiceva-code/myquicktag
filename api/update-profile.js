@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       "gallery_data", "draft_json", "sedi_json",
       "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza",
       "pocket_cloud", "review_url", "review_contact",
-      "video_url", "video_cta_text", "video_cta_url"
+      "video_url", "video_cta_text", "video_cta_url",
      "partners_data" 
     ];
 
