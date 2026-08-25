@@ -1633,7 +1633,12 @@
             if (videoUrl !== "") {
                 roomMedia.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-video')">▶️ SMART VIDEO</div>`;
             }
-
+           
+// Anteprima Lead Capture
+            const isLeadActive = document.getElementById('input-lead-attivo') && document.getElementById('input-lead-attivo').checked;
+            if (isLeadActive) {
+                roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} border-color: #e5c158; color: #e5c158;" onclick="apriDrawer('drawer-lead-capture')"><i class="fas fa-bullseye"></i> RICHIESTA CONTATTO ATTIVA</div>`;
+            }
             const galleryDataStr = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
             let arrayGalleria = [];
             try { arrayGalleria = JSON.parse(galleryDataStr); } catch(e) {}
@@ -1936,7 +1941,9 @@
             const videoUrl = document.getElementById('field-video-url') ? document.getElementById('field-video-url').value.trim() : "";
             const videoCtaText = document.getElementById('field-video-cta-text') ? document.getElementById('field-video-cta-text').value.trim() : "";
             const videoCtaUrl = document.getElementById('field-video-cta-url') ? document.getElementById('field-video-cta-url').value.trim() : "";
-
+            const leadAttivo = document.getElementById('input-lead-attivo') ? document.getElementById('input-lead-attivo').checked : false;
+            const leadTitolo = document.getElementById('input-lead-titolo') ? document.getElementById('input-lead-titolo').value.trim() : "";
+            const leadLeadsData = document.getElementById('field-lead-leads-data') ? document.getElementById('field-lead-leads-data').value : "[]";
             return { 
                 username_system: NOME_SISTEMA, 
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
@@ -1948,6 +1955,9 @@
                 live_status_action_type: statusActionType,
                 live_status_action_label: statusActionLabel,
                 live_status_action_url: statusActionUrl,
+                lead_capture_attivo: leadAttivo ? 'true' : 'false',
+        lead_capture_titolo: leadTitolo,
+        lead_capture_leads: leadLeadsData,
                 
                 flash_text: flashText, flash_expiry: flashExpiry,
                 pdf_label: pdfLabel, pdf_url: pdfUrl,      
@@ -2095,6 +2105,19 @@
                             pt.style.color = '#10b981';
                         }
                     }
+                    // Caricamento Lead Capture (Vasetto)
+        if (document.getElementById('input-lead-attivo')) {
+            document.getElementById('input-lead-attivo').checked = (f.lead_capture_attivo === 'true' || f.lead_capture_attivo === true);
+        }
+        if (f.lead_capture_titolo && document.getElementById('input-lead-titolo')) {
+            document.getElementById('input-lead-titolo').value = f.lead_capture_titolo;
+        }
+        if (f.lead_capture_leads && document.getElementById('field-lead-leads-data')) {
+            document.getElementById('field-lead-leads-data').value = f.lead_capture_leads;
+            try {
+                disegnaListaLeads(JSON.parse(f.lead_capture_leads));
+            } catch(e) {}
+        }
                     if (f.partners_data && document.getElementById('field-partners-data')) {
     document.getElementById('field-partners-data').value = f.partners_data;
     try {
