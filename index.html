@@ -816,7 +816,7 @@ async function vaiAllaVerifica() {
         return; // Ferma l'esecuzione (non chiama il server)
     } 
 
-    // ==========================================
+   // ==========================================
     // SE PASSA I CONTROLLI, PROCEDIAMO NORMALMENTE
     // ==========================================
     const reservedDataStr = localStorage.getItem('myquicktag_reserved');
@@ -825,17 +825,41 @@ async function vaiAllaVerifica() {
             const reservedData = JSON.parse(reservedDataStr);
             const now = new Date().getTime();
             if (now < reservedData.expire && reservedData.tag === rawTag) {
-                document.getElementById('welcome-tag-title').innerText = `${formattedTag} ti sta aspettando.`;
+                // Modifica per evitare l'errore se welcome-tag-title non esiste
+                const titleElement = document.getElementById('welcome-tag-title');
+                if (titleElement) titleElement.innerText = `${formattedTag} ti sta aspettando.`;
                 apriOverlay('welcome-overlay');
                 return; 
             }
         } catch(e) {}
     }
 
+    // ==========================================
+    // 3. ZERO-LATENCY BYPASS (Controllo Proprietario)
+    // ==========================================
+    const utenteLoggato = localStorage.getItem('loggedUser');
+    let chiaviSalvate = [];
+    try {
+        chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+    } catch(e) {}
+
+    if (utenteLoggato === rawTag || chiaviSalvate.includes(rawTag)) {
+        // L'utente possiede già la tag. Bypassiamo Airtable e lo facciamo entrare all'istante.
+        btn.innerHTML = "BENTORNATO...";
+        btn.style.background = "#ffffff";
+        btn.style.color = "#000000";
+        btn.style.opacity = "1";
+        
+        setTimeout(() => {
+            window.location.href = `profile.html?u=${rawTag}`;
+        }, 800);
+        return; // Termina l'esecuzione qui, risparmiando risorse server.
+    }
+
+    // Se arriva qui, il nome non è suo. Procede con la normale chiamata API.
     const originalText = btn.innerHTML;
     btn.innerHTML = "VERIFICA IN CORSO...";
     btn.style.opacity = "0.7";
-
     try {
         const response = await fetch('/api/check-and-create', {
             method: 'POST',
