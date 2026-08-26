@@ -870,7 +870,7 @@ async function vaiAllaVerifica() {
         const data = await response.json();
 
         if (data.success) {
-            const scadenza = new Date().getTime() + 1800000; // 30 minuti di tempo
+            const scadenza = new Date().getTime() + 86400000; // 24 ore esatte di tempo
             localStorage.setItem('myquicktag_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
 
             document.getElementById('welcome-tag-name').innerText = formattedTag; 
@@ -890,6 +890,21 @@ async function vaiAllaVerifica() {
 function procediAllaRegistrazione() {
     const inputField = document.getElementById('tag-input');
     const rawTag = inputField.value.trim().toLowerCase().replace(/\s+/g, '').replace(/@/g, '');
+
+    // =========================================================
+    // IL PEZZO MANCANTE: CONSEGNA DELLE CHIAVI DI PROPRIETÀ
+    // =========================================================
+    localStorage.setItem('loggedUser', rawTag);
+    let chiaviSalvate = [];
+    try { 
+        chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]'); 
+    } catch(e) {}
+    
+    if (!chiaviSalvate.includes(rawTag)) {
+        chiaviSalvate.push(rawTag);
+        localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviSalvate));
+    }
+    // =========================================================
 
     const btn = document.getElementById('btn-entra-spazio');
     if (btn) {
