@@ -35,7 +35,8 @@ export default async function handler(req, res) {
      "partners_data",
      "lead_capture_attivo", "lead_capture_titolo", "lead_capture_leads",
       "shop_attivo", "shop_titolo", "shop_prezzo", "shop_link", "shop_scadenza",
-      "analytics_log"
+      "analytics_data", "analytics_log"
+      
     ];
 
     nativeFields.forEach(f => {
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
         if (typeof body[f] === 'string') {
           
           // 2. PROTEZIONE JSON (Aggiunto pocket_cloud per non far distruggere le virgolette)
-      let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud' || f === 'partners_data' || f === 'lead_capture_leads' || f === 'analytics_log') 
+     let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud' || f === 'partners_data' || f === 'lead_capture_leads' || f === 'analytics_data' || f === 'analytics_log')
           ? body[f].trim() 
           : body[f].replace(/['"]+/g, '').trim(); 
           
