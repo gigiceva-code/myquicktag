@@ -2071,6 +2071,8 @@ function apriMacroArea(area, skipHistory = false) {
 // APERTURA SEZIONE INTERNA E CONTENUTI
 // ============================================================
 function apriSezione(tipo) {
+    // Accensione Radar Analytics
+    tracciaClickSezione(tipo.toUpperCase());
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
@@ -3186,6 +3188,56 @@ window.chiudiGateShop = function() {
             document.body.style.overflow = 'auto'; // Ripristina lo scorrimento
         }, 400);
     }
+} 
+   // ============================================================
+// 📊 RADAR ANALYTICS SILENZIOSO (TRACKING DEI CLICK)
+// ============================================================
+function tracciaClickSezione(nomeSezione) {
+    // Evitiamo di tracciare il proprietario per non falsare le statistiche
+    const utenteLoggato = localStorage.getItem('loggedUser');
+    if (utenteLoggato && utenteLoggato.toLowerCase() === usernameCorrente.toLowerCase()) return;
+    if (usernameCorrente === "tuonome.it") return;
+
+    try {
+        const now = new Date();
+        const dataFormattata = now.toLocaleDateString('it-IT'); 
+        const oraFormattata = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+        const timestamp = now.getTime();
+
+        const nuovoClick = {
+            sezione: nomeSezione,
+            data: dataFormattata,
+            ora: oraFormattata,
+            timestamp: timestamp
+        };
+
+        // Recuperiamo il log esistente 
+        let logAttuale = [];
+        try {
+            if (cacheDatiUtente.analytics_log) {
+                logAttuale = JSON.parse(cacheDatiUtente.analytics_log);
+            }
+        } catch (e) {
+            logAttuale = [];
+        }
+
+        // Aggiungiamo il click in cima alla lista (massimo 1000 per non appesantire)
+        logAttuale.unshift(nuovoClick);
+        if (logAttuale.length > 1000) logAttuale = logAttuale.slice(0, 1000);
+
+        cacheDatiUtente.analytics_log = JSON.stringify(logAttuale);
+
+        // Sparo silenzioso ad Airtable (senza await, così l'utente non aspetta)
+        fetch('/api/update-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username_system: usernameCorrente,
+                analytics_log: cacheDatiUtente.analytics_log
+            })
+        }).catch(() => {}); // Fallisce in silenzio se manca la rete
+
+    } catch (e) {}
 } 
 </script>     
 </body>
