@@ -1950,7 +1950,7 @@ function apriMacroArea(area, skipHistory = false) {
         if (cacheDatiUtente.review_url) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriScudoReputazione()"><i class="fas fa-star" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">LASCIA UN FEEDBACK</span></button>`;
         }
-    }
+   
       // --- LEAD CAPTURE (IL VASETTO PUBBLICO) ---
         if (cacheDatiUtente.lead_capture_attivo === 'true' || cacheDatiUtente.lead_capture_attivo === true) {
             const titoloVasetto = cacheDatiUtente.lead_capture_titolo || "Lascia il tuo contatto per essere ricontattato";
@@ -1968,6 +1968,7 @@ function apriMacroArea(area, skipHistory = false) {
                 </div>
             `;
         } 
+           }  
  else if (area === 'media') {
         titolo.textContent = 'MEDIA';
         
