@@ -320,7 +320,7 @@
         #profile-content[data-layout="badge"] .username-display { display: block !important; width: max-content !important; max-width: 100% !important; margin: 0 auto !important; text-align: center !important; }
 
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(2); opacity: 0; } }
-        /* ============================================================
+   /* ============================================================
    CORREZIONE LINEA DIVIDER PER NOMI CORTI 
    ============================================================ */
 #profile-content[data-layout="divider"] #name-capsule-wrapper.nome-corto {
@@ -330,8 +330,8 @@
 
 #profile-content[data-layout="divider"] #name-capsule-wrapper.nome-corto::before,
 #profile-content[data-layout="divider"] #name-capsule-wrapper.nome-corto::after {
-    top: calc(50% + 18px) !important; /* Spinge la linea sotto il testo */
-}
+    top: calc(50% + 22px) !important; /* Spinge la linea esattamente sotto il testo */
+} 
     </style>
 </head>
 <body>
@@ -352,7 +352,7 @@
                         <img id="live-avatar-img" class="orbital-img" src="" alt="Brand Logo">
                     </div>
                 </div>
-                <div class="username-capsule-wrapper">
+                <div class="username-capsule-wrapper" id="name-capsule-wrapper">
                     <div class="username-capsule">
                         <div class="username-capsule-inner">
                           <div class="username-display" id="tag-username"></div> 
