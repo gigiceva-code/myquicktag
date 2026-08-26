@@ -1857,6 +1857,7 @@ function renderizzaQuickAction(tipo, url) {
 }
 
 function eseguiQuickAction() {
+    tracciaClickSezione('QUICK ACTION');
     const tipo = (cacheDatiUtente.quick_action_tipo || '').toLowerCase();
     const url  = cacheDatiUtente.quick_action_url || '';
     if (!url) return;
@@ -2865,6 +2866,7 @@ function apriScudoReputazione() {
     const body = document.getElementById('sheet-body');
 
     if (!sheet || !backdrop) return;
+    tracciaClickSezione('SCUDO REPUTAZIONE');
     if (navigator.vibrate) navigator.vibrate(20);
 
     icon.style.background = 'rgba(229, 193, 88, 0.1)';
@@ -2970,6 +2972,8 @@ function convertiUrlInEmbed(url) {
 
 function apriSmartVideo() {
     if (navigator.vibrate) navigator.vibrate(20);
+tracciaClickSezione('SMART VIDEO');
+    
     const overlay = document.getElementById('video-vault-overlay');
     const iframe = document.getElementById('video-vault-iframe');
     const ctaContainer = document.getElementById('video-vault-cta-container');
@@ -3022,7 +3026,8 @@ async function inviaLeadVisitatore() {
         alert('Inserisci sia il nome che un recapito valido per continuare.');
         return;
     }
-
+tracciaClickSezione('LEAD ACQUISITO');
+    
     // Blocca il bottone per evitare doppi invii
     const btn = event.currentTarget;
     const testoOriginale = btn.innerText;
@@ -3125,10 +3130,9 @@ function controllaAcquistoIstantaneo() {
             <!-- Il timer verrà iniettato qui -->
         </div>
         
-        <a href="${link}" target="_blank" rel="noopener noreferrer" style="background: #e5c158; color: #000; width: 100%; max-width: 320px; padding: 18px; border-radius: 14px; text-decoration: none; font-weight: 800; font-size: 1.1rem; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(229, 193, 88, 0.3); transition: transform 0.2s;">
+        <a href="${link}" target="_blank" rel="noopener noreferrer" onclick="tracciaClickSezione('ACQUISTO FOMO')" style="background: #e5c158; color: #000; width: 100%; max-width: 320px; padding: 18px; border-radius: 14px; text-decoration: none; font-weight: 800; font-size: 1.1rem; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(229, 193, 88, 0.3); transition: transform 0.2s;">
             ACQUISTA ORA
         </a>
-        
         <div style="margin-top: 30px; color: rgba(255,255,255,0.3); font-size: 0.65rem; text-decoration: underline; cursor: pointer; letter-spacing: 0.5px;" onclick="chiudiGateShop()">
             Voglio solo salvare il contatto
         </div>
