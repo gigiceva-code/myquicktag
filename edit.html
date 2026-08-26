@@ -2083,6 +2083,8 @@
                 const data = await response.json();
                 
                 if (data.success && azioneRedirect) {
+                   window.onbeforeunload = null; 
+                    localStorage.removeItem('mqt_autosave_' + NOME_SISTEMA); 
                     window.onbeforeunload = null; 
 
                     if (azioneRedirect === 'checkout') {
@@ -2122,7 +2124,16 @@
                 if (pianoSimulato) {
                     userPlan = pianoSimulato;
                 }
-                const f = (() => { if (data.fields?.draft_json) { try { return { ...JSON.parse(data.fields.draft_json) }; } catch(e) {} } return data.fields || data; })();
+                let f = (() => { if (data.fields?.draft_json) { try { return { ...JSON.parse(data.fields.draft_json) }; } catch(e) {} } return data.fields || data; })();
+
+                // --- RECUPERO AUTO-SAVE LOCALE ---
+                const localDraft = localStorage.getItem('mqt_autosave_' + NOME_SISTEMA);
+                if (localDraft) {
+                    try {
+                        const parsedDraft = JSON.parse(localDraft);
+                        f = { ...f, ...parsedDraft }; // Fonde i dati di Airtable con l'ultima bozza non salvata
+                    } catch(e) {}
+                }
 
                 if (f) {
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
@@ -2391,6 +2402,7 @@
             accendiIControlli(); 
             inizializzaPagina(); 
             initDragAndDrop();
+            avviaAutoSave();
             
             let conteggioTap = 0;
             let tempoUltimoTap = 0;
@@ -3091,6 +3103,19 @@ function disegnaListaLeads(leadsArray) {
         track.appendChild(item);
     });
 } 
+       // ==========================================
+        // 💾 AUTO-SAVE INVISIBILE
+        // ==========================================
+        function avviaAutoSave() {
+            setInterval(() => {
+                // Non salva se stiamo solo testando o se la pagina sta ancora caricando
+                if (NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
+                
+                // Scatta la foto ai campi e salva
+                const datiAttuali = raccogliDatiDalForm();
+                localStorage.setItem('mqt_autosave_' + NOME_SISTEMA, JSON.stringify(datiAttuali));
+            }, 5000); // Salva in background ogni 5 secondi
+        } 
         
     </script>
 </body>
