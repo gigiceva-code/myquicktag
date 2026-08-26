@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Analytics - myquicktag</title>
+    <title>Business Intelligence - myquicktag</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <style>
         :root {
             --bg-color: #000000;
             --card-bg: rgba(255, 255, 255, 0.02);
             --border-light: rgba(255, 255, 255, 0.05);
             --accent-smeraldo: #50C878;
+            --accent-gold: #e5c158;
             --text-main: #ffffff;
             --text-sec: #6c6c70; 
         }
@@ -26,18 +26,21 @@
             font-family: 'Inter', sans-serif;
             height: 100%;
             width: 100%;
-            overflow: hidden; /* LA REGOLA D'ORO: Zero Scroll */
             display: flex;
             justify-content: center;
         }
 
+        /* Ora permettiamo lo scroll perché ci sono molti dati */
         .dashboard-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             height: 100%;
             display: flex;
             flex-direction: column;
             padding: 20px 24px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 50px;
         }
 
         /* HEADER */
@@ -48,7 +51,8 @@
             width: 100%;
             padding-bottom: 15px;
             border-bottom: 1px solid var(--border-light);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            flex-shrink: 0;
         }
 
         .btn-back {
@@ -66,16 +70,25 @@
 
         .brand-logo { font-size: 0.65rem; font-weight: 600; letter-spacing: 3px; color: var(--accent-smeraldo); }
 
-        /* NUMERO GIGANTE (Sussurrato) */
-        .hero-stats {
+        /* NUMERO GIGANTE E PICCO (Flex Row) */
+        .hero-stats-row {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            flex: 0.8; /* Riempe lo spazio superiore ma non troppo */
+            margin-bottom: 25px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 25px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        .hero-stats h2 { font-size: 0.65rem; font-weight: 400; text-transform: uppercase; letter-spacing: 5px; color: var(--text-sec); margin-bottom: 5px; }
-        .total-views { font-size: 4.5rem; font-weight: 300; color: var(--text-main); line-height: 1; letter-spacing: -2px; }
+
+        .hero-stat-box { display: flex; flex-direction: column; }
+        .hero-stat-box.right { align-items: flex-end; text-align: right; }
+        
+        .stat-title { font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 3px; color: var(--text-sec); margin-bottom: 5px; }
+        .stat-big { font-size: 3rem; font-weight: 300; color: var(--text-main); line-height: 1; letter-spacing: -1px; }
+        .stat-medium { font-size: 1.5rem; font-weight: 600; color: var(--accent-gold); line-height: 1; margin-top: 10px;}
 
         /* CARDS (Sottili e chirurgiche) */
         .analytics-card {
@@ -83,35 +96,46 @@
             border: 1px solid var(--border-light);
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
-        .card-header i { color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8; }
-        .card-header h3 { font-size: 0.7rem; font-weight: 500; letter-spacing: 2px; color: var(--text-main); text-transform: uppercase; }
+        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .card-header i { color: var(--accent-smeraldo); font-size: 0.95rem; opacity: 0.9; }
+        .card-header h3 { font-size: 0.75rem; font-weight: 500; letter-spacing: 2px; color: var(--text-main); text-transform: uppercase; }
 
-        /* PROGRESS BARS */
-        .bar-group { display: flex; flex-direction: column; gap: 5px; }
-        .bar-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-sec); letter-spacing: 1px;}
-        .bar-labels strong { color: var(--text-main); font-weight: 400; }
+        /* PROGRESS BARS (Dispositivi) */
+        .bar-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px;}
+        .bar-group:last-child { margin-bottom: 0;}
+        .bar-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-sec); letter-spacing: 1px;}
+        .bar-labels strong { color: var(--text-main); font-weight: 500; }
         
-        .bar-track { width: 100%; height: 3px; background: rgba(255, 255, 255, 0.04); border-radius: 10px; overflow: hidden; }
+        .bar-track { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.04); border-radius: 10px; overflow: hidden; }
         .bar-fill { height: 100%; border-radius: 10px; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); width: 0%; }
         
         .bar-fill.apple { background: #ffffff; } 
         .bar-fill.android { background: var(--accent-smeraldo); }
-        .bar-fill.desktop { background: #d4af37; } /* Un tocco di oro per il desktop */
+        .bar-fill.desktop { background: #d4af37; }
 
-        /* LISTA LOCALITÀ (Massimo 3) */
+        /* LISTA LOCALITÀ */
         .geo-list { display: flex; flex-direction: column; gap: 10px; }
         .geo-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); }
         .geo-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .geo-city { font-size: 0.75rem; color: #e8e8ed; display: flex; align-items: center; gap: 8px; font-weight: 300; letter-spacing: 0.5px;}
-        .geo-views { font-size: 0.75rem; font-weight: 500; color: var(--accent-smeraldo); }
+        .geo-city { font-size: 0.8rem; color: #e8e8ed; display: flex; align-items: center; gap: 8px; font-weight: 300; letter-spacing: 0.5px;}
+        .geo-views { font-size: 0.8rem; font-weight: 600; color: var(--accent-smeraldo); }
 
+        /* GRAFICO ORARI */
+        .chart-wrapper { width: 100%; height: 200px; position: relative; margin-top: 10px;}
+
+        /* LISTA CLICK INTERNI */
+        .internal-list { display: flex; flex-direction: column; gap: 15px; }
+        .internal-item { display: flex; flex-direction: column; gap: 5px; padding-bottom: 15px; border-bottom: 1px solid var(--border-light); }
+        .internal-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .internal-top { display: flex; justify-content: space-between; align-items: center; }
+        .internal-name { font-size: 0.8rem; font-weight: 600; color: var(--text-main); letter-spacing: 0.5px;}
+        .internal-count { font-size: 0.9rem; font-weight: 600; color: var(--accent-gold); }
     </style>
 </head>
 <body>
@@ -123,12 +147,29 @@
             <i class="fas fa-chevron-left"></i>
             <span>Console</span>
         </a>
-        <div class="brand-logo">myquicktag</div>
+        <div class="brand-logo">BUSINESS INTELLIGENCE</div>
     </header>
 
-    <section class="hero-stats">
-        <h2>Total Scans</h2>
-        <div class="total-views" id="counter-views">0</div>
+    <section class="hero-stats-row">
+        <div class="hero-stat-box">
+            <span class="stat-title">Scansioni</span>
+            <div class="stat-big" id="counter-views">0</div>
+        </div>
+        <div class="hero-stat-box right">
+            <span class="stat-title">Sezione Più Calda</span>
+            <div class="stat-medium" id="top-section-name">N/A</div>
+            <div style="font-size: 0.65rem; color: var(--text-sec); margin-top: 4px;" id="top-section-time">Picco orario: --:--</div>
+        </div>
+    </section>
+
+    <section class="analytics-card">
+        <div class="card-header">
+            <i class="fas fa-clock" style="color: var(--accent-gold);"></i>
+            <h3 style="color: var(--accent-gold);">Orari di Interazione</h3>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="timeChart"></canvas>
+        </div>
     </section>
 
     <section class="analytics-card">
@@ -136,36 +177,44 @@
             <i class="fas fa-mobile-alt"></i>
             <h3>Dispositivi</h3>
         </div>
-        
         <div class="bar-group">
             <div class="bar-labels"><span>iOS (Apple)</span><strong id="os-apple-perc">0%</strong></div>
             <div class="bar-track"><div class="bar-fill apple" id="os-apple-bar"></div></div>
         </div>
-
         <div class="bar-group">
             <div class="bar-labels"><span>Android</span><strong id="os-android-perc">0%</strong></div>
             <div class="bar-track"><div class="bar-fill android" id="os-android-bar"></div></div>
         </div>
-
         <div class="bar-group">
             <div class="bar-labels"><span>Desktop / Altri</span><strong id="os-desktop-perc">0%</strong></div>
             <div class="bar-track"><div class="bar-fill desktop" id="os-desktop-bar"></div></div>
         </div>
     </section>
 
-    <section class="analytics-card" style="margin-bottom: auto;">
+    <section class="analytics-card">
+        <div class="card-header">
+            <i class="fas fa-bullseye" style="color: var(--accent-gold);"></i>
+            <h3 style="color: var(--accent-gold);">Dettaglio Click</h3>
+        </div>
+        <div class="internal-list" id="internal-list-container">
+            <div style="font-size:0.75rem; color:var(--text-sec); text-align:center;">In attesa di interazioni...</div>
+        </div>
+    </section>
+
+    <section class="analytics-card">
         <div class="card-header">
             <i class="fas fa-map-marker-alt"></i>
             <h3>Località Rilevate</h3>
         </div>
         <div class="geo-list" id="geo-list-container">
-            <div style="font-size:0.7rem; color:var(--text-sec); text-align:center; padding: 5px 0;">Recupero dati...</div>
+            <div style="font-size:0.75rem; color:var(--text-sec); text-align:center;">Recupero dati...</div>
         </div>
     </section>
 
 </div>
 
 <script>
+    // --- ANIMAZIONE CONTATORI ---
     function animaContatore(idElemento, valoreFinale) {
         const el = document.getElementById(idElemento);
         if (!el) return;
@@ -184,6 +233,7 @@
         }, frameRate);
     }
 
+    // --- CARICAMENTO DATI ---
     document.addEventListener("DOMContentLoaded", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         let usernameCorrente = urlParams.get("u") || localStorage.getItem("loggedUser");
@@ -199,66 +249,175 @@
         if (!usernameCorrente) return;
 
         try {
-            const response = await fetch(`/api/get-profile?u=${usernameCorrente}`);
+            const response = await fetch(`/api/get-profile?u=${usernameCorrente}&_cb=${Date.now()}`);
             const data = await response.json();
 
             if (data.success && data.fields) {
+                
+                // 1. SCANSIONI (Macro)
                 const viewsReali = data.fields.views || 0;
                 animaContatore('counter-views', viewsReali);
 
+                // 2. DISPOSITIVI E LOCALITÀ (Macro - da analytics_data)
                 if (data.fields.analytics_data) {
                     try {
-                        const analytics = JSON.parse(data.fields.analytics_data);
-                        
-                        // 1. Calcolo Dispositivi (iOS, Android, Desktop)
-                        const os = analytics.os || {};
-                        const appleViews = os.iOS || 0;
-                        const androidViews = os.Android || 0;
-                        const desktopViews = (os.Desktop || 0) + (os.Other || 0);
-                        const totalOsViews = appleViews + androidViews + desktopViews;
+                        const macroAnalytics = JSON.parse(data.fields.analytics_data);
+                        elaboraMacroAnalytics(macroAnalytics);
+                    } catch(e) { console.error("Errore macro analytics", e); }
+                } else {
+                    document.getElementById('geo-list-container').innerHTML = '<div style="font-size:0.7rem; color:var(--text-sec); text-align:center;">Dati non sufficienti.</div>';
+                }
 
-                        if (totalOsViews > 0) {
-                            const applePerc = Math.round((appleViews / totalOsViews) * 100);
-                            const androidPerc = Math.round((androidViews / totalOsViews) * 100);
-                            const desktopPerc = Math.round((desktopViews / totalOsViews) * 100);
-                            
-                            document.getElementById('os-apple-perc').innerText = applePerc + '%';
-                            document.getElementById('os-android-perc').innerText = androidPerc + '%';
-                            document.getElementById('os-desktop-perc').innerText = desktopPerc + '%';
-                            
-                            setTimeout(() => {
-                                document.getElementById('os-apple-bar').style.width = applePerc + '%';
-                                document.getElementById('os-android-bar').style.width = androidPerc + '%';
-                                document.getElementById('os-desktop-bar').style.width = desktopPerc + '%';
-                            }, 200);
-                        }
-
-                        // 2. Classifica Città (Max 3 per non creare scroll)
-                        const geo = analytics.geo || {};
-                        const geoArray = Object.entries(geo).map(([city, count]) => ({ city, count }));
-                        geoArray.sort((a, b) => b.count - a.count);
-                        const topGeo = geoArray.slice(0, 3);
-                        
-                        const geoListEl = document.getElementById('geo-list-container');
-                        if (geoListEl) {
-                            if (topGeo.length > 0) {
-                                geoListEl.innerHTML = topGeo.map(item => `
-                                    <div class="geo-item">
-                                        <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.65rem;"></i> ${item.city}</div>
-                                        <div class="geo-views">${item.count}</div>
-                                    </div>
-                                `).join('');
-                            } else {
-                                geoListEl.innerHTML = '<div style="font-size:0.7rem; color:var(--text-sec); text-align:center;">Dati non sufficienti.</div>';
-                            }
-                        }
-                    } catch(e) { console.error(e); }
+                // 3. CLICK E ORARI (Micro - dal nuovo analytics_log)
+                if (data.fields.analytics_log) {
+                    try {
+                        const microLog = JSON.parse(data.fields.analytics_log);
+                        if (microLog.length > 0) elaboraMicroLog(microLog);
+                    } catch(e) { console.error("Errore micro log", e); }
                 }
             }
         } catch (error) {
             document.getElementById('counter-views').innerText = "-";
         }
     });
+
+    // --- ELABORAZIONE DATI VECCHI (DISPOSITIVI/GEO) ---
+    function elaboraMacroAnalytics(analytics) {
+        const os = analytics.os || {};
+        const appleViews = os.iOS || 0;
+        const androidViews = os.Android || 0;
+        const desktopViews = (os.Desktop || 0) + (os.Other || 0);
+        const totalOsViews = appleViews + androidViews + desktopViews;
+
+        if (totalOsViews > 0) {
+            const applePerc = Math.round((appleViews / totalOsViews) * 100);
+            const androidPerc = Math.round((androidViews / totalOsViews) * 100);
+            const desktopPerc = Math.round((desktopViews / totalOsViews) * 100);
+            
+            document.getElementById('os-apple-perc').innerText = applePerc + '%';
+            document.getElementById('os-android-perc').innerText = androidPerc + '%';
+            document.getElementById('os-desktop-perc').innerText = desktopPerc + '%';
+            
+            setTimeout(() => {
+                document.getElementById('os-apple-bar').style.width = applePerc + '%';
+                document.getElementById('os-android-bar').style.width = androidPerc + '%';
+                document.getElementById('os-desktop-bar').style.width = desktopPerc + '%';
+            }, 200);
+        }
+
+        const geo = analytics.geo || {};
+        const geoArray = Object.entries(geo).map(([city, count]) => ({ city, count }));
+        geoArray.sort((a, b) => b.count - a.count);
+        const topGeo = geoArray.slice(0, 4); // Mostriamo le top 4
+        
+        const geoListEl = document.getElementById('geo-list-container');
+        if (topGeo.length > 0) {
+            geoListEl.innerHTML = topGeo.map(item => `
+                <div class="geo-item">
+                    <div class="geo-city"><i class="fas fa-location-arrow" style="color: #444; font-size: 0.65rem;"></i> ${item.city}</div>
+                    <div class="geo-views">${item.count}</div>
+                </div>
+            `).join('');
+        } else {
+            geoListEl.innerHTML = '<div style="font-size:0.75rem; color:var(--text-sec); text-align:center;">Dati non sufficienti.</div>';
+        }
+    }
+
+    // --- ELABORAZIONE NUOVI CLICK (SEZIONI/ORARI) ---
+    function elaboraMicroLog(logArray) {
+        const mappaSezioni = {};
+        const mappaOrari = {};
+        for (let i = 0; i < 24; i++) mappaOrari[i.toString().padStart(2, '0')] = 0;
+
+        logArray.forEach(click => {
+            const sez = click.sezione || "SCONOSCIUTA";
+            mappaSezioni[sez] = (mappaSezioni[sez] || 0) + 1;
+
+            if (click.ora && click.ora.includes(':')) {
+                const oraEstratta = click.ora.split(':')[0];
+                if (mappaOrari[oraEstratta] !== undefined) mappaOrari[oraEstratta]++;
+            }
+        });
+
+        // Trova Top Sezione
+        let topSezione = "N/A";
+        let maxSezClick = 0;
+        for (const [sez, count] of Object.entries(mappaSezioni)) {
+            if (count > maxSezClick) { maxSezClick = count; topSezione = sez; }
+        }
+        if(topSezione.length > 15) topSezione = topSezione.substring(0, 15) + '...';
+        document.getElementById('top-section-name').innerText = topSezione;
+
+        // Trova Picco Orario
+        let topOra = "00";
+        let maxOraClick = 0;
+        for (const [ora, count] of Object.entries(mappaOrari)) {
+            if (count > maxOraClick) { maxOraClick = count; topOra = ora; }
+        }
+        if (maxOraClick > 0) document.getElementById('top-section-time').innerText = `Picco orario: ${topOra}:00`;
+
+        // Disegna Lista
+        const containerLista = document.getElementById('internal-list-container');
+        const arraySezioni = Object.entries(mappaSezioni).sort((a, b) => b[1] - a[1]);
+        
+        containerLista.innerHTML = arraySezioni.map(([nome, click]) => {
+            const perc = Math.round((click / maxSezClick) * 100);
+            let colorBar = 'var(--accent-smeraldo)';
+            if (nome.includes('ACQUISTO') || nome.includes('LEAD') || nome.includes('QUICK ACTION')) colorBar = 'var(--accent-gold)';
+            
+            return `
+                <div class="internal-item">
+                    <div class="internal-top">
+                        <span class="internal-name">${nome}</span>
+                        <span class="internal-count">${click}</span>
+                    </div>
+                    <div class="bar-track"><div class="bar-fill" style="width: ${perc}%; background: ${colorBar};"></div></div>
+                </div>
+            `;
+        }).join('');
+
+        // Disegna Grafico
+        setTimeout(() => { disegnaGrafico(mappaOrari); }, 300);
+    }
+
+    // --- CHART.JS GRAFICO ORARI ---
+    function disegnaGrafico(mappaOrari) {
+        const ctx = document.getElementById('timeChart');
+        if(!ctx) return;
+
+        const labels = Object.keys(mappaOrari).map(h => `${h}:00`);
+        const data = Object.values(mappaOrari);
+
+        // Se tutti i valori sono 0, non disegnare (evita grafico piatto)
+        if (data.every(val => val === 0)) return;
+
+        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 200);
+        gradient.addColorStop(0, 'rgba(229, 193, 88, 1)');
+        gradient.addColorStop(1, 'rgba(229, 193, 88, 0.1)');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: gradient,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    barPercentage: 0.7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: true } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#6c6c70', stepSize: 1, font: { size: 9 } } },
+                    x: { grid: { display: false }, ticks: { color: '#6c6c70', font: { size: 9 }, maxTicksLimit: 6 } }
+                }
+            }
+        });
+    }
 </script>
 
 </body>
