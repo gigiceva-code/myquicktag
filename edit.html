@@ -404,28 +404,59 @@
     <!-- ========================================== -->
     <!-- 0. PLANCIA COMANDI                         -->
     <!-- ========================================== -->
-    <div class="drawer-glass" id="drawer-master">
+   <div class="drawer-glass" id="drawer-master">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back"></div>
             <div class="header-title" style="font-weight: 400;">PLANCIA COMANDI</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
-            <div class="edit-menu-item" onclick="apriDrawer('env-identity')">
-               <i class="far fa-user-circle pillar-icon"></i><span class="pillar-text">IDENTITY</span>
+            
+            <div class="edit-menu-item" style="justify-content: space-between; padding-right: 0 !important;">
+                <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-identity')">
+                    <i class="far fa-user-circle pillar-icon"></i><span class="pillar-text">IDENTITY</span>
+                </div>
+                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('IDENTITY', '<b>Il fulcro del tuo brand.</b><br><br>Qui definisci chi sei, inserisci la tua foto o il tuo logo aziendale, scrivi la tua storia professionale (Bio e CV) e gestisci il tuo Pass Digitale (QR Code).', event)">
+                    <i class="far fa-info-circle" style="color: #e5c158; font-size: 1.1rem;"></i>
+                </div>
             </div>
-            <div class="edit-menu-item" onclick="apriDrawer('env-business')">
-                <i class="fas fa-briefcase pillar-icon"></i><span class="pillar-text">BUSINESS</span>
+
+            <div class="edit-menu-item" style="justify-content: space-between; padding-right: 0 !important;">
+                <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-network')">
+                    <i class="fas fa-globe pillar-icon"></i><span class="pillar-text">NETWORK</span>
+                </div>
+                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('NETWORK', '<b>I ponti verso l\'esterno.</b><br><br>Qui configuri tutti i modi per farti contattare: il tuo sito ufficiale, i tuoi canali social, i tuoi recapiti salvabili in rubrica e i partner della tua cerchia di fiducia.', event)">
+                    <i class="far fa-info-circle" style="color: #e5c158; font-size: 1.1rem;"></i>
+                </div>
             </div>
-            <div class="edit-menu-item" onclick="apriDrawer('env-media')">
-                <i class="fas fa-images pillar-icon"></i><span class="pillar-text">MEDIA</span>
+
+            <div class="edit-menu-item" style="justify-content: space-between; padding-right: 0 !important;">
+                <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-media')">
+                    <i class="fas fa-images pillar-icon"></i><span class="pillar-text">VETRINA</span>
+                </div>
+                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('VETRINA', '<b>Mostra il tuo valore.</b><br><br>L\'ambiente dedicato a ciò che offri. Crea il tuo portfolio visivo con la Galleria, fai scaricare i tuoi Listini/Menu in PDF e usa lo Smart Video per colpire l\'attenzione.', event)">
+                    <i class="far fa-info-circle" style="color: #e5c158; font-size: 1.1rem;"></i>
+                </div>
             </div>
-            <div class="edit-menu-item" onclick="apriDrawer('env-network')">
-                <i class="fas fa-globe pillar-icon"></i><span class="pillar-text">NETWORK</span>
+
+            <div class="edit-menu-item" style="justify-content: space-between; padding-right: 0 !important;">
+                <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-business')">
+                    <i class="fas fa-briefcase pillar-icon"></i><span class="pillar-text">BUSINESS</span>
+                </div>
+                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('BUSINESS', '<b>Gestione e acquisizione.</b><br><br>Strumenti avanzati per proteggere la tua azienda filtrando le recensioni negative in privato e moduli intelligenti per catturare nuovi contatti commerciali a freddo.', event)">
+                    <i class="far fa-info-circle" style="color: #e5c158; font-size: 1.1rem;"></i>
+                </div>
             </div>
-            <div class="edit-menu-item emerald-text" onclick="apriDrawer('env-action')">
-              <i class="fas fa-rocket pillar-icon"></i> <span class="pillar-text">ACTION CENTER</span>
+
+            <div class="edit-menu-item emerald-text" style="justify-content: space-between; padding-right: 0 !important;">
+                <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-action')">
+                    <i class="fas fa-rocket pillar-icon"></i><span class="pillar-text">ACTION CENTER</span>
+                </div>
+                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('ACTION CENTER', '<b>L\'arsenale di conversione.</b><br><br>Qui crei urgenza. Usa i bottoni strategici prioritari, il semaforo live, i coupon passaparola e il gate di acquisto a tempo per spingere i visitatori all\'azione immediata.', event)">
+                    <i class="far fa-info-circle" style="color: #10b981; font-size: 1.1rem;"></i>
+                </div>
             </div>
+
             <div class="edit-menu-item" onclick="apriDrawer('drawer-style')" style="margin-top: 15px !important;">
                 <i class="fas fa-palette pillar-icon"></i><span class="pillar-text">STILE & DESIGN</span>
             </div>
@@ -434,11 +465,24 @@
             </div>
         </div>
     </div>
-
+     
+<div class="drawer-glass" id="drawer-insight" style="z-index: 3000;">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div>
+            <div class="header-title" style="font-weight: 400; color: #e5c158;" id="insight-title">INFO STRATEGICA</div>
+            <div class="header-close" onclick="chiudiInsight()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; padding: 0 10px;">
+            <div id="insight-content" style="color: #fff; font-size: 0.8rem; line-height: 1.6; font-weight: 300;">
+                </div>
+        </div>
+        <button class="btn-crea" onclick="chiudiInsight()" style="margin-top: auto; margin-bottom: 20px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.3); color: #e5c158;">CHIUDI E TORNA ALL'EDITOR</button>
+    </div>
+    
     <!-- ========================================== -->
     <!-- 1. ENV IDENTITY E SUOI MODULI              -->
     <!-- ========================================== -->
-    <div class="drawer-glass" id="env-identity">
+   <div class="drawer-glass" id="env-identity">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">IDENTITY</div>
@@ -459,6 +503,13 @@
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">La tua presentazione</span>
                 </div>
             </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-cv')">
+                <i class="fas fa-file-alt pillar-icon"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text">CURRICULUM VITAE</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il tuo percorso professionale</span>
+                </div>
+            </div>
             <div class="edit-menu-item" onclick="document.getElementById('modal-qr').classList.add('active');">
                 <i class="fas fa-qrcode pillar-icon" style="color: #d4af37;"></i>
                 <div style="display: flex; flex-direction: column;">
@@ -468,7 +519,6 @@
             </div>
         </div>
     </div>
-
     <div class="drawer-glass" id="drawer-identita">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-identity')"><i class="fas fa-chevron-left"></i></div>
@@ -516,7 +566,7 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA BIO</button>
     </div>
 
-   <!-- ========================================== -->
+  <!-- ========================================== -->
     <!-- 2. ENV BUSINESS E SUOI MODULI              -->
     <!-- ========================================== -->
     <div class="drawer-glass" id="env-business">
@@ -526,28 +576,13 @@
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
-            <div class="edit-menu-item" onclick="apriDrawer('drawer-showcase')">
-                <i class="fas fa-file-pdf pillar-icon" style="color: #e5c158;"></i>
-                <div style="display: flex; flex-direction: column;">
-                    <span class="pillar-text" style="color: #e5c158;">VETRINA PDF</span>
-                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Carica Menu, Listini o Brochure</span>
-                </div>
-            </div>
-            <div class="edit-menu-item" onclick="apriDrawer('drawer-cv')">
-                <i class="fas fa-file-alt pillar-icon"></i>
-                <div style="display: flex; flex-direction: column;">
-                    <span class="pillar-text">CURRICULUM VITAE</span>
-                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il tuo percorso professionale</span>
-                </div>
-            </div>
-          <div class="edit-menu-item" onclick="apriDrawer('drawer-review')">
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-review')">
                 <i class="fas fa-star pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #e5c158;">SCUDO REPUTAZIONE</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Filtra recensioni in privato</span>
                 </div>
             </div>
-            <!-- NUOVO TASTO: LEAD CAPTURE (VASETTO) -->
             <div class="edit-menu-item" onclick="apriDrawer('drawer-lead-capture')">
                 <i class="fas fa-bullseye pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
@@ -557,6 +592,39 @@
             </div>
         </div>
     </div>
+
+    <!-- ========================================== -->
+    <!-- 3. ENV VETRINA E SUOI MODULI               -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="env-media">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 400;">VETRINA</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-gallery')">
+                <i class="fas fa-images pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">GALLERIA IMMAGINI</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Mostra i tuoi lavori o prodotti</span>
+                </div>
+            </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-showcase')">
+                <i class="fas fa-file-pdf pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">VETRINA PDF</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Carica Menu, Listini o Brochure</span>
+                </div>
+            </div>
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-video')">
+                <i class="fas fa-play-circle pillar-icon" style="color: #e5c158;"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="pillar-text" style="color: #e5c158;">SMART VIDEO VAULT</span>
+                    <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Video immersivo con CTA</span>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="drawer-glass" id="drawer-showcase">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
@@ -1643,7 +1711,7 @@
 
             const roomIdentity = document.getElementById('room-identity');
             const roomBusiness = document.getElementById('room-business');
-            const roomMedia = document.getElementById('room-media');
+            const roomMedia = document.getElementById('room-media'); // Questo ora è Vetrina
             const roomNetwork = document.getElementById('room-network');
             
             if(!roomIdentity || !roomBusiness || !roomMedia || !roomNetwork) return;
@@ -1652,6 +1720,10 @@
             roomBusiness.innerHTML = '';
             roomMedia.innerHTML = '';
             roomNetwork.innerHTML = '';
+
+            // Rinominiamo visivamente MEDIA in VETRINA nell'anteprima in tempo reale
+            const titleMedia = document.querySelector('#container-media .room-title');
+            if(titleMedia) titleMedia.innerText = "VETRINA";
 
             const baseStyle = `font-size: 0.75rem; letter-spacing: 2px; font-weight: 500; color: ${coloreTesto}; text-transform: uppercase; text-align: center; width: 100%; cursor: pointer; transition: opacity 0.3s ease; padding: 5px 0;`;
 
@@ -1676,47 +1748,13 @@
                 roomIdentity.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-bio')">BIO E PRESENTAZIONE</div>`;
             }
 
-            // STANZA 2: BUSINESS
-            const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
-            if (reviewUrl !== "") {
-                roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-review')">⭐ FEEDBACK CLIENTI</div>`;
-            }
-            
-            const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "Scarica Documento";
-            const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
-            if (pdfUrl !== "") {
-                roomBusiness.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 5px 0;" onclick="apriDrawer('drawer-showcase')">📄 ${pdfLabel.toUpperCase()}</div>`;
-            }
-            
+            // --- SPOSTATO QUI: CV ---
             const cvInput = document.getElementById('field-cv');
             if (cvInput && cvInput.value.trim() !== "") {
-                roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-cv')">CURRICULUM VITAE</div>`;
+                roomIdentity.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-cv')">CURRICULUM VITAE</div>`;
             }
 
-           // STANZA 3: MEDIA
-            const videoUrl = document.getElementById('field-video-url') ? document.getElementById('field-video-url').value.trim() : "";
-            if (videoUrl !== "") {
-                roomMedia.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-video')">▶️ SMART VIDEO</div>`;
-            }
-           
-// Anteprima Lead Capture
-            const isLeadActive = document.getElementById('input-lead-attivo') && document.getElementById('input-lead-attivo').checked;
-            if (isLeadActive) {
-                roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} border-color: #e5c158; color: #e5c158;" onclick="apriDrawer('drawer-lead-capture')"><i class="fas fa-bullseye"></i> RICHIESTA CONTATTO ATTIVA</div>`;
-            }
-            const galleryDataStr = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
-            let arrayGalleria = [];
-            try { arrayGalleria = JSON.parse(galleryDataStr); } catch(e) {}
-            if (arrayGalleria.length > 0) {
-                let grigliaHTML = '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; pointer-events: none; margin-top: 5px;">';
-                arrayGalleria.forEach(url => {
-                    grigliaHTML += `<div style="aspect-ratio: 1; border-radius: 6px; background-image: url('${url}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);"></div>`;
-                });
-                grigliaHTML += '</div>';
-                roomMedia.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; text-align: center; width: 100%; padding: 5px 0; cursor: pointer;" onclick="apriDrawer('drawer-gallery')">🖼️ GALLERIA IMMAGINI${grigliaHTML}</div>`;
-            }
-
-           // STANZA 4: NETWORK
+            // STANZA 2: NETWORK
             const qaInput = document.getElementById('field-qa-label');
             if (qaInput && qaInput.value.trim() !== "") {
                 const testoScelto = qaInput.value.trim().toUpperCase();
@@ -1739,19 +1777,53 @@
                 roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-social')">COLLEGAMENTI E SOCIAL</div>`;
             }
 
-            // --- INSERITO QUI: CERCHIA DI FIDUCIA (PARTNERS) ---
             const partnersStr = document.getElementById('field-partners-data') ? document.getElementById('field-partners-data').value : "[]";
             let arrayP = [];
             try { arrayP = JSON.parse(partnersStr); } catch(e) {}
             if (arrayP.length > 0) {
                 roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-partners')">🤝 CERCHIA DI FIDUCIA (${arrayP.length})</div>`;
             }
-            // ---------------------------------------------------
+
+            // STANZA 3: VETRINA (Ex MEDIA)
+            const videoUrl = document.getElementById('field-video-url') ? document.getElementById('field-video-url').value.trim() : "";
+            if (videoUrl !== "") {
+                roomMedia.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-video')">▶️ SMART VIDEO</div>`;
+            }
+            
+            // --- SPOSTATO QUI: PDF ---
+            const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "Scarica Documento";
+            const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
+            if (pdfUrl !== "") {
+                roomMedia.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 5px 0;" onclick="apriDrawer('drawer-showcase')">📄 ${pdfLabel.toUpperCase()}</div>`;
+            }
+
+            const galleryDataStr = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
+            let arrayGalleria = [];
+            try { arrayGalleria = JSON.parse(galleryDataStr); } catch(e) {}
+            if (arrayGalleria.length > 0) {
+                let grigliaHTML = '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; pointer-events: none; margin-top: 5px;">';
+                arrayGalleria.forEach(url => {
+                    grigliaHTML += `<div style="aspect-ratio: 1; border-radius: 6px; background-image: url('${url}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);"></div>`;
+                });
+                grigliaHTML += '</div>';
+                roomMedia.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; text-align: center; width: 100%; padding: 5px 0; cursor: pointer;" onclick="apriDrawer('drawer-gallery')">🖼️ GALLERIA IMMAGINI${grigliaHTML}</div>`;
+            }
+
+            // STANZA 4: BUSINESS
+            const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
+            if (reviewUrl !== "") {
+                roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-review')">⭐ FEEDBACK CLIENTI</div>`;
+            }
+            
+            const isLeadActive = document.getElementById('input-lead-attivo') && document.getElementById('input-lead-attivo').checked;
+            if (isLeadActive) {
+                roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} border-color: #e5c158; color: #e5c158;" onclick="apriDrawer('drawer-lead-capture')"><i class="fas fa-bullseye"></i> RICHIESTA CONTATTO ATTIVA</div>`;
+            }
 
             document.getElementById('container-identity').style.display = roomIdentity.innerHTML === '' ? 'none' : 'flex';
-            document.getElementById('container-business').style.display = roomBusiness.innerHTML === '' ? 'none' : 'flex';
-            document.getElementById('container-media').style.display = roomMedia.innerHTML === '' ? 'none' : 'flex';
             document.getElementById('container-network').style.display = roomNetwork.innerHTML === '' ? 'none' : 'flex';
+            document.getElementById('container-media').style.display = roomMedia.innerHTML === '' ? 'none' : 'flex';
+            document.getElementById('container-business').style.display = roomBusiness.innerHTML === '' ? 'none' : 'flex';
         }
         function aggiornaLimitiSocial() {
             const internalTrack = document.getElementById('social-internal-track');
@@ -3142,6 +3214,22 @@ function disegnaListaLeads(leadsArray) {
                 localStorage.setItem('mqt_autosave_' + NOME_SISTEMA, JSON.stringify(datiAttuali));
             }, 5000); // Salva in background ogni 5 secondi
         } 
+        // ==========================================
+        // GESTIONE INSIGHTS (LE ⓘ STRATEGICHE)
+        // ==========================================
+        function mostraInsight(titolo, htmlContent, event) {
+            if(event) event.stopPropagation(); // Evita di aprire anche il cassetto sottostante
+            document.getElementById('insight-title').innerText = 'INFO: ' + titolo;
+            document.getElementById('insight-content').innerHTML = htmlContent;
+            
+            const insightDrawer = document.getElementById('drawer-insight');
+            insightDrawer.style.zIndex = "3005"; // Si posiziona sopra tutto
+            insightDrawer.classList.add('open');
+        }
+
+        function chiudiInsight() {
+            document.getElementById('drawer-insight').classList.remove('open');
+        }
         
     </script>
 </body>
