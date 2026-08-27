@@ -12,6 +12,45 @@
     <link id="dynamic-icon" rel="icon" href="">
 
     <style>
+        /* ============================================================
+           PULIZIA SCROLL E DESIGN BOTTONI "i" LUXURY
+           ============================================================ */
+        /* Nasconde la barra nativa ovunque */
+        ::-webkit-scrollbar { width: 0px !important; background: transparent !important; display: none !important; }
+        * { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+
+        /* Compattiamo la Plancia per farla stare fissa in 1 schermata (No Scroll) */
+        #drawer-master .edit-menu-item { padding: 18px 10px !important; }
+
+        /* La nuova icona "i" Premium (Cerchio vuoto con lettera elegante) */
+        .luxury-info-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Bordo bianco delicato */
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        /* Variante Smeraldo per l'Action Center */
+        .emerald-text .luxury-info-icon {
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #10b981;
+        }
+        /* Effetto riempimento al tocco (Feedback visivo) */
+        .info-click-area:active .luxury-info-icon {
+            background: #ffffff;
+            color: #000000;
+        }
+        .emerald-text .info-click-area:active .luxury-info-icon {
+            background: #10b981;
+            color: #000000;
+        }
         :root {
             --bg-esterno: #0d0d0f;
             --accent-smeraldo: #50C878;
@@ -338,7 +377,7 @@
 } 
     </style>
 </head>
-<body>
+   <body>
    
    <div class="configurator-wrapper">
         <div id="profile-content" data-theme="black_dna"> 
@@ -376,7 +415,7 @@
                     <div class="room-content" id="room-business"></div>
                 </div>
                 <div class="room-container" id="container-media">
-                    <div class="room-title" onclick="toggleRoom('room-media')">MEDIA</div>
+                    <div class="room-title" onclick="toggleRoom('room-media')">VETRINA</div>
                     <div class="room-content" id="room-media"></div>
                 </div>
                 <div class="room-container" id="container-network">
@@ -401,23 +440,20 @@
     
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
 
-    <!-- ========================================== -->
-    <!-- 0. PLANCIA COMANDI                         -->
-    <!-- ========================================== -->
-   <div class="drawer-glass" id="drawer-master">
-        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+    <div class="drawer-glass" id="drawer-master">
+        <div class="drawer-header-liquido" style="margin-bottom: 10px;">
             <div class="header-back"></div>
-            <div class="header-title" style="font-weight: 400;">PLANCIA COMANDI</div>
+            <div class="header-title" style="font-weight: 400; letter-spacing: 3px;">PLANCIA COMANDI</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
+        <div style="display: flex; flex-direction: column; flex: 1; padding: 0 5px;">
             
             <div class="edit-menu-item" style="justify-content: space-between; padding-right: 0 !important;">
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-identity')">
                     <i class="far fa-user-circle pillar-icon"></i><span class="pillar-text">IDENTITY</span>
                 </div>
-                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('IDENTITY', '<b>Il fulcro del tuo brand.</b><br><br>Qui definisci chi sei, inserisci la tua foto o il tuo logo aziendale, scrivi la tua storia professionale (Bio e CV) e gestisci il tuo Pass Digitale (QR Code).', event)">
-                    <i class="fas fa-info-circle" style="color: #e5c158; font-size: 1.1rem;"></i>
+                <div class="info-click-area" style="padding: 10px; cursor: pointer;" onclick="mostraInsight('IDENTITY', '<b>Il fulcro del tuo brand.</b><br><br>Qui definisci chi sei, inserisci la tua foto o il tuo logo aziendale, scrivi la tua storia professionale (Bio e CV) e gestisci il tuo Pass Digitale (QR Code).', event)">
+                    <div class="luxury-info-icon">i</div>
                 </div>
             </div>
 
@@ -425,8 +461,8 @@
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-network')">
                     <i class="fas fa-globe pillar-icon"></i><span class="pillar-text">NETWORK</span>
                 </div>
-                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('NETWORK', '<b>I ponti verso l\'esterno.</b><br><br>Qui configuri tutti i modi per farti contattare: il tuo sito ufficiale, i tuoi canali social, i tuoi recapiti salvabili in rubrica e i partner della tua cerchia di fiducia.', event)">
-                    <i class="fas fa-info-circle" style="color: #e5c158; font-size: 1.1rem;"></i>
+                <div class="info-click-area" style="padding: 10px; cursor: pointer;" onclick="mostraInsight('NETWORK', '<b>I ponti verso l\'esterno.</b><br><br>Qui configuri tutti i modi per farti contattare: il tuo sito ufficiale, i tuoi canali social, i tuoi recapiti salvabili in rubrica e i partner della tua cerchia di fiducia.', event)">
+                    <div class="luxury-info-icon">i</div>
                 </div>
             </div>
 
@@ -434,8 +470,8 @@
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-media')">
                     <i class="fas fa-images pillar-icon"></i><span class="pillar-text">VETRINA</span>
                 </div>
-                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('VETRINA', '<b>Mostra il tuo valore.</b><br><br>L\'ambiente dedicato a ciò che offri. Crea il tuo portfolio visivo con la Galleria, fai scaricare i tuoi Listini/Menu in PDF e usa lo Smart Video per colpire l\'attenzione.', event)">
-                    <i class="fas fa-info-circle" style="color: #e5c158; font-size: 1.1rem;"></i>
+                <div class="info-click-area" style="padding: 10px; cursor: pointer;" onclick="mostraInsight('VETRINA', '<b>Mostra il tuo valore.</b><br><br>L\'ambiente dedicato a ciò che offri. Crea il tuo portfolio visivo con la Galleria, fai scaricare i tuoi Listini/Menu in PDF e usa lo Smart Video per colpire l\'attenzione.', event)">
+                    <div class="luxury-info-icon">i</div>
                 </div>
             </div>
 
@@ -443,8 +479,8 @@
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-business')">
                     <i class="fas fa-briefcase pillar-icon"></i><span class="pillar-text">BUSINESS</span>
                 </div>
-                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('BUSINESS', '<b>Gestione e acquisizione.</b><br><br>Strumenti avanzati per proteggere la tua azienda filtrando le recensioni negative in privato e moduli intelligenti per catturare nuovi contatti commerciali a freddo.', event)">
-                    <i class="fas fa-info-circle" style="color: #e5c158; font-size: 1.1rem;"></i>
+                <div class="info-click-area" style="padding: 10px; cursor: pointer;" onclick="mostraInsight('BUSINESS', '<b>Gestione e acquisizione.</b><br><br>Strumenti avanzati per proteggere la tua azienda filtrando le recensioni negative in privato e moduli intelligenti per catturare nuovi contatti commerciali a freddo.', event)">
+                    <div class="luxury-info-icon">i</div>
                 </div>
             </div>
 
@@ -452,21 +488,21 @@
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-action')">
                     <i class="fas fa-rocket pillar-icon"></i><span class="pillar-text">ACTION CENTER</span>
                 </div>
-                <div style="padding: 10px; cursor: pointer;" onclick="mostraInsight('ACTION CENTER', '<b>L\'arsenale di conversione.</b><br><br>Qui crei urgenza. Usa i bottoni strategici prioritari, il semaforo live, i coupon passaparola e il gate di acquisto a tempo per spingere i visitatori all\'azione immediata.', event)">
-                    <i class="fas fa-info-circle" style="color: #10b981; font-size: 1.1rem;"></i>
+                <div class="info-click-area" style="padding: 10px; cursor: pointer;" onclick="mostraInsight('ACTION CENTER', '<b>L\'arsenale di conversione.</b><br><br>Qui crei urgenza. Usa i bottoni strategici prioritari, il semaforo live, i coupon passaparola e il gate di acquisto a tempo per spingere i visitatori all\'azione immediata.', event)">
+                    <div class="luxury-info-icon">i</div>
                 </div>
             </div>
 
-            <div class="edit-menu-item" onclick="apriDrawer('drawer-style')" style="margin-top: 15px !important;">
+            <div class="edit-menu-item" onclick="apriDrawer('drawer-style')" style="margin-top: 10px !important;">
                 <i class="fas fa-palette pillar-icon"></i><span class="pillar-text">STILE & DESIGN</span>
             </div>
             <div class="edit-menu-item" onclick="apriDrawer('drawer-piani')">
-                <i class="fas fa-gem pillar-icon" style="color: #e5c158 !important;"></i><span class="pillar-text" style="color: #e5c158 !important;">GESTIONE PIANO</span>
+                <i class="fas fa-gem pillar-icon"></i><span class="pillar-text">GESTIONE PIANO</span>
             </div>
         </div>
     </div>
      
-<div class="drawer-glass" id="drawer-insight" style="z-index: 3000;">
+    <div class="drawer-glass" id="drawer-insight" style="z-index: 3000;">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back"></div>
             <div class="header-title" style="font-weight: 400; color: #e5c158;" id="insight-title">INFO STRATEGICA</div>
@@ -479,10 +515,7 @@
         <button class="btn-crea" onclick="chiudiInsight()" style="margin-top: auto; margin-bottom: 20px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.3); color: #e5c158;">CHIUDI E TORNA ALL'EDITOR</button>
     </div>
     
-    <!-- ========================================== -->
-    <!-- 1. ENV IDENTITY E SUOI MODULI              -->
-    <!-- ========================================== -->
-   <div class="drawer-glass" id="env-identity">
+    <div class="drawer-glass" id="env-identity">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">IDENTITY</div>
@@ -519,6 +552,7 @@
             </div>
         </div>
     </div>
+    
     <div class="drawer-glass" id="drawer-identita">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-identity')"><i class="fas fa-chevron-left"></i></div>
@@ -564,7 +598,7 @@
             </button>
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA BIO</button>
-    </div>
+    </div> 
 
   <!-- ========================================== -->
     <!-- 2. ENV BUSINESS E SUOI MODULI              -->
