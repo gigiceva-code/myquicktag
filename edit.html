@@ -344,7 +344,7 @@
 <div id="reservation-badge" style="display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 5000; align-items: center; gap: 10px; background: rgba(10, 10, 12, 0.85); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 30px; padding: 8px 16px; backdrop-filter: blur(15px); box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
     <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.8rem;"></i>
     <div style="color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.5px;">
-        <span id="badge-target-name" style="font-weight: 700;">@brand</span> protetto per 24h
+        <span id="badge-target-name" style="font-weight: 700;">@brand</span> <span id="badge-timer-text">protetto per 24h</span>
     </div>
 </div>
 
@@ -2875,6 +2875,7 @@ async function gestisciAzioneMaster() {
       function initReservationMonitor() {
             const badge = document.getElementById('reservation-badge');
             const nameUI = document.getElementById('badge-target-name');
+            const timerTextUI = document.getElementById('badge-timer-text'); // Il nuovo contatore
 
             if (!badge || !nameUI) return;
 
@@ -2897,21 +2898,40 @@ async function gestisciAzioneMaster() {
             nameUI.innerText = '@' + NOME_SISTEMA.toUpperCase();
             badge.style.display = 'flex';
 
-            // Controllo immediato: se apri il link dopo 24h, ti sbatte fuori subito
-            if ((expiry - new Date().getTime()) <= 0) {
-                eseguiSfrattoScadenza();
-                return;
-            }
-
-            // Controllo silenzioso ogni 10 secondi in background
-            const monitorInterval = setInterval(() => {
+            // Il motore che fa tic-tac
+            function aggiornaTestoTimer() {
                 const remaining = expiry - new Date().getTime();
                 if (remaining <= 0) {
-                    clearInterval(monitorInterval);
                     eseguiSfrattoScadenza();
+                    return;
                 }
-            }, 10000);
+                
+                if (timerTextUI) {
+                    const ore = Math.floor(remaining / (1000 * 60 * 60));
+                    const minuti = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const secondi = Math.floor((remaining % (1000 * 60)) / 1000);
+                    
+                    const minStr = minuti < 10 ? "0" + minuti : minuti;
+                    const secStr = secondi < 10 ? "0" + secondi : secondi;
+                    
+                    if (ore > 0) {
+                        timerTextUI.innerText = `scade in ${ore}h ${minStr}m`;
+                    } else {
+                        // Nell'ultima ora diventa rosso e mostra i secondi per far salire l'ansia!
+                        timerTextUI.innerText = `scade tra ${minStr}m ${secStr}s`;
+                        timerTextUI.style.color = "#ff4444"; 
+                    }
+                }
+            }
+
+            aggiornaTestoTimer(); // Avvio immediato
+
+            // Loop di aggiornamento ogni secondo
+            const monitorInterval = setInterval(() => {
+                aggiornaTestoTimer();
+            }, 1000);
         }
+        
 
         function eseguiSfrattoScadenza() {
             // Crea un muro visivo nero che impedisce di fare clic sull'editor
