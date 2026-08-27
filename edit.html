@@ -348,7 +348,7 @@
                 <div style="color: #e5c158; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; white-space: nowrap; text-transform: uppercase;">
                     <span id="badge-target-name" style="font-weight: 800;">@BRAND</span> 
                     <span style="opacity: 0.5; margin: 0 4px;">|</span> 
-                    <span id="badge-timer-text">SCADE IN 24H</span>
+                    <span id="badge-timer-text">RISERVATO PER 24H</span>
                 </div>
             </div> 
               <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
@@ -2914,13 +2914,14 @@ async function gestisciAzioneMaster() {
                     
                     const minStr = minuti < 10 ? "0" + minuti : minuti;
                     const secStr = secondi < 10 ? "0" + secondi : secondi;
-                    
                     if (ore > 0) {
-                        timerTextUI.innerText = `scade in ${ore}h ${minStr}m`;
+                        timerTextUI.innerText = `riservato per ${ore}h ${minStr}m`;
                     } else {
                         // Nell'ultima ora diventa rosso e mostra i secondi per far salire l'ansia!
-                        timerTextUI.innerText = `scade tra ${minStr}m ${secStr}s`;
+                        timerTextUI.innerText = `riservato per ${minStr}m ${secStr}s`;
                         timerTextUI.style.color = "#ff4444"; 
+                     }
+                   
                     }
                 }
             }
