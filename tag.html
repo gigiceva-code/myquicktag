@@ -2090,8 +2090,8 @@ function apriSezione(tipo) {
     document.getElementById('testo-chiudi').innerText = 'INDIETRO';
     document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
 
-    if (tipo === 'pdf') {
-        let pdfLink = cacheDatiUtente.pdf_url;
+    if (tipo === 'pdf' || tipo === 'cv') {
+        let pdfLink = tipo === 'cv' ? cacheDatiUtente.cv : cacheDatiUtente.pdf_url;
         if (pdfLink) {
             if (pdfLink.startsWith('http://')) {
                 pdfLink = pdfLink.replace('http://', 'https://');
@@ -2390,7 +2390,6 @@ function apriSezione(tipo) {
 
     const contenuti = {
         'bio': { t: 'Biografia', c: cacheDatiUtente.bio || 'Nessuna bio disponibile.' },
-        'cv':  { t: 'Curriculum Vitae', c: cacheDatiUtente.cv || 'CV non ancora configurato.' }
     };
 
     if (!contenuti[tipo]) return;
