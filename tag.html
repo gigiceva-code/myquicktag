@@ -1422,19 +1422,21 @@ function gestisciVisibilitaCaselle(fields) {
     const elIdentity = document.getElementById('room-identity');
     if (elIdentity) elIdentity.style.display = 'flex';
 
-    const hasBusiness = !!fields.pdf_url || !!fields.cv || !!fields.review_url;
+    // --- MODIFICA: Business ora mostra solo Scudo Reputazione e Lead Capture (Vasetto) ---
+    const hasBusiness = !!fields.review_url || (fields.lead_capture_attivo === 'true' || fields.lead_capture_attivo === true);
     const elBusiness = document.getElementById('room-business');
     if (elBusiness) elBusiness.style.display = hasBusiness ? 'flex' : 'none';
 
+    // --- MODIFICA: Vetrina (ex Media) ora si accende anche se c'è un PDF ---
     let galleryData = [];
     try { galleryData = JSON.parse(fields.gallery_data || '[]'); } catch(e) {}
-    const hasMedia = galleryData.length > 0;
+    const hasMedia = galleryData.length > 0 || !!fields.video_url || !!fields.pdf_url;
     const elMedia = document.getElementById('room-media');
     if (elMedia) elMedia.style.display = hasMedia ? 'flex' : 'none';
 
     let canali = [];
     try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
-   const hasNetwork = !!fields.sito_web || !!fields.telefono1 || !!fields.email || (fields.config_canali && fields.config_canali !== '[]') || (fields.partners_data && fields.partners_data !== '[]');
+    const hasNetwork = !!fields.sito_web || !!fields.telefono1 || !!fields.email || (fields.config_canali && fields.config_canali !== '[]') || (fields.partners_data && fields.partners_data !== '[]');
     const elNetwork = document.getElementById('room-network');
     if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
 
@@ -1937,17 +1939,14 @@ function apriMacroArea(area, skipHistory = false) {
         if (cacheDatiUtente.bio) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('bio')"><i class="fas fa-pen-nib" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">BIOGRAFIA</span></button>`;
         }
-    }
-   else if (area === 'business') {
-        titolo.textContent = 'BUSINESS';
-        if (cacheDatiUtente.pdf_url) {
-            const label = (cacheDatiUtente.pdf_label || 'DOCUMENTO PDF').toUpperCase();
-            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('pdf')"><i class="fas fa-file-pdf" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">${label}</span></button>`;
-        }
+        // --- SPOSTATO QUI: CV ---
         if (cacheDatiUtente.cv) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('cv')"><i class="fas fa-file-alt" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">CURRICULUM VITAE</span></button>`;
         }
-        // NUOVO TASTO SCUDO REPUTAZIONE (Mostrato solo se c'è il link configurato)
+    }
+    else if (area === 'business') {
+        titolo.textContent = 'BUSINESS';
+        
         if (cacheDatiUtente.review_url) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriScudoReputazione()"><i class="fas fa-star" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">LASCIA UN FEEDBACK</span></button>`;
         }
@@ -1968,11 +1967,17 @@ function apriMacroArea(area, skipHistory = false) {
                     </div>
                 </div>
             `;
-        } 
-           }  
- else if (area === 'media') {
-        titolo.textContent = 'MEDIA';
+        }  
+    }  
+    else if (area === 'media') {
+        titolo.textContent = 'VETRINA'; // --- CAMBIATO IN VETRINA ---
         
+        // --- SPOSTATO QUI: PDF ---
+        if (cacheDatiUtente.pdf_url) {
+            const label = (cacheDatiUtente.pdf_label || 'DOCUMENTO PDF').toUpperCase();
+            sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('pdf')"><i class="fas fa-file-pdf" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left;">${label}</span></button>`;
+        }
+
         // NUOVO: SMART VIDEO VAULT
         if (cacheDatiUtente.video_url) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSmartVideo()" style="border: 1px solid rgba(229, 193, 88, 0.3); background: rgba(229, 193, 88, 0.05); margin-bottom: 15px;"><i class="fas fa-play-circle" style="font-size:1.2rem; width:25px; color:#e5c158;"></i> <span style="flex:1; text-align:left; color:#e5c158; font-weight:600;">GUARDA IL VIDEO</span></button>`;
@@ -1986,7 +1991,7 @@ function apriMacroArea(area, skipHistory = false) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('gallery')"><i class="fas fa-images" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">GALLERIA IMMAGINI</span></button>`;
         }
     }
-   else if (area === 'network') {
+    else if (area === 'network') {
         titolo.textContent = 'NETWORK';
         if (cacheDatiUtente.sito_web) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('sito')"><i class="fas fa-globe" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">SITO WEB UFFICIALE</span></button>`;
@@ -2013,7 +2018,7 @@ function apriMacroArea(area, skipHistory = false) {
         }
         // -------------------------------------
     }
-   else if (area === 'action_center') {
+    else if (area === 'action_center') {
         titolo.textContent = 'ACTION CENTER';
         
         // 1. Inserimento Azione Rapida
@@ -2067,7 +2072,6 @@ function apriMacroArea(area, skipHistory = false) {
         history.pushState(null, null, '#sezione');
     }
 }
-
 // ============================================================
 // APERTURA SEZIONE INTERNA E CONTENUTI
 // ============================================================
