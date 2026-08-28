@@ -259,41 +259,25 @@
             </div>
         </div>
         
-        <!-- MOTORE DI ANTEPRIMA IN TEMPO REALE -->
-        <div id="blocks-track" style="width: 100%; max-width: 320px; margin: 40px auto; display: flex; flex-direction: column; gap: 10px;">
-            <!-- ZONA COPERTINA (Semaforo, Flash, Bottoni) -->
-            <div id="preview-copertina" style="display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center; margin-bottom: 20px;"></div>
-
-            <!-- LE STANZE CHE SI RIEMPIONO DA SOLE -->
-            <div id="container-identity" style="display:none; flex-direction: column; width: 100%; align-items: center;">
-                <div class="room-title">IDENTITY</div>
-                <div id="room-identity" style="display: flex; flex-direction: column; width: 100%; padding-top: 10px; gap: 8px;"></div>
-            </div>
+      <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
+        <div id="mainGrid">
             
-            <div id="container-business" style="display:none; flex-direction: column; width: 100%; align-items: center;">
-                <div class="room-title">BUSINESS</div>
-                <div id="room-business" style="display: flex; flex-direction: column; width: 100%; padding-top: 10px; gap: 8px;"></div>
-            </div>
+            <!-- ZONA COPERTINA (Semaforo, Flash, Azione Rapida in Evidenza) -->
+            <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-bottom: 20px;"></div>
             
-            <div id="container-media" style="display:none; flex-direction: column; width: 100%; align-items: center;">
-                <div class="room-title">VETRINA</div>
-                <div id="room-media" style="display: flex; flex-direction: column; width: 100%; padding-top: 10px; gap: 8px;"></div>
-            </div>
+            <!-- LE STANZE STANDARD (Design Pulito, Testo Fluttuante) -->
+            <button class="room-link" id="room-identity" onclick="apriDrawer('env-identity')">IDENTITY</button>
+            <button class="room-link" id="room-business" onclick="apriDrawer('env-business')">BUSINESS</button>
+            <button class="room-link" id="room-media" onclick="apriDrawer('env-media')">VETRINA</button>
+            <button class="room-link" id="room-network" onclick="apriDrawer('env-network')">NETWORK</button>
             
-            <div id="container-network" style="display:none; flex-direction: column; width: 100%; align-items: center;">
-                <div class="room-title">NETWORK</div>
-                <div id="room-network" style="display: flex; flex-direction: column; width: 100%; padding-top: 10px; gap: 8px;"></div>
-            </div>
+            <!-- QUINTA STANZA: ACTION CENTER -->
+            <button class="room-link" id="room-action-center" onclick="apriDrawer('env-action')" style="color: var(--theme-border, #d4af37) !important; font-weight: 500 !important;">ACTION CENTER</button>
             
-            <div id="container-action" style="display:none; flex-direction: column; width: 100%; align-items: center;">
-                <div class="room-title" style="color: #10b981;">ACTION CENTER</div>
-                <div id="room-action" style="display: flex; flex-direction: column; width: 100%; padding-top: 10px; gap: 8px;"></div>
-            </div>
-            
-            <div style="height: 100px;"></div> <!-- Spazio di fine corsa per il pulsante fluttuante -->
-        </div>
-    </div>
-
+            <!-- Spazio di fine corsa per il micro-comando galleggiante -->
+            <div style="height: 100px; flex-shrink: 0;"></div>
+        </div> 
+         </div> 
 
     <!-- 🚀 IL MICRO-COMANDO LUXURY (WYSIWYG TRIGGER) -->
     <div id="mqt-magic-trigger" onclick="apriDrawer('drawer-master')" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100000; backdrop-filter: blur(15px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); transition: transform 0.2s;">
@@ -1259,117 +1243,101 @@
         }
 
         // Aggiorna fisicamente il DOM della pagina
-        function aggiornaAnteprimaLive() {
-            const track = document.getElementById('blocks-track');
-            if(!track) return;
-
-            const temaVal = document.querySelector('input[name="digital_style"]:checked')?.value || 'black_dna';
-            const coloriTema = { 'emerald': '#00E680', 'obsidian_gold': '#d4af37', 'satin_rose': '#c8968e', 'titanium': '#b0b0b5', 'black_dna': '#ffffff' };
-            const coloreTesto = coloriTema[temaVal] || '#ffffff';
-
+       function aggiornaAnteprimaLive() {
             const previewCopertina = document.getElementById('preview-copertina');
             const roomIdentity = document.getElementById('room-identity');
             const roomBusiness = document.getElementById('room-business');
             const roomMedia = document.getElementById('room-media'); // Vetrina
             const roomNetwork = document.getElementById('room-network');
-            const roomAction = document.getElementById('room-action');
+            const roomAction = document.getElementById('room-action-center');
             
             if(!roomIdentity || !roomBusiness || !roomMedia || !roomNetwork || !roomAction || !previewCopertina) return;
 
+            // Svuota la copertina prima di ricalcolarla
             previewCopertina.innerHTML = '';
-            roomIdentity.innerHTML = '';
-            roomBusiness.innerHTML = '';
-            roomMedia.innerHTML = '';
-            roomNetwork.innerHTML = '';
-            roomAction.innerHTML = '';
-
-            const baseStyle = `font-size: 0.75rem; letter-spacing: 2px; font-weight: 500; color: ${coloreTesto}; text-transform: uppercase; text-align: center; width: 100%; cursor: pointer; transition: opacity 0.3s ease; padding: 5px 0;`;
-
-            // --- ZONA COPERTINA (Semaforo, Flash, Azione Rapida in evidenza) ---
+            
+            // --- 1. ZONA COPERTINA (Design Pillole Luxury) ---
+            
+            // Semaforo
             const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
             const statusText = document.getElementById('field-status-text') ? document.getElementById('field-status-text').value.trim() : "";
             if (statusColor !== "") {
-                let colorHex = '#10b981'; let icona = '🟢';
-                if (statusColor === 'yellow') { colorHex = '#f59e0b'; icona = '🟡'; }
-                if (statusColor === 'red') { colorHex = '#ef4444'; icona = '🔴'; }
+                let colorHex = '#10b981'; let borderHex = 'rgba(16, 185, 129, 0.3)'; let bgHex = 'rgba(16, 185, 129, 0.05)';
+                if (statusColor === 'yellow') { colorHex = '#f59e0b'; borderHex = 'rgba(245, 158, 11, 0.3)'; bgHex = 'rgba(245, 158, 11, 0.05)'; }
+                if (statusColor === 'red') { colorHex = '#ef4444'; borderHex = 'rgba(239, 68, 68, 0.3)'; bgHex = 'rgba(239, 68, 68, 0.05)'; }
                 const displayTesto = statusText !== "" ? statusText.toUpperCase() : 'LIVE STATUS';
-                previewCopertina.innerHTML += `<div style="color: ${colorHex}; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 8px 0; background: rgba(0,0,0,0.4); border-radius: 8px;" onclick="apriDrawer('drawer-live-status')">${icona} ${displayTesto}</div>`;
+                
+                previewCopertina.innerHTML += `
+                <div class="feature-pill" style="border-color: ${borderHex}; background: ${bgHex};" onclick="apriDrawer('drawer-live-status')">
+                    <div class="led-dot" style="background-color: ${colorHex}; box-shadow: 0 0 8px ${colorHex};"></div>
+                    <span style="color: ${colorHex};">${displayTesto}</span>
+                </div>`;
             }
 
+            // MQT Flash
             const flashText = document.getElementById('field-flash-text') ? document.getElementById('field-flash-text').value.trim() : "";
             if (flashText !== "") {
-                previewCopertina.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 8px 0; background: rgba(229,193,88,0.1); border-radius: 8px;" onclick="apriDrawer('drawer-flash')">⚡ FLASH: ${flashText.toUpperCase()}</div>`;
+                previewCopertina.innerHTML += `
+                <div class="feature-pill pulsing-flash" style="border-color: rgba(229, 193, 88, 0.3); background: rgba(229, 193, 88, 0.05);" onclick="apriDrawer('drawer-flash')">
+                    <i class="fas fa-bolt" style="color: #e5c158; font-size: 0.8rem;"></i>
+                    <span style="color: #e5c158;">${flashText.toUpperCase()}</span>
+                </div>`;
             }
 
+            // Azione Rapida in Copertina
             const qaInput = document.getElementById('field-qa-label');
             const qaCopertina = document.getElementById('input-qa-copertina') && document.getElementById('input-qa-copertina').checked;
-            
+            let hasActionInRoom = false;
+
             if (qaInput && qaInput.value.trim() !== "") {
                 const testoScelto = qaInput.value.trim().toUpperCase();
-                const bottoneHTML = `<div class="dynamic-theme-text" style="${baseStyle} border: 1px solid #10b981; color: #10b981; padding: 10px; border-radius: 12px; font-weight: 700;" onclick="apriDrawer('drawer-quick')">🚀 ${testoScelto}</div>`;
-                if (qaCopertina) { previewCopertina.innerHTML += bottoneHTML; } else { roomAction.innerHTML += bottoneHTML; }
+                if (qaCopertina) {
+                    previewCopertina.innerHTML += `
+                    <div class="feature-pill" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);" onclick="apriDrawer('drawer-quick')">
+                        <i class="fas fa-rocket" style="color: #10b981; font-size: 0.8rem;"></i>
+                        <span style="color: #10b981; font-weight: 700;">${testoScelto}</span>
+                    </div>`;
+                } else {
+                    hasActionInRoom = true; // Va nell'Action Center
+                }
             }
 
-            // --- STANZA 1: IDENTITY ---
-            const bioInput = document.getElementById('field-bio');
-            if (bioInput && bioInput.value.trim() !== "") { roomIdentity.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-bio')">BIO E PRESENTAZIONE</div>`; }
 
-            const cvInput = document.getElementById('field-cv');
-            if (cvInput && cvInput.value.trim() !== "") { roomIdentity.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-cv')">CURRICULUM VITAE</div>`; }
-
-            // --- STANZA 2: BUSINESS ---
-            const reviewUrl = document.getElementById('field-review-url') ? document.getElementById('field-review-url').value.trim() : "";
-            if (reviewUrl !== "") { roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-review')">⭐ FEEDBACK CLIENTI</div>`; }
-            const isLeadActive = document.getElementById('input-lead-attivo') && document.getElementById('input-lead-attivo').checked;
-            if (isLeadActive) { roomBusiness.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} border-color: #e5c158; color: #e5c158;" onclick="apriDrawer('drawer-lead-capture')"><i class="fas fa-bullseye"></i> RICHIESTA CONTATTO ATTIVA</div>`; }
-
-            // --- STANZA 3: VETRINA ---
-            const videoUrl = document.getElementById('field-video-url') ? document.getElementById('field-video-url').value.trim() : "";
-            if (videoUrl !== "") { roomMedia.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-video')">▶️ SMART VIDEO</div>`; }
+            // --- 2. MOTORE A SCOMPARSA DELLE STANZE ---
+            // Il sistema controlla in tempo reale cosa hai compilato. Se una stanza è vuota, scompare.
             
-            const pdfLabel = document.getElementById('field-pdf-label') ? document.getElementById('field-pdf-label').value.trim() : "Scarica Documento";
-            const pdfUrl = document.getElementById('field-pdf-url') ? document.getElementById('field-pdf-url').value : "";
-            if (pdfUrl !== "") { roomMedia.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; text-align: center; width: 100%; padding: 5px 0;" onclick="apriDrawer('drawer-showcase')">📄 ${pdfLabel.toUpperCase()}</div>`; }
+            // Identity
+            const hasBio = document.getElementById('field-bio') && document.getElementById('field-bio').value.trim() !== "";
+            const hasCV = document.getElementById('field-cv') && document.getElementById('field-cv').value.trim() !== "";
+            roomIdentity.style.display = (hasBio || hasCV) ? 'flex' : 'none';
 
-            const galleryDataStr = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
-            let arrayGalleria = [];
-            try { arrayGalleria = JSON.parse(galleryDataStr); } catch(e) {}
-            if (arrayGalleria.length > 0) {
-                let grigliaHTML = '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; pointer-events: none; margin-top: 5px;">';
-                arrayGalleria.forEach(url => {
-                    let urlMin = url; if(url.includes('/upload/')) urlMin = url.replace('/upload/', '/upload/c_fill,w_100,h_100,q_auto,f_auto/');
-                    grigliaHTML += `<div style="aspect-ratio: 1; border-radius: 6px; background-image: url('${urlMin}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);"></div>`;
-                });
-                grigliaHTML += '</div>';
-                roomMedia.innerHTML += `<div style="color: #e5c158; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; text-align: center; width: 100%; padding: 5px 0; cursor: pointer;" onclick="apriDrawer('drawer-gallery')">🖼️ GALLERIA IMMAGINI${grigliaHTML}</div>`;
-            }
+            // Business
+            const hasReview = document.getElementById('field-review-url') && document.getElementById('field-review-url').value.trim() !== "";
+            const hasLead = document.getElementById('input-lead-attivo') && document.getElementById('input-lead-attivo').checked;
+            roomBusiness.style.display = (hasReview || hasLead) ? 'flex' : 'none';
 
-            // --- STANZA 4: NETWORK ---
-            const telInput = document.getElementById('field-tel1');
-            const emailInput = document.getElementById('field-email');
-            if ((telInput && telInput.value.trim() !== "") || (emailInput && emailInput.value.trim() !== "")) { roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-contatti')">SALVA CONTATTO (RUBRICA)</div>`; }
-            const sitoInput = document.getElementById('field-sito');
-            if (sitoInput && sitoInput.value.trim() !== "") { roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-sito')">SITO WEB UFFICIALE</div>`; }
-            const internalTrack = document.getElementById('social-internal-track');
-            if (internalTrack && internalTrack.children.length > 0) { roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle}" onclick="apriDrawer('drawer-social')">COLLEGAMENTI E SOCIAL</div>`; }
-            const partnersStr = document.getElementById('field-partners-data') ? document.getElementById('field-partners-data').value : "[]";
-            let arrayP = []; try { arrayP = JSON.parse(partnersStr); } catch(e) {}
-            if (arrayP.length > 0) { roomNetwork.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-partners')">🤝 CERCHIA DI FIDUCIA (${arrayP.length})</div>`; }
+            // Vetrina
+            const hasVideo = document.getElementById('field-video-url') && document.getElementById('field-video-url').value.trim() !== "";
+            const hasPdf = document.getElementById('field-pdf-url') && document.getElementById('field-pdf-url').value.trim() !== "";
+            const galleryData = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
+            const hasGallery = galleryData !== "[]" && galleryData !== "";
+            roomMedia.style.display = (hasVideo || hasPdf || hasGallery) ? 'flex' : 'none';
 
-            // --- STANZA 5: ACTION CENTER ---
-            const qpPremioA = document.getElementById('field-qp-premio-a') ? document.getElementById('field-qp-premio-a').value.trim() : "";
-            if(qpPremioA !== "") { roomAction.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #10b981;" onclick="apriDrawer('drawer-quickpass')">🎁 QUICK PASS ATTIVO</div>`; }
-            const isShopActive = document.getElementById('input-shop-attivo') && document.getElementById('input-shop-attivo').checked;
-            if (isShopActive) { roomAction.innerHTML += `<div class="dynamic-theme-text" style="${baseStyle} color: #e5c158;" onclick="apriDrawer('drawer-shop')">🛒 VENDITA ISTANTANEA (FOMO)</div>`; }
+            // Network
+            const hasTel = document.getElementById('field-tel1') && document.getElementById('field-tel1').value.trim() !== "";
+            const hasEmail = document.getElementById('field-email') && document.getElementById('field-email').value.trim() !== "";
+            const hasSito = document.getElementById('field-sito') && document.getElementById('field-sito').value.trim() !== "";
+            const trackSocial = document.getElementById('social-internal-track');
+            const hasSocial = trackSocial && trackSocial.children.length > 0;
+            const partnersData = document.getElementById('field-partners-data') ? document.getElementById('field-partners-data').value : "[]";
+            const hasPartners = partnersData !== "[]" && partnersData !== "";
+            roomNetwork.style.display = (hasTel || hasEmail || hasSito || hasSocial || hasPartners) ? 'flex' : 'none';
 
-            // GESTIONE VISIBILITÀ DELLE STANZE VUOTE
-            document.getElementById('container-identity').style.display = roomIdentity.innerHTML === '' ? 'none' : 'flex';
-            document.getElementById('container-business').style.display = roomBusiness.innerHTML === '' ? 'none' : 'flex';
-            document.getElementById('container-media').style.display = roomMedia.innerHTML === '' ? 'none' : 'flex';
-            document.getElementById('container-network').style.display = roomNetwork.innerHTML === '' ? 'none' : 'flex';
-            document.getElementById('container-action').style.display = roomAction.innerHTML === '' ? 'none' : 'flex';
+            // Action Center
+            const hasQuickPass = document.getElementById('field-qp-premio-a') && document.getElementById('field-qp-premio-a').value.trim() !== "";
+            const hasShop = document.getElementById('input-shop-attivo') && document.getElementById('input-shop-attivo').checked;
+            roomAction.style.display = (hasQuickPass || hasShop || hasActionInRoom) ? 'flex' : 'none';
         }
-
         // ==========================================
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
