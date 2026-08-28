@@ -702,17 +702,29 @@
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA VETRINA</button>
     </div>
 
-    <div class="drawer-glass" id="drawer-cv">
+   <div class="drawer-glass" id="drawer-cv">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-back" onclick="apriDrawer('env-identity')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">CURRICULUM VITAE</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 10px;">
-         <textarea id="field-cv" placeholder="Scrivi o incolla qui il tuo percorso professionale, le tue esperienze o la storia della tua azienda..." style="width: 100%; height: 180px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; resize: none;"></textarea> 
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center;">
-                Il testo verrà formattato con un'elegante cornice nella tua Tag.
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
+                Carica il tuo CV in formato PDF. Verrà ospitato nel nostro cloud ad alta velocità.
             </div>
+            <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px;">
+                <input type="file" id="cv-upload" accept="application/pdf" style="display: none;" onchange="gestisciUploadCV(event)">
+                <label for="cv-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #fff; margin-bottom: 10px;"></i>
+                    <span id="cv-upload-text" style="color: #fff; font-size: 0.8rem; font-weight: 600;">Seleziona il PDF del tuo CV</span>
+                    <span style="font-size: 0.6rem; color: rgba(255,255,255,0.4); margin-top: 5px;">Max 5 MB</span>
+                </label>
+                <div id="cv-loader" style="display: none; margin-top: 15px; width: 100%; text-align: center;">
+                    <i class="fas fa-circle-notch fa-spin" style="color: #10b981; font-size: 1.2rem;"></i>
+                    <span style="display: block; font-size: 0.7rem; color: #10b981; margin-top: 5px;">Caricamento in corso...</span>
+                </div>
+            </div>
+            <input type="hidden" id="field-cv" value="">
         </div>
         <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
             <button type="button" onclick="eliminaAsset('cv')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -721,6 +733,7 @@
         </div>
         <button class="btn-crea" onclick="confermaEChiudiCassetto()">SALVA CV</button>
     </div>
+       
 <div class="drawer-glass" id="drawer-review">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('env-business')"><i class="fas fa-chevron-left"></i></div>
@@ -2917,6 +2930,44 @@ async function gestisciAzioneMaster() {
                 event.target.value = '';
             }
         }
+        async function gestisciUploadCV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.type !== 'application/pdf') {
+                alert("Formato non valido. Seleziona un file PDF.");
+                return;
+            }
+
+            document.getElementById('cv-loader').style.display = 'block';
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'myquicktag_upload'); 
+
+            try {
+                const response = await fetch('https://api.cloudinary.com/v1_1/etgsaztr/auto/upload', {
+                    method: 'POST', body: formData
+                });
+                const data = await response.json();
+
+                if (data.secure_url) {
+                    document.getElementById('field-cv').value = data.secure_url;
+                    const testocv = document.getElementById('cv-upload-text');
+                    if (testocv) {
+                        testocv.innerHTML = 'CV CARICATO ✅<br><span style="font-size: 0.6rem; color: #fff;">Pronto per il profilo</span>';
+                        testocv.style.color = '#10b981';
+                    }
+                    aggiornaAnteprimaLive();
+                } else {
+                    alert("Errore dal server Cloudinary. Riprova.");
+                }
+            } catch (error) {
+                alert("Errore di connessione alla rete.");
+            } finally {
+                document.getElementById('cv-loader').style.display = 'none';
+                event.target.value = '';
+            }
+        }
 
         function eliminaAsset(tipo) {
             if (tipo === 'sito') {
@@ -2935,8 +2986,13 @@ async function gestisciAzioneMaster() {
                     testopdf.innerHTML = 'Seleziona un file PDF';
                     testopdf.style.color = '#fff';
                 }
-            } else if (tipo === 'cv') {
+           } else if (tipo === 'cv') {
                 document.getElementById('field-cv').value = '';
+                const testocv = document.getElementById('cv-upload-text');
+                if (testocv) {
+                    testocv.innerHTML = 'Seleziona il PDF del tuo CV';
+                    testocv.style.color = '#fff';
+                }
             } else if (tipo === 'social') {
                 const track = document.getElementById('social-internal-track');
                 if(track) track.innerHTML = '';
