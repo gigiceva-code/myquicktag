@@ -2770,18 +2770,18 @@ async function gestisciAzioneMaster() {
             }
         }
 
-        async function gestisciUploadGalleria(event) {
+       async function gestisciUploadGalleria(event) {
             const files = event.target.files;
             if (!files || files.length === 0) return;
 
             const hiddenField = document.getElementById('field-gallery-data');
             let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
 
-           // Limiti Dinamici per Piano
-            const limiteMax = userPlan === 'GOLD' ? 9 : 3;
+            // Limiti Dinamici per Piano
+            const limiteMax = typeof userPlan !== 'undefined' && userPlan === 'GOLD' ? 9 : 3;
 
             if (arrayAttuale.length + files.length > limiteMax) {
-                alert(`Attenzione: Il piano ${userPlan} consente un massimo di ${limiteMax} foto.\nNe hai già caricate ${arrayAttuale.length} e stai cercando di aggiungerne ${files.length}.`);
+                alert(`Attenzione: Il piano consente un massimo di ${limiteMax} foto.\nNe hai già caricate ${arrayAttuale.length} e stai cercando di aggiungerne ${files.length}.`);
                 event.target.value = '';
                 return;
             }
@@ -2795,32 +2795,24 @@ async function gestisciAzioneMaster() {
                 }
             }
 
-            // 1. Mostriamo subito le anteprime LOCALI per ingannare l'attesa
-            const arrayOriginale = [...arrayAttuale];
-            const localUrls = fileArray.map(file => URL.createObjectURL(file));
-            hiddenField.value = JSON.stringify([...arrayAttuale, ...localUrls]);
-            disegnaGrigliaGalleria();
-            aggiornaAnteprimaLive();
-
-            // 2. Trasformiamo la rotellina in un indicatore di progresso stile lusso
+            // 1. Mostriamo subito l'interfaccia di caricamento (Senza intasare la RAM con anteprime giganti)
             const loader = document.getElementById('gallery-loader');
             loader.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:center; background:rgba(0,0,0,0.7); padding:12px 24px; border-radius:12px; border:1px solid #e5c158; margin-top:10px;">
                     <i class="fas fa-circle-notch fa-spin" style="color: #e5c158; font-size:1.5rem; margin-bottom:8px;"></i>
-                    <span id="gallery-progress" style="color:#e5c158; font-size:0.75rem; font-weight:600; letter-spacing:1px;">Preparazione...</span>
+                    <span id="gallery-progress" style="color:#e5c158; font-size:0.75rem; font-weight:600; letter-spacing:1px;">Avvio caricamento...</span>
                 </div>
             `;
             loader.style.display = 'block';
 
-            // 3. Stacchiamo l'upload dal thread principale per non far "congelare" lo schermo del telefono
+            // 2. Stacchiamo l'upload per non congelare lo schermo
             setTimeout(async () => {
-                let finalArray = [...arrayOriginale];
+                let finalArray = [...arrayAttuale];
                 let successCount = 0;
                 const progressText = document.getElementById('gallery-progress');
 
-                // Caricamento in CODA (Sequenziale) - Zero stress per il processore
                 for (let i = 0; i < fileArray.length; i++) {
-                    if (progressText) progressText.innerText = `Caricamento ${i + 1} di ${fileArray.length}`;
+                    if (progressText) progressText.innerText = `Caricamento ${i + 1} di ${fileArray.length}...`;
                     
                     const formData = new FormData();
                     formData.append('file', fileArray[i]);
@@ -2831,9 +2823,15 @@ async function gestisciAzioneMaster() {
                             method: 'POST', body: formData
                         });
                         const data = await response.json();
+                        
                         if (data.secure_url) {
                             finalArray.push(data.secure_url);
                             successCount++;
+                            
+                            // Disegniamo la miniatura appena Cloudinary ci dà l'ok
+                            hiddenField.value = JSON.stringify(finalArray);
+                            disegnaGrigliaGalleria();
+                            if(typeof aggiornaAnteprimaLive === 'function') aggiornaAnteprimaLive();
                         }
                     } catch (error) {
                         console.error("Errore foto " + i, error);
@@ -2841,20 +2839,16 @@ async function gestisciAzioneMaster() {
                 }
 
                 if (successCount < fileArray.length) {
-                    alert(`Completato con errori: caricate ${successCount} su ${fileArray.length}. Se la connessione è debole, caricale a gruppi più piccoli.`);
+                    alert(`Completato con errori: caricate ${successCount} su ${fileArray.length}.`);
                 }
 
-                // Sostituiamo i link finti con quelli definitivi del cloud
-                hiddenField.value = JSON.stringify(finalArray);
-                disegnaGrigliaGalleria();
-                aggiornaAnteprimaLive();
-                
                 // Ripristino grafica base del bottone
                 loader.style.display = 'none';
                 loader.innerHTML = `<i class="fas fa-circle-notch fa-spin" style="color: #e5c158;"></i>`;
                 event.target.value = ''; 
-            }, 150); // 150 ms di respiro per lasciar disegnare la griglia finta
+            }, 100); 
         }
+
         function disegnaGrigliaGalleria() {
             const grid = document.getElementById('gallery-preview-grid');
             const hiddenField = document.getElementById('field-gallery-data');
@@ -2863,19 +2857,24 @@ async function gestisciAzioneMaster() {
             let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
             grid.innerHTML = ""; 
 
-            arrayAttuale.forEach((url, index) => {
+            arrayAttuale.forEach((urlOriginale, index) => {
+                // TRUCCO ANTI-CRASH RAM: Chiediamo a Cloudinary di inviare una miniatura leggerissima (w_300, q_auto)
+                let urlMiniatura = urlOriginale;
+                if(urlOriginale.includes('/upload/')) {
+                    urlMiniatura = urlOriginale.replace('/upload/', '/upload/c_fill,w_300,h_300,q_auto,f_auto/');
+                }
+
                 const div = document.createElement('div');
-                div.style.cssText = `position: relative; width: 100%; aspect-ratio: 1; border-radius: 8px; background-image: url('${url}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;`;
+                div.style.cssText = `position: relative; width: 100%; aspect-ratio: 1; border-radius: 8px; background-image: url('${urlMiniatura}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;`;
                 
-                // Cliccando sull'immagine, si espande
-                div.onclick = function() { espandiImmagine(url); };
+                div.onclick = function() { if(typeof espandiImmagine === 'function') espandiImmagine(urlOriginale); };
                 
                 const btnDelete = document.createElement('div');
                 btnDelete.innerHTML = '<i class="fas fa-times"></i>';
                 btnDelete.style.cssText = `position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.9); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; cursor: pointer; z-index: 2;`;
                 
                 btnDelete.onclick = function(e) { 
-                    e.stopPropagation(); // Evita che il clic sul cestino apra lo zoom
+                    e.stopPropagation(); 
                     rimuoviImmagineGalleria(index); 
                 };
 
@@ -2883,15 +2882,15 @@ async function gestisciAzioneMaster() {
                 grid.appendChild(div);
             });
         }
+
         function rimuoviImmagineGalleria(index) {
             const hiddenField = document.getElementById('field-gallery-data');
             let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
             arrayAttuale.splice(index, 1); 
             hiddenField.value = JSON.stringify(arrayAttuale); 
             disegnaGrigliaGalleria(); 
-            aggiornaAnteprimaLive(); 
+            if(typeof aggiornaAnteprimaLive === 'function') aggiornaAnteprimaLive(); 
         }
-
         async function gestisciUploadPDF(event) {
             const file = event.target.files[0];
             if (!file) return;
