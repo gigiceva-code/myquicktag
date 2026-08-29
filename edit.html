@@ -231,7 +231,7 @@
 <body>
     
     <!-- IL PROFILO LIVE WYSIWYG -->
-    <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
+   <div id="profile-content" class="app-container locked" data-theme="black_dna" data-layout="badge">
         
         <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 0 auto 25px auto; width: max-content;">
             <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.75rem;"></i>
@@ -278,21 +278,25 @@
             <div style="height: 100px; flex-shrink: 0;"></div>
         </div> 
          </div>
-    
-<!-- 🚀 IL MICRO-COMANDO LUXURY (WYSIWYG TRIGGER) -->
-    <div id="mqt-magic-trigger" onclick="apriDrawer('drawer-master')" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100000; transition: opacity 0.3s ease, transform 0.2s;">
+
+ <!-- 🚀 IL MOTORE CENTRALE: MINILOGO A DUE STATI -->
+    <div id="dynamic-trigger-area" style="position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 1000; transition: opacity 0.4s ease;">
         
-        <!-- Il Minilogo Esatto della Tag Pubblica (Bianco, senza sfondi neri) -->
-        <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
-            <div style="position: absolute; width: 30px; height: 30px; border: 2px solid #ffffff; border-radius: 50%; box-sizing: border-box; opacity: 0.8;"></div>
-            <div style="position: absolute; width: 3px; height: 10px; background: #ffffff; bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
-            <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
+        <div onclick="gestisciAzioneMinilogo()" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <!-- Minilogo Originale MQT (Design puro) -->
+            <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
+                <div style="position: absolute; width: 30px; height: 30px; border: 2px solid #50C878; border-radius: 50%; box-sizing: border-box; opacity: 0.9;"></div>
+                <div style="position: absolute; width: 3px; height: 10px; background: #50C878; bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
+                
+                <!-- LED Autosave Incastonato (Invisibile finché non salva) -->
+                <div id="autosave-dot" style="position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; background: #10b981; border-radius: 50%; display: none; box-shadow: 0 0 10px #10b981; animation: pulseSaveSync 1.5s infinite;"></div>
+            </div>
+            
+            <!-- Dicitura Dinamica che cambia in base allo stato -->
+            <span id="testo-trigger-dinamico" style="font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: #50C878; font-weight: 500;">ENTRA E MODIFICA</span>
         </div>
-        
-        <!-- Pallino Auto-Save (Spostato leggermente per adattarsi alla trasparenza) -->
-        <div id="autosave-dot" style="position: absolute; top: 6px; right: 6px; width: 10px; height: 10px; background: #10b981; border-radius: 50%; display: none; box-shadow: 0 0 10px #10b981; animation: pulseSaveSync 1.5s infinite;"></div>
     </div>
- 
 
     <!-- ============================================================ -->
     <!-- I CASSETTI DELL'EDITOR (Nascosti dietro le quinte)           -->
@@ -1345,6 +1349,21 @@
             const hasShop = document.getElementById('input-shop-attivo') && document.getElementById('input-shop-attivo').checked;
             roomAction.style.display = (hasQuickPass || hasShop || hasActionInRoom) ? 'flex' : 'none';
         }
+        function gestisciAzioneMinilogo() {
+            const container = document.getElementById('profile-content');
+            const testoTrigger = document.getElementById('testo-trigger-dinamico');
+
+            // Se la Tag è chiusa (Modalità Copertina)
+            if (container.classList.contains('locked')) {
+                // Sblocca la Tag: scompare l'avatar e salgono le stanze!
+                container.classList.remove('locked');
+                container.classList.add('unlocked');
+                testoTrigger.innerText = "PLANCIA COMANDI"; // Cambia il testo
+            } else {
+                // Se la Tag è già aperta, apre l'editor
+                apriDrawer('drawer-master');
+            }
+        }
         // ==========================================
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
@@ -1382,6 +1401,8 @@
 
             if (window.location.hash !== '#menu') {
                 history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
+               const triggerArea = document.getElementById('dynamic-trigger-area');
+            if(triggerArea) { triggerArea.style.opacity = '0'; triggerArea.style.pointerEvents = 'none'; } 
             }
         }
 
@@ -1411,6 +1432,8 @@
             if (window.location.hash !== '#menu') {
                 eseguiChiusuraGrafica();
                 eseguiAutoSaveInvisibile(); // Auto-save anche se torna indietro col tasto nativo
+               const triggerArea = document.getElementById('dynamic-trigger-area');
+            if(triggerArea) { triggerArea.style.opacity = '1'; triggerArea.style.pointerEvents = 'auto'; } 
             }
         });
 
