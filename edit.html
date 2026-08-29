@@ -302,14 +302,15 @@
     <!-- I CASSETTI DELL'EDITOR (Nascosti dietro le quinte)           -->
     <!-- ============================================================ -->
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
-
-    <div class="drawer-glass" id="drawer-master">
+<div class="drawer-glass" id="drawer-master">
         <div class="drawer-header-liquido" style="margin-bottom: 10px;">
             <div class="header-back"></div>
             <div class="header-title" style="font-weight: 400; letter-spacing: 3px;">PLANCIA COMANDI</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        <div style="display: flex; flex-direction: column; flex: 1; padding: 0 5px;">
+        
+        <!-- ELENCO VOCI SCORREVOLE (Salva lo spazio su schermi piccoli) -->
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px; margin-bottom: 15px;">
             
             <div class="edit-menu-item" style="justify-content: space-between; padding-right: 0 !important;">
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-identity')">
@@ -363,10 +364,14 @@
                 <i class="fas fa-gem pillar-icon"></i><span class="pillar-text">GESTIONE PIANO</span>
             </div>
             
-            <button class="btn-crea" onclick="gestisciAzioneMaster()" id="master-action-btn" style="margin-top: 25px; background: #10b981; border: none; color: #000;">
-                <i class="fas fa-globe" id="master-action-icon"></i> <span id="master-action-text">PUBBLICA ONLINE</span>
-            </button>
         </div>
+        
+        <!-- BOTTONE PUBBLICA ANCORATO IN FONDO -->
+        <button class="btn-crea" onclick="gestisciAzioneMaster()" id="master-action-btn" style="background: #10b981; border: none; color: #000; flex-shrink: 0; padding: 18px; border-radius: 16px; margin-bottom: 5px;">
+            <i class="fas fa-globe" id="master-action-icon"></i> <span id="master-action-text">PUBBLICA ONLINE</span>
+        </button>
+    </div>
+   
     </div>
      
     <div class="drawer-glass" id="drawer-insight" style="z-index: 3000;">
