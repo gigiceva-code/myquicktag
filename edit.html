@@ -1398,7 +1398,7 @@
         // ==========================================
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
-            function apriDrawer(idDrawer) {
+           function apriDrawer(idDrawer) {
             // ==========================================================
             // 🧠 MOTORE DI ROUTING INTELLIGENTE (Memoria di navigazione)
             // ==========================================================
@@ -1411,8 +1411,7 @@
                 return; // Interrompe il codice e impedisce alla Plancia di aprirsi
             }
 
-            // Memoria: Se apri una stanza (env-) e la Plancia in quel momento è chiusa,
-            // significa logicamente che hai cliccato dalla Preview.
+            // Memoria: Se apri una stanza e la Plancia è chiusa, sei entrato dalla Preview
             if (idDrawer.startsWith('env-')) {
                 if (masterDrawer && !masterDrawer.classList.contains('open')) {
                     window.entratoDaPreview = true;
@@ -1422,9 +1421,6 @@
             }
             // ==========================================================
             
-            // Controlli Piani Premium/Gold (Da qui in giù lasci il tuo codice normale!)
-            const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
-            // ... resto della tua funzione ...
             // Controlli Piani Premium/Gold
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
@@ -1451,6 +1447,7 @@
                 drawerTarget.style.zIndex = "2005"; 
                 setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
             }
+
             // Spegne gli altri cassetti
             setTimeout(() => {
                 document.querySelectorAll('.drawer-glass').forEach(d => {
@@ -1463,9 +1460,8 @@
 
             if (window.location.hash !== '#menu') {
                 history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
-         }     
+            }
         }
-
         function chiudiSenzaSalvare() {
             if (window.location.hash === '#menu') {
                 history.back(); 
