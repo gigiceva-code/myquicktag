@@ -1676,7 +1676,7 @@
             }
         }
 
-        async function inizializzaPagina() { 
+      async function inizializzaPagina() {  
             if(NOME_SISTEMA === "tuonome.it") {
                 isLoadingDati = false;
                 
@@ -1831,6 +1831,20 @@
                         } catch(e) {}
                     } 
 
+                    // ==========================================================
+                    // 3. 🌐 POPOLAMENTO STANZE IN ANTEPRIMA (Contenuti Reali)
+                    // ==========================================================
+                    const bioContainer = document.getElementById('preview-bio-content');
+                    if (bioContainer) {
+                        bioContainer.innerHTML = f.bio ? `<p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; text-align: center; padding: 10px;">${f.bio}</p>` : `<p style="color: #64748b; font-size: 0.85rem; text-align: center;">Nessuna biografia inserita.</p>`;
+                    }
+                    
+                    const cvContainer = document.getElementById('preview-cv-content');
+                    if (cvContainer) {
+                        cvContainer.innerHTML = f.cv ? `<a href="${f.cv}" target="_blank" class="room-link" style="display: block; text-align: center; text-decoration: none; margin-top: 15px;">📄 SCARICA CURRICULUM VITAE</a>` : `<p style="color: #64748b; font-size: 0.85rem; text-align: center;">Nessun CV caricato.</p>`;
+                    }
+                    // ==========================================================
+
                     if (f.config_canali) {
                         try {
                             const canali = typeof f.config_canali === 'string' ? JSON.parse(f.config_canali) : f.config_canali;
@@ -1876,7 +1890,7 @@
                     applicaTemaLive(); 
                     aggiornaLimitiSocial(); 
                     initReservationMonitor();
-              }     
+                }     
             } catch (e) { 
                 console.error("Errore caricamento", e); 
       } finally {
@@ -1898,8 +1912,7 @@
                 if(triggerArea) triggerArea.style.opacity = '1';
 
             } 
-        } 
-
+        }
         // ==========================================
         // ALTRE FUNZIONI ESISTENTI INVARIATE
         // ==========================================
@@ -2317,11 +2330,11 @@
             aggiornaAnteprimaLive(); eseguiAutoSaveInvisibile(); chiudiSenzaSalvare();
         }
 
-     async function gestisciUploadAvatar(event) {
+    async function gestisciUploadAvatar(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            // Mostra subito l'anteprima locale (Feedback visivo immediato)
+            // 1. Anteprima immediata locale nel pannello di modifica
             const previewUrl = URL.createObjectURL(file);
             const box = document.getElementById('avatar-preview-box');
             if (box) { 
@@ -2333,7 +2346,7 @@
             const icon = document.getElementById('avatar-icon');
             if(icon) icon.style.display = 'none';
 
-            // Accende il loader
+            // 2. Accende il loader
             const loader = document.getElementById('avatar-loader');
             if(loader) loader.style.display = 'flex';
 
@@ -2342,7 +2355,7 @@
             formData.append('upload_preset', 'myquicktag_upload'); 
 
             try {
-                // Chiamata a Cloudinary (Punto di sintassi corretto!)
+                // 3. Invio a Cloudinary
                 const response = await fetch('https://api.cloudinary.com/v1_1/etgsaztr/image/upload', { 
                     method: 'POST', 
                     body: formData 
@@ -2352,19 +2365,19 @@
                 if (data.secure_url) {                            
                     const imageUrl = data.secure_url;
                     
-                    // Assegna il link definitivo al campo nascosto
+                    // Assegna il link al campo nascosto
                     document.getElementById('field-avatar-url').value = imageUrl;
 
-                    // Aggiorna l'anteprima live della Tag
+                    // 4. AGGIORNAMENTO FORZATO DELLA COPERTINA PRINCIPALE (Il fix visivo)
                     const liveContainer = document.getElementById('live-avatar-container');
                     const liveImg = document.getElementById('live-avatar-img');
                     
                     if(liveImg && liveContainer) {
                         liveImg.src = imageUrl;
-                        liveContainer.style.display = 'flex';
+                        liveContainer.style.display = 'flex'; // Rende visibile il cerchio dell'avatar
                     } 
 
-                    // 🚀 SALVATAGGIO AUTOMATICO IMMEDIATO
+                    // 5. Salva subito in bozza senza perdere tempo
                     await eseguiAutoSaveInvisibile();
 
                 } else { 
