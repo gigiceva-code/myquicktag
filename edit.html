@@ -1399,6 +1399,33 @@
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
         function apriDrawer(idDrawer) {
+            function apriDrawer(idDrawer) {
+            // ==========================================================
+            // 🧠 MOTORE DI ROUTING INTELLIGENTE (Memoria di navigazione)
+            // ==========================================================
+            const masterDrawer = document.getElementById('drawer-master');
+            
+            // Se clicchi "Indietro" per andare alla Plancia, ma eri entrato dalla Preview...
+            if (idDrawer === 'drawer-master' && window.entratoDaPreview === true) {
+                window.entratoDaPreview = false; // Reset della memoria
+                chiudiSenzaSalvare(); // Chiude il cassetto e ti lascia in Preview
+                return; // Interrompe il codice e impedisce alla Plancia di aprirsi
+            }
+
+            // Memoria: Se apri una stanza (env-) e la Plancia in quel momento è chiusa,
+            // significa logicamente che hai cliccato dalla Preview.
+            if (idDrawer.startsWith('env-')) {
+                if (masterDrawer && !masterDrawer.classList.contains('open')) {
+                    window.entratoDaPreview = true;
+                } else if (masterDrawer && masterDrawer.classList.contains('open')) {
+                    window.entratoDaPreview = false;
+                }
+            }
+            // ==========================================================
+            
+            // Controlli Piani Premium/Gold (Da qui in giù lasci il tuo codice normale!)
+            const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
+            // ... resto della tua funzione ...
             // Controlli Piani Premium/Gold
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
