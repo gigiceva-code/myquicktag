@@ -256,7 +256,7 @@
 <body>
     
     <!-- IL PROFILO LIVE WYSIWYG -->
-   <div id="profile-content" class="app-container locked" data-theme="black_dna" data-layout="badge">
+ <div id="profile-content" class="app-container locked" data-theme="black_dna" data-layout="badge" style="opacity: 0; transition: opacity 0.6s ease;">
         
         <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 0 auto 25px auto; width: max-content;">
             <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.75rem;"></i>
@@ -1822,9 +1822,8 @@
               }     
             } catch (e) { 
                 console.error("Errore caricamento", e); 
-         } finally {
+       } finally {
                 isLoadingDati = false;
-               
                 
                 // Setta il bottone in base allo stato
                 if (statoUtente === 'attivo') {
@@ -1832,6 +1831,11 @@
                 } else {
                     document.getElementById('master-action-text').innerText = "COMPLETA TAG";
                 }
+
+                // 🚀 I DATI SONO CARICATI: APRIAMO IL SIPARIO (FADE IN)
+                document.getElementById('profile-content').style.opacity = '1';
+                const triggerArea = document.getElementById('dynamic-trigger-area');
+                if(triggerArea) triggerArea.style.opacity = '1';
             }
         }
 
