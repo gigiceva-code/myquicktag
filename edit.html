@@ -2317,7 +2317,7 @@
             aggiornaAnteprimaLive(); eseguiAutoSaveInvisibile(); chiudiSenzaSalvare();
         }
 
-       async function gestisciUploadAvatar(event) {
+     async function gestisciUploadAvatar(event) {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -2342,8 +2342,11 @@
             formData.append('upload_preset', 'myquicktag_upload'); 
 
             try {
-                // Chiamata a Cloudinary
-                const response =. await fetch('https://api.cloudinary.com/v1_1/etgsaztr/image/upload', { method: 'POST', body: formData });
+                // Chiamata a Cloudinary (Punto di sintassi corretto!)
+                const response = await fetch('https://api.cloudinary.com/v1_1/etgsaztr/image/upload', { 
+                    method: 'POST', 
+                    body: formData 
+                });
                 const data = await response.json();
 
                 if (data.secure_url) {                            
@@ -2362,7 +2365,6 @@
                     } 
 
                     // 🚀 SALVATAGGIO AUTOMATICO IMMEDIATO
-                    // Non aspettiamo l'utente: blindiamo subito il logo nel database locale e in bozza!
                     await eseguiAutoSaveInvisibile();
 
                 } else { 
