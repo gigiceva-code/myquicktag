@@ -241,6 +241,15 @@
         .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
         .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
         .app-container.unlocked .username-capsule-wrapper { transform: translateY(0) !important; pointer-events: auto; }
+        /* ============================================================
+           STILE DELLE PILLOLE LIVE (Semaforo e Flash)
+           ============================================================ */
+        .action-bar-container { display: flex; align-items: center; justify-content: center; width: 100%; z-index: 5; }
+        .feature-pill { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); font-size: 0.7rem; font-weight: 600; letter-spacing: 1px; cursor: pointer; backdrop-filter: blur(10px); transition: transform 0.2s; margin: 0 auto; width: max-content; }
+        .feature-pill:active { transform: scale(0.95); }
+        .led-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .pulsing-flash { animation: pulseFlash 2s infinite; }
+        @keyframes pulseFlash { 0% { box-shadow: 0 0 0 0 rgba(229, 193, 88, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(229, 193, 88, 0); } 100% { box-shadow: 0 0 0 0 rgba(229, 193, 88, 0); } }
     </style>
 </head>
 
@@ -1370,16 +1379,17 @@
             const hasShop = document.getElementById('input-shop-attivo') && document.getElementById('input-shop-attivo').checked;
             roomAction.style.display = (hasQuickPass || hasShop || hasActionInRoom) ? 'flex' : 'none';
         }
-        function gestisciAzioneMinilogo() {
+       function gestisciAzioneMinilogo() {
             const container = document.getElementById('profile-content');
             const testoTrigger = document.getElementById('testo-trigger-dinamico');
 
-            // Se la Tag è chiusa (Modalità Copertina)
             if (container.classList.contains('locked')) {
-                // Sblocca la Tag: scompare l'avatar e salgono le stanze!
+                // Sblocca la Tag: scompare l'avatar e salgono le stanze
                 container.classList.remove('locked');
                 container.classList.add('unlocked');
-                testoTrigger.innerText = "PLANCIA COMANDI"; // Cambia il testo
+                testoTrigger.innerText = "PLANCIA COMANDI";
+                // Forza l'aggiornamento immediato del semaforo e del flash!
+                aggiornaAnteprimaLive(); 
             } else {
                 // Se la Tag è già aperta, apre l'editor
                 apriDrawer('drawer-master');
@@ -1402,6 +1412,9 @@
 
             const drawerTarget = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
+            // Spegne SEMPRE il minilogo quando si apre un qualsiasi cassetto
+            const triggerArea = document.getElementById('dynamic-trigger-area');
+            if(triggerArea) { triggerArea.style.opacity = '0'; triggerArea.style.pointerEvents = 'none'; }
 
             if (backdrop) backdrop.classList.add('active');
 
@@ -1422,9 +1435,7 @@
 
             if (window.location.hash !== '#menu') {
                 history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
-               const triggerArea = document.getElementById('dynamic-trigger-area');
-            if(triggerArea) { triggerArea.style.opacity = '0'; triggerArea.style.pointerEvents = 'none'; } 
-            }
+         }     
         }
 
         function chiudiSenzaSalvare() {
