@@ -284,11 +284,11 @@
             </div>
         </div>
         
-      <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
+      <!-- ZONA COPERTINA ESTRAIBILE (Fuori dal mainGrid per vedersi a tag chiusa) -->
+        <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-bottom: 20px; position: relative; z-index: 15;"></div>
+
+        <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
         <div id="mainGrid">
-            
-            <!-- ZONA COPERTINA (Semaforo, Flash, Azione Rapida in Evidenza) -->
-            <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-bottom: 20px;"></div>
             
             <!-- LE STANZE STANDARD (Design Pulito, Testo Fluttuante) -->
             <button class="room-link" id="room-identity" onclick="apriDrawer('env-identity')">IDENTITY</button>
@@ -1412,9 +1412,12 @@
 
             const drawerTarget = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
-            // Spegne SEMPRE il minilogo quando si apre un qualsiasi cassetto
-            const triggerArea = document.getElementById('dynamic-trigger-area');
-            if(triggerArea) { triggerArea.style.opacity = '0'; triggerArea.style.pointerEvents = 'none'; }
+            
+            // Spegne SEMPRE TUTTI i miniloghi presenti nella pagina (Anticlone)
+            document.querySelectorAll('#dynamic-trigger-area').forEach(el => {
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+            });
 
             if (backdrop) backdrop.classList.add('active');
 
@@ -1422,7 +1425,6 @@
                 drawerTarget.style.zIndex = "2005"; 
                 setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
             }
-
             // Spegne gli altri cassetti
             setTimeout(() => {
                 document.querySelectorAll('.drawer-glass').forEach(d => {
@@ -1752,27 +1754,31 @@
                     if (f.quickpass_limite && document.getElementById('field-qp-limite')) document.getElementById('field-qp-limite').value = f.quickpass_limite;
                     if (f.quickpass_scadenza && document.getElementById('field-qp-scadenza')) document.getElementById('field-qp-scadenza').value = f.quickpass_scadenza;
 
-                    if (f.modulo_vcf) {
-                        if (f.avatar_url && document.getElementById('field-avatar-url')) {
-                            document.getElementById('field-avatar-url').value = f.avatar_url;
-                            const liveImg = document.getElementById('live-avatar-img');
-                            if(liveImg) {
-                                liveImg.src = f.avatar_url;
-                                document.getElementById('live-avatar-container').style.display = 'flex';
-                                const box = document.getElementById('avatar-preview-box');
-                                if(box) {
-                                    box.style.backgroundImage = `url('${f.avatar_url}')`; box.style.backgroundSize = 'cover'; box.style.backgroundPosition = 'center'; box.style.border = '1px solid rgba(255,255,255,0.4)';
-                                    const icon = document.getElementById('avatar-icon'); if(icon) icon.style.display = 'none';
-                                }
+                   
+                      // 1. CARICAMENTO AVATAR (Sganciato e Immediato)
+                    if (f.avatar_url && document.getElementById('field-avatar-url')) {
+                        document.getElementById('field-avatar-url').value = f.avatar_url;
+                        const liveImg = document.getElementById('live-avatar-img');
+                        if(liveImg) {
+                            liveImg.src = f.avatar_url;
+                            document.getElementById('live-avatar-container').style.display = 'flex';
+                            const box = document.getElementById('avatar-preview-box');
+                            if(box) {
+                                box.style.backgroundImage = `url('${f.avatar_url}')`; box.style.backgroundSize = 'cover'; box.style.backgroundPosition = 'center'; box.style.border = '1px solid rgba(255,255,255,0.4)';
+                                const icon = document.getElementById('avatar-icon'); if(icon) icon.style.display = 'none';
                             }
                         }
+                    }
+
+                    // 2. CARICAMENTO RUBRICA E CONTATTI
+                    if (f.modulo_vcf) {
                         try {
                             const vcf = typeof f.modulo_vcf === 'string' ? JSON.parse(f.modulo_vcf) : f.modulo_vcf;
                             if (vcf.telefono1 && document.getElementById('field-tel1')) document.getElementById('field-tel1').value = vcf.telefono1;
                             if (vcf.telefono2 && document.getElementById('field-tel2')) document.getElementById('field-tel2').value = vcf.telefono2;
                             if (vcf.indirizzo && document.getElementById('field-indirizzo')) document.getElementById('field-indirizzo').value = vcf.indirizzo;
                         } catch(e) {}
-                    }
+                    } 
 
                     if (f.config_canali) {
                         try {
