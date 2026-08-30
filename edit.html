@@ -225,6 +225,22 @@
         .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
         .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; } 
+        /* ============================================================
+           IL MORPH CINEMATOGRAFICO (COPERTINA -> AMBIENTI)
+           ============================================================ */
+        .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; }
+        .app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; }
+        
+        .header-monolith { transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s ease, margin-bottom 0.6s ease !important; }
+        
+        .app-container.locked .header-monolith { transform: translateY(30vh); }
+        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
+        .app-container.locked .username-capsule-wrapper { transform: translateY(0) !important; }
+        
+        .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
+        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
+        .app-container.unlocked .username-capsule-wrapper { transform: translateY(0) !important; pointer-events: auto; }
     </style>
 </head>
 
@@ -383,7 +399,7 @@
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; padding: 0 10px;">
             <div id="insight-content" style="color: #fff; font-size: 0.8rem; line-height: 1.6; font-weight: 300;"></div>
         </div>
-        <button class="btn-crea" onclick="chiudiInsight()" style="margin-top: auto; margin-bottom: 20px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.3); color: #e5c158;">CHIUDI E TORNA ALL'EDITOR</button>
+       <button class="btn-crea" onclick="chiudiInsight()" style="margin-top: auto; margin-bottom: 20px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: #ffffff; font-size: 0.75rem; font-weight: 300; letter-spacing: 3px;">CHIUDI E TORNA ALL'EDITOR</button>
     </div>
     
     <!-- === SOTTOMENU ENV === -->
@@ -1628,7 +1644,7 @@
         async function inizializzaPagina() { 
             if(NOME_SISTEMA === "tuonome.it") {
                 isLoadingDati = false;
-                document.getElementById('mqt-magic-trigger').style.display = 'flex'; // Accende l'editor
+                
                 return; 
             }
             try {
@@ -1797,7 +1813,7 @@
                 console.error("Errore caricamento", e); 
          } finally {
                 isLoadingDati = false;
-                document.getElementById('mqt-magic-trigger').style.display = 'flex'; // Accende l'editor
+               
                 
                 // Setta il bottone in base allo stato
                 if (statoUtente === 'attivo') {
