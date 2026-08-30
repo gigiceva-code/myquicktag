@@ -256,7 +256,7 @@
 <body>
     
     <!-- IL PROFILO LIVE WYSIWYG -->
- <div id="profile-content" class="app-container locked" data-theme="black_dna" data-layout="badge" style="opacity: 0; transition: opacity 0.6s ease;">
+<div id="profile-content" class="app-container locked" data-theme="black_dna" data-layout="badge" style="opacity: 0; transition: opacity 0.8s ease;">
         
         <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 0 auto 25px auto; width: max-content;">
             <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.75rem;"></i>
@@ -282,11 +282,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+            
+            <!-- 🚀 PILLOLE INSERITE NEL MONOLITH (Così scendono insieme al nome!) -->
+            <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-top: 20px; position: relative; z-index: 15;"></div>
+            
+        </div> <!-- FINE DEL MONOLITH (Ora la copertina è qui dentro!) -->
         
-      <!-- ZONA COPERTINA ESTRAIBILE (Fuori dal mainGrid per vedersi a tag chiusa) -->
-        <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-bottom: 20px; position: relative; z-index: 15;"></div>
-
         <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
         <div id="mainGrid">
             
@@ -302,8 +303,7 @@
             <!-- Spazio di fine corsa per il micro-comando galleggiante -->
             <div style="height: 100px; flex-shrink: 0;"></div>
         </div> 
-         </div>
-
+        </div>
  <!-- 🚀 IL MOTORE CENTRALE: MINILOGO A DUE STATI -->
     <div id="dynamic-trigger-area" style="position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 1000; transition: opacity 0.4s ease;">
         
@@ -1670,7 +1670,36 @@
                 const pianoSimulato = localStorage.getItem('mqt_temp_plan_' + NOME_SISTEMA);
                 if (pianoSimulato) userPlan = pianoSimulato;
                 
-                let f = (() => { if (data.fields?.draft_json) { try { return { ...JSON.parse(data.fields.draft_json) }; } catch(e) {} } return data.fields || data; })();
+               // ========================================================
+                // MOTORE SAAS DI SELF-HEALING (Sincronizzazione Intelligente)
+                // ========================================================
+                let liveData = data.fields || data;
+                let f = { ...liveData }; // 1. La roccia: Partiamo dai dati LIVE ufficiali
+
+                if (liveData.draft_json && liveData.draft_json.trim() !== "") {
+                    try {
+                        let draftData = JSON.parse(liveData.draft_json);
+                        
+                        // 2. DIAGNOSTICA: La bozza è corrotta dal nostro vecchio bug?
+                        // Se nel live c'è un logo, ma nella bozza è sparito, è un'anomalia di sistema.
+                        let isBozzaCorrotta = !draftData.avatar_url && liveData.avatar_url;
+
+                        if (isBozzaCorrotta) {
+                            // 3. AUTO-CURA: Iniettiamo i parametri vitali dal Live alla Bozza
+                            console.warn("myquicktag: Rilevata bozza corrotta. Ripristino asset dal database Live.");
+                            draftData.avatar_url = liveData.avatar_url;
+                            draftData.digital_style = liveData.digital_style;
+                            draftData.digital_layout = liveData.digital_layout;
+                        }
+
+                        // 4. FUSIONE: La bozza (ora curata) si sovrappone al live
+                        f = { ...liveData, ...draftData };
+
+                    } catch(e) {
+                        console.error("myquicktag: Errore lettura bozza. Fallback forzato sui dati Live.");
+                    }
+                }
+                // ========================================================
 
                 if (f) {
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
@@ -1828,7 +1857,7 @@
               }     
             } catch (e) { 
                 console.error("Errore caricamento", e); 
-       } finally {
+      } finally {
                 isLoadingDati = false;
                 
                 // Setta il bottone in base allo stato
@@ -1838,12 +1867,16 @@
                     document.getElementById('master-action-text').innerText = "COMPLETA TAG";
                 }
 
+                // 🚀 FORZA L'AGGIORNAMENTO GRAFICO (Evita blocchi se ci sono stati errori di rete)
+                if (typeof applicaTemaLive === "function") applicaTemaLive();
+
                 // 🚀 I DATI SONO CARICATI: APRIAMO IL SIPARIO (FADE IN)
                 document.getElementById('profile-content').style.opacity = '1';
                 const triggerArea = document.getElementById('dynamic-trigger-area');
                 if(triggerArea) triggerArea.style.opacity = '1';
-            }
-        }
+
+            } 
+        } 
 
         // ==========================================
         // ALTRE FUNZIONI ESISTENTI INVARIATE
