@@ -770,7 +770,16 @@ async function vaiAllaVerifica() {
         return;
     }
 
-    const rawTag = tagValue.replace(/\s+/g, '').replace(/@/g, '');
+    // 1. RIMUOVE LA CHIOCCIOLA
+    const stringaSenzaChiocciola = tagValue.replace(/@/g, '').trim();
+    
+    // 2. FILTRO BLINDATO: Se c'è anche solo un punto, uno spazio o un simbolo, lo blocca subito!
+    if (/[^a-z0-9]/.test(stringaSenzaChiocciola)) {
+        alert("⚠️ Formato non valido: Il tuo @nome può contenere solo lettere e numeri. Non sono ammessi punti, spazi o caratteri speciali.");
+        return;
+    }
+
+    const rawTag = stringaSenzaChiocciola;
     const formattedTag = '@' + rawTag;
 
     // ==========================================
@@ -787,11 +796,11 @@ async function vaiAllaVerifica() {
         return; 
     }
 
- // ==========================================
+    // ==========================================
     // 2. GOLDLIST (Tappeto Rosso - Trattativa VIP)
     // ==========================================
     const goldlist = [
-        "myquicktag", "quicktag", "mqt", "official", "team", "staff", "security",
+        "official", "team", "staff", "security",
         "vip", "pro", "premium", "business", "agency", "brand", "creator", "shop", "store",
         "cocacola", "ferrari", "nike", "apple" 
     ];
@@ -814,8 +823,7 @@ async function vaiAllaVerifica() {
         // Apri il popup VIP
         apriOverlay('premium-overlay');
         return; // Ferma l'esecuzione (non chiama il server)
-    } 
-
+    }
    // ==========================================
     // SE PASSA I CONTROLLI, PROCEDIAMO NORMALMENTE
     // ==========================================
@@ -886,10 +894,12 @@ async function vaiAllaVerifica() {
         btn.style.opacity = "1";
     }
 }
+
 // 4. REGISTRAZIONE & SCUDO ANTI-RITORNO PERFETTO
 function procediAllaRegistrazione() {
     const inputField = document.getElementById('tag-input');
-    const rawTag = inputField.value.trim().toLowerCase().replace(/\s+/g, '').replace(/@/g, '');
+    // MODIFICA: Pulisce via qualsiasi punto o carattere strano che potrebbe essere sfuggito
+    const rawTag = inputField.value.trim().toLowerCase().replace(/@/g, '').replace(/[^a-z0-9]/g, '');
 
     // =========================================================
     // IL PEZZO MANCANTE: CONSEGNA DELLE CHIAVI DI PROPRIETÀ
