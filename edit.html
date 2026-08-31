@@ -2598,29 +2598,67 @@
             setInterval(aggiornaTestoTimer, 1000);
         }  
 
-        function eseguiSfrattoScadenza() {
+      function eseguiSfrattoScadenza() {
             const overlay = document.createElement('div');
             overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#fff; font-family:"Inter", sans-serif;';
             overlay.innerHTML = `
                 <i class="fas fa-lock" style="font-size: 3rem; color: #ff4444; margin-bottom: 20px;"></i>
                 <h2 style="font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Tempo Scaduto</h2>
                 <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); text-align: center; max-width: 250px; line-height: 1.6;">Le 24 ore riservate per configurare questa identità sono terminate. Il nome è stato rilasciato.</p>
-                <button onclick="window.location.href='index.html'" style="margin-top: 30px; background: #fff; color: #000; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px; cursor: pointer;">TORNA ALLA HOME</button>
+                <!-- 🚀 Bottone aggiornato: ora chiama il reset distruttivo -->
+                <button onclick="resetSessioneESci()" style="margin-top: 30px; background: #fff; color: #000; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px; cursor: pointer;">TORNA ALLA HOME</button>
             `;
             document.body.appendChild(overlay);
             localStorage.removeItem('mqt_res_expiry_' + NOME_SISTEMA); localStorage.removeItem('mqt_cache_' + NOME_SISTEMA); localStorage.removeItem('mqt_theme_' + NOME_SISTEMA); localStorage.removeItem('mqt_layout_' + NOME_SISTEMA);
         }
 
+        // ==========================================================
+        // 🛑 DISTRUZIONE SESSIONE E USCITA DI SICUREZZA (Anti-Loop)
+        // ==========================================================
+        function resetSessioneESci() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tagCorrente = urlParams.get('u');
+            
+            if (tagCorrente) {
+                // Rimuove la chiave specifica dal portachiavi multiplo
+                let chiavi = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+                chiavi = chiavi.filter(k => k !== tagCorrente);
+                localStorage.setItem('myquicktag_keys', JSON.stringify(chiavi));
+                
+                // Se l'utente attivo è quello scaduto, scollega anche lui
+                if (localStorage.getItem('loggedUser') === tagCorrente) {
+                    localStorage.removeItem('loggedUser');
+                }
+            }
+            
+            // Rimuove il flag di prenotazione temporanea
+            localStorage.removeItem('myquicktag_reserved');
+            
+            // Reindirizza pulito alla landing page
+            window.location.href = '/';
+        }
         function initDragAndDrop() {
             const trackSocial = document.getElementById('social-internal-track');
             if(trackSocial) {
                 new Sortable(trackSocial, { 
-                    handle: '.drag-handle', animation: 250, 
-                    easing: "cubic-bezier(1, 0, 0, 1)", ghostClass: 'sortable-ghost', dragClass: 'sortable-drag',
-                    onEnd: function () { aggiornaAnteprimaLive(); eseguiAutoSaveInvisibile(); }
+                    handle: '.drag-handle', 
+                    animation: 250, 
+                    easing: "cubic-bezier(1, 0, 0, 1)", 
+                    ghostClass: 'sortable-ghost', 
+                    dragClass: 'sortable-drag',
+                    // 🚀 FIX MOBILE: Costringe il telefono ad aspettare 100 millisecondi 
+                    // per capire che vuoi trascinare e non scorrere la pagina
+                    delay: 100, 
+                    delayOnTouchOnly: true, 
+                    onEnd: function () { 
+                        // 🚀 FIX API: Avvisa il sistema che l'ordine è cambiato per far scattare il salvataggio
+                        formModificato = true; 
+                        aggiornaAnteprimaLive(); 
+                        eseguiAutoSaveInvisibile(); 
+                    }
                 });
             }
-        } 
+        }
 
         function avviamyquicktag() {
             accendiIControlli(); 
