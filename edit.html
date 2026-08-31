@@ -1291,6 +1291,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     <script>
+        let formModificato = false; // Il vero Dirty Flag
+
+        // I sensori: si accorgono istantaneamente se tocchi o scrivi qualcosa
+        document.addEventListener('input', () => { formModificato = true; });
+        document.addEventListener('change', () => { formModificato = true; });
         let ultimoSalvataggio = null; // Memoria del Dirty Flag
         const NOME_SISTEMA = getNomeBrandReale();
         let isDrawerOpen = false;
@@ -1613,34 +1618,31 @@
             }; 
         } 
 
-        // Nuova funzione per l'Auto-Salvataggio (Intelligente e Leggera)
+        // Nuova funzione per l'Auto-Salvataggio (Blindata)
         async function eseguiAutoSaveInvisibile() {
             if(NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
 
+            // 🔥 IL DIRTY FLAG: Se non hai toccato nulla, bloccati. 0 API usate.
+            if (!formModificato) return; 
+
             const payloadDati = raccogliDatiDalForm();
-            const stringaDati = JSON.stringify(payloadDati);
-
-            // 🔥 IL DIRTY FLAG: Se i dati sono identici all'ultimo salvataggio, bloccati. 0 API usate.
-            if (ultimoSalvataggio === stringaDati) {
-                return; 
-            }
-
+            
             // Aggiorna l'interfaccia istantaneamente
             localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
             localStorage.setItem('mqt_theme_' + NOME_SISTEMA, payloadDati.digital_style);
             localStorage.setItem('mqt_layout_' + NOME_SISTEMA, payloadDati.digital_layout);
             applicaTemaLive();
 
-            // Accende il LED verde fluttuante SOLO se sta salvando davvero
+            // Accende il LED verde fluttuante
             const dot = document.getElementById('autosave-dot');
             if (dot) dot.style.display = 'block';
 
             try {
-                const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: stringaDati };
+                const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
                 await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) });
                 
-                // Aggiorna la memoria fotografica con i nuovi dati salvati
-                ultimoSalvataggio = stringaDati; 
+                // Salvataggio andato a buon fine, resetta il sensore!
+                formModificato = false; 
             } catch(e) {
                 console.error("AutoSave Fallito", e);
             } finally {
@@ -1963,8 +1965,6 @@
                 document.getElementById('profile-content').style.opacity = '1';
                 const triggerArea = document.getElementById('dynamic-trigger-area');
                 if(triggerArea) triggerArea.style.opacity = '1';
-                // 🚀 Scatta la fotografia iniziale per il sistema Anti-Spreco API
-                ultimoSalvataggio = JSON.stringify(raccogliDatiDalForm());
 
             } 
         }
