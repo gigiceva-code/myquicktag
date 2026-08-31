@@ -288,22 +288,23 @@
             
         </div> <!-- FINE DEL MONOLITH (Ora la copertina è qui dentro!) -->
         
-        <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
+       
+       <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
         <div id="mainGrid">
             
             <!-- LE STANZE STANDARD (Design Pulito, Testo Fluttuante) -->
-            <button class="room-link" id="room-identity" onclick="apriDrawer('env-identity')">IDENTITY</button>
-            <button class="room-link" id="room-business" onclick="apriDrawer('env-business')">BUSINESS</button>
-            <button class="room-link" id="room-media" onclick="apriDrawer('env-media')">VETRINA</button>
-            <button class="room-link" id="room-network" onclick="apriDrawer('env-network')">NETWORK</button>
+            <button class="room-link" id="room-identity" onclick="apriDrawer('view-identity')">IDENTITY</button>
+            <button class="room-link" id="room-business" onclick="apriDrawer('view-business')">BUSINESS</button>
+            <button class="room-link" id="room-media" onclick="apriDrawer('view-media')">VETRINA</button>
+            <button class="room-link" id="room-network" onclick="apriDrawer('view-network')">NETWORK</button>
             
             <!-- QUINTA STANZA: ACTION CENTER -->
-            <button class="room-link" id="room-action-center" onclick="apriDrawer('env-action')" style="color: var(--theme-border, #d4af37) !important; font-weight: 500 !important;">ACTION CENTER</button>
+            <button class="room-link" id="room-action-center" onclick="apriDrawer('view-action')" style="color: var(--theme-border, #d4af37) !important; font-weight: 500 !important;">ACTION CENTER</button>
             
             <!-- Spazio di fine corsa per il micro-comando galleggiante -->
             <div style="height: 100px; flex-shrink: 0;"></div>
         </div> 
-        </div>
+        </div> <!-- FINE PROFILE CONTENT (Non cancellare questo div!) -->
  <!-- 🚀 IL MOTORE CENTRALE: MINILOGO A DUE STATI -->
     <div id="dynamic-trigger-area" style="position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 1000; transition: opacity 0.4s ease;">
         
@@ -321,6 +322,50 @@
             <!-- Dicitura Dinamica che cambia in base allo stato -->
             <span id="testo-trigger-dinamico" style="font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: #50C878; font-weight: 500;">ENTRA E MODIFICA</span>
         </div>
+    </div>
+    <!-- ============================================================ -->
+    <!-- I CASSETTI DI ANTEPRIMA REALE (Specchio della Tag Pubblica)  -->
+    <!-- ============================================================ -->
+    <div class="drawer-glass" id="view-identity">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div>
+            <div class="header-title" style="font-weight: 400;">IDENTITY</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 10px;">
+            <div id="preview-bio-content"></div>
+            <div id="preview-cv-content"></div>
+        </div>
+    </div>
+
+    <div class="drawer-glass" id="view-business">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div><div class="header-title" style="font-weight: 400;">BUSINESS</div><div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="padding: 15px; color: #86868b; text-align: center; font-size: 0.8rem; line-height: 1.6;">I moduli Business (Scudo e Vasetto) sono attivi e visibili nella Tag Pubblica.</div>
+    </div>
+
+    <div class="drawer-glass" id="view-media">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div><div class="header-title" style="font-weight: 400;">VETRINA</div><div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="padding: 15px; color: #86868b; text-align: center; font-size: 0.8rem; line-height: 1.6;">I contenuti Media (Galleria e PDF) sono configurati. Vai alla Tag per visualizzarli in Full Screen.</div>
+    </div>
+
+    <div class="drawer-glass" id="view-network">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div><div class="header-title" style="font-weight: 400;">NETWORK</div><div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div id="preview-network-content" style="padding: 10px;">
+            <div style="padding: 15px; color: #86868b; text-align: center; font-size: 0.8rem; line-height: 1.6;">I tuoi link Social e Contatti sono operativi.</div>
+        </div>
+    </div>
+
+    <div class="drawer-glass" id="view-action">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div><div class="header-title" style="font-weight: 400; color: #d4af37;">ACTION CENTER</div><div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="padding: 15px; color: #86868b; text-align: center; font-size: 0.8rem; line-height: 1.6;">Moduli di Azione Rapida e Shop caricati.</div>
     </div>
 
     <!-- ============================================================ -->
@@ -1246,6 +1291,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     <script>
+        let ultimoSalvataggio = null; // Memoria del Dirty Flag
         const NOME_SISTEMA = getNomeBrandReale();
         let isDrawerOpen = false;
         let statoUtente = 'in attesa'; 
@@ -1567,33 +1613,40 @@
             }; 
         } 
 
-        // Nuova funzione per l'Auto-Salvataggio (Invisibile e Leggera)
+        // Nuova funzione per l'Auto-Salvataggio (Intelligente e Leggera)
         async function eseguiAutoSaveInvisibile() {
             if(NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
 
             const payloadDati = raccogliDatiDalForm();
-            
+            const stringaDati = JSON.stringify(payloadDati);
+
+            // 🔥 IL DIRTY FLAG: Se i dati sono identici all'ultimo salvataggio, bloccati. 0 API usate.
+            if (ultimoSalvataggio === stringaDati) {
+                return; 
+            }
+
             // Aggiorna l'interfaccia istantaneamente
             localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
             localStorage.setItem('mqt_theme_' + NOME_SISTEMA, payloadDati.digital_style);
             localStorage.setItem('mqt_layout_' + NOME_SISTEMA, payloadDati.digital_layout);
             applicaTemaLive();
 
-            // Accende il LED verde fluttuante per dire "Sto salvando"
+            // Accende il LED verde fluttuante SOLO se sta salvando davvero
             const dot = document.getElementById('autosave-dot');
             if (dot) dot.style.display = 'block';
 
             try {
-                const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
+                const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: stringaDati };
                 await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) });
+                
+                // Aggiorna la memoria fotografica con i nuovi dati salvati
+                ultimoSalvataggio = stringaDati; 
             } catch(e) {
                 console.error("AutoSave Fallito", e);
             } finally {
-                // Spegne il LED
                 setTimeout(() => { if (dot) dot.style.display = 'none'; }, 1000);
             }
         }
-
         // Il Bottone Ufficiale "Pubblica Online"
         async function gestisciAzioneMaster() {
             if(NOME_SISTEMA === "tuonome.it") return; 
@@ -1910,6 +1963,8 @@
                 document.getElementById('profile-content').style.opacity = '1';
                 const triggerArea = document.getElementById('dynamic-trigger-area');
                 if(triggerArea) triggerArea.style.opacity = '1';
+                // 🚀 Scatta la fotografia iniziale per il sistema Anti-Spreco API
+                ultimoSalvataggio = JSON.stringify(raccogliDatiDalForm());
 
             } 
         }
