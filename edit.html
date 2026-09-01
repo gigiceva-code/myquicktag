@@ -228,11 +228,11 @@
         /* ============================================================
            IL MORPH CINEMATOGRAFICO (COPERTINA -> AMBIENTI)
            ============================================================ */
-        .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; }
-        .app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; }
+        .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; overflow-y: hidden !important; padding: 0 !important; }
+        .app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; overflow-y: auto !important; }
         
         .header-monolith { transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
-        .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s ease, margin-bottom 0.6s ease !important; }
+        .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
         
         .app-container.locked .header-monolith { transform: translateY(30vh); }
         .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
@@ -240,7 +240,23 @@
         
         .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
         .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
-        .app-container.unlocked .username-capsule-wrapper { transform: translateY(0) !important; pointer-events: auto; }
+        .app-container.unlocked .username-capsule-wrapper { transform: translateY(-114px) !important; pointer-events: auto; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
+
+        /* TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
+        .entrance-prompt {
+            position: absolute !important; bottom: 40px !important; left: 50% !important; transform: translateX(-50%) !important;
+            display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.6s ease;
+        }
+        .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
+        
+        .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
+        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; }
+        
+        .exit-prompt { 
+            display: flex !important; flex-direction: column; align-items: center; margin-top: auto !important; margin-bottom: 0px !important; 
+            padding-top: 30px; padding-bottom: 10px; opacity: 0.5; transition: opacity 0.3s, transform 0.2s; cursor: pointer; flex-shrink: 0;
+        }
+        .exit-prompt:active { opacity: 1; transform: scale(0.95); }
         /* ============================================================
            STILE DELLE PILLOLE LIVE (Semaforo e Flash)
            ============================================================ */
@@ -287,7 +303,15 @@
             <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-top: 20px; position: relative; z-index: 15;"></div>
             
         </div> <!-- FINE DEL MONOLITH (Ora la copertina è qui dentro!) -->
-        
+        <!-- TASTO DI INGRESSO (Copertina) -->
+        <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTagPreview()">
+            <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
+                <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--core-border); border-radius: 50%; box-sizing: border-box; opacity: 0.8;"></div>
+                <div style="position: absolute; width: 3px; height: 10px; background: var(--core-border); bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
+            </div>
+            <span>ESPLORA TAG</span>
+        </div>
        
        <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
         <div id="mainGrid">
@@ -300,29 +324,20 @@
             
             <!-- QUINTA STANZA: ACTION CENTER -->
             <button class="room-link" id="room-action-center" onclick="apriDrawer('view-action')" style="color: var(--theme-border, #d4af37) !important; font-weight: 500 !important;">ACTION CENTER</button>
-            
-            <!-- Spazio di fine corsa per il micro-comando galleggiante -->
-            <div style="height: 100px; flex-shrink: 0;"></div>
-        </div> 
-        </div> <!-- FINE PROFILE CONTENT (Non cancellare questo div!) -->
- <!-- 🚀 IL MOTORE CENTRALE: MINILOGO A DUE STATI -->
-    <div id="dynamic-trigger-area" style="position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 1000; transition: opacity 0.4s ease;">
         
-        <div onclick="gestisciAzioneMinilogo()" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-            <!-- Minilogo Originale MQT (Design puro) -->
-            <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
-                <div style="position: absolute; width: 30px; height: 30px; border: 2px solid #50C878; border-radius: 50%; box-sizing: border-box; opacity: 0.9;"></div>
-                <div style="position: absolute; width: 3px; height: 10px; background: #50C878; bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
-                <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
-                
-                <!-- LED Autosave Incastonato (Invisibile finché non salva) -->
-                <div id="autosave-dot" style="position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; background: #10b981; border-radius: 50%; display: none; box-shadow: 0 0 10px #10b981; animation: pulseSaveSync 1.5s infinite;"></div>
+           <!-- TASTO DI RITORNO HOME -->
+            <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTagPreview()">
+                <span>HOME</span>
             </div>
-            
-            <!-- Dicitura Dinamica che cambia in base allo stato -->
-            <span id="testo-trigger-dinamico" style="font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: #50C878; font-weight: 500;">ENTRA E MODIFICA</span>
-        </div>
+        </div> 
+        </div> 
+    <!-- 🚀 TELECOMANDO EDITOR GLOBALE -->
+    <div onclick="apriDrawer('drawer-master')" style="position: fixed; bottom: 25px; right: 25px; cursor: pointer; z-index: 1500; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.85); padding: 12px 18px; border-radius: 30px; backdrop-filter: blur(10px); border: 1px solid rgba(80, 200, 120, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.6); transition: transform 0.2s;">
+        <i class="fas fa-pen" style="color: #50C878; font-size: 0.9rem;"></i>
+        <span style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #50C878; font-weight: 700;">EDITOR</span>
+        <div id="autosave-dot" style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: none; box-shadow: 0 0 10px #10b981;"></div>
     </div>
+ 
     <!-- ============================================================ -->
     <!-- I CASSETTI DI ANTEPRIMA REALE (Specchio della Tag Pubblica)  -->
     <!-- ============================================================ -->
@@ -1447,21 +1462,18 @@
             const hasShop = document.getElementById('input-shop-attivo') && document.getElementById('input-shop-attivo').checked;
             roomAction.style.display = (hasQuickPass || hasShop || hasActionInRoom) ? 'flex' : 'none';
         }
-       function gestisciAzioneMinilogo() {
+       function sbloccaTagPreview() {
             const container = document.getElementById('profile-content');
-            const testoTrigger = document.getElementById('testo-trigger-dinamico');
+            if (!container || !container.classList.contains('locked')) return;
+            container.classList.remove('locked');
+            container.classList.add('unlocked');
+        }
 
-            if (container.classList.contains('locked')) {
-                // Sblocca la Tag: scompare l'avatar e salgono le stanze
-                container.classList.remove('locked');
-                container.classList.add('unlocked');
-                testoTrigger.innerText = "PLANCIA COMANDI";
-                // Forza l'aggiornamento immediato del semaforo e del flash!
-                aggiornaAnteprimaLive(); 
-            } else {
-                // Se la Tag è già aperta, apre l'editor
-                apriDrawer('drawer-master');
-            }
+        function bloccaTagPreview() {
+            const container = document.getElementById('profile-content');
+            if (!container || !container.classList.contains('unlocked')) return;
+            container.classList.remove('unlocked');
+            container.classList.add('locked');
         }
         // ==========================================
         // GESTIONE CASSETTI (Il Teatro Liquido)
