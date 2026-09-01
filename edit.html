@@ -244,7 +244,7 @@
 
         /* TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
         .entrance-prompt {
-            position: absolute !important; bottom: 40px !important; left: 50% !important; transform: translateX(-50%) !important;
+            position: absolute !important; bottom: 60px !important; left: 50% !important; transform: translateX(-50%) !important;
             display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.6s ease;
         }
         .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
@@ -252,11 +252,14 @@
         .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
         .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; }
         
-        .exit-prompt { 
-            display: flex !important; flex-direction: column; align-items: center; margin-top: auto !important; margin-bottom: 0px !important; 
-            padding-top: 30px; padding-bottom: 10px; opacity: 0.5; transition: opacity 0.3s, transform 0.2s; cursor: pointer; flex-shrink: 0;
-        }
-        .exit-prompt:active { opacity: 1; transform: scale(0.95); }
+       .exit-prompt { 
+    display: flex !important; flex-direction: column; align-items: center; 
+    margin-top: auto !important; margin-bottom: 0px !important; 
+    padding-top: 30px; padding-bottom: 20px; opacity: 0.9; /* Opacità aumentata */
+    transition: opacity 0.3s, transform 0.2s; cursor: pointer; flex-shrink: 0; 
+}
+.exit-prompt span { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: #ffffff; font-weight: 500; }
+.exit-prompt i { color: #ffffff !important; font-size: 1rem !important; margin-bottom: 8px; opacity: 0.8; }
         /* ============================================================
            STILE DELLE PILLOLE LIVE (Semaforo e Flash)
            ============================================================ */
@@ -284,6 +287,15 @@
         </div> 
 
         <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
+            <!-- TOP BAR FINTA PER PARITÀ VISIVA CON LA TAG PUBBLICA -->
+            <div style="position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 15px; z-index: 100;">
+                <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 30px; opacity: 0.6; transition: opacity 0.2s;">
+                    <span style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
+                </div>
+                <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="cursor: pointer; opacity: 0.6; transition: opacity 0.2s;">
+                    <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
+                </div>
+            </div>
             <div id="live-avatar-container" class="orbital-container" style="display: none;">
                 <div class="orbital-ring" id="dna-core-ring"></div>
                 <div class="orbital-sphere">
@@ -390,7 +402,7 @@
 <div class="drawer-glass" id="drawer-master">
         <div class="drawer-header-liquido" style="margin-bottom: 10px;">
             <div class="header-back"></div>
-            <div class="header-title" style="font-weight: 400; letter-spacing: 3px;">PLANCIA COMANDI</div>
+           <div class="header-title" style="font-weight: 400; letter-spacing: 3px;">EDITOR</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         
