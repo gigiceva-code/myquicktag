@@ -1713,24 +1713,24 @@
         }
 
         function formattaBadge(testoBruto) {
-            const el = document.getElementById('tag-username');
-            if(!el) return;
-            let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
-            if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
-            el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
-            el.style.cssText = ""; 
+    const el = document.getElementById('tag-username');
+    if(!el) return;
+    let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
+    if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
+    el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
+    el.style.cssText = ""; 
 
-            if (testo.length > 35) { el.style.fontSize = "0.85rem"; } 
-            else if (testo.length > 22) { el.style.fontSize = "0.95rem"; } 
-            else { el.style.fontSize = "1.05rem"; }
+    if (testo.length > 35) { el.style.fontSize = "0.85rem"; } 
+    else if (testo.length > 22) { el.style.fontSize = "0.95rem"; } 
+    else { el.style.fontSize = "1.05rem"; }
 
-            const wrapper = document.getElementById('name-capsule-wrapper');
-            if (wrapper) {
-                if (testo.length < 16 && !testo.includes(' ')) { wrapper.classList.add('nome-corto'); } 
-                else { wrapper.classList.remove('nome-corto'); }
-            }
-        }
-
+    const wrapper = document.getElementById('name-capsule-wrapper');
+    if (wrapper) {
+        // RIGA MODIFICATA: Ora accetta fino a 18 caratteri per il formato "nome-corto"
+        if (testo.length <= 18 && !testo.includes(' ')) { wrapper.classList.add('nome-corto'); } 
+        else { wrapper.classList.remove('nome-corto'); }
+    }
+}
       async function inizializzaPagina() {  
             if(NOME_SISTEMA === "tuonome.it") {
                 isLoadingDati = false;
