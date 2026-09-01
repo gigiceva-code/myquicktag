@@ -532,19 +532,27 @@
             <div class="header-title" style="font-weight: 400;">BUSINESS</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
-            <div class="edit-menu-item" onclick="apriDrawer('drawer-review')">
+      <div class="edit-menu-item" onclick="apriDrawer('drawer-review')">
                 <i class="fas fa-star pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #e5c158;">SCUDO REPUTAZIONE</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Filtra recensioni in privato</span>
                 </div>
+                <!-- BADGE STRATEGIA -->
+                <div onclick="event.stopPropagation(); mostraInsight('LA FABBRICA DELLE 5 STELLE', '<b>Cos\'è:</b> Un filtro intelligente per le recensioni dei tuoi clienti.<br><br><b>A cosa serve:</b> A bloccare le lamentele pubbliche e spingere solo le recensioni perfette.<br><br><b>La Strategia Pro:</b> Le recensioni negative uccidono le vendite. Lo Scudo intercetta i clienti insoddisfatti (che cliccano 1, 2 o 3 stelle) deviandoli su WhatsApp o Email per permetterti di risolvere il problema in privato. Chi clicca 4 o 5 stelle viene mandato dritto su Google o TripAdvisor a farti pubblicità gratuita.', event)" style="margin-left: auto; display: flex; align-items: center; gap: 5px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                    <i class="fas fa-bolt"></i> STRATEGIA
+                </div>
             </div>
+
             <div class="edit-menu-item" onclick="apriDrawer('drawer-lead-capture')">
                 <i class="fas fa-bullseye pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #e5c158;">LEAD CAPTURE (VASETTO)</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Raccogli contatti e richieste</span>
+                </div>
+                <!-- BADGE STRATEGIA -->
+                <div onclick="event.stopPropagation(); mostraInsight('LA MACCHINA DEI CONTATTI', '<b>Cos\'è:</b> Un modulo nativo, veloce e infallibile per raccogliere dati.<br><br><b>A cosa serve:</b> A crearti un database di potenziali clienti caldi e profilati.<br><br><b>La Strategia Pro:</b> Non aspettare passivamente che ti chiamino. Offri un\'esca di valore (es. \'Lascia l\'email per sbloccare il listino segreto\' o \'Richiedi una consulenza gratuita\'). Il cliente inserisce i dati e tu ottieni lead pronti a comprare, che potrai ricontattare e a cui potrai inviare offerte mirate in futuro.', event)" style="margin-left: auto; display: flex; align-items: center; gap: 5px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                    <i class="fas fa-bolt"></i> STRATEGIA
                 </div>
             </div>
         </div>
@@ -571,17 +579,21 @@
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Carica Menu, Listini o Brochure</span>
                 </div>
             </div>
-            <div class="edit-menu-item" onclick="apriDrawer('drawer-video')">
+          <div class="edit-menu-item" onclick="apriDrawer('drawer-video')">
                 <i class="fas fa-play-circle pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #e5c158;">SMART VIDEO VAULT</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Video immersivo con CTA</span>
                 </div>
+                <!-- BADGE STRATEGIA -->
+                <div onclick="event.stopPropagation(); mostraInsight('VENDI MENTRE GUARDANO', '<b>Cos\'è:</b> Un player video immersivo con pulsante Call-to-Action fuso al suo interno.<br><br><b>A cosa serve:</b> A presentare un\'offerta o un servizio chiudendo immediatamente la vendita.<br><br><b>La Strategia Pro:</b> Un video vale mille parole, ma un bottone d\'acquisto sotto al video vale migliaia di euro. Usa questo spazio per un video di vendita o una dimostrazione. Quando il cliente è \'caldo\' dall\'entusiasmo del video, premerà la CTA atterrando direttamente sul carrello o sul tuo WhatsApp. Zero distrazioni, solo conversioni.', event)" style="margin-left: auto; display: flex; align-items: center; gap: 5px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                    <i class="fas fa-bolt"></i> STRATEGIA
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="drawer-glass" id="env-network">
+    <div class="drawer-glass" id="env-network"> 
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">NETWORK</div>
@@ -625,40 +637,65 @@
             <div class="header-title" style="font-weight: 400; color: #10b981;">ACTION CENTER</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
-            <div class="edit-menu-item" onclick="apriDrawer('drawer-quick')">
+        <div class="edit-menu-item" onclick="apriDrawer('drawer-quick')">
                 <i class="fas fa-bolt pillar-icon" style="color: #10b981;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #10b981;">AZIONE RAPIDA</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Bottone CTA in evidenza</span>
                 </div>
+                <!-- BADGE STRATEGIA (Colore Smeraldo per l'Azione Rapida) -->
+                <div onclick="event.stopPropagation(); mostraInsight('LA TUA CALL TO ACTION', '<b>Cos\'è:</b> Il pulsante principale e più in evidenza in assoluto della tua Tag.<br><br><b>A cosa serve:</b> A far compiere l\'azione prioritaria e più redditizia per il tuo business.<br><br><b>La Strategia Pro:</b> Qual è l\'azione numero uno che ti porta soldi in cassa? Prenotare un tavolo? Chiamarti per un preventivo? Inseriscila qui. Ignora le metriche di vanità e punta dritto all\'obiettivo. Rendi fisicamente impossibile per il cliente non notare e non cliccare su questo bottone dorato.', event)" style="margin-left: auto; display: flex; align-items: center; gap: 5px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                    <i class="fas fa-bolt"></i> STRATEGIA
+                </div>
             </div>
+            
             <div class="edit-menu-item" onclick="apriDrawer('drawer-live-status')">
                 <i class="fas fa-broadcast-tower pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #e5c158;">LIVE STATUS</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Il semaforo sulla tua Tag</span>
                 </div>
+                <!-- BADGE STRATEGIA -->
+                <div onclick="event.stopPropagation(); mostraInsight('IL SEMAFORO DELLE VENDITE', '<b>Cos\'è:</b> Un indicatore visivo in tempo reale della tua operatività.<br><br><b>A cosa serve:</b> A creare scarsità o spingere l\'utente al contatto immediato.<br><br><b>La Strategia Pro:</b> Usa la psicologia dei colori. Sei libero e vuoi ricevere chiamate? Metti Verde e scrivi \'Chiamami ora, sono operativo\'. Sei pieno di lavoro? Metti Rosso e scrivi \'Sold out fino a domani\'. Questo farà percepire al cliente che il tuo tempo e i tuoi servizi sono preziosi e richiestissimi, alzando il tuo valore.', event)" style="margin-left: auto; display: flex; align-items: center; gap: 5px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                    <i class="fas fa-bolt"></i> STRATEGIA
+                </div>
             </div>
+            
             <div class="edit-menu-item" onclick="apriDrawer('drawer-flash')">
                 <i class="fas fa-bolt pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #e5c158;">MQT FLASH</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Annuncio a tempo (24h)</span>
                 </div>
+                <!-- BADGE STRATEGIA -->
+                <div onclick="event.stopPropagation(); mostraInsight('L\'ANNUNCIO IMPERDIBILE', '<b>Cos\'è:</b> Un banner testuale in alto che \'bypassa\' tutto il resto e attira l\'occhio.<br><br><b>A cosa serve:</b> A comunicare urgenze, posti liberati last-minute o promozioni lampo.<br><br><b>La Strategia Pro:</b> Hai ricevuto una disdetta all\'ultimo minuto? Hai un evento speciale proprio stasera? Inseriscilo qui. Il Flash è l\'unica cosa che l\'utente non può letteralmente evitare di leggere entrando nella tua Tag. Usalo con parsimonia per comunicazioni che richiedono un\'azione fulminea, e poi fallo sparire per non abituare l\'occhio del cliente.', event)" style="margin-left: auto; display: flex; align-items: center; gap: 5px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                    <i class="fas fa-bolt"></i> STRATEGIA
+                </div>
             </div>
+            
             <div class="edit-menu-item" onclick="apriDrawer('drawer-shop')">
                 <i class="fas fa-shopping-cart pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #e5c158;">ACQUISTO ISTANTANEO</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Gate di vendita con timer</span>
                 </div>
+                
+                <!-- IL NUOVO BADGE STRATEGIA (SHOP) -->
+                <div onclick="event.stopPropagation(); mostraInsight('VENDITA D\'IMPULSO (FOMO)', '<b>Cos\'è:</b> Un gate di acquisto d\'emergenza a comparsa nativa, dotato di timer.<br><br><b>A cosa serve:</b> A forzare la vendita immediata sfruttando l\'urgenza psicologica.<br><br><b>La Strategia Pro:</b> Inserisci un prodotto, un servizio o un\'offerta incredibile con un timer di 24 ore. L\'effetto FOMO (Fear Of Missing Out) spingerà i tuoi contatti a comprare subito, direttamente dalla tua tag, prima che l\'offerta sparisca per sempre. Chiudi la vendita prima che il cliente abbia il tempo di ripensarci.', event)" style="margin-left: auto; display: flex; align-items: center; gap: 5px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                    <i class="fas fa-bolt"></i> STRATEGIA
+                </div>
             </div>
+
             <div class="edit-menu-item" onclick="apriDrawer('drawer-quickpass')">
                 <i class="fas fa-ticket-alt pillar-icon" style="color: #e5c158;"></i>
                 <div style="display: flex; flex-direction: column;">
                     <span class="pillar-text" style="color: #e5c158;">QUICK PASS</span>
                     <span style="font-size: 0.6rem; color: #86868b; margin-top: 4px; letter-spacing: 1px;">Sistema di passaparola</span>
+                </div>
+                
+                <!-- IL NUOVO BADGE STRATEGIA (QUICK PASS) -->
+                <div onclick="event.stopPropagation(); mostraInsight('IL MOTORE VIRALE (QUICK PASS)', '<b>Cos\'è:</b> Un sistema di couponing e passaparola integrato nativamente.<br><br><b>A cosa serve:</b> A trasformare i tuoi clienti attuali nei tuoi migliori venditori.<br><br><b>La Strategia Pro:</b> Non fare sconti a caso. Offri un premio irresistibile (es. un caffè omaggio o 10€ di sconto) come \'Regalo per un amico\'. Il tuo cliente invierà il pass su WhatsApp a tutta la sua rubrica per fargli un favore. Loro inquadrano, sbloccano e vengono da te a spendere. Hai appena acquisito nuovi clienti a costo zero.', event)" style="margin-left: auto; display: flex; align-items: center; gap: 5px; background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.4); color: #e5c158; font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                    <i class="fas fa-bolt"></i> STRATEGIA
                 </div>
             </div>
         </div>
