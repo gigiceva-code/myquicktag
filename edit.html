@@ -230,17 +230,22 @@
            ============================================================ */
         .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; overflow-y: hidden !important; padding: 0 !important; }
         .app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; overflow-y: auto !important; }
-        
+
         .header-monolith { transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        /* La fisica corretta dell'Avatar che collassa fluidamente */
         .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
         
         .app-container.locked .header-monolith { transform: translateY(30vh); }
         .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
-        .app-container.locked .username-capsule-wrapper { transform: translateY(0) !important; }
         
         .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
         .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
-        .app-container.unlocked .username-capsule-wrapper { transform: translateY(-114px) !important; pointer-events: auto; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
+
+        /* Il Nome non usa più translateY, sale naturalmente tirato su dall'avatar che si azzera */
+        .username-capsule-wrapper { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; pointer-events: auto; }
+        .app-container.locked .username-capsule-wrapper { transform: translateY(0) !important; }
+        .app-container.unlocked .username-capsule-wrapper { transform: translateY(0) !important; }
 
         /* TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
         .entrance-prompt {
@@ -273,6 +278,20 @@
 </head>
 
 <body>
+    <!-- LAYER VETRO PER LA TOP BAR FINTA (Parità con tag.html) -->
+    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: calc(100% - 32px); max-width: 410px; height: calc(100svh - 32px); max-height: 840px; pointer-events: none; z-index: 10000;">
+        <div style="position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 15px; pointer-events: auto;">
+            
+            <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); opacity: 0.6; transition: opacity 0.2s;">
+                <span style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
+            </div>
+            
+            <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="cursor: pointer; opacity: 0.6; transition: opacity 0.2s;">
+                <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
+            </div>
+            
+        </div>
+    </div>
     
     <!-- IL PROFILO LIVE WYSIWYG -->
 <div id="profile-content" class="app-container locked" data-theme="black_dna" data-layout="badge" style="opacity: 0; transition: opacity 0.8s ease;">
@@ -287,7 +306,7 @@
         </div> 
 
         <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
-            <!-- TOP BAR FINTA PER PARITÀ VISIVA CON LA TAG PUBBLICA -->
+           <!-- TOP BAR FINTA PER PARITÀ VISIVA CON LA TAG PUBBLICA -->
             <div style="position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 15px; z-index: 100;">
                 <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 30px; opacity: 0.6; transition: opacity 0.2s;">
                     <span style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
@@ -295,7 +314,7 @@
                 <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="cursor: pointer; opacity: 0.6; transition: opacity 0.2s;">
                     <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
                 </div>
-            </div>
+            </div> 
             <div id="live-avatar-container" class="orbital-container" style="display: none;">
                 <div class="orbital-ring" id="dna-core-ring"></div>
                 <div class="orbital-sphere">
