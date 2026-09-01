@@ -1398,10 +1398,27 @@
             // --- 2. MOTORE A SCOMPARSA DELLE STANZE ---
             // Il sistema controlla in tempo reale cosa hai compilato. Se una stanza è vuota, scompare.
             
-            // Identity
-            const hasBio = document.getElementById('field-bio') && document.getElementById('field-bio').value.trim() !== "";
-            const hasCV = document.getElementById('field-cv') && document.getElementById('field-cv').value.trim() !== "";
+         // Identity
+            const valBio = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
+            const valCV = document.getElementById('field-cv') ? document.getElementById('field-cv').value.trim() : "";
+            const hasBio = valBio !== "";
+            const hasCV = valCV !== "";
             roomIdentity.style.display = (hasBio || hasCV) ? 'flex' : 'none';
+
+            // AGGIORNAMENTO IN TEMPO REALE DELL'ANTEPRIMA (Bio e CV)
+            const bioContainer = document.getElementById('preview-bio-content');
+            if (bioContainer) {
+                bioContainer.innerHTML = hasBio 
+                    ? `<p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; text-align: center; padding: 10px;">${valBio}</p>` 
+                    : `<p style="color: #64748b; font-size: 0.85rem; text-align: center;">Nessuna biografia inserita.</p>`;
+            }
+
+            const cvContainer = document.getElementById('preview-cv-content');
+            if (cvContainer) {
+                cvContainer.innerHTML = hasCV 
+                    ? `<a href="${valCV}" target="_blank" class="room-link" style="display: block; text-align: center; text-decoration: none; margin-top: 15px;">📄 SCARICA CURRICULUM VITAE</a>` 
+                    : `<p style="color: #64748b; font-size: 0.85rem; text-align: center;">Nessun CV caricato.</p>`;
+            } 
 
             // Business
             const hasReview = document.getElementById('field-review-url') && document.getElementById('field-review-url').value.trim() !== "";
