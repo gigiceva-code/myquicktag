@@ -209,7 +209,7 @@
         .drawer-backdrop.active { opacity: 1 !important; pointer-events: auto !important; }
         .drawer-header-liquido { display: flex; justify-content: space-between; align-items: center; position: relative; margin-bottom: 25px; }
         .drawer-header-liquido .header-back { flex: 1; display: flex; justify-content: flex-start; color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; }
-        .drawer-header-liquido .header-title { flex: 3; font-size: 0.7rem; font-weight: 600; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-align: center; white-space: nowrap; }
+        .drawer-header-liquido .header-title { flex: 3; font-size: 0.7rem; font-weight: 600; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 10px; }
         .drawer-header-liquido .header-close { flex: 1; display: flex; justify-content: flex-end; color: rgba(255, 255, 255, 0.4); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; }
         
         .edit-menu-item { display: flex !important; align-items: center !important; background: transparent !important; border: none !important; border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; padding: 22px 10px !important; width: 100%; cursor: pointer; transition: all 0.3s ease !important; }
@@ -309,7 +309,7 @@
                 <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
             </div>
         </div> 
-        <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 0 auto 25px auto; width: max-content;">
+       <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 55px auto 25px auto; width: max-content; position: relative; z-index: 5;">
             <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.75rem;"></i>
             <div style="color: #e5c158; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; white-space: nowrap; text-transform: uppercase;">
                 <span id="badge-target-name" style="font-weight: 800;">@BRAND</span> 
@@ -1652,13 +1652,20 @@
             }
         }
 
-        // Gestione Tasto Indietro del telefono
+      // Gestione Tasto Indietro del telefono (Multi-livello)
         window.addEventListener('popstate', function (event) {
-            if (window.location.hash !== '#menu') {
+            const hash = window.location.hash;
+            const insightDrawer = document.getElementById('drawer-insight');
+            
+            if (hash === '#menu') {
+                // Se torniamo a #menu, significa che eravamo dentro una strategia. Chiudiamo solo quella.
+                if (insightDrawer && insightDrawer.classList.contains('open')) {
+                    insightDrawer.classList.remove('open');
+                }
+            } else if (hash === '') {
+                // Se il link è vuoto, siamo tornati alla copertina. Chiudiamo tutto.
                 eseguiChiusuraGrafica();
-                eseguiAutoSaveInvisibile(); // Auto-save anche se torna indietro col tasto nativo
-               const triggerArea = document.getElementById('dynamic-trigger-area');
-            if(triggerArea) { triggerArea.style.opacity = '1'; triggerArea.style.pointerEvents = 'auto'; } 
+                eseguiAutoSaveInvisibile();
             }
         });
 
@@ -2817,6 +2824,11 @@
                 insightDrawer.style.zIndex = "3005"; 
                 setTimeout(() => { insightDrawer.classList.add('open'); }, 10);
             }
+            
+            // Memorizza il livello per il tasto indietro Android
+            if (window.location.hash !== '#insight') {
+                history.pushState(null, "", "#insight");
+            }
         }
 
         function apriStrategia(idFeature, event) {
@@ -2828,6 +2840,11 @@
         function chiudiInsight() {
             const insightDrawer = document.getElementById('drawer-insight');
             if (insightDrawer) insightDrawer.classList.remove('open');
+            
+            // Torna indietro nella cronologia senza far chiudere l'editor
+            if (window.location.hash === '#insight') {
+                history.back();
+            }
         }
     </script>
 </body>
