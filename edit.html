@@ -308,14 +308,14 @@
             <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="cursor: pointer; opacity: 0.6; transition: opacity 0.2s;">
                 <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
             </div>
-        </div> 
-      <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 55px auto 25px auto; width: max-content; position: relative; z-index: 5;">
+      <div id="reservation-badge" style="display: none; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; width: max-content; z-index: 100;">
+            <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.75rem;"></i>
             <div style="color: #e5c158; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; white-space: nowrap; text-transform: uppercase;">
                 <span id="badge-target-name" style="font-weight: 800;">@BRAND</span> 
                 <span style="opacity: 0.5; margin: 0 4px;">|</span> 
                 <span id="badge-timer-text">RISERVATO PER 24H</span>
             </div>
-        </div> 
+        </div>
 
         <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
            
@@ -333,11 +333,8 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- 🚀 PILLOLE INSERITE NEL MONOLITH (Così scendono insieme al nome!) -->
-            <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-top: 20px; position: relative; z-index: 15;"></div>
-            
         </div> <!-- FINE DEL MONOLITH (Ora la copertina è qui dentro!) -->
+    
         <!-- TASTO DI INGRESSO (Copertina) -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTagPreview()">
             <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
@@ -350,6 +347,8 @@
        
        <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
         <div id="mainGrid">
+                <!-- 🚀 PILLOLE INSERITE NEL MONOLITH (Così scendono insieme al nome!) -->
+            <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-top: 20px; position: relative; z-index: 15;"></div>
             
             <!-- LE STANZE STANDARD (Design Pulito, Testo Fluttuante) -->
             <button class="room-link" id="room-identity" onclick="apriDrawer('view-identity')">IDENTITY</button>
@@ -1788,28 +1787,44 @@
         async function gestisciAzioneMaster() {
             if(NOME_SISTEMA === "tuonome.it") return; 
 
-            // Se l'utente non ha mai pagato, lo porta al checkout prima di pubblicare
+            const datiConfigurati = raccogliDatiDalForm();
+            
+            // LOGICA DI CONTROLLO MINIMO SINDACABILE (Senza obbligo di Logo)
+            const haBio = datiConfigurati.bio !== "";
+            const haSito = datiConfigurati.sito_web !== "";
+            const haEmail = datiConfigurati.email !== "";
+            
+            let haTelefono = false;
+            try {
+                const vcf = JSON.parse(datiConfigurati.modulo_vcf || "{}");
+                haTelefono = vcf.telefono1 !== "";
+            } catch(e) {}
+            
+            const canaliSocialCount = JSON.parse(datiConfigurati.config_canali || "[]").length;
+            const haSocial = canaliSocialCount > 0;
+
+            const haContenutoMinimo = haBio || haSito || haEmail || haTelefono || haSocial;
+
+            if (!haContenutoMinimo) {
+                alert("⚠️ Configurazione Incompleta\n\nPrima di procedere devi inserire almeno un contenuto nella tua tag.\n\nCompila almeno uno di questi campi per continuare:\n- Biografia\n- Sito Web\n- Email o Telefono\n- Un Canale Social");
+                return;
+            }
+
+            // Se l'utente non è attivo, forza il passaggio dal Checkout
             if (statoUtente !== 'attivo') {
-                const hasData = raccogliDatiDalForm().bio !== "" || raccogliDatiDalForm().sito_web !== "";
-                if (!hasData) {
-                    alert("⚠️ Profilo Incompleto\n\nPer attivare la tua Tag, compila almeno la Bio o inserisci il tuo Sito.");
-                    return;
-                }
                 const btn = document.getElementById('master-action-text');
                 if(btn) btn.innerText = "VERIFICA...";
                 window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
                 return;
             }
 
+            // Se attivo, spinge i dati live svuotando la bozza
             try {
                 const btnText = document.getElementById('master-action-text');
                 const textOriginale = btnText ? btnText.innerText : "ATTENDI...";
                 if (btnText) btnText.innerText = "PUBBLICAZIONE...";
 
-                const payloadDati = raccogliDatiDalForm();
-                
-                // Manda online (svuotando il draft)
-                const bodyRichiesta = { ...payloadDati, draft_json: "" }; 
+                const bodyRichiesta = { ...datiConfigurati, draft_json: "" }; 
                 
                 const response = await fetch('/api/update-profile', { 
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 
@@ -1828,8 +1843,6 @@
                 if (document.getElementById('master-action-text')) document.getElementById('master-action-text').innerText = "RIPROVA";
             }
         }
-
-
         // ==========================================
         // MOTORE DI CARICAMENTO E SUPPORTO (Invariati)
         // ==========================================
