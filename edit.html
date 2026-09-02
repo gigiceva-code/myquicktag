@@ -249,7 +249,7 @@
         /* La fisica corretta dell'Avatar che collassa fluidamente */
         .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
         
-        .app-container.locked .header-monolith { transform: translateY(30vh); }
+        .app-container.locked .header-monolith { transform: translateY(15vh); }
         .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
         
         .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
@@ -262,7 +262,7 @@
 
         /* TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
         .entrance-prompt {
-            position: absolute !important; bottom: 60px !important; left: 50% !important; transform: translateX(-50%) !important;
+            position: absolute !important; bottom: 35px !important; left: 50% !important; transform: translateX(-50%) !important;
             display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.6s ease;
         }
         .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
