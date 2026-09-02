@@ -367,11 +367,10 @@
             </div>
         </div> 
         </div> 
-    <!-- 🚀 TELECOMANDO EDITOR GLOBALE -->
+   <!-- 🚀 TELECOMANDO EDITOR GLOBALE -->
     <div onclick="apriDrawer('drawer-master')" style="position: fixed; bottom: 25px; right: 25px; cursor: pointer; z-index: 1500; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.85); padding: 12px 18px; border-radius: 30px; backdrop-filter: blur(10px); border: 1px solid rgba(80, 200, 120, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.6); transition: transform 0.2s;">
         <i class="fas fa-pen" style="color: #50C878; font-size: 0.9rem;"></i>
         <span style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #50C878; font-weight: 700;">EDITOR</span>
-        <div id="autosave-dot" style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: none; box-shadow: 0 0 10px #10b981;"></div>
     </div>
  
     <!-- ============================================================ -->
@@ -1743,11 +1742,19 @@
             }; 
         } 
 
-       // Funzione per l'Auto-Salvataggio
+     let ultimaFotografiaDati = ""; // Memoria per risparmiare chiamate API
+
+        // Funzione per l'Auto-Salvataggio (Intelligente, Blindata e Leggera)
         async function eseguiAutoSaveInvisibile() {
             if(NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
 
             const payloadDati = raccogliDatiDalForm();
+            const fotografiaAttuale = JSON.stringify(payloadDati);
+
+            // 🔥 IL VERO SCUDO API: Se i dati sono identici all'ultimo salvataggio, fermati.
+            if (fotografiaAttuale === ultimaFotografiaDati) return; 
+            
+            ultimaFotografiaDati = fotografiaAttuale; 
             
             // Aggiorna l'interfaccia istantaneamente
             localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
@@ -1755,20 +1762,12 @@
             localStorage.setItem('mqt_layout_' + NOME_SISTEMA, payloadDati.digital_layout);
             applicaTemaLive();
 
-            // Accende il LED verde fluttuante
-            const dot = document.getElementById('autosave-dot');
-            if (dot) dot.style.display = 'block';
-
             try {
-                const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
+                // Invio dei dati al server
+                const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: fotografiaAttuale };
                 await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) });
-                
-                // Salvataggio andato a buon fine, resetta il sensore!
-                formModificato = false; 
             } catch(e) {
                 console.error("AutoSave Fallito", e);
-            } finally {
-                setTimeout(() => { if (dot) dot.style.display = 'none'; }, 1000);
             }
         }
         // Il Bottone Ufficiale "Pubblica Online"
