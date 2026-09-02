@@ -1743,12 +1743,9 @@
             }; 
         } 
 
-        // Nuova funzione per l'Auto-Salvataggio (Blindata)
+       // Funzione per l'Auto-Salvataggio
         async function eseguiAutoSaveInvisibile() {
             if(NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
-
-            // 🔥 IL DIRTY FLAG: Se non hai toccato nulla, bloccati. 0 API usate.
-            if (!formModificato) return; 
 
             const payloadDati = raccogliDatiDalForm();
             
