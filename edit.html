@@ -238,37 +238,36 @@
         .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
         .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; } 
-       /* ============================================================
+     /* ============================================================
            IL MORPH CINEMATOGRAFICO (COPERTINA -> AMBIENTI)
            ============================================================ */
         .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; overflow-y: hidden !important; padding: 0 !important; }
         .app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; overflow-y: auto !important; }
 
-        .header-monolith { transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        /* Eliminiamo i salti rigidi. Il monolite si adatta se c'è o non c'è il logo */
+        .header-monolith { transition: transform 0.6s ease; }
+        .app-container.locked .header-monolith { transform: translateY(0); }
+        .app-container.unlocked .header-monolith { transform: translateY(-30px); pointer-events: none; }
 
-        /* La fisica corretta dell'Avatar che non scompare mai del tutto */
-        .orbital-container { height: 84px !important; margin-bottom: 30px !important; transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
-        
-        .app-container.locked .header-monolith { transform: translateY(15vh); }
-        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; }
-        
-        .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
-        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; pointer-events: none !important; }
+        /* L'avatar si restringe morbidamente (SOLO SE C'È) */
+        .orbital-container { transition: all 0.4s ease !important; }
+        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
+        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
 
-        /* Il Nome usa translateY per scorrere fluido sopra l'avatar ridotto */
-        .username-capsule-wrapper { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; pointer-events: auto; }
-        .app-container.locked .username-capsule-wrapper { transform: translateY(0) !important; }
-        .app-container.unlocked .username-capsule-wrapper { transform: translateY(-114px) !important; }
+        .username-capsule-wrapper { transition: all 0.4s ease !important; pointer-events: auto; }
 
-        /* TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
+        /* TASTI DI NAVIGAZIONE SCISSI (Spazio rispettato in basso) */
         .entrance-prompt {
-            position: absolute !important; bottom: 35px !important; left: 50% !important; transform: translateX(-50%) !important;
-            display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.6s ease;
+            position: absolute !important; 
+            bottom: 95px !important; /* Alzato a 95px per stare sopra Editor e Pubblica */
+            left: 50% !important; 
+            transform: translateX(-50%) !important;
+            display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.4s ease;
         }
         .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
         
-        .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
-        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; }
+        .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.2s; }
+        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; } 
         
        .exit-prompt { 
     display: flex !important; flex-direction: column; align-items: center; 
@@ -308,7 +307,7 @@
             <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="cursor: pointer; opacity: 0.6; transition: opacity 0.2s;">
                 <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
             </div>
-      <div id="reservation-badge" style="display: none; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; width: max-content; z-index: 100;">
+     <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 55px auto 0 auto; width: max-content; position: relative; z-index: 5;">
             <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.75rem;"></i>
             <div style="color: #e5c158; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; white-space: nowrap; text-transform: uppercase;">
                 <span id="badge-target-name" style="font-weight: 800;">@BRAND</span> 
@@ -1740,7 +1739,7 @@
             }; 
         } 
 
-   let ultimaFotografiaDati = null; // Inizializza a null
+  let ultimaFotografiaDati = null; 
 
         // Funzione per l'Auto-Salvataggio (Intelligente e Visibile)
         async function eseguiAutoSaveInvisibile() {
@@ -1749,14 +1748,8 @@
             const payloadDati = raccogliDatiDalForm();
             const fotografiaAttuale = JSON.stringify(payloadDati);
 
-            // Al primo avvio, memorizza lo stato iniziale e fermati
-            if (ultimaFotografiaDati === null) {
-                ultimaFotografiaDati = fotografiaAttuale;
-                return;
-            }
-
-            // Se i dati sono identici all'ultimo salvataggio, fermati
-            if (fotografiaAttuale === ultimaFotografiaDati) return; 
+            // Se i dati sono identici all'ultimo salvataggio, fermati per non sprecare API
+            if (ultimaFotografiaDati !== null && fotografiaAttuale === ultimaFotografiaDati) return; 
             
             ultimaFotografiaDati = fotografiaAttuale; 
             
@@ -1767,7 +1760,7 @@
             applicaTemaLive();
 
             try {
-                // Feedback visivo sul bottone principale (così VEDI se salva davvero)
+                // Feedback visivo sul bottone
                 const btnMaster = document.getElementById('master-action-text');
                 const testoOriginale = btnMaster ? btnMaster.innerText : "PUBBLICA ONLINE";
                 if(btnMaster) btnMaster.innerText = "SALVATAGGIO...";
