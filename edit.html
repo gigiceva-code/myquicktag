@@ -238,7 +238,7 @@
         .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
         .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; } 
-        /* ============================================================
+       /* ============================================================
            IL MORPH CINEMATOGRAFICO (COPERTINA -> AMBIENTI)
            ============================================================ */
         .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; overflow-y: hidden !important; padding: 0 !important; }
@@ -246,19 +246,19 @@
 
         .header-monolith { transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        /* La fisica corretta dell'Avatar che collassa fluidamente */
-        .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
+        /* La fisica corretta dell'Avatar che non scompare mai del tutto */
+        .orbital-container { height: 84px !important; margin-bottom: 30px !important; transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
         
         .app-container.locked .header-monolith { transform: translateY(15vh); }
-        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
+        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; }
         
         .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
-        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
+        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; pointer-events: none !important; }
 
-        /* Il Nome non usa più translateY, sale naturalmente tirato su dall'avatar che si azzera */
+        /* Il Nome usa translateY per scorrere fluido sopra l'avatar ridotto */
         .username-capsule-wrapper { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; pointer-events: auto; }
         .app-container.locked .username-capsule-wrapper { transform: translateY(0) !important; }
-        .app-container.unlocked .username-capsule-wrapper { transform: translateY(0) !important; }
+        .app-container.unlocked .username-capsule-wrapper { transform: translateY(-114px) !important; }
 
         /* TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
         .entrance-prompt {
@@ -309,8 +309,7 @@
                 <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
             </div>
         </div> 
-       <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 55px auto 25px auto; width: max-content; position: relative; z-index: 5;">
-            <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.75rem;"></i>
+      <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 55px auto 25px auto; width: max-content; position: relative; z-index: 5;">
             <div style="color: #e5c158; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; white-space: nowrap; text-transform: uppercase;">
                 <span id="badge-target-name" style="font-weight: 800;">@BRAND</span> 
                 <span style="opacity: 0.5; margin: 0 4px;">|</span> 
@@ -1742,16 +1741,22 @@
             }; 
         } 
 
-     let ultimaFotografiaDati = ""; // Memoria per risparmiare chiamate API
+   let ultimaFotografiaDati = null; // Inizializza a null
 
-        // Funzione per l'Auto-Salvataggio (Intelligente, Blindata e Leggera)
+        // Funzione per l'Auto-Salvataggio (Intelligente e Visibile)
         async function eseguiAutoSaveInvisibile() {
             if(NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
 
             const payloadDati = raccogliDatiDalForm();
             const fotografiaAttuale = JSON.stringify(payloadDati);
 
-            // 🔥 IL VERO SCUDO API: Se i dati sono identici all'ultimo salvataggio, fermati.
+            // Al primo avvio, memorizza lo stato iniziale e fermati
+            if (ultimaFotografiaDati === null) {
+                ultimaFotografiaDati = fotografiaAttuale;
+                return;
+            }
+
+            // Se i dati sono identici all'ultimo salvataggio, fermati
             if (fotografiaAttuale === ultimaFotografiaDati) return; 
             
             ultimaFotografiaDati = fotografiaAttuale; 
@@ -1763,9 +1768,18 @@
             applicaTemaLive();
 
             try {
-                // Invio dei dati al server
+                // Feedback visivo sul bottone principale (così VEDI se salva davvero)
+                const btnMaster = document.getElementById('master-action-text');
+                const testoOriginale = btnMaster ? btnMaster.innerText : "PUBBLICA ONLINE";
+                if(btnMaster) btnMaster.innerText = "SALVATAGGIO...";
+
                 const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: fotografiaAttuale };
                 await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) });
+                
+                if(btnMaster) {
+                    btnMaster.innerText = "BOZZA SALVATA ✓";
+                    setTimeout(() => { btnMaster.innerText = testoOriginale; }, 2000);
+                }
             } catch(e) {
                 console.error("AutoSave Fallito", e);
             }
