@@ -2779,67 +2779,43 @@
         }
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', avviamyquicktag); } else { avviamyquicktag(); } 
-       // ==========================================
-// MOTORE UNIFICATO: INSIGHT E STRATEGIE
-// ==========================================
-const databaseStrategie = {
-    'quickpass': { 
-        titolo: "IL MOTORE VIRALE", 
-        testo: "<b>Cos'è:</b> Un sistema di passaparola integrato.<br><br><b>La Strategia:</b> Offri un premio irresistibile (es. caffè omaggio o 10€) come regalo per un amico. Il tuo cliente invierà il pass alla sua rubrica su WhatsApp. Loro inquadrano, sbloccano e vengono da te a spendere. Acquisirai clienti nuovi a costo zero." 
-    },
-    'review': { 
-        titolo: "LA FABBRICA DELLE 5 STELLE", 
-        testo: "<b>Cos'è:</b> Un filtro intelligente per le recensioni.<br><br><b>La Strategia:</b> Le lamentele pubbliche uccidono le vendite. Lo Scudo devia i clienti insoddisfatti in privato (su WhatsApp o Email) per permetterti di rimediare. Chi clicca 4 o 5 stelle viene mandato dritto su Google a farti pubblicità." 
-    },
-    'lead': { 
-        titolo: "LA MACCHINA DEI CONTATTI", 
-        testo: "<b>Cos'è:</b> Un modulo per raccogliere dati.<br><br><b>La Strategia:</b> Non aspettare che ti chiamino. Offri un regalo di valore (es. una guida o uno sconto). Il cliente inserisce i dati e tu ottieni contatti pronti a comprare, da ricontattare con offerte mirate in futuro." 
-    },
-    'video': { 
-        titolo: "VENDI MENTRE GUARDANO", 
-        testo: "<b>Cos'è:</b> Un video immersivo con pulsante fuso all'interno.<br><br><b>La Strategia:</b> Usa questo spazio per una dimostrazione. Quando il cliente si scalda per il video, preme il tasto e atterra sul carrello o su WhatsApp. Zero distrazioni, solo conversioni." 
-    },
-    'action': { 
-        titolo: "LA TUA CALL TO ACTION", 
-        testo: "<b>Cos'è:</b> Il pulsante prioritario della tua Tag.<br><br><b>La Strategia:</b> Qual è l'azione numero 1 che ti porta soldi in cassa? Prenotare? Chiamarti? Inseriscila qui. Rendi fisicamente impossibile per il cliente non notare questo bottone dorato." 
-    },
-    'status': { 
-        titolo: "IL SEMAFORO DELLE VENDITE", 
-        testo: "<b>Cos'è:</b> Indicatore live della tua operatività.<br><br><b>La Strategia:</b> Usa la psicologia. Vuoi chiamate? Verde: 'Chiamami ora'. Pieno di lavoro? Rosso: 'Sold out fino a domani'. Questo fa percepire il tuo tempo come prezioso e richiestissimo." 
-    },
-    'flash': { 
-        titolo: "ANNUNCIO IMPERDIBILE", 
-        testo: "<b>Cos'è:</b> Un banner testuale a comparsa.<br><br><b>La Strategia:</b> Disdetta last-minute? Evento speciale stasera? È l'unica cosa che il cliente non può evitare di leggere. Usalo per comunicazioni fulminee, poi fallo sparire." 
-    },
-    'shop': { 
-        titolo: "VENDITA DI IMPULSO", 
-        testo: "<b>Cos'è:</b> Un gate di acquisto rapido con timer.<br><br><b>La Strategia:</b> Inserisci un'offerta incredibile con un timer di 24h. Spingerà i contatti a comprare subito, prima che la promozione sparisca per sempre. Chiudi la vendita prima che ci ripensino." 
-    },
-    'partners': { 
-        titolo: "PARTNERSHIP STRATEGICA", 
-        testo: "<b>Cos'è:</b> Rete di collegamenti con le Tag dei partner.<br><br><b>La Strategia:</b> Fai squadra con professionisti complementari. Insieme create un ecosistema chiuso dove i clienti girano solo tra di voi, aumentando il fatturato di tutti." 
-    }
-};
+      // ==========================================
+        // MOTORE UNIFICATO: INSIGHT E STRATEGIE
+        // ==========================================
+        const databaseStrategie = {
+            'quickpass': { titolo: "IL MOTORE VIRALE", testo: "<b>Cos'è:</b> Un sistema di passaparola integrato.<br><br><b>La Strategia:</b> Offri un premio irresistibile (es. caffè omaggio o 10€) come regalo per un amico. Il tuo cliente invierà il pass alla sua rubrica su WhatsApp. Loro inquadrano, sbloccano e vengono da te a spendere. Acquisirai clienti nuovi a costo zero." },
+            'review': { titolo: "LA FABBRICA DELLE 5 STELLE", testo: "<b>Cos'è:</b> Un filtro intelligente per le recensioni.<br><br><b>La Strategia:</b> Le lamentele pubbliche uccidono le vendite. Lo Scudo devia i clienti insoddisfatti in privato per permetterti di rimediare. Chi clicca 4 o 5 stelle viene mandato dritto su Google a farti pubblicità." },
+            'lead': { titolo: "LA MACCHINA DEI CONTATTI", testo: "<b>Cos'è:</b> Un modulo per raccogliere dati.<br><br><b>La Strategia:</b> Non aspettare che ti chiamino. Offri un regalo di valore (es. una guida o uno sconto). Il cliente inserisce i dati e tu ottieni contatti pronti a comprare, da ricontattare con offerte mirate in futuro." },
+            'video': { titolo: "VENDI MENTRE GUARDANO", testo: "<b>Cos'è:</b> Un player video immersivo con pulsante.<br><br><b>La Strategia:</b> Usa questo spazio per un video di vendita o una dimostrazione. Quando il cliente si scalda per il video, preme il tasto e atterra sul carrello o su WhatsApp. Zero distrazioni, solo conversioni." },
+            'action': { titolo: "LA TUA CALL TO ACTION", testo: "<b>Cos'è:</b> Il pulsante prioritario della tua Tag.<br><br><b>La Strategia:</b> Qual è l'azione numero 1 che ti porta soldi in cassa? Prenotare? Chiamarti? Inseriscila qui. Rendi fisicamente impossibile per il cliente non notare questo bottone dorato." },
+            'status': { titolo: "IL SEMAFORO DELLE VENDITE", testo: "<b>Cos'è:</b> Indicatore live della tua operatività.<br><br><b>La Strategia:</b> Usa la psicologia. Vuoi chiamate? Verde: 'Chiamami ora'. Pieno di lavoro? Rosso: 'Sold out fino a domani'. Questo fa percepire il tuo tempo come prezioso e richiestissimo." },
+            'flash': { titolo: "ANNUNCIO IMPERDIBILE", testo: "<b>Cos'è:</b> Un banner testuale a comparsa.<br><br><b>La Strategia:</b> Disdetta last-minute? Evento speciale stasera? È l'unica cosa che il cliente non può evitare di leggere. Usalo per comunicazioni fulminee, poi fallo sparire." },
+            'shop': { titolo: "VENDITA DI IMPULSO", testo: "<b>Cos'è:</b> Un gate di acquisto rapido con timer.<br><br><b>La Strategia:</b> Inserisci un'offerta incredibile con un timer di 24h. Spingerà i contatti a comprare subito, prima che la promozione sparisca per sempre. Chiudi la vendita prima che ci ripensino." },
+            'partners': { titolo: "PARTNERSHIP STRATEGICA", testo: "<b>Cos'è:</b> Rete di collegamenti con le Tag dei partner.<br><br><b>La Strategia:</b> Fai squadra con professionisti complementari. Insieme create un ecosistema chiuso dove i clienti girano solo tra di voi, aumentando il fatturato di tutti." }
+        };
 
-function mostraInsight(titolo, htmlContent, event) {
-    if(event) { event.preventDefault(); event.stopPropagation(); }
-    document.getElementById('insight-title').innerText = titolo.includes(':') ? titolo : 'INFO: ' + titolo;
-    document.getElementById('insight-content').innerHTML = htmlContent;
-    
-    const insightDrawer = document.getElementById('drawer-insight');
-    insightDrawer.style.zIndex = "3005"; 
-    insightDrawer.classList.add('open');
-}
+        function mostraInsight(titolo, htmlContent, event) {
+            if(event) { event.preventDefault(); event.stopPropagation(); }
+            document.getElementById('insight-title').innerText = titolo.includes(':') ? titolo : 'INFO: ' + titolo;
+            document.getElementById('insight-content').innerHTML = htmlContent;
+            
+            const insightDrawer = document.getElementById('drawer-insight');
+            if (insightDrawer) {
+                insightDrawer.style.zIndex = "3005"; 
+                setTimeout(() => { insightDrawer.classList.add('open'); }, 10);
+            }
+        }
 
-function apriStrategia(idFeature, event) {
-    const dati = databaseStrategie[idFeature];
-    if(dati) mostraInsight('STRATEGIA: ' + dati.titolo, dati.testo, event);
-}
+        function apriStrategia(idFeature, event) {
+            if(event) { event.preventDefault(); event.stopPropagation(); }
+            const dati = databaseStrategie[idFeature];
+            if(dati) mostraInsight('STRATEGIA: ' + dati.titolo, dati.testo, event);
+        }
 
-function chiudiInsight() {
-    document.getElementById('drawer-insight').classList.remove('open');
-}
-        
+        function chiudiInsight() {
+            const insightDrawer = document.getElementById('drawer-insight');
+            if (insightDrawer) insightDrawer.classList.remove('open');
+        }
     </script>
 </body>
 </html>
