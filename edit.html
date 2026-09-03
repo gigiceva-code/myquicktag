@@ -237,7 +237,6 @@
         .vip-switch { position: relative; width: 40px; height: 22px; -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.1); border-radius: 24px; outline: none; cursor: pointer; transition: 0.3s; margin: 0; }
         .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
-        .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; } 
    /* ============================================================
            IL MORPH CINEMATOGRAFICO (COPERTINA -> AMBIENTI)
            ============================================================ */
@@ -253,27 +252,24 @@
         .app-container.locked .header-monolith { transform: translateY(30vh); }
         .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
 
+        /* La magia di tag.html: collasso fisico dell'avatar, zero sbalzi */
         .orbital-container {
-            height: 84px !important;
-            margin-bottom: 30px !important;
-            transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
-        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; }
-        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; }
+        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
+        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
 
-        .username-capsule-wrapper {
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            pointer-events: auto;
-        }
-        .app-container.locked .username-capsule-wrapper { transform: translateY(0) !important; }
-        .app-container.unlocked .username-capsule-wrapper { transform: translateY(-114px) !important; }
+        /* Il nome e la pillola salgono usando la gravità naturale, senza forzature */
+        .username-capsule-wrapper { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; pointer-events: auto; transform: translateY(0) !important; }
+        .app-container.unlocked .username-capsule-wrapper { transform: translateY(0) !important; }
 
-        /* TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
+        #preview-copertina { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important; }
+        .app-container.locked #preview-copertina { transform: translateY(0) !important; }
+        .app-container.unlocked #preview-copertina { transform: translateY(0) !important; opacity: 0; }
+
+        /* TASTI DI NAVIGAZIONE SCISSI (Il Mini-Logo Q+@ riposizionato e alzato a 85px per il telecomando Editor) */
         .entrance-prompt {
-            position: absolute !important; 
-            bottom: 85px !important; /* Alzato di precisione per NON toccare il telecomando EDITOR */
-            left: 50% !important; 
-            transform: translateX(-50%) !important;
+            position: absolute !important; bottom: 85px !important; left: 50% !important; transform: translateX(-50%) !important;
             display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.6s ease;
         }
         .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
@@ -1553,11 +1549,19 @@
             const hasShop = document.getElementById('input-shop-attivo') && document.getElementById('input-shop-attivo').checked;
             roomAction.style.display = (hasQuickPass || hasShop || hasActionInRoom) ? 'flex' : 'none';
         }
-       function sbloccaTagPreview() {
+      function sbloccaTagPreview() {
             const container = document.getElementById('profile-content');
             if (!container || !container.classList.contains('locked')) return;
             container.classList.remove('locked');
             container.classList.add('unlocked');
+            
+            // Nasconde dolcemente il tasto Editor
+            const telecomando = document.querySelector('div[onclick="apriDrawer(\'drawer-master\')"]');
+            if(telecomando) {
+                telecomando.style.transition = 'opacity 0.4s ease';
+                telecomando.style.opacity = '0';
+                telecomando.style.pointerEvents = 'none';
+            }
         }
 
         function bloccaTagPreview() {
@@ -1565,6 +1569,14 @@
             if (!container || !container.classList.contains('unlocked')) return;
             container.classList.remove('unlocked');
             container.classList.add('locked');
+            
+            // Fa riapparire il tasto Editor
+            const telecomando = document.querySelector('div[onclick="apriDrawer(\'drawer-master\')"]');
+            if(telecomando) {
+                telecomando.style.transition = 'opacity 0.4s ease';
+                telecomando.style.opacity = '1';
+                telecomando.style.pointerEvents = 'auto';
+            }
         }
         // ==========================================
         // GESTIONE CASSETTI (Il Teatro Liquido)
