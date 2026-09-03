@@ -244,22 +244,25 @@
         .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; overflow-y: hidden !important; padding: 0 !important; }
         .app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; overflow-y: auto !important; }
 
-        /* Eliminiamo i salti rigidi. Il monolite si adatta se c'è o non c'è il logo */
-        .header-monolith { transition: transform 0.6s ease; }
-        .app-container.locked .header-monolith { transform: translateY(0); }
-        .app-container.unlocked .header-monolith { transform: translateY(-30px); pointer-events: none; }
+        .header-monolith { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        /* L'avatar si restringe morbidamente (SOLO SE C'È) */
-        .orbital-container { transition: all 0.4s ease !important; }
+        /* Spinge il blocco al centro quando la tag è chiusa */
+        .app-container.locked .header-monolith { transform: translateY(20vh); }
+        .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
+
+        /* L'avatar si restringe e azzera la sua altezza morbidamente, facendo salire il nome in modo naturale */
+        .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
+        
         .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
         .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
 
-        .username-capsule-wrapper { transition: all 0.4s ease !important; pointer-events: auto; }
+        /* Il nome segue il flusso senza forzature */
+        .username-capsule-wrapper { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; pointer-events: auto; transform: translateY(0) !important; }
 
-        /* TASTI DI NAVIGAZIONE SCISSI (Spazio rispettato in basso) */
+        /* TASTI DI NAVIGAZIONE SCISSI */
         .entrance-prompt {
             position: absolute !important; 
-            bottom: 95px !important; /* Alzato a 95px per stare sopra Editor e Pubblica */
+            bottom: 85px !important; /* Alzato per non toccare mai il telecomando EDITOR */
             left: 50% !important; 
             transform: translateX(-50%) !important;
             display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.4s ease;
@@ -267,7 +270,7 @@
         .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
         
         .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.2s; }
-        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; } 
+        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; }
         
        .exit-prompt { 
     display: flex !important; flex-direction: column; align-items: center; 
