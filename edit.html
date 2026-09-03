@@ -2175,16 +2175,19 @@
             chiudiSenzaSalvare();
         }
 
-       
-        function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
+       function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
             userPlan = nuovoPianoSelezionato; 
             localStorage.setItem('mqt_temp_plan_' + NOME_SISTEMA, userPlan); 
             aggiornaLucchetti();
-            chiudiSenzaSalvare(); 
+            
+            // Reindirizzamento logico all'Editor principale invece di chiudere i cassetti
+            apriDrawer('drawer-master'); 
+            
             setTimeout(() => {
                 alert(`Fantastico! Hai selezionato il piano ${nuovoPianoSelezionato}.\n\nI lucchetti del tuo piano sono sbloccati. Ora puoi configurare queste funzioni e vedere l'anteprima in tempo reale.`);
             }, 400);
         }
+        
 
         function aggiornaLucchetti() {
             const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop'];
