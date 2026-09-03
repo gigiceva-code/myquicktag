@@ -238,35 +238,48 @@
         .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
         .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; } 
-    /* ============================================================
-          /* ============================================================
+   /* ============================================================
            IL MORPH CINEMATOGRAFICO (COPERTINA -> AMBIENTI)
            ============================================================ */
         .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; overflow-y: hidden !important; padding: 0 !important; }
         .app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; overflow-y: auto !important; }
 
-        /* Ripristinata la geometria originale e naturale di tag.html */
-        .header-monolith { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .header-monolith {
+            width: 100%; display: flex; flex-direction: column; align-items: center; 
+            padding: 10px 0; position: relative; z-index: 10;
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
         .app-container.locked .header-monolith { transform: translateY(30vh); }
         .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
 
-        /* L'avatar si restringe e azzera la sua altezza. Se non c'è, questa regola viene semplicemente ignorata */
-        .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
-        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
-        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
+        .orbital-container {
+            height: 84px !important;
+            margin-bottom: 30px !important;
+            transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; }
+        .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; }
 
-        /* Il nome rimane ancorato al suo posto. Nessun salto al soffitto. */
-        .username-capsule-wrapper { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; pointer-events: auto; transform: translateY(0) !important; }
+        .username-capsule-wrapper {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            pointer-events: auto;
+        }
+        .app-container.locked .username-capsule-wrapper { transform: translateY(0) !important; }
+        .app-container.unlocked .username-capsule-wrapper { transform: translateY(-114px) !important; }
 
-        /* TASTO "ESPLORA TAG" ALZATO A 85px PER NON TOCCARE IL TELECOMANDO EDITOR */
+        /* TASTI DI NAVIGAZIONE SCISSI (Copertina Sospesa, Home in Flusso) */
         .entrance-prompt {
-            position: absolute !important; bottom: 85px !important; left: 50% !important; transform: translateX(-50%) !important;
+            position: absolute !important; 
+            bottom: 85px !important; /* Alzato di precisione per NON toccare il telecomando EDITOR */
+            left: 50% !important; 
+            transform: translateX(-50%) !important;
             display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.6s ease;
         }
         .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
         
         .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
-        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; } 
+        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; }
        .exit-prompt { 
     display: flex !important; flex-direction: column; align-items: center; 
     margin-top: auto !important; margin-bottom: 0px !important; 
@@ -295,19 +308,20 @@
    
     
     <!-- IL PROFILO LIVE WYSIWYG -->
-<div id="profile-content" class="app-container locked" data-theme="black_dna" data-layout="badge" style="opacity: 0; transition: opacity 0.8s ease;">
-       <!-- TOP BAR FINTA (Visibile solo in copertina) -->
+    <div id="profile-content" class="app-container locked" data-theme="black_dna" data-layout="badge" style="opacity: 0; transition: opacity 0.8s ease;">
+        
+        <!-- TOP BAR FINTA (Visibile solo in copertina) -->
         <div class="top-bar-finta">
             <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); opacity: 0.6; transition: opacity 0.2s;">
                 <span style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
             </div>
-            
             <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="cursor: pointer; opacity: 0.6; transition: opacity 0.2s;">
                 <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
             </div>
-    
-        <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
-           
+        </div> 
+
+        <div class="header-monolith">
+            
             <div id="live-avatar-container" class="orbital-container" style="display: none;">
                 <div class="orbital-ring" id="dna-core-ring"></div>
                 <div class="orbital-sphere">
@@ -322,8 +336,9 @@
                     </div>
                 </div>
             </div>
-        </div> <!-- FINE DEL MONOLITH (Ora la copertina è qui dentro!) -->
-    
+            
+        </div> <!-- FINE DEL MONOLITH -->
+        
         <!-- TASTO DI INGRESSO (Copertina) -->
         <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTagPreview()">
             <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
@@ -333,11 +348,13 @@
             </div>
             <span>ESPLORA TAG</span>
         </div>
-       
-       <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
+        
+        <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
         <div id="mainGrid">
-           <!-- CONTENITORE PILLOLE (Visibile solo nelle stanze) -->
-            <div id="preview-copertina" class="action-bar-container" style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 20px; width: 100%;"></div>
+            
+            <!-- CONTENITORE PILLOLE IN ALTO (Semaforo, Flash, Action) -->
+            <div id="preview-copertina" class="action-bar-container" style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%;"></div>
+            
             <!-- LE STANZE STANDARD (Design Pulito, Testo Fluttuante) -->
             <button class="room-link" id="room-identity" onclick="apriDrawer('view-identity')">IDENTITY</button>
             <button class="room-link" id="room-business" onclick="apriDrawer('view-business')">BUSINESS</button>
@@ -347,12 +364,12 @@
             <!-- QUINTA STANZA: ACTION CENTER -->
             <button class="room-link" id="room-action-center" onclick="apriDrawer('view-action')" style="color: var(--theme-border, #d4af37) !important; font-weight: 500 !important;">ACTION CENTER</button>
         
-           <!-- TASTO DI RITORNO HOME -->
+            <!-- TASTO DI RITORNO HOME -->
             <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTagPreview()">
                 <span>HOME</span>
             </div>
         </div> 
-        </div> 
+    </div>
    <!-- 🚀 TELECOMANDO EDITOR GLOBALE -->
     <div onclick="apriDrawer('drawer-master')" style="position: fixed; bottom: 25px; right: 25px; cursor: pointer; z-index: 1500; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.85); padding: 12px 18px; border-radius: 30px; backdrop-filter: blur(10px); border: 1px solid rgba(80, 200, 120, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.6); transition: transform 0.2s;">
         <i class="fas fa-pen" style="color: #50C878; font-size: 0.9rem;"></i>
