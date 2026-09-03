@@ -1604,16 +1604,18 @@
             }
             // ==========================================================
             
-            // Controlli Piani Premium/Gold
+           // Controlli Piani Premium/Gold
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
-                alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
+                alert("Questa funzione è un'esclusiva del piano GOLD 👑.\n\nVerrai reindirizzato alla sezione 'Gestione Piano' per sbloccarla.");
+                apriDrawer('drawer-piani'); // Il redirect automatico
                 return;
             }
             if ((idDrawer === 'drawer-quick' || idDrawer === 'drawer-gallery') && userPlan === 'BASE') {
-                alert("Questa funzione richiede almeno il piano PREMIUM 🚀.\n\nVai nella sezione 'Gestione Piano' dal menù per sbloccarla!");
+                alert("Questa funzione richiede almeno il piano PREMIUM 🚀.\n\nVerrai reindirizzato alla sezione 'Gestione Piano' per sbloccarla.");
+                apriDrawer('drawer-piani'); // Il redirect automatico
                 return;
-            } 
+            }
 
             const drawerTarget = document.getElementById(idDrawer);
             const backdrop = document.getElementById('drawer-backdrop');
@@ -1871,25 +1873,32 @@
             aggiornaAnteprimaLive();
         }
 
-        function formattaBadge(testoBruto) {
-    const el = document.getElementById('tag-username');
-    if(!el) return;
-    let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
-    if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
-    el.innerHTML = `<span class="at-symbol">@</span><span class="brand-text">${testo}</span>`;
-    el.style.cssText = ""; 
+       function formattaBadge(testoBruto) {
+            const el = document.getElementById('tag-username');
+            if(!el) return;
+            if (!testoBruto) testoBruto = "TUONOME";
+            let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
+            if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
-    if (testo.length > 35) { el.style.fontSize = "0.85rem"; } 
-    else if (testo.length > 22) { el.style.fontSize = "0.95rem"; } 
-    else { el.style.fontSize = "1.05rem"; }
+            // L'ancoraggio esatto della @ come in tag.html
+            el.innerHTML = `<span class="brand-text" style="position: relative;"><span class="at-symbol" style="position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;">@</span>${testo}</span>`;
 
-    const wrapper = document.getElementById('name-capsule-wrapper');
-    if (wrapper) {
-        // RIGA MODIFICATA: Ora accetta fino a 18 caratteri per il formato "nome-corto"
-        if (testo.length <= 18 && !testo.includes(' ')) { wrapper.classList.add('nome-corto'); } 
-        else { wrapper.classList.remove('nome-corto'); }
-    }
-}
+            el.style.whiteSpace = "normal"; el.style.wordBreak = "normal"; el.style.overflowWrap = "break-word";
+
+            if (testo.length > 25) { el.style.fontSize = "0.85rem"; } 
+            else if (testo.length > 18) { el.style.fontSize = "0.95rem"; } 
+            else { el.style.fontSize = "1.05rem"; }
+            
+            // IL BISTURI PER IL DIVIDER: Nessun blocco sugli spazi, segue solo la naturale larghezza dei caratteri
+            const wrapper = document.getElementById('name-capsule-wrapper');
+            if (wrapper) {
+                if (testo.length < 16) {
+                    wrapper.classList.add('nome-corto');
+                } else {
+                    wrapper.classList.remove('nome-corto');
+                }
+            }
+        }
       async function inizializzaPagina() {  
             if(NOME_SISTEMA === "tuonome.it") {
                 isLoadingDati = false;
@@ -2283,10 +2292,11 @@
             }
         }
 
-        function gestisciVIPSwitch(checkbox) {
+       function gestisciVIPSwitch(checkbox) {
             if(userPlan !== 'GOLD') {
                 checkbox.checked = false;
-                alert("Funzione Premium\n\nIl modulo VIP Vault è un'esclusiva del Piano Gold. Consente di proteggere link riservati o listini privati tramite PIN.\n\nPer abilitare questa funzione, procedi all'upgrade nella sezione 'Gestione Piano'.");
+                alert("Funzione Premium\n\nIl modulo VIP Vault è un'esclusiva del Piano Gold. Consente di proteggere link riservati o listini privati tramite PIN.\n\nVerrai reindirizzato alla 'Gestione Piano'.");
+                apriDrawer('drawer-piani'); // Il redirect automatico
                 return;
             }
             document.getElementById('vip-pin-container').style.display = checkbox.checked ? 'block' : 'none';
