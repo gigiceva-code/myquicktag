@@ -239,36 +239,34 @@
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
         .vip-switch:checked::after { transform: translateX(18px); background: #1a1a1a; } 
     /* ============================================================
+          /* ============================================================
            IL MORPH CINEMATOGRAFICO (COPERTINA -> AMBIENTI)
            ============================================================ */
         .app-container #mainGrid { opacity: 0; pointer-events: none; transition: opacity 0.5s ease !important; overflow-y: hidden !important; padding: 0 !important; }
         .app-container.unlocked #mainGrid { opacity: 1; pointer-events: auto; overflow-y: auto !important; }
 
-        /* Usiamo margin per la centratura naturale. Niente misure fisse pericolose */
-        .header-monolith { transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); margin-top: auto; margin-bottom: auto; }
-        .app-container.unlocked .header-monolith { margin-top: 0; margin-bottom: 0; pointer-events: none; }
+        /* Ripristinata la geometria originale e naturale di tag.html */
+        .header-monolith { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .app-container.locked .header-monolith { transform: translateY(30vh); }
+        .app-container.unlocked .header-monolith { transform: translateY(0); pointer-events: none; }
 
-        /* L'avatar si restringe fluidamente */
+        /* L'avatar si restringe e azzera la sua altezza. Se non c'è, questa regola viene semplicemente ignorata */
         .orbital-container { transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
         .app-container.locked .orbital-container { opacity: 1 !important; transform: scale(1) !important; height: 84px !important; margin-bottom: 30px !important; }
         .app-container.unlocked .orbital-container { opacity: 0 !important; transform: scale(0.5) !important; height: 0px !important; margin-bottom: 0px !important; pointer-events: none !important; }
 
-        /* Il nome */
+        /* Il nome rimane ancorato al suo posto. Nessun salto al soffitto. */
         .username-capsule-wrapper { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; pointer-events: auto; transform: translateY(0) !important; }
 
-        /* TASTI DI NAVIGAZIONE SCISSI */
+        /* TASTO "ESPLORA TAG" ALZATO A 85px PER NON TOCCARE IL TELECOMANDO EDITOR */
         .entrance-prompt {
-            position: absolute !important; 
-            bottom: 85px !important; 
-            left: 0 !important; 
-            right: 0 !important;
-            display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.4s ease;
+            position: absolute !important; bottom: 85px !important; left: 50% !important; transform: translateX(-50%) !important;
+            display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; z-index: 100; transition: opacity 0.6s ease;
         }
         .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
         
-        .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.2s; }
-        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; }
-        
+        .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
+        .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; } 
        .exit-prompt { 
     display: flex !important; flex-direction: column; align-items: center; 
     margin-top: auto !important; margin-bottom: 0px !important; 
@@ -307,15 +305,7 @@
             <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="cursor: pointer; opacity: 0.6; transition: opacity 0.2s;">
                 <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
             </div>
-     <div id="reservation-badge" style="display: none; align-items: center; justify-content: center; gap: 8px; background: rgba(229, 193, 88, 0.08); border: 1px solid rgba(229, 193, 88, 0.3); border-radius: 20px; padding: 6px 14px; margin: 55px auto 0 auto; width: max-content; position: relative; z-index: 5;">
-            <i class="fas fa-shield-alt" style="color: #e5c158; font-size: 0.75rem;"></i>
-            <div style="color: #e5c158; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; white-space: nowrap; text-transform: uppercase;">
-                <span id="badge-target-name" style="font-weight: 800;">@BRAND</span> 
-                <span style="opacity: 0.5; margin: 0 4px;">|</span> 
-                <span id="badge-timer-text">RISERVATO PER 24H</span>
-            </div>
-        </div>
-
+    
         <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
            
             <div id="live-avatar-container" class="orbital-container" style="display: none;">
@@ -346,9 +336,8 @@
        
        <!-- IL NUOVO MOTORE DI ANTEPRIMA (100% IDENTICO ALLA TAG PUBBLICA) -->
         <div id="mainGrid">
-                <!-- 🚀 PILLOLE INSERITE NEL MONOLITH (Così scendono insieme al nome!) -->
-            <div id="preview-copertina" class="action-bar-container" style="flex-direction: column; gap: 10px; margin-top: 20px; position: relative; z-index: 15;"></div>
-            
+           <!-- CONTENITORE PILLOLE (Visibile solo nelle stanze) -->
+            <div id="preview-copertina" class="action-bar-container" style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 20px; width: 100%;"></div>
             <!-- LE STANZE STANDARD (Design Pulito, Testo Fluttuante) -->
             <button class="room-link" id="room-identity" onclick="apriDrawer('view-identity')">IDENTITY</button>
             <button class="room-link" id="room-business" onclick="apriDrawer('view-business')">BUSINESS</button>
@@ -1760,7 +1749,7 @@
             applicaTemaLive();
 
             try {
-                // Feedback visivo sul bottone
+                // Feedback visivo sul bottone principale (così VEDI se salva davvero)
                 const btnMaster = document.getElementById('master-action-text');
                 const testoOriginale = btnMaster ? btnMaster.innerText : "PUBBLICA ONLINE";
                 if(btnMaster) btnMaster.innerText = "SALVATAGGIO...";
