@@ -1654,7 +1654,8 @@
             if (backdrop) backdrop.classList.add('active');
 
             if (drawerTarget) {
-                drawerTarget.style.zIndex = "2005"; 
+                drawerTarget.style.zIndex = "9999"; // Livello divino: batte qualsiasi sfondo o scudo
+                drawerTarget.style.pointerEvents = "auto"; // Forza l'attivazione del touch
                 setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
             }
 
@@ -2957,6 +2958,20 @@ function gestisciVIPSwitch(checkbox) {
                 overlay.children[0].style.transform = 'scale(0.95)';
                 setTimeout(() => { overlay.style.display = 'none'; }, 300);
             }
+        });
+        // ==========================================
+        // CUSCINETTO ANTI-CRASH (Protegge l'app dal tasto indietro Android)
+        // ==========================================
+        window.addEventListener('load', () => {
+            // Appena l'editor si carica, crea uno stato invisibile. 
+            // In questo modo, se premi indietro 2 volte, non chiudi il browser!
+            history.pushState({ appInit: true }, "");
+        });
+
+        // Intercettazione globale del tasto Indietro per proteggere l'interfaccia
+        window.addEventListener('popstate', function(event) {
+            // Assicuriamoci che il cuscino esista sempre
+            history.pushState({ appInit: true }, ""); 
         });
     </script>
 </body>
