@@ -1629,10 +1629,19 @@
             }
             // ==========================================================
             
-         // Controlli Piani Premium/Gold
+         // Controlli Piani Premium/Gold (con Action Center incluso come esca)
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
+            
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è riservata al piano Gold.<br><br>Passa a questo livello per sbloccarla e potenziare la tua identità digitale.");
+                return;
+            }
+
+            // Abbiamo aggiunto 'drawer-action' a questa lista
+            const esclusivePremium = ['drawer-quick', 'drawer-gallery', 'drawer-action']; 
+            
+            if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
+                mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "L'Action Center e gli strumenti di conversione rapida richiedono il piano Premium.<br><br>Espandi la tua Tag per massimizzare i contatti.");
                 return;
             }
             if ((idDrawer === 'drawer-quick' || idDrawer === 'drawer-gallery') && userPlan === 'BASE') {
@@ -2220,9 +2229,11 @@
             }, 400);
         }
 
-        function aggiornaLucchetti() {
+       function aggiornaLucchetti() {
             const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop'];
-            const cassettiPremium = ['drawer-quick', 'drawer-gallery']; 
+            
+            // ECCO LA MODIFICA: Ho aggiunto 'drawer-action' nella lista Premium
+            const cassettiPremium = ['drawer-quick', 'drawer-gallery', 'drawer-action']; 
             
             document.querySelectorAll('.premium-field-container').forEach(container => {
                 const overlay = container.querySelector('.premium-lock-overlay');
@@ -2240,7 +2251,6 @@
             });
             if(typeof aggiornaLimitiSocial === 'function') aggiornaLimitiSocial();
         }
-
         function selezionaStatus(colore) {
             document.getElementById('btn-status-green').style.opacity = '0.3';
             document.getElementById('btn-status-yellow').style.opacity = '0.3';
