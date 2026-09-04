@@ -1607,7 +1607,7 @@
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
         function apriDrawer(idDrawer) {
-            console.log("Valore di userPlan:", userPlan);
+          
             // ==========================================================
             // 🧠 MOTORE DI ROUTING INTELLIGENTE (Memoria di navigazione)
             // ==========================================================
@@ -2925,6 +2925,8 @@ function gestisciVIPSwitch(checkbox) {
         // MOTORE POPUP CUSTOM E TASTO INDIETRO ANDROID
         // ==========================================
         function mostraPopupPremium(titolo, messaggio) {
+        // Log 1: Verifica che la funzione venga richiamata dal click
+            console.error("DEBUG: Avvio mostraPopupPremium. Titolo ricevuto:", titolo);
             document.getElementById('premium-alert-title').innerHTML = titolo;
             document.getElementById('premium-alert-msg').innerHTML = messaggio;
             const overlay = document.getElementById('premium-alert-overlay');
