@@ -2926,18 +2926,24 @@ function gestisciVIPSwitch(checkbox) {
         // MOTORE POPUP CUSTOM E TASTO INDIETRO ANDROID
         // ==========================================
     function mostraPopupPremium(titolo, messaggio) {
-            document.getElementById('premium-alert-title').innerHTML = titolo;
-            document.getElementById('premium-alert-msg').innerHTML = messaggio;
-            const overlay = document.getElementById('premium-alert-overlay');
-            
-            overlay.style.display = 'flex';
-            setTimeout(() => { 
-                overlay.style.opacity = '1'; 
-                overlay.children[0].style.transform = 'scale(1)'; 
-            }, 10);
-            
-            history.pushState({ popupAperto: true }, "");
+    const titleEl = document.getElementById('premium-alert-title');
+    const msgEl = document.getElementById('premium-alert-msg');
+    const overlay = document.getElementById('premium-alert-overlay');
+
+    if (titleEl) titleEl.innerHTML = titolo;
+    if (msgEl) msgEl.innerHTML = messaggio;
+
+    if (overlay) {
+        // Forza l'apparizione immediata senza bug di transizione mobile
+        overlay.style.display = 'flex';
+        overlay.style.opacity = '1'; 
+        if (overlay.children[0]) {
+            overlay.children[0].style.transform = 'scale(1)';
         }
+        
+        history.pushState({ popupAperto: true }, "");
+    }
+}
        
        function confermaPremiumAlert() {
             chiudiPremiumAlert(); 
