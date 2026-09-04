@@ -2924,29 +2924,36 @@ function gestisciVIPSwitch(checkbox) {
         // ==========================================
         // MOTORE POPUP CUSTOM E TASTO INDIETRO ANDROID
         // ==========================================
-        function mostraPopupPremium(titolo, messaggio) {
-        // Log 1: Verifica che la funzione venga richiamata dal click
+      function mostraPopupPremium(titolo, messaggio) {
             console.error("DEBUG: Avvio mostraPopupPremium. Titolo ricevuto:", titolo);
-            document.getElementById('premium-alert-title').innerHTML = titolo;
-            document.getElementById('premium-alert-msg').innerHTML = messaggio;
-            const overlay = document.getElementById('premium-alert-overlay');
-            overlay.style.display = 'flex';
-            setTimeout(() => { overlay.style.opacity = '1'; overlay.children[0].style.transform = 'scale(1)'; }, 10);
-            
-            // Magia: creiamo un finto step nella cronologia per catturare il tasto indietro!
-            history.pushState({ popupAperto: true }, "");
-        }
 
-        function chiudiPremiumAlert() {
-            const overlay = document.getElementById('premium-alert-overlay');
-            overlay.style.opacity = '0';
-            overlay.children[0].style.transform = 'scale(0.95)';
-            setTimeout(() => { overlay.style.display = 'none'; }, 300);
-            
-            // Se chiudi con la 'X', rimuoviamo il finto step dalla cronologia
-            if (history.state && history.state.popupAperto) { history.back(); }
-        }
+            const titleEl = document.getElementById('premium-alert-title');
+            const msgEl = document.getElementById('premium-alert-msg');
+            const overlayEl = document.getElementById('premium-alert-overlay');
 
+            if (!titleEl) {
+                console.error("ERRORE: Il sistema non trova l'HTML con ID 'premium-alert-title'");
+            }
+            if (!msgEl) {
+                console.error("ERRORE: Il sistema non trova l'HTML con ID 'premium-alert-msg'");
+            }
+            if (!overlayEl) {
+                console.error("ERRORE: Il sistema non trova l'HTML con ID 'premium-alert-overlay'");
+            }
+
+            if (titleEl && msgEl && overlayEl) {
+                titleEl.innerHTML = titolo;
+                msgEl.innerHTML = messaggio;
+                
+                overlayEl.style.display = 'flex';
+                setTimeout(() => { 
+                    overlayEl.style.opacity = '1'; 
+                    overlayEl.children[0].style.transform = 'scale(1)'; 
+                }, 10);
+                
+                history.pushState({ popupAperto: true }, "");
+            }
+        }
         function confermaPremiumAlert() {
             chiudiPremiumAlert(); // Chiude il popup...
             setTimeout(() => { apriDrawer('drawer-piani'); }, 300); // ...e va ai piani dolcemente
