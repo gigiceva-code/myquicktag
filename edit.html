@@ -2233,11 +2233,9 @@
             }, 400);
         }
 
-       function aggiornaLucchetti() {
+      function aggiornaLucchetti() {
             const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop'];
-            
-            // ECCO LA MODIFICA: Ho aggiunto 'drawer-action' nella lista Premium
-            const cassettiPremium = ['drawer-quick', 'drawer-gallery', 'drawer-action']; 
+            const cassettiPremium = ['drawer-quick', 'drawer-gallery']; 
             
             document.querySelectorAll('.premium-field-container').forEach(container => {
                 const overlay = container.querySelector('.premium-lock-overlay');
