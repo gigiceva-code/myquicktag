@@ -2954,81 +2954,47 @@ function gestisciVIPSwitch(checkbox) {
             history.pushState({ popupAperto: true }, "");
         }
        
-        function confermaPremiumAlert() {
-            chiudiPremiumAlert(); // Chiude il popup...
-            setTimeout(() => { apriDrawer('drawer-piani'); }, 300); // ...e va ai piani dolcemente
+       function confermaPremiumAlert() {
+            chiudiPremiumAlert(); 
+            setTimeout(() => { apriDrawer('drawer-piani'); }, 300); 
         }
 
-      
+        function chiudiPremiumAlert() {
             const overlay = document.getElementById('premium-alert-overlay');
-            if (overlay && overlay.style.display === 'flex') {
-                // L'utente ha premuto indietro: la cronologia torna indietro da sola, noi chiudiamo solo la grafica
+            if (overlay) {
                 overlay.style.opacity = '0';
-                overlay.children[0].style.transform = 'scale(0.95)';
+                if (overlay.children[0]) {
+                    overlay.children[0].style.transform = 'scale(0.95)';
+                }
+                setTimeout(() => { 
+                    overlay.style.display = 'none'; 
+                }, 300);
+            }
+        }
+
+        // UNICO GESTORE DELLA CRONOLOGIA PULITO
+        window.addEventListener('popstate', function(event) {
+            const hash = window.location.hash;
+            const insightDrawer = document.getElementById('drawer-insight');
+            const overlay = document.getElementById('premium-alert-overlay');
+
+            if (overlay && overlay.style.display === 'flex') {
+                overlay.style.opacity = '0';
+                if (overlay.children[0]) overlay.children[0].style.transform = 'scale(0.95)';
                 setTimeout(() => { overlay.style.display = 'none'; }, 300);
+                return;
+            }
+
+            if (insightDrawer && insightDrawer.classList.contains('open')) {
+                insightDrawer.classList.remove('open');
+                return;
+            }
+
+            if (hash === '' || hash === '#') {
+                eseguiChiusuraGrafica();
+                eseguiAutoSaveInvisibile();
             }
         });
-       // ==========================================
-// MOTORE POPUP CUSTOM E TASTO INDIETRO ANDROID
-// ==========================================
-function mostraPopupPremium(titolo, messaggio) {
-    document.getElementById('premium-alert-title').innerHTML = titolo;
-    document.getElementById('premium-alert-msg').innerHTML = messaggio;
-    const overlay = document.getElementById('premium-alert-overlay');
-    
-    overlay.style.display = 'flex';
-    setTimeout(() => { 
-        overlay.style.opacity = '1'; 
-        overlay.children[0].style.transform = 'scale(1)'; 
-    }, 10);
-    
-    history.pushState({ popupAperto: true }, "");
-}
-
-function confermaPremiumAlert() {
-    chiudiPremiumAlert(); 
-    setTimeout(() => { apriDrawer('drawer-piani'); }, 300); 
-}
-
-function chiudiPremiumAlert() {
-    const overlay = document.getElementById('premium-alert-overlay');
-    if (overlay) {
-        overlay.style.opacity = '0';
-        if (overlay.children[0]) {
-            overlay.children[0].style.transform = 'scale(0.95)';
-        }
-        setTimeout(() => { 
-            overlay.style.display = 'none'; 
-        }, 300);
-    }
-}
-
-// UNICO GESTORE DELLA CRONOLOGIA (Sostituisce tutti i precedenti popstate)
-window.addEventListener('popstate', function(event) {
-    const hash = window.location.hash;
-    const insightDrawer = document.getElementById('drawer-insight');
-    const overlay = document.getElementById('premium-alert-overlay');
-
-    // 1. Se il popup premium è aperto, chiudilo
-    if (overlay && overlay.style.display === 'flex') {
-        overlay.style.opacity = '0';
-        if (overlay.children[0]) overlay.children[0].style.transform = 'scale(0.95)';
-        setTimeout(() => { overlay.style.display = 'none'; }, 300);
-        return;
-    }
-
-    // 2. Se il cassetto delle strategie è aperto, chiudilo
-    if (insightDrawer && insightDrawer.classList.contains('open')) {
-        insightDrawer.classList.remove('open');
-        return;
-    }
-
-    // 3. Se torniamo all'inizio (# o vuoto), chiudi tutti i cassetti aperti
-    if (hash === '' || hash === '#') {
-        eseguiChiusuraGrafica();
-        eseguiAutoSaveInvisibile();
-    }
-});
     </script>
 </body>
 </html>
