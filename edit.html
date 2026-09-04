@@ -1603,12 +1603,7 @@
        // ==========================================
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
-        function apriDrawer(idDrawer) {
-    // 🛡️ Protezione da caricamento: evita falsi blocchi prima che i dati siano pronti
-    if (typeof isLoadingDati !== 'undefined' && isLoadingDati) {
-        return;
-    }
-
+      function apriDrawer(idDrawer) {
     const masterDrawer = document.getElementById('drawer-master');
     
     // 🧠 Motore di Routing Intelligente (Memoria di navigazione)
@@ -1626,14 +1621,14 @@
         }
     }
     
-    // 👑 Controllo Esclusive GOLD
+    // 👑 Controllo Esclusive GOLD (Mostra il popup se non sei Gold)
     const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
     if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
         mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e potenziare la tua identità digitale.");
         return;
     }
 
-    // 🚀 Controllo Esclusive PREMIUM (Corretto con 'drawer-gallery')
+    // 🚀 Controllo Esclusive PREMIUM (Mostra il popup se sei Base)
     const esclusivePremium = ['drawer-quick', 'drawer-gallery']; 
     if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
         mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua Tag con strumenti avanzati.");
@@ -1668,7 +1663,7 @@
     if (window.location.hash !== '#menu') {
         history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
     }
-}
+} 
         function chiudiSenzaSalvare() {
     // 1. Chiusura grafica immediata di tutti i cassetti
     eseguiChiusuraGrafica();
