@@ -1687,8 +1687,7 @@
             }
         }
 
-      // Gestione Tasto Indietro del telefono (Multi-livello)
-        window.addEventListener('popstate', function (event) {
+      
             const hash = window.location.hash;
             const insightDrawer = document.getElementById('drawer-insight');
             
@@ -1704,7 +1703,32 @@
             }
         });
 
+// UNICO GESTORE DELLA CRONOLOGIA (Sostituisce tutti i precedenti popstate)
+window.addEventListener('popstate', function(event) {
+    const hash = window.location.hash;
+    const insightDrawer = document.getElementById('drawer-insight');
+    const overlay = document.getElementById('premium-alert-overlay');
 
+    // 1. Se il popup premium è aperto, chiudilo
+    if (overlay && overlay.style.display === 'flex') {
+        overlay.style.opacity = '0';
+        if (overlay.children[0]) overlay.children[0].style.transform = 'scale(0.95)';
+        setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        return;
+    }
+
+    // 2. Se il cassetto delle strategie è aperto, chiudilo
+    if (insightDrawer && insightDrawer.classList.contains('open')) {
+        insightDrawer.classList.remove('open');
+        return;
+    }
+
+    // 3. Se torniamo all'inizio (# o vuoto), chiudi tutti i cassetti aperti
+    if (hash === '' || hash === '#') {
+        eseguiChiusuraGrafica();
+        eseguiAutoSaveInvisibile();
+    }
+});
         // ==========================================
         // 💾 IL MOTORE DI SALVATAGGIO (Riscritto per WYSIWYG)
         // ==========================================
@@ -2935,8 +2959,7 @@ function gestisciVIPSwitch(checkbox) {
             setTimeout(() => { apriDrawer('drawer-piani'); }, 300); // ...e va ai piani dolcemente
         }
 
-        // Il Listener (Ascoltatore) del Tasto Indietro Fisico di Android
-        window.addEventListener('popstate', function(event) {
+      
             const overlay = document.getElementById('premium-alert-overlay');
             if (overlay && overlay.style.display === 'flex') {
                 // L'utente ha premuto indietro: la cronologia torna indietro da sola, noi chiudiamo solo la grafica
@@ -2957,9 +2980,19 @@ function gestisciVIPSwitch(checkbox) {
         }, 300);
     }
 }
-       
-        // Intercettazione globale del tasto Indietro per proteggere l'interfaccia
-        window.addEventListener('popstate', function(event) {
+      function chiudiPremiumAlert() {
+    const overlay = document.getElementById('premium-alert-overlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        if (overlay.children[0]) {
+            overlay.children[0].style.transform = 'scale(0.95)';
+        }
+        setTimeout(() => { 
+            overlay.style.display = 'none'; 
+        }, 300);
+    }
+} 
+        
             // Assicuriamoci che il cuscino esista sempre
             history.pushState({ appInit: true }, ""); 
         });
