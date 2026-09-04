@@ -1603,10 +1603,10 @@
                 telecomando.style.pointerEvents = 'auto';
             }
         }
-        // ==========================================
+       // ==========================================
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
-           function apriDrawer(idDrawer) {
+        function apriDrawer(idDrawer) {
             // ==========================================================
             // 🧠 MOTORE DI ROUTING INTELLIGENTE (Memoria di navigazione)
             // ==========================================================
@@ -1629,32 +1629,16 @@
             }
             // ==========================================================
             
-         // Controlli Piani Premium/Gold (SOLO per le singole funzioni interne)
+            // Controlli Piani Premium/Gold (SOLO per le singole funzioni interne)
             const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
             if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
                 mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e potenziare la tua identità digitale.");
                 return;
             }
 
-            const esclusivePremium = ['drawer-quick', 'drawer-gallery']; // Rimosso 'drawer-action' da qui!
+            const esclusivePremium = ['drawer-quick', 'drawer-gallery']; 
             if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
                 mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua Tag con strumenti avanzati.");
-                return;
-            }
-            // Abbiamo aggiunto 'drawer-action' a questa lista
-            const esclusivePremium = ['drawer-quick', 'drawer-gallery', 'drawer-action']; 
-            
-            if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
-                mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "L'Action Center e gli strumenti di conversione rapida richiedono il piano Premium.<br><br>Espandi la tua Tag per massimizzare i contatti.");
-                return;
-            }
-            if ((idDrawer === 'drawer-quick' || idDrawer === 'drawer-gallery') && userPlan === 'BASE') {
-                mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano Premium.<br><br>Espandi la tua Tag con strumenti di conversione avanzati.");
-                return;
-            }
-            if ((idDrawer === 'drawer-quick' || idDrawer === 'drawer-gallery') && userPlan === 'BASE') {
-                alert("Questa funzione richiede almeno il piano PREMIUM 🚀.\n\nVerrai reindirizzato alla sezione 'Gestione Piano' per sbloccarla.");
-                apriDrawer('drawer-piani'); // Il redirect automatico
                 return;
             }
 
