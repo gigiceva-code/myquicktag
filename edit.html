@@ -1604,7 +1604,7 @@
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
         function apriDrawer(idDrawer) {
-    // 🛡️ Protezione da Race Condition: se i dati stanno ancora caricando, evita falsi blocchi
+    // 🛡️ Protezione da caricamento: evita falsi blocchi prima che i dati siano pronti
     if (typeof isLoadingDati !== 'undefined' && isLoadingDati) {
         return;
     }
@@ -1633,7 +1633,7 @@
         return;
     }
 
-    // 🚀 Controllo Esclusive PREMIUM
+    // 🚀 Controllo Esclusive PREMIUM (Corretto con 'drawer-gallery')
     const esclusivePremium = ['drawer-quick', 'drawer-gallery']; 
     if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
         mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua Tag con strumenti avanzati.");
@@ -1643,7 +1643,6 @@
     const drawerTarget = document.getElementById(idDrawer);
     const backdrop = document.getElementById('drawer-backdrop');
     
-    // Spegne eventuali trigger di sfondo
     document.querySelectorAll('#dynamic-trigger-area').forEach(el => {
         el.style.opacity = '0';
         el.style.pointerEvents = 'none';
@@ -1652,12 +1651,11 @@
     if (backdrop) backdrop.classList.add('active');
 
     if (drawerTarget) {
-        drawerTarget.style.zIndex = "9999"; // Primo piano assoluto
-        drawerTarget.style.pointerEvents = "auto"; // Riattiva il touch
+        drawerTarget.style.zIndex = "9999"; 
+        drawerTarget.style.pointerEvents = "auto"; 
         setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
     }
 
-    // Spegne gli altri cassetti
     setTimeout(() => {
         document.querySelectorAll('.drawer-glass').forEach(d => {
             if (d.id !== idDrawer) {
@@ -1672,15 +1670,17 @@
     }
 }
         function chiudiSenzaSalvare() {
-            if (window.location.hash === '#menu') {
-                history.back(); 
-            } else {
-                eseguiChiusuraGrafica();
-            }
-            // 🚀 TRIGGER AUTO-SAVE QUANDO SI CHIUDE UN CASSETTO
-            eseguiAutoSaveInvisibile();
-        }
-
+    // 1. Chiusura grafica immediata di tutti i cassetti
+    eseguiChiusuraGrafica();
+    
+    // 2. Pulisce l'URL se c'era un hash attivo (#menu o #insight)
+    if (window.location.hash === '#menu' || window.location.hash === '#insight') {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+    
+    // 3. Salva la bozza in background
+    eseguiAutoSaveInvisibile();
+}
         function eseguiChiusuraGrafica() {
             document.querySelectorAll('.drawer-glass').forEach(d => {
                 d.classList.remove('open');
@@ -2934,6 +2934,7 @@ function gestisciVIPSwitch(checkbox) {
             
             history.pushState({ popupAperto: true }, "");
         }
+       
         function confermaPremiumAlert() {
             chiudiPremiumAlert(); // Chiude il popup...
             setTimeout(() => { apriDrawer('drawer-piani'); }, 300); // ...e va ai piani dolcemente
@@ -2949,15 +2950,19 @@ function gestisciVIPSwitch(checkbox) {
                 setTimeout(() => { overlay.style.display = 'none'; }, 300);
             }
         });
-        // ==========================================
-        // CUSCINETTO ANTI-CRASH (Protegge l'app dal tasto indietro Android)
-        // ==========================================
-        window.addEventListener('load', () => {
-            // Appena l'editor si carica, crea uno stato invisibile. 
-            // In questo modo, se premi indietro 2 volte, non chiudi il browser!
-            history.pushState({ appInit: true }, "");
-        });
-
+         function chiudiPremiumAlert() {
+    const overlay = document.getElementById('premium-alert-overlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        if (overlay.children[0]) {
+            overlay.children[0].style.transform = 'scale(0.95)';
+        }
+        setTimeout(() => { 
+            overlay.style.display = 'none'; 
+        }, 300);
+    }
+}
+       
         // Intercettazione globale del tasto Indietro per proteggere l'interfaccia
         window.addEventListener('popstate', function(event) {
             // Assicuriamoci che il cuscino esista sempre
