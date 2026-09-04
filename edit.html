@@ -1687,21 +1687,6 @@
             }
         }
 
-      
-            const hash = window.location.hash;
-            const insightDrawer = document.getElementById('drawer-insight');
-            
-            if (hash === '#menu') {
-                // Se torniamo a #menu, significa che eravamo dentro una strategia. Chiudiamo solo quella.
-                if (insightDrawer && insightDrawer.classList.contains('open')) {
-                    insightDrawer.classList.remove('open');
-                }
-            } else if (hash === '') {
-                // Se il link è vuoto, siamo tornati alla copertina. Chiudiamo tutto.
-                eseguiChiusuraGrafica();
-                eseguiAutoSaveInvisibile();
-            }
-        });
 
 // UNICO GESTORE DELLA CRONOLOGIA (Sostituisce tutti i precedenti popstate)
 window.addEventListener('popstate', function(event) {
