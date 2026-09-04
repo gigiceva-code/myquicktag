@@ -197,10 +197,7 @@
             visibility: visible !important;
             pointer-events: auto !important;
         }
-            opacity: 1 !important; visibility: visible !important; pointer-events: auto !important;
-            transform: translate(-50%, -50%) scale(1) !important; 
-            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0s !important; 
-        }
+         
         .drawer-backdrop {
             position: fixed !important; top: 0 !important; left: 0 !important;
             width: 100% !important; height: 100% !important; background: rgba(0, 0, 0, 0.6) !important; 
@@ -1607,73 +1604,73 @@
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
         function apriDrawer(idDrawer) {
-          
-            // ==========================================================
-            // 🧠 MOTORE DI ROUTING INTELLIGENTE (Memoria di navigazione)
-            // ==========================================================
-            const masterDrawer = document.getElementById('drawer-master');
-            
-            // Se clicchi "Indietro" per andare alla Plancia, ma eri entrato dalla Preview...
-            if (idDrawer === 'drawer-master' && window.entratoDaPreview === true) {
-                window.entratoDaPreview = false; // Reset della memoria
-                chiudiSenzaSalvare(); // Chiude il cassetto e ti lascia in Preview
-                return; // Interrompe il codice e impedisce alla Plancia di aprirsi
-            }
+    // 🛡️ Protezione da Race Condition: se i dati stanno ancora caricando, evita falsi blocchi
+    if (typeof isLoadingDati !== 'undefined' && isLoadingDati) {
+        return;
+    }
 
-            // Memoria: Se apri una stanza e la Plancia è chiusa, sei entrato dalla Preview
-            if (idDrawer.startsWith('env-')) {
-                if (masterDrawer && !masterDrawer.classList.contains('open')) {
-                    window.entratoDaPreview = true;
-                } else if (masterDrawer && masterDrawer.classList.contains('open')) {
-                    window.entratoDaPreview = false;
-                }
-            }
-            // ==========================================================
-            
-            // Controlli Piani Premium/Gold (SOLO per le singole funzioni interne)
-            const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
-            if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
-                mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e potenziare la tua identità digitale.");
-                return;
-            }
+    const masterDrawer = document.getElementById('drawer-master');
+    
+    // 🧠 Motore di Routing Intelligente (Memoria di navigazione)
+    if (idDrawer === 'drawer-master' && window.entratoDaPreview === true) {
+        window.entratoDaPreview = false; 
+        chiudiSenzaSalvare(); 
+        return; 
+    }
 
-            const esclusivePremium = ['drawer-quick', 'drawer-gallery']; 
-            if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
-                mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua Tag con strumenti avanzati.");
-                return;
-            }
-
-            const drawerTarget = document.getElementById(idDrawer);
-            const backdrop = document.getElementById('drawer-backdrop');
-            
-            // Spegne SEMPRE TUTTI i miniloghi presenti nella pagina (Anticlone)
-            document.querySelectorAll('#dynamic-trigger-area').forEach(el => {
-                el.style.opacity = '0';
-                el.style.pointerEvents = 'none';
-            });
-
-            if (backdrop) backdrop.classList.add('active');
-
-            if (drawerTarget) {
-                drawerTarget.style.zIndex = "9999"; // Livello divino: batte qualsiasi sfondo o scudo
-                drawerTarget.style.pointerEvents = "auto"; // Forza l'attivazione del touch
-                setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
-            }
-
-            // Spegne gli altri cassetti
-            setTimeout(() => {
-                document.querySelectorAll('.drawer-glass').forEach(d => {
-                    if (d.id !== idDrawer) {
-                        d.classList.remove('open');
-                        d.style.zIndex = "2000"; 
-                    }
-                });
-            }, 300);
-
-            if (window.location.hash !== '#menu') {
-                history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
-            }
+    if (idDrawer.startsWith('env-')) {
+        if (masterDrawer && !masterDrawer.classList.contains('open')) {
+            window.entratoDaPreview = true;
+        } else if (masterDrawer && masterDrawer.classList.contains('open')) {
+            window.entratoDaPreview = false;
         }
+    }
+    
+    // 👑 Controllo Esclusive GOLD
+    const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
+    if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
+        mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e potenziare la tua identità digitale.");
+        return;
+    }
+
+    // 🚀 Controllo Esclusive PREMIUM
+    const esclusivePremium = ['drawer-quick', 'drawer-gallery']; 
+    if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
+        mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua Tag con strumenti avanzati.");
+        return;
+    }
+
+    const drawerTarget = document.getElementById(idDrawer);
+    const backdrop = document.getElementById('drawer-backdrop');
+    
+    // Spegne eventuali trigger di sfondo
+    document.querySelectorAll('#dynamic-trigger-area').forEach(el => {
+        el.style.opacity = '0';
+        el.style.pointerEvents = 'none';
+    });
+
+    if (backdrop) backdrop.classList.add('active');
+
+    if (drawerTarget) {
+        drawerTarget.style.zIndex = "9999"; // Primo piano assoluto
+        drawerTarget.style.pointerEvents = "auto"; // Riattiva il touch
+        setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
+    }
+
+    // Spegne gli altri cassetti
+    setTimeout(() => {
+        document.querySelectorAll('.drawer-glass').forEach(d => {
+            if (d.id !== idDrawer) {
+                d.classList.remove('open');
+                d.style.zIndex = "2000"; 
+            }
+        });
+    }, 300);
+
+    if (window.location.hash !== '#menu') {
+        history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
+    }
+}
         function chiudiSenzaSalvare() {
             if (window.location.hash === '#menu') {
                 history.back(); 
@@ -2924,35 +2921,18 @@ function gestisciVIPSwitch(checkbox) {
         // ==========================================
         // MOTORE POPUP CUSTOM E TASTO INDIETRO ANDROID
         // ==========================================
-      function mostraPopupPremium(titolo, messaggio) {
-            console.error("DEBUG: Avvio mostraPopupPremium. Titolo ricevuto:", titolo);
-
-            const titleEl = document.getElementById('premium-alert-title');
-            const msgEl = document.getElementById('premium-alert-msg');
-            const overlayEl = document.getElementById('premium-alert-overlay');
-
-            if (!titleEl) {
-                console.error("ERRORE: Il sistema non trova l'HTML con ID 'premium-alert-title'");
-            }
-            if (!msgEl) {
-                console.error("ERRORE: Il sistema non trova l'HTML con ID 'premium-alert-msg'");
-            }
-            if (!overlayEl) {
-                console.error("ERRORE: Il sistema non trova l'HTML con ID 'premium-alert-overlay'");
-            }
-
-            if (titleEl && msgEl && overlayEl) {
-                titleEl.innerHTML = titolo;
-                msgEl.innerHTML = messaggio;
-                
-                overlayEl.style.display = 'flex';
-                setTimeout(() => { 
-                    overlayEl.style.opacity = '1'; 
-                    overlayEl.children[0].style.transform = 'scale(1)'; 
-                }, 10);
-                
-                history.pushState({ popupAperto: true }, "");
-            }
+    function mostraPopupPremium(titolo, messaggio) {
+            document.getElementById('premium-alert-title').innerHTML = titolo;
+            document.getElementById('premium-alert-msg').innerHTML = messaggio;
+            const overlay = document.getElementById('premium-alert-overlay');
+            
+            overlay.style.display = 'flex';
+            setTimeout(() => { 
+                overlay.style.opacity = '1'; 
+                overlay.children[0].style.transform = 'scale(1)'; 
+            }, 10);
+            
+            history.pushState({ popupAperto: true }, "");
         }
         function confermaPremiumAlert() {
             chiudiPremiumAlert(); // Chiude il popup...
