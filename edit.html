@@ -2931,24 +2931,33 @@ function gestisciVIPSwitch(checkbox) {
         // ==========================================
         // MOTORE POPUP CUSTOM E TASTO INDIETRO ANDROID
         // ==========================================
-    function mostraPopupPremium(titolo, messaggio) {
+   function mostraPopupPremium(titolo, messaggio) {
+    const overlay = document.getElementById('premium-alert-overlay');
+    
+    // Paracadute estremo: se l'HTML del popup per qualche motivo è danneggiato, usa l'alert di sistema
+    if (!overlay) {
+        alert("👑 " + titolo + "\n\n" + messaggio.replace(/<[^>]*>?/gm, ''));
+        return;
+    }
+
     const titleEl = document.getElementById('premium-alert-title');
     const msgEl = document.getElementById('premium-alert-msg');
-    const overlay = document.getElementById('premium-alert-overlay');
-
     if (titleEl) titleEl.innerHTML = titolo;
     if (msgEl) msgEl.innerHTML = messaggio;
 
-    if (overlay) {
-        // Forza l'apparizione immediata senza bug di transizione mobile
-        overlay.style.display = 'flex';
-        overlay.style.opacity = '1'; 
-        if (overlay.children[0]) {
-            overlay.children[0].style.transform = 'scale(1)';
-        }
-        
-        history.pushState({ popupAperto: true }, "");
+    // FORZA BRUTA CSS: Costringe il browser a renderlo visibile scavalcando qualsiasi blocco
+    overlay.style.setProperty('display', 'flex', 'important');
+    overlay.style.setProperty('opacity', '1', 'important');
+    overlay.style.setProperty('visibility', 'visible', 'important');
+    overlay.style.setProperty('pointer-events', 'auto', 'important');
+    overlay.style.setProperty('z-index', '2147483647', 'important'); // Il livello massimo possibile
+
+    if (overlay.children[0]) {
+        overlay.children[0].style.setProperty('transform', 'scale(1)', 'important');
     }
+
+    // Registra l'apertura per la cronologia del telefono
+    history.pushState({ popupAperto: true }, "");
 }
        
        function confermaPremiumAlert() {
