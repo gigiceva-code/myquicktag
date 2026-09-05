@@ -1600,12 +1600,7 @@
        // ==========================================
         // GESTIONE CASSETTI (Il Teatro Liquido)
         // ==========================================
-     function apriDrawer(idDrawer) {
-    console.log("----------------------------------------");
-    console.log("🎯 CLICK RICEVUTO per il cassetto:", idDrawer);
-    console.log("👑 userPlan attuale nel browser:", userPlan);
-    console.log("----------------------------------------");
-
+    function apriDrawer(idDrawer) {
     const masterDrawer = document.getElementById('drawer-master');
     
     // 🧠 Motore di Routing Intelligente
@@ -1626,7 +1621,6 @@
     // 👑 Controllo Esclusive GOLD
     const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
     if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
-        console.log("⛔ Blocco scattato: Funzione GOLD protetta! Mostro il popup.");
         mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e potenziare la tua identità digitale.");
         return;
     }
@@ -1634,13 +1628,10 @@
     // 🚀 Controllo Esclusive PREMIUM
     const esclusivePremium = ['drawer-quick', 'drawer-gallery']; 
     if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
-        console.log("⛔ Blocco scattato: Funzione PREMIUM protetta! Mostro il popup.");
         mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua Tag con strumenti avanzati.");
         return;
     }
 
-    console.log("✅ Nessun blocco: Procedo ad aprire il cassetto normale.");
-    
     const drawerTarget = document.getElementById(idDrawer);
     const backdrop = document.getElementById('drawer-backdrop');
     
