@@ -1330,47 +1330,63 @@
         <button class="btn-crea" onclick="chiudiSenzaSalvare()">CONFERMA STILE</button>
     </div>
 
-    <div class="drawer-glass" id="drawer-piani">
-        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">PIANI E ABBONAMENTI</div>
-            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
-        </div>
+   <div class="drawer-glass" id="drawer-piani">
+    <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+        <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
+        <div class="header-title" style="font-weight: 400;">PIANI E ABBONAMENTI</div>
+        <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+    </div>
 
-        <div class="style-list" style="gap: 12px; margin-top: 10px; overflow-y: auto; padding-bottom: 20px;">
-            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2);">
-                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">PIANO BASE</span>
-                </div>
-              <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;" onclick="sbloccaPianoInAnteprima('BASE')">
-                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">PIANO BASE</span>
-                </div>
-                <ul style="color: rgba(255,255,255,0.7); font-size: 0.7rem; line-height: 1.6; padding-left: 15px; margin: 0; margin-bottom: 10px;">
-                    <li>Nome, Bio e Avatar / Logo</li>
-                    <li>Stile e Layout Tag</li>
-                    <li>Sito Web Ufficiale</li>
-                    <li>Fino a 3 Link Social</li>
-                    <li>QR Code Ufficiale</li>
-                </ul>
-                <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 6px; border-radius: 6px; color: #fff; font-size: 0.7rem; font-weight: 600;">SELEZIONA BASE</div>
+    <div class="style-list" style="gap: 12px; margin-top: 10px; overflow-y: auto; padding-bottom: 20px;">
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;" onclick="sbloccaPianoInAnteprima('BASE')">
+            <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">PIANO BASE</span>
             </div>
-            
-            <div style="background: rgba(16, 185, 129, 0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(16, 185, 129, 0.3); cursor: pointer;" onclick="sbloccaPianoInAnteprima('PREMIUM')">
-                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="color: #10b981; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px;">PREMIUM</span>
-                    <i class="fas fa-unlock" style="color: #10b981; font-size: 0.8rem;"></i>
-                </div>
-                <ul style="color: rgba(255,255,255,0.7); font-size: 0.7rem; line-height: 1.6; padding-left: 15px; margin: 0; margin-bottom: 10px;">
-                    <li><span style="color: #10b981;">Tutto ciò che c'è nel Base, PIÙ:</span></li>
-                    <li>Rubrica Completa (Salvataggio in Rubrica)</li>
-                    <li>Social & Link Illimitati</li>
-                    <li>Azione Rapida (CTA) in evidenza</li>
-                    <li>Galleria (Max 3 foto)</li>
-                </ul>
-                <div style="text-align: center; background: rgba(16, 185, 129, 0.1); padding: 6px; border-radius: 6px; color: #10b981; font-size: 0.7rem; font-weight: 600;">SELEZIONA PREMIUM</div>
+            <ul style="color: rgba(255,255,255,0.7); font-size: 0.7rem; line-height: 1.6; padding-left: 15px; margin: 0; margin-bottom: 15px;">
+                <li>Identità completa e CV (PDF)</li>
+                <li>Personalizzazione Temi e Layout</li>
+                <li>Salvataggio in Rubrica (VCF)</li>
+                <li>Fino a 5 Link Social</li>
+                <li>Sito Web e QR Code Dinamico</li>
+            </ul>
+            <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 8px; border-radius: 8px; color: #fff; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">Simula Piano Base</div>
+        </div>
+        
+        <div style="background: rgba(16, 185, 129, 0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(16, 185, 129, 0.3); cursor: pointer; margin-top: 5px;" onclick="sbloccaPianoInAnteprima('PREMIUM')">
+            <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #10b981; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px;">PREMIUM</span>
+                <i class="fas fa-unlock" style="color: #10b981; font-size: 0.8rem;"></i>
             </div>
-            
+            <ul style="color: rgba(255,255,255,0.7); font-size: 0.7rem; line-height: 1.6; padding-left: 15px; margin: 0; margin-bottom: 15px;">
+                <li><span style="color: #10b981; font-weight: 600;">Tutto il Base, PIÙ:</span></li>
+                <li>Social & Link Illimitati</li>
+                <li>Telefono secondario e Mappe</li>
+                <li>Azione Rapida (CTA) in evidenza</li>
+                <li>Galleria (Max 6 foto) e Vetrina PDF</li>
+            </ul>
+            <div style="text-align: center; background: #10b981; padding: 8px; border-radius: 8px; color: #000; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Simula Premium</div>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, rgba(229, 193, 88, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 16px; border-radius: 14px; border: 1px solid #e5c158; cursor: pointer; position: relative; overflow: hidden; margin-top: 5px;" onclick="sbloccaPianoInAnteprima('GOLD')">
+            <div style="position: absolute; top: 0; right: 0; background: #e5c158; color: #000; font-size: 0.5rem; font-weight: 800; padding: 4px 12px; border-bottom-left-radius: 10px; letter-spacing: 1px;">TOP SELLER</div>
+            <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #e5c158; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px;">GOLD</span>
+                <i class="fas fa-crown" style="color: #e5c158; font-size: 0.9rem;"></i>
+            </div>
+            <ul style="color: rgba(255,255,255,0.7); font-size: 0.7rem; line-height: 1.6; padding-left: 15px; margin: 0; margin-bottom: 15px;">
+                <li><span style="color: #e5c158; font-weight: 600;">Tutto il Premium, PIÙ:</span></li>
+                <li><b>Scudo Reputazione</b> (Filtro Recensioni)</li>
+                <li><b>Lead Capture</b> (Raccolta Contatti)</li>
+                <li><b>Action Center</b> (Semaforo, Timer, Vendite)</li>
+                <li>Quick Pass (Passaparola virale)</li>
+                <li>VIP Vault (Link con PIN di sblocco)</li>
+                <li>Cerchia di Partner fidata</li>
+            </ul>
+            <div style="text-align: center; background: #e5c158; padding: 8px; border-radius: 8px; color: #000; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Simula Gold</div>
+        </div>
+    </div>
+</div>
             <div style="background: linear-gradient(135deg, rgba(229, 193, 88, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 16px; border-radius: 14px; border: 1px solid #e5c158; cursor: pointer; position: relative; overflow: hidden; margin-top: 12px;" onclick="sbloccaPianoInAnteprima('GOLD')">
                 <div style="position: absolute; top: 0; right: 0; background: #e5c158; color: #000; font-size: 0.5rem; font-weight: 800; padding: 4px 12px; border-bottom-left-radius: 10px; letter-spacing: 1px;">TOP</div>
                 <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
@@ -1618,17 +1634,17 @@
         }
     }
     
-   // 👑 Controllo Esclusive GOLD
-    const esclusiveGold = ['drawer-live-status', 'drawer-flash', 'drawer-showcase', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop']; 
+  // 👑 Controllo Esclusive GOLD (Monetizzazione e Marketing)
+    const esclusiveGold = ['drawer-review', 'drawer-lead-capture', 'drawer-partners', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass']; 
     if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
-        mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e potenziare la tua identità digitale.", "GOLD");
+        mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e iniziare a monetizzare.", "GOLD");
         return;
     }
 
-    // 🚀 Controllo Esclusive PREMIUM
-    const esclusivePremium = ['drawer-quick', 'drawer-gallery']; 
+    // 🚀 Controllo Esclusive PREMIUM (Vetrina e Azioni)
+    const esclusivePremium = ['drawer-gallery', 'drawer-showcase', 'drawer-quick']; 
     if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
-        mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua Tag con strumenti avanzati.", "PREMIUM");
+        mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua vetrina e i tuoi contatti.", "PREMIUM");
         return;
     }
 
@@ -2217,26 +2233,32 @@ window.addEventListener('popstate', function(event) {
             }, 400);
         }
 
-      function aggiornaLucchetti() {
-            const cassettiGold = ['drawer-showcase', 'drawer-live-status', 'drawer-flash', 'drawer-quickpass', 'drawer-review', 'drawer-video', 'drawer-shop'];
-            const cassettiPremium = ['drawer-quick', 'drawer-gallery']; 
-            
-            document.querySelectorAll('.premium-field-container').forEach(container => {
-                const overlay = container.querySelector('.premium-lock-overlay');
-                if (overlay) {
-                    const parentDrawer = container.closest('.drawer-glass');
-                    if (parentDrawer) {
-                        const drawerId = parentDrawer.id;
-                        if (cassettiGold.includes(drawerId)) {
-                            overlay.style.display = (userPlan === 'GOLD') ? 'none' : 'flex';
-                        } else if (cassettiPremium.includes(drawerId)) {
-                            overlay.style.display = (userPlan === 'PREMIUM' || userPlan === 'GOLD') ? 'none' : 'flex';
-                        }
-                    }
+     function aggiornaLucchetti() {
+    const cassettiGold = ['drawer-review', 'drawer-lead-capture', 'drawer-partners', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass'];
+    const cassettiPremium = ['drawer-gallery', 'drawer-showcase', 'drawer-quick']; 
+    
+    document.querySelectorAll('.premium-field-container').forEach(container => {
+        const overlay = container.querySelector('.premium-lock-overlay');
+        if (overlay) {
+            const parentDrawer = container.closest('.drawer-glass');
+            if (parentDrawer) {
+                const drawerId = parentDrawer.id;
+                
+                if (cassettiGold.includes(drawerId)) {
+                    overlay.style.display = (userPlan === 'GOLD') ? 'none' : 'flex';
+                } else if (cassettiPremium.includes(drawerId)) {
+                    overlay.style.display = (userPlan === 'PREMIUM' || userPlan === 'GOLD') ? 'none' : 'flex';
+                } else if (drawerId === 'drawer-contatti') {
+                    // Eccezione: i campi Tel2 e Maps dentro Contatti sono Premium
+                    overlay.style.display = (userPlan === 'PREMIUM' || userPlan === 'GOLD') ? 'none' : 'flex';
+                    const icon = overlay.querySelector('.fa-lock');
+                    if(icon) { icon.style.color = '#10b981'; } // Lucchetto verde
                 }
-            });
-            if(typeof aggiornaLimitiSocial === 'function') aggiornaLimitiSocial();
+            }
         }
+    });
+    if(typeof aggiornaLimitiSocial === 'function') aggiornaLimitiSocial();
+}
         function selezionaStatus(colore) {
             document.getElementById('btn-status-green').style.opacity = '0.3';
             document.getElementById('btn-status-yellow').style.opacity = '0.3';
@@ -2377,7 +2399,7 @@ function gestisciVIPSwitch(checkbox) {
 
         function aggiungiLinkSmart() {
             const internalTrack = document.getElementById('social-internal-track');
-            let limit = 3; if (userPlan === 'PREMIUM') limit = 8; if (userPlan === 'GOLD') limit = 999;
+         let limit = 5; if (userPlan === 'PREMIUM' || userPlan === 'GOLD') limit = 999;
             
             if (internalTrack && internalTrack.children.length >= limit) {
                 alert("Avviso di Sistema\n\nIl piano attuale consente l'inserimento di un massimo di " + limit + " canali.\nProcedere all'upgrade per rimuovere questo limite.");
@@ -2442,35 +2464,40 @@ function gestisciVIPSwitch(checkbox) {
             aggiornaLimitiSocial(); aggiornaAnteprimaLive(); eseguiAutoSaveInvisibile();
         }
 
-        function aggiornaLimitiSocial() {
-            const internalTrack = document.getElementById('social-internal-track');
-            if (!internalTrack) return;
-            const count = internalTrack.children.length;
-            const counterEl = document.getElementById('social-counter');
-            const btnAdd = document.getElementById('btn-add-social');
+       function aggiornaLimitiSocial() {
+    const internalTrack = document.getElementById('social-internal-track');
+    if (!internalTrack) return;
+    const count = internalTrack.children.length;
+    const counterEl = document.getElementById('social-counter');
+    const btnAdd = document.getElementById('btn-add-social');
 
-            let limit = 3; let planName = "Piano Base";
-            if (userPlan === 'PREMIUM') { limit = 8; planName = "Piano Premium"; }
-            if (userPlan === 'GOLD') { limit = 999; planName = "Piano Gold"; }
+    // --- LA PARTE CENTRALE MODIFICATA (Base a 5, Premium/Gold Illimitati) ---
+    let limit = 5; 
+    let planName = "Piano Base";
+    
+    if (userPlan === 'PREMIUM' || userPlan === 'GOLD') { 
+        limit = 999; 
+        planName = (userPlan === 'GOLD') ? "Piano Gold" : "Piano Premium"; 
+    }
+    // ------------------------------------------------------------------------
 
-            if (counterEl) {
-                if (limit === 999) { counterEl.innerText = `${count}/∞ (${planName})`; } 
-                else { counterEl.innerText = `${count}/${limit} (${planName})`; }
-            }
+    if (counterEl) {
+        if (limit === 999) { counterEl.innerText = `${count}/∞ (${planName})`; } 
+        else { counterEl.innerText = `${count}/${limit} (${planName})`; }
+    }
 
-            if (btnAdd) {
-                if (count >= limit) {
-                    btnAdd.innerHTML = `<i class="fas fa-lock"></i> LIMITE RAGGIUNTO`;
-                    btnAdd.style.background = "rgba(255,255,255,0.1)"; btnAdd.style.color = "#ff4444";
-                    btnAdd.onclick = function(e) { if(e) e.preventDefault(); alert("Avviso di Sistema\n\nHai raggiunto il limite massimo di " + limit + " canali previsto dal tuo piano."); };
-                } else {
-                    btnAdd.innerHTML = `+ AGGIUNGI AL PROFILO`;
-                    btnAdd.style.background = "#10b981"; btnAdd.style.color = "#000";
-                    btnAdd.onclick = aggiungiLinkSmart;
-                }
-            }
+    if (btnAdd) {
+        if (count >= limit) {
+            btnAdd.innerHTML = `<i class="fas fa-lock"></i> LIMITE RAGGIUNTO`;
+            btnAdd.style.background = "rgba(255,255,255,0.1)"; btnAdd.style.color = "#ff4444";
+            btnAdd.onclick = function(e) { if(e) e.preventDefault(); alert("Avviso di Sistema\n\nHai raggiunto il limite massimo di " + limit + " canali previsto dal tuo piano."); };
+        } else {
+            btnAdd.innerHTML = `+ AGGIUNGI AL PROFILO`;
+            btnAdd.style.background = "#10b981"; btnAdd.style.color = "#000";
+            btnAdd.onclick = aggiungiLinkSmart;
         }
-
+    }
+}
         function aggiungiPartner() {
             const nomeInput = document.getElementById('input-partner-nome');
             const urlInput = document.getElementById('input-partner-url');
@@ -2638,7 +2665,7 @@ function gestisciVIPSwitch(checkbox) {
             const hiddenField = document.getElementById('field-gallery-data');
             let arrayAttuale = hiddenField.value && hiddenField.value !== "[]" ? JSON.parse(hiddenField.value) : [];
 
-            const limiteMax = typeof userPlan !== 'undefined' && userPlan === 'GOLD' ? 9 : 3;
+            const limiteMax = typeof userPlan !== 'undefined' && userPlan === 'GOLD' ? 9 : 6;
 
             if (arrayAttuale.length + files.length > limiteMax) {
                 alert(`Attenzione: Il piano consente un massimo di ${limiteMax} foto.\nNe hai già caricate ${arrayAttuale.length} e stai cercando di aggiungerne ${files.length}.`);
