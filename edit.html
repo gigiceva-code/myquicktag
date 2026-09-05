@@ -1303,34 +1303,7 @@
         <button class="btn-crea" onclick="chiudiSenzaSalvare()">SALVA QUICK PASS</button>
     </div>
 
-    <!-- === STILI E PIANI === -->
-    <div class="drawer-glass" id="drawer-style">
-        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 400;">DIGITAL STYLE</div>
-            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
-        </div>
-        <div class="style-list">
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="black_dna" checked onchange="applicaTemaLive()"><div class="style-bar"><span>Black DNA</span><div class="color-dot" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.3);"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="emerald" onchange="applicaTemaLive()"><div class="style-bar"><span>Emerald</span><div class="color-dot" style="background: #00E680;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="titanium" onchange="applicaTemaLive()"><div class="style-bar"><span>Titanium</span><div class="color-dot" style="background: #b0b0b5;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="obsidian_gold" onchange="applicaTemaLive()"><div class="style-bar"><span>Obsidian Gold</span><div class="color-dot" style="background: #e5c158;"></div></div></label>
-            <label class="style-bar-label"><input type="radio" name="digital_style" value="satin_rose" onchange="applicaTemaLive()"><div class="style-bar"><span>Satin Rose</span><div class="color-dot" style="background: #c8968e;"></div></div></label>
-        </div>
-        <div class="drawer-header-liquido" style="margin-top: 25px; margin-bottom: 15px;">
-            <div class="header-back"></div>
-            <div class="header-title" style="font-weight: 400;">BRAND LAYOUT</div>
-            <div class="header-close"></div>
-        </div>
-        <div class="style-list" style="flex-direction: row; gap: 10px; margin-bottom: 24px;">
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="badge" checked onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Badge</span></div></label>
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="divider" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Divider</span></div></label>
-            <label class="style-bar-label" style="flex: 1;"><input type="radio" name="digital_layout" value="pure" onchange="applicaTemaLive()"><div class="style-bar" style="justify-content: center; padding: 12px 0;"><span>Pure</span></div></label>
-        </div>
-        <button class="btn-crea" onclick="chiudiSenzaSalvare()">CONFERMA STILE</button>
-    </div>
-
-  <!-- === STILI E PIANI === -->
+   <!-- === STILI E PIANI === -->
     <div class="drawer-glass" id="drawer-style">
         <div class="drawer-header-liquido" style="margin-bottom: 20px;">
             <div class="header-back" onclick="apriDrawer('drawer-master')"><i class="fas fa-chevron-left"></i></div>
@@ -1415,27 +1388,12 @@
                 </ul>
                 <div style="text-align: center; background: #e5c158; padding: 8px; border-radius: 8px; color: #000; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Simula Gold</div>
             </div>
+            
+            <!-- Spessore per permettere lo scroll oltre il bottone -->
+            <div style="height: 100px; flex-shrink: 0;"></div>
         </div>
     </div>
-<!-- === POPUP CUSTOM PER FUNZIONI PREMIUM/GOLD (Blindato) === -->
-<div id="premium-alert-overlay" style="display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0, 0, 0, 0.9) !important; backdrop-filter: blur(10px) !important; z-index: 2147483647 !important; justify-content: center !important; align-items: center !important; padding: 20px !important; opacity: 0; transition: opacity 0.3s ease;">
-    <div style="background: #121215 !important; border: 2px solid #d4af37 !important; border-radius: 24px !important; padding: 32px 24px !important; text-align: center !important; width: 100% !important; max-width: 340px !important; box-shadow: 0 25px 60px rgba(0,0,0,0.9) !important; transform: scale(0.95); transition: transform 0.3s ease; position: relative !important; z-index: 2147483647 !important;">
-        
-        <!-- Tasto X per chiudere senza fare nulla -->
-        <button onclick="chiudiPremiumAlert()" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">&times;</button>
-        
-        <i class="fas fa-lock" style="font-size: 2.5rem; color: #d4af37; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));"></i>
-        
-        <h3 id="premium-alert-title" style="color: #fff; font-size: 1.05rem; font-weight: 600; margin-bottom: 12px; letter-spacing: 2px; text-transform: uppercase;">FUNZIONE BLOCCATA</h3>
-        
-        <p id="premium-alert-msg" style="color: #a0a0a5; font-size: 0.9rem; font-weight: 300; line-height: 1.6; margin-bottom: 28px; padding: 0 10px;"></p>
-        
-        <!-- Tasto Conferma per andare ai Piani -->
-        <button onclick="confermaPremiumAlert()" style="width: 100%; padding: 16px; background: #d4af37; border: none; border-radius: 12px; color: #000; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; transition: transform 0.2s; text-transform: uppercase;">
-            GESTIONE PIANI
-        </button>
-    </div>
-</div>
+    <!-- VECCHIO POPUP HTML ELIMINATO, ORA CI PENSA IL JAVASCRIPT -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
@@ -1646,19 +1604,19 @@
         }
     }
     
-  // 👑 Controllo Esclusive GOLD (Monetizzazione e Marketing)
-    const esclusiveGold = ['drawer-review', 'drawer-lead-capture', 'drawer-partners', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass']; 
+ // 👑 Controllo Esclusive GOLD (Monetizzazione e Marketing)
+    const esclusiveGold = ['drawer-review', 'drawer-lead-capture', 'drawer-partners', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass', 'drawer-video', 'drawer-showcase']; 
     if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
         mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e iniziare a monetizzare.", "GOLD");
         return;
     }
 
     // 🚀 Controllo Esclusive PREMIUM (Vetrina e Azioni)
-    const esclusivePremium = ['drawer-gallery', 'drawer-showcase', 'drawer-quick']; 
+    const esclusivePremium = ['drawer-gallery', 'drawer-quick']; 
     if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
         mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua vetrina e i tuoi contatti.", "PREMIUM");
         return;
-    }
+    } 
 
     const drawerTarget = document.getElementById(idDrawer);
     const backdrop = document.getElementById('drawer-backdrop');
