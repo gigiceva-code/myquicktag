@@ -2692,7 +2692,36 @@ function gestisciVIPSwitch(checkbox) {
                 aggiornaAnteprimaLive(); eseguiAutoSaveInvisibile();
             }, 100); 
         }
+function disegnaGrigliaGalleria() {
+            const hiddenField = document.getElementById('field-gallery-data');
+            const grid = document.getElementById('gallery-preview-grid');
+            if (!hiddenField || !grid) return;
+            
+            let arrayAttuale = [];
+            try { arrayAttuale = JSON.parse(hiddenField.value || '[]'); } catch(e) {}
+            
+            grid.innerHTML = '';
+            arrayAttuale.forEach((url, i) => {
+                grid.innerHTML += `
+                <div style="position:relative; aspect-ratio:1/1; border-radius:8px; overflow:hidden; border: 1px solid rgba(255,255,255,0.1);">
+                    <img src="${url}" style="width:100%; height:100%; object-fit:cover;">
+                    <div style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.7); width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="rimuoviFotoGalleria(${i})">
+                        <i class="fas fa-trash" style="color:#ff4444; font-size:0.7rem;"></i>
+                    </div>
+                </div>`;
+            });
+        }
 
+        function rimuoviFotoGalleria(index) {
+            const hiddenField = document.getElementById('field-gallery-data');
+            let arrayAttuale = [];
+            try { arrayAttuale = JSON.parse(hiddenField.value || '[]'); } catch(e) {}
+            arrayAttuale.splice(index, 1);
+            if(hiddenField) hiddenField.value = JSON.stringify(arrayAttuale);
+            disegnaGrigliaGalleria();
+            aggiornaAnteprimaLive(); 
+            eseguiAutoSaveInvisibile();
+        }
         async function gestisciUploadPDF(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -2964,43 +2993,21 @@ function gestisciVIPSwitch(checkbox) {
             chiudiPremiumAlert(); 
             setTimeout(() => { apriDrawer('drawer-piani'); }, 300); 
         }
-
-        function chiudiPremiumAlert() {
+function chiudiPremiumAlert() {
             const overlay = document.getElementById('premium-alert-overlay');
             if (overlay) {
-                overlay.style.opacity = '0';
+                overlay.style.setProperty('opacity', '0', 'important');
                 if (overlay.children[0]) {
-                    overlay.children[0].style.transform = 'scale(0.95)';
+                    overlay.children[0].style.setProperty('transform', 'scale(0.95)', 'important');
                 }
                 setTimeout(() => { 
-                    overlay.style.display = 'none'; 
+                    // Distrugge fisicamente lo scudo invisibile!
+                    overlay.style.setProperty('display', 'none', 'important'); 
+                    overlay.style.setProperty('pointer-events', 'none', 'important');
                 }, 300);
             }
         }
-
-        // UNICO GESTORE DELLA CRONOLOGIA PULITO
-        window.addEventListener('popstate', function(event) {
-            const hash = window.location.hash;
-            const insightDrawer = document.getElementById('drawer-insight');
-            const overlay = document.getElementById('premium-alert-overlay');
-
-            if (overlay && overlay.style.display === 'flex') {
-                overlay.style.opacity = '0';
-                if (overlay.children[0]) overlay.children[0].style.transform = 'scale(0.95)';
-                setTimeout(() => { overlay.style.display = 'none'; }, 300);
-                return;
-            }
-
-            if (insightDrawer && insightDrawer.classList.contains('open')) {
-                insightDrawer.classList.remove('open');
-                return;
-            }
-
-            if (hash === '' || hash === '#') {
-                eseguiChiusuraGrafica();
-                eseguiAutoSaveInvisibile();
-            }
-        });
+       
     </script>
 </body>
 </html>
