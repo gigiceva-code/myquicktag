@@ -2692,36 +2692,7 @@ function gestisciVIPSwitch(checkbox) {
                 aggiornaAnteprimaLive(); eseguiAutoSaveInvisibile();
             }, 100); 
         }
-function disegnaGrigliaGalleria() {
-            const hiddenField = document.getElementById('field-gallery-data');
-            const grid = document.getElementById('gallery-preview-grid');
-            if (!hiddenField || !grid) return;
-            
-            let arrayAttuale = [];
-            try { arrayAttuale = JSON.parse(hiddenField.value || '[]'); } catch(e) {}
-            
-            grid.innerHTML = '';
-            arrayAttuale.forEach((url, i) => {
-                grid.innerHTML += `
-                <div style="position:relative; aspect-ratio:1/1; border-radius:8px; overflow:hidden; border: 1px solid rgba(255,255,255,0.1);">
-                    <img src="${url}" style="width:100%; height:100%; object-fit:cover;">
-                    <div style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.7); width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="rimuoviFotoGalleria(${i})">
-                        <i class="fas fa-trash" style="color:#ff4444; font-size:0.7rem;"></i>
-                    </div>
-                </div>`;
-            });
-        }
 
-        function rimuoviFotoGalleria(index) {
-            const hiddenField = document.getElementById('field-gallery-data');
-            let arrayAttuale = [];
-            try { arrayAttuale = JSON.parse(hiddenField.value || '[]'); } catch(e) {}
-            arrayAttuale.splice(index, 1);
-            if(hiddenField) hiddenField.value = JSON.stringify(arrayAttuale);
-            disegnaGrigliaGalleria();
-            aggiornaAnteprimaLive(); 
-            eseguiAutoSaveInvisibile();
-        }
         async function gestisciUploadPDF(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -2958,56 +2929,90 @@ function disegnaGrigliaGalleria() {
             }
         }
         // ==========================================
-        // MOTORE POPUP CUSTOM E TASTO INDIETRO ANDROID
-        // ==========================================
-   function mostraPopupPremium(titolo, messaggio) {
-    const overlay = document.getElementById('premium-alert-overlay');
+// FUNZIONI MANCANTI GALLERIA (Fix Errore Caricamento)
+// ==========================================
+function disegnaGrigliaGalleria() {
+    const hiddenField = document.getElementById('field-gallery-data');
+    const grid = document.getElementById('gallery-preview-grid');
+    if (!hiddenField || !grid) return;
     
-    // Paracadute estremo: se l'HTML del popup per qualche motivo è danneggiato, usa l'alert di sistema
-    if (!overlay) {
-        alert("👑 " + titolo + "\n\n" + messaggio.replace(/<[^>]*>?/gm, ''));
-        return;
-    }
-
-    const titleEl = document.getElementById('premium-alert-title');
-    const msgEl = document.getElementById('premium-alert-msg');
-    if (titleEl) titleEl.innerHTML = titolo;
-    if (msgEl) msgEl.innerHTML = messaggio;
-
-    // FORZA BRUTA CSS: Costringe il browser a renderlo visibile scavalcando qualsiasi blocco
-    overlay.style.setProperty('display', 'flex', 'important');
-    overlay.style.setProperty('opacity', '1', 'important');
-    overlay.style.setProperty('visibility', 'visible', 'important');
-    overlay.style.setProperty('pointer-events', 'auto', 'important');
-    overlay.style.setProperty('z-index', '2147483647', 'important'); // Il livello massimo possibile
-
-    if (overlay.children[0]) {
-        overlay.children[0].style.setProperty('transform', 'scale(1)', 'important');
-    }
-
-    // Registra l'apertura per la cronologia del telefono
-    history.pushState({ popupAperto: true }, "");
+    let arrayAttuale = [];
+    try { arrayAttuale = JSON.parse(hiddenField.value || '[]'); } catch(e) {}
+    
+    grid.innerHTML = '';
+    arrayAttuale.forEach((url, i) => {
+        grid.innerHTML += `
+        <div style="position:relative; aspect-ratio:1/1; border-radius:8px; overflow:hidden; border: 1px solid rgba(255,255,255,0.1);">
+            <img src="${url}" style="width:100%; height:100%; object-fit:cover;">
+            <div style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.7); width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="rimuoviFotoGalleria(${i})">
+                <i class="fas fa-trash" style="color:#ff4444; font-size:0.7rem;"></i>
+            </div>
+        </div>`;
+    });
 }
-       
-       function confermaPremiumAlert() {
-            chiudiPremiumAlert(); 
-            setTimeout(() => { apriDrawer('drawer-piani'); }, 300); 
-        }
+
+function rimuoviFotoGalleria(index) {
+    const hiddenField = document.getElementById('field-gallery-data');
+    let arrayAttuale = [];
+    try { arrayAttuale = JSON.parse(hiddenField.value || '[]'); } catch(e) {}
+    arrayAttuale.splice(index, 1);
+    if(hiddenField) hiddenField.value = JSON.stringify(arrayAttuale);
+    disegnaGrigliaGalleria();
+    aggiornaAnteprimaLive(); 
+    eseguiAutoSaveInvisibile();
+}
+
+// ==========================================
+// MOTORE POPUP CUSTOM BLINDATO (Creato via JS)
+// ==========================================
+function mostraPopupPremium(titolo, messaggio) {
+    let overlay = document.getElementById('premium-alert-overlay');
+    
+    // Lo ricreiamo da zero per scavalcare ogni blocco CSS o HTML mancante!
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'premium-alert-overlay';
+        document.body.appendChild(overlay);
+    } else {
+        document.body.appendChild(overlay); // Lo sposta in cima alla visuale
+    }
+
+    overlay.style.cssText = 'display: flex !important; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0, 0, 0, 0.92) !important; backdrop-filter: blur(12px) !important; z-index: 2147483647 !important; justify-content: center !important; align-items: center !important; padding: 20px !important; box-sizing: border-box !important; opacity: 0; transition: opacity 0.3s ease; pointer-events: auto !important;';
+    
+    overlay.innerHTML = `
+        <div style="background: #15151a !important; border: 2px solid #d4af37 !important; border-radius: 24px !important; padding: 32px 24px !important; text-align: center !important; width: 100% !important; max-width: 340px !important; box-shadow: 0 25px 60px rgba(0,0,0,0.9) !important; transform: scale(0.95); transition: transform 0.3s ease; box-sizing: border-box !important; position: relative !important;">
+            <button onclick="chiudiPremiumAlert()" style="position: absolute !important; top: 15px !important; right: 15px !important; background: rgba(255,255,255,0.1) !important; border: none !important; color: #fff !important; width: 32px !important; height: 32px !important; border-radius: 50% !important; font-size: 1.2rem !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 10 !important; outline: none !important;">&times;</button>
+            <i class="fas fa-lock" style="font-size: 2.5rem !important; color: #d4af37 !important; margin-bottom: 20px !important; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4)) !important;"></i>
+            <h3 style="color: #fff !important; font-size: 1.05rem !important; font-weight: 600 !important; margin-bottom: 12px !important; letter-spacing: 2px !important; text-transform: uppercase !important; font-family: 'Inter', sans-serif !important; margin-top:0 !important;">${titolo}</h3>
+            <p style="color: #a0a0a5 !important; font-size: 0.9rem !important; font-weight: 300 !important; line-height: 1.6 !important; margin-bottom: 28px !important; font-family: 'Inter', sans-serif !important;">${messaggio}</p>
+            <button onclick="confermaPremiumAlert()" style="width: 100% !important; padding: 16px !important; background: #d4af37 !important; border: none !important; border-radius: 12px !important; color: #000 !important; font-size: 0.85rem !important; font-weight: 700 !important; letter-spacing: 2px !important; cursor: pointer !important; text-transform: uppercase !important; outline: none !important;">GESTIONE PIANI</button>
+        </div>
+    `;
+
+    setTimeout(() => {
+        overlay.style.setProperty('opacity', '1', 'important');
+        overlay.children[0].style.setProperty('transform', 'scale(1)', 'important');
+    }, 10);
+}
+
 function chiudiPremiumAlert() {
-            const overlay = document.getElementById('premium-alert-overlay');
-            if (overlay) {
-                overlay.style.setProperty('opacity', '0', 'important');
-                if (overlay.children[0]) {
-                    overlay.children[0].style.setProperty('transform', 'scale(0.95)', 'important');
-                }
-                setTimeout(() => { 
-                    // Distrugge fisicamente lo scudo invisibile!
-                    overlay.style.setProperty('display', 'none', 'important'); 
-                    overlay.style.setProperty('pointer-events', 'none', 'important');
-                }, 300);
-            }
+    const overlay = document.getElementById('premium-alert-overlay');
+    if (overlay) {
+        overlay.style.setProperty('opacity', '0', 'important');
+        if (overlay.children[0]) {
+            overlay.children[0].style.setProperty('transform', 'scale(0.95)', 'important');
         }
-       
+        setTimeout(() => { 
+            overlay.style.setProperty('display', 'none', 'important');
+            overlay.style.setProperty('pointer-events', 'none', 'important');
+        }, 300);
+    }
+}
+
+function confermaPremiumAlert() {
+    chiudiPremiumAlert(); 
+    setTimeout(() => { apriDrawer('drawer-piani'); }, 300); 
+}
     </script>
 </body>
 </html>
