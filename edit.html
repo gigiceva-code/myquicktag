@@ -490,17 +490,27 @@
    
     </div>
      
-    <div class="drawer-glass" id="drawer-insight" style="z-index: 3000;">
-        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
-            <div class="header-back"></div>
-            <div class="header-title" style="font-weight: 400; color: #e5c158;" id="insight-title">INFO STRATEGICA</div>
-            <div class="header-close" onclick="chiudiInsight()"><i class="fas fa-times"></i></div>
+  <div class="drawer-glass" id="drawer-insight" style="background-color: #111827 !important; color: #f3f4f6 !important; z-index: 3000;">
+        
+        <div class="drawer-header-liquido" style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+            <div class="header-back" onclick="chiudiInsight()" style="color: #9ca3af;"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 700; color: #ffffff; letter-spacing: 1px; font-size: 0.85rem;" id="insight-title"><i class="fas fa-bolt" style="color: #e5c158; margin-right: 8px;"></i>INFO STRATEGICA</div>
+            <div class="header-close" onclick="chiudiInsight()" style="color: #9ca3af;"><i class="fas fa-times"></i></div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; padding: 0 10px;">
-            <div id="insight-content" style="color: #fff; font-size: 0.8rem; line-height: 1.6; font-weight: 300;"></div>
+
+        <!-- Contenitore Testo (con spazio in fondo per non farsi coprire dal bottone) -->
+        <div style="display: flex; flex-direction: column; gap: 15px; padding: 10px 10px 100px 10px; flex: 1; overflow-y: auto;">
+            <div id="insight-content" style="width: 100%;"></div>
         </div>
-       <button class="btn-crea" onclick="chiudiInsight()" style="margin-top: auto; margin-bottom: 20px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: #ffffff; font-size: 0.75rem; font-weight: 300; letter-spacing: 3px;">CHIUDI E TORNA ALL'EDITOR</button>
-    </div>
+
+        <!-- STICKY CTA BUTTON (Sempre visibile in basso) -->
+        <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px 20px 25px 20px; background: linear-gradient(to top, #111827 80%, rgba(17,24,39,0) 100%);">
+            <div onclick="chiudiInsight(); setTimeout(() => apriDrawer('drawer-piani'), 300);" style="background: #e5c158; color: #111827; text-align: center; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 4px 15px rgba(229,193,88,0.3);">
+                SCOPRI I PIANI E SBLOCCA <i class="fas fa-lock-open" style="margin-left: 5px;"></i>
+            </div>
+        </div>
+
+    </div> 
     
     <!-- === SOTTOMENU ENV === -->
     <div class="drawer-glass" id="env-identity">
@@ -1381,71 +1391,7 @@
                 </ul>
                 <div onclick="sbloccaPianoInAnteprima('GOLD')" style="text-align: center; background: #e5c158; padding: 10px; border-radius: 8px; color: #111827; font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Simula Gold</div>
             </div>
-<!-- ============================================================================== -->
-<!-- 🎯 OVERLAY STRATEGICI (PRODUCT-LED EDUCATION)                                  -->
-<!-- Cassetti informativi (Dark Executive) per la conversione e l'upgrade dei piani -->
-<!-- ============================================================================== -->
-<!-- DRAWER STRATEGIA: QUICK PASS -->
-    <div class="drawer-glass" id="drawer-strategia-quickpass" style="background-color: #111827 !important; color: #f3f4f6 !important; z-index: 2500;">
-        
-        <!-- HEADER -->
-        <div class="drawer-header-liquido" style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
-            <div class="header-back" onclick="chiudiDrawer('drawer-strategia-quickpass')" style="color: #9ca3af;"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 700; color: #ffffff; letter-spacing: 1px; font-size: 0.85rem;"><i class="fas fa-bolt" style="color: #e5c158; margin-right: 8px;"></i>STRATEGIA QUICK PASS</div>
-            <div class="header-close" onclick="chiudiSenzaSalvare()" style="color: #9ca3af;"><i class="fas fa-times"></i></div>
-        </div>
 
-        <!-- CONTENUTO SCORREVOLE (Padding bottom per il bottone fisso) -->
-        <div style="display: flex; flex-direction: column; gap: 16px; overflow-y: auto; padding: 10px 5px 100px 5px; height: 100%;">
-            
-            <!-- BLOCCO 1: IL PROBLEMA -->
-            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px;">
-                <div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">La Fabbrica dei Clienti a Costo Zero</div>
-                <div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">
-                    Dimentica i budget bruciati in pubblicità per inseguire perfetti sconosciuti. Il passaparola è la leva commerciale più potente al mondo, e myquicktag lo trasforma in una macchina automatica. Invece di un semplice "link" da guardare, offri ai tuoi clienti un incentivo per farti portare nuovi contatti paganti.
-                </div>
-            </div>
-
-            <!-- BLOCCO 2: LA MECCANICA E SETUP -->
-            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px;">
-                <div style="font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-bottom: 12px;">Come si innesca? (La Regola Win-Win)</div>
-                <div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6; margin-bottom: 12px;">
-                    Dai al tuo cliente un motivo per inoltrare la tua Tag su WhatsApp ai suoi amici. Devono vincere tutti:
-                </div>
-                <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.75rem; color: #9ca3af; line-height: 1.6;">
-                    <li style="margin-bottom: 12px;">
-                        <i class="fas fa-store" style="color: #e5c158; margin-right: 6px; width: 14px;"></i>
-                        <strong style="color: #ffffff;">Attività locali:</strong> "Invia il Pass: per te in regalo [un omaggio / trattamento extra] oggi, per il tuo amico [un vantaggio esclusivo] al primo acquisto".
-                    </li>
-                    <li style="margin-bottom: 12px;">
-                        <i class="fas fa-laptop" style="color: #e5c158; margin-right: 6px; width: 14px;"></i>
-                        <strong style="color: #ffffff;">Servizi o digitale:</strong> "Condividi il Pass: sblocchi l'accesso a [materiale riservato / consulenza extra], e il tuo collega ottiene [una pre-analisi / bonus]".
-                    </li>
-                    <li>
-                        <i class="fas fa-cog" style="color: #e5c158; margin-right: 6px; width: 14px;"></i>
-                        <strong style="color: #ffffff;">Decidi tu:</strong> Scegli liberamente il premio (gadget, priorità, sconti) che si adatta ai tuoi margini di guadagno.
-                    </li>
-                </ul>
-            </div>
-
-            <!-- BLOCCO 3: IL ROI -->
-            <div style="background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px; padding: 18px;">
-                <div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">Il Ritorno Economico (ROI)</div>
-                <div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">
-                    Chi riceve il tuo contatto da un amico si fida già di te: la trattativa è chiusa all'80%. Ogni cliente felice si moltiplica portandone altri due, riempiendo la tua agenda o il tuo locale con traffico continuo, a costo zero.
-                </div>
-            </div>
-            
-        </div>
-
-        <!-- STICKY CTA BUTTON (Fisso in basso) -->
-        <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px 20px 25px 20px; background: linear-gradient(to top, #111827 80%, rgba(17,24,39,0) 100%);">
-            <div onclick="apriDrawer('drawer-piani')" style="background: #e5c158; color: #111827; text-align: center; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 4px 15px rgba(229,193,88,0.3);">
-                SBLOCCA QUICK PASS (GOLD) <i class="fas fa-lock-open" style="margin-left: 5px;"></i>
-            </div>
-        </div>
-
-    </div>
     <!-- VECCHIO POPUP HTML ELIMINATO, ORA CI PENSA IL JAVASCRIPT -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -2926,7 +2872,10 @@ function gestisciVIPSwitch(checkbox) {
         // MOTORE UNIFICATO: INSIGHT E STRATEGIE
         // ==========================================
         const databaseStrategie = {
-            'quickpass': { titolo: "IL MOTORE VIRALE", testo: "<b>Cos'è:</b> Un sistema di passaparola integrato.<br><br><b>La Strategia:</b> Offri un premio irresistibile (es. caffè omaggio o 10€) come regalo per un amico. Il tuo cliente invierà il pass alla sua rubrica su WhatsApp. Loro inquadrano, sbloccano e vengono da te a spendere. Acquisirai clienti nuovi a costo zero." },
+            'quickpass': { 
+                titolo: "IL MOTORE VIRALE", 
+                testo: '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">La Fabbrica dei Clienti a Costo Zero</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Dimentica i budget bruciati in pubblicità per inseguire perfetti sconosciuti. Il passaparola è la leva commerciale più potente al mondo, e myquicktag lo trasforma in una macchina automatica. Invece di un semplice "link" da guardare, offri ai tuoi clienti un incentivo per farti portare nuovi contatti paganti.</div></div><div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-bottom: 12px;">Come si innesca? (La Regola Win-Win)</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6; margin-bottom: 12px;">Dai al tuo cliente un motivo per inoltrare la tua Tag su WhatsApp ai suoi amici. Devono vincere tutti:</div><ul style="list-style: none; padding: 0; margin: 0; font-size: 0.75rem; color: #9ca3af; line-height: 1.6;"><li style="margin-bottom: 12px;"><i class="fas fa-store" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Attività locali:</strong> "Invia il Pass: per te in regalo [un omaggio / trattamento extra] oggi, per il tuo amico [un vantaggio esclusivo] al primo acquisto".</li><li style="margin-bottom: 12px;"><i class="fas fa-laptop" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Servizi o digitale:</strong> "Condividi il Pass: sblocchi l\'accesso a [materiale riservato / consulenza extra], e il tuo collega ottiene [una pre-analisi / bonus]".</li><li><i class="fas fa-cog" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Decidi tu:</strong> Scegli liberamente il premio (gadget, priorità, sconti) che si adatta ai tuoi margini di guadagno.</li></ul></div><div style="background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px; padding: 18px;"><div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">Il Ritorno Economico (ROI)</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Chi riceve il tuo contatto da un amico si fida già di te: la trattativa è chiusa all\'80%. Ogni cliente felice si moltiplica portandone altri due, riempiendo la tua agenda o il tuo locale con traffico continuo, a costo zero.</div></div>' 
+            },
             'review': { titolo: "LA FABBRICA DELLE 5 STELLE", testo: "<b>Cos'è:</b> Un filtro intelligente per le recensioni.<br><br><b>La Strategia:</b> Le lamentele pubbliche uccidono le vendite. Lo Scudo devia i clienti insoddisfatti in privato per permetterti di rimediare. Chi clicca 4 o 5 stelle viene mandato dritto su Google a farti pubblicità." },
             'lead': { titolo: "LA MACCHINA DEI CONTATTI", testo: "<b>Cos'è:</b> Un modulo per raccogliere dati.<br><br><b>La Strategia:</b> Non aspettare che ti chiamino. Offri un regalo di valore (es. una guida o uno sconto). Il cliente inserisce i dati e tu ottieni contatti pronti a comprare, da ricontattare con offerte mirate in futuro." },
             'video': { titolo: "VENDI MENTRE GUARDANO", testo: "<b>Cos'è:</b> Un player video immersivo con pulsante.<br><br><b>La Strategia:</b> Usa questo spazio per un video di vendita o una dimostrazione. Quando il cliente si scalda per il video, preme il tasto e atterra sul carrello o su WhatsApp. Zero distrazioni, solo conversioni." },
