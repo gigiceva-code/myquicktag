@@ -189,9 +189,9 @@
             transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0s !important; 
         }
 
-        /* FORZA IL CASSETTO STRATEGIE IN PRIMO PIANO ASSOLUTO */
-        #drawer-insight.open {
-            z-index: 9999 !important;
+       /* FORZA I CASSETTI DI INFO E STRATEGIA IN PRIMO PIANO ASSOLUTO */
+        #drawer-insight.open, #drawer-strategia.open {
+            z-index: 10000 !important;
             display: flex !important;
             opacity: 1 !important;
             visibility: visible !important;
@@ -1685,6 +1685,7 @@
 window.addEventListener('popstate', function(event) {
     const hash = window.location.hash;
     const insightDrawer = document.getElementById('drawer-insight');
+    const strategiaDrawer = document.getElementById('drawer-strategia'); // Aggiunto
     const overlay = document.getElementById('premium-alert-overlay');
 
     // 1. Se il popup premium è aperto, chiudilo
@@ -1695,9 +1696,13 @@ window.addEventListener('popstate', function(event) {
         return;
     }
 
-    // 2. Se il cassetto delle strategie è aperto, chiudilo
+    // 2. Se i cassetti in sovraimpressione sono aperti, chiudili
     if (insightDrawer && insightDrawer.classList.contains('open')) {
         insightDrawer.classList.remove('open');
+        return;
+    }
+    if (strategiaDrawer && strategiaDrawer.classList.contains('open')) { // Aggiunto
+        strategiaDrawer.classList.remove('open');
         return;
     }
 
