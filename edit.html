@@ -2906,7 +2906,7 @@ function gestisciVIPSwitch(checkbox) {
         function apriStrategia(idFeature, event) {
             if(event) { event.preventDefault(); event.stopPropagation(); }
             const dati = databaseStrategie[idFeature];
-            if(dati) mostraInsight('STRATEGIA: ' + dati.titolo, dati.testo, event);
+            if(dati) mostraInsight(dati.titolo, dati.testo, event);
         }
 
         function chiudiInsight() {
