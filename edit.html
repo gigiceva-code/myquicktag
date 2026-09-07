@@ -2898,40 +2898,55 @@ function gestisciVIPSwitch(checkbox) {
             'partners': { titolo: "PARTNERSHIP STRATEGICA", testo: "<b>Cos'è:</b> Rete di collegamenti con le Tag dei partner.<br><br><b>La Strategia:</b> Fai squadra con professionisti complementari. Insieme create un ecosistema chiuso dove i clienti girano solo tra di voi, aumentando il fatturato di tutti." }
         };
 
-      // 1. Funzione ripristinata per le INFO BASE
+    // 1. Funzione per le INFO BASE
 function mostraInsight(titolo, htmlContent, event) {
     if(event) { event.preventDefault(); event.stopPropagation(); }
-    document.getElementById('insight-title').innerText = 'INFO: ' + titolo;
-    document.getElementById('insight-content').innerHTML = htmlContent;
-    
+
+    const titleEl = document.getElementById('insight-title');
+    const contentEl = document.getElementById('insight-content');
     const insightDrawer = document.getElementById('drawer-insight');
-    if (insightDrawer) {
-        insightDrawer.style.zIndex = "3005"; 
+
+    // Se trova l'HTML, apre scavalcando tutto. Altrimenti lancia l'allarme.
+    if (titleEl && contentEl && insightDrawer) {
+        titleEl.innerHTML = '<i class="fas fa-info-circle" style="color: #e5c158; margin-right: 8px;"></i>' + titolo;
+        contentEl.innerHTML = htmlContent;
+
+        insightDrawer.style.zIndex = "10000"; 
+        insightDrawer.style.pointerEvents = "auto";
         setTimeout(() => { insightDrawer.classList.add('open'); }, 10);
-    }
-    
-    if (window.location.hash !== '#insight') {
-        history.pushState(null, "", "#insight");
+
+        if (window.location.hash !== '#insight') {
+            history.pushState(null, "", "#insight");
+        }
+    } else {
+        alert("ERRORE: Cassetto INFO mancante. L'HTML non è stato incollato correttamente.");
     }
 }
 
-// 2. NUOVA Funzione dedicata alle STRATEGIE PREMIUM
+// 2. Funzione per le STRATEGIE PREMIUM
 function apriStrategia(idFeature, event) {
     if(event) { event.preventDefault(); event.stopPropagation(); }
     const dati = databaseStrategie[idFeature];
+    
     if(dati) {
-        // Applica l'icona dorata e annulla il troncamento
-        document.getElementById('strategia-title').innerHTML = '<i class="fas fa-bolt" style="color: #e5c158; margin-right: 8px;"></i>' + dati.titolo;
-        document.getElementById('strategia-content').innerHTML = dati.testo;
-        
+        const titleEl = document.getElementById('strategia-title');
+        const contentEl = document.getElementById('strategia-content');
         const strategiaDrawer = document.getElementById('drawer-strategia');
-        if (strategiaDrawer) {
-            strategiaDrawer.style.zIndex = "3005"; 
+
+        // Se trova l'HTML, apre scavalcando tutto. Altrimenti lancia l'allarme.
+        if (titleEl && contentEl && strategiaDrawer) {
+            titleEl.innerHTML = '<i class="fas fa-bolt" style="color: #e5c158; margin-right: 8px;"></i>' + dati.titolo;
+            contentEl.innerHTML = dati.testo;
+
+            strategiaDrawer.style.zIndex = "10000"; 
+            strategiaDrawer.style.pointerEvents = "auto";
             setTimeout(() => { strategiaDrawer.classList.add('open'); }, 10);
-        }
-        
-        if (window.location.hash !== '#strategia') {
-            history.pushState(null, "", "#strategia");
+
+            if (window.location.hash !== '#strategia') {
+                history.pushState(null, "", "#strategia");
+            }
+        } else {
+            alert("ERRORE: Cassetto STRATEGIA mancante. Ripetere l'inserimento HTML.");
         }
     }
 }
