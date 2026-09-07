@@ -490,27 +490,39 @@
    
     </div>
      
-  <div class="drawer-glass" id="drawer-insight" style="background-color: #111827 !important; color: #f3f4f6 !important; z-index: 3000;">
-        
+ <!-- ========================================== -->
+    <!-- CASSETTO 1: INFO BASE (Ripristinato)       -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-insight" style="z-index: 3000;">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div>
+            <div class="header-title" style="font-weight: 400; color: #e5c158;" id="insight-title">INFO STRATEGICA</div>
+            <div class="header-close" onclick="chiudiInsight()"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; padding: 0 10px;">
+            <div id="insight-content" style="color: #fff; font-size: 0.8rem; line-height: 1.6; font-weight: 300;"></div>
+        </div>
+        <button class="btn-crea" onclick="chiudiInsight()" style="margin-top: auto; margin-bottom: 20px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: #ffffff; font-size: 0.75rem; font-weight: 300; letter-spacing: 3px;">CHIUDI E TORNA ALL'EDITOR</button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- CASSETTO 2: STRATEGIE PREMIUM (Marketing)  -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-strategia" style="background-color: #111827 !important; color: #f3f4f6 !important; z-index: 3000;">
         <div class="drawer-header-liquido" style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
-            <div class="header-back" onclick="chiudiInsight()" style="color: #9ca3af;"><i class="fas fa-chevron-left"></i></div>
-            <div class="header-title" style="font-weight: 700; color: #ffffff; letter-spacing: 1px; font-size: 0.85rem; white-space: normal; overflow: visible; line-height: 1.2; text-align: center; flex: 1; padding: 0 10px;" id="insight-title">
-            <div class="header-close" onclick="chiudiInsight()" style="color: #9ca3af;"><i class="fas fa-times"></i></div>
+            <div class="header-back" onclick="chiudiStrategia()" style="color: #9ca3af;"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-title" style="font-weight: 700; color: #ffffff; letter-spacing: 1px; font-size: 0.85rem; white-space: normal; overflow: visible; line-height: 1.2; text-align: center; flex: 1; padding: 0 10px;" id="strategia-title">STRATEGIA</div>
+            <div class="header-close" onclick="chiudiStrategia()" style="color: #9ca3af;"><i class="fas fa-times"></i></div>
         </div>
-
-        <!-- Contenitore Testo (con spazio in fondo per non farsi coprire dal bottone) -->
         <div style="display: flex; flex-direction: column; gap: 15px; padding: 10px 10px 100px 10px; flex: 1; overflow-y: auto;">
-            <div id="insight-content" style="width: 100%;"></div>
+            <div id="strategia-content" style="width: 100%;"></div>
         </div>
-
-        <!-- STICKY CTA BUTTON (Sempre visibile in basso) -->
         <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px 20px 25px 20px; background: linear-gradient(to top, #111827 80%, rgba(17,24,39,0) 100%);">
-            <div onclick="chiudiInsight(); setTimeout(() => apriDrawer('drawer-piani'), 300);" style="background: #e5c158; color: #111827; text-align: center; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 4px 15px rgba(229,193,88,0.3);">
+            <div onclick="chiudiStrategia(); setTimeout(() => apriDrawer('drawer-piani'), 300);" style="background: #e5c158; color: #111827; text-align: center; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 4px 15px rgba(229,193,88,0.3);">
                 SCOPRI I PIANI E SBLOCCA <i class="fas fa-lock-open" style="margin-left: 5px;"></i>
             </div>
         </div>
-
-    </div> 
+    </div>
     
     <!-- === SOTTOMENU ENV === -->
     <div class="drawer-glass" id="env-identity">
@@ -2886,12 +2898,10 @@ function gestisciVIPSwitch(checkbox) {
             'partners': { titolo: "PARTNERSHIP STRATEGICA", testo: "<b>Cos'è:</b> Rete di collegamenti con le Tag dei partner.<br><br><b>La Strategia:</b> Fai squadra con professionisti complementari. Insieme create un ecosistema chiuso dove i clienti girano solo tra di voi, aumentando il fatturato di tutti." }
         };
 
-       function mostraInsight(titolo, htmlContent, event) {
+      // 1. Funzione ripristinata per le INFO BASE
+function mostraInsight(titolo, htmlContent, event) {
     if(event) { event.preventDefault(); event.stopPropagation(); }
-    
-    // Riga modificata: inietta l'icona e il titolo pulito
-    document.getElementById('insight-title').innerHTML = '<i class="fas fa-bolt" style="color: #e5c158; margin-right: 8px;"></i>' + titolo;
-    
+    document.getElementById('insight-title').innerText = 'INFO: ' + titolo;
     document.getElementById('insight-content').innerHTML = htmlContent;
     
     const insightDrawer = document.getElementById('drawer-insight');
@@ -2900,17 +2910,31 @@ function gestisciVIPSwitch(checkbox) {
         setTimeout(() => { insightDrawer.classList.add('open'); }, 10);
     }
     
-    // Memorizza il livello per il tasto indietro Android
     if (window.location.hash !== '#insight') {
         history.pushState(null, "", "#insight");
     }
 }
-        function apriStrategia(idFeature, event) {
-            if(event) { event.preventDefault(); event.stopPropagation(); }
-            const dati = databaseStrategie[idFeature];
-            if(dati) mostraInsight(dati.titolo, dati.testo, event);
-        }
 
+// 2. NUOVA Funzione dedicata alle STRATEGIE PREMIUM
+function apriStrategia(idFeature, event) {
+    if(event) { event.preventDefault(); event.stopPropagation(); }
+    const dati = databaseStrategie[idFeature];
+    if(dati) {
+        // Applica l'icona dorata e annulla il troncamento
+        document.getElementById('strategia-title').innerHTML = '<i class="fas fa-bolt" style="color: #e5c158; margin-right: 8px;"></i>' + dati.titolo;
+        document.getElementById('strategia-content').innerHTML = dati.testo;
+        
+        const strategiaDrawer = document.getElementById('drawer-strategia');
+        if (strategiaDrawer) {
+            strategiaDrawer.style.zIndex = "3005"; 
+            setTimeout(() => { strategiaDrawer.classList.add('open'); }, 10);
+        }
+        
+        if (window.location.hash !== '#strategia') {
+            history.pushState(null, "", "#strategia");
+        }
+    }
+}
         function chiudiInsight() {
             const insightDrawer = document.getElementById('drawer-insight');
             if (insightDrawer) insightDrawer.classList.remove('open');
@@ -2920,6 +2944,15 @@ function gestisciVIPSwitch(checkbox) {
                 history.back();
             }
         }
+        function chiudiStrategia() {
+    const strategiaDrawer = document.getElementById('drawer-strategia');
+    if (strategiaDrawer) strategiaDrawer.classList.remove('open');
+    
+    // Torna indietro nella cronologia per il nuovo cassetto marketing
+    if (window.location.hash === '#strategia') {
+        history.back();
+    }
+}
         // ==========================================
 // FUNZIONI MANCANTI GALLERIA (Fix Errore Caricamento)
 // ==========================================
