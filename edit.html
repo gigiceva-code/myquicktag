@@ -1615,7 +1615,7 @@
     }
     
  // 👑 Controllo Esclusive GOLD (Monetizzazione e Marketing)
-    const esclusiveGold = ['drawer-review', 'drawer-lead-capture', 'drawer-partners', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass', 'drawer-video', 'drawer-showcase']; 
+  const esclusiveGold = ['drawer-review', 'drawer-lead-capture', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass', 'drawer-video', 'drawer-showcase']; 
     if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
         mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e iniziare a monetizzare.", "GOLD");
         return;
@@ -2219,7 +2219,7 @@ window.addEventListener('popstate', function(event) {
         }
 
      function aggiornaLucchetti() {
-    const cassettiGold = ['drawer-review', 'drawer-lead-capture', 'drawer-partners', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass'];
+   const cassettiGold = ['drawer-review', 'drawer-lead-capture', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass'];
     const cassettiPremium = ['drawer-gallery', 'drawer-showcase', 'drawer-quick']; 
     
     document.querySelectorAll('.premium-field-container').forEach(container => {
@@ -2914,7 +2914,10 @@ function gestisciVIPSwitch(checkbox) {
             },
             'video': { titolo: "VENDI MENTRE GUARDANO", testo: "<b>Cos'è:</b> Un player video immersivo con pulsante.<br><br><b>La Strategia:</b> Usa questo spazio per un video di vendita o una dimostrazione. Quando il cliente si scalda per il video, preme il tasto e atterra sul carrello o su WhatsApp. Zero distrazioni, solo conversioni." },
             'action': { titolo: "LA TUA CALL TO ACTION", testo: "<b>Cos'è:</b> Il pulsante prioritario della tua Tag.<br><br><b>La Strategia:</b> Qual è l'azione numero 1 che ti porta soldi in cassa? Prenotare? Chiamarti? Inseriscila qui. Rendi fisicamente impossibile per il cliente non notare questo bottone dorato." },
-            'partners': { titolo: "PARTNERSHIP STRATEGICA", testo: "<b>Cos'è:</b> Rete di collegamenti con le Tag dei partner.<br><br><b>La Strategia:</b> Fai squadra con professionisti complementari. Insieme create un ecosistema chiuso dove i clienti girano solo tra di voi, aumentando il fatturato di tutti." }
+            'partners': { 
+                titolo: "IL NETWORK DI REFERENZE", 
+                testo: '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">La Dispersione del Traffico</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Sia online che offline, quando un cliente finisce di interagire con te, torna su Google o sui social per cercare il servizio successivo. La "Cerchia di Fiducia" blocca questa emorragia. Creando un ecosistema chiuso con altri business complementari, il traffico circola esclusivamente all\'interno del vostro circuito, azzerando la concorrenza esterna.</div></div><div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-bottom: 12px;">Connessioni Fisiche e Digitali</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6; margin-bottom: 12px;">Connettere le rispettive Tag genera un trasferimento di fiducia automatico, applicabile a qualsiasi mercato:</div><ul style="list-style: none; padding: 0; margin: 0; font-size: 0.75rem; color: #9ca3af; line-height: 1.6;"><li style="margin-bottom: 12px;"><i class="fas fa-laptop" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Business Digitale:</strong> Un e-commerce di abbigliamento si collega a un brand di accessori. Un web designer raccomanda l\'esperto SEO. Il traffico si scambia online.</li><li style="margin-bottom: 12px;"><i class="fas fa-store" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Business Fisico:</strong> Il centro fitness inserisce la nutrizionista e il negozio di integratori locale. Il cliente viene fidelizzato nel quartiere.</li><li><i class="fas fa-cog" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Consulenza e Servizi:</strong> L\'avvocato societario raccomanda il commercialista, passandosi clienti alto-spendenti a vicenda.</li></ul></div><div style="background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px; padding: 18px;"><div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">Acquisizione Passiva (Zero CAC)</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Il network annulla i costi pubblicitari. Ogni volta che un tuo partner riceve una visita—che sia tramite una Tag fisica su un bancone o tramite un link in bio su Instagram—il tuo brand viene esposto a un cliente già pre-qualificato e pronto a comprare.</div></div>' 
+            }
         };
 
   // 1. Funzione per le INFO BASE
