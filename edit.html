@@ -2956,6 +2956,12 @@ function apriStrategia(idFeature, event) {
             titleEl.innerHTML = '<i class="fas fa-bolt" style="color: #e5c158; margin-right: 8px;"></i>' + dati.titolo;
             contentEl.innerHTML = dati.testo;
 
+            // FIX: Nasconde il tasto "Sblocca" se la funzione è gratis (Cerchia di Fiducia)
+            const bannerSblocco = strategiaDrawer.lastElementChild;
+            if(bannerSblocco) {
+                bannerSblocco.style.display = (idFeature === 'partners') ? 'none' : 'block';
+            }
+
             strategiaDrawer.style.zIndex = "10000"; 
             strategiaDrawer.style.pointerEvents = "auto";
             setTimeout(() => { strategiaDrawer.classList.add('open'); }, 10);
