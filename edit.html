@@ -1651,17 +1651,27 @@
             setTimeout(() => { overlay.style.opacity = '1'; }, 10);
         }
 
-        // --- 4. RENDERING TERZO LIVELLO (IL DETTAGLIO DELLA SEZIONE) ---
+        // --- 4. RENDERING TERZO LIVELLO (IL DETTAGLIO DELLA SEZIONE - 1:1 CON TAG.HTML) ---
         function apriSezioneAnteprima(tipo) {
             const titolo = document.getElementById('titoloSezione');
             const corpo = document.getElementById('corpoSezione');
             
-            // Modifica il tasto in basso per farlo diventare un "INDIETRO" verso la Macro Area
             const btn = document.querySelector('#overlaySezione button');
             if(btn) {
                 btn.innerHTML = '<i class="fas fa-chevron-left"></i> INDIETRO';
                 btn.onclick = () => apriMacroAreaAnteprima(anteprimaMacroAreaCorrente);
             }
+
+            // Calcolo del colore dinamico del tema per i bordi e le icone (esattamente come su tag.html)
+            const theme = document.querySelector('input[name="digital_style"]:checked')?.value || 'black_dna';
+            let themeBorder = 'rgba(255, 255, 255, 0.3)';
+            if(theme === 'emerald') themeBorder = '#00E680';
+            if(theme === 'obsidian_gold') themeBorder = '#e5c158';
+            if(theme === 'satin_rose') themeBorder = '#c8968e';
+            if(theme === 'titanium') themeBorder = '#b0b0b5';
+
+            // Il bottone di condivisione standard usato in tag.html
+            const btnCondividiHTML = `<button style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff; padding:7px 10px; border-radius:8px; cursor:default; flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>`;
 
             if (tipo === 'bio') {
                 titolo.textContent = 'BIOGRAFIA';
@@ -1681,15 +1691,49 @@
             else if (tipo === 'sito') {
                 titolo.textContent = 'SITO WEB';
                 const sito = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
-                corpo.innerHTML = `<div style="width: 100%; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 12px;"><i class="fas fa-globe" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; color:#f5f5f7; font-weight:500;">${sito}</span></div>`;
+                const dominioPulito = sito.replace(/https?:\/\/(www\.)?/, '').split('/')[0];
+                corpo.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); width: 100%;">
+                        <div style="display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;">
+                            <i class="fas fa-globe" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i>
+                            <span style="font-size:0.95rem; color:#f5f5f7; font-weight:500;">${dominioPulito || sito}</span>
+                        </div>
+                        ${btnCondividiHTML}
+                    </div>`;
             }
             else if (tipo === 'contatti') {
                 titolo.textContent = 'CONTATTI';
                 const tel = document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "";
                 const email = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
                 let html = '';
-                if(tel) html += `<div style="width: 100%; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 12px;"><i class="fas fa-phone" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; color:#f5f5f7; font-weight:500;">${tel}</span></div>`;
-                if(email) html += `<div style="width: 100%; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 12px;"><i class="fas fa-envelope" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; color:#f5f5f7; font-weight:500;">${email}</span></div>`;
+                
+                if(tel) {
+                    html += `
+                    <div style="display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); width: 100%;">
+                        <div style="display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;">
+                            <i class="fas fa-phone" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i>
+                            <span style="font-size:0.9rem; color:#f5f5f7;">${tel}</span>
+                        </div>
+                        ${btnCondividiHTML}
+                    </div>`;
+                }
+                if(email) {
+                    html += `
+                    <div style="display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); width: 100%;">
+                        <div style="display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;">
+                            <i class="fas fa-envelope" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i>
+                            <span style="font-size:0.9rem; color:#f5f5f7;">${email}</span>
+                        </div>
+                        ${btnCondividiHTML}
+                    </div>`;
+                }
+
+                // INSERIMENTO 1:1 DEL BOTTONE SALVA IN RUBRICA
+                html += `
+                <div style="width: 100%; margin-top: 25px; padding: 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid ${themeBorder}; border-radius: 12px; color: #e8e8ed; font-size: 0.8rem; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; cursor: default; display: flex; justify-content: center; align-items: center; gap: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); box-sizing: border-box;">
+                    <i class="fas fa-address-book" style="font-size: 1.15rem; color: ${themeBorder};"></i> SALVA IN RUBRICA
+                </div>`;
+
                 corpo.innerHTML = html;
             }
             else if (tipo === 'social') {
@@ -1700,7 +1744,17 @@
                     trackSocial.querySelectorAll('.social-block-live').forEach(block => {
                         const nome = block.getAttribute('data-nome');
                         const icona = block.getAttribute('data-icon') || "fas fa-link";
-                        html += `<div style="width: 100%; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 12px;"><i class="${icona}" style="font-size:1.1rem; width:22px; text-align:center; color:#ffffff;"></i><span style="font-size:0.95rem; color:#f5f5f7; font-weight:500;">${nome}</span></div>`;
+                        const isVip = block.getAttribute('data-vip') === 'true';
+                        const lockHtml = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.8rem; margin-left: 8px;"></i>` : '';
+
+                        html += `
+                        <div style="display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); width: 100%;">
+                            <div style="display:flex; align-items:center; gap:12px; flex:1; text-decoration:none; color:inherit;">
+                                <i class="${icona}" style="font-size:1.2rem; width:22px; text-align:center; color:#ffffff;"></i>
+                                <span style="font-size:0.95rem; font-weight:500;">${nome}</span>${lockHtml}
+                            </div>
+                            ${btnCondividiHTML}
+                        </div>`;
                     });
                 }
                 corpo.innerHTML = html;
@@ -1735,7 +1789,6 @@
                 corpo.innerHTML = `<div style="display: flex; flex-direction: column; width: 100%; align-items: center; gap: 20px; padding-top: 15px;"><i class="fas fa-gift" style="font-size: 3.5rem; color: #d4af37;"></i><div style="text-align:center; font-size:1rem; font-weight:300; color:#e8e8ed; line-height:1.6;">Regala <strong style="color:#fff;">${pB}</strong> a un amico.<br>Quando lo utilizzerà, tu sbloccherai:</div><div style="width: 100%; padding: 25px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-left: 2px solid #d4af37; border-radius: 20px; display: flex; flex-direction: column; align-items: center;"><span style="font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;">IL TUO PREMIO</span><span style="font-size: 1.25rem; font-weight: 600; color: #fff; letter-spacing: 2px; text-align: center; text-transform: uppercase;">${pA}</span></div></div>`;
             }
         }
-
         function chiudiSezioneAnteprima() {
             const overlay = document.getElementById('overlaySezione');
             if(overlay) {
