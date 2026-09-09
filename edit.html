@@ -1412,10 +1412,41 @@
                 </ul>
                 <div onclick="sbloccaPianoInAnteprima('GOLD')" style="text-align: center; background: #e5c158; padding: 10px; border-radius: 8px; color: #111827; font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Simula Gold</div>
             </div>
+            
+<!-- ========================================== -->
+    <!-- CASSETTO SALVATAGGIO (Il Bivio Sicuro)     -->
+    <!-- ========================================== -->
+    <div class="drawer-glass" id="drawer-salvataggio">
+        <div class="drawer-header-liquido" style="margin-bottom: 20px;">
+            <div class="header-back"></div>
+            <div class="header-title" style="font-weight: 400;">OPZIONI DI SALVATAGGIO</div>
+            <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px; padding: 0 5px;">
+            <div onclick="salvaEDirigi('bozza')" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;">
+                <i class="fas fa-inbox" style="color: rgba(255,255,255,0.4); font-size: 1.2rem;"></i>
+                <div style="flex: 1;">
+                    <div style="color: #fff; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">SALVA IN DASHBOARD</div>
+                    <div style="color: rgba(255,255,255,0.4); font-size: 0.6rem; margin-top: 4px; letter-spacing: 0.5px;">Bozza privata, non visibile online.</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.2); font-size: 0.8rem;"></i>
+            </div>
 
+            <div onclick="salvaEDirigi('pubblica')" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;">
+                <i class="fas fa-globe" style="color: #10b981; font-size: 1.2rem;"></i>
+                <div style="flex: 1;">
+                    <div style="color: #10b981; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">PUBBLICA ADESSO</div>
+                    <div style="color: rgba(16, 185, 129, 0.6); font-size: 0.6rem; margin-top: 4px; letter-spacing: 0.5px;">Aggiorna la tua Tag in tempo reale.</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: rgba(16, 185, 129, 0.4); font-size: 0.8rem;"></i>
+            </div>
+        </div>
+    </div>
     <!-- VECCHIO POPUP HTML ELIMINATO, ORA CI PENSA IL JAVASCRIPT -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+            
 
     <script>
         let formModificato = false; // Il vero Dirty Flag
@@ -1866,87 +1897,64 @@ window.addEventListener('popstate', function(event) {
 
  let ultimaFotografiaDati = null; 
 
-      // Funzione per l'Auto-Salvataggio (Intelligente e Visibile)
+      // 1. NEUTRALIZZA L'AUTOSAVE (Salva solo nella cache locale, zero chiamate API in background)
         async function eseguiAutoSaveInvisibile() {
             if(NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
-
             const payloadDati = raccogliDatiDalForm();
-            const fotografiaAttuale = JSON.stringify(payloadDati);
-
-            if (ultimaFotografiaDati === fotografiaAttuale) return; 
-            
-            ultimaFotografiaDati = fotografiaAttuale; 
-            
             localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
             localStorage.setItem('mqt_theme_' + NOME_SISTEMA, payloadDati.digital_style);
             localStorage.setItem('mqt_layout_' + NOME_SISTEMA, payloadDati.digital_layout);
             applicaTemaLive();
+        }
 
-            const btnMaster = document.getElementById('master-action-text');
-            const testoOriginale = (statoUtente === 'attivo') ? "PUBBLICA ONLINE" : "COMPLETA TAG";
+        // 2. FUNZIONE DI VERIFICA (Recuperata dal vecchio file)
+        function verificaCompletamentoBase() {
+            const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
+            const sitoVal = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
+            const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
+            const tel1Val = document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "";
+            const internalTrack = document.getElementById('social-internal-track');
+            const haSocial = internalTrack && internalTrack.children.length > 0;
 
-            try {
-                if(btnMaster) btnMaster.innerText = "SALVATAGGIO...";
+            return (bioVal !== "" || sitoVal !== "" || emailVal !== "" || tel1Val !== "" || haSocial);
+        }
 
-                const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: fotografiaAttuale };
-                await fetch('/api/update-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) });
-                
-                if(btnMaster) {
-                    btnMaster.innerText = "BOZZA SALVATA ✓";
-                    // Distrugge eventuali timer precedenti e forza il ripristino pulito
-                    if (window.autoSaveTimeout) clearTimeout(window.autoSaveTimeout);
-                    window.autoSaveTimeout = setTimeout(() => { 
-                        btnMaster.innerText = testoOriginale; 
-                    }, 2000);
+        // 3. IL TASTONE VERDE (Apre il bivio o manda in cassa)
+        function gestisciAzioneMaster() {
+            if (statoUtente === 'attivo') {
+                apriDrawer('drawer-salvataggio');
+            } else {
+                if (verificaCompletamentoBase()) {
+                    salvaEDirigi('checkout');
+                } else {
+                    alert("⚠️ Configurazione Incompleta\n\nPrima di procedere devi inserire almeno un contenuto nella tua tag.\nCompila almeno uno di questi campi:\n- Biografia\n- Sito Web\n- Email o Telefono\n- Un Canale Social");
                 }
-            } catch(e) {
-                console.error("AutoSave Fallito", e);
-                if(btnMaster) btnMaster.innerText = testoOriginale;
             }
         }
-        // Il Bottone Ufficiale "Pubblica Online"
-        async function gestisciAzioneMaster() {
-            if(NOME_SISTEMA === "tuonome.it") return; 
 
-            const datiConfigurati = raccogliDatiDalForm();
+        // 4. IL VERO MOTORE DI SALVATAGGIO API (Su comando manuale)
+        async function salvaEDirigi(azione) {
+            const payloadDati = raccogliDatiDalForm();
             
-            // LOGICA DI CONTROLLO MINIMO SINDACABILE (Senza obbligo di Logo)
-            const haBio = datiConfigurati.bio !== "";
-            const haSito = datiConfigurati.sito_web !== "";
-            const haEmail = datiConfigurati.email !== "";
-            
-            let haTelefono = false;
+            // Chiudiamo graficamente i cassetti
+            document.querySelectorAll('.drawer-glass').forEach(d => d.classList.remove('open'));
+            const backdrop = document.getElementById('drawer-backdrop');
+            if (backdrop) backdrop.classList.remove('active');
+
             try {
-                const vcf = JSON.parse(datiConfigurati.modulo_vcf || "{}");
-                haTelefono = vcf.telefono1 !== "";
-            } catch(e) {}
-            
-            const canaliSocialCount = JSON.parse(datiConfigurati.config_canali || "[]").length;
-            const haSocial = canaliSocialCount > 0;
+                const btnMasterText = document.getElementById('master-action-text');
+                const testoOriginale = btnMasterText ? btnMasterText.innerText : "PUBBLICA ONLINE";
+                if(btnMasterText) btnMasterText.innerText = "ELABORAZIONE...";
 
-            const haContenutoMinimo = haBio || haSito || haEmail || haTelefono || haSocial;
+                let bodyRichiesta = {};
+                if (azione === 'pubblica') {
+                    // Svuota la bozza e pubblica ufficialmente
+                    bodyRichiesta = { ...payloadDati, draft_json: "" }; 
+                } else {
+                    // Invia i dati SOLO alla colonna draft_json
+                    bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
+                }
 
-            if (!haContenutoMinimo) {
-                alert("⚠️ Configurazione Incompleta\n\nPrima di procedere devi inserire almeno un contenuto nella tua tag.\n\nCompila almeno uno di questi campi per continuare:\n- Biografia\n- Sito Web\n- Email o Telefono\n- Un Canale Social");
-                return;
-            }
-
-            // Se l'utente non è attivo, forza il passaggio dal Checkout
-            if (statoUtente !== 'attivo') {
-                const btn = document.getElementById('master-action-text');
-                if(btn) btn.innerText = "VERIFICA...";
-                window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
-                return;
-            }
-
-            // Se attivo, spinge i dati live svuotando la bozza
-            try {
-                const btnText = document.getElementById('master-action-text');
-                const textOriginale = btnText ? btnText.innerText : "ATTENDI...";
-                if (btnText) btnText.innerText = "PUBBLICAZIONE...";
-
-                const bodyRichiesta = { ...datiConfigurati, draft_json: "" }; 
-                
                 const response = await fetch('/api/update-profile', { 
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 
                 });
@@ -1954,14 +1962,23 @@ window.addEventListener('popstate', function(event) {
                 const data = await response.json();
                 
                 if (data.success) {
-                   window.location.href = `/tag.html?u=${NOME_SISTEMA}`; 
+                    window.onbeforeunload = null; // Rimuove eventuali blocchi di uscita
+                    if (azione === 'checkout') {
+                        window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
+                    } else if (azione === 'bozza') {
+                        window.location.href = `/profile.html`; 
+                    } else if (azione === 'pubblica') {
+                        window.location.href = `/tag.html?u=${NOME_SISTEMA}`; 
+                    }
                 } else {
-                    alert("Errore di pubblicazione. Riprova.");
-                    if (btnText) btnText.innerText = textOriginale;
+                    alert("Errore durante il salvataggio. Riprova.");
+                    if (btnMasterText) btnMasterText.innerText = testoOriginale;
                 }
             } catch (error) { 
-                alert("Errore di rete. Controlla la tua connessione.");
-                if (document.getElementById('master-action-text')) document.getElementById('master-action-text').innerText = "RIPROVA";
+                console.error("Errore API:", error); 
+                alert("Errore di rete. Controlla la connessione.");
+                const btnMasterText = document.getElementById('master-action-text');
+                if (btnMasterText) btnMasterText.innerText = "RIPROVA";
             }
         }
         // ==========================================
