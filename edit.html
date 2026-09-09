@@ -292,7 +292,7 @@
         .top-bar-finta { position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 15px; z-index: 100; transition: opacity 0.4s ease; }
         .app-container.locked .top-bar-finta { opacity: 1; pointer-events: auto; }
         .app-container.unlocked .top-bar-finta { opacity: 0; pointer-events: none; }
-        /* ============================================================
+     /* ============================================================
            TESTI LUNGHI E CORTI: SAFE CENTERING DINAMICO
            ============================================================ */
         #corpoSezione .testo-lettura {
@@ -306,11 +306,13 @@
             color: #e8e8ed !important;
             text-align: center !important; 
             
-            /* LA MAGIA: Prende lo spazio vuoto sopra e sotto. 
-               Se il testo è corto lo centra. Se è lungo, si appoggia in cima. */
+            /* FIX: Spezza le parole infinite e rispetta gli "a capo" */
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: pre-wrap !important;
+            
             margin-top: auto !important;   
             margin-bottom: auto !important;
-            
             width: 100% !important;
             box-sizing: border-box !important;
         }           
@@ -1447,11 +1449,17 @@
             
 
     <script>
-        let formModificato = false; // Il vero Dirty Flag
+       let formModificato = false; // Il vero Dirty Flag
 
-        // I sensori: si accorgono istantaneamente se tocchi o scrivi qualcosa
-        document.addEventListener('input', () => { formModificato = true; });
-        document.addEventListener('change', () => { formModificato = true; });
+        // FIX: Salva nel disco locale istantaneamente ad ogni tocco
+        document.addEventListener('input', () => { 
+            formModificato = true; 
+            if(typeof eseguiAutoSaveInvisibile === 'function') eseguiAutoSaveInvisibile(); 
+        });
+        document.addEventListener('change', () => { 
+            formModificato = true; 
+            if(typeof eseguiAutoSaveInvisibile === 'function') eseguiAutoSaveInvisibile(); 
+        });
         let ultimoSalvataggio = null; // Memoria del Dirty Flag
         const NOME_SISTEMA = getNomeBrandReale();
         let isDrawerOpen = false;
@@ -1937,9 +1945,13 @@
             }
         }
 
-        // 2. MOTORE DI CHIUSURA (Silenzioso)
+      // 2. MOTORE DI CHIUSURA (Silenzioso ma con salvataggio garantito)
         function chiudiSenzaSalvare() {
             eseguiChiusuraGrafica();
+            
+            // FIX: Assicura il salvataggio quando si preme "SALVA"
+            if(typeof eseguiAutoSaveInvisibile === 'function') eseguiAutoSaveInvisibile();
+            
             // Pulisce l'URL svuotando l'hash in modo silenzioso, senza far scattare falsi ritorni
             if (window.location.hash !== '') {
                 history.replaceState(null, "", window.location.pathname + window.location.search);
