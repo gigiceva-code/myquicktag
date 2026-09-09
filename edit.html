@@ -1461,8 +1461,8 @@
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
-        // Aggiorna fisicamente il DOM della pagina
-       function aggiornaAnteprimaLive() {
+      // Aggiorna fisicamente il DOM della pagina simulando il design finale
+        function aggiornaAnteprimaLive() {
             const previewCopertina = document.getElementById('preview-copertina');
             const roomIdentity = document.getElementById('room-identity');
             const roomBusiness = document.getElementById('room-business');
@@ -1522,44 +1522,24 @@
             }
 
 
-            // --- 2. MOTORE A SCOMPARSA DELLE STANZE ---
-            // Il sistema controlla in tempo reale cosa hai compilato. Se una stanza è vuota, scompare.
+            // --- 2. VERIFICA DATI PER ACCENSIONE STANZE ---
             
-         // Identity
             const valBio = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
             const valCV = document.getElementById('field-cv') ? document.getElementById('field-cv').value.trim() : "";
             const hasBio = valBio !== "";
             const hasCV = valCV !== "";
             roomIdentity.style.display = (hasBio || hasCV) ? 'flex' : 'none';
 
-            // AGGIORNAMENTO IN TEMPO REALE DELL'ANTEPRIMA (Bio e CV)
-            const bioContainer = document.getElementById('preview-bio-content');
-            if (bioContainer) {
-                bioContainer.innerHTML = hasBio 
-                    ? `<p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; text-align: center; padding: 10px;">${valBio}</p>` 
-                    : `<p style="color: #64748b; font-size: 0.85rem; text-align: center;">Nessuna biografia inserita.</p>`;
-            }
-
-            const cvContainer = document.getElementById('preview-cv-content');
-            if (cvContainer) {
-                cvContainer.innerHTML = hasCV 
-                    ? `<a href="${valCV}" target="_blank" class="room-link" style="display: block; text-align: center; text-decoration: none; margin-top: 15px;">📄 SCARICA CURRICULUM VITAE</a>` 
-                    : `<p style="color: #64748b; font-size: 0.85rem; text-align: center;">Nessun CV caricato.</p>`;
-            } 
-
-            // Business
             const hasReview = document.getElementById('field-review-url') && document.getElementById('field-review-url').value.trim() !== "";
             const hasLead = document.getElementById('input-lead-attivo') && document.getElementById('input-lead-attivo').checked;
             roomBusiness.style.display = (hasReview || hasLead) ? 'flex' : 'none';
 
-            // Vetrina
             const hasVideo = document.getElementById('field-video-url') && document.getElementById('field-video-url').value.trim() !== "";
             const hasPdf = document.getElementById('field-pdf-url') && document.getElementById('field-pdf-url').value.trim() !== "";
             const galleryData = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
             const hasGallery = galleryData !== "[]" && galleryData !== "";
             roomMedia.style.display = (hasVideo || hasPdf || hasGallery) ? 'flex' : 'none';
 
-            // Network
             const hasTel = document.getElementById('field-tel1') && document.getElementById('field-tel1').value.trim() !== "";
             const hasEmail = document.getElementById('field-email') && document.getElementById('field-email').value.trim() !== "";
             const hasSito = document.getElementById('field-sito') && document.getElementById('field-sito').value.trim() !== "";
@@ -1569,10 +1549,99 @@
             const hasPartners = partnersData !== "[]" && partnersData !== "";
             roomNetwork.style.display = (hasTel || hasEmail || hasSito || hasSocial || hasPartners) ? 'flex' : 'none';
 
-            // Action Center
             const hasQuickPass = document.getElementById('field-qp-premio-a') && document.getElementById('field-qp-premio-a').value.trim() !== "";
             const hasShop = document.getElementById('input-shop-attivo') && document.getElementById('input-shop-attivo').checked;
             roomAction.style.display = (hasQuickPass || hasShop || hasActionInRoom) ? 'flex' : 'none';
+
+
+            // --- 3. RENDERING GRAFICO REALE DELLE STANZE DI ANTEPRIMA ---
+            
+            // IDENTITY
+            const bioContainer = document.getElementById('preview-bio-content');
+            if (bioContainer) {
+                bioContainer.innerHTML = hasBio 
+                    ? `<div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); padding:20px; border-radius:16px; margin-bottom:15px;"><p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; text-align: center;">${valBio}</p></div>` 
+                    : ``;
+            }
+            const cvContainer = document.getElementById('preview-cv-content');
+            if (cvContainer) {
+                cvContainer.innerHTML = hasCV 
+                    ? `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.1); margin-top:10px;"><i class="fas fa-file-pdf" style="color:#e5c158; font-size:1.5rem; margin-bottom:10px;"></i><br><span style="color:#fff; font-size:0.8rem; font-weight:600; letter-spacing:1px;">SCARICA CURRICULUM VITAE</span></div>` 
+                    : ``;
+            } 
+
+            // NETWORK
+            const networkContainer = document.getElementById('preview-network-content');
+            if (networkContainer) {
+                let netHTML = '<div style="display:flex; flex-direction:column; gap:8px;">';
+                if (hasTel || hasEmail || hasSito) {
+                    netHTML += `<div style="font-size:0.65rem; color:#86868b; margin-bottom:5px; margin-top:5px; letter-spacing:1.5px; text-align:center;">CONTATTI DIRETTI</div>`;
+                    if (hasTel) netHTML += `<div style="background:rgba(255,255,255,0.05); padding:14px; border-radius:12px; display:flex; align-items:center; border:1px solid rgba(255,255,255,0.05);"><i class="fas fa-phone" style="width:30px; color:#10b981; font-size:1.1rem; text-align:center;"></i><span style="color:#fff; font-size:0.9rem; margin-left:10px; font-weight:500;">Chiama</span></div>`;
+                    if (hasEmail) netHTML += `<div style="background:rgba(255,255,255,0.05); padding:14px; border-radius:12px; display:flex; align-items:center; border:1px solid rgba(255,255,255,0.05);"><i class="fas fa-envelope" style="width:30px; color:#e5c158; font-size:1.1rem; text-align:center;"></i><span style="color:#fff; font-size:0.9rem; margin-left:10px; font-weight:500;">Invia Email</span></div>`;
+                    if (hasSito) netHTML += `<div style="background:rgba(255,255,255,0.05); padding:14px; border-radius:12px; display:flex; align-items:center; border:1px solid rgba(255,255,255,0.05);"><i class="fas fa-globe" style="width:30px; color:#3b82f6; font-size:1.1rem; text-align:center;"></i><span style="color:#fff; font-size:0.9rem; margin-left:10px; font-weight:500;">Visita Sito Web</span></div>`;
+                }
+                if (hasSocial) {
+                    netHTML += `<div style="font-size:0.65rem; color:#86868b; margin-bottom:5px; margin-top:10px; letter-spacing:1.5px; text-align:center;">SOCIAL E PIATTAFORME</div>`;
+                    trackSocial.querySelectorAll('.social-block-live').forEach(block => {
+                        const nome = block.getAttribute('data-nome');
+                        const icon = block.getAttribute('data-icon');
+                        netHTML += `<div style="background:rgba(255,255,255,0.05); padding:14px; border-radius:12px; display:flex; align-items:center; border:1px solid rgba(255,255,255,0.05);"><i class="${icon}" style="width:30px; color:#fff; font-size:1.2rem; text-align:center;"></i><span style="color:#fff; font-size:0.9rem; margin-left:10px; font-weight:500;">${nome}</span></div>`;
+                    });
+                }
+                if (hasPartners) {
+                    netHTML += `<div style="font-size:0.65rem; color:#e5c158; margin-bottom:5px; margin-top:10px; letter-spacing:1.5px; text-align:center;">CERCHIA DI FIDUCIA</div>`;
+                    try {
+                        const partners = JSON.parse(partnersData);
+                        partners.forEach(p => {
+                            netHTML += `<div style="background:rgba(229,193,88,0.05); padding:14px; border-radius:12px; display:flex; align-items:center; border:1px solid rgba(229,193,88,0.2);"><i class="fas fa-handshake" style="width:30px; color:#e5c158; font-size:1.1rem; text-align:center;"></i><span style="color:#fff; font-size:0.9rem; margin-left:10px; font-weight:500;">${p.nome}</span></div>`;
+                        });
+                    } catch(e){}
+                }
+                netHTML += '</div>';
+                networkContainer.innerHTML = netHTML;
+            }
+
+            // VETRINA (Media)
+            const mediaContainer = document.querySelector('#view-media > div:nth-child(2)');
+            if (mediaContainer) {
+                let medHTML = '<div style="display:flex; flex-direction:column; gap:10px; padding:10px;">';
+                if (hasGallery) {
+                    medHTML += `<div style="font-size:0.65rem; color:#86868b; margin-bottom:5px; letter-spacing:1.5px; text-align:center;">GALLERIA IMMAGINI</div>`;
+                    medHTML += `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:10px;">`;
+                    try {
+                        const foto = JSON.parse(galleryData);
+                        foto.forEach(f => {
+                            medHTML += `<div style="aspect-ratio:1/1; border-radius:10px; background-image:url('${f}'); background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.1);"></div>`;
+                        });
+                    } catch(e){}
+                    medHTML += `</div>`;
+                }
+                if (hasPdf) medHTML += `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.1);"><i class="fas fa-file-pdf" style="color:#e5c158; font-size:1.5rem; margin-bottom:10px;"></i><br><span style="color:#fff; font-size:0.8rem; font-weight:600; letter-spacing:1px;">VETRINA PDF</span></div>`;
+                if (hasVideo) medHTML += `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.1);"><i class="fas fa-play-circle" style="color:#10b981; font-size:1.5rem; margin-bottom:10px;"></i><br><span style="color:#fff; font-size:0.8rem; font-weight:600; letter-spacing:1px;">SMART VIDEO VAULT</span></div>`;
+                medHTML += '</div>';
+                mediaContainer.innerHTML = medHTML;
+            }
+
+            // BUSINESS
+            const businessContainer = document.querySelector('#view-business > div:nth-child(2)');
+            if (businessContainer) {
+                let busHTML = '<div style="display:flex; flex-direction:column; gap:10px; padding:10px;">';
+                if (hasReview) busHTML += `<div style="background:rgba(229,193,88,0.05); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(229,193,88,0.2);"><i class="fas fa-star" style="color:#e5c158; font-size:1.5rem; margin-bottom:10px;"></i><br><span style="color:#e5c158; font-size:0.8rem; font-weight:600; letter-spacing:1px;">SCUDO REPUTAZIONE</span></div>`;
+                if (hasLead) busHTML += `<div style="background:rgba(16,185,129,0.05); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(16,185,129,0.2);"><i class="fas fa-envelope-open-text" style="color:#10b981; font-size:1.5rem; margin-bottom:10px;"></i><br><span style="color:#10b981; font-size:0.8rem; font-weight:600; letter-spacing:1px;">LEAD CAPTURE</span></div>`;
+                busHTML += '</div>';
+                businessContainer.innerHTML = busHTML;
+            }
+
+            // ACTION CENTER
+            const actionContainer = document.querySelector('#view-action > div:nth-child(2)');
+            if (actionContainer) {
+                let actHTML = '<div style="display:flex; flex-direction:column; gap:10px; padding:10px;">';
+                if (hasActionInRoom) actHTML += `<div style="background:#10b981; padding:16px; border-radius:14px; text-align:center; box-shadow:0 10px 20px rgba(16,185,129,0.2);"><span style="color:#000; font-size:0.95rem; font-weight:800; letter-spacing:1px;"><i class="fas fa-bolt" style="margin-right:8px;"></i>${qaInput.value.toUpperCase()}</span></div>`;
+                if (hasShop) actHTML += `<div style="background:rgba(229,193,88,0.05); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(229,193,88,0.3);"><i class="fas fa-shopping-cart" style="color:#e5c158; font-size:1.5rem; margin-bottom:10px;"></i><br><span style="color:#e5c158; font-size:0.8rem; font-weight:600; letter-spacing:1px;">VENDITA FLASH ATTIVA</span></div>`;
+                if (hasQuickPass) actHTML += `<div style="background:rgba(59,130,246,0.05); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(59,130,246,0.3);"><i class="fas fa-ticket-alt" style="color:#3b82f6; font-size:1.5rem; margin-bottom:10px;"></i><br><span style="color:#3b82f6; font-size:0.8rem; font-weight:600; letter-spacing:1px;">QUICK PASS</span></div>`;
+                actHTML += '</div>';
+                actionContainer.innerHTML = actHTML;
+            }
         }
       function sbloccaTagPreview() {
             const container = document.getElementById('profile-content');
