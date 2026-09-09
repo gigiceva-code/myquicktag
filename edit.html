@@ -1763,8 +1763,23 @@
                 corpo.innerHTML = html;
             }
             else if (tipo === 'cv' || tipo === 'pdf') {
-                titolo.textContent = tipo === 'cv' ? 'CURRICULUM VITAE' : 'DOCUMENTO PDF';
-                corpo.innerHTML = `<div style="padding: 40px; text-align: center;"><i class="fas fa-file-pdf" style="font-size: 3rem; color: #e5c158; margin-bottom: 15px;"></i><br><span style="color: #fff; font-size: 0.9rem;">Visualizzazione PDF attiva solo nella versione live.</span></div>`;
+                // Legge il link reale direttamente dal campo nascosto dell'editor
+                let pdfLink = tipo === 'cv' ? document.getElementById('field-cv').value : document.getElementById('field-pdf-url').value;
+                
+                if (pdfLink) {
+                    // Normalizza l'URL per sicurezza
+                    if (pdfLink.startsWith('http://')) {
+                        pdfLink = pdfLink.replace('http://', 'https://');
+                    } else if (!pdfLink.startsWith('https://') && !pdfLink.startsWith('/')) {
+                        pdfLink = 'https://' + pdfLink;
+                    }
+                    // Apre il PDF in una nuova scheda pulita
+                    window.open(pdfLink, '_blank', 'noopener noreferrer');
+                }
+                
+                // Chiude dolcemente la finestra di overlay per non lasciarla bloccata al ritorno
+                chiudiSezioneAnteprima();
+                return;
             }
             else if (tipo === 'video') {
                 titolo.textContent = 'SMART VIDEO';
