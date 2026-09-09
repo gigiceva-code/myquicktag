@@ -1797,7 +1797,7 @@ window.addEventListener('popstate', function(event) {
 
  let ultimaFotografiaDati = null; 
 
-        // Funzione per l'Auto-Salvataggio (Intelligente e Visibile)
+      // Funzione per l'Auto-Salvataggio (Intelligente e Visibile)
         async function eseguiAutoSaveInvisibile() {
             if(NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
 
@@ -1815,10 +1815,11 @@ window.addEventListener('popstate', function(event) {
             localStorage.setItem('mqt_layout_' + NOME_SISTEMA, payloadDati.digital_layout);
             applicaTemaLive();
 
+            const btnMaster = document.getElementById('master-action-text');
+            // FIX: Calcoliamo il testo originale matematicamente dallo stato dell'utente. Nessun margine d'errore.
+            const testoOriginale = (statoUtente === 'attivo') ? "PUBBLICA ONLINE" : "COMPLETA TAG";
+
             try {
-                // Feedback visivo sul bottone principale (così VEDI se salva davvero)
-                const btnMaster = document.getElementById('master-action-text');
-                const testoOriginale = btnMaster ? btnMaster.innerText : "PUBBLICA ONLINE";
                 if(btnMaster) btnMaster.innerText = "SALVATAGGIO...";
 
                 const bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: fotografiaAttuale };
@@ -1826,10 +1827,17 @@ window.addEventListener('popstate', function(event) {
                 
                 if(btnMaster) {
                     btnMaster.innerText = "BOZZA SALVATA ✓";
-                    setTimeout(() => { btnMaster.innerText = testoOriginale; }, 2000);
+                    setTimeout(() => { 
+                        // Ripristina il testo esatto solo se nel frattempo non è partito un altro salvataggio
+                        if(btnMaster.innerText === "BOZZA SALVATA ✓") {
+                            btnMaster.innerText = testoOriginale; 
+                        }
+                    }, 2000);
                 }
             } catch(e) {
                 console.error("AutoSave Fallito", e);
+                // FIX: Se cade la connessione o l'API fallisce, il tasto torna normale e non sparisce
+                if(btnMaster) btnMaster.innerText = testoOriginale;
             }
         }
         // Il Bottone Ufficiale "Pubblica Online"
