@@ -156,7 +156,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; transition: all 0.3s ease;
         }
         .room-link:active { color: #ffffff !important; transform: scale(0.98); }
-        .room-link::after { content: '::'; margin-left: 12px; opacity: 0; pointer-events: none; }
         
         /* I colori tematici delle stanze accese */
         #profile-content[data-theme="emerald"] .room-title { color: #00E680; }
@@ -227,9 +226,9 @@
         .style-bar-label input { display: none; }
         .style-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; color: #a0a0a0; font-size: 0.7rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s ease; cursor: pointer; }
         .color-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: #ffffff; }
         .sortable-ghost { opacity: 0.4; background: rgba(255, 255, 255, 0.05); }
         .sortable-drag { background: rgba(20, 20, 22, 0.95); box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        .style-bar-label input:checked + .style-bar { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: #ffffff; }
         .vip-switch { position: relative; width: 40px; height: 22px; -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.1); border-radius: 24px; outline: none; cursor: pointer; transition: 0.3s; margin: 0; }
         .vip-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .vip-switch:checked { background: #e5c158; box-shadow: 0 0 10px rgba(229, 193, 88, 0.4); }
@@ -2059,10 +2058,13 @@
 
  let ultimaFotografiaDati = null; 
 
-      // 1. NEUTRALIZZA L'AUTOSAVE (Salva solo nella cache locale, zero chiamate API in background)
-        async function eseguiAutoSaveInvisibile() {
+    async function eseguiAutoSaveInvisibile() {
             if(NOME_SISTEMA === "tuonome.it" || isLoadingDati) return;
             const payloadDati = raccogliDatiDalForm();
+            
+            // AGGIUNGI QUESTA RIGA: Salva tutto nel disco del telefono
+            localStorage.setItem('mqt_draft_full_' + NOME_SISTEMA, JSON.stringify(payloadDati));
+
             localStorage.setItem('mqt_cache_' + NOME_SISTEMA, payloadDati.username_display);
             localStorage.setItem('mqt_theme_' + NOME_SISTEMA, payloadDati.digital_style);
             localStorage.setItem('mqt_layout_' + NOME_SISTEMA, payloadDati.digital_layout);
@@ -2125,6 +2127,7 @@
                 
                 if (data.success) {
                     window.onbeforeunload = null; // Rimuove eventuali blocchi di uscita
+                    localStorage.removeItem('mqt_draft_full_' + NOME_SISTEMA);
                     if (azione === 'checkout') {
                         window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
                     } else if (azione === 'bozza') {
@@ -2207,6 +2210,10 @@
                 // ========================================================
                 let liveData = data.fields || data;
                 let f = { ...liveData }; // 1. La roccia: Partiamo dai dati LIVE ufficiali
+                const localDraft = localStorage.getItem('mqt_draft_full_' + NOME_SISTEMA);
+                if (localDraft) {
+                    try { Object.assign(f, JSON.parse(localDraft)); } catch(e) {}
+                }
 
                 if (liveData.draft_json && liveData.draft_json.trim() !== "") {
                     try {
