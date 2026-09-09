@@ -1835,82 +1835,75 @@
                 telecomando.style.pointerEvents = 'auto';
             }
         }
-       // ==========================================
-        // GESTIONE CASSETTI (Il Teatro Liquido)
-        // ==========================================
-    function apriDrawer(idDrawer) {
-    const masterDrawer = document.getElementById('drawer-master');
-    
-    // 🧠 Motore di Routing Intelligente
-    if (idDrawer === 'drawer-master' && window.entratoDaPreview === true) {
-        window.entratoDaPreview = false; 
-        chiudiSenzaSalvare(); 
-        return; 
-    }
-
-    if (idDrawer.startsWith('env-')) {
-        if (masterDrawer && !masterDrawer.classList.contains('open')) {
-            window.entratoDaPreview = true;
-        } else if (masterDrawer && masterDrawer.classList.contains('open')) {
-            window.entratoDaPreview = false;
-        }
-    }
-    
- // 👑 Controllo Esclusive GOLD (Monetizzazione e Marketing)
-  const esclusiveGold = ['drawer-review', 'drawer-lead-capture', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass', 'drawer-video', 'drawer-showcase']; 
-    if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
-        mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e iniziare a monetizzare.", "GOLD");
-        return;
-    }
-
-    // 🚀 Controllo Esclusive PREMIUM (Vetrina e Azioni)
-    const esclusivePremium = ['drawer-gallery', 'drawer-quick']; 
-    if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
-        mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua vetrina e i tuoi contatti.", "PREMIUM");
-        return;
-    } 
-
-    const drawerTarget = document.getElementById(idDrawer);
-    const backdrop = document.getElementById('drawer-backdrop');
-    
-    document.querySelectorAll('#dynamic-trigger-area').forEach(el => {
-        el.style.opacity = '0';
-        el.style.pointerEvents = 'none';
-    });
-
-    if (backdrop) backdrop.classList.add('active');
-
-    if (drawerTarget) {
-        drawerTarget.style.zIndex = "9999"; 
-        drawerTarget.style.pointerEvents = "auto"; 
-        setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
-    }
-
-    setTimeout(() => {
-        document.querySelectorAll('.drawer-glass').forEach(d => {
-            if (d.id !== idDrawer) {
-                d.classList.remove('open');
-                d.style.zIndex = "2000"; 
+       
+   // 1. MOTORE DI APERTURA (Con Router di Cronologia)
+        function apriDrawer(idDrawer) {
+            const masterDrawer = document.getElementById('drawer-master');
+            
+            if (idDrawer === 'drawer-master' && window.entratoDaPreview === true) {
+                window.entratoDaPreview = false; 
+                chiudiSenzaSalvare(); 
+                return; 
             }
-        });
-    }, 300);
 
-    if (window.location.hash !== '#menu') {
-        history.pushState({ level: 'cassetto_aperto' }, "", "#menu");
-    }
-}
+            if (idDrawer.startsWith('env-')) {
+                if (masterDrawer && !masterDrawer.classList.contains('open')) window.entratoDaPreview = true;
+                else if (masterDrawer && masterDrawer.classList.contains('open')) window.entratoDaPreview = false;
+            }
+            
+            const esclusiveGold = ['drawer-review', 'drawer-lead-capture', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass', 'drawer-video', 'drawer-showcase']; 
+            if (esclusiveGold.includes(idDrawer) && userPlan !== 'GOLD') {
+                mostraPopupPremium("ESCLUSIVA GOLD 👑", "Questa funzione è un'esclusiva del piano GOLD.<br><br>Premi GESTIONE PIANI per sbloccarla e iniziare a monetizzare.", "GOLD");
+                return;
+            }
+
+            const esclusivePremium = ['drawer-gallery', 'drawer-quick']; 
+            if (esclusivePremium.includes(idDrawer) && userPlan === 'BASE') {
+                mostraPopupPremium("ESCLUSIVA PREMIUM 🚀", "Questa funzione richiede almeno il piano PREMIUM.<br><br>Premi GESTIONE PIANI per espandere la tua vetrina e i tuoi contatti.", "PREMIUM");
+                return;
+            } 
+
+            const drawerTarget = document.getElementById(idDrawer);
+            const backdrop = document.getElementById('drawer-backdrop');
+            
+            document.querySelectorAll('#dynamic-trigger-area').forEach(el => {
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+            });
+
+            if (backdrop) backdrop.classList.add('active');
+
+            if (drawerTarget) {
+                drawerTarget.style.zIndex = "9999"; 
+                drawerTarget.style.pointerEvents = "auto"; 
+                setTimeout(() => { drawerTarget.classList.add('open'); }, 10);
+            }
+
+            setTimeout(() => {
+                document.querySelectorAll('.drawer-glass').forEach(d => {
+                    if (d.id !== idDrawer) {
+                        d.classList.remove('open');
+                        d.style.zIndex = "2000"; 
+                    }
+                });
+            }, 300);
+
+            // 🎯 IL BISTURI: Registra l'ID esatto del cassetto per creare i "passi" per il tasto indietro
+            if (window.location.hash !== '#' + idDrawer) {
+                history.pushState({ drawer: idDrawer }, "", "#" + idDrawer);
+            }
+        }
+
+        // 2. MOTORE DI CHIUSURA (Silenzioso)
         function chiudiSenzaSalvare() {
-    // 1. Chiusura grafica immediata di tutti i cassetti
-    eseguiChiusuraGrafica();
-    
-    // 2. Pulisce l'URL se c'era un hash attivo (#menu o #insight)
-    if (window.location.hash === '#menu' || window.location.hash === '#insight') {
-        history.replaceState(null, "", window.location.pathname + window.location.search);
-    }
-    
-    // 3. Salva la bozza in background
-    eseguiAutoSaveInvisibile();
-}
+            eseguiChiusuraGrafica();
+            // Pulisce l'URL svuotando l'hash in modo silenzioso, senza far scattare falsi ritorni
+            if (window.location.hash !== '') {
+                history.replaceState(null, "", window.location.pathname + window.location.search);
+            }
+        }
+
+        // 3. CHIUSURA GRAFICA (Intatta)
         function eseguiChiusuraGrafica() {
             document.querySelectorAll('.drawer-glass').forEach(d => {
                 d.classList.remove('open');
@@ -1922,38 +1915,60 @@
             }
         }
 
+        // 4. IL CERVELLO DEL TASTO ANDROID (Ascolta e naviga a ritroso)
+        window.addEventListener('popstate', function(event) {
+            const hash = window.location.hash;
+            const insightDrawer = document.getElementById('drawer-insight');
+            const strategiaDrawer = document.getElementById('drawer-strategia'); 
+            const overlayPremium = document.getElementById('premium-alert-overlay');
+            const overlayAnteprima = document.getElementById('overlaySezione');
 
-// UNICO GESTORE DELLA CRONOLOGIA (Sostituisce tutti i precedenti popstate)
-window.addEventListener('popstate', function(event) {
-    const hash = window.location.hash;
-    const insightDrawer = document.getElementById('drawer-insight');
-    const strategiaDrawer = document.getElementById('drawer-strategia'); // Aggiunto
-    const overlay = document.getElementById('premium-alert-overlay');
+            // Livello Superiore: chiude i popup se aperti
+            if (overlayPremium && overlayPremium.style.display === 'flex') {
+                chiudiPremiumAlert();
+                return;
+            }
+            if (insightDrawer && insightDrawer.classList.contains('open')) {
+                insightDrawer.classList.remove('open');
+                return;
+            }
+            if (strategiaDrawer && strategiaDrawer.classList.contains('open')) { 
+                strategiaDrawer.classList.remove('open');
+                return;
+            }
+            if (overlayAnteprima && overlayAnteprima.style.display === 'flex' && hash === '') {
+                chiudiSezioneAnteprima();
+                return;
+            }
 
-    // 1. Se il popup premium è aperto, chiudilo
-    if (overlay && overlay.style.display === 'flex') {
-        overlay.style.opacity = '0';
-        if (overlay.children[0]) overlay.children[0].style.transform = 'scale(0.95)';
-        setTimeout(() => { overlay.style.display = 'none'; }, 300);
-        return;
-    }
-
-    // 2. Se i cassetti in sovraimpressione sono aperti, chiudili
-    if (insightDrawer && insightDrawer.classList.contains('open')) {
-        insightDrawer.classList.remove('open');
-        return;
-    }
-    if (strategiaDrawer && strategiaDrawer.classList.contains('open')) { // Aggiunto
-        strategiaDrawer.classList.remove('open');
-        return;
-    }
-
-    // 3. Se torniamo all'inizio (# o vuoto), chiudi tutti i cassetti aperti
-    if (hash === '' || hash === '#') {
-        eseguiChiusuraGrafica();
-        eseguiAutoSaveInvisibile();
-    }
-});
+            // 🎯 ROUTING DEI CASSETTI (Il fix per il tasto Indietro)
+            if (hash === '' || hash === '#') {
+                // Hash vuoto: siamo tornati alla base. Chiudi tutto.
+                eseguiChiusuraGrafica();
+            } else {
+                // L'hash ci dice esattamente dove eravamo prima (es. #env-identity)
+                const targetId = hash.substring(1); 
+                const cassettoDaRiaprire = document.getElementById(targetId);
+                
+                if (cassettoDaRiaprire && cassettoDaRiaprire.classList.contains('drawer-glass')) {
+                    // Chiudi tutti gli altri cassetti
+                    document.querySelectorAll('.drawer-glass').forEach(d => {
+                        if (d.id !== targetId) {
+                            d.classList.remove('open');
+                            d.style.zIndex = "2000";
+                        }
+                    });
+                    
+                    // Riaccendi solo il cassetto precedente
+                    const backdrop = document.getElementById('drawer-backdrop');
+                    if (backdrop) backdrop.classList.add('active');
+                    
+                    cassettoDaRiaprire.style.zIndex = "9999";
+                    cassettoDaRiaprire.style.pointerEvents = "auto";
+                    cassettoDaRiaprire.classList.add('open');
+                }
+            }
+        });
         // ==========================================
         // 💾 IL MOTORE DI SALVATAGGIO (Riscritto per WYSIWYG)
         // ==========================================
