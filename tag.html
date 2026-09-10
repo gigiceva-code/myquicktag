@@ -679,21 +679,20 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     font-size: 0.95rem !important;
     line-height: 1.8 !important;
     font-weight: 300 !important;
-    color: #e8e8ed !important; 
+    color: #e8e8ed !important;
     
-    /* La nuova cornice glassmorphism */
+    /* Regola di sicurezza e formattazione testo */
+    white-space: pre-wrap !important; /* Gestisce i a capo in modo sicuro senza tag HTML */
+    
     background: rgba(20, 20, 22, 0.6) !important; 
     backdrop-filter: blur(12px) !important;
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.1) !important; /* Riflesso luce */
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 16px !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
     
     padding: 24px !important;
-    
-    /* IL BISTURI: Spinge la Bio verso l'alto annullando la centratura verticale */
     margin: 15px auto auto auto !important; 
-    
     width: 100% !important;
     box-sizing: border-box !important;
     letter-spacing: 0.3px !important;
@@ -1329,7 +1328,11 @@ function formattaBadge(testoBruto) {
     let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
     if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
 
-    el.innerHTML = `<span class="brand-text" style="position: relative;"><span class="at-symbol" style="position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;">@</span>${testo}</span>`;
+    // BLINDAGGIO XSS: Usiamo una struttura sicura con textContent per il nome
+    el.innerHTML = `<span class="brand-text" style="position: relative;"><span class="at-symbol" style="position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;">@</span><span id="safe-username-span"></span></span>`;
+    
+    const safeSpan = document.getElementById('safe-username-span');
+    if (safeSpan) safeSpan.textContent = testo; // Protezione totale contro script malevoli
 
     el.style.whiteSpace = "normal"; el.style.wordBreak = "normal"; el.style.overflowWrap = "break-word";
 
@@ -1337,7 +1340,6 @@ function formattaBadge(testoBruto) {
     else if (testo.length > 18) { el.style.fontSize = "0.95rem"; } 
     else { el.style.fontSize = "1.05rem"; }
     
-    // IL BISTURI PER IL DIVIDER: Riconosce i nomi corti (una sola riga)
     const wrapper = document.getElementById('name-capsule-wrapper');
     if (wrapper) {
         if (testo.length < 16) {
@@ -2390,15 +2392,20 @@ function apriSezione(tipo) {
         return;
     }
 
-    const contenuti = {
+   const contenuti = {
         'bio': { t: 'Biografia', c: cacheDatiUtente.bio || 'Nessuna bio disponibile.' },
     };
 
     if (!contenuti[tipo]) return;
 
     titolo.textContent = contenuti[tipo].t;
-    corpo.innerHTML = `<div class="testo-lettura">${contenuti[tipo].c.replace(/\n/g, '<br>')}</div>`;
-
+    
+    // BLINDAGGIO SICUREZZA: Creazione sicura del testo senza rischi XSS
+    corpo.innerHTML = '';
+    const divTesto = document.createElement('div');
+    divTesto.className = 'testo-lettura';
+    divTesto.textContent = contenuti[tipo].c; // Il browser mostra il testo in modo sicuro
+    corpo.appendChild(divTesto);
     const btnCondividiSezione = document.getElementById('btnCondividiLink');
     if (btnCondividiSezione) {
         btnCondividiSezione.style.display = tipo === 'cv' ? 'block' : 'none';
