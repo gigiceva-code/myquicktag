@@ -5,6 +5,10 @@ export default async function handler(req, res) {
   const { u } = req.query;
   if (!u) return res.status(400).json({ error: "Utente mancante" });
 
+  // --- FIX SICUREZZA: Protezione da iniezioni ---
+  // Filtriamo la variabile 'u' per accettare solo lettere, numeri, trattini e underscore.
+  const safeUsername = u.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+
   try {
     // ====================================================
     // 1. CATTURA DATI INVISIBILI (Dispositivo e Località)
@@ -30,7 +34,8 @@ export default async function handler(req, res) {
     // ====================================================
     // 2. RECUPERA I DATI ATTUALI DA AIRTABLE
     // ====================================================
-    const formula = `{username_system}='${u}'`;
+    // Usiamo il nome utente pulito e sicuro per la formula
+    const formula = `{username_system}='${safeUsername}'`;
     // Ora chiediamo ad Airtable sia le 'views' che gli 'analytics_data'
     const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}&fields%5B%5D=views&fields%5B%5D=analytics_data`;
     
