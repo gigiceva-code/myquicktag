@@ -788,9 +788,11 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
 #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto {
     width: 220px !important; /* Forza l'ingombro esatto per mantenere la linea lunga originale */
 }
-#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before,
+#profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before {
+    top: auto !important; bottom: 6px !important; transform: translateX(-50%) !important; /* sotto il nome corto, non più a metà */
+}
 #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after {
-    top: calc(50% + 18px) !important; /* Lo avvicina al testo per non farlo sembrare staccato */
+    top: auto !important; bottom: 6px !important; transform: none !important;
 }
 /* ============================================================
    2. LA CORNICE LUXURY IN TUTTE LE SEZIONI DELLA TAG
@@ -3249,3 +3251,4 @@ function tracciaClickSezione(nomeSezione) {
 </script>     
 </body>
 </html>
+    
