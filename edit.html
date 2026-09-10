@@ -1954,8 +1954,11 @@
             // FIX: Assicura il salvataggio quando si preme "SALVA"
             if(typeof eseguiAutoSaveInvisibile === 'function') eseguiAutoSaveInvisibile();
 
-            // Promemoria discreto: chiarisce che il salvataggio reale avviene con "Pubblica"
-            if(typeof mostraPromemoriaPubblica === 'function') mostraPromemoriaPubblica();
+            // Promemoria discreto: solo se è stata davvero fatta una modifica
+            if (formModificato && typeof mostraPromemoriaPubblica === 'function') {
+                mostraPromemoriaPubblica();
+                formModificato = false;
+            }
             
             // Pulisce l'URL svuotando l'hash in modo silenzioso, senza far scattare falsi ritorni
             if (window.location.hash !== '') {
@@ -3428,10 +3431,10 @@ function confermaPremiumAlert() {
     </div>
     </div>
     <!-- BADGE PRENOTAZIONE 24H (fixed: non influenza mai il layout della pagina) -->
-    <div id="reservation-badge" style="position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 500; display: none; align-items: center; gap: 8px; background: rgba(20,20,22,0.75); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 8px 16px; pointer-events: none; white-space: nowrap;">
-        <i class="fas fa-hourglass-half" style="color:#e5c158; font-size:0.7rem;"></i>
-        <span id="badge-target-name" style="color:#fff; font-size:0.62rem; font-weight:600; letter-spacing:1px;"></span>
-        <span id="badge-timer-text" style="color:#e5c158; font-size:0.62rem; font-weight:500;"></span>
+    <div id="reservation-badge" style="position: fixed; top: 54px; left: 50%; transform: translateX(-50%); z-index: 500; display: none; align-items: center; gap: 6px; background: rgba(20,20,22,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.06); border-radius: 30px; padding: 5px 12px; pointer-events: none; white-space: nowrap;">
+        <i class="fas fa-hourglass-half" style="color:#e5c158; font-size:0.62rem;"></i>
+        <span id="badge-target-name" style="color:#fff; font-size:0.58rem; font-weight:600; letter-spacing:1px;"></span>
+        <span id="badge-timer-text" style="color:#e5c158; font-size:0.58rem; font-weight:500;"></span>
     </div>
 
     <!-- PROMEMORIA APPLICA (toast leggero, non invasivo) -->
