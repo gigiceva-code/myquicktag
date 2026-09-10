@@ -2471,7 +2471,6 @@
                     aggiornaLucchetti();
                     applicaTemaLive(); 
                     aggiornaLimitiSocial(); 
-                    initReservationMonitor();
                 }     
             } catch (e) { 
                 console.error("Errore caricamento", e); 
@@ -3087,8 +3086,6 @@ function gestisciVIPSwitch(checkbox) {
             const nameUI = document.getElementById('badge-target-name');
             const timerTextUI = document.getElementById('badge-timer-text'); 
 
-            console.log('DEBUG TIMER →', { statoUtente: statoUtente, badgeTrovato: !!badge, nameUITrovato: !!nameUI, NOME_SISTEMA: NOME_SISTEMA });
-
             if (!badge || !nameUI) return;
 
             if (statoUtente === 'attivo') {
@@ -3427,6 +3424,9 @@ function confermaPremiumAlert() {
     setTimeout(() => { apriDrawer('drawer-piani'); }, 300); 
 }
     </script>
+
+    </div>
+    </div>
     <!-- BADGE PRENOTAZIONE 24H (fixed: non influenza mai il layout della pagina) -->
     <div id="reservation-badge" style="position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 500; display: none; align-items: center; gap: 8px; background: rgba(20,20,22,0.75); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 8px 16px; pointer-events: none; white-space: nowrap;">
         <i class="fas fa-hourglass-half" style="color:#e5c158; font-size:0.7rem;"></i>
