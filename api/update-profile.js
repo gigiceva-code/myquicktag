@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
 
@@ -9,8 +8,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "username_system mancante" });
   }
 
+  // --- FIX SICUREZZA 1: Protezione da iniezioni ---
+  // Puliamo il nome utente tenendo solo lettere, numeri, trattini e underscore.
+  // Questo distrugge qualsiasi tentativo di inserire codici dannosi come ' OR '1'='1
+  const safeUsername = username_system.replace(/[^a-zA-Z0-9_-]/g, '');
+
   try {
-    const formula = `{username_system}='${username_system}'`;
+    // Usiamo il nome utente pulito e sicuro per cercare nel database
+    const formula = `{username_system}='${safeUsername}'`;
     const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}`;
     
     const response = await fetch(searchUrl, {
@@ -20,11 +25,11 @@ export default async function handler(req, res) {
 
     const fieldsToSave = {};
     
-   // 1. LA LISTA VIP (Inclusi SMART REVIEW GATE e SMART VIDEO VAULT)
+   // --- FIX DATI 2: Aggiunto "quick_action_copertina" alla lista ---
     const nativeFields = [
       "username_display", "bio", "cv", "digital_style", "digital_layout", "stato", 
       "password", "email", "modulo_vcf", "sito_web", 
-      "quick_action_tipo", "quick_action_label", "quick_action_url", "avatar_url",
+      "quick_action_tipo", "quick_action_label", "quick_action_url", "quick_action_copertina", "avatar_url",
       "live_status_color", "live_status_text", "live_status_micro", "live_status_action_type", "live_status_action_label", "live_status_action_url",
       "flash_text", "flash_micro", "flash_expiry", 
       "pdf_label", "pdf_url", 
@@ -36,15 +41,13 @@ export default async function handler(req, res) {
      "lead_capture_attivo", "lead_capture_titolo", "lead_capture_leads",
       "shop_attivo", "shop_titolo", "shop_prezzo", "shop_link", "shop_scadenza",
       "analytics_data", "analytics_log"
-      
     ];
 
     nativeFields.forEach(f => {
       if (body[f] !== undefined && body[f] !== null) {
         if (typeof body[f] === 'string') {
           
-          // 2. PROTEZIONE JSON (Aggiunto pocket_cloud per non far distruggere le virgolette)
-     let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud' || f === 'partners_data' || f === 'lead_capture_leads' || f === 'analytics_data' || f === 'analytics_log')
+          let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud' || f === 'partners_data' || f === 'lead_capture_leads' || f === 'analytics_data' || f === 'analytics_log')
           ? body[f].trim() 
           : body[f].replace(/['"]+/g, '').trim(); 
           
@@ -55,7 +58,7 @@ export default async function handler(req, res) {
               else if (upper === "TITANIUM") valueClean = "TITANIUM";
               else if (upper === "OBSIDIAN" || upper === "OBSIDIAN GOLD") valueClean = "OBSIDIAN GOLD";
             }
-           
+            
             if (f === "stato") valueClean = valueClean.toLowerCase();
             if (f === "quick_action_tipo") valueClean = valueClean.toLowerCase();
             
@@ -83,7 +86,6 @@ export default async function handler(req, res) {
     if (data.records && data.records.length > 0) {
       const recordId = data.records[0].id;
       
-      // 3. PARACADUTE ANTI-CRASH: Se non ci sono campi validi, blocca la chiamata invece di far infuriare Airtable
       if (Object.keys(fieldsToSave).length === 0) {
           return res.status(200).json({ success: true, action: 'skipped_empty' });
       }
@@ -104,7 +106,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Airtable ha rifiutato l'update", dettagli: updateError });
       
     } else {
-      fieldsToSave.username_system = username_system;
+      fieldsToSave.username_system = safeUsername; // Salviamo la versione sicura
       if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa";
       fieldsToSave.views = 0;
 
