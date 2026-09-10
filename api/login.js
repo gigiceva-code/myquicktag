@@ -3,10 +3,17 @@ export default async function handler(req, res) {
 
     const { tag, pwd } = req.body;
     
+    if (!tag || !pwd) {
+        return res.status(400).json({ success: false, message: 'Tag o password mancanti' });
+    }
+    
+    // --- FIX SICUREZZA: Pulizia del tag da caratteri pericolosi ---
+    const tagPulito = tag.replace('@', '').trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '');
+
     // Step di sicurezza: offuschiamo la password ricevuta per confrontarla con quella su Airtable
     const crypto = await import('crypto');
 
-const pwdProtetta = crypto
+    const pwdProtetta = crypto
     .createHash('sha256')
     .update(pwd)
     .digest('hex');
@@ -15,8 +22,7 @@ const pwdProtetta = crypto
     const tableId = process.env.AIRTABLE_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
 
-    // Ricerca per tag (pulito) e password protetta
-    const tagPulito = tag.replace('@', '').trim().toLowerCase();
+    // Ricerca per tag pulito e sicuro e password protetta
     const filter = `AND({username_system} = '${tagPulito}', {password} = '${pwdProtetta}')`;
     const url = `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula=${encodeURIComponent(filter)}`;
 
