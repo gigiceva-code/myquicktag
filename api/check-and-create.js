@@ -3,12 +3,13 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Metodo non consentito' });
     }
 
-    // Pulizia tag: tutto minuscolo e senza spazi per evitare duplicati
+    // --- FIX SICUREZZA: Pulizia e protezione del tag ---
+    // Manteniamo solo lettere, numeri, trattini e underscore, scartando tutto il resto
     const rawTag = req.body.tag || "";
-    const tag = rawTag.replace('@', '').trim().toLowerCase();
+    const tag = rawTag.replace('@', '').trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '');
 
     if (!tag) {
-        return res.status(400).json({ success: false, message: 'Tag non valido' });
+        return res.status(400).json({ success: false, message: 'Tag non valido o con caratteri non consentiti' });
     }
 
     const baseId = process.env.AIRTABLE_BASE_ID;
