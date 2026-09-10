@@ -3087,6 +3087,8 @@ function gestisciVIPSwitch(checkbox) {
             const nameUI = document.getElementById('badge-target-name');
             const timerTextUI = document.getElementById('badge-timer-text'); 
 
+            console.log('DEBUG TIMER →', { statoUtente: statoUtente, badgeTrovato: !!badge, nameUITrovato: !!nameUI, NOME_SISTEMA: NOME_SISTEMA });
+
             if (!badge || !nameUI) return;
 
             if (statoUtente === 'attivo') {
