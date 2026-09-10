@@ -672,8 +672,18 @@ async function caricaDatiDashboard(nomeMinuto) {
             if (typeof aggiornaContatoriDashboard === "function") aggiornaContatoriDashboard(data.fields);
             
         } else {
-            aggiornaCard("Digital Identity", "Profilo non configurato", "Offline");
+            // La tag non esiste (più) sul server: probabilmente una prenotazione scaduta
+            // e riciclata, o un account rimosso. Il "bypass zero-latenza" in index.html
+            // si basa sulla cache locale, quindi va ripulita per non restare bloccati qui.
+            let chiaviSalvate = [];
+            try { chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]'); } catch(e) {}
+            const chiaviAggiornate = chiaviSalvate.filter(k => k !== nomeMinuto);
+            localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviAggiornate));
+            if (localStorage.getItem('loggedUser') === nomeMinuto) localStorage.removeItem('loggedUser');
+
+            aggiornaCard("Questa Tag non è più disponibile", "Ti reindirizziamo alla home\u2026", "");
             aggiornaBadge("offline");
+            setTimeout(() => { window.location.href = "index.html"; }, 1800);
         }
     } catch (err) {
         aggiornaCard("Errore Connessione", "Impossibile contattare il server", "Offline");
@@ -819,3 +829,4 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 </body>
 </html>
+
