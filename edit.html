@@ -105,7 +105,8 @@
             background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 25%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.3) 75%, transparent 100%); z-index: 1; pointer-events: none;
         }
         #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto { width: 220px !important;  margin: 0 auto !important; }
-        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before, #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after { top: calc(50% + 18px) !important; }
+        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::before { top: auto !important; bottom: 6px !important; transform: translateX(-50%) !important; }
+        #profile-content[data-layout="divider"] .username-capsule-wrapper.nome-corto::after { top: auto !important; bottom: 6px !important; transform: none !important; }
         #profile-content[data-layout="pure"] .header-monolith { display: block !important; padding: 20px 0 !important; width: 100% !important; position: relative; }
 
         .at-symbol { opacity: 0.4; font-weight: 300; margin-right: 4px; font-size: 0.9em; letter-spacing: 0; }
@@ -397,7 +398,7 @@
             <div id="titoloSezione" style="font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 20px; flex-shrink: 0;">TITOLO</div>
             
             <!-- MODIFICA QUI: justify-content cambiato da flex-start a center -->
-            <div id="corpoSezione" style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; width: 100%; overflow-y: auto; gap: 0; -ms-overflow-style: none; scrollbar-width: none;"></div>
+            <div id="corpoSezione" style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; width: 100%; overflow-y: auto; overflow-x: hidden; gap: 0; -ms-overflow-style: none; scrollbar-width: none;"></div>
             
             <div style="margin-top: auto; display: flex; justify-content: center; width: 100%;">
                 <button onclick="chiudiSezioneAnteprima()" style="background: none; border: none; color: #86868b; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; padding: 15px; display: flex; align-items: center; gap: 10px;">
@@ -2278,6 +2279,12 @@
                     } catch(e) {
                         console.error("myquicktag: Errore lettura bozza. Fallback forzato sui dati Live.");
                     }
+                }
+
+                // FIX: la bozza locale (non ancora sincronizzata col server) deve avere sempre priorità
+                // sull'ultimo merge, altrimenti le modifiche fatte con "SALVA BIO" ecc. spariscono al refresh
+                if (localDraft) {
+                    try { Object.assign(f, JSON.parse(localDraft)); } catch(e) {}
                 }
                 // ========================================================
 
