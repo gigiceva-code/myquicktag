@@ -6,9 +6,13 @@ export default async function handler(req, res) {
 
   if (!u) return res.status(400).json({ success: false, error: "Username mancante" });
 
+  // --- FIX SICUREZZA: Protezione da iniezioni ---
+  // Puliamo il nome utente mantenendo solo lettere, numeri, trattini e underscore.
+  const safeUsername = u.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+
   try {
-    // Cerchiamo nella colonna corretta "username_system"
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={username_system}='${u.toLowerCase()}'`;
+    // Cerchiamo nella colonna corretta "username_system" usando SOLO il nome pulito
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={username_system}='${safeUsername}'`;
     
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
