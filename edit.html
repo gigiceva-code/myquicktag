@@ -2488,6 +2488,9 @@
                 // 🚀 FORZA L'AGGIORNAMENTO GRAFICO (Evita blocchi se ci sono stati errori di rete)
                 if (typeof applicaTemaLive === "function") applicaTemaLive();
 
+                // 🚀 Stesso principio: il badge di prenotazione non deve dipendere dal resto del caricamento
+                if (typeof initReservationMonitor === "function") initReservationMonitor();
+
                 // 🚀 I DATI SONO CARICATI: APRIAMO IL SIPARIO (FADE IN)
                 document.getElementById('profile-content').style.opacity = '1';
                 const triggerArea = document.getElementById('dynamic-trigger-area');
@@ -3436,4 +3439,3 @@ function confermaPremiumAlert() {
 
 </body>
 </html>
-
