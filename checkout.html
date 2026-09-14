@@ -483,9 +483,14 @@
                 
                 const resData = await response.json();
                 
-                if (resData.success) {
+                               if (resData.success) {
                     // Pulizia finale del lucchetto della sessione
                     localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
+
+                    // Salviamo il token di sessione ricevuto dal server
+                    if (resData.sessionToken) {
+                        localStorage.setItem('mqt_session_token', resData.sessionToken);
+                    }
 
                     // Successo totale -> Mostriamo lo Step 3 di conferma
                     document.getElementById("step-password").style.display = "none";
