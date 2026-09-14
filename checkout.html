@@ -487,9 +487,16 @@
                     // Pulizia finale del lucchetto della sessione
                     localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
 
-                    // Salviamo il token di sessione ricevuto dal server
+                                     // Salviamo il token di sessione ricevuto dal server
                     if (resData.sessionToken) {
-                        localStorage.setItem('mqt_session_token', resData.sessionToken);
+                        let tokenSalvati = {};
+                        try {
+                            tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+                        } catch(e) {
+                            tokenSalvati = {};
+                        }
+                        tokenSalvati[targetUserClean] = resData.sessionToken;
+                        localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
                     }
 
                     // Successo totale -> Mostriamo lo Step 3 di conferma
