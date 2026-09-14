@@ -729,8 +729,14 @@
                     bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
                 }
 
-                // Alleghiamo il token di sessione per l'autorizzazione server-side
-                bodyRichiesta.sessionToken = localStorage.getItem('mqt_session_token');
+                               // Alleghiamo il token di sessione corretto per QUESTA tag (portachiavi multi-account)
+                let tokenSalvati = {};
+                try {
+                    tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+                } catch(e) {
+                    tokenSalvati = {};
+                }
+                bodyRichiesta.sessionToken = tokenSalvati[NOME_SISTEMA];
 
                 const response = await fetch('/api/update-profile', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 
