@@ -32,12 +32,22 @@ export default async function handler(req, res) {
         });
         const data = await response.json();
 
-        if (data.records && data.records.length > 0) {
+              if (data.records && data.records.length > 0) {
+            const expiry = Date.now() + (1000 * 60 * 60 * 24 * 30); // 30 giorni
+            const payload = `${tagPulito}.${expiry}`;
+            const signature = crypto
+                .createHmac('sha256', process.env.SESSION_SECRET)
+                .update(payload)
+                .digest('hex');
+            const sessionToken = `${payload}.${signature}`;
+
             res.status(200).json({ 
                 success: true, 
-                username: tagPulito 
+                username: tagPulito,
+                sessionToken
             });
         } else {
+
             res.status(401).json({ success: false, message: 'Credenziali non valide' });
         }
     } catch (error) {
