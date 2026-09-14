@@ -1560,17 +1560,22 @@ async function pubblicaBozza() {
     
     try {
         const bozza = JSON.parse(cacheDatiUtente.draft_json || '{}');
-               const response = await fetch('/api/update-profile', {
+                    let tokenSalvatiPubblica = {};
+        try {
+            tokenSalvatiPubblica = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+        } catch(e) {
+            tokenSalvatiPubblica = {};
+        }
+        const response = await fetch('/api/update-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username_system: usernameCorrente,
                 ...bozza,
                 draft_json: "",
-                sessionToken: localStorage.getItem('mqt_session_token')
+                sessionToken: tokenSalvatiPubblica[usernameCorrente]
             })
-        });
-
+        }); 
         const data = await response.json();
         
         if (data.success) {
