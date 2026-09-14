@@ -138,9 +138,10 @@
         }
 
         // Se l'utente ha già installato l'app con successo, portalo direttamente al profilo
-        window.addEventListener('appinstalled', () => {
+               window.addEventListener('appinstalled', () => {
             deferredPrompt = null;
             window.location.href = `/tag.html?u=${nomeUtenteGlobale}`;
         });
     </script>
-</head>
+</body>
+</html>
