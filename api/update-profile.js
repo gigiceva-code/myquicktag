@@ -47,14 +47,20 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-    // --- FIX SICUREZZA: blocco scritture su account già attivi senza token valido ---
+      // --- FIX SICUREZZA: blocco scritture su account già attivi senza token valido ---
+    // Eccezione: questi campi sono pensati per essere scritti anche da visitatori anonimi
+    // (form di contatto pubblico, tracking click) e restano scrivibili senza token.
+    const PUBLIC_WRITABLE_FIELDS = ['analytics_log', 'lead_capture_leads'];
+
     const recordEsistente = data.records && data.records.length > 0 ? data.records[0] : null;
     const accountGiaAttivo = !!recordEsistente?.fields?.password;
 
-    if (accountGiaAttivo && !verifyToken(safeUsername, sessionToken)) {
+    const campiRichiesti = Object.keys(body).filter(k => k !== 'username_system' && k !== 'sessionToken');
+    const soloCampiPubblici = campiRichiesti.every(k => PUBLIC_WRITABLE_FIELDS.includes(k));
+
+    if (accountGiaAttivo && !soloCampiPubblici && !verifyToken(safeUsername, sessionToken)) {
       return res.status(401).json({ error: "Non autorizzato: sessione mancante o non valida" });
     }
-
     const fieldsToSave = {};
     
    // --- FIX DATI 2: Aggiunto "quick_action_copertina" alla lista ---
