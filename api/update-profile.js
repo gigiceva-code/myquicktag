@@ -1,8 +1,32 @@
+import crypto from 'crypto';
+
+function generateToken(username) {
+  const expiry = Date.now() + (1000 * 60 * 60 * 24 * 30); // 30 giorni
+  const payload = `${username}.${expiry}`;
+  const signature = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(payload).digest('hex');
+  return `${payload}.${signature}`;
+}
+
+function verifyToken(username, token) {
+  if (!token || typeof token !== 'string') return false;
+  const parts = token.split('.');
+  if (parts.length !== 3) return false;
+  const [tokenUser, expiry, signature] = parts;
+  if (tokenUser !== username) return false;
+  if (Date.now() > Number(expiry)) return false;
+  const expected = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(`${tokenUser}.${expiry}`).digest('hex');
+  try {
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  } catch {
+    return false;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
 
   const body = req.body;
-  const { username_system } = body; 
+  const { username_system, sessionToken } = body;
 
   if (!username_system) {
     return res.status(400).json({ error: "username_system mancante" });
@@ -18,10 +42,18 @@ export default async function handler(req, res) {
     const formula = `{username_system}='${safeUsername}'`;
     const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}`;
     
-    const response = await fetch(searchUrl, {
+      const response = await fetch(searchUrl, {
       headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}` }
     });
     const data = await response.json();
+
+    // --- FIX SICUREZZA: blocco scritture su account già attivi senza token valido ---
+    const recordEsistente = data.records && data.records.length > 0 ? data.records[0] : null;
+    const accountGiaAttivo = !!recordEsistente?.fields?.password;
+
+    if (accountGiaAttivo && !verifyToken(safeUsername, sessionToken)) {
+      return res.status(401).json({ error: "Non autorizzato: sessione mancante o non valida" });
+    }
 
     const fieldsToSave = {};
     
@@ -99,7 +131,11 @@ export default async function handler(req, res) {
         body: JSON.stringify({ fields: fieldsToSave })
       });
 
-      if (update.ok) return res.status(200).json({ success: true, action: 'updated' });
+             if (update.ok) {
+        const responseBody = { success: true, action: 'updated' };
+        if (fieldsToSave.password) responseBody.sessionToken = generateToken(safeUsername);
+        return res.status(200).json(responseBody);
+      }
       
       const updateError = await update.json();
       console.error("AIRTABLE UPDATE REJECTED:", updateError);
@@ -119,7 +155,11 @@ export default async function handler(req, res) {
         body: JSON.stringify({ fields: fieldsToSave })
       });
 
-      if (create.ok) return res.status(200).json({ success: true, action: 'created' });
+           if (create.ok) {
+        const responseBody = { success: true, action: 'created' };
+        if (fieldsToSave.password) responseBody.sessionToken = generateToken(safeUsername);
+        return res.status(200).json(responseBody);
+      }
       
       const createError = await create.json();
       console.error("AIRTABLE CREATE REJECTED:", createError);
