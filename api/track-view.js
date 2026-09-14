@@ -76,13 +76,20 @@ export default async function handler(req, res) {
         analyticsData.os[os] = 1;
     }
 
-    // Aggiungi 1 alla città corretta
-    if (analyticsData.geo[locationKey]) {
-        analyticsData.geo[locationKey]++;
-    } else {
-        analyticsData.geo[locationKey] = 1;
-    }
+     // Aggiungi 1 alla città corretta, con limite di dimensione (top 15 città)
+    const MAX_CITIES = 15;
+    const existingKeys = Object.keys(analyticsData.geo).filter(k => k !== 'Altre');
 
+    if (analyticsData.geo[locationKey] !== undefined) {
+        // Città già tracciata: incrementa normalmente
+        analyticsData.geo[locationKey]++;
+    } else if (existingKeys.length < MAX_CITIES) {
+        // Non c'è ancora, ma c'è spazio: la aggiungiamo come nuova voce
+        analyticsData.geo[locationKey] = 1;
+    } else {
+        // Non c'è spazio: confluisce nel bucket generico
+        analyticsData.geo['Altre'] = (analyticsData.geo['Altre'] || 0) + 1;
+    }
     // ====================================================
     // 4. SALVA IL PACCHETTO COMPRESSO SU AIRTABLE
     // ====================================================
