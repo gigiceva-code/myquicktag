@@ -1383,13 +1383,19 @@ function salvaNelPocketCorrente() {
 // MOTORE DI SINCRONIZZAZIONE SILENZIOSA (Lusso)
 async function sincronizzaPocketCloud(utente, pocketArray) {
     try {
-              await fetch('/api/update-profile', {
+                   let tokenSalvatiPocket = {};
+        try {
+            tokenSalvatiPocket = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+        } catch(e) {
+            tokenSalvatiPocket = {};
+        }
+        await fetch('/api/update-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username_system: utente,
                 pocket_cloud: JSON.stringify(pocketArray), // Inietta l'intero archivio nella colonna
-                sessionToken: localStorage.getItem('mqt_session_token')
+                sessionToken: tokenSalvatiPocket[utente]
             })
         });
     } catch (error) {
