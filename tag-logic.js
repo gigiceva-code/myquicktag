@@ -1383,12 +1383,13 @@ function salvaNelPocketCorrente() {
 // MOTORE DI SINCRONIZZAZIONE SILENZIOSA (Lusso)
 async function sincronizzaPocketCloud(utente, pocketArray) {
     try {
-        await fetch('/api/update-profile', {
+              await fetch('/api/update-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username_system: utente,
-                pocket_cloud: JSON.stringify(pocketArray) // Inietta l'intero archivio nella colonna
+                pocket_cloud: JSON.stringify(pocketArray), // Inietta l'intero archivio nella colonna
+                sessionToken: localStorage.getItem('mqt_session_token')
             })
         });
     } catch (error) {
@@ -1553,13 +1554,14 @@ async function pubblicaBozza() {
     
     try {
         const bozza = JSON.parse(cacheDatiUtente.draft_json || '{}');
-        const response = await fetch('/api/update-profile', {
+               const response = await fetch('/api/update-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username_system: usernameCorrente,
                 ...bozza,
-                draft_json: ""
+                draft_json: "",
+                sessionToken: localStorage.getItem('mqt_session_token')
             })
         });
 
