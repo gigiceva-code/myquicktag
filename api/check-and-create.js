@@ -59,7 +59,7 @@ export default async function handler(req, res) {
                 }
             }
         }
-        // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer)
+            // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer)
         const createUrl = `https://api.airtable.com/v0/${baseId}/${tableId}`;
         const createRes = await fetch(createUrl, {
             method: 'POST',
@@ -75,15 +75,38 @@ export default async function handler(req, res) {
             })
         });
 
-        if (createRes.ok) {
-            res.status(200).json({ success: true, message: 'Tag riservato!' });
-        } else {
+        if (!createRes.ok) {
             const errorDetail = await createRes.json();
             console.error("Errore Airtable:", errorDetail);
-            res.status(500).json({ success: false, message: 'Errore durante la prenotazione' });
+            return res.status(500).json({ success: false, message: 'Errore durante la prenotazione' });
         }
-    } catch (error) {
-        console.error("Errore Sistema:", error);
-        res.status(500).json({ success: false, message: 'Errore di sistema' });
-    }
-}
+
+        const newRecord = await createRes.json();
+
+        // 3. RI-VERIFICA ANTI-COLLISIONE: controlliamo se nel frattempo
+        // un'altra richiesta ha creato lo stesso tag (race condition)
+        const recheckRes = await fetch(checkUrl, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const recheckData = await recheckRes.json();
+
+        if (recheckData.records && recheckData.records.length > 1) {
+            // Più di un record con lo stesso username_system: c'è stata una collisione.
+            // Vince chi ha il record creato per primo (createdTime più vecchio).
+            const sorted = [...recheckData.records].sort(
+                (a, b) => new Date(a.createdTime) - new Date(b.createdTime)
+            );
+            const winner = sorted[0];
+
+            if (winner.id !== newRecord.id) {
+                // Siamo arrivati secondi: cancelliamo il nostro record appena creato
+                const deleteUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${newRecord.id}`;
+                await fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                return res.status(400).json({ success: false, message: 'Spiacente, questo @tag è già occupato' });
+            }
+        }
+
+        res.status(200).json({ success: true, message: 'Tag riservato!' }); 
