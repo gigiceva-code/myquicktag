@@ -736,9 +736,19 @@ async function checkAccess() {
                 chiaviSalvate.push(nuovoUtente);
             }
             
-            localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviSalvate));
+                               localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviSalvate));
             localStorage.setItem('loggedUser', nuovoUtente);
-            // ==========================================
+            if (data.sessionToken) {
+                let tokenSalvati = {};
+                try {
+                    tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+                } catch(e) {
+                    tokenSalvati = {};
+                }
+                tokenSalvati[nuovoUtente] = data.sessionToken;
+                localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
+            }
+            // ========================================== 
             
             // L'utente è ufficiale, puliamo eventuali bozze in sospeso
             localStorage.removeItem('myquicktag_reserved'); 
