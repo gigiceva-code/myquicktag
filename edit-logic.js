@@ -720,7 +720,7 @@
                 const testoOriginale = btnMasterText ? btnMasterText.innerText : "PUBBLICA ONLINE";
                 if(btnMasterText) btnMasterText.innerText = "ELABORAZIONE...";
 
-                let bodyRichiesta = {};
+                              let bodyRichiesta = {};
                 if (azione === 'pubblica') {
                     // Svuota la bozza e pubblica ufficialmente
                     bodyRichiesta = { ...payloadDati, draft_json: "" }; 
@@ -729,7 +729,10 @@
                     bodyRichiesta = { username_system: NOME_SISTEMA, draft_json: JSON.stringify(payloadDati) };
                 }
 
-                const response = await fetch('/api/update-profile', { 
+                // Alleghiamo il token di sessione per l'autorizzazione server-side
+                bodyRichiesta.sessionToken = localStorage.getItem('mqt_session_token');
+
+                const response = await fetch('/api/update-profile', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 
                 });
                 
