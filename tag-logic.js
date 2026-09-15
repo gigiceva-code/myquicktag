@@ -1334,7 +1334,42 @@ window.addEventListener('popstate', (e) => {
 // ============================================================
 // GESTIONE TAG POCKET (IBRIDA: LOCALE + CLOUD SYNC)
 // ============================================================
-function salvaNelPocketCorrente() {
+// Fonde l'archivio locale con quello salvato su Airtable (multi-dispositivo)
+async function fondiPocketConCloud(pocketLocale, utenteLoggato) {
+    if (!utenteLoggato) return pocketLocale;
+    try {
+        const cacheBuster = Date.now();
+        const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}`);
+        const data = await response.json();
+
+        if (!data.success || !data.fields || !data.fields.pocket_cloud) {
+            return pocketLocale;
+        }
+
+        let pocketCloud = [];
+        try {
+            pocketCloud = JSON.parse(data.fields.pocket_cloud);
+        } catch(e) {
+            return pocketLocale;
+        }
+
+        const mappaUnita = {};
+        [...pocketCloud, ...pocketLocale].forEach(contatto => {
+            const esistente = mappaUnita[contatto.username];
+            if (!esistente || new Date(contatto.dataSalvataggio) > new Date(esistente.dataSalvataggio)) {
+                mappaUnita[contatto.username] = contatto;
+            }
+        });
+
+        return Object.values(mappaUnita);
+
+    } catch (error) {
+        console.error("Merge pocket cloud fallito, uso solo il dato locale.", error);
+        return pocketLocale;
+    }
+}
+
+async function salvaNelPocketCorrente() {
     const usernameTag = cacheDatiUtente.username_system || window.location.pathname.split('u=')[1] || "Sconosciuto";
     const nomeVisualizzato = cacheDatiUtente.username_display || cacheDatiUtente.username_system || "myquicktag";
     
@@ -1344,6 +1379,9 @@ function salvaNelPocketCorrente() {
     } catch(e) {
         pocketLocale = [];
     }
+
+    const utenteLoggato = localStorage.getItem('loggedUser');
+    pocketLocale = await fondiPocketConCloud(pocketLocale, utenteLoggato);
     
     const giaEsistente = pocketLocale.find(item => item.username === usernameTag);
     
@@ -1358,7 +1396,6 @@ function salvaNelPocketCorrente() {
         localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
         
         // 2. CLOUD SYNC: Se c'è un utente loggato, salva su Airtable in background
-        const utenteLoggato = localStorage.getItem('loggedUser');
         if (utenteLoggato) {
             sincronizzaPocketCloud(utenteLoggato, pocketLocale);
         }
@@ -1376,10 +1413,11 @@ function salvaNelPocketCorrente() {
         
         mostraOverlayPocket("TAG SALVATA", "Contatto salvato con successo nel tuo archivio.");
     } else {
+        // Anche se il contatto esisteva già, il merge potrebbe aver portato dati nuovi da altri dispositivi
+        localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
         mostraOverlayPocket("TAG PRESENTE", "Questa tag si trova già nel tuo archivio.");
     }
 }
-
 // MOTORE DI SINCRONIZZAZIONE SILENZIOSA (Lusso)
 async function sincronizzaPocketCloud(utente, pocketArray) {
     try {
