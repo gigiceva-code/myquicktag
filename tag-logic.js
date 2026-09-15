@@ -133,7 +133,7 @@ async function avviaFlusso(username) {
 
         // (NOTA: Nessun altro doppione di isOwner più in basso: usiamo quello calcolato sopra)
 
-        if ((modeDraft || mode === 'new' || mode === 'public' || isOwner) && fields.draft_json) {
+        if (isOwner && fields.draft_json) {
             try {
                 const bozza = JSON.parse(fields.draft_json);
                 fields = { ...bozza, username_system: fields.username_system, stato: fields.stato, draft_json: fields.draft_json };
@@ -152,14 +152,14 @@ async function avviaFlusso(username) {
             // 📊 MOTORE TRACCIAMENTO VISITE (SILENZIOSO)
             // ============================================================
             // Se NON è il proprietario a guardare e NON siamo in modalità anteprima
-            if (!isOwner && !modeDraft && mode !== 'public' && mode !== 'new') {
+                        if (!isOwner) {
                 // Spara il ping al server in background senza usare await (Zero lag per l'utente)
                 fetch(`/api/track-view?u=${usernameCorrente}`, { method: 'POST' })
                     .catch(e => console.error("Tracking invisibile fallito:", e));
             }
 
         } else if (stato === "in attesa") {
-            if (mode === 'new' || mode === 'draft' || mode === 'public' || isOwner) {
+                       if (isOwner) {
                 renderizzaTagCompleta(fields);
                 mostraOverlayAcquisto();
             } else {
