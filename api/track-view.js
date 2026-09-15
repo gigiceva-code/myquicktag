@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     // Ora chiediamo ad Airtable sia le 'views' che gli 'analytics_data'
     const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}&fields%5B%5D=views&fields%5B%5D=analytics_data`;
     
-    const response = await fetch(searchUrl, {
+       const response = await airtableFetch(searchUrl, {
       headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}` }
     });
     const data = await response.json();
@@ -94,7 +94,7 @@ export default async function handler(req, res) {
     // ====================================================
     // 4. SALVA IL PACCHETTO COMPRESSO SU AIRTABLE
     // ====================================================
-    const update = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordId}`, {
+    const update = await airtableFetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordId}`, { 
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
