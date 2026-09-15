@@ -133,14 +133,14 @@ async function avviaFlusso(username) {
 
         // (NOTA: Nessun altro doppione di isOwner più in basso: usiamo quello calcolato sopra)
 
-        if (isOwner && fields.draft_json) {
+               if (isOwner && fields.draft_json) {
             try {
                 const bozza = JSON.parse(fields.draft_json);
-                fields = { ...bozza, username_system: fields.username_system, stato: fields.stato, draft_json: fields.draft_json };
+                fields = { ...fields, ...bozza };
             } catch (e) {
                 console.error("Errore parsing draft_json:", e);
             }
-        }
+        } 
 
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
