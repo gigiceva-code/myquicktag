@@ -145,7 +145,7 @@
         caricaPocket();
         configuraRicerca();
     });
-function caricaPocket() {
+async function caricaPocket() {
         const contenitoreLista = document.getElementById('lista-pocket');
         const statoVuoto = document.getElementById('pocket-vuoto');
         
@@ -157,6 +157,8 @@ function caricaPocket() {
         } catch(e) {
             console.error("Errore lettura pocket:", e);
         }
+
+        contattiSalvati = await fondiPocketConCloud(contattiSalvati);
 
         if (contattiSalvati.length === 0) {
             statoVuoto.style.display = 'flex';
@@ -298,22 +300,77 @@ function caricaPocket() {
             mostraToast('Contatto rimosso');
         }, 300);
     }
+        // Fonde l'archivio locale con quello salvato su Airtable (multi-dispositivo)
+    async function fondiPocketConCloud(pocketLocale) {
+        const utenteLoggato = localStorage.getItem('loggedUser');
+        if (!utenteLoggato) return pocketLocale;
 
-    // Motore di Sync (Da incollare sotto eliminaContatto)
+        try {
+            const cacheBuster = Date.now();
+            const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}`);
+            const data = await response.json();
+
+            if (!data.success || !data.fields || !data.fields.pocket_cloud) {
+                return pocketLocale;
+            }
+
+            let pocketCloud = [];
+            try {
+                pocketCloud = JSON.parse(data.fields.pocket_cloud);
+            } catch(e) {
+                return pocketLocale;
+            }
+
+            // Unione per username: in caso di doppione tiene il salvataggio più recente
+            const mappaUnita = {};
+            [...pocketCloud, ...pocketLocale].forEach(contatto => {
+                const esistente = mappaUnita[contatto.username];
+                if (!esistente || new Date(contatto.dataSalvataggio) > new Date(esistente.dataSalvataggio)) {
+                    mappaUnita[contatto.username] = contatto;
+                }
+            });
+
+                      const pocketUnito = Object.values(mappaUnita);
+            localStorage.setItem('mqt_pocket', JSON.stringify(pocketUnito));
+
+            // Se il merge ha aggiunto o aggiornato qualcosa rispetto al cloud, riallinea subito Airtable
+            const cloudEraGiaAggiornato = pocketCloud.length === pocketUnito.length &&
+                pocketCloud.every(c => mappaUnita[c.username] && mappaUnita[c.username].dataSalvataggio === c.dataSalvataggio);
+
+            if (!cloudEraGiaAggiornato) {
+                sincronizzaPocketCloud(utenteLoggato, pocketUnito);
+            }
+
+            return pocketUnito;
+
+        } catch (error) {
+            console.error("Merge pocket cloud fallito, uso solo il dato locale.", error);
+            return pocketLocale;
+        }
+    }
+
+      // Motore di Sync (Da incollare sotto eliminaContatto)
     async function sincronizzaPocketCloud(utente, pocketArray) {
         try {
+            let tokenSalvatiPocket = {};
+            try {
+                tokenSalvatiPocket = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+            } catch(e) {
+                tokenSalvatiPocket = {};
+            }
             await fetch('/api/update-profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     username_system: utente,
-                    pocket_cloud: JSON.stringify(pocketArray)
+                    pocket_cloud: JSON.stringify(pocketArray),
+                    sessionToken: tokenSalvatiPocket[utente]
                 })
             });
         } catch (error) {
             console.error("Cloud Sync fallito");
         }
-    } 
+    }
 </script>
 </body>
 </html>
