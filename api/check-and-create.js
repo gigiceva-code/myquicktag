@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     const checkUrl = `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={username_system}='${tag}'`;
 
     try {
-        const checkRes = await fetch(checkUrl, {
+      const checkRes = await airtableFetch(checkUrl, {
             headers: { Authorization: `Bearer ${token}` }
         });
         const checkData = await checkRes.json();
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
                     console.log(`♻️ Riciclo tag scaduto (>24h): ${tag} (Età: ${Math.round(ageInMinutes / 60)} ore)`);
                     
                     const deleteUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${record.id}`;
-                    await fetch(deleteUrl, {
+                    await airtableFetch(deleteUrl, {
                         method: 'DELETE',
                         headers: { Authorization: `Bearer ${token}` }
                     });
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
         }
             // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer)
         const createUrl = `https://api.airtable.com/v0/${baseId}/${tableId}`;
-        const createRes = await fetch(createUrl, {
+       const createRes = await airtableFetch(createUrl, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
 
         // 3. RI-VERIFICA ANTI-COLLISIONE: controlliamo se nel frattempo
         // un'altra richiesta ha creato lo stesso tag (race condition)
-        const recheckRes = await fetch(checkUrl, {
+       const recheckRes = await airtableFetch(checkUrl, {
             headers: { Authorization: `Bearer ${token}` }
         });
         const recheckData = await recheckRes.json();
@@ -102,7 +102,7 @@ export default async function handler(req, res) {
             if (winner.id !== newRecord.id) {
                 // Siamo arrivati secondi: cancelliamo il nostro record appena creato
                 const deleteUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${newRecord.id}`;
-                await fetch(deleteUrl, {
+               await airtableFetch(deleteUrl, {
                     method: 'DELETE',
                     headers: { Authorization: `Bearer ${token}` }
                 });
