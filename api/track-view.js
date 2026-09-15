@@ -1,3 +1,4 @@
+import { airtableFetch } from '../lib/airtable-fetch.js';
 export default async function handler(req, res) {
   // Accetta solo richieste POST
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
