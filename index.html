@@ -690,6 +690,15 @@ function scrollToSection(id) {
 function openLogin() { apriOverlay('login-overlay'); }
 function closeLogin() { chiudiOverlay('login-overlay'); }
 
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
 async function checkAccess() {
     const tagInput = document.getElementById('login-tag').value;
     const passwordInput = document.getElementById('login-password').value;
@@ -708,10 +717,11 @@ async function checkAccess() {
     btn.style.opacity = "0.7";
 
     try {
+        const pwdHashata = await hashPassword(passwordInput);
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: formattedTag, pwd: passwordInput })
+            body: JSON.stringify({ tag: formattedTag, pwd: pwdHashata })
         });
         const data = await response.json();
 
