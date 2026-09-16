@@ -359,7 +359,7 @@
         });
 
         // 1. CHIAMATA fetch AL DATABASE PER ACCERTARSI DELLO STATO DELL'UTENTE
-       
+        async function verificaIndirizzoEInizializza() {
             try {
                 const response = await fetch(`/api/get-profile?u=${targetUserClean}`);
                 const data = await response.json();
