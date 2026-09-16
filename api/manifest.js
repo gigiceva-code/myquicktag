@@ -16,9 +16,9 @@ export default function handler(req, res) {
     const finalUser = safeUser || 'user';
     const displayUtente = `@${finalUser.toUpperCase()}`;
 
-    // Collega le icone dinamiche generate dall'altro file
-    const icon192 = `/api/generate-icons?u=${finalUser}`;
-    const icon512 = `/api/generate-icons?u=${finalUser}`;
+        // Icona unica del brand, uguale per tutti gli utenti
+    const icon192 = `/api/generate-icons`;
+    const icon512 = `/api/generate-icons`;
 
     // Costruiamo il manifest dinamico con i link corretti (usando i backticks ``)
     const manifest = {
