@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { airtableFetch } from '../lib/airtable-fetch.js';
 
 function generateToken(username) {
   const expiry = Date.now() + (1000 * 60 * 60 * 24 * 30); // 30 giorni
@@ -42,7 +43,7 @@ export default async function handler(req, res) {
     const formula = `{username_system}='${safeUsername}'`;
     const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}`;
     
-      const response = await fetch(searchUrl, {
+            const response = await airtableFetch(searchUrl, {
       headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}` }
     });
     const data = await response.json();
@@ -128,7 +129,7 @@ export default async function handler(req, res) {
           return res.status(200).json({ success: true, action: 'skipped_empty' });
       }
 
-      const update = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordId}`, {
+         const update = await airtableFetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordId}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
@@ -152,7 +153,7 @@ export default async function handler(req, res) {
       if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa";
       fieldsToSave.views = 0;
 
-      const create = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
+            const create = await airtableFetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
