@@ -1,3 +1,5 @@
+import { airtableFetch } from '../lib/airtable-fetch.js';
+
 export default async function handler(req, res) {
   const { u } = req.query;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
@@ -14,10 +16,9 @@ export default async function handler(req, res) {
     // Cerchiamo nella colonna corretta "username_system" usando SOLO il nome pulito
     const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={username_system}='${safeUsername}'`;
     
-    const response = await fetch(url, {
+       const response = await airtableFetch(url, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
     });
-
     const data = await response.json();
 
     if (data.records && data.records.length > 0) {
