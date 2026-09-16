@@ -7,17 +7,13 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Tag o password mancanti' });
     }
     
-    // --- FIX SICUREZZA: Pulizia del tag da caratteri pericolosi ---
+       // --- FIX SICUREZZA: Pulizia del tag da caratteri pericolosi ---
     const tagPulito = tag.replace('@', '').trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '');
 
-    // Step di sicurezza: offuschiamo la password ricevuta per confrontarla con quella su Airtable
+    // La password arriva già hashata SHA-256 dal client (index.html): qui la usiamo così com'è,
+    // non viene mai calcolato né visto l'hash a partire dalla password in chiaro sul server.
     const crypto = await import('crypto');
-
-    const pwdProtetta = crypto
-    .createHash('sha256')
-    .update(pwd)
-    .digest('hex');
-
+    const pwdProtetta = pwd;
     const baseId = process.env.AIRTABLE_BASE_ID;
     const tableId = process.env.AIRTABLE_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
