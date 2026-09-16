@@ -355,11 +355,11 @@
                 document.getElementById("loading-screen").innerHTML = "<p style='color:red;'>Errore: Nessun profilo selezionato per il checkout.</p>";
                 return;
             }
-            verificalndirizzoEInizializza();
+                       verificaIndirizzoEInizializza();
         });
 
         // 1. CHIAMATA fetch AL DATABASE PER ACCERTARSI DELLO STATO DELL'UTENTE
-        async function verificalndirizzoEInizializza() {
+       
             try {
                 const response = await fetch(`/api/get-profile?u=${targetUserClean}`);
                 const data = await response.json();
