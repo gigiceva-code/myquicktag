@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Identity Console - myquicktag</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link id="dynamic-manifest" rel="manifest" href="">
+    <link id="dynamic-icon" rel="icon" href="">
+
+<style>
+    :root {
+        --bg-color: #000000;
+        --card-bg: rgba(255, 255, 255, 0.02);
+        --border-white: rgba(255, 255, 255, 0.9);
+        --accent-smeraldo: #50C878;
+        --text-sec: #6c6c70; 
+    }
+
+   body {
+        margin: 0; 
+        padding: 16px 16px 40px 16px;
+        background-color: var(--bg-color);
+        font-family: 'Inter', sans-serif;
+        color: white;
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .user-welcome { text-align: left; margin: 10px 0 15px; width: 100%; }
+    .user-welcome h1 { font-size: 1.5rem; margin: 0; font-weight: 600; color: var(--accent-smeraldo); }
+    .user-welcome p { color: #ffffff; font-size: 0.9rem; margin: 2px 0 0; text-transform: uppercase; }
+
+    section { margin-bottom: 15px; }
+    
+    #block-gestione {
+        width: 100%;
+        margin-top: 40px; 
+    }
+
+    .action-btn {
+        display: flex; 
+        align-items: center; 
+        background: rgba(255, 255, 255, 0.03); 
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 16px 20px; 
+        text-decoration: none; 
+        color: white;
+        margin-bottom: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+    }
+
+    .action-btn i.btn-icon { 
+        width: 30px; 
+        font-size: 1rem; 
+        color: var(--accent-smeraldo); 
+    }
+
+    .action-btn span { 
+        flex-grow: 1; 
+        font-size: 0.9rem; 
+        font-weight: 500;
+    }
+    
+    .core-grid {
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .btn-main {
+        margin-bottom: 10px;
+    }
+    
+    .btn-text-box {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        text-align: left;
+    }
+    
+    .btn-text-box small {
+        color: var(--text-sec);
+        font-size: 0.7rem;
+        margin-top: 2px;
+    }
+
+    /* Statistiche stile Luxury Minimal */
+    .stats-grid-clean {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin: 25px 0 35px 0;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+    .stat-inline {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .stat-inline i {
+        color: var(--accent-smeraldo);
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    .stat-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    .stat-label {
+        font-size: 0.7rem;
+        color: var(--text-sec);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+ 
+    #block-identity-system {
+        margin-bottom: 10px;
+    }
+
+    /* Card Boutique */
+    .hero-activation-card-new {
+        display: block;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 24px 20px 35px 20px !important;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+        position: relative !important; 
+    }
+    
+    .hero-header-new {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+    }
+    .qr-icon-box-new {
+        font-size: 1.5rem;
+        color: var(--accent-smeraldo);
+        display: flex;
+        align-items: center;
+    }
+    .hero-text-new {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .hero-text-new h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+        letter-spacing: -0.3px;
+    }
+    .hero-text-new p {
+        margin: 0;
+        font-size: 0.85rem; 
+        color: #e0e0e0; 
+        font-weight: 400;
+    }
+    
+    .action-trigger-corner {
+        position: absolute;
+        bottom: 12px;
+        right: 18px;
+        font-size: 0.75rem;
+        color: var(--accent-smeraldo); 
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-transform: none; 
+    }
+    
+    .action-trigger-corner i {
+        font-size: 0.65rem;
+    }
+
+    /* Effetto Velluto Bianco */
+    a, div, span, button {
+        -webkit-tap-highlight-color: transparent !important;
+        tap-highlight-color: transparent !important;
+    }
+
+    .hero-activation-card-new, .action-btn {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                    background-color 0.4s ease-out !important;
+    }
+
+    .hero-activation-card-new:active, .action-btn:active {
+        transform: scale(0.99) !important; 
+        background-color: rgba(255, 255, 255, 0.08) !important; 
+    }
+
+    .badge-text {
+        margin: 2px 0 0 0;
+        font-size: 0.7rem;
+        color: var(--accent-smeraldo);
+        opacity: 0.9;
+    }
+    
+    .badge {
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 8px;
+        transition: all 0.25s ease;
+    }
+
+    .badge-online { background: #00c85320; color: #00c853; }
+    .badge-draft { background: #ffab0020; color: #ffab00; }
+    .badge-offline { background: #ff525220; color: #ff5252; }
+
+    #view-badge {
+        display: none !important;
+    }
+
+    /* Notifiche e Campanella */
+    .btn-bell {
+        background: transparent;
+        border: none;
+        color: #ffffff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 5px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn-bell:active {
+        transform: scale(0.9);
+        opacity: 0.7;
+    }
+
+    .notif-dot {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 8px;
+        height: 8px;
+        background-color: var(--accent-smeraldo);
+        border-radius: 50%;
+        border: 2px solid var(--bg-color);
+        display: none; 
+    }
+
+    .btn-bell.has-notifications .notif-dot { display: block; }
+
+    .notification-dropdown {
+        position: absolute;
+        top: 130%;
+        right: -10px; 
+        width: 280px;
+        background: #0a0a0a; 
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .notification-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .notif-header {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .notif-list { display: flex; flex-direction: column; max-height: 350px; overflow-y: auto; }
+    
+    .notif-item {
+        padding: 16px 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        transition: background 0.2s ease;
+    }
+
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item:active { background: rgba(255, 255, 255, 0.05); }
+
+    .notif-icon {
+        width: 36px; height: 36px; border-radius: 10px; display: flex;
+        align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0;
+    }
+
+    .notif-icon.draft { color: #ffab00; background: rgba(255, 171, 0, 0.1); }
+
+    .notif-content { display: flex; flex-direction: column; gap: 3px; }
+    .notif-content strong { color: #ffffff; font-size: 0.85rem; font-weight: 500; }
+    .notif-content span { color: #888888; font-size: 0.75rem; } 
+
+    /* Stili Modali Generici (es. Upsell) */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        display: flex; justify-content: center; align-items: center;
+        z-index: 9999; padding: 20px; transition: opacity 0.3s ease;
+    }
+
+    .modal-content {
+        background: #121212;
+        border: 1px solid rgba(80, 200, 120, 0.2); 
+        border-radius: 24px; padding: 40px 30px; width: 100%; max-width: 380px;
+        text-align: center; position: relative; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        animation: modalEntrata 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .close-modal-btn {
+        position: absolute; top: 18px; right: 20px; background: none; border: none;
+        color: #666666; font-size: 28px; cursor: pointer; line-height: 1; transition: color 0.2s ease;
+    }
+    .close-modal-btn:hover { color: #ffffff; }
+
+    .modal-title {
+        color: #ffffff; font-size: 1.4rem; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 8px;
+    }
+    .modal-subtitle { color: #888888; font-size: 0.9rem; margin-bottom: 25px; }
+
+    @keyframes modalEntrata {
+        from { opacity: 0; transform: scale(0.95) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+</style>
+</head>
+<body>
+
+<div class="user-welcome">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>Identity Console</h1>
+            <p id="dash-user">@UTENTE</p>
+        </div>
+        
+        <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
+            <div class="notification-wrapper" style="position: relative;">
+                <button id="btn-notifications" class="btn-bell" aria-label="Notifiche">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-dot"></span>
+                </button>
+                
+                <div id="notif-dropdown" class="notification-dropdown">
+                    <div class="notif-header">Notifiche</div>
+                    <div class="notif-list" id="notif-list-container">
+                        
+                        <a href="#" class="notif-item" id="notif-draft-item" style="display: none;">
+                            <div class="notif-icon draft"><i class="fas fa-edit"></i></div>
+                            <div class="notif-content">
+                                <strong>Hai una bozza in sospeso</strong>
+                                <span>Tocca per completare la pubblicazione</span>
+                            </div>
+                        </a>
+
+                        <div class="notif-item" id="notif-empty-state" style="justify-content: center; opacity: 0.5;">
+                            <div class="notif-content" style="text-align: center;">
+                                <span>Nessuna nuova notifica</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div onclick="location.reload();" style="cursor:pointer; color: var(--accent-smeraldo); padding: 5px;">
+                <i class="fas fa-sync-alt"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CARD PRINCIPALE: DIGITAL IDENTITY -->
+<section id="block-identity-system" style="width: 100%;">
+    <a href="#" id="link-view" class="hero-activation-card-new">
+        <div class="hero-header-new">
+            <div class="qr-icon-box-new">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <div class="hero-text-new">
+                <h3 id="view-title">Digital Identity</h3>
+                <p id="view-desc" class="slogan-text">Il tuo nome nel mondo.</p>
+                <p id="view-badge" class="badge-text"></p>
+            </div>
+            <span class="action-trigger-corner">Vedi anteprima <i class="fas fa-chevron-right"></i></span>
+        </div>
+    </a>
+</section>
+
+<!-- BARRA STATISTICHE -->
+<div class="stats-grid-clean" id="dashboard-stats">
+    <div class="stat-inline" id="stat-scansioni" style="cursor: pointer;">
+        <i class="fas fa-chart-line"></i>
+        <div style="display: flex; flex-direction: column;">
+            <span class="stat-value" id="count-visits">-</span>
+            <span class="stat-label">Scansioni</span>
+        </div>
+    </div>
+    <div class="stat-inline">
+        <i class="fas fa-shield-alt"></i>
+        <div style="display: flex; flex-direction: column;">
+            <span class="stat-value" id="days-left">- gg</span>
+            <span class="stat-label">Scadenza</span>
+        </div>
+    </div>
+</div> 
+
+<!-- BANNER PAYWALL -->
+<div id="paywall-banner" style="display: none; background: linear-gradient(135deg, #1a1a1a 0%, #2d0000 100%); border: 1px solid #ff4444; border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: center; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.15);">
+    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ff4444; margin-bottom: 12px;"></i>
+    <h3 style="margin: 0 0 6px 0; color: #ffffff; font-size: 1.1rem; font-weight: 600;">Intervento Richiesto</h3>
+    <p id="paywall-text" style="margin: 0 0 16px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; line-height: 1.4;">Il tuo piano è scaduto. Rinnova subito per mantenere attiva la tua Digital Identity.</p>
+    <a href="#" id="btn-rinnova" style="display: inline-block; background: #ff4444; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; transition: transform 0.2s ease;">Scegli un Piano</a>
+</div>
+
+<!-- BLOCCO GESTIONE -->
+<section id="block-gestione" style="width: 100%; margin-top: 10px;">
+    <div class="core-grid" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 0;">
+        
+        <a href="#" id="link-edit" class="action-btn btn-main" style="margin-bottom: 0;">
+            <i class="fas fa-sliders-h btn-icon"></i>
+            <div class="btn-text-box">
+                <span>Configura la tua Tag</span>
+                <small>Personalizza design e contenuti della tag</small>
+            </div>
+            <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
+        </a>
+        
+        <a href="#" id="link-pocket" class="action-btn btn-main" style="margin-bottom: 0;">
+            <i class="far fa-address-book btn-icon"></i>
+            <div class="btn-text-box">
+                <span>Il Mio Pocket</span>
+                <small>La tua collezione di tag salvate</small>
+            </div>
+            <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
+        </a>
+
+        <a href="#" id="link-account" class="action-btn btn-main" style="margin-bottom: 0;">
+            <i class="fas fa-user-shield btn-icon"></i>
+            <div class="btn-text-box">
+                <span>Account & Piano</span>
+                <small>Gestisci abbonamento e sicurezza</small>
+            </div>
+            <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
+        </a>
+
+    </div>
+</section>
+
+<!-- OVERLAY UPSELL ANALYTICS (Ora usa classi pulite) -->
+<div id="upsell-analytics-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="max-width: 360px; padding: 40px 30px; background: #0a0a0a; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
+        <button onclick="document.getElementById('upsell-analytics-modal').style.display='none'" class="close-modal-btn" style="color: #888;">&times;</button>
+        
+        <div style="width: 50px; height: 50px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: #d4af37; font-size: 1.3rem;">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        
+        <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 600; color: #fff; letter-spacing: -0.3px; margin-bottom: 8px;">Business Intelligence</h3>
+        <p class="modal-subtitle" style="color: #999; font-size: 0.85rem; line-height: 1.5; margin-bottom: 24px;">
+            L'accesso ai dati geografici, ai flussi di traffico e al tracciamento dei click è riservato ai profili <strong>Premium</strong> e <strong>Gold</strong>.
+        </p>
+        
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 16px; text-align: left; margin-bottom: 25px;">
+            <div style="font-size: 0.78rem; color: #ccc; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-shield-alt" style="color: var(--accent-smeraldo);"></i> Geolocalizzazione Scansioni</div>
+            <div style="font-size: 0.78rem; color: #ccc; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-shield-alt" style="color: var(--accent-smeraldo);"></i> Analisi Dispositivi (iOS / Android)</div>
+            <div style="font-size: 0.78rem; color: #ccc; display: flex; align-items: center; gap: 8px;"><i class="fas fa-shield-alt" style="color: var(--accent-smeraldo);"></i> Heatmap Click sui Link</div>
+        </div>
+        
+        <a href="#" id="btn-upsell-checkout" style="display: block; width: 100%; background: #ffffff; color: #000000; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.8px; text-align: center; transition: all 0.2s ease;">Fai l'Upgrade</a>
+    </div>
+</div>
+  <script src="migrate-storage.js"></script>     
+<script>
+// ====================================================
+// 🟩 BLOCCO 1 — FUNZIONI DI SUPPORTO & LUXURY NAVIGATE
+// ====================================================
+
+function aggiornaCard(title, desc, badge) {
+    const titleEl = document.getElementById("view-title");
+    const descEl = document.getElementById("view-desc");
+    const badgeEl = document.getElementById("view-badge");
+
+    if (titleEl) titleEl.innerText = title || "";
+    if (descEl) descEl.innerText = desc || "";
+    if (badgeEl) badgeEl.innerText = badge || "";
+}
+
+function aggiornaBadge(stato) {
+    const badgeEl = document.getElementById("view-badge");
+    if (!badgeEl) return;
+
+    badgeEl.className = "badge"; 
+    badgeEl.style.display = "";  
+
+    switch (stato.toLowerCase().trim()) {
+        case "online":
+            badgeEl.innerText = "Online";
+            badgeEl.classList.add("badge-online");
+            break;
+        case "bozza":
+            badgeEl.innerText = "";
+            badgeEl.classList.add("badge-draft");
+            badgeEl.style.display = "none";
+            break;
+        case "nuovo":
+            badgeEl.innerText = "";
+            badgeEl.style.display = "none";
+            break;
+        case "offline":
+            badgeEl.innerText = "Offline";
+            badgeEl.classList.add("badge-offline");
+            break;
+        default:
+            badgeEl.innerText = "";
+            badgeEl.style.display = "none";
+            break;
+    }
+} 
+
+function luxuryNavigate(event, url) {
+    if (event) event.preventDefault();
+    setTimeout(function() {
+        window.location.href = url; 
+    }, 250); 
+}
+
+// ====================================================
+// 🟦 BLOCCO 2 — LOGICA DI DECISIONE (ANTEPRIMA & NOTIFICHE)
+// ====================================================
+
+function determinaModalitaAnteprima(record, nomeMinuto) {
+    const stato = (record.stato || "").toLowerCase().trim();
+    const haPassword = record.password && record.password.trim() !== "";
+    const haBozza = record.draft_json && record.draft_json.trim() !== "";
+    
+    const linkView = document.getElementById("link-view");
+
+    aggiornaCard("", "", "");
+    if (linkView) {
+        linkView.dataset.url = "";
+        linkView.dataset.mode = "";
+        linkView.style.pointerEvents = "auto";   
+        linkView.style.opacity = "1";   
+        linkView.classList.remove("pulsing-effect");
+    }
+
+    if (!record.draft_json || record.draft_json.trim() === "") {
+        localStorage.removeItem("haVistoAnteprima");
+    }
+    localStorage.removeItem("haVistoAnteprima"); 
+
+    // --- LOGICA CAMPANELLA ---
+    const bellIcon = document.getElementById('btn-notifications');
+    const notifDraftItem = document.getElementById('notif-draft-item');
+    const notifEmptyState = document.getElementById('notif-empty-state');
+
+    if (bellIcon) bellIcon.classList.remove('has-notifications');
+    if (notifDraftItem) notifDraftItem.style.display = 'none';
+    if (notifEmptyState) notifEmptyState.style.display = 'flex';
+
+    if ((haBozza && localStorage.getItem("loggedUser") === nomeMinuto) || (!haPassword && haBozza)) {
+        if (bellIcon) bellIcon.classList.add('has-notifications');
+        if (notifDraftItem) {
+            notifDraftItem.style.display = 'flex';
+            notifDraftItem.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+        }
+        if (notifEmptyState) notifEmptyState.style.display = 'none';
+    }
+
+    if (notifDraftItem && !notifDraftItem.dataset.hasListener) {
+        notifDraftItem.addEventListener('click', function(e) {
+            if (this.dataset.url) luxuryNavigate(e, this.dataset.url);
+        });
+        notifDraftItem.dataset.hasListener = "true";
+    }
+
+    // --- ASSEGNAZIONE DEL LINK ANTEPRIMA ---
+    const claimLuxury = "Il tuo nome nel mondo.";
+
+    if (localStorage.getItem("justPublished")) {
+        localStorage.removeItem("justPublished");
+        aggiornaCard("Digital Identity", claimLuxury, "Online");
+        aggiornaBadge("online");
+        if (linkView) linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        return;
+    }
+
+    if (localStorage.getItem("loggedUser") !== nomeMinuto) {
+        if (linkView) linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        aggiornaCard("Digital Identity", claimLuxury, "Online");
+        aggiornaBadge("online");
+        return;
+    }
+
+    if (stato === "in attesa" || !haPassword) {
+        if (linkView) {
+            linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+            linkView.classList.add("pulsing-effect"); 
+        }
+        aggiornaCard("Digital Identity", claimLuxury, "in attesa");
+        aggiornaBadge("bozza");
+        return;
+    }
+
+    if (stato === "attivo" && !haBozza) {
+        if (linkView) linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
+        aggiornaCard("Digital Identity", claimLuxury, "Online");
+        aggiornaBadge("online");
+        return;
+    }
+
+    if (linkView) linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=draft`;
+    aggiornaCard("Digital Identity", claimLuxury, "modifiche salvate");
+    aggiornaBadge("bozza");
+    return;
+}
+  
+// ====================================================
+// 🟨 BLOCCO 3 — CARICAMENTO DATI DA DATABASE E CLOUD SYNC
+// ====================================================
+
+async function caricaDatiDashboard(nomeMinuto) {
+    if (!nomeMinuto) return;
+
+    try {
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const data = await response.json();
+
+        if (data && data.success) {
+            if (data.fields.pocket_cloud && data.fields.pocket_cloud.trim() !== "") {
+                try {
+                    const pocketDalCloud = JSON.parse(data.fields.pocket_cloud);
+                    localStorage.setItem('mqt_pocket', JSON.stringify(pocketDalCloud));
+                } catch (e) {
+                    console.error("Errore parse pocket cloud", e);
+                }
+            }
+            
+            determinaModalitaAnteprima(data.fields, nomeMinuto);
+            if (typeof aggiornaContatoriDashboard === "function") aggiornaContatoriDashboard(data.fields);
+            
+        } else {
+            // La tag non esiste (più) sul server: probabilmente una prenotazione scaduta
+            // e riciclata, o un account rimosso. Il "bypass zero-latenza" in index.html
+            // si basa sulla cache locale, quindi va ripulita per non restare bloccati qui.
+            let chiaviSalvate = [];
+            try { chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]'); } catch(e) {}
+            const chiaviAggiornate = chiaviSalvate.filter(k => k !== nomeMinuto);
+            localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviAggiornate));
+            if (localStorage.getItem('loggedUser') === nomeMinuto) localStorage.removeItem('loggedUser');
+
+            aggiornaCard("Questa Tag non è più disponibile", "Ti reindirizziamo alla home\u2026", "");
+            aggiornaBadge("offline");
+            setTimeout(() => { window.location.href = "index.html"; }, 1800);
+        }
+    } catch (err) {
+        aggiornaCard("Errore Connessione", "Impossibile contattare il server", "Offline");
+        aggiornaBadge("offline");
+    }
+}
+
+// ====================================================
+// 📊 BLOCCO 4 — AGGIORNAMENTO CONTATORI & PAYWALL
+// ====================================================
+function aggiornaContatoriDashboard(record) {
+    const scansEl = document.getElementById("count-visits");
+    if (scansEl) {
+        const totaleScansioni = record.views || record.scans || 0;
+        scansEl.innerText = totaleScansioni;
+    }
+
+    const trialEl = document.getElementById("days-left");
+    const paywallBanner = document.getElementById("paywall-banner");
+    const btnEdit = document.getElementById("link-edit");
+    const btnRinnova = document.getElementById("btn-rinnova");
+
+    let giorniRimanenti = 90; 
+    if (record.data_scadenza) {
+        const dataScadenza = new Date(record.data_scadenza);
+        const oggi = new Date();
+        const diffTempo = dataScadenza - oggi;
+        giorniRimanenti = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+    }
+    
+    if (trialEl) {
+        if (giorniRimanenti > 0) {
+            trialEl.innerText = giorniRimanenti + " gg";
+            trialEl.style.color = (giorniRimanenti <= 7) ? "#ffab00" : "#ffffff";
+        } else {
+            trialEl.innerText = "Scaduto";
+            trialEl.style.color = "#ff4444"; 
+        }
+    }
+
+    if (giorniRimanenti <= 0) {
+        if (paywallBanner) paywallBanner.style.display = "block";
+        if (btnEdit) {
+            btnEdit.style.opacity = "0.4"; 
+            btnEdit.style.pointerEvents = "none"; 
+            btnEdit.onclick = function(e) {
+                e.preventDefault();
+                alert("Piano scaduto. Rinnova per modificare la Tag.");
+            };
+        }
+        if (btnRinnova) {
+            const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
+            btnRinnova.href = `checkout.html?u=${utenteCorrente}`;
+        }
+    }
+
+    // LOGICA ANALYTICS
+    const statScansioni = document.getElementById("stat-scansioni");
+    if (statScansioni) {
+        statScansioni.onclick = function() {
+            const userPlan = String(record.plan || "base").toLowerCase().trim();
+            const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
+
+            if (userPlan.includes("gold") || userPlan.includes("premium")) {
+                window.location.href = `analytics.html?u=${utenteCorrente}`;
+            } else {
+                const upsellModal = document.getElementById("upsell-analytics-modal");
+                const btnUpsellCheckout = document.getElementById("btn-upsell-checkout");
+                
+                if (btnUpsellCheckout) btnUpsellCheckout.href = `checkout.html?u=${utenteCorrente}`;
+                if (upsellModal) upsellModal.style.display = "flex";
+            }
+        };
+    } 
+}
+  
+// ====================================================
+// 🟧 BLOCCO 5 — INIZIALIZZAZIONE & EVENT LISTENERS
+// ====================================================
+
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let nomeMinuto = urlParams.get("u") || urlParams.get("user") || localStorage.getItem("loggedUser");
+
+    if (!nomeMinuto) return;
+    nomeMinuto = nomeMinuto.trim();
+
+    const dashUserEl = document.getElementById("dash-user");
+    if (dashUserEl) dashUserEl.innerText = `@${nomeMinuto}`;
+
+    caricaDatiDashboard(nomeMinuto);
+
+    const linkView = document.getElementById("link-view");
+    if (linkView) {
+        linkView.addEventListener("click", function(e) {
+            e.preventDefault();
+            const targetUrl = this.dataset.url;
+            if (targetUrl) luxuryNavigate(e, targetUrl);
+        });
+    }
+
+    const linkEdit = document.getElementById("link-edit");
+    if (linkEdit) {
+        linkEdit.addEventListener("click", function(e) {
+            e.preventDefault();
+            luxuryNavigate(e, `edit.html?u=${nomeMinuto}`);
+        });
+    }
+
+    const linkPocket = document.getElementById("link-pocket");
+    if (linkPocket) {
+        linkPocket.addEventListener("click", function(e) {
+            e.preventDefault();
+            luxuryNavigate(e, `pocket.html`);
+        });
+    }
+
+    const linkAccount = document.getElementById("link-account");
+    if (linkAccount) {
+        linkAccount.addEventListener("click", function(e) {
+            e.preventDefault();
+            luxuryNavigate(e, `account.html?u=${nomeMinuto}`);
+        });
+    }
+
+    const btnNotifications = document.getElementById("btn-notifications");
+    const notifDropdown = document.getElementById("notif-dropdown");
+
+    if (btnNotifications && notifDropdown) {
+        btnNotifications.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation(); 
+            notifDropdown.classList.toggle("active");
+        });
+
+        document.addEventListener("click", function(e) {
+            if (!notifDropdown.contains(e.target) && !btnNotifications.contains(e.target)) {
+                notifDropdown.classList.remove("active");
+            }
+        });
+    }
+});
+</script>
+</body>
+</html>
+

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050505">
+    <title>myquicktag</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link id="dynamic-manifest" rel="manifest" href="">
+    <link id="dynamic-icon" rel="icon" href="">
+      <link rel="stylesheet" href="style.css">
+    </head>
+<body>
+
+            <!-- Bottone Salva Tag con LED pulsante -->
+            <div id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); transition: all 0.3s;">
+                <div id="dot-salva" style="width: 6px; height: 6px; background-color: #fff; border-radius: 50%; animation: pulseWhiteDot 2s infinite;"></div>
+                <span id="testo-salva-top" style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
+            </div>
+
+            <!-- Trigger QR Originale -->
+            <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()" style="position: static; margin: 0; padding: 0;">
+                <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
+         
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 1. CHASSIS PRINCIPALE E SIGILLO ORBITALE                     -->
+    <!-- ============================================================ -->
+    <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
+        <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
+            
+            <!-- IL SIGILLO ORBITALE (Allineato a edit.html) -->
+            <div id="live-avatar-container" class="orbital-container" style="display: none;">
+                <div class="orbital-ring" id="dna-core-ring"></div>
+                <div class="orbital-sphere">
+                    <img id="live-avatar-img" class="orbital-img" src="" alt="Core">
+                </div>
+            </div>
+
+            <!-- IL NOME BRAND (Architettura aggiornata da edit.html) -->
+            <div id="name-capsule-wrapper" class="username-capsule-wrapper">
+                <div class="username-capsule">
+                    <div class="username-capsule-inner">
+                        <div class="username-display" id="tag-username">@TUONOME.IT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+       
+
+   <!-- TASTO DI INGRESSO (Copertina) -->
+        <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
+            <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
+                <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--core-border); border-radius: 50%; box-sizing: border-box; opacity: 0.8;"></div>
+                <div style="position: absolute; width: 3px; height: 10px; background: var(--core-border); bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
+            </div>
+            <span>ESPLORA TAG</span>
+        </div>
+
+       <!-- ============================================================ -->
+    <!-- 2. IL TOTEM DELLE STANZE                                     -->
+    <!-- ============================================================ -->
+    <div id="mainGrid">
+        
+        <!-- CONTENITORE PILLOLE IN ALTO -->
+        <div id="action-bar-features" class="action-bar-container">
+            <div class="feature-pill" id="pill-live-status" style="display:none;" onclick="apriDettaglio('status')">
+                <div class="led-dot" id="pill-status-dot"></div>
+                <span id="pill-status-text">ONLINE</span>
+            </div>
+
+        </div>
+        
+        <!-- STANZE STANDARD -->
+        <button class="room-link" id="room-identity" onclick="apriMacroArea('identity')" style="display:none;">IDENTITY</button>
+        <button class="room-link" id="room-business" onclick="apriMacroArea('business')" style="display:none;">BUSINESS</button>
+        <button class="room-link" id="room-media" onclick="apriMacroArea('media')" style="display:none;">VETRINA</button>
+        <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
+        
+        <!-- QUINTA STANZA: ACTION CENTER -->
+        <button class="room-link" id="room-action-center" onclick="apriMacroArea('action_center')" style="display:none; color: var(--theme-border, #d4af37) !important; font-weight: 500 !important; letter-spacing: 4px !important;">ACTION CENTER</button>
+        
+        <!-- TASTO DI RITORNO HOME -->
+        <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
+            <span>HOME</span>
+        </div>
+
+    </div>
+        <!-- ============================================================ -->
+        <!-- CTA (Invariate)                                              -->
+        <!-- ============================================================ -->
+        <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
+            <button class="btn-condividi-profilo" onclick="vaiAlCheckout()" style="width: 100%; padding: 18px; font-size: 1rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 12px;">
+                <i class="fas fa-unlock-alt"></i> Sblocca la tua myquicktag
+            </button>
+        </div>
+        <div id="cta-pubblica-container" style="display: none; width: 100%;">
+            <button onclick="pubblicaBozza()" style="width: 100%; padding: 16px; background: #10b981; border: none; border-radius: 12px; color: #000000; font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: -0.2px;">
+                Pubblica la tua tag
+            </button>
+            <p style="text-align: center; color: var(--text-sec); font-size: 0.8rem; margin-top: 10px;">
+                La tua tag diventerà visibile a tutti
+            </p>
+        </div>
+
+    </div>
+
+  <!-- ============================================================ -->
+    <!-- 3. IL TEATRO LIQUIDO (L'OVERLAY A SPECCHIO PER I SOTTOMENU)  -->
+    <!-- ============================================================ -->
+    <div id="overlaySezione" class="pagine-overlay">
+        <div class="contenuto-card" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+            
+            <div id="titoloSezione" class="titolo-sezione" style="margin-bottom: 20px;">TITOLO</div>
+            
+            <!-- Corpo scrollabile (I contenuti) -->
+            <div id="corpoSezione" class="corpo-sezione" style="flex: 1; overflow-y: auto; overflow-x: hidden;"></div>
+
+           <!-- Pulsante Ergonomico in Basso (Sticky) -->
+            <div class="bottom-action-bar">
+                <button onclick="chiudiSezione()" style="background: none; border: none; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; padding: 15px; display: flex; align-items: center; gap: 10px; transition: color 0.2s;">
+                    <i class="fas fa-times" id="icona-chiudi"></i> <span id="testo-chiudi">CHIUDI</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Pulsante Dashboard (Invariato) -->
+    <div id="back-to-dashboard" style="display:none; position:fixed; bottom:80px; left:32px; z-index:10000;">
+        <button onclick="chiudiOverlayAcquisto()" style="background:none; border:none; color:#10b981; font-size:0.85rem; font-weight:600; cursor:pointer; padding:8px; letter-spacing:0.3px;">
+            ← Dashboard
+        </button>
+    </div>
+ 
+    <!-- ============================================================ -->
+    <!-- OVERLAY DI SISTEMA (TUTTI INVARIATI E PROTETTI AL 100%)      -->
+    <!-- ============================================================ -->
+
+    <!-- OVERLAY SHOWROOM -->
+    <div id="showroom-overlay" style="display: none;">
+        <div id="expanding-box"> 
+            <div class="conversion-content"> 
+                <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
+                <button class="btn-condividi-profilo" id="showroom-action-btn" style="margin-top: 15px;">Attiva la tua myquicktag</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY WELCOME PWA -->
+    <div id="tag-welcome-overlay" style="display: none;">
+        <div class="contenuto-card" style="background: #111; padding: 32px; border-radius: 24px; text-align: center; align-items: center; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 0 40px rgba(255,255,255,0.15), 0 0 1px rgba(255,255,255,0.9);">
+            <div style="width: 40px; height: 3px; background: #10b981; border-radius: 2px; margin: 0 auto 24px auto;"></div>
+            <h2 id="welcome-titolo" class="titolo-sezione" style="margin-bottom: 16px; font-size: 1.3rem; color: #ffffff; text-shadow: 0 0 20px rgba(255,255,255,0.4); letter-spacing: -0.3px;">@username è attiva</h2>
+            <p id="welcome-corpo" class="corpo-sezione" style="margin-bottom: 16px; color: #ffffff; text-shadow: 0 0 15px rgba(255,255,255,0.3); font-size: 0.88rem; line-height: 1.6;">
+                Aggiungila alla schermata Home.<br>Sempre con te, sempre tua.
+            </p>
+            <button id="trigger-pwa-install" onclick="installaPWA()" style="width: 100%; padding: 16px; margin-bottom: 14px; background: #10b981; border: none; border-radius: 12px !important; color: #000000; font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: -0.2px;">
+                Installa ora
+            </button> 
+            <button onclick="chiudiWelcomeEMostraTag()" style="background: none; border: none; color: rgba(255,255,255,0.4); font-size: 0.85rem; cursor: pointer; padding: 8px;">
+                Continua senza installare
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastNotifica" class="toast">Link copiato!</div>
+
+    <!-- OVERLAY VIP VAULT -->
+    <div id="vip-vault-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 99999; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(10px);">
+        <div style="background: #111; padding: 32px 24px; border-radius: 24px; text-align: center; border: 1px solid rgba(229, 193, 88, 0.4); box-shadow: 0 0 40px rgba(229, 193, 88, 0.15); width: 100%; max-width: 340px; position: relative;">
+            <button onclick="chiudiVipVault()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.5rem; cursor: pointer; padding: 5px;">&times;</button>
+            <i class="fas fa-lock" style="color: #e5c158; font-size: 2.2rem; margin-bottom: 15px;"></i>
+            <h2 style="color: #e5c158; font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">VIP Vault</h2>
+            <p style="color: #86868b; font-size: 0.85rem; margin-bottom: 24px; line-height: 1.5;">L'accesso a questo canale è riservato.<br>Inserisci il PIN di sblocco.</p>
+            
+            <input type="password" id="vip-pin-input" inputmode="numeric" placeholder="****" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(229, 193, 88, 0.3); color: #e5c158; padding: 16px; border-radius: 12px; font-size: 1.5rem; text-align: center; letter-spacing: 8px; outline: none; margin-bottom: 20px; transition: border-color 0.3s ease;">
+            
+            <button id="btn-sblocca-vip" onclick="verificaPinVip()" style="width: 100%; padding: 16px; background: #e5c158; color: #000; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; font-size: 0.95rem; transition: transform 0.2s;">
+                SBLOCCA CANALE
+            </button>
+        </div>
+    </div>
+      <!-- OVERLAY QUICK PASS LANDING (PER IL NUOVO CLIENTE) -->
+    <div id="qp-landing-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 100000; background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(15px);">
+        <div style="background: #111; padding: 0; border-radius: 24px; text-align: center; border: 1px solid var(--theme-border, #d4af37); box-shadow: 0 20px 50px rgba(0,0,0,0.8); width: 100%; max-width: 360px; position: relative; overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- Header colorato -->
+            <div style="background: rgba(255,255,255,0.05); padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <button onclick="chiudiQPLanding()" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">&times;</button>
+                <i class="fas fa-gift" style="color: var(--theme-border, #d4af37); font-size: 2.5rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));"></i>
+                <h2 style="color: #fff; font-size: 1.2rem; font-weight: 500; letter-spacing: 1px; margin-bottom: 5px;">Hai un regalo!</h2>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">Mostra questo pass in cassa per ritirarlo</p>
+            </div>
+                
+                <!-- Il QR Code su fondo bianco per massima leggibilità dai lettori -->
+                <div style="background: #fff; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+                    <div id="qp-landing-qr" style="width: 160px; height: 160px;"></div>
+                </div>
+                <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 3px;">SCANSIONA PER VALIDARE</div>
+            </div>
+
+            <!-- La tua esca NON invasiva -->
+            <a href="https://myquicktag.com" target="_blank" rel="noopener noreferrer" style="display: block; padding: 18px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: background 0.2s;">
+                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; font-weight: 300;">
+                    Powered by <strong style="color: #fff; font-weight: 600;">myquicktag</strong>
+                </div>
+                <div style="font-size: 0.65rem; color: var(--theme-border, #d4af37); margin-top: 6px; letter-spacing: 1px; font-weight: 500;">
+                    CREA LA TUA TAG GRATIS &rarr;
+                </div>
+            </a>
+    </div> 
+       <!-- ========================================== -->
+    <!-- ⚡ SMART VIDEO VAULT (PLAYER IMMERSIVO)    -->
+    <!-- ========================================== -->
+    <div id="video-vault-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(15px); opacity: 0; transition: opacity 0.3s ease;">
+      <div style="position: absolute; top: 20px; left: 20px; width: 42px; height: 42px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 1.2rem; cursor: pointer; z-index: 999999; backdrop-filter: blur(10px);" onclick="chiudiSmartVideo()">
+            <i class="fas fa-times"></i>
+        </div> 
+        <div id="video-vault-container" style="width: 90%; max-width: 600px; aspect-ratio: 16/9; background: #000; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(229, 193, 88, 0.15); border: 1px solid rgba(229, 193, 88, 0.4);">
+            <iframe id="video-vault-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+        </div>
+        <div id="video-vault-cta-container" style="margin-top: 30px; width: 90%; max-width: 400px; display: none;">
+            <a id="video-vault-cta-btn" href="#" target="_blank" style="display: block; width: 100%; padding: 18px; background: #e5c158; color: #000; text-align: center; font-size: 0.9rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border-radius: 12px; box-shadow: 0 10px 25px rgba(229, 193, 88, 0.4); transition: transform 0.2s;">
+                <!-- Testo dinamico -->
+            </a>
+        </div>
+    </div>
+
+    <!-- OVERLAY QR CODE NATIVO -->
+    <!-- (Questo lo inietterà il JS se serve nella macro area Identity, non serve averlo fisso qui se usiamo l'overlay a specchio, ma il div container per qrcode.js lo mettiamo nel js) -->
+       <!-- ============================================================ -->
+    <!-- OVERLAY BOTTOM SHEET PER KILLER FEATURES                     -->
+    <!-- ============================================================ -->
+    <div id="feature-backdrop" class="sheet-backdrop" onclick="chiudiDettaglio()"></div>
+    <div id="feature-bottom-sheet" class="bottom-sheet">
+        <div class="sheet-handle" onclick="chiudiDettaglio()"></div>
+        <div class="sheet-header">
+            <div id="sheet-icon" class="sheet-icon"></div>
+            <h3 id="sheet-title">Titolo</h3>
+        </div>
+        <div id="sheet-body" class="sheet-body">
+            <!-- Il contenuto verrà iniettato dal Javascript -->
+        </div>
+        <button class="sheet-close-btn" onclick="chiudiDettaglio()">CHIUDI</button>
+    </div>
+      
+      <!-- ============================================================ -->
+    <!-- LIGHTBOX OVERLAY COMPONENT                                   -->
+    <!-- ============================================================ -->
+    <div id="mqt-lightbox" class="lightbox-overlay">
+        <div class="lightbox-header">
+            <span id="lightbox-counter" class="lightbox-counter">1/1</span>
+            <i class="fas fa-times lightbox-close" onclick="chiudiLightbox()"></i>
+        </div>
+        <div id="lightbox-track" class="lightbox-track" onscroll="aggiornaContatoreLightbox()"></div>
+        <div class="lightbox-nav nav-left" onclick="scorriLightbox(-1)"><i class="fas fa-chevron-left"></i></div>
+        <div class="lightbox-nav nav-right" onclick="scorriLightbox(1)"><i class="fas fa-chevron-right"></i></div>
+    </div> 
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050505">
+    <title>myquicktag</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link id="dynamic-manifest" rel="manifest" href="">
+    <link id="dynamic-icon" rel="icon" href="">
+      <link rel="stylesheet" href="style.css">
+    </head>
+<body>
+
+            <!-- Bottone Salva Tag con LED pulsante -->
+            <div id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); transition: all 0.3s;">
+                <div id="dot-salva" style="width: 6px; height: 6px; background-color: #fff; border-radius: 50%; animation: pulseWhiteDot 2s infinite;"></div>
+                <span id="testo-salva-top" style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
+            </div>
+
+            <!-- Trigger QR Originale -->
+            <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()" style="position: static; margin: 0; padding: 0;">
+                <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
+         
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 1. CHASSIS PRINCIPALE E SIGILLO ORBITALE                     -->
+    <!-- ============================================================ -->
+    <div id="profile-content" class="app-container" data-theme="black_dna" data-layout="badge">
+        <div class="header-monolith" style="flex-direction: column; position: relative; z-index: 10;">
+            
+            <!-- IL SIGILLO ORBITALE (Allineato a edit.html) -->
+            <div id="live-avatar-container" class="orbital-container" style="display: none;">
+                <div class="orbital-ring" id="dna-core-ring"></div>
+                <div class="orbital-sphere">
+                    <img id="live-avatar-img" class="orbital-img" src="" alt="Core">
+                </div>
+            </div>
+
+            <!-- IL NOME BRAND (Architettura aggiornata da edit.html) -->
+            <div id="name-capsule-wrapper" class="username-capsule-wrapper">
+                <div class="username-capsule">
+                    <div class="username-capsule-inner">
+                        <div class="username-display" id="tag-username">@TUONOME.IT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+       
+
+   <!-- TASTO DI INGRESSO (Copertina) -->
+        <div id="entrance-prompt" class="entrance-prompt" onclick="sbloccaTag()">
+            <div class="mini-logo-wrapper" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent;">
+                <div style="position: absolute; width: 30px; height: 30px; border: 2px solid var(--core-border); border-radius: 50%; box-sizing: border-box; opacity: 0.8;"></div>
+                <div style="position: absolute; width: 3px; height: 10px; background: var(--core-border); bottom: 4px; right: 4px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                <div style="position: absolute; color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: 800; top: 46%; left: 50%; transform: translate(-50%, -50%); line-height: 1;">@</div>
+            </div>
+            <span>ESPLORA TAG</span>
+        </div>
+
+       <!-- ============================================================ -->
+    <!-- 2. IL TOTEM DELLE STANZE                                     -->
+    <!-- ============================================================ -->
+    <div id="mainGrid">
+        
+        <!-- CONTENITORE PILLOLE IN ALTO -->
+        <div id="action-bar-features" class="action-bar-container">
+            <div class="feature-pill" id="pill-live-status" style="display:none;" onclick="apriDettaglio('status')">
+                <div class="led-dot" id="pill-status-dot"></div>
+                <span id="pill-status-text">ONLINE</span>
+            </div>
+
+        </div>
+        
+        <!-- STANZE STANDARD -->
+        <button class="room-link" id="room-identity" onclick="apriMacroArea('identity')" style="display:none;">IDENTITY</button>
+        <button class="room-link" id="room-business" onclick="apriMacroArea('business')" style="display:none;">BUSINESS</button>
+        <button class="room-link" id="room-media" onclick="apriMacroArea('media')" style="display:none;">VETRINA</button>
+        <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
+        
+        <!-- QUINTA STANZA: ACTION CENTER -->
+        <button class="room-link" id="room-action-center" onclick="apriMacroArea('action_center')" style="display:none; color: var(--theme-border, #d4af37) !important; font-weight: 500 !important; letter-spacing: 4px !important;">ACTION CENTER</button>
+        
+        <!-- TASTO DI RITORNO HOME -->
+        <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">
+            <span>HOME</span>
+        </div>
+
+    </div>
+        <!-- ============================================================ -->
+        <!-- CTA (Invariate)                                              -->
+        <!-- ============================================================ -->
+        <div id="cta-sblocco-container" style="display: none; margin-top: 40px; width: 100%;">
+            <button class="btn-condividi-profilo" onclick="vaiAlCheckout()" style="width: 100%; padding: 18px; font-size: 1rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 12px;">
+                <i class="fas fa-unlock-alt"></i> Sblocca la tua myquicktag
+            </button>
+        </div>
+        <div id="cta-pubblica-container" style="display: none; width: 100%;">
+            <button onclick="pubblicaBozza()" style="width: 100%; padding: 16px; background: #10b981; border: none; border-radius: 12px; color: #000000; font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: -0.2px;">
+                Pubblica la tua tag
+            </button>
+            <p style="text-align: center; color: var(--text-sec); font-size: 0.8rem; margin-top: 10px;">
+                La tua tag diventerà visibile a tutti
+            </p>
+        </div>
+
+    </div>
+
+  <!-- ============================================================ -->
+    <!-- 3. IL TEATRO LIQUIDO (L'OVERLAY A SPECCHIO PER I SOTTOMENU)  -->
+    <!-- ============================================================ -->
+    <div id="overlaySezione" class="pagine-overlay">
+        <div class="contenuto-card" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+            
+            <div id="titoloSezione" class="titolo-sezione" style="margin-bottom: 20px;">TITOLO</div>
+            
+            <!-- Corpo scrollabile (I contenuti) -->
+            <div id="corpoSezione" class="corpo-sezione" style="flex: 1; overflow-y: auto; overflow-x: hidden;"></div>
+
+           <!-- Pulsante Ergonomico in Basso (Sticky) -->
+            <div class="bottom-action-bar">
+                <button onclick="chiudiSezione()" style="background: none; border: none; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; padding: 15px; display: flex; align-items: center; gap: 10px; transition: color 0.2s;">
+                    <i class="fas fa-times" id="icona-chiudi"></i> <span id="testo-chiudi">CHIUDI</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Pulsante Dashboard (Invariato) -->
+    <div id="back-to-dashboard" style="display:none; position:fixed; bottom:80px; left:32px; z-index:10000;">
+        <button onclick="chiudiOverlayAcquisto()" style="background:none; border:none; color:#10b981; font-size:0.85rem; font-weight:600; cursor:pointer; padding:8px; letter-spacing:0.3px;">
+            ← Dashboard
+        </button>
+    </div>
+ 
+    <!-- ============================================================ -->
+    <!-- OVERLAY DI SISTEMA (TUTTI INVARIATI E PROTETTI AL 100%)      -->
+    <!-- ============================================================ -->
+
+    <!-- OVERLAY SHOWROOM -->
+    <div id="showroom-overlay" style="display: none;">
+        <div id="expanding-box"> 
+            <div class="conversion-content"> 
+                <h2 id="conversion-title">Nessun altro potrà essere @...</h2>
+                <button class="btn-condividi-profilo" id="showroom-action-btn" style="margin-top: 15px;">Attiva la tua myquicktag</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY WELCOME PWA -->
+    <div id="tag-welcome-overlay" style="display: none;">
+        <div class="contenuto-card" style="background: #111; padding: 32px; border-radius: 24px; text-align: center; align-items: center; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 0 40px rgba(255,255,255,0.15), 0 0 1px rgba(255,255,255,0.9);">
+            <div style="width: 40px; height: 3px; background: #10b981; border-radius: 2px; margin: 0 auto 24px auto;"></div>
+            <h2 id="welcome-titolo" class="titolo-sezione" style="margin-bottom: 16px; font-size: 1.3rem; color: #ffffff; text-shadow: 0 0 20px rgba(255,255,255,0.4); letter-spacing: -0.3px;">@username è attiva</h2>
+            <p id="welcome-corpo" class="corpo-sezione" style="margin-bottom: 16px; color: #ffffff; text-shadow: 0 0 15px rgba(255,255,255,0.3); font-size: 0.88rem; line-height: 1.6;">
+                Aggiungila alla schermata Home.<br>Sempre con te, sempre tua.
+            </p>
+            <button id="trigger-pwa-install" onclick="installaPWA()" style="width: 100%; padding: 16px; margin-bottom: 14px; background: #10b981; border: none; border-radius: 12px !important; color: #000000; font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: -0.2px;">
+                Installa ora
+            </button> 
+            <button onclick="chiudiWelcomeEMostraTag()" style="background: none; border: none; color: rgba(255,255,255,0.4); font-size: 0.85rem; cursor: pointer; padding: 8px;">
+                Continua senza installare
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastNotifica" class="toast">Link copiato!</div>
+
+    <!-- OVERLAY VIP VAULT -->
+    <div id="vip-vault-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 99999; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(10px);">
+        <div style="background: #111; padding: 32px 24px; border-radius: 24px; text-align: center; border: 1px solid rgba(229, 193, 88, 0.4); box-shadow: 0 0 40px rgba(229, 193, 88, 0.15); width: 100%; max-width: 340px; position: relative;">
+            <button onclick="chiudiVipVault()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.5rem; cursor: pointer; padding: 5px;">&times;</button>
+            <i class="fas fa-lock" style="color: #e5c158; font-size: 2.2rem; margin-bottom: 15px;"></i>
+            <h2 style="color: #e5c158; font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">VIP Vault</h2>
+            <p style="color: #86868b; font-size: 0.85rem; margin-bottom: 24px; line-height: 1.5;">L'accesso a questo canale è riservato.<br>Inserisci il PIN di sblocco.</p>
+            
+            <input type="password" id="vip-pin-input" inputmode="numeric" placeholder="****" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(229, 193, 88, 0.3); color: #e5c158; padding: 16px; border-radius: 12px; font-size: 1.5rem; text-align: center; letter-spacing: 8px; outline: none; margin-bottom: 20px; transition: border-color 0.3s ease;">
+            
+            <button id="btn-sblocca-vip" onclick="verificaPinVip()" style="width: 100%; padding: 16px; background: #e5c158; color: #000; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; font-size: 0.95rem; transition: transform 0.2s;">
+                SBLOCCA CANALE
+            </button>
+        </div>
+    </div>
+      <!-- OVERLAY QUICK PASS LANDING (PER IL NUOVO CLIENTE) -->
+    <div id="qp-landing-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 100000; background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(15px);">
+        <div style="background: #111; padding: 0; border-radius: 24px; text-align: center; border: 1px solid var(--theme-border, #d4af37); box-shadow: 0 20px 50px rgba(0,0,0,0.8); width: 100%; max-width: 360px; position: relative; overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- Header colorato -->
+            <div style="background: rgba(255,255,255,0.05); padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <button onclick="chiudiQPLanding()" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">&times;</button>
+                <i class="fas fa-gift" style="color: var(--theme-border, #d4af37); font-size: 2.5rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));"></i>
+                <h2 style="color: #fff; font-size: 1.2rem; font-weight: 500; letter-spacing: 1px; margin-bottom: 5px;">Hai un regalo!</h2>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">Mostra questo pass in cassa per ritirarlo</p>
+            </div>
+                
+                <!-- Il QR Code su fondo bianco per massima leggibilità dai lettori -->
+                <div style="background: #fff; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+                    <div id="qp-landing-qr" style="width: 160px; height: 160px;"></div>
+                </div>
+                <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 3px;">SCANSIONA PER VALIDARE</div>
+            </div>
+
+            <!-- La tua esca NON invasiva -->
+            <a href="https://myquicktag.com" target="_blank" rel="noopener noreferrer" style="display: block; padding: 18px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: background 0.2s;">
+                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; font-weight: 300;">
+                    Powered by <strong style="color: #fff; font-weight: 600;">myquicktag</strong>
+                </div>
+                <div style="font-size: 0.65rem; color: var(--theme-border, #d4af37); margin-top: 6px; letter-spacing: 1px; font-weight: 500;">
+                    CREA LA TUA TAG GRATIS &rarr;
+                </div>
+            </a>
+    </div> 
+       <!-- ========================================== -->
+    <!-- ⚡ SMART VIDEO VAULT (PLAYER IMMERSIVO)    -->
+    <!-- ========================================== -->
+    <div id="video-vault-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(15px); opacity: 0; transition: opacity 0.3s ease;">
+      <div style="position: absolute; top: 20px; left: 20px; width: 42px; height: 42px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 1.2rem; cursor: pointer; z-index: 999999; backdrop-filter: blur(10px);" onclick="chiudiSmartVideo()">
+            <i class="fas fa-times"></i>
+        </div> 
+        <div id="video-vault-container" style="width: 90%; max-width: 600px; aspect-ratio: 16/9; background: #000; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(229, 193, 88, 0.15); border: 1px solid rgba(229, 193, 88, 0.4);">
+            <iframe id="video-vault-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+        </div>
+        <div id="video-vault-cta-container" style="margin-top: 30px; width: 90%; max-width: 400px; display: none;">
+            <a id="video-vault-cta-btn" href="#" target="_blank" style="display: block; width: 100%; padding: 18px; background: #e5c158; color: #000; text-align: center; font-size: 0.9rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border-radius: 12px; box-shadow: 0 10px 25px rgba(229, 193, 88, 0.4); transition: transform 0.2s;">
+                <!-- Testo dinamico -->
+            </a>
+        </div>
+    </div>
+
+    <!-- OVERLAY QR CODE NATIVO -->
+    <!-- (Questo lo inietterà il JS se serve nella macro area Identity, non serve averlo fisso qui se usiamo l'overlay a specchio, ma il div container per qrcode.js lo mettiamo nel js) -->
+       <!-- ============================================================ -->
+    <!-- OVERLAY BOTTOM SHEET PER KILLER FEATURES                     -->
+    <!-- ============================================================ -->
+    <div id="feature-backdrop" class="sheet-backdrop" onclick="chiudiDettaglio()"></div>
+    <div id="feature-bottom-sheet" class="bottom-sheet">
+        <div class="sheet-handle" onclick="chiudiDettaglio()"></div>
+        <div class="sheet-header">
+            <div id="sheet-icon" class="sheet-icon"></div>
+            <h3 id="sheet-title">Titolo</h3>
+        </div>
+        <div id="sheet-body" class="sheet-body">
+            <!-- Il contenuto verrà iniettato dal Javascript -->
+        </div>
+        <button class="sheet-close-btn" onclick="chiudiDettaglio()">CHIUDI</button>
+    </div>
+      
+      <!-- ============================================================ -->
+    <!-- LIGHTBOX OVERLAY COMPONENT                                   -->
+    <!-- ============================================================ -->
+    <div id="mqt-lightbox" class="lightbox-overlay">
+        <div class="lightbox-header">
+            <span id="lightbox-counter" class="lightbox-counter">1/1</span>
+            <i class="fas fa-times lightbox-close" onclick="chiudiLightbox()"></i>
+        </div>
+        <div id="lightbox-track" class="lightbox-track" onscroll="aggiornaContatoreLightbox()"></div>
+        <div class="lightbox-nav nav-left" onclick="scorriLightbox(-1)"><i class="fas fa-chevron-left"></i></div>
+        <div class="lightbox-nav nav-right" onclick="scorriLightbox(1)"><i class="fas fa-chevron-right"></i></div>
+    </div> 
+<script src="migrate-storage.js"></script>
+<script src="tag-logic.js"></script>
+</body>
+</html>
+    
+
+    
