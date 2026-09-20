@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050505">
+    <title>il mio pocket - myquicktag</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-esterno: #0d0d0f;       
+            --bg-chassis: #000000;       
+            --accent-gold: #d4af37;      
+            --text-main: #f5f5f7;
+            --text-sec: #86868b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+       html { height: 100%; width: 100%; overscroll-behavior-y: none; }
+        
+        /* Inchioda il body ai 4 angoli reali dello schermo */
+        body { 
+            background-color: var(--bg-esterno); color: var(--text-main); 
+            display: flex; align-items: center; justify-content: center; 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            overflow: hidden; margin: 0; padding: 0;
+        }
+
+        /* Usa 100% normale invece di svh */
+        .app-container {
+            width: calc(100% - 32px); max-width: 410px; height: calc(100% - 32px); max-height: 840px;
+            background-color: var(--bg-chassis); border: 1px solid rgba(212, 175, 55, 0.3); 
+            border-radius: 28px; padding: 40px 24px 20px 24px; display: flex; flex-direction: column;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.9); position: relative;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.98) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+        /* HEADER & SEARCH */
+        .pocket-header { margin-bottom: 25px; flex-shrink: 0; }
+        .header-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header-top-row h1 { font-size: 0.7rem; font-weight: 300; letter-spacing: 6px; color: #fff; text-transform: uppercase; margin: 0; opacity: 0.8; }
+        
+        /* Tasto Condividi Pocket Globale */
+        .btn-share-pocket { color: var(--accent-gold); font-size: 1.1rem; cursor: pointer; padding: 5px; opacity: 0.8; transition: opacity 0.2s, transform 0.2s; }
+        .btn-share-pocket:active { opacity: 1; transform: scale(0.9); }
+
+        .delete-single-btn { color: rgba(255, 255, 255, 0.2); font-size: 1rem; padding: 10px; cursor: pointer; transition: color 0.2s, transform 0.2s; flex-shrink: 0; }
+        .delete-single-btn:active { color: #ff4d4d; transform: scale(0.9); }
+
+        .search-wrapper { position: relative; width: 100%; padding-bottom: 10px; }
+        .search-wrapper i { position: absolute; left: 0; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 0.8rem; font-weight: 300; }
+        .search-input {
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 10px 12px 30px; color: #fff; font-size: 0.85rem; font-weight: 300;
+            outline: none; transition: border-color 0.3s ease; letter-spacing: 1px;
+        }
+        .search-input:focus { border-bottom-color: rgba(212, 175, 55, 0.5); }
+        .search-input::placeholder { color: var(--text-sec); font-weight: 300; letter-spacing: 1px; font-size: 0.8rem; }
+
+        /* LISTA FLUIDA */
+        .pocket-list {
+            flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+            padding-bottom: 20px; -ms-overflow-style: none; scrollbar-width: none;
+            mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+        }
+        .pocket-list::-webkit-scrollbar { display: none; }
+
+        /* LA RIGA DEL CONTATTO */
+        .contact-row {
+            display: flex; align-items: center; justify-content: space-between; padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            animation: scivolaSu 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(15px);
+        }
+        .contact-row:last-child { border-bottom: none; }
+
+        .contact-link { display: flex; align-items: center; gap: 18px; flex: 1; text-decoration: none; overflow: hidden; transition: opacity 0.2s; }
+        .contact-link:active { opacity: 0.5; }
+
+        .avatar-ring { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .avatar-ring span { font-size: 1rem; font-weight: 300; color: #fff; }
+
+        .contact-data { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; overflow: hidden; }
+        .contact-name { font-size: 0.9rem; font-weight: 400; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 1px; }
+        .contact-username { font-size: 0.65rem; font-weight: 300; color: var(--text-sec); letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Tasto Condividi Singolo */
+        .share-single-btn { color: rgba(255, 255, 255, 0.3); font-size: 1rem; padding: 10px; cursor: pointer; transition: color 0.2s, transform 0.2s; flex-shrink: 0; margin-left: 10px; }
+        .share-single-btn:active { color: #fff; transform: scale(0.9); }
+
+        @keyframes scivolaSu { to { opacity: 1; transform: translateY(0); } }
+
+        /* EMPTY STATE E BOTTOM BAR */
+        .empty-state { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; animation: fadeStatoVuoto 1.5s ease forwards 0.4s; }
+        @keyframes fadeStatoVuoto { to { opacity: 1; } }
+        .empty-state i { font-size: 2rem; margin-bottom: 24px; color: var(--text-sec); font-weight: 300; opacity: 0.3; }
+        .empty-state p { font-size: 0.7rem; font-weight: 300; line-height: 1.8; letter-spacing: 3px; color: var(--text-sec); text-transform: uppercase; opacity: 0.7; }
+        
+        .bottom-bar { flex-shrink: 0; padding-top: 10px; display: flex; justify-content: center; align-items: center; }
+        .btn-chiudi { background: transparent; border: none; color: var(--text-sec); font-size: 0.65rem; font-weight: 300; letter-spacing: 5px; text-transform: uppercase; padding: 15px; cursor: pointer; transition: color 0.2s; }
+        .btn-chiudi:active { color: #fff; }
+
+        /* TOAST NOTIFICA */
+        .toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(50px); background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.2); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; z-index: 10000; pointer-events: none; }
+        .toast.mostra { transform: translateX(-50%) translateY(0); opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="pocket-header">
+            <div class="header-top-row">
+                <div style="width: 24px;"></div> <h1>IL MIO POCKET</h1>
+                <i class="fas fa-arrow-up-right-from-square btn-share-pocket" onclick="condividiInteroPocket()" title="Condividi intero pocket"></i>
+            </div>
+            <div class="search-wrapper">
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); color: var(--text-sec);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> 
+                <input type="text" class="search-input" id="cerca-contatto" placeholder="Cerca un contatto..." autocomplete="off">
+            </div>
+        </div>
+
+        <div class="pocket-list" id="lista-pocket">
+            </div>
+
+        <div class="empty-state" id="pocket-vuoto">
+            <i class="far fa-bookmark"></i>
+            <p>Il tuo archivio<br>è vuoto</p>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn-chiudi" onclick="history.back()">CHIUDI</button>
+        </div>
+
+    </div>
+    
+    <div id="toastNotifica" class="toast"></div>
+<script src="migrate-storage.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        caricaPocket();
+        configuraRicerca();
+    });
+async function caricaPocket() {
+        const contenitoreLista = document.getElementById('lista-pocket');
+        const statoVuoto = document.getElementById('pocket-vuoto');
+        
+        contenitoreLista.innerHTML = '';
+        let contattiSalvati = [];
+        
+        try {
+            contattiSalvati = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
+        } catch(e) {
+            console.error("Errore lettura pocket:", e);
+        }
+
+        contattiSalvati = await fondiPocketConCloud(contattiSalvati);
+
+        if (contattiSalvati.length === 0) {
+            statoVuoto.style.display = 'flex';
+            document.querySelector('.btn-share-pocket').style.display = 'none';
+            return;
+        }
+
+        statoVuoto.style.display = 'none';
+        
+        contattiSalvati.sort((a, b) => a.nome.localeCompare(b.nome));
+
+        contattiSalvati.forEach((contatto, index) => {
+            const row = document.createElement('div');
+            row.className = 'contact-row'; 
+            row.style.animationDelay = `${index * 0.08}s`;
+
+            // Rimuove la @ iniziale se presente e prende la vera prima lettera
+            let nomePulito = contatto.nome.replace(/^@/, '').trim();
+            const iniziale = nomePulito ? nomePulito.charAt(0).toUpperCase() : '';
+
+            row.innerHTML = `
+                <a href="${contatto.url}" class="contact-link">
+                    <div class="avatar-ring">
+                        <span>${iniziale}</span>
+                    </div>
+                    <div class="contact-data">
+                        <span class="contact-name">${contatto.nome}</span>
+                        <span class="contact-username">@${contatto.username}</span>
+                    </div>
+                </a>
+                <div style="display: flex; gap: 5px; align-items: center; padding-left: 10px;">
+                    <i class="fas fa-share-nodes share-single-btn" onclick="condividiSingolo('${contatto.nome}', '${contatto.url}', event)"></i>
+                    <i class="far fa-trash-can delete-single-btn" onclick="eliminaContatto('${contatto.username}', this, event)"></i>
+                </div>
+            `;
+            contenitoreLista.appendChild(row);
+         });
+     }
+    
+    // ============================================================
+    // MOTORE DI CONDIVISIONE
+    // ============================================================
+    function condividiSingolo(nome, url, event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const testo = `Guarda la tag di ${nome} su myquicktag!`;
+        _eseguiCondivisione(testo, url);
+    }
+
+    function condividiInteroPocket() {
+        let contattiSalvati = [];
+        try { contattiSalvati = JSON.parse(localStorage.getItem('mqt_pocket') || '[]'); } catch(e) {}
+        
+        if (contattiSalvati.length === 0) return;
+
+        contattiSalvati.sort((a, b) => a.nome.localeCompare(b.nome));
+
+        let testoCondivisione = "Ecco i miei contatti salvati su myquicktag:\n\n";
+        contattiSalvati.forEach(c => {
+            testoCondivisione += `▪ ${c.nome}\n${c.url}\n\n`;
+        });
+        testoCondivisione += "Crea la tua tag gratis su myquicktag.it";
+
+        _eseguiCondivisione("il mio pocket myquicktag", "", testoCondivisione);
+    }
+
+    function _eseguiCondivisione(titolo, url, testoPuro = null) {
+        if (navigator.share) {
+            const shareData = testoPuro 
+                ? { title: titolo, text: testoPuro } 
+                : { title: titolo, url: url };
+                
+            navigator.share(shareData).catch(err => {
+                if (err.name !== 'AbortError') console.error("Errore condivisione:", err);
+            });
+        } else {
+            const testoDaCopiare = testoPuro || `${titolo} - ${url}`;
+            navigator.clipboard.writeText(testoDaCopiare)
+                .then(() => mostraToast('🔗 Copiato negli appunti!'))
+                .catch(() => mostraToast('Errore nella copia'));
+        }
+    }
+
+    function mostraToast(messaggio) {
+        const toast = document.getElementById('toastNotifica');
+        if (!toast) return;
+        toast.textContent = messaggio;
+        toast.classList.add('mostra');
+        setTimeout(() => toast.classList.remove('mostra'), 2800);
+    }
+
+    function configuraRicerca() {
+        const inputRicerca = document.getElementById('cerca-contatto');
+        if (!inputRicerca) return;
+
+        inputRicerca.addEventListener('input', (e) => {
+            const termine = e.target.value.toLowerCase().trim();
+            const righe = document.querySelectorAll('.contact-row');
+            
+            righe.forEach(riga => {
+                const nome = riga.querySelector('.contact-name').textContent.toLowerCase();
+                const username = riga.querySelector('.contact-username').textContent.toLowerCase();
+                
+                if (nome.includes(termine) || username.includes(termine)) {
+                    riga.style.display = 'flex';
+                } else {
+                    riga.style.display = 'none';
+                }
+            });
+        });
+    }
+           function eliminaContatto(username, elementoIcona, event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Trova la riga HTML del contatto
+        const rigaContatto = elementoIcona.closest('.contact-row');
+        
+        // Animazione di uscita elegante
+        rigaContatto.style.transition = "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)";
+        rigaContatto.style.opacity = "0";
+        rigaContatto.style.transform = "translateX(-20px)";
+        
+     setTimeout(() => {
+            // Rimuovi dalla memoria del telefono
+            let pocketLocale = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
+            pocketLocale = pocketLocale.filter(c => c.username !== username);
+            localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
+            
+            // AGGIUNTA CLOUD SYNC: Se elimino dal telefono, elimino da Airtable
+            const utenteLoggato = localStorage.getItem('mqt_logged_user');
+            if (utenteLoggato) {
+                sincronizzaPocketCloud(utenteLoggato, pocketLocale);
+            }
+            
+            // Ricarica la grafica
+            caricaPocket();
+            mostraToast('Contatto rimosso');
+        }, 300);
+    }
+        // Fonde l'archivio locale con quello salvato su Airtable (multi-dispositivo)
+    async function fondiPocketConCloud(pocketLocale) {
+        const utenteLoggato = localStorage.getItem('mqt_logged_user');
+        if (!utenteLoggato) return pocketLocale;
+
+        try {
+            const cacheBuster = Date.now();
+            const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}`);
+            const data = await response.json();
+
+            if (!data.success || !data.fields || !data.fields.pocket_cloud) {
+                return pocketLocale;
+            }
+
+            let pocketCloud = [];
+            try {
+                pocketCloud = JSON.parse(data.fields.pocket_cloud);
+            } catch(e) {
+                return pocketLocale;
+            }
+
+            // Unione per username: in caso di doppione tiene il salvataggio più recente
+            const mappaUnita = {};
+            [...pocketCloud, ...pocketLocale].forEach(contatto => {
+                const esistente = mappaUnita[contatto.username];
+                if (!esistente || new Date(contatto.dataSalvataggio) > new Date(esistente.dataSalvataggio)) {
+                    mappaUnita[contatto.username] = contatto;
+                }
+            });
+
+                      const pocketUnito = Object.values(mappaUnita);
+            localStorage.setItem('mqt_pocket', JSON.stringify(pocketUnito));
+
+            // Se il merge ha aggiunto o aggiornato qualcosa rispetto al cloud, riallinea subito Airtable
+            const cloudEraGiaAggiornato = pocketCloud.length === pocketUnito.length &&
+                pocketCloud.every(c => mappaUnita[c.username] && mappaUnita[c.username].dataSalvataggio === c.dataSalvataggio);
+
+            if (!cloudEraGiaAggiornato) {
+                sincronizzaPocketCloud(utenteLoggato, pocketUnito);
+            }
+
+            return pocketUnito;
+
+        } catch (error) {
+            console.error("Merge pocket cloud fallito, uso solo il dato locale.", error);
+            return pocketLocale;
+        }
+    }
+
+      // Motore di Sync (Da incollare sotto eliminaContatto)
+    async function sincronizzaPocketCloud(utente, pocketArray) {
+        try {
+            let tokenSalvatiPocket = {};
+            try {
+                tokenSalvatiPocket = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+            } catch(e) {
+                tokenSalvatiPocket = {};
+            }
+            await fetch('/api/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username_system: utente,
+                    pocket_cloud: JSON.stringify(pocketArray),
+                    sessionToken: tokenSalvatiPocket[utente]
+                })
+            });
+        } catch (error) {
+            console.error("Cloud Sync fallito");
+        }
+    }
+</script>
+</body>
+</html>

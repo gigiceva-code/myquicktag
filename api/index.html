@@ -1,0 +1,1103 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    
+    <title>myquicktag - Instant Digital Identity</title>
+    
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23000000'/%3E%3Ccircle cx='50' cy='50' r='35' stroke='%2350C878' stroke-width='8' fill='none'/%3E%3Cline x1='72' y1='72' x2='90' y2='90' stroke='%2350C878' stroke-width='8' stroke-linecap='round'/%3E%3Ctext x='50' y='47' font-family='sans-serif' font-size='44' font-weight='bold' fill='%23ffffff' text-anchor='middle' dominant-baseline='central'%3E@%3C/text%3E%3C/svg%3E">
+    <meta name="description" content="Il tuo Tag. Il tuo spazio digitale. Sincronizza social, contatti e servizi in un unico @nome con la tecnologia NFC e QR dinamica di myquicktag.">
+    <meta name="keywords" content="digital identity, biglietto da visita digitale, NFC, QR code dinamico, link in bio, smart tag, ecosistema digitale">
+    <meta name="author" content="myquicktag">
+    <meta name="robots" content="index, follow">
+
+    <meta name="theme-color" content="#000000">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://myquicktag.it/">
+    <meta property="og:title" content="myquicktag | L'Evoluzione dell'Identità Digitale">
+    <meta property="og:description" content="Tutto il tuo ecosistema digitale in un singolo tocco. Verifica la disponibilità e prenota ora il tuo @nome.">
+    <meta property="og:image" content="https://myquicktag.it/assets/og-image.jpg">
+    <meta property="og:site_name" content="myquicktag">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://myquicktag.it/">
+    <meta name="twitter:title" content="myquicktag | Premium Digital Tag">
+    <meta name="twitter:description" content="Tutto il tuo ecosistema digitale in un singolo tocco. Verifica la disponibilità e prenota ora il tuo @nome.">
+    <meta name="twitter:image" content="https://myquicktag.it/assets/og-image.jpg">
+
+    <link id="dynamic-manifest" rel="manifest" href="/api/manifest?u=user">
+    <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+    /* RESET & BASE LUXURY */
+    body {
+        background-color: #000000;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #ffffff;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+    }
+
+   /* SCROLL ENGINE: LIBERO, FLUIDO E PROFESSIONALE */
+    .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        scroll-behavior: smooth;
+    }
+
+    .container::-webkit-scrollbar { display: none; }
+
+    section {
+        width: 100%;
+        min-height: 100vh; 
+        position: relative;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    /* BOTTONI ELITE */
+    button, .btn-cyber, .btn-verifica {
+        transition: all 0.2s ease-in-out !important;
+        cursor: pointer;
+        border-radius: 4px !important; 
+        box-shadow: none !important; 
+        border: none;
+    }
+
+    button:active, .btn-cyber:active, .btn-verifica:active {
+        transform: scale(0.98);
+        filter: brightness(0.9);
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-5px);}
+        60% {transform: translateY(-3px);}
+    }
+
+    /* DETOX VISIVO: DARK GLASSMORPHISM */
+    .glass-panel {
+        border: 1px solid rgba(255, 255, 255, 0.04) !important;
+        background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 100%) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255,255,255,0.03) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        transition: all 0.4s ease !important;
+    }
+
+    .glass-panel:active {
+        border-color: rgba(80, 200, 120, 0.2) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(80, 200, 120, 0.05), inset 0 1px 0 0 rgba(255,255,255,0.05) !important;
+        transform: scale(0.98);
+    }
+
+    /* EMOJI MONOCROMATICHE E TRATTAMENTO VERDE */
+    .emoji-luxury {
+        filter: grayscale(100%) brightness(1.2) sepia(100%) hue-rotate(90deg) saturate(350%);
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    /* REVEAL ENGINE */
+    .reveal-item {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+    }
+    .reveal-item.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .delay-1 { transition-delay: 0.15s; }
+    .delay-2 { transition-delay: 0.3s; }
+
+    /* DESKTOP VETRINA ELITE */
+    @media (min-width: 1024px) {
+        .container {
+            max-width: 1100px !important;
+            padding: 0 40px !important;
+            box-sizing: border-box;
+        }
+
+     #s4 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            align-content: center;
+            align-items: center;
+            gap: 60px;
+        } 
+        
+        /* S3: Allineamento orizzontale card */
+        #s3 { justify-content: center !important; }
+        .s3-scroll-container {
+            padding: 0 !important;
+            justify-content: center !important;
+            overflow: hidden !important; 
+            gap: 40px !important;
+            width: 100% !important;
+        }
+    }
+/* CSS PER I PALLINI DI SCORRIMENTO */
+.s3-dot {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    width: 8px;
+    transition: all 0.3s ease;
+}
+.s3-dot.active {
+    background: rgba(80, 200, 120, 0.8);
+    width: 18px;
+}
+    
+</style>
+    </head>
+<body>
+
+    <header style="position: fixed; top: 0; left: 0; width: 100%; padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 2000; border-bottom: 1px solid rgba(255,255,255,0.05); box-sizing: border-box;">
+        
+       <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="position: relative; width: 28px; height: 28px; filter: drop-shadow(0 0 8px rgba(80, 200, 120, 0.3));">
+                <div style="width: 100%; height: 100%; border: 2.5px solid #50C878; border-radius: 50%; box-sizing: border-box;"></div>
+                <div style="position: absolute; width: 3px; height: 12px; background: #50C878; bottom: -2px; right: 0px; transform: rotate(-45deg); border-radius: 2px;"></div>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); color: #ffffff; font-family: sans-serif; font-size: 18px; font-weight: bold;">@</div>
+            </div>
+            <span style="font-size: 18px; font-weight: 900; letter-spacing: 1.5px; color: #ffffff;">myquicktag</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div onclick="openLogin()" style="cursor: pointer; color: #50C878; display: flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span style="font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: none;" class="desktop-only">Accedi</span>
+            </div>
+            <div onclick="toggleMenu()" style="cursor: pointer; display: flex; flex-direction: column; gap: 5px;">
+                <div style="width: 24px; height: 2px; background: #ffffff;"></div>
+                <div style="width: 24px; height: 2px; background: #ffffff;"></div>
+            </div>
+        </div>
+    </header>
+    <div class="container" style="background: #000; font-family: 'Inter', sans-serif; position: relative;">
+
+       <section id="s1" class="section-1" style="display: flex; justify-content: center; align-items: center; padding: 120px 20px 80px 20px; box-sizing: border-box; background: #000000; overflow: hidden; position: relative; min-height: 100vh;">
+            
+            <!-- GLOW DI SFONDO CENTRALE -->
+            <div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: #50C878; filter: blur(180px); opacity: 0.12; border-radius: 50%; z-index: 1;"></div>
+
+            <div style="width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 2;">
+                
+                <h1 class="reveal-item" style="font-size: 36px; font-weight: 300; line-height: 1.2; color: #ffffff; margin: 0 0 20px 0; letter-spacing: -0.5px;">
+                    Il tuo spazio assoluto,<br><span style="font-weight: 700;">senza compromessi.</span>
+                </h1>
+                
+                <p class="reveal-item delay-1" style="color: #A0A0A0; font-size: 16px; font-weight: 300; line-height: 1.6; margin: 0 0 35px 0; max-width: 550px;">
+                    Il design incontra l'immediatezza. Nessuna app da scaricare, nessuna barriera. Il tuo portale personale, sempre online con un singolo click.
+                </p> 
+
+                <!-- SPUNTE VERDI (Allineate orizzontalmente su desktop, a cascata su mobile) -->
+                <div class="reveal-item delay-1" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 50px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Tecnologia PWA nativa</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">@nome esclusivo</span>
+                    </div> 
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Aggiornamenti in tempo reale</span>
+                    </div>
+                </div>
+
+                <!-- WIDGET DI RICERCA -->
+                <div class="reveal-item delay-2" id="search-widget" style="width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 6px; display: flex; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: all 0.3s ease; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; padding: 14px 15px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A0A0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-right: 12px; opacity: 0.7;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <div style="display: flex; align-items: center; flex-grow: 1;">
+                            <span style="color: #ffffff; font-size: 18px; font-weight: 400; line-height: 1; opacity: 0.8;">@</span>
+                         <input type="text" id="tag-input" maxlength="30" placeholder="tuonome" autocomplete="off" spellcheck="false" style="width: 100%; padding: 0; margin: 0; background-color: transparent !important; background: transparent !important; border: none !important; color: #ffffff; font-size: 18px; font-weight: 400; outline: none !important; box-shadow: none !important; -webkit-appearance: none; border-radius: 0; line-height: 1;"> 
+                        </div>
+                    </div>
+                    <button id="btn-verifica-principale" onclick="vaiAllaVerifica()" class="btn-verifica" style="width: 100%; padding: 18px 0; background: #50C878; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease;">
+                        VERIFICA DISPONIBILITÀ
+                    </button>
+                </div>
+
+                <!-- MICRO-TESTO -->
+               <div class="reveal-item delay-2" style="display: flex; align-items: center; gap: 8px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <p style="margin: 0; font-size: 11px; color: #ffffff; font-weight: 500; letter-spacing: 0.5px;">Tre mesi di accesso completo, nessuna carta richiesta.</p>
+                </div>
+
+            </div>
+        </section> 
+                     <!-- ============================================================ -->
+        <!-- SECTION 2: ARCHITETTURA TARGET E CASI D'USO (MINIMAL LUXURY)  -->
+        <!-- ============================================================ -->
+        <section id="s2" class="section-2 reveal-item" style="display: flex; justify-content: center; align-items: center; padding: 80px 20px; box-sizing: border-box; background: #000000; position: relative; min-height: 100vh; scroll-snap-align: start;">
+            
+            <div style="width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 2;">
+                
+                <!-- INTESTAZIONE SEZIONE -->
+                <div style="text-align: center; max-width: 550px;">
+                    <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">
+                        PROGETTATO PER IL BUSINESS
+                    </p>
+                    <h2 style="font-size: 28px; font-weight: 300; line-height: 1.25; color: #ffffff; margin: 0; letter-spacing: -0.5px;">
+                        Un unico strumento.<br><span style="font-weight: 700;">Infinita flessibilità.</span>
+                    </h2>
+                </div>
+
+            <!-- SELETTORE A PILLOLE (TABS) -->
+                <div id="s2-tab-container" style="display: flex; gap: 8px; width: 100%; max-width: 600px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth;">
+                    
+                    <button class="target-tab active-tab" onclick="switchTarget('pro', this, 1)" style="flex: 1 0 auto; padding: 12px 18px; background: rgba(80, 200, 120, 0.1); border: 1px solid rgba(80, 200, 120, 0.4); border-radius: 8px; cursor: pointer; color: #ffffff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
+                        Professionisti & Aziende
+                    </button>
+                    
+                    <button class="target-tab" onclick="switchTarget('local', this, 2)" style="flex: 1 0 auto; padding: 12px 18px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; color: #888888; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
+                        Attività Locali & Retail
+                    </button>
+                    
+                    <button class="target-tab" onclick="switchTarget('creator', this, 3)" style="flex: 1 0 auto; padding: 12px 18px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; color: #888888; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
+                        Creator & Freelance
+                    </button>
+                    
+                </div>
+
+                <!-- TRATTINI GUIDA CON ID SPECIFICI -->
+                <div style="display: flex; justify-content: center; gap: 6px; margin-top: 5px; margin-bottom: 25px; width: 100%;">
+                    <div id="s2-dot-1" style="height: 3px; background: rgba(80, 200, 120, 0.8); border-radius: 2px; width: 18px; transition: all 0.3s ease;"></div>
+                    <div id="s2-dot-2" style="height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px; width: 8px; transition: all 0.3s ease;"></div>
+                    <div id="s2-dot-3" style="height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px; width: 8px; transition: all 0.3s ease;"></div>
+                </div>
+
+                <!-- PANNELLO MASTER CASI D'USO -->
+                <div class="glass-panel" style="width: 100%; border-radius: 16px; padding: 35px 30px; box-sizing: border-box; background: rgba(10, 10, 12, 0.8); border: 1px solid rgba(255, 255, 255, 0.06); position: relative;">
+                    
+                    <!-- TAB 1: PROFESSIONISTI -->
+                    <div id="content-pro" class="target-content" style="display: block;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                            <span style="display: inline-block; width: 6px; height: 6px; background: #50C878; border-radius: 50%; box-shadow: 0 0 8px #50C878;"></span>
+                            <span style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Corporate & B2B Standard</span>
+                        </div>
+                        <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; letter-spacing: -0.3px;">
+                            Digitalizzazione dei contatti aziendali
+                        </h3>
+                        <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300; margin: 0 0 25px 0;">
+                            Elimina la carta. Permetti a clienti e partner di salvare la tua scheda VCF completa in rubrica con un singolo tocco NFC o scansione QR. Integra cataloghi PDF, link LinkedIn ed email istituzionali.
+                        </p>
+                        
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Rubrica VCF nativa</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Documenti e Brochure PDF</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Dominio @nome riservato</span>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: ATTIVITÀ LOCALI -->
+                    <div id="content-local" class="target-content" style="display: none;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                            <span style="display: inline-block; width: 6px; height: 6px; background: #e5c158; border-radius: 50%; box-shadow: 0 0 8px #e5c158;"></span>
+                            <span style="color: #e5c158; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Retail & Hospitality</span>
+                        </div>
+                        <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; letter-spacing: -0.3px;">
+                            Punto di contatto fisico-digitale
+                        </h3>
+                        <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300; margin: 0 0 25px 0;">
+                            Pensato per B&B, ristoranti e strutture fisiche. Esponi il supporto NFC/QR sul bancone o sui tavoli: i visitatori accedono al menu, lanciano la navigazione Maps o usufruiscono di promozioni flash istantanee.
+                        </p>
+
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Modulo Promo Flash</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Indicazioni Maps & Booking</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Azione Rapida configurabile</span>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: CREATOR -->
+                    <div id="content-creator" class="target-content" style="display: none;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                            <span style="display: inline-block; width: 6px; height: 6px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 8px #3b82f6;"></span>
+                            <span style="color: #3b82f6; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Media & Personal Brand</span>
+                        </div>
+                        <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; letter-spacing: -0.3px;">
+                            L'hub unico per la tua community
+                        </h3>
+                        <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300; margin: 0 0 25px 0;">
+                            Centralizza la tua presenza online. Raggruppa tutti i canali social, condividi gallerie fotografiche ad alta risoluzione e sfrutta la sezione VIP Vault protetta da PIN per contenuti riservati.
+                        </p>
+
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Protezione VIP Vault (PIN)</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Galleria Media dedicata</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Link social unificati</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- JAVASCRIPT SWITCHER INFALLIBILE -->
+            <script src="migrate-storage.js"></script>
+            <script>
+                function switchTarget(targetId, clickedBtn, dotNumber) {
+                    // 1. Reset stile di tutti i bottoni
+                    const tabs = document.querySelectorAll('.target-tab');
+                    tabs.forEach(tab => {
+                        tab.style.background = 'transparent';
+                        tab.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                        tab.style.color = '#888888';
+                        tab.style.fontWeight = '500';
+                    });
+
+                    // 2. Accendi il bottone cliccato
+                    clickedBtn.style.background = 'rgba(80, 200, 120, 0.1)';
+                    clickedBtn.style.border = '1px solid rgba(80, 200, 120, 0.4)';
+                    clickedBtn.style.color = '#ffffff';
+                    clickedBtn.style.fontWeight = '600';
+
+                    // 3. Centra fluidamente il bottone nello schermo
+                    clickedBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+                    // 4. Cambia i contenuti del pannello master
+                    const contents = document.querySelectorAll('.target-content');
+                    contents.forEach(content => content.style.display = 'none');
+                    const targetContent = document.getElementById('content-' + targetId);
+                    if (targetContent) targetContent.style.display = 'block';
+
+                    // 5. Aggiornamento chirurgico dei trattini tramite ID
+                    for (let i = 1; i <= 3; i++) {
+                        const dot = document.getElementById('s2-dot-' + i);
+                        if (dot) {
+                            if (i === dotNumber) {
+                                dot.style.background = 'rgba(80, 200, 120, 0.8)';
+                                dot.style.width = '18px';
+                            } else {
+                                dot.style.background = 'rgba(255, 255, 255, 0.15)';
+                                dot.style.width = '8px';
+                            }
+                        }
+                    }
+                }
+            </script>
+        </section>
+  
+
+<section id="s3" class="section-3" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 70px 0 50px 0; box-sizing: border-box; position: relative; height: 100dvh; scroll-snap-align: start; background: #000;">
+
+            <div class="reveal-item" style="text-align: center; padding: 0 20px;">
+                <p style="color: #50C878; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px;">
+                    POTENZA ILLIMITATA
+                </p>
+                <h2 style="font-size: 24px; font-weight: 300; line-height: 1.3; color: #ffffff; max-width: 320px; margin: 0 auto; letter-spacing: 0.5px;">
+                    Un ecosistema d'élite con<br>
+                    <span style="font-weight: 800;">un singolo click.</span>
+                </h2>
+            </div>
+              
+            <div class="s3-scroll-container reveal-item delay-1" style="width: 100%; display: flex; align-items: center; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; margin: 20px 0; gap: 20px; padding: 0 50vw; box-sizing: border-box;">
+                
+                <div style="min-width: calc(50vw - 160px); flex-shrink: 0;"></div>
+
+                <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
+                    <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">✨</div>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Presence</h3>
+                    <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Espandi la tua presenza.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Sincronizza social, contatti e siti web in un unico link perfetto.</p>
+                </div>
+
+                <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
+                    <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">📱</div>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Showcase</h3>
+                    <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Presenta il meglio di te.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Mostra servizi e catalogo ai tuoi clienti con un'eleganza assoluta.</p>
+                </div>
+
+                <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
+                    <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">⭐</div>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Reputation</h3>
+                    <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Consolida la tua autorità.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Raccogli feedback reali e aumenta la tua credibilità in tempo reale.</p>
+                </div>
+
+                <div style="min-width: calc(50vw - 160px); flex-shrink: 0;"></div>
+            </div>
+         <div class="reveal-item delay-2" style="display: flex; justify-content: center; width: 100%; margin-top: 15px; z-index: 10;">
+    <div style="display: flex; gap: 6px;" id="s3-dots-container">
+        <div class="s3-dot active" id="dot-1"></div>
+        <div class="s3-dot" id="dot-2"></div>
+        <div class="s3-dot" id="dot-3"></div>
+    </div>
+</div> 
+              
+            
+        </section>
+<section id="s4" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; height: 100dvh; box-sizing: border-box; background: #000; scroll-snap-align: start; position: relative;">
+
+            <div class="reveal-item" style="text-align: center; margin-bottom: 50px; width: 100%; max-width: 340px;">
+                <div style="width: 60px; height: 60px; margin: 0 auto 20px auto; background: rgba(80, 200, 120, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(80, 200, 120, 0.3);">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <rect x="7" y="7" width="3" height="3"></rect>
+                        <rect x="14" y="7" width="3" height="3"></rect>
+                        <rect x="7" y="14" width="3" height="3"></rect>
+                        <rect x="14" y="14" width="3" height="3"></rect>
+                    </svg>
+                </div>
+                
+                <p style="color: #50C878; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">
+                    CONNESSIONE REALE
+                </p>
+                <h2 style="color: #ffffff; font-size: 26px; font-weight: 300; margin: 0 auto 15px auto; line-height: 1.2; letter-spacing: -0.5px;">
+                    Fatti trovare, ricordare e<br><span style="font-weight: 800;">contattare in un istante.</span>
+                </h2>
+                <p style="color: #A0A0A0; font-size: 15px; line-height: 1.5; font-weight: 300;">
+                    Il tuo QR dinamico integrato è la chiave per condividere il tuo @nome ovunque: su carta, su schermo o tramite NFC.
+                </p>
+            </div>
+
+            <div class="reveal-item delay-1" style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                
+               <!-- MICRO FAQ PRE-CHECKOUT -->
+                <div class="glass-panel" style="width: 100%; padding: 25px 20px; border-radius: 12px; text-align: left; display: flex; flex-direction: column; gap: 18px; margin-bottom: 10px;">
+                    
+                    <div style="border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 15px;">
+                        <p style="color: #ffffff; font-size: 13px; font-weight: 600; margin: 0 0 6px 0;">Cosa succede dopo i 3 mesi?</p>
+                        <p style="color: #A0A0A0; font-size: 12px; margin: 0; line-height: 1.5; font-weight: 300;">Nessun rinnovo automatico e nessun addebito a sorpresa. Sarai tu a decidere liberamente se continuare o disattivare il profilo.</p>
+                    </div>
+
+                    <div>
+                        <p style="color: #ffffff; font-size: 13px; font-weight: 600; margin: 0 0 6px 0;">Chi scansiona la tag deve avere un'app?</p>
+                        <p style="color: #A0A0A0; font-size: 12px; margin: 0; line-height: 1.5; font-weight: 300;">Assolutamente no. myquicktag si apre all'istante su qualsiasi smartphone tramite il browser nativo.</p>
+                    </div>
+
+                </div> 
+                <button onclick="scrollToSection('s1')" class="btn-cyber" style="background: #50C878; color: #000; border: none; padding: 22px; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-radius: 10px; width: 100%; transition: all 0.2s ease; box-shadow: 0 6px 15px rgba(80, 200, 120, 0.25);">
+                    BLOCCA IL TUO NOME ORA
+                </button>
+                
+                <p style="color: #555555; font-size: 10px; letter-spacing: 2px; margin-top: 10px;">MYQUICKTAG © 2026</p>
+            </div>
+        </section>
+<div id="menu-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 999; display: none; flex-direction: column; padding: 60px 40px; box-sizing: border-box; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
+    
+<div onclick="toggleMenu()" style="position: absolute; top: 25px; right: 25px; cursor: pointer; background: rgba(0,0,0,0.6); padding: 12px 10px; border-radius: 4px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 6px; z-index: 3000;">
+    <div style="width: 22px; height: 2px; background: #50C878;"></div>
+    <div style="width: 22px; height: 2px; background: #50C878;"></div>
+</div>
+<nav style="margin-top: 40px; display: flex; flex-direction: column; gap: 32px;">
+    
+    <a href="javascript:void(0)" onclick="chiudiOverlay('menu-overlay'); scrollToSection('s1')" style="color: #ffffff; text-decoration: none; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Prenota Nome</span>
+        <span style="color: #A0A0A0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px;">Verifica la disponibilità</span>
+    </a>
+
+    <a href="javascript:void(0)" onclick="chiudiOverlay('menu-overlay'); scrollToSection('s2')" style="color: #ffffff; text-decoration: none; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Casi d'Uso</span>
+        <span style="color: #A0A0A0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px;">Per Aziende, Creator e Retail</span>
+    </a>
+
+    <a href="javascript:void(0)" onclick="chiudiOverlay('menu-overlay'); scrollToSection('s4')" style="color: #ffffff; text-decoration: none; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Supporto & FAQ</span>
+        <span style="color: #A0A0A0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px;">Risposte veloci ai tuoi dubbi</span>
+    </a>
+
+    <a href="javascript:void(0)" onclick="chiudiOverlay('menu-overlay'); scrollToSection('s1')" style="margin-top: 10px; background: #50C878; color: #000; text-decoration: none; padding: 18px; text-align: center; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px;">
+        Ottieni la tua Tag
+    </a>
+
+</nav>
+
+<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+    <p style="color: #50C878; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">Social Channels</p>
+    <p style="color: #E0E0E0; font-size: 13px; font-weight: 300; line-height: 1.5; margin-bottom: 15px;">
+        I canali ufficiali sono in arrivo.<br>Preparati alla rivoluzione digitale.
+    </p>
+    <div style="display: flex; gap: 15px; color: #ffffff; font-size: 11px; font-weight: 600; letter-spacing: 1px;">
+        <span>INSTAGRAM</span> • <span>LINKEDIN</span> • <span>TIKTOK</span>
+    </div>
+</div>
+
+<div style="margin-top: auto; padding-top: 30px;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+        <p style="color: #808080; font-size: 11px; margin-bottom: 5px; letter-spacing: 1px;">SUPPORTO DIRETTO</p>
+        <a href="mailto:info@myquicktag.com" style="color: #50C878; text-decoration: none; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">info@myquicktag.it</a>
+        
+        <div style="display: flex; gap: 20px; margin-top: 15px;">
+            <a href="#" style="color: #909090; text-decoration: none; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Privacy Policy</a>
+            <a href="#" style="color: #909090; text-decoration: none; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Termini di Vendita</a>
+        </div>
+    </div>
+   <p style="margin-top: 25px; color: #ffffff; opacity: 0.9; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700;">
+    © 2026 MYQUICKTAG® GLOBAL REGISTRY • ELITE STANDARDS
+</p>
+ 
+</div>  
+  </div>
+       <div id="menu-icon" onclick="toggleMenu()" style="position: absolute; top: 25px; right: 25px; z-index: 1000; cursor: pointer; background: rgba(0,0,0,0.6); padding: 12px 10px; border-radius: 4px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 6px;">
+        <div style="width: 22px; height: 2px; background: #50C878;"></div>
+        <div style="width: 22px; height: 2px; background: #50C878;"></div>
+    </div><div id="portal-icon" onclick="openLogin()" style="position: absolute; top: 25px; left: 25px; z-index: 1000; cursor: pointer; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 4px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+        <rect x="16" y="11" width="6" height="6" rx="1" stroke-width="1" fill="black"></rect>
+    </svg>
+</div>
+
+<div id="login-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+    
+    <div onclick="closeLogin()" style="position: absolute; top: 25px; right: 25px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </div>
+
+    <div style="width: 100%; max-width: 300px; text-align: center;">
+        <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px;">Identity Portal</p>
+        
+        <div style="margin-bottom: 40px;">
+            <input type="text" id="login-tag" placeholder="@tag" autocomplete="username" style="background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 24px; font-weight: 300; width: 100%; padding: 10px 0; outline: none; text-align: center; letter-spacing: 1px;">
+        </div>
+
+        <div style="margin-bottom: 40px;">
+            <input type="password" id="login-password" placeholder="password" autocomplete="current-password" style="background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 24px; font-weight: 300; width: 100%; padding: 10px 0; outline: none; text-align: center; letter-spacing: 4px;">
+        </div>
+
+        <button onclick="checkAccess()" style="width: 100%; padding: 20px; background: #50C878; color: #000; border: none; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
+            ACCEDI
+        </button>
+    </div>
+</div>
+      <!-- OVERLAY NOMI PREMIUM (GOLDLIST) -->
+<div id="premium-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+    
+    <!-- Tasto Chiudi X -->
+    <div onclick="chiudiOverlay('premium-overlay')" style="position: absolute; top: 25px; right: 25px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </div>
+
+    <div style="width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(212, 175, 55, 0.3); background: linear-gradient(145deg, #0a0a0c 0%, #000000 100%); padding: 45px 25px; border-radius: 16px; box-sizing: border-box; position: relative; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(212, 175, 55, 0.15);">
+        
+        <!-- BADGE GOLD -->
+        <div style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 20px; margin-bottom: 20px;">
+            <span style="width: 6px; height: 6px; background: #D4AF37; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);"></span>
+            <span style="color: #D4AF37; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Global Premium Tag</span>
+        </div>
+
+        <h2 id="premium-tag-name" style="color: #ffffff; font-size: 26px; font-weight: 300; margin: 0 0 15px 0; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 10px; box-sizing: border-box;">
+            @nome
+        </h2>
+
+        <p style="color: #A0A0A0; font-size: 14px; font-weight: 300; margin-bottom: 35px; line-height: 1.6; padding: 0 10px;">
+            Questa identità digitale è classificata come <strong style="color: #D4AF37; font-weight: 600;">Premium</strong>. L'assegnazione è trattata privatamente dal nostro team per garantirne la tutela.
+        </p>
+
+        <!-- BOTTONE MAILTO CON GRADIENTE LUXURY -->
+        <button id="btn-premium-mail" style="width: 100%; padding: 20px; background: linear-gradient(135deg, #F3D078 0%, #D4AF37 50%, #AA771C 100%); color: #000000; border: none; font-weight: 900; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.25);">
+            CONTATTA IL TEAM VIP
+        </button> 
+    </div>
+</div>
+<div id="welcome-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+    
+    <div style="width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); background: #08080a; padding: 45px 25px; border-radius: 16px; box-sizing: border-box; position: relative; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);">
+        
+        <!-- BADGE STATUS ELEGANTE -->
+        <div style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; margin-bottom: 20px;">
+            <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);"></span>
+            <span style="color: #ffffff; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">Status: Disponibile</span>
+        </div>
+
+        <!-- IL NOME ISOLATO (Non andrà mai a capo male) -->
+        <h2 id="welcome-tag-name" style="color: #ffffff; font-size: 26px; font-weight: 300; margin: 0 0 10px 0; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 10px; box-sizing: border-box;">
+            @nome
+        </h2>
+
+        <p style="color: #888888; font-size: 14px; font-weight: 300; margin-bottom: 40px; line-height: 1.5; padding: 0 15px;">Ora puoi creare il tuo spazio digitale, vedere l'anteprima e decidere con calma.</p>
+
+        <!-- LISTA VANTAGGI (Icone vettoriali bianche) -->
+        <div style="text-align: left; display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; padding: 0 10px;">
+            
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"></path></svg>
+                <div>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 4px; letter-spacing: 0.3px;">Crea la tua tag</strong>
+                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Entra, gioca con i dettagli e guarda il tuo ecosistema nascere in tempo reale.</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                <div>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 4px; letter-spacing: 0.3px;">Guarda l'anteprima</strong>
+                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Scopri come la tua identità si trasforma in una PWA sul telefono di chi incontri.</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                <div>
+                    <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 4px; letter-spacing: 0.3px;">Nessun impegno</strong>
+                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Esplora l'editor in totale libertà. Sarai tu a decidere se e quando attivarlo.</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTTONE PREMIUM (Bianco Assoluto) -->
+        <button id="btn-entra-spazio" onclick="procediAllaRegistrazione()" style="width: 100%; padding: 20px; background: #ffffff; color: #000000; border: none; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out;">
+            ENTRA NEL TUO SPAZIO
+        </button> 
+    </div>
+</div>
+</div>
+<script>
+// 1. NAVIGAZIONE UNIFICATA
+function scrollToSection(id) {
+    const target = document.getElementById(id);
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// 2. GESTIONE IDENTITY PORTAL (LOGIN)
+function openLogin() { apriOverlay('login-overlay'); }
+function closeLogin() { chiudiOverlay('login-overlay'); }
+
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+async function checkAccess() {
+    const tagInput = document.getElementById('login-tag').value;
+    const passwordInput = document.getElementById('login-password').value;
+    const btn = document.querySelector('#login-overlay button');
+
+    if (!tagInput || !passwordInput) {
+        alert("Inserisci credenziali valide.");
+        return;
+    }
+
+    const rawTag = tagInput.toLowerCase().trim().replace(/\s+/g, '').replace(/@/g, '');
+    const formattedTag = '@' + rawTag;
+
+    btn.innerText = "VERIFICA IDENTITY...";
+    btn.disabled = true;
+    btn.style.opacity = "0.7";
+
+    try {
+        const pwdHashata = await hashPassword(passwordInput);
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: formattedTag, pwd: pwdHashata })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            btn.style.background = "#ffffff";
+            btn.innerText = "IDENTITÀ CONFERMATA";
+            btn.style.opacity = "1";
+            
+            // ==========================================
+            // GESTIONE SESSIONI PWA MULTIPLE: ARRAY DI AUTORIZZAZIONE
+            // ==========================================
+            const nuovoUtente = data.username.replace('@', '').toLowerCase().trim();
+            
+            let chiaviSalvate = [];
+            try {
+                chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
+            } catch(e) {
+                chiaviSalvate = [];
+            }
+            
+            if (!chiaviSalvate.includes(nuovoUtente)) {
+                chiaviSalvate.push(nuovoUtente);
+            }
+            
+                               localStorage.setItem('mqt_keys', JSON.stringify(chiaviSalvate));
+            localStorage.setItem('mqt_logged_user', nuovoUtente);
+            if (data.sessionToken) {
+                let tokenSalvati = {};
+                try {
+                    tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+                } catch(e) {
+                    tokenSalvati = {};
+                }
+                tokenSalvati[nuovoUtente] = data.sessionToken;
+                localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
+            }
+            // ========================================== 
+            
+            // L'utente è ufficiale, puliamo eventuali bozze in sospeso
+            localStorage.removeItem('mqt_reserved'); 
+            
+            setTimeout(() => {
+                window.location.href = `profile.html?u=${data.username}`;
+            }, 800);
+        } else {
+            alert(data.message || "Accesso negato. Riprova.");
+            btn.innerText = "ACCEDI";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        }
+    } catch (error) {
+        console.error("Errore Portale:", error);
+        alert("Sistema momentaneamente non raggiungibile.");
+        btn.innerText = "ACCEDI";
+        btn.disabled = false;
+        btn.style.opacity = "1";
+    }
+}
+async function vaiAllaVerifica() {
+    const inputField = document.getElementById('tag-input');
+    const tagValue = inputField.value.trim().toLowerCase();
+    const btn = document.getElementById('btn-verifica-principale');
+
+    if (tagValue === "") {
+        alert("Inserisci un nome prima di verificare la disponibilità.");
+        return;
+    }
+
+    // 1. RIMUOVE LA CHIOCCIOLA
+    const stringaSenzaChiocciola = tagValue.replace(/@/g, '').trim();
+    
+    // 2. FILTRO BLINDATO: Se c'è anche solo un punto, uno spazio o un simbolo, lo blocca subito!
+    if (/[^a-z0-9]/.test(stringaSenzaChiocciola)) {
+        alert("⚠️ Formato non valido: Il tuo @nome può contenere solo lettere e numeri. Non sono ammessi punti, spazi o caratteri speciali.");
+        return;
+    }
+
+    const rawTag = stringaSenzaChiocciola;
+    const formattedTag = '@' + rawTag;
+
+    // ==========================================
+    // 1. BLACKLIST 
+    // ==========================================
+    const blacklist = [
+        "admin", "administrator", "root", "support", "info", "help", "api", 
+        "login", "logout", "register", "index", "home", "mail", "test",
+        "error", "null", "undefined"
+    ];
+
+    if (blacklist.includes(rawTag)) {
+        alert("Questo nome è riservato per funzioni di sistema o non è valido. Scegli un altro tag.");
+        return; 
+    }
+
+    // ==========================================
+    // 2. GOLDLIST (Tappeto Rosso - Trattativa VIP)
+    // ==========================================
+    const goldlist = [
+        "official", "team", "staff", "security",
+        "vip", "pro", "premium", "business", "agency", "brand", "creator", "shop", "store",
+        "cocacola", "ferrari", "nike", "apple" 
+    ];
+
+    if (goldlist.includes(rawTag) || rawTag.length < 3) {
+        // Mostra il nome nel popup dorato
+        document.getElementById('premium-tag-name').innerText = formattedTag;
+        
+        // Costruisci l'email precompilata
+        const oggettoMail = encodeURIComponent(`Richiesta sblocco nome Premium: ${formattedTag}`);
+        const corpoMail = encodeURIComponent(`Salve Team myquicktag,\n\nVorrei richiedere informazioni per lo sblocco e l'assegnazione dell'identità digitale ${formattedTag}.\n\nDati di contatto:\nNome/Azienda: \nTelefono: \n\nIn attesa di un vostro riscontro.\nCordiali saluti.`);
+        
+        const mailtoLink = `mailto:vip@myquicktag.it?subject=${oggettoMail}&body=${corpoMail}`;
+        
+        // Assegnazione robusta dell'evento click (Risolve il blocco su mobile)
+        document.getElementById('btn-premium-mail').onclick = function() {
+            window.location.href = mailtoLink;
+        };
+        
+        // Apri il popup VIP
+        apriOverlay('premium-overlay');
+        return; // Ferma l'esecuzione (non chiama il server)
+    }
+   // ==========================================
+    // SE PASSA I CONTROLLI, PROCEDIAMO NORMALMENTE
+    // ==========================================
+    const reservedDataStr = localStorage.getItem('mqt_reserved');
+    if (reservedDataStr) {
+        try {
+            const reservedData = JSON.parse(reservedDataStr);
+            const now = new Date().getTime();
+            if (now < reservedData.expire && reservedData.tag === rawTag) {
+                // Modifica per evitare l'errore se welcome-tag-title non esiste
+                const titleElement = document.getElementById('welcome-tag-title');
+                if (titleElement) titleElement.innerText = `${formattedTag} ti sta aspettando.`;
+                apriOverlay('welcome-overlay');
+                return; 
+            }
+        } catch(e) {}
+    }
+
+    // ==========================================
+    // 3. ZERO-LATENCY BYPASS (Controllo Proprietario)
+    // ==========================================
+    const utenteLoggato = localStorage.getItem('mqt_logged_user');
+    let chiaviSalvate = [];
+    try {
+        chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
+    } catch(e) {}
+
+    if (utenteLoggato === rawTag || chiaviSalvate.includes(rawTag)) {
+        // L'utente possiede già la tag. Bypassiamo Airtable e lo facciamo entrare all'istante.
+        btn.innerHTML = "BENTORNATO...";
+        btn.style.background = "#ffffff";
+        btn.style.color = "#000000";
+        btn.style.opacity = "1";
+        
+        setTimeout(() => {
+            window.location.href = `profile.html?u=${rawTag}`;
+        }, 800);
+        return; // Termina l'esecuzione qui, risparmiando risorse server.
+    }
+
+    // Se arriva qui, il nome non è suo. Procede con la normale chiamata API.
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "VERIFICA IN CORSO...";
+    btn.style.opacity = "0.7";
+    try {
+        const response = await fetch('/api/check-and-create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: formattedTag })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            const scadenza = new Date().getTime() + 86400000; // 24 ore esatte di tempo
+            localStorage.setItem('mqt_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
+
+            document.getElementById('welcome-tag-name').innerText = formattedTag; 
+            apriOverlay('welcome-overlay');
+        } else {
+            alert(data.message || "Nome non disponibile. Scegli un altro tag.");
+        }
+    } catch (error) {
+        console.error("Errore API:", error);
+        alert("Errore di connessione al server. Riprova tra poco.");
+    } finally {
+        btn.innerHTML = originalText;
+        btn.style.opacity = "1";
+    }
+}
+
+// 4. REGISTRAZIONE & SCUDO ANTI-RITORNO PERFETTO
+function procediAllaRegistrazione() {
+    const inputField = document.getElementById('tag-input');
+    // MODIFICA: Pulisce via qualsiasi punto o carattere strano che potrebbe essere sfuggito
+    const rawTag = inputField.value.trim().toLowerCase().replace(/@/g, '').replace(/[^a-z0-9]/g, '');
+
+    // =========================================================
+    // IL PEZZO MANCANTE: CONSEGNA DELLE CHIAVI DI PROPRIETÀ
+    // =========================================================
+    localStorage.setItem('mqt_logged_user', rawTag);
+    let chiaviSalvate = [];
+    try { 
+        chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]'); 
+    } catch(e) {}
+    
+    if (!chiaviSalvate.includes(rawTag)) {
+        chiaviSalvate.push(rawTag);
+        localStorage.setItem('mqt_keys', JSON.stringify(chiaviSalvate));
+    }
+    // =========================================================
+
+    const btn = document.getElementById('btn-entra-spazio');
+    if (btn) {
+        btn.innerText = "ACCESSO IN CORSO...";
+        btn.style.opacity = "0.7";
+    }
+
+    // Ci mettiamo in ascolto del "passo indietro"
+    window.addEventListener('popstate', function onPop() {
+        window.removeEventListener('popstate', onPop);
+        // Appena l'overlay è stato bruciato dalla cronologia, polverizziamo la index!
+        window.location.replace(`edit.html?u=${encodeURIComponent(rawTag)}`);
+    });
+
+    // Inneschiamo il passo indietro invisibile per eliminare l'overlay
+    history.back();
+}
+// 5. LOGICA PWA E OVERLAY
+window.addEventListener('popstate', function(event) {
+    document.getElementById('welcome-overlay').style.display = 'none';
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('menu-overlay').style.display = 'none';
+    document.body.style.overflow = 'auto';
+});
+
+function apriOverlay(id) {
+    history.pushState({ overlay: id }, null, "");
+    document.getElementById(id).style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function chiudiOverlay(id) {
+    document.getElementById(id).style.display = 'none';
+    document.body.style.overflow = 'auto';
+    if (history.state && history.state.overlay) {
+        history.back();
+    }
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('menu-overlay');
+    const icon = document.getElementById('menu-icon');
+    if (menu.style.display === 'flex') {
+        chiudiOverlay('menu-overlay');
+        if (icon) icon.style.opacity = '1';
+    } else {
+        apriOverlay('menu-overlay');
+        if (icon) icon.style.opacity = '0';
+    }
+}
+
+// 6. MOTORE PALLINI SECTION 3
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollContainer = document.querySelector('.s3-scroll-container');
+    const dots = [
+        document.getElementById('dot-1'),
+        document.getElementById('dot-2'),
+        document.getElementById('dot-3')
+    ];
+
+    if (scrollContainer && dots[0]) {
+        scrollContainer.addEventListener('scroll', () => {
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            const scrollLeft = scrollContainer.scrollLeft;
+            const percent = scrollLeft / maxScroll;
+
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            if (percent < 0.3) dots[0].classList.add('active');
+            else if (percent > 0.7) dots[2].classList.add('active');
+            else dots[1].classList.add('active');
+        });
+    }
+});
+
+// 7. REVEAL ENGINE E MEMORIA SCROLL
+window.addEventListener('beforeunload', () => localStorage.setItem('mqt_scroll_pos', window.scrollY));
+
+function controllaMemoriaProprieta() {
+    const reservedDataStr = localStorage.getItem('mqt_reserved');
+    if (reservedDataStr) {
+        try {
+            const reservedData = JSON.parse(reservedDataStr);
+            const now = new Date().getTime();
+            
+            if (now < reservedData.expire) {
+                const searchWidget = document.getElementById('search-widget');
+                if (searchWidget) {
+                    searchWidget.innerHTML = `
+                        <div style="padding: 10px; text-align: center;">
+                            <div style="display: inline-flex; align-items: center; justify-content: center; padding: 4px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; margin-bottom: 15px;">
+                                <span style="width: 6px; height: 6px; background: #e5c158; border-radius: 50%; margin-right: 6px; box-shadow: 0 0 8px rgba(229, 193, 88, 0.5);"></span>
+                                <span style="color: #ffffff; font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">In sospeso</span>
+                            </div>
+                            
+                            <p style="color: #ffffff; font-size: 24px; font-weight: 300; margin: 0 0 20px 0; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 10px; box-sizing: border-box;">
+                                @${reservedData.tag.toLowerCase()}
+                            </p>
+                            
+                            <button onclick="window.location.href='edit.html?u=${reservedData.tag}'" style="width: 100%; padding: 18px 0; background: #ffffff; color: #000000; border: none; border-radius: 8px; font-weight: 800; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s ease;">
+                                RIPRENDI E COMPLETA
+                            </button>
+                            
+                            <button onclick="localStorage.removeItem('mqt_reserved'); location.reload();" style="width: 100%; padding: 12px 0; background: transparent; color: #888888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline; letter-spacing: 0.5px;">
+                                Annulla e cerca un nuovo nome
+                            </button>
+                        </div>
+                    `;
+                }
+            } else {
+                localStorage.removeItem('mqt_reserved');
+            }
+        } catch(e) {
+            localStorage.removeItem('mqt_reserved');
+        }
+    }
+}
+    function initMyquicktag() {
+    const scrollPos = localStorage.getItem('mqt_scroll_pos');
+    if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
+
+    controllaMemoriaProprieta();
+
+    const tagInput = document.getElementById('tag-input');
+    if (tagInput) {
+        tagInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); vaiAllaVerifica(); }
+        });
+    }
+
+    const loginPassword = document.getElementById('login-password');
+    const loginTag = document.getElementById('login-tag');
+    function triggerLoginOnEnter(e) {
+        if (e.key === 'Enter') { e.preventDefault(); checkAccess(); }
+    }
+    if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
+    if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
+
+    setTimeout(() => {
+        const elementiS1 = document.querySelectorAll('#s1 .reveal-item');
+        elementiS1.forEach(el => el.classList.add('active'));
+    }, 50);
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target); 
+            }
+        });
+    }, { root: null, rootMargin: '0px', threshold: 0.15 });
+
+    document.querySelectorAll('.reveal-item').forEach(el => {
+        if (!el.closest('#s1')) revealObserver.observe(el);
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMyquicktag);
+} else {
+    initMyquicktag();
+}
+</script>
+</body>
+</html>
