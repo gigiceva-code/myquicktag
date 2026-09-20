@@ -577,9 +577,9 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     }
 
     if (!record.draft_json || record.draft_json.trim() === "") {
-        localStorage.removeItem("haVistoAnteprima");
+        localStorage.removeItem("mqt_ha_visto_anteprima");
     }
-    localStorage.removeItem("haVistoAnteprima"); 
+    localStorage.removeItem("mqt_ha_visto_anteprima"); 
 
     // --- LOGICA CAMPANELLA ---
     const bellIcon = document.getElementById('btn-notifications');
@@ -590,7 +590,7 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     if (notifDraftItem) notifDraftItem.style.display = 'none';
     if (notifEmptyState) notifEmptyState.style.display = 'flex';
 
-    if ((haBozza && localStorage.getItem("loggedUser") === nomeMinuto) || (!haPassword && haBozza)) {
+    if ((haBozza && localStorage.getItem("mqt_logged_user") === nomeMinuto) || (!haPassword && haBozza)) {
         if (bellIcon) bellIcon.classList.add('has-notifications');
         if (notifDraftItem) {
             notifDraftItem.style.display = 'flex';
@@ -609,15 +609,15 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     // --- ASSEGNAZIONE DEL LINK ANTEPRIMA ---
     const claimLuxury = "Il tuo nome nel mondo.";
 
-    if (localStorage.getItem("justPublished")) {
-        localStorage.removeItem("justPublished");
+    if (localStorage.getItem("mqt_just_published")) {
+        localStorage.removeItem("mqt_just_published");
         aggiornaCard("Digital Identity", claimLuxury, "Online");
         aggiornaBadge("online");
         if (linkView) linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
         return;
     }
 
-    if (localStorage.getItem("loggedUser") !== nomeMinuto) {
+    if (localStorage.getItem("mqt_logged_user") !== nomeMinuto) {
         if (linkView) linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
         aggiornaCard("Digital Identity", claimLuxury, "Online");
         aggiornaBadge("online");
@@ -676,10 +676,10 @@ async function caricaDatiDashboard(nomeMinuto) {
             // e riciclata, o un account rimosso. Il "bypass zero-latenza" in index.html
             // si basa sulla cache locale, quindi va ripulita per non restare bloccati qui.
             let chiaviSalvate = [];
-            try { chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]'); } catch(e) {}
+            try { chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]'); } catch(e) {}
             const chiaviAggiornate = chiaviSalvate.filter(k => k !== nomeMinuto);
-            localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviAggiornate));
-            if (localStorage.getItem('loggedUser') === nomeMinuto) localStorage.removeItem('loggedUser');
+            localStorage.setItem('mqt_keys', JSON.stringify(chiaviAggiornate));
+            if (localStorage.getItem('mqt_logged_user') === nomeMinuto) localStorage.removeItem('mqt_logged_user');
 
             aggiornaCard("Questa Tag non è più disponibile", "Ti reindirizziamo alla home\u2026", "");
             aggiornaBadge("offline");
@@ -735,7 +735,7 @@ function aggiornaContatoriDashboard(record) {
             };
         }
         if (btnRinnova) {
-            const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
+            const utenteCorrente = record.username_system || localStorage.getItem("mqt_logged_user");
             btnRinnova.href = `checkout.html?u=${utenteCorrente}`;
         }
     }
@@ -745,7 +745,7 @@ function aggiornaContatoriDashboard(record) {
     if (statScansioni) {
         statScansioni.onclick = function() {
             const userPlan = String(record.plan || "base").toLowerCase().trim();
-            const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
+            const utenteCorrente = record.username_system || localStorage.getItem("mqt_logged_user");
 
             if (userPlan.includes("gold") || userPlan.includes("premium")) {
                 window.location.href = `analytics.html?u=${utenteCorrente}`;
@@ -766,7 +766,7 @@ function aggiornaContatoriDashboard(record) {
 
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
-    let nomeMinuto = urlParams.get("u") || urlParams.get("user") || localStorage.getItem("loggedUser");
+    let nomeMinuto = urlParams.get("u") || urlParams.get("user") || localStorage.getItem("mqt_logged_user");
 
     if (!nomeMinuto) return;
     nomeMinuto = nomeMinuto.trim();

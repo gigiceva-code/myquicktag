@@ -236,7 +236,7 @@
     // --- CARICAMENTO DATI ---
     document.addEventListener("DOMContentLoaded", async () => {
         const urlParams = new URLSearchParams(window.location.search);
-        let usernameCorrente = urlParams.get("u") || localStorage.getItem("loggedUser");
+        let usernameCorrente = urlParams.get("u") || localStorage.getItem("mqt_logged_user");
 
         const btnBack = document.getElementById('btn-back-console');
         if(btnBack) {

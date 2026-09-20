@@ -23,7 +23,7 @@
                 const nomeUrl = params.get('u') || params.get('user');
                 if (nomeUrl) return nomeUrl.replace('@', '').trim().toLowerCase();
                 
-                const utenteLoggato = localStorage.getItem('loggedUser');
+                const utenteLoggato = localStorage.getItem('mqt_logged_user');
                 if (utenteLoggato) return utenteLoggato.replace('@', '').trim().toLowerCase();
             } catch(e) {}
             return "tuonome.it";
@@ -1714,18 +1714,18 @@ function gestisciVIPSwitch(checkbox) {
             
             if (tagCorrente) {
                 // Rimuove la chiave specifica dal portachiavi multiplo
-                let chiavi = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+                let chiavi = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
                 chiavi = chiavi.filter(k => k !== tagCorrente);
-                localStorage.setItem('myquicktag_keys', JSON.stringify(chiavi));
+                localStorage.setItem('mqt_keys', JSON.stringify(chiavi));
                 
                 // Se l'utente attivo è quello scaduto, scollega anche lui
-                if (localStorage.getItem('loggedUser') === tagCorrente) {
-                    localStorage.removeItem('loggedUser');
+                if (localStorage.getItem('mqt_logged_user') === tagCorrente) {
+                    localStorage.removeItem('mqt_logged_user');
                 }
             }
             
             // Rimuove il flag di prenotazione temporanea
-            localStorage.removeItem('myquicktag_reserved');
+            localStorage.removeItem('mqt_reserved');
             
             // Reindirizza pulito alla landing page
             window.location.href = '/';

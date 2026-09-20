@@ -738,7 +738,7 @@ async function checkAccess() {
             
             let chiaviSalvate = [];
             try {
-                chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+                chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
             } catch(e) {
                 chiaviSalvate = [];
             }
@@ -747,8 +747,8 @@ async function checkAccess() {
                 chiaviSalvate.push(nuovoUtente);
             }
             
-                               localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviSalvate));
-            localStorage.setItem('loggedUser', nuovoUtente);
+                               localStorage.setItem('mqt_keys', JSON.stringify(chiaviSalvate));
+            localStorage.setItem('mqt_logged_user', nuovoUtente);
             if (data.sessionToken) {
                 let tokenSalvati = {};
                 try {
@@ -762,7 +762,7 @@ async function checkAccess() {
             // ========================================== 
             
             // L'utente è ufficiale, puliamo eventuali bozze in sospeso
-            localStorage.removeItem('myquicktag_reserved'); 
+            localStorage.removeItem('mqt_reserved'); 
             
             setTimeout(() => {
                 window.location.href = `profile.html?u=${data.username}`;
@@ -848,7 +848,7 @@ async function vaiAllaVerifica() {
    // ==========================================
     // SE PASSA I CONTROLLI, PROCEDIAMO NORMALMENTE
     // ==========================================
-    const reservedDataStr = localStorage.getItem('myquicktag_reserved');
+    const reservedDataStr = localStorage.getItem('mqt_reserved');
     if (reservedDataStr) {
         try {
             const reservedData = JSON.parse(reservedDataStr);
@@ -866,10 +866,10 @@ async function vaiAllaVerifica() {
     // ==========================================
     // 3. ZERO-LATENCY BYPASS (Controllo Proprietario)
     // ==========================================
-    const utenteLoggato = localStorage.getItem('loggedUser');
+    const utenteLoggato = localStorage.getItem('mqt_logged_user');
     let chiaviSalvate = [];
     try {
-        chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+        chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
     } catch(e) {}
 
     if (utenteLoggato === rawTag || chiaviSalvate.includes(rawTag)) {
@@ -900,7 +900,7 @@ async function vaiAllaVerifica() {
 
         if (data.success) {
             const scadenza = new Date().getTime() + 86400000; // 24 ore esatte di tempo
-            localStorage.setItem('myquicktag_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
+            localStorage.setItem('mqt_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
 
             document.getElementById('welcome-tag-name').innerText = formattedTag; 
             apriOverlay('welcome-overlay');
@@ -925,15 +925,15 @@ function procediAllaRegistrazione() {
     // =========================================================
     // IL PEZZO MANCANTE: CONSEGNA DELLE CHIAVI DI PROPRIETÀ
     // =========================================================
-    localStorage.setItem('loggedUser', rawTag);
+    localStorage.setItem('mqt_logged_user', rawTag);
     let chiaviSalvate = [];
     try { 
-        chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]'); 
+        chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]'); 
     } catch(e) {}
     
     if (!chiaviSalvate.includes(rawTag)) {
         chiaviSalvate.push(rawTag);
-        localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviSalvate));
+        localStorage.setItem('mqt_keys', JSON.stringify(chiaviSalvate));
     }
     // =========================================================
 
@@ -1012,10 +1012,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 7. REVEAL ENGINE E MEMORIA SCROLL
-window.addEventListener('beforeunload', () => localStorage.setItem('scrollPos', window.scrollY));
+window.addEventListener('beforeunload', () => localStorage.setItem('mqt_scroll_pos', window.scrollY));
 
 function controllaMemoriaProprieta() {
-    const reservedDataStr = localStorage.getItem('myquicktag_reserved');
+    const reservedDataStr = localStorage.getItem('mqt_reserved');
     if (reservedDataStr) {
         try {
             const reservedData = JSON.parse(reservedDataStr);
@@ -1039,22 +1039,22 @@ function controllaMemoriaProprieta() {
                                 RIPRENDI E COMPLETA
                             </button>
                             
-                            <button onclick="localStorage.removeItem('myquicktag_reserved'); location.reload();" style="width: 100%; padding: 12px 0; background: transparent; color: #888888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline; letter-spacing: 0.5px;">
+                            <button onclick="localStorage.removeItem('mqt_reserved'); location.reload();" style="width: 100%; padding: 12px 0; background: transparent; color: #888888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline; letter-spacing: 0.5px;">
                                 Annulla e cerca un nuovo nome
                             </button>
                         </div>
                     `;
                 }
             } else {
-                localStorage.removeItem('myquicktag_reserved');
+                localStorage.removeItem('mqt_reserved');
             }
         } catch(e) {
-            localStorage.removeItem('myquicktag_reserved');
+            localStorage.removeItem('mqt_reserved');
         }
     }
 }
     function initMyquicktag() {
-    const scrollPos = localStorage.getItem('scrollPos');
+    const scrollPos = localStorage.getItem('mqt_scroll_pos');
     if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
 
     controllaMemoriaProprieta();

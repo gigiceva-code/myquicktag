@@ -9,7 +9,7 @@
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const utenteUrl = urlParams.get('u');
-            const utenteLocal = localStorage.getItem('myquicktag_pending');
+            const utenteLocal = localStorage.getItem('mqt_pending');
             
             // Priorità all'URL, altrimenti usa il localStorage, altrimenti 'user'
             let utenteTrovato = utenteUrl || utenteLocal || 'user';

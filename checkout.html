@@ -514,7 +514,7 @@
      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
         function vaiAllaTag() {
             if (!targetUserClean) return;
-            localStorage.setItem('loggedUser', targetUserClean);
+            localStorage.setItem('mqt_logged_user', targetUserClean);
             window.location.href = `/tag.html?u=${targetUserClean}&welcome=1`;
         }   
 </script>

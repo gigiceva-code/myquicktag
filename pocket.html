@@ -290,7 +290,7 @@ async function caricaPocket() {
             localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
             
             // AGGIUNTA CLOUD SYNC: Se elimino dal telefono, elimino da Airtable
-            const utenteLoggato = localStorage.getItem('loggedUser');
+            const utenteLoggato = localStorage.getItem('mqt_logged_user');
             if (utenteLoggato) {
                 sincronizzaPocketCloud(utenteLoggato, pocketLocale);
             }
@@ -302,7 +302,7 @@ async function caricaPocket() {
     }
         // Fonde l'archivio locale con quello salvato su Airtable (multi-dispositivo)
     async function fondiPocketConCloud(pocketLocale) {
-        const utenteLoggato = localStorage.getItem('loggedUser');
+        const utenteLoggato = localStorage.getItem('mqt_logged_user');
         if (!utenteLoggato) return pocketLocale;
 
         try {

@@ -100,12 +100,12 @@ async function avviaFlusso(username) {
         // 1. PORTACHIAVI MULTI-TAG CON FALLBACK DI TRANSIZIONE
         let chiaviSalvate = [];
         try {
-            chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+            chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
         } catch(e) {
             chiaviSalvate = [];
         }
         
-        const singleLoggedUser = localStorage.getItem('loggedUser');
+        const singleLoggedUser = localStorage.getItem('mqt_logged_user');
         
         // Verifica se l'utente è proprietario tramite array multiplo O tramite il vecchio login
         const isOwner = chiaviSalvate.some(u => u.toLowerCase() === username.toLowerCase()) || 
@@ -1380,7 +1380,7 @@ async function salvaNelPocketCorrente() {
         pocketLocale = [];
     }
 
-    const utenteLoggato = localStorage.getItem('loggedUser');
+    const utenteLoggato = localStorage.getItem('mqt_logged_user');
     pocketLocale = await fondiPocketConCloud(pocketLocale, utenteLoggato);
     
     const giaEsistente = pocketLocale.find(item => item.username === usernameTag);
@@ -2114,7 +2114,7 @@ window.chiudiGateShop = function() {
 // ============================================================
 function tracciaClickSezione(nomeSezione) {
     // Evitiamo di tracciare il proprietario per non falsare le statistiche
-    const utenteLoggato = localStorage.getItem('loggedUser');
+    const utenteLoggato = localStorage.getItem('mqt_logged_user');
     if (utenteLoggato && utenteLoggato.toLowerCase() === usernameCorrente.toLowerCase()) return;
     if (usernameCorrente === "tuonome.it") return;
 
