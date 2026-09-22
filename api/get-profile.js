@@ -22,12 +22,28 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (data.records && data.records.length > 0) {
-      // Creiamo l'oggetto finale da mandare al frontend partendo dai campi nativi
-      return res.status(200).json({
+      const record = data.records[0];
+
+      // SICUREZZA: l'hash della password non lascia mai il server (era la credenziale di login).
+      // Al suo posto il frontend riceve solo un booleano.
+      const { password, ...fieldsPubblici } = record.fields;
+      fieldsPubblici.has_password = !!(password && String(password).trim() !== "");
+
+      const risposta = {
         success: true,
-        id: data.records[0].id,
-        fields: data.records[0].fields
-      });
+        id: record.id,
+        fields: fieldsPubblici
+      };
+
+      // PRENOTAZIONE 24H: unica fonte di verità = createdTime di Airtable (stesso criterio di check-and-create.js)
+      const stato = (fieldsPubblici.stato || "").toLowerCase().trim();
+      if (stato === "in attesa" && record.createdTime) {
+        const createdMs = new Date(record.createdTime).getTime();
+        risposta.reservation_expires_at = new Date(createdMs + 24 * 60 * 60 * 1000).toISOString();
+        risposta.server_now = new Date().toISOString();
+      }
+
+      return res.status(200).json(risposta);
     } else {
       return res.status(404).json({ success: false, error: "Profilo non trovato" });
     }
