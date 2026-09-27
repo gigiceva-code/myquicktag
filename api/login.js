@@ -13,7 +13,9 @@ export default async function handler(req, res) {
     // La password arriva già hashata SHA-256 dal client (index.html): qui la usiamo così com'è,
     // non viene mai calcolato né visto l'hash a partire dalla password in chiaro sul server.
     const crypto = await import('crypto');
-    const pwdProtetta = pwd;
+    // --- FIX SICUREZZA: la password arriva come hash SHA-256 (64 caratteri esadecimali) ---
+// Qualsiasi altro carattere viene scartato, così non può rompere la formula Airtable.
+const pwdProtetta = String(pwd).replace(/[^a-fA-F0-9]/g, '');
     const baseId = process.env.AIRTABLE_BASE_ID;
     const tableId = process.env.AIRTABLE_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
