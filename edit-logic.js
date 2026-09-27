@@ -816,7 +816,14 @@
                 return; 
             }
             try {
-                const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}`);
+               let tokenPerLettura = {};
+try {
+    tokenPerLettura = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+} catch (e) {
+    tokenPerLettura = {};
+}
+const tokenAttuale = tokenPerLettura[NOME_SISTEMA] || '';
+const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeURIComponent(tokenAttuale)}`);
                 const data = await response.json();
 
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
