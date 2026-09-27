@@ -397,21 +397,25 @@
             if (!targetUserClean) return false;
 
             try {
-                // Interroga il database per sapere l'età reale della Tag
+                // Interroga il database per sapere se la prenotazione e' ancora valida.
+                // FIX: prima si leggeva data.createdTime, che get-profile.js non ha mai restituito a
+                // livello radice; il fallback su "adesso" azzerava sempre l'eta' calcolata e il controllo
+                // non scattava mai. Ora si usa reservation_expires_at/server_now, calcolati dal server
+                // stesso in get-profile.js per i record "in attesa".
                 const res = await fetch(`/api/get-profile?u=${targetUserClean}`);
                 const data = await res.json();
-                
-                // Cerca la data di creazione nel database
-                const baseTime = data.createdTime || (data.record && data.record.createdTime) || new Date().toISOString();
-                const createdTime = new Date(baseTime).getTime();
-                const now = new Date().getTime();
-                const ageInMinutes = (now - createdTime) / (1000 * 60);
 
-                // Se è in attesa ed è più vecchia di 24 ore (1440 min)
-                if (data.fields && data.fields.stato === 'in attesa' && ageInMinutes >= 1440) {
+                const statoAttuale = data.fields && data.fields.stato;
+                const prenotazioneScaduta = statoAttuale === 'in attesa'
+                    && data.reservation_expires_at
+                    && data.server_now
+                    && new Date(data.server_now).getTime() >= new Date(data.reservation_expires_at).getTime();
+
+                // Se è in attesa ed è scaduta secondo l'orologio del server
+                if (prenotazioneScaduta) {
                     alert("⚠️ Prenotazione Scaduta\n\nSono trascorse oltre 24 ore dalla riserva iniziale. Questa identità digitale potrebbe essere stata liberata o riassegnata.\n\nVerrai reindirizzato alla Home per verificarne la disponibilità.");
                     
-                    // Pulizia locale e reindirizzamento
+                    // Pulizia locale (chiave dismessa, per compatibilita' con dispositivi non ancora aggiornati) e reindirizzamento
                     localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
                     window.location.href = '/'; 
                     return false; // Blocca il pagamento
