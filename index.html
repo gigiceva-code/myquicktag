@@ -899,7 +899,10 @@ async function vaiAllaVerifica() {
         const data = await response.json();
 
         if (data.success) {
-            const scadenza = new Date().getTime() + 86400000; // 24 ore esatte di tempo
+            // Scadenza calcolata sul createdTime restituito dal server (non sull'orologio del client,
+            // per evitare disallineamenti se il dispositivo ha l'ora sbagliata)
+            const baseCreatedTime = data.createdTime ? new Date(data.createdTime).getTime() : new Date().getTime();
+            const scadenza = baseCreatedTime + 86400000; // 24 ore esatte dalla creazione reale del record
             localStorage.setItem('mqt_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
 
             document.getElementById('welcome-tag-name').innerText = formattedTag; 
