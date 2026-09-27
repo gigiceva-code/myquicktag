@@ -15,6 +15,7 @@
         let isDrawerOpen = false;
         let statoUtente = 'in attesa'; 
         let userPlan = 'BASE';
+        let datiPrenotazioneServer = null; // {scadenzaLocale}: scadenza del server tradotta sull'orologio locale, calcolata una sola volta al caricamento
         let isLoadingDati = true;
         
         function getNomeBrandReale() {
@@ -820,6 +821,19 @@
 
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
                 userPlan = (data.fields?.plan || 'BASE').toUpperCase().trim();
+
+                // PRENOTAZIONE 24H: il server (get-profile.js) fornisce reservation_expires_at + server_now
+                // solo per i record "in attesa". Traduciamo subito la scadenza sull'orologio di QUESTO
+                // dispositivo (una tantum, qui), cosi' il countdown puo' poi ticchettare in locale senza
+                // richiamare il server ogni secondo, restando comunque ancorato al tempo reale del server.
+                if (data.reservation_expires_at && data.server_now) {
+                    const scadenzaServerMs = new Date(data.reservation_expires_at).getTime();
+                    const nowServerMs = new Date(data.server_now).getTime();
+                    const msRimanentiAlFetch = scadenzaServerMs - nowServerMs;
+                    datiPrenotazioneServer = { scadenzaLocale: Date.now() + msRimanentiAlFetch };
+                } else {
+                    datiPrenotazioneServer = null;
+                }
 
                 const pianoSimulato = localStorage.getItem('mqt_temp_plan_' + NOME_SISTEMA);
                 if (pianoSimulato) userPlan = pianoSimulato;
@@ -1648,19 +1662,25 @@ function gestisciVIPSwitch(checkbox) {
 
             if (!badge || !nameUI) return;
 
+            // Pulizia della vecchia chiave locale (pre-refactoring): la scadenza ora arriva sempre dal server
+            localStorage.removeItem('mqt_res_expiry_' + NOME_SISTEMA);
+
             if (statoUtente === 'attivo') {
                 badge.style.display = 'none';
-                localStorage.removeItem('mqt_res_expiry_' + NOME_SISTEMA);
                 return;
             }
 
-            const RES_STORAGE_KEY = 'mqt_res_expiry_' + NOME_SISTEMA;
-            let expiry = localStorage.getItem(RES_STORAGE_KEY);
-            
-            if (!expiry) {
-                expiry = new Date().getTime() + (24 * 60 * 60 * 1000); 
-                localStorage.setItem(RES_STORAGE_KEY, expiry);
+            // FONTE UNICA DI VERITA': scadenza calcolata dal server in inizializzaPagina() (vedi datiPrenotazioneServer).
+            // Se per qualche motivo non e' disponibile (es. risposta server incompleta), non inventiamo
+            // una scadenza locale: mostriamo il badge senza countdown piuttosto che un timer inventato.
+            if (!datiPrenotazioneServer) {
+                nameUI.innerText = '@' + NOME_SISTEMA.toUpperCase();
+                if (timerTextUI) timerTextUI.innerText = 'prenotazione attiva';
+                badge.style.display = 'flex';
+                return;
             }
+
+            const expiry = datiPrenotazioneServer.scadenzaLocale;
 
             nameUI.innerText = '@' + NOME_SISTEMA.toUpperCase();
             badge.style.display = 'flex';
