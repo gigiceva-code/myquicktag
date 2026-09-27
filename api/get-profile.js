@@ -1,7 +1,24 @@
+import crypto from 'crypto';
 import { airtableFetch } from '../lib/airtable-fetch.js';
 
+// Stessa logica di verifyToken usata in update-profile.js (HMAC + confronto a tempo costante).
+function verifyToken(username, token) {
+  if (!token || typeof token !== 'string') return false;
+  const parts = token.split('.');
+  if (parts.length !== 3) return false;
+  const [tokenUser, expiry, signature] = parts;
+  if (tokenUser !== username) return false;
+  if (Date.now() > Number(expiry)) return false;
+  const expected = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(`${tokenUser}.${expiry}`).digest('hex');
+  try {
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  } catch {
+    return false;
+  }
+}
+
 export default async function handler(req, res) {
-  const { u } = req.query;
+  const { u, token } = req.query;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
   const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
@@ -24,11 +41,15 @@ export default async function handler(req, res) {
     if (data.records && data.records.length > 0) {
       const record = data.records[0];
 
-      // SICUREZZA: l'hash della password non lascia mai il server (era la credenziale di login).
-      // Al suo posto il frontend riceve solo un booleano.
-      const { password, ...fieldsPubblici } = record.fields;
+          const { password, draft_json, ...fieldsPubblici } = record.fields;
       fieldsPubblici.has_password = !!(password && String(password).trim() !== "");
 
+      // --- FIX SICUREZZA: draft_json è la bozza privata dell'utente, non deve essere
+      // leggibile da chiunque conosca lo username. Torna nella risposta SOLO se chi chiama
+      // dimostra di essere il proprietario tramite sessionToken valido.
+      if (draft_json !== undefined && verifyToken(safeUsername, token)) {
+        fieldsPubblici.draft_json = draft_json;
+      } 
       const risposta = {
         success: true,
         id: record.id,
