@@ -59,7 +59,15 @@ export default async function handler(req, res) {
     const campiRichiesti = Object.keys(body).filter(k => k !== 'username_system' && k !== 'sessionToken');
     const soloCampiPubblici = campiRichiesti.every(k => PUBLIC_WRITABLE_FIELDS.includes(k));
 
-    if (accountGiaAttivo && !soloCampiPubblici && !verifyToken(safeUsername, sessionToken)) {
+   // --- FIX SICUREZZA: record "in attesa" (senza password) non sono più scrivibili
+// liberamente da chiunque conosca lo username. Restano scrivibili senza token SOLO se:
+// - la richiesta tocca solo campi pubblici (analytics/lead), oppure
+// - la richiesta sta impostando la password per la prima volta (claim legittimo dell'account,
+//   il flusso normale di fine registrazione).
+// In ogni altro caso (es. modificare bio/url/social su una tag altrui non ancora attivata) serve un token.
+const staClaimandoAccount = !accountGiaAttivo && typeof body.password === 'string' && body.password.trim() !== '';
+
+if (!soloCampiPubblici && !staClaimandoAccount && !verifyToken(safeUsername, sessionToken)) {
       return res.status(401).json({ error: "Non autorizzato: sessione mancante o non valida" });
     }
     const fieldsToSave = {};
