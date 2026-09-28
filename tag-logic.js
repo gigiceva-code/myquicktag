@@ -119,8 +119,19 @@ async function avviaFlusso(username) {
         }
 
         // 2. FETCH DATI CON CACHE BUSTER
-        const cacheBuster = Date.now();
-        const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}`);
+const cacheBuster = Date.now();
+// Il token serve solo al proprietario, per poter leggere la propria bozza privata (draft_json).
+let tokenPerBozza = '';
+if (isOwner) {
+    try {
+        const tokenSalvatiTag = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+        tokenPerBozza = tokenSalvatiTag[username] || '';
+    } catch (e) {
+        tokenPerBozza = '';
+    }
+}
+const tokenParam = tokenPerBozza ? `&token=${encodeURIComponent(tokenPerBozza)}` : '';
+const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}${tokenParam}`);
         const data = await response.json();
         
         if (!data.success || !data.fields) {
