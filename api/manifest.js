@@ -27,7 +27,7 @@ export default function handler(req, res) {
       "short_name": displayUtente,
       "description": "Luxury Digital Identity",
       "start_url": `/u/${finalUser}`,
-      "scope": `/u/${finalUser}/`,
+      "scope": `/u/${finalUser}`,
       "display": "fullscreen",     
       "background_color": "#050505", // Schermata di avvio nera in stile luxury
       "theme_color": "#050505",      // Colora la barra di stato del telefono di nero

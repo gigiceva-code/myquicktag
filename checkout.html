@@ -495,6 +495,8 @@
                                if (resData.success) {
                     // Pulizia finale del lucchetto della sessione
                     localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
+                    // La tag ora è attiva: la home non deve più mostrare "Riprendi e completa"
+                    localStorage.removeItem('mqt_reserved');
 
                                      // Salviamo il token di sessione ricevuto dal server
                     if (resData.sessionToken) {

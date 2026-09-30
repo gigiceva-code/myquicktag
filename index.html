@@ -1033,6 +1033,17 @@ function controllaMemoriaProprieta() {
             const now = new Date().getTime();
             
             if (now < reservedData.expire) {
+                // Se nel frattempo la tag è stata attivata (checkout completato) il promemoria non serve più
+                fetch(`/api/get-profile?u=${encodeURIComponent(reservedData.tag)}`)
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d && d.fields && (d.fields.stato || '').toLowerCase().trim() === 'attivo') {
+                            localStorage.removeItem('mqt_reserved');
+                            location.reload();
+                        }
+                    })
+                    .catch(() => {});
+
                 const searchWidget = document.getElementById('search-widget');
                 if (searchWidget) {
                     searchWidget.innerHTML = `
