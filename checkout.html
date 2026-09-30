@@ -473,6 +473,10 @@
                 return;
             }
 
+            // Ricevuta della prenotazione (salvata in index.html): prova che la tag è stata prenotata da questo dispositivo
+            let tokenPrenotazione = '';
+            try { tokenPrenotazione = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}')[targetUserClean] || ''; } catch(e) {}
+
             try {
                 // Utilizziamo la tua API ufficiale per salvare i dati su Airtable
                 const response = await fetch('/api/update-profile', {
@@ -481,7 +485,8 @@
                     body: JSON.stringify({
                         username_system: targetUserClean,
                         password: await hashPassword(passwordSelezionata),
-                        stato: "attivo" // Cambiamo definitivamente lo stato sul database
+                        stato: "attivo", // Cambiamo definitivamente lo stato sul database
+                        sessionToken: tokenPrenotazione
                     })
                 });
                 

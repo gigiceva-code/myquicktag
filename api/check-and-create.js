@@ -1,4 +1,15 @@
+import crypto from 'crypto';
 import { airtableFetch } from '../lib/airtable-fetch.js';
+
+// "Ricevuta" della prenotazione: un token di sessione firmato dal server (stesso formato
+// di login.js), valido solo fino alla scadenza delle 24h. Solo chi ha prenotato lo riceve,
+// quindi solo lui può modificare la tag in attesa e impostarne la prima password.
+function generateReservationToken(username, createdTime) {
+  const expiry = new Date(createdTime).getTime() + (1000 * 60 * 60 * 24);
+  const payload = `${username}.${expiry}`;
+  const signature = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(payload).digest('hex');
+  return `${payload}.${signature}`;
+}
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Metodo non consentito' });
@@ -112,7 +123,7 @@ export default async function handler(req, res) {
 
              // Il client usa questo createdTime (fonte server) per calcolare la scadenza a 24h,
              // invece di affidarsi al proprio orologio locale.
-             res.status(200).json({ success: true, message: 'Tag riservato!', createdTime: newRecord.createdTime });
+             res.status(200).json({ success: true, message: 'Tag riservato!', createdTime: newRecord.createdTime, username: tag, sessionToken: generateReservationToken(tag, newRecord.createdTime) });
 
     } catch (error) {
         console.error("Errore Sistema:", error);

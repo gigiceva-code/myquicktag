@@ -53,21 +53,15 @@ export default async function handler(req, res) {
     // (form di contatto pubblico, tracking click) e restano scrivibili senza token.
     const PUBLIC_WRITABLE_FIELDS = ['analytics_log', 'lead_capture_leads'];
 
-    const recordEsistente = data.records && data.records.length > 0 ? data.records[0] : null;
-    const accountGiaAttivo = !!recordEsistente?.fields?.password;
 
     const campiRichiesti = Object.keys(body).filter(k => k !== 'username_system' && k !== 'sessionToken');
     const soloCampiPubblici = campiRichiesti.every(k => PUBLIC_WRITABLE_FIELDS.includes(k));
 
-   // --- FIX SICUREZZA: record "in attesa" (senza password) non sono più scrivibili
-// liberamente da chiunque conosca lo username. Restano scrivibili senza token SOLO se:
-// - la richiesta tocca solo campi pubblici (analytics/lead), oppure
-// - la richiesta sta impostando la password per la prima volta (claim legittimo dell'account,
-//   il flusso normale di fine registrazione).
-// In ogni altro caso (es. modificare bio/url/social su una tag altrui non ancora attivata) serve un token.
-const staClaimandoAccount = !accountGiaAttivo && typeof body.password === 'string' && body.password.trim() !== '';
-
-if (!soloCampiPubblici && !staClaimandoAccount && !verifyToken(safeUsername, sessionToken)) {
+    // --- FIX SICUREZZA: ogni scrittura (tranne i campi pubblici) richiede un token valido.
+    // - Account attivo: il token arriva dal login.
+    // - Tag "in attesa": il token è la ricevuta data da check-and-create.js a chi l'ha prenotata
+    //   (vale 24h). Così nessun altro può modificarla o impostarne la prima password.
+    if (!soloCampiPubblici && !verifyToken(safeUsername, sessionToken)) {
       return res.status(401).json({ error: "Non autorizzato: sessione mancante o non valida" });
     }
     const fieldsToSave = {};

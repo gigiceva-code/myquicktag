@@ -905,6 +905,14 @@ async function vaiAllaVerifica() {
             const scadenza = baseCreatedTime + 86400000; // 24 ore esatte dalla creazione reale del record
             localStorage.setItem('mqt_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
 
+            // Ricevuta della prenotazione: serve per salvare la tag e scegliere la password al checkout
+            if (data.sessionToken) {
+                let tokenSalvati = {};
+                try { tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}'); } catch(e) {}
+                tokenSalvati[data.username || rawTag] = data.sessionToken;
+                localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
+            }
+
             document.getElementById('welcome-tag-name').innerText = formattedTag; 
             apriOverlay('welcome-overlay');
         } else {
