@@ -151,28 +151,9 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Airtable ha rifiutato l'update", dettagli: updateError });
       
     } else {
-      fieldsToSave.username_system = safeUsername; // Salviamo la versione sicura
-      if (!fieldsToSave.stato) fieldsToSave.stato = "in attesa";
-      fieldsToSave.views = 0;
-
-            const create = await airtableFetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ fields: fieldsToSave })
-      });
-
-           if (create.ok) {
-        const responseBody = { success: true, action: 'created' };
-        if (fieldsToSave.password) responseBody.sessionToken = generateToken(safeUsername);
-        return res.status(200).json(responseBody);
-      }
-      
-      const createError = await create.json();
-      console.error("AIRTABLE CREATE REJECTED:", createError);
-      return res.status(500).json({ error: "Airtable ha rifiutato la creazione", dettagli: createError });
+      // La tag non esiste: le tag nascono solo dalla prenotazione (check-and-create.js),
+      // qui si modificano soltanto quelle già esistenti.
+      return res.status(404).json({ error: "Tag non trovata" });
     }
 
   } catch (e) {
