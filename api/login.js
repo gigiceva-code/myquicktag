@@ -16,6 +16,11 @@ export default async function handler(req, res) {
     // --- FIX SICUREZZA: la password arriva come hash SHA-256 (64 caratteri esadecimali) ---
 // Qualsiasi altro carattere viene scartato, così non può rompere la formula Airtable.
 const pwdProtetta = String(pwd).replace(/[^a-fA-F0-9]/g, '');
+    // Un hash valido è sempre lungo esattamente 64 caratteri. Senza questo controllo una password
+    // "vuota" dopo la pulizia troverebbe i record "in attesa", che non hanno ancora una password.
+    if (pwdProtetta.length !== 64 || !tagPulito) {
+        return res.status(401).json({ success: false, message: 'Credenziali non valide' });
+    }
     const baseId = process.env.AIRTABLE_BASE_ID;
     const tableId = process.env.AIRTABLE_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
