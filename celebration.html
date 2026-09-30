@@ -22,6 +22,7 @@
             const manifestLink = document.createElement('link');
             manifestLink.id = "dynamic-manifest";
             manifestLink.rel = "manifest";
+            manifestLink.crossOrigin = "use-credentials"; // serve sui Preview Vercel protetti da login
             manifestLink.href = `/api/manifest?u=${utenteTrovato}`;
 
             const iconLink = document.createElement('link');
