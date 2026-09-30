@@ -682,6 +682,16 @@
             applicaTemaLive();
         }
 
+        // Pulizia testo all'uscita dal campo (usata da onblur in edit.html): toglie spazi
+        // superflui e righe vuote in eccesso, senza toccare il contenuto
+        function pulisciTesto(testo) {
+            return String(testo || '')
+                .replace(/[ \t]+/g, ' ')
+                .replace(/ *\n */g, '\n')
+                .replace(/\n{3,}/g, '\n\n')
+                .trim();
+        }
+
         // 2. FUNZIONE DI VERIFICA (Recuperata dal vecchio file)
         function verificaCompletamentoBase() {
             const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
