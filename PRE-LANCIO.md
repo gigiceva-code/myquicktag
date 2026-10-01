@@ -29,10 +29,13 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 - [ ] Test completi sul Preview di `sviluppo-v2`, usando sempre l'indirizzo **fisso** del branch:
   `https://myquicktag-git-sviluppo-v2-gigiceva-codes-projects.vercel.app`
   (ogni deploy ha anche un indirizzo suo, ma i dati salvati nel browser e le app installate restano legati all'indirizzo usato).
-- [ ] **Database di produzione (Airtable):** il Preview usa la base "MyQuickTag (Copy)". Verificare che la base usata dal sito pubblico abbia le stesse colonne, in particolare:
-  - `quick_action_copertina` (testo)
-  - `data_inizio` e `data_scadenza` (data)
-- [ ] **Variabili d'ambiente su Vercel (Production):** `SESSION_SECRET`, `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID`.
+- [x] **Database migrato da Airtable a Supabase** (progetto `myquicktag`, Francoforte, tabella `tags`).
+  Struttura in `supabase/migrations/`; importate le 8 tag di prova della base "MyQuickTag (Copy)".
+- [ ] **Variabili d'ambiente su Vercel (Preview e Production):** `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`.
+  - `SUPABASE_URL` = `https://atlhrkkfovblkhgzfeuo.supabase.co`
+  - `SUPABASE_SECRET_KEY` = dashboard Supabase → Project Settings → API Keys → **Secret key** (`sb_secret_…`). Mai nel codice o nel browser.
+  - Dopo il test, le variabili `AIRTABLE_*` si possono togliere.
+- [ ] Prima del lancio: svuotare la tabella `tags` dalle tag di prova.
 - [ ] Unire `sviluppo-v2` in `main` (pull request) e ricontrollare il sito pubblico.
 - [ ] Dopo il passaggio, le tag già attive ricevono 90 giorni pieni dal primo accesso (nessuna viene disattivata d'ufficio): verificare su un paio di tag reali.
 
@@ -43,4 +46,5 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 - **Sessione:** dopo il login il "pass" vale 90 giorni e si rinnova a ogni utilizzo (come Instagram/Google). Va rifatto il login solo dopo 90 giorni senza aprire la tag o l'editor.
 - **Prenotazione:** dura 24 ore ed è legata al browser che l'ha fatta (ricevuta firmata).
 - **iPhone:** l'app installata ha dati separati da Safari, quindi dopo l'installazione il proprietario deve rifare il login una volta dentro l'app (limite di Apple).
+- **Database:** solo le funzioni in `api/` parlano con Supabase (tramite `lib/db.js`), con la chiave segreta. Il browser non ha accesso diretto.
 - **Durata tag:** 90 giorni + 14 di grazia (tag ancora online e modificabile), poi disattivata finché non viene rinnovata. I contenuti non vengono cancellati.

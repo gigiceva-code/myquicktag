@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { airtableFetch } from '../lib/airtable-fetch.js';
+import { trovaTag, creaTag, eliminaTag } from '../lib/db.js';
 
 // "Ricevuta" della prenotazione: un token di sessione firmato dal server (stesso formato
 // di login.js), valido solo fino alla scadenza delle 24h. Solo chi ha prenotato lo riceve,
@@ -24,24 +24,14 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Tag non valido o con caratteri non consentiti' });
     }
 
-    const baseId = process.env.AIRTABLE_BASE_ID;
-    const tableId = process.env.AIRTABLE_TABLE_ID;
-    const token = process.env.AIRTABLE_TOKEN;
-
     // 1. Verifica se il tag è già occupato o prenotato
-    const checkUrl = `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={username_system}='${tag}'`;
-
     try {
-      const checkRes = await airtableFetch(checkUrl, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        const checkData = await checkRes.json();
+        const record = await trovaTag(tag, ['stato']);
 
-        if (checkData.records && checkData.records.length > 0) {
-            const record = checkData.records[0];
+        if (record) {
             const stato = record.fields.stato ? record.fields.stato.toLowerCase() : "";
             
-            // Airtable fornisce sempre il 'createdTime' nativo in ogni record
+            // createdTime = momento della prenotazione (colonna created_at del database)
             const createdTime = new Date(record.createdTime).getTime();
             const now = new Date().getTime();
             const ageInMinutes = (now - createdTime) / (1000 * 60);
@@ -61,64 +51,18 @@ export default async function handler(req, res) {
                     // IL NETTURBINO: Riciclo dopo 24 Ore
                     // ==========================================
                     console.log(`♻️ Riciclo tag scaduto (>24h): ${tag} (Età: ${Math.round(ageInMinutes / 60)} ore)`);
-                    
-                    const deleteUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${record.id}`;
-                    await airtableFetch(deleteUrl, {
-                        method: 'DELETE',
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
+                    await eliminaTag(record.id);
                     // Il vecchio record è distrutto. Il codice prosegue per assegnarlo al nuovo utente.
                 }
             }
         }
-            // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer)
-        const createUrl = `https://api.airtable.com/v0/${baseId}/${tableId}`;
-       const createRes = await airtableFetch(createUrl, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                fields: {
-                    "username_system": tag,
-                    "stato": "in attesa"
-                }
-            })
-        });
 
-        if (!createRes.ok) {
-            const errorDetail = await createRes.json();
-            console.error("Errore Airtable:", errorDetail);
-            return res.status(500).json({ success: false, message: 'Errore durante la prenotazione' });
-        }
-
-        const newRecord = await createRes.json();
-
-        // 3. RI-VERIFICA ANTI-COLLISIONE: controlliamo se nel frattempo
-        // un'altra richiesta ha creato lo stesso tag (race condition)
-       const recheckRes = await airtableFetch(checkUrl, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        const recheckData = await recheckRes.json();
-
-        if (recheckData.records && recheckData.records.length > 1) {
-            // Più di un record con lo stesso username_system: c'è stata una collisione.
-            // Vince chi ha il record creato per primo (createdTime più vecchio).
-            const sorted = [...recheckData.records].sort(
-                (a, b) => new Date(a.createdTime) - new Date(b.createdTime)
-            );
-            const winner = sorted[0];
-
-            if (winner.id !== newRecord.id) {
-                // Siamo arrivati secondi: cancelliamo il nostro record appena creato
-                const deleteUrl = `https://api.airtable.com/v0/${baseId}/${tableId}/${newRecord.id}`;
-               await airtableFetch(deleteUrl, {
-                    method: 'DELETE',
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                return res.status(400).json({ success: false, message: 'Spiacente, questo @tag è già occupato' });
-            }
+        // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer).
+        // ANTI-COLLISIONE: username_system è "unique" nel database, quindi se due richieste
+        // arrivano insieme solo la prima riesce a creare la riga; l'altra riceve null.
+        const newRecord = await creaTag({ username_system: tag, stato: "in attesa" });
+        if (!newRecord) {
+            return res.status(400).json({ success: false, message: 'Spiacente, questo @tag è già occupato' });
         }
 
              // Il client usa questo createdTime (fonte server) per calcolare la scadenza a 24h,

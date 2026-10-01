@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { airtableFetch } from '../lib/airtable-fetch.js';
+import { trovaTag, aggiornaTag } from '../lib/db.js';
 import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito } from '../lib/abbonamento.js';
 
 function generateToken(username) {
@@ -41,13 +41,7 @@ export default async function handler(req, res) {
 
   try {
     // Usiamo il nome utente pulito e sicuro per cercare nel database
-    const formula = `{username_system}='${safeUsername}'`;
-    const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}`;
-    
-            const response = await airtableFetch(searchUrl, {
-      headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}` }
-    });
-    const data = await response.json();
+    const recordAttuale = await trovaTag(safeUsername);
 
       // --- FIX SICUREZZA: blocco scritture su account già attivi senza token valido ---
     // Eccezione: questi campi sono pensati per essere scritti anche da visitatori anonimi
@@ -68,7 +62,6 @@ export default async function handler(req, res) {
     }
 
     // --- DURATA TAG (90 giorni + 14 di grazia, vedi lib/abbonamento.js) ---
-    const recordAttuale = data.records && data.records.length > 0 ? data.records[0] : null;
     const statoAttuale = String(recordAttuale?.fields?.stato || '').toLowerCase().trim();
     const abbonamento = recordAttuale && statoAttuale === 'attivo' ? calcolaAbbonamento(recordAttuale) : null;
 
@@ -81,14 +74,10 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: "Il rinnovo sarà disponibile negli ultimi 14 giorni del piano", abbonamento });
       }
       const nuovaScadenza = nuovaScadenzaRinnovo(abbonamento);
-      const rinnovo = await airtableFetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordAttuale.id}`, {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields: { data_scadenza: nuovaScadenza } })
-      });
-      if (!rinnovo.ok) {
-        const erroreRinnovo = await rinnovo.json();
-        console.error("AIRTABLE RINNOVO REJECTED:", erroreRinnovo);
+      try {
+        await aggiornaTag(recordAttuale.id, { data_scadenza: nuovaScadenza });
+      } catch (erroreRinnovo) {
+        console.error("DB RINNOVO REJECTED:", erroreRinnovo.dettagli || erroreRinnovo);
         return res.status(500).json({ error: "Rinnovo non riuscito" });
       }
       const recordRinnovato = { ...recordAttuale, fields: { ...recordAttuale.fields, data_scadenza: nuovaScadenza } };
@@ -159,11 +148,9 @@ export default async function handler(req, res) {
       fieldsToSave.config_canali = typeof body.config_canali === 'object' ? JSON.stringify(body.config_canali) : body.config_canali;
     }
 
-    if (data.records && data.records.length > 0) {
-      const recordId = data.records[0].id;
-      
+    if (recordAttuale) {
       // Attivazione (prima password): il server scrive le date del piano, mai il browser
-      if (fieldsToSave.password && !data.records[0].fields.password) {
+      if (fieldsToSave.password && !recordAttuale.fields.password) {
         Object.assign(fieldsToSave, dateAttivazione());
       }
 
@@ -171,30 +158,22 @@ export default async function handler(req, res) {
           return res.status(200).json({ success: true, action: 'skipped_empty' });
       }
 
-         const update = await airtableFetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordId}`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ fields: fieldsToSave })
-      });
-
-             if (update.ok) {
-        const responseBody = { success: true, action: 'updated' };
-        // Sessione "scorrevole" (come Google/Instagram): ogni salvataggio di un account attivo
-        // rinnova il token per altri 90 giorni. Le ricevute di prenotazione (tag senza password)
-        // NON vengono rinnovate: restano legate alle 24h della prenotazione.
-        const accountConPassword = !!(fieldsToSave.password || data.records[0].fields.password);
-        if (fieldsToSave.password || (tokenValido && accountConPassword)) {
-          responseBody.sessionToken = generateToken(safeUsername);
-        }
-        return res.status(200).json(responseBody);
+      try {
+        await aggiornaTag(recordAttuale.id, fieldsToSave);
+      } catch (updateError) {
+        console.error("DB UPDATE REJECTED:", updateError.dettagli || updateError);
+        return res.status(500).json({ error: "Il database ha rifiutato l'update", dettagli: updateError.dettagli });
       }
-      
-      const updateError = await update.json();
-      console.error("AIRTABLE UPDATE REJECTED:", updateError);
-      return res.status(500).json({ error: "Airtable ha rifiutato l'update", dettagli: updateError });
+
+      const responseBody = { success: true, action: 'updated' };
+      // Sessione "scorrevole" (come Google/Instagram): ogni salvataggio di un account attivo
+      // rinnova il token per altri 90 giorni. Le ricevute di prenotazione (tag senza password)
+      // NON vengono rinnovate: restano legate alle 24h della prenotazione.
+      const accountConPassword = !!(fieldsToSave.password || recordAttuale.fields.password);
+      if (fieldsToSave.password || (tokenValido && accountConPassword)) {
+        responseBody.sessionToken = generateToken(safeUsername);
+      }
+      return res.status(200).json(responseBody);
       
     } else {
       // La tag non esiste: le tag nascono solo dalla prenotazione (check-and-create.js),

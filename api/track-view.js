@@ -1,4 +1,4 @@
-import { airtableFetch } from '../lib/airtable-fetch.js';
+import { trovaTag, aggiornaTag } from '../lib/db.js';
 export default async function handler(req, res) {
   // Accetta solo richieste POST
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
@@ -33,23 +33,15 @@ export default async function handler(req, res) {
     const locationKey = city !== 'Sconosciuta' ? `${city}, ${country}` : 'Sconosciuta';
 
     // ====================================================
-    // 2. RECUPERA I DATI ATTUALI DA AIRTABLE
+    // 2. RECUPERA I DATI ATTUALI DAL DATABASE
     // ====================================================
-    // Usiamo il nome utente pulito e sicuro per la formula
-    const formula = `{username_system}='${safeUsername}'`;
-    // Ora chiediamo ad Airtable sia le 'views' che gli 'analytics_data'
-    const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}&fields%5B%5D=views&fields%5B%5D=analytics_data`;
-    
-       const response = await airtableFetch(searchUrl, {
-      headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}` }
-    });
-    const data = await response.json();
+    // Leggiamo solo 'views' e 'analytics_data'
+    const record = await trovaTag(safeUsername, ['views', 'analytics_data']);
 
-    if (!data.records || data.records.length === 0) {
+    if (!record) {
         return res.status(404).json({ error: "Utente non trovato" });
     }
 
-    const record = data.records[0];
     const recordId = record.id;
     const currentViews = record.fields.views || 0;
     
@@ -92,28 +84,13 @@ export default async function handler(req, res) {
         analyticsData.geo['Altre'] = (analyticsData.geo['Altre'] || 0) + 1;
     }
     // ====================================================
-    // 4. SALVA IL PACCHETTO COMPRESSO SU AIRTABLE
+    // 4. SALVA IL PACCHETTO COMPRESSO NEL DATABASE
     // ====================================================
-    const update = await airtableFetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordId}`, { 
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        fields: { 
-            views: currentViews + 1,
-            analytics_data: JSON.stringify(analyticsData) // Impacchettiamo tutto in una sola cella
-        }
-      })
+    await aggiornaTag(recordId, {
+        views: currentViews + 1,
+        analytics_data: JSON.stringify(analyticsData) // Impacchettiamo tutto in una sola cella
     });
-
-    if (update.ok) {
-        return res.status(200).json({ success: true });
-    } else {
-        const err = await update.json();
-        return res.status(500).json({ error: "Errore aggiornamento Airtable", details: err });
-    }
+    return res.status(200).json({ success: true });
 
   } catch (e) {
     console.error("CRASH TRACK-VIEW:", e);

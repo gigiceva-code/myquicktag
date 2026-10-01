@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { airtableFetch } from '../lib/airtable-fetch.js';
+import { trovaTag, aggiornaTag } from '../lib/db.js';
 import { calcolaAbbonamento, dateAttivazione } from '../lib/abbonamento.js';
 
 // Stessa logica di verifyToken usata in update-profile.js (HMAC + confronto a tempo costante).
@@ -27,9 +27,6 @@ function generateToken(username) {
 
 export default async function handler(req, res) {
   const { u, token } = req.query;
-  const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
-  const BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const TABLE_ID = process.env.AIRTABLE_TABLE_ID; 
 
   if (!u) return res.status(400).json({ success: false, error: "Username mancante" });
 
@@ -38,17 +35,10 @@ export default async function handler(req, res) {
   const safeUsername = u.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
 
   try {
-    // Cerchiamo nella colonna corretta "username_system" usando SOLO il nome pulito
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula={username_system}='${safeUsername}'`;
-    
-       const response = await airtableFetch(url, {
-      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
-    });
-    const data = await response.json();
+    // Cerchiamo nella colonna "username_system" usando SOLO il nome pulito
+    const record = await trovaTag(safeUsername);
 
-    if (data.records && data.records.length > 0) {
-      const record = data.records[0];
-
+    if (record) {
           const { password, draft_json, ...fieldsPubblici } = record.fields;
       fieldsPubblici.has_password = !!(password && String(password).trim() !== "");
 
@@ -73,11 +63,7 @@ export default async function handler(req, res) {
           const daScrivere = { data_scadenza: date.data_scadenza };
           if (!record.fields.data_inizio) daScrivere.data_inizio = date.data_inizio;
           try {
-            await airtableFetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}/${record.id}`, {
-              method: 'PATCH',
-              headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}`, 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fields: daScrivere })
-            });
+            await aggiornaTag(record.id, daScrivere);
             record.fields.data_scadenza = date.data_scadenza;
           } catch (e) {
             console.error("Scrittura date abbonamento fallita:", e);
@@ -103,7 +89,7 @@ export default async function handler(req, res) {
         res.setHeader('Cache-Control', 'no-store');
       }
 
-      // PRENOTAZIONE 24H: unica fonte di verità = createdTime di Airtable (stesso criterio di check-and-create.js)
+      // PRENOTAZIONE 24H: unica fonte di verità = createdTime del database (stesso criterio di check-and-create.js)
       const stato = (fieldsPubblici.stato || "").toLowerCase().trim();
       if (stato === "in attesa" && record.createdTime) {
         const createdMs = new Date(record.createdTime).getTime();
