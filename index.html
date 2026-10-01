@@ -28,8 +28,9 @@
     <meta name="twitter:description" content="Tutto il tuo ecosistema digitale in un singolo tocco. Verifica la disponibilità e prenota ora il tuo @nome.">
     <meta name="twitter:image" content="https://myquicktag.it/assets/og-image.jpg">
 
-    <link id="dynamic-manifest" rel="manifest" crossorigin="use-credentials" href="/api/manifest?u=user">
-    <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
+    <!-- La home non è installabile come app: ogni app è la tag di un utente (vedi tag.html) -->
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>

@@ -11,6 +11,12 @@
     
     <link id="dynamic-manifest" rel="manifest" crossorigin="use-credentials" href="">
     <link id="dynamic-icon" rel="icon" href="">
+    <!-- App installata: icona PNG (iPhone non accetta SVG) e modalità a schermo intero -->
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta id="apple-app-title" name="apple-mobile-web-app-title" content="myquicktag">
       <link rel="stylesheet" href="/style.css">
     <style>
         /* Barra SALVA + QR: stessa posizione e misure della card (.app-container in style.css) */

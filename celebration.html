@@ -29,7 +29,7 @@
             const iconLink = document.createElement('link');
             iconLink.id = "dynamic-icon";
             iconLink.rel = "apple-touch-icon";
-            iconLink.href = `/api/generate-icon?u=${utenteTrovato}`;
+            iconLink.href = "/icons/apple-touch-icon.png"; // PNG: iPhone non accetta SVG
 
             // Li infiliamo nella testa della pagina prima che Chrome si muova
             document.head.appendChild(manifestLink);

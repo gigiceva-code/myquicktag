@@ -79,6 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     document.getElementById("dynamic-manifest").href = `/api/manifest?u=${usernameCorrente}`;
     document.getElementById("dynamic-icon").href = `/api/generate-icons?u=${usernameCorrente}`;
+    const titoloApp = document.getElementById("apple-app-title");
+    if (titoloApp && usernameCorrente) titoloApp.content = "@" + usernameCorrente.toUpperCase();
     
     if (!usernameCorrente) {
         mostraErrore("Nessun profilo specificato.");
