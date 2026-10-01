@@ -579,10 +579,27 @@ function scorriLightbox(direzione) {
 // ============================================================
 // QR CODE & SITO WEB
 // ============================================================
+// Una tag "in attesa" non deve essere condivisibile: QR e condivisione solo dopo il checkout
+function tagAttiva() {
+    return ((cacheDatiUtente && cacheDatiUtente.stato) || '').toLowerCase().trim() === 'attivo';
+}
+
+const QR_SIMULATO_HTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px;">
+                <div style="width:190px; height:190px; border-radius: 20px; padding:10px; background:#fff; display:flex; justify-content:center; align-items:center;">
+                    <i class="fas fa-qrcode" style="font-size: 5rem; color: #000;"></i>
+                </div>
+                <div style="font-size: 0.8rem; color: #86868b; text-align: center; line-height: 1.5;">Simulazione QR Code in anteprima.<br>La condivisione è disabilitata.</div>
+            </div>`;
+
 function generaQR(url) {
     const wrapper = document.querySelector('.qr-wrapper');
     if (!wrapper) return;
     wrapper.innerHTML = '';
+    if (!tagAttiva()) {
+        wrapper.innerHTML = '<i class="fas fa-qrcode" style="font-size: 3rem; color: #000;"></i>';
+        return;
+    }
     new QRCode(wrapper, { text: url, width: 84, height: 84, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
 }
 
@@ -978,6 +995,11 @@ function apriSezione(tipo) {
 
     if (tipo === 'qr') {
         titolo.textContent = 'ACCESS TAG';
+        // Tag non ancora attivata (checkout non completato): niente QR reale, come nell'editor
+        if (!tagAttiva()) {
+            corpo.innerHTML = QR_SIMULATO_HTML;
+            return;
+        }
         const url = `${window.location.origin}/tag.html?u=${cacheDatiUtente.username_system}`;
         corpo.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px;">
