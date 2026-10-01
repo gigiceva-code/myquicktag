@@ -12,9 +12,28 @@
     <link id="dynamic-manifest" rel="manifest" crossorigin="use-credentials" href="">
     <link id="dynamic-icon" rel="icon" href="">
       <link rel="stylesheet" href="/style.css">
+    <style>
+        /* Barra SALVA + QR: stessa posizione e misure della card (.app-container in style.css) */
+        #mqt-top-bar-layer {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: calc(100% - 32px); max-width: 410px;
+            height: calc(100svh - 32px); max-height: 840px;
+            z-index: 20; pointer-events: none;
+            visibility: hidden; /* compare solo quando la card è pronta: niente bottoni sulla pagina nera */
+        }
+        body:has(#profile-content.ready) #mqt-top-bar-layer { visibility: visible; }
+        #mqt-top-bar-layer .mqt-top-bar-inner {
+            display: flex; justify-content: flex-end; align-items: center; gap: 16px;
+            padding: 22px 24px 0 24px;
+        }
+        #mqt-top-bar-layer .mqt-top-bar-inner > * { pointer-events: auto; }
+    </style>
     </head>
 <body>
 
+    <!-- BARRA SUPERIORE (SALVA + QR): ricalca posizione e misure della card, contenuti in alto a destra -->
+    <div id="mqt-top-bar-layer">
+        <div class="mqt-top-bar-inner">
             <!-- Bottone Salva Tag con LED pulsante -->
             <div id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); transition: all 0.3s;">
                 <div id="dot-salva" style="width: 6px; height: 6px; background-color: #fff; border-radius: 50%; animation: pulseWhiteDot 2s infinite;"></div>
@@ -24,7 +43,8 @@
             <!-- Trigger QR Originale -->
             <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()" style="position: static; margin: 0; padding: 0;">
                 <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
-         
+            </div>
+        </div>
     </div>
 
     <!-- ============================================================ -->
