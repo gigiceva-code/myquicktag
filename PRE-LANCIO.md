@@ -19,8 +19,8 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 - Con il pagamento vero (Stripe) l'attivazione e il rinnovo dovranno essere confermati da Stripe al server (webhook), non dal browser.
 
 ### Prezzo mostrato nel checkout di attivazione
-- `checkout.html` mostra **"€19,00"**, ma oggi l'attivazione è gratuita (scelta voluta per i primi 3 mesi).
-- Decidere cosa mostrare (es. "Gratis per 3 mesi") e allineare i testi del checkout.
+- ✅ Fatto: il checkout di attivazione mostra "Gratis per 3 mesi", il pulsante "Attiva gratis" e la nota "Nessun pagamento richiesto"; i loghi delle carte sono nascosti.
+- Con il pagamento vero vanno ripristinati prezzo, pulsante, nota e loghi in `checkout.html`.
 
 ---
 
@@ -32,10 +32,11 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 - [ ] **Database di produzione (Airtable):** il Preview usa la base "MyQuickTag (Copy)". Verificare che la base usata dal sito pubblico abbia le stesse colonne, in particolare:
   - `quick_action_copertina` (testo)
   - `data_inizio` e `data_scadenza` (data)
-  - **Controllo dell'1/10/2026** sulla base "MyQuickTag" (Table 1): `data_inizio` e `data_scadenza` ci sono, ma mancano **24 colonne** presenti nella copia:
-    `pocket_cloud`, `cv`, `live_status_micro`, `live_status_action_type`, `live_status_action_label`, `live_status_action_url`, `flash_micro`, `analytics_data`, `analytics_log`, `review_url`, `review_contact`, `video_url`, `video_cta_text`, `video_cta_url`, `partners_data`, `lead_capture_attivo`, `lead_capture_titolo`, `lead_capture_leads`, `shop_attivo`, `shop_titolo`, `shop_prezzo`, `shop_link`, `shop_scadenza`, `quick_action_copertina`.
-    Inoltre due colonne hanno un tipo diverso: `avatar_url` (allegato in produzione, testo nella copia) e `digital_style` (selezione singola in produzione, testo nella copia).
-    Da verificare anche quale base usa davvero il sito pubblico (`AIRTABLE_BASE_ID` in Production).
+  - **Sistemato l'1/10/2026** sulla base "MyQuickTag" (Table 1), che risultava vuota (0 record):
+    - aggiunte le 24 colonne che mancavano rispetto alla copia (`quick_action_copertina`, `analytics_log`, `lead_capture_*`, `shop_*`, `video_*`, `partners_data`, ecc.);
+    - `avatar_url` e `digital_style` ora sono testo, come nella copia: prima erano allegato e selezione singola, e Airtable rifiutava i salvataggi dell'editor;
+    - le due colonne vecchie, vuote, sono state rinominate `avatar_url_VECCHIO_da_eliminare` e `digital_style_VECCHIO_da_eliminare` e si possono eliminare a mano.
+  - [ ] Controllare che `AIRTABLE_BASE_ID` in Production punti davvero a questa base. Se il sito pubblico ha già tag attive, usa un'altra base, perché questa è vuota.
 - [ ] **Variabili d'ambiente su Vercel (Production):** `SESSION_SECRET`, `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID`.
 - [ ] Unire `sviluppo-v2` in `main` (pull request) e ricontrollare il sito pubblico.
 - [ ] Dopo il passaggio, le tag già attive ricevono 90 giorni pieni dal primo accesso (nessuna viene disattivata d'ufficio): verificare su un paio di tag reali.

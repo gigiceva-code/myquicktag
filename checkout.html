@@ -282,20 +282,21 @@
                 <div class="invoice-divider"></div>
                 <div class="invoice-row total-row">
                     <span>Totale dell'ordine</span>
-                    <span class="price-tag" id="display-price">€19,00</span>
+                    <span class="price-tag" id="display-price">Gratis per 3 mesi</span>
                 </div>
             </div>
 
-            <div class="payment-gateways">
+            <!-- Attivazione gratuita (primi 3 mesi): loghi di pagamento nascosti finché non c'è il pagamento vero -->
+            <div class="payment-gateways" style="display: none;">
                 <span class="gateway-logo">Visa</span>
                 <span class="gateway-logo">Mastercard</span>
                 <span class="gateway-logo">Apple Pay</span>
                 <span class="gateway-logo">Stripe</span>
             </div>
 
-            <p class="legal-notice">Verrai indirizzato alla piattaforma di pagamento sicura. I dati della tua carta sono protetti da crittografia end-to-end.</p>
+            <p class="legal-notice">Nessun pagamento richiesto: i primi 3 mesi sono gratuiti e non ti chiediamo i dati della carta.</p>
             <button class="action-button" onclick="eseguiTransazione()">
-                Procedi al pagamento sicuro
+                Attiva gratis
             </button>
         </div>
 
