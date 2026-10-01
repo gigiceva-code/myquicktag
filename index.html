@@ -359,6 +359,7 @@
 
             <!-- JAVASCRIPT SWITCHER INFALLIBILE -->
             <script src="migrate-storage.js"></script>
+            <script src="/session.js"></script>
             <script>
                 function switchTarget(targetId, clickedBtn, dotNumber) {
                     // 1. Reset stile di tutti i bottoni
@@ -872,8 +873,26 @@ async function vaiAllaVerifica() {
         chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
     } catch(e) {}
 
-    if (utenteLoggato === rawTag || chiaviSalvate.includes(rawTag)) {
-        // L'utente possiede già la tag. Bypassiamo Airtable e lo facciamo entrare all'istante.
+    let eraSuQuestoDispositivo = utenteLoggato === rawTag || chiaviSalvate.includes(rawTag);
+    if (eraSuQuestoDispositivo && !mqtSessione.valida(rawTag)) {
+        // La tag era su questo dispositivo ma la sessione è scaduta
+        mqtSessione.rimuovi(rawTag);
+        eraSuQuestoDispositivo = false;
+        try {
+            const r = await fetch(`/api/get-profile?u=${encodeURIComponent(rawTag)}`);
+            const d = await r.json();
+            if (d && d.fields && d.fields.has_password) {
+                // Account attivo: login con la tag già compilata
+                document.getElementById('login-tag').value = '@' + rawTag;
+                apriOverlay('login-overlay');
+                return;
+            }
+        } catch (e) {}
+        // Prenotazione scaduta o tag inesistente: prosegue con la verifica normale
+    }
+
+    if (eraSuQuestoDispositivo) {
+        // L'utente possiede già la tag (sessione valida). Bypassiamo Airtable e lo facciamo entrare all'istante.
         btn.innerHTML = "BENTORNATO...";
         btn.style.background = "#ffffff";
         btn.style.color = "#000000";
@@ -1080,6 +1099,15 @@ function controllaMemoriaProprieta() {
     if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
 
     controllaMemoriaProprieta();
+
+    // Arrivo da "Sessione scaduta" (session.js): apre il login con la tag già compilata
+    const tagDaRiloggare = new URLSearchParams(window.location.search).get('login');
+    if (tagDaRiloggare) {
+        const campoTag = document.getElementById('login-tag');
+        if (campoTag) campoTag.value = '@' + tagDaRiloggare.replace(/[^a-zA-Z0-9_-]/g, '');
+        history.replaceState(null, '', window.location.pathname);
+        apriOverlay('login-overlay');
+    }
 
     const tagInput = document.getElementById('tag-input');
     if (tagInput) {

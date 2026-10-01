@@ -108,8 +108,10 @@ async function avviaFlusso(username) {
         const singleLoggedUser = localStorage.getItem('mqt_logged_user');
         
         // Verifica se l'utente è proprietario tramite array multiplo O tramite il vecchio login
-        const isOwner = chiaviSalvate.some(u => u.toLowerCase() === username.toLowerCase()) || 
-                        (singleLoggedUser && singleLoggedUser.toLowerCase() === username.toLowerCase());
+        // Proprietario = la tag è nel portachiavi del dispositivo E la sua sessione non è scaduta
+        const isOwner = (chiaviSalvate.some(u => u.toLowerCase() === username.toLowerCase()) || 
+                        (singleLoggedUser && singleLoggedUser.toLowerCase() === username.toLowerCase())) &&
+                        mqtSessione.valida(username);
 
         if (modeDraft) {
             if (!isOwner) {
@@ -133,6 +135,8 @@ if (isOwner) {
 const tokenParam = tokenPerBozza ? `&token=${encodeURIComponent(tokenPerBozza)}` : '';
 const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}${tokenParam}`);
         const data = await response.json();
+        // Sessione scorrevole: il server restituisce un token rinnovato al proprietario
+        if (data.sessionToken) mqtSessione.salva(username, data.sessionToken);
         
         if (!data.success || !data.fields) {
             mostraShowroom(username);
@@ -1647,7 +1651,9 @@ async function pubblicaBozza() {
                 sessionToken: tokenSalvatiPubblica[usernameCorrente]
             })
         }); 
+        if (response.status === 401) { mqtSessione.scaduta(usernameCorrente); return; }
         const data = await response.json();
+        if (data.sessionToken) mqtSessione.salva(usernameCorrente, data.sessionToken);
         
         if (data.success) {
             if(btn) {

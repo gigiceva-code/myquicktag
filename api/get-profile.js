@@ -17,6 +17,13 @@ function verifyToken(username, token) {
   }
 }
 
+function generateToken(username) {
+  const expiry = Date.now() + (1000 * 60 * 60 * 24 * 90); // 90 giorni
+  const payload = `${username}.${expiry}`;
+  const signature = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(payload).digest('hex');
+  return `${payload}.${signature}`;
+}
+
 export default async function handler(req, res) {
   const { u, token } = req.query;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
@@ -47,7 +54,8 @@ export default async function handler(req, res) {
       // --- FIX SICUREZZA: draft_json è la bozza privata dell'utente, non deve essere
       // leggibile da chiunque conosca lo username. Torna nella risposta SOLO se chi chiama
       // dimostra di essere il proprietario tramite sessionToken valido.
-      if (draft_json !== undefined && verifyToken(safeUsername, token)) {
+      const tokenValido = verifyToken(safeUsername, token);
+      if (draft_json !== undefined && tokenValido) {
         fieldsPubblici.draft_json = draft_json;
       } 
       const risposta = {
@@ -55,6 +63,14 @@ export default async function handler(req, res) {
         id: record.id,
         fields: fieldsPubblici
       };
+
+      // Sessione "scorrevole": il proprietario di un account attivo che apre la sua tag o
+      // l'editor riceve un token rinnovato per altri 90 giorni. Le ricevute di prenotazione
+      // (account senza password) non vengono rinnovate.
+      if (tokenValido && fieldsPubblici.has_password) {
+        risposta.sessionToken = generateToken(safeUsername);
+        res.setHeader('Cache-Control', 'no-store');
+      }
 
       // PRENOTAZIONE 24H: unica fonte di verità = createdTime di Airtable (stesso criterio di check-and-create.js)
       const stato = (fieldsPubblici.stato || "").toLowerCase().trim();

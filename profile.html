@@ -501,7 +501,8 @@
         <a href="#" id="btn-upsell-checkout" style="display: block; width: 100%; background: #ffffff; color: #000000; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.8px; text-align: center; transition: all 0.2s ease;">Fai l'Upgrade</a>
     </div>
 </div>
-  <script src="migrate-storage.js"></script>     
+  <script src="migrate-storage.js"></script>
+  <script src="/session.js"></script>     
 <script>
 // ====================================================
 // 🟩 BLOCCO 1 — FUNZIONI DI SUPPORTO & LUXURY NAVIGATE
@@ -659,6 +660,11 @@ async function caricaDatiDashboard(nomeMinuto) {
         const data = await response.json();
 
         if (data && data.success) {
+            // Account attivo ma sessione scaduta su questo dispositivo: login prima di entrare
+            if (data.fields.has_password && !mqtSessione.valida(nomeMinuto)) {
+                mqtSessione.scaduta(nomeMinuto);
+                return;
+            }
             if (data.fields.pocket_cloud && data.fields.pocket_cloud.trim() !== "") {
                 try {
                     const pocketDalCloud = JSON.parse(data.fields.pocket_cloud);
@@ -675,11 +681,7 @@ async function caricaDatiDashboard(nomeMinuto) {
             // La tag non esiste (più) sul server: probabilmente una prenotazione scaduta
             // e riciclata, o un account rimosso. Il "bypass zero-latenza" in index.html
             // si basa sulla cache locale, quindi va ripulita per non restare bloccati qui.
-            let chiaviSalvate = [];
-            try { chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]'); } catch(e) {}
-            const chiaviAggiornate = chiaviSalvate.filter(k => k !== nomeMinuto);
-            localStorage.setItem('mqt_keys', JSON.stringify(chiaviAggiornate));
-            if (localStorage.getItem('mqt_logged_user') === nomeMinuto) localStorage.removeItem('mqt_logged_user');
+            mqtSessione.rimuovi(nomeMinuto);
 
             aggiornaCard("Questa Tag non è più disponibile", "Ti reindirizziamo alla home\u2026", "");
             aggiornaBadge("offline");

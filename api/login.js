@@ -36,7 +36,7 @@ const pwdProtetta = String(pwd).replace(/[^a-fA-F0-9]/g, '');
         const data = await response.json();
 
               if (data.records && data.records.length > 0) {
-            const expiry = Date.now() + (1000 * 60 * 60 * 24 * 30); // 30 giorni
+            const expiry = Date.now() + (1000 * 60 * 60 * 24 * 90); // 90 giorni, rinnovati a ogni utilizzo (get-profile / update-profile)
             const payload = `${tagPulito}.${expiry}`;
             const signature = crypto
                 .createHmac('sha256', process.env.SESSION_SECRET)

@@ -752,8 +752,20 @@
                 const response = await fetch('/api/update-profile', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 
                 });
+
+                if (response.status === 401) {
+                    // Il lavoro è già al sicuro nella bozza locale (mqt_draft_full_): non va perso
+                    if (statoUtente === 'attivo') {
+                        mqtSessione.scaduta(NOME_SISTEMA);
+                    } else {
+                        alert("Prenotazione non valida su questo dispositivo\n\nLa prenotazione è scaduta oppure è stata fatta da un altro dispositivo o browser. Torna alla home per verificare il nome.");
+                        if (btnMasterText) btnMasterText.innerText = testoOriginale;
+                    }
+                    return;
+                }
                 
                 const data = await response.json();
+                if (data.sessionToken) mqtSessione.salva(NOME_SISTEMA, data.sessionToken);
                 
                 if (data.success) {
                     window.onbeforeunload = null; // Rimuove eventuali blocchi di uscita
@@ -835,6 +847,14 @@ try {
 const tokenAttuale = tokenPerLettura[NOME_SISTEMA] || '';
 const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeURIComponent(tokenAttuale)}`);
                 const data = await response.json();
+
+                // Account attivo ma sessione scaduta: login prima di iniziare a modificare
+                if (data.fields && data.fields.has_password && !mqtSessione.valida(NOME_SISTEMA)) {
+                    mqtSessione.scaduta(NOME_SISTEMA);
+                    return;
+                }
+                // Sessione scorrevole: token rinnovato dal server
+                if (data.sessionToken) mqtSessione.salva(NOME_SISTEMA, data.sessionToken);
 
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
                 userPlan = (data.fields?.plan || 'BASE').toUpperCase().trim();
@@ -1750,15 +1770,8 @@ function gestisciVIPSwitch(checkbox) {
             const tagCorrente = urlParams.get('u');
             
             if (tagCorrente) {
-                // Rimuove la chiave specifica dal portachiavi multiplo
-                let chiavi = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
-                chiavi = chiavi.filter(k => k !== tagCorrente);
-                localStorage.setItem('mqt_keys', JSON.stringify(chiavi));
-                
-                // Se l'utente attivo è quello scaduto, scollega anche lui
-                if (localStorage.getItem('mqt_logged_user') === tagCorrente) {
-                    localStorage.removeItem('mqt_logged_user');
-                }
+                // Rimuove la tag dal portachiavi del dispositivo (chiave, token, utente attivo)
+                mqtSessione.rimuovi(tagCorrente);
             }
             
             // Rimuove il flag di prenotazione temporanea

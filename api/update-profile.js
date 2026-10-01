@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { airtableFetch } from '../lib/airtable-fetch.js';
 
 function generateToken(username) {
-  const expiry = Date.now() + (1000 * 60 * 60 * 24 * 30); // 30 giorni
+  const expiry = Date.now() + (1000 * 60 * 60 * 24 * 90); // 90 giorni
   const payload = `${username}.${expiry}`;
   const signature = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(payload).digest('hex');
   return `${payload}.${signature}`;
@@ -61,7 +61,8 @@ export default async function handler(req, res) {
     // - Account attivo: il token arriva dal login.
     // - Tag "in attesa": il token è la ricevuta data da check-and-create.js a chi l'ha prenotata
     //   (vale 24h). Così nessun altro può modificarla o impostarne la prima password.
-    if (!soloCampiPubblici && !verifyToken(safeUsername, sessionToken)) {
+    const tokenValido = verifyToken(safeUsername, sessionToken);
+    if (!soloCampiPubblici && !tokenValido) {
       return res.status(401).json({ error: "Non autorizzato: sessione mancante o non valida" });
     }
     const fieldsToSave = {};
@@ -142,7 +143,13 @@ export default async function handler(req, res) {
 
              if (update.ok) {
         const responseBody = { success: true, action: 'updated' };
-        if (fieldsToSave.password) responseBody.sessionToken = generateToken(safeUsername);
+        // Sessione "scorrevole" (come Google/Instagram): ogni salvataggio di un account attivo
+        // rinnova il token per altri 90 giorni. Le ricevute di prenotazione (tag senza password)
+        // NON vengono rinnovate: restano legate alle 24h della prenotazione.
+        const accountConPassword = !!(fieldsToSave.password || data.records[0].fields.password);
+        if (fieldsToSave.password || (tokenValido && accountConPassword)) {
+          responseBody.sessionToken = generateToken(safeUsername);
+        }
         return res.status(200).json(responseBody);
       }
       
