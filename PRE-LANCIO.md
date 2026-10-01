@@ -24,6 +24,21 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 
 ---
 
+### Database: migrazione da Airtable a Supabase (prima del lancio)
+- **Deciso:** la migrazione a Supabase avviene **prima del lancio**. La data del lancio la decide il proprietario del progetto.
+- **Perché:** Airtable ha un limite mensile di chiamate API. Oggi ogni visita a una tag pubblica fa circa 3 chiamate (`get-profile` + `track-view`) e ogni click tracciato altre 2: con il piano gratuito bastano poche centinaia di visite al mese per bloccare il sito. La base "MyQuickTag (Copy)" esiste proprio perché la base originale aveva raggiunto il limite.
+- **Cosa coinvolge:** `api/check-and-create.js`, `api/get-profile.js`, `api/update-profile.js`, `api/track-view.js`, `api/login.js` e `lib/airtable-fetch.js`. Non cambiano `lib/abbonamento.js`, `lib/nomi-riservati.js` e le sessioni.
+- **Schema:** le colonne della base "MyQuickTag (Copy)" sono lo schema da ricreare come tabella su Supabase.
+- **Dati:** importare le tag reali dalla base in uso (al 1/10/2026 la Copy ne ha 8, tra cui `luigimicelli` e `lamaestraelalunno`) e scartare quelle di prova (`verificatest`, `utenteprova`, `nuovoaccount`…).
+- **Da fare per iniziare:** collegare il connettore Supabase su claude.ai (Personalizza → Connettori) e aprire una nuova sessione.
+
+### Sicurezza: da risolvere durante la migrazione (trovati il 1/10/2026)
+- [ ] **Dati privati leggibili da chiunque:** `/api/get-profile?u=nome` restituisce tutti i campi tranne password e bozza, compresi `lead_capture_leads` (nomi e contatti lasciati dai visitatori), `email` del proprietario e `analytics_log`. È un problema GDPR. Correzione: `get-profile` deve restituire ai visitatori solo i campi pubblici.
+- [ ] **Contatti e statistiche modificabili senza login:** la pagina pubblica invia a `update-profile` l'intera lista di `lead_capture_leads` e di `analytics_log`, che sono scrivibili senza token. Chiunque può svuotarle o riempirle di dati falsi. Correzione: un'API che aggiunge **un solo** contatto e una che registra **un solo** click, senza mai ricevere o rimandare l'intera lista.
+- [ ] **VIP Vault:** PIN e link protetto arrivano entrambi al browser e il controllo avviene lì, quindi il link si legge dagli strumenti per sviluppatori. Correzione: verificare il PIN sul server e mandare il link solo se il PIN è giusto.
+
+---
+
 ## 2. Da fare prima del passaggio su `main`
 
 - [ ] Test completi sul Preview di `sviluppo-v2`, usando sempre l'indirizzo **fisso** del branch:
@@ -36,8 +51,8 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
     - aggiunte le 24 colonne che mancavano rispetto alla copia (`quick_action_copertina`, `analytics_log`, `lead_capture_*`, `shop_*`, `video_*`, `partners_data`, ecc.);
     - `avatar_url` e `digital_style` ora sono testo, come nella copia: prima erano allegato e selezione singola, e Airtable rifiutava i salvataggi dell'editor;
     - le due colonne vecchie, vuote, sono state rinominate `avatar_url_VECCHIO_da_eliminare` e `digital_style_VECCHIO_da_eliminare` e si possono eliminare a mano.
-  - [ ] Controllare che `AIRTABLE_BASE_ID` in Production punti davvero a questa base. Se il sito pubblico ha già tag attive, usa un'altra base, perché questa è vuota.
-- [ ] **Variabili d'ambiente su Vercel (Production):** `SESSION_SECRET`, `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID`.
+  - Al 1/10/2026 su Vercel `AIRTABLE_BASE_ID` è un'unica variabile per Production e Preview e punta alla Copy, usata solo per il limite di chiamate. Con la migrazione a Supabase questo punto viene superato.
+- [x] **Variabili d'ambiente su Vercel (Production):** `SESSION_SECRET`, `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID` (verificate il 1/10/2026, tutte presenti). Dopo la migrazione andranno sostituite da quelle di Supabase.
 - [ ] Unire `sviluppo-v2` in `main` (pull request) e ricontrollare il sito pubblico.
 - [ ] Dopo il passaggio, le tag già attive ricevono 90 giorni pieni dal primo accesso (nessuna viene disattivata d'ufficio): verificare su un paio di tag reali.
 
