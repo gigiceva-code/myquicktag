@@ -32,6 +32,10 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 - [ ] **Database di produzione (Airtable):** il Preview usa la base "MyQuickTag (Copy)". Verificare che la base usata dal sito pubblico abbia le stesse colonne, in particolare:
   - `quick_action_copertina` (testo)
   - `data_inizio` e `data_scadenza` (data)
+  - **Controllo dell'1/10/2026** sulla base "MyQuickTag" (Table 1): `data_inizio` e `data_scadenza` ci sono, ma mancano **24 colonne** presenti nella copia:
+    `pocket_cloud`, `cv`, `live_status_micro`, `live_status_action_type`, `live_status_action_label`, `live_status_action_url`, `flash_micro`, `analytics_data`, `analytics_log`, `review_url`, `review_contact`, `video_url`, `video_cta_text`, `video_cta_url`, `partners_data`, `lead_capture_attivo`, `lead_capture_titolo`, `lead_capture_leads`, `shop_attivo`, `shop_titolo`, `shop_prezzo`, `shop_link`, `shop_scadenza`, `quick_action_copertina`.
+    Inoltre due colonne hanno un tipo diverso: `avatar_url` (allegato in produzione, testo nella copia) e `digital_style` (selezione singola in produzione, testo nella copia).
+    Da verificare anche quale base usa davvero il sito pubblico (`AIRTABLE_BASE_ID` in Production).
 - [ ] **Variabili d'ambiente su Vercel (Production):** `SESSION_SECRET`, `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID`.
 - [ ] Unire `sviluppo-v2` in `main` (pull request) e ricontrollare il sito pubblico.
 - [ ] Dopo il passaggio, le tag già attive ricevono 90 giorni pieni dal primo accesso (nessuna viene disattivata d'ufficio): verificare su un paio di tag reali.
@@ -39,6 +43,11 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 ---
 
 ## 3. Da sapere (comportamenti voluti, non bug)
+
+- **Blacklist e goldlist dei nomi:** l'elenco è in `lib/nomi-riservati.js` e lo controlla il server (`api/check-and-create.js`), non più il browser. Per aggiungere o togliere un nome basta modificare quel file.
+  - Blacklist: il nome non si può prenotare.
+  - Goldlist e nomi con meno di 3 caratteri: niente prenotazione automatica, compare il popup "Global Premium Tag" con l'email a vip@myquicktag.it. Un nome Premium già assegnato risulta "occupato".
+  - Le nuove prenotazioni accettano solo lettere e numeri, come già indicato nella home.
 
 - **Sessione:** dopo il login il "pass" vale 90 giorni e si rinnova a ogni utilizzo (come Instagram/Google). Va rifatto il login solo dopo 90 giorni senza aprire la tag o l'editor.
 - **Prenotazione:** dura 24 ore ed è legata al browser che l'ha fatta (ricevuta firmata).

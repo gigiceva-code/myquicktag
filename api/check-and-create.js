@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { airtableFetch } from '../lib/airtable-fetch.js';
+import { classificaNome } from '../lib/nomi-riservati.js';
 
 // "Ricevuta" della prenotazione: un token di sessione firmato dal server (stesso formato
 // di login.js), valido solo fino alla scadenza delle 24h. Solo chi ha prenotato lo riceve,
@@ -16,12 +17,19 @@ export default async function handler(req, res) {
     }
 
     // --- FIX SICUREZZA: Pulizia e protezione del tag ---
-    // Manteniamo solo lettere, numeri, trattini e underscore, scartando tutto il resto
-    const rawTag = req.body.tag || "";
-    const tag = rawTag.replace('@', '').trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '');
+    // Nelle nuove prenotazioni il nome può contenere solo lettere e numeri (stessa regola della home):
+    // un nome con altri caratteri viene rifiutato, non "ripulito" in un nome diverso.
+    const rawTag = String(req.body.tag || "");
+    const tag = rawTag.replace('@', '').trim().toLowerCase();
 
-    if (!tag) {
+    if (!tag || /[^a-z0-9]/.test(tag)) {
         return res.status(400).json({ success: false, message: 'Tag non valido o con caratteri non consentiti' });
+    }
+
+    // --- BLACKLIST (lib/nomi-riservati.js): nomi di sistema, rifiutati prima di toccare Airtable ---
+    const categoria = classificaNome(tag);
+    if (categoria === 'riservato') {
+        return res.status(400).json({ success: false, codice: 'riservato', message: 'Questo nome è riservato per funzioni di sistema o non è valido. Scegli un altro tag.' });
     }
 
     const baseId = process.env.AIRTABLE_BASE_ID;
@@ -71,6 +79,13 @@ export default async function handler(req, res) {
                 }
             }
         }
+        // --- GOLDLIST (lib/nomi-riservati.js): un nome Premium libero non si prenota da solo,
+        // l'assegnazione la tratta il team. Controllata dopo la ricerca, così un nome Premium
+        // già assegnato risulta semplicemente "occupato".
+        if (categoria === 'premium') {
+            return res.status(403).json({ success: false, codice: 'premium', username: tag, message: "Nome Premium: l'assegnazione è trattata dal team." });
+        }
+
             // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer)
         const createUrl = `https://api.airtable.com/v0/${baseId}/${tableId}`;
        const createRes = await airtableFetch(createUrl, {
