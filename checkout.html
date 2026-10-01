@@ -350,6 +350,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         let usernameScelto = urlParams.get("u") || "";
         let targetUserClean = usernameScelto.replace('@', '').trim().toLowerCase();
+        // Rinnovo (dalla dashboard): stessa pagina, ma per una tag già attiva del proprietario
+        const modalitaRinnovo = urlParams.get("rinnovo") === "1";
 
         document.addEventListener("DOMContentLoaded", function() {
             if (!targetUserClean) {
@@ -369,6 +371,20 @@
                     const record = data.fields;
                     const stato = (record.stato || "").toLowerCase().trim();
                     const usernameDisplay = record.username_display || targetUserClean.toUpperCase();
+
+                    // RINNOVO: tag attiva + proprietario con sessione valida
+                    if (stato === "attivo" && modalitaRinnovo) {
+                        if (!mqtSessione.valida(targetUserClean)) { mqtSessione.scaduta(targetUserClean); return; }
+                        const nomeRinnovo = usernameDisplay.replace('@', '');
+                        document.querySelector("#step-payment .main-title").innerText = "Rinnova la tua tag";
+                        document.getElementById("display-username").innerText = `Rinnovo @${nomeRinnovo}`;
+                        document.getElementById("receipt-username").innerText = `@${nomeRinnovo}`;
+                        document.getElementById("display-price").innerText = "Gratis";
+                        document.querySelector('button[onclick="eseguiTransazione()"]').innerText = "Rinnova per 90 giorni";
+                        document.getElementById("loading-screen").style.display = "none";
+                        document.getElementById("step-payment").style.display = "block";
+                        return;
+                    }
 
                     // Se il profilo è già attivo, lo mandiamo via a protezione del sistema
                     if (stato === "attivo") {
@@ -437,6 +453,8 @@
             const testoOriginale = btn ? btn.innerText : "";
             if(btn) { btn.innerText = "VERIFICA IN CORSO..."; btn.disabled = true; }
 
+            if (modalitaRinnovo) { await eseguiRinnovo(btn, testoOriginale); return; }
+
             const puoPagare = await verificaCoperturaPrenotazione();
             
             if (!puoPagare) {
@@ -454,6 +472,34 @@
             // Successo transazione -> Passaggio allo Step 2 (Password)
             document.getElementById("step-payment").style.display = "none";
             document.getElementById("step-password").style.display = "block";
+        }
+
+        // RINNOVO: il server allunga la scadenza di 90 giorni (lib/abbonamento.js)
+        async function eseguiRinnovo(btn, testoOriginale) {
+            try {
+                const response = await fetch('/api/update-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username_system: targetUserClean, rinnova: true, sessionToken: mqtSessione.token(targetUserClean) })
+                });
+                if (response.status === 401) { mqtSessione.scaduta(targetUserClean); return; }
+                const resData = await response.json();
+                if (!resData.success) {
+                    alert(resData.error || "Rinnovo non riuscito. Riprova.");
+                    if (btn) { btn.innerText = testoOriginale; btn.disabled = false; }
+                    return;
+                }
+                if (resData.sessionToken) mqtSessione.salva(targetUserClean, resData.sessionToken);
+                const nuovaScadenza = new Date(resData.abbonamento.data_scadenza + 'T12:00:00Z').toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                document.querySelector("#step-success .main-title").innerText = "Rinnovo completato";
+                document.querySelector("#step-success .subtitle").innerText = `La tua tag è attiva fino al ${nuovaScadenza}.`;
+                document.getElementById("step-payment").style.display = "none";
+                document.getElementById("step-success").style.display = "block";
+            } catch (e) {
+                console.error("Errore rinnovo:", e);
+                alert("Errore di connessione. Riprova tra poco.");
+                if (btn) { btn.innerText = testoOriginale; btn.disabled = false; }
+            }
         }
 
         // 3. CHIAMATA fetch AL DATABASE PER SALVARE LA PASSWORD ED ATTIVARE IL PROFILO
@@ -526,6 +572,7 @@
      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
         function vaiAllaTag() {
             if (!targetUserClean) return;
+            if (modalitaRinnovo) { window.location.href = `/profile.html?u=${targetUserClean}`; return; }
             localStorage.setItem('mqt_logged_user', targetUserClean);
             window.location.href = `/tag.html?u=${targetUserClean}&welcome=1`;
         }   

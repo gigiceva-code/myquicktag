@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { airtableFetch } from '../lib/airtable-fetch.js';
+import { calcolaAbbonamento, dateAttivazione } from '../lib/abbonamento.js';
 
 // Stessa logica di verifyToken usata in update-profile.js (HMAC + confronto a tempo costante).
 function verifyToken(username, token) {
@@ -63,6 +64,36 @@ export default async function handler(req, res) {
         id: record.id,
         fields: fieldsPubblici
       };
+
+      // DURATA TAG (90 giorni + 14 di grazia): fase calcolata dal server
+      if (String(fieldsPubblici.stato || '').toLowerCase().trim() === 'attivo') {
+        // Tag attivate prima dell'introduzione delle date: 90 giorni pieni da oggi (scritti una volta sola)
+        if (!record.fields.data_scadenza) {
+          const date = dateAttivazione();
+          const daScrivere = { data_scadenza: date.data_scadenza };
+          if (!record.fields.data_inizio) daScrivere.data_inizio = date.data_inizio;
+          try {
+            await airtableFetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}/${record.id}`, {
+              method: 'PATCH',
+              headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fields: daScrivere })
+            });
+            record.fields.data_scadenza = date.data_scadenza;
+          } catch (e) {
+            console.error("Scrittura date abbonamento fallita:", e);
+          }
+        }
+        risposta.abbonamento = calcolaAbbonamento(record);
+        // Tag scaduta: ai visitatori non si mostrano più i contenuti, solo il nome
+        if (risposta.abbonamento.fase === 'scaduta' && !tokenValido) {
+          risposta.fields = {
+            username_system: fieldsPubblici.username_system,
+            username_display: fieldsPubblici.username_display,
+            stato: fieldsPubblici.stato,
+            has_password: fieldsPubblici.has_password
+          };
+        }
+      }
 
       // Sessione "scorrevole": il proprietario di un account attivo che apre la sua tag o
       // l'editor riceve un token rinnovato per altri 90 giorni. Le ricevute di prenotazione

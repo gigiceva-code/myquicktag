@@ -160,8 +160,21 @@ const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}$
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
 
+      // DURATA TAG (90 giorni + 14 di grazia): fase calcolata dal server
+      const faseTag = data.abbonamento ? data.abbonamento.fase : 'attiva';
+      if (stato === "attivo" && faseTag === 'scaduta' && !isOwner) {
+            // Tag disattivata: il server non manda più i contenuti ai visitatori
+            mostraErrore(`@${(fields.username_display || fields.username_system || '').replace('@', '')}<br>non è al momento attiva.`);
+            return;
+      }
+
       if (stato === "attivo") {
             renderizzaTagCompleta(fields);
+            if (isOwner && faseTag === 'scaduta') {
+                setTimeout(() => mostraToast('Tag disattivata: non è visibile al pubblico. Rinnovala dalla dashboard'), 800);
+            } else if (isOwner && faseTag === 'grazia') {
+                setTimeout(() => mostraToast(`Piano scaduto: la tag resta online ancora ${data.abbonamento.giorni_alla_disattivazione} giorni. Rinnovala dalla dashboard`), 800);
+            }
             
             // ============================================================
             // 📊 MOTORE TRACCIAMENTO VISITE (SILENZIOSO)

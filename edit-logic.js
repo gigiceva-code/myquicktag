@@ -764,6 +764,11 @@
                     return;
                 }
                 
+                if (response.status === 403) {
+                    alert("Tag disattivata\n\nRinnova dalla dashboard per poter salvare le modifiche. Il tuo lavoro resta salvato su questo dispositivo.");
+                    if (btnMasterText) btnMasterText.innerText = testoOriginale;
+                    return;
+                }
                 const data = await response.json();
                 if (data.sessionToken) mqtSessione.salva(NOME_SISTEMA, data.sessionToken);
                 
@@ -855,6 +860,12 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                 }
                 // Sessione scorrevole: token rinnovato dal server
                 if (data.sessionToken) mqtSessione.salva(NOME_SISTEMA, data.sessionToken);
+                // Tag disattivata (90 giorni + 14 di grazia trascorsi): si torna alla dashboard per rinnovare
+                if (data.abbonamento && data.abbonamento.fase === 'scaduta') {
+                    alert("Tag disattivata\n\nIl piano e il periodo di grazia sono terminati. Rinnova dalla dashboard per riattivarla e modificarla.");
+                    window.location.href = `/profile.html?u=${NOME_SISTEMA}`;
+                    return;
+                }
 
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
                 userPlan = (data.fields?.plan || 'BASE').toUpperCase().trim();

@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { airtableFetch } from '../lib/airtable-fetch.js';
+import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito } from '../lib/abbonamento.js';
 
 function generateToken(username) {
   const expiry = Date.now() + (1000 * 60 * 60 * 24 * 90); // 90 giorni
@@ -65,6 +66,39 @@ export default async function handler(req, res) {
     if (!soloCampiPubblici && !tokenValido) {
       return res.status(401).json({ error: "Non autorizzato: sessione mancante o non valida" });
     }
+
+    // --- DURATA TAG (90 giorni + 14 di grazia, vedi lib/abbonamento.js) ---
+    const recordAttuale = data.records && data.records.length > 0 ? data.records[0] : null;
+    const statoAttuale = String(recordAttuale?.fields?.stato || '').toLowerCase().trim();
+    const abbonamento = recordAttuale && statoAttuale === 'attivo' ? calcolaAbbonamento(recordAttuale) : null;
+
+    // Rinnovo: solo il proprietario (token valido), solo negli ultimi 14 giorni, in grazia o dopo
+    if (body.rinnova === true) {
+      if (!abbonamento || !tokenValido) {
+        return res.status(403).json({ error: "Rinnovo non consentito" });
+      }
+      if (!rinnovoConsentito(abbonamento)) {
+        return res.status(400).json({ error: "Il rinnovo sarà disponibile negli ultimi 14 giorni del piano", abbonamento });
+      }
+      const nuovaScadenza = nuovaScadenzaRinnovo(abbonamento);
+      const rinnovo = await airtableFetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordAttuale.id}`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { data_scadenza: nuovaScadenza } })
+      });
+      if (!rinnovo.ok) {
+        const erroreRinnovo = await rinnovo.json();
+        console.error("AIRTABLE RINNOVO REJECTED:", erroreRinnovo);
+        return res.status(500).json({ error: "Rinnovo non riuscito" });
+      }
+      const recordRinnovato = { ...recordAttuale, fields: { ...recordAttuale.fields, data_scadenza: nuovaScadenza } };
+      return res.status(200).json({ success: true, action: 'renewed', abbonamento: calcolaAbbonamento(recordRinnovato), sessionToken: generateToken(safeUsername) });
+    }
+
+    // Tag scaduta (finita anche la grazia): niente modifiche finché non viene rinnovata
+    if (abbonamento && abbonamento.fase === 'scaduta' && !soloCampiPubblici) {
+      return res.status(403).json({ error: "Tag scaduta: rinnova per modificarla", scaduta: true, abbonamento });
+    }
     const fieldsToSave = {};
     
    // --- FIX DATI 2: Aggiunto "quick_action_copertina" alla lista ---
@@ -128,6 +162,11 @@ export default async function handler(req, res) {
     if (data.records && data.records.length > 0) {
       const recordId = data.records[0].id;
       
+      // Attivazione (prima password): il server scrive le date del piano, mai il browser
+      if (fieldsToSave.password && !data.records[0].fields.password) {
+        Object.assign(fieldsToSave, dateAttivazione());
+      }
+
       if (Object.keys(fieldsToSave).length === 0) {
           return res.status(200).json({ success: true, action: 'skipped_empty' });
       }

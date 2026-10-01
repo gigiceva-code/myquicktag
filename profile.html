@@ -674,6 +674,7 @@ async function caricaDatiDashboard(nomeMinuto) {
                 }
             }
             
+            data.fields.abbonamento = data.abbonamento; // fase della tag (attiva / grazia / scaduta)
             determinaModalitaAnteprima(data.fields, nomeMinuto);
             if (typeof aggiornaContatoriDashboard === "function") aggiornaContatoriDashboard(data.fields);
             
@@ -708,37 +709,50 @@ function aggiornaContatoriDashboard(record) {
     const btnEdit = document.getElementById("link-edit");
     const btnRinnova = document.getElementById("btn-rinnova");
 
-    let giorniRimanenti = 90; 
-    if (record.data_scadenza) {
-        const dataScadenza = new Date(record.data_scadenza);
-        const oggi = new Date();
-        const diffTempo = dataScadenza - oggi;
-        giorniRimanenti = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+    // DURATA TAG: 90 giorni + 14 di grazia, fase calcolata dal server (lib/abbonamento.js)
+    const abb = record.abbonamento;
+    const utenteCorrente = record.username_system || localStorage.getItem("mqt_logged_user");
+    const paywallText = document.getElementById("paywall-text");
+    const formattaData = d => new Date(d + 'T12:00:00Z').toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    if (btnRinnova) {
+        btnRinnova.href = `checkout.html?u=${utenteCorrente}&rinnovo=1`;
+        btnRinnova.innerText = "Rinnova gratis per 90 giorni";
     }
-    
-    if (trialEl) {
-        if (giorniRimanenti > 0) {
-            trialEl.innerText = giorniRimanenti + " gg";
-            trialEl.style.color = (giorniRimanenti <= 7) ? "#ffab00" : "#ffffff";
+
+    if (abb && trialEl) {
+        if (abb.fase === 'attiva') {
+            trialEl.innerText = abb.giorni_alla_scadenza + " gg";
+            trialEl.style.color = (abb.giorni_alla_scadenza <= 14) ? "#ffab00" : "#ffffff";
+        } else if (abb.fase === 'grazia') {
+            trialEl.innerText = "Scaduta";
+            trialEl.style.color = "#ffab00";
         } else {
-            trialEl.innerText = "Scaduto";
-            trialEl.style.color = "#ff4444"; 
+            trialEl.innerText = "Disattivata";
+            trialEl.style.color = "#ff4444";
         }
     }
 
-    if (giorniRimanenti <= 0) {
+    // Avviso di rinnovo: ultimi 14 giorni del piano e periodo di grazia (tag ancora online)
+    if (abb && (abb.fase === 'grazia' || (abb.fase === 'attiva' && abb.giorni_alla_scadenza <= 14))) {
         if (paywallBanner) paywallBanner.style.display = "block";
+        if (paywallText) {
+            paywallText.innerText = abb.fase === 'grazia'
+                ? `Il piano è scaduto il ${formattaData(abb.data_scadenza)}. La tua tag resta online ancora ${abb.giorni_alla_disattivazione} giorni: rinnova per non perderla.`
+                : `Il tuo piano scade il ${formattaData(abb.data_scadenza)} (tra ${abb.giorni_alla_scadenza} giorni). Rinnova ora: i giorni rimasti non vanno persi.`;
+        }
+    }
+
+    // Tag disattivata (finita anche la grazia): non è più visibile e non si può modificare
+    if (abb && abb.fase === 'scaduta') {
+        if (paywallBanner) paywallBanner.style.display = "block";
+        if (paywallText) paywallText.innerText = "La tua tag è disattivata: non è più visibile al pubblico. Rinnova per riattivarla subito con tutti i tuoi contenuti.";
         if (btnEdit) {
             btnEdit.style.opacity = "0.4"; 
             btnEdit.style.pointerEvents = "none"; 
             btnEdit.onclick = function(e) {
                 e.preventDefault();
-                alert("Piano scaduto. Rinnova per modificare la Tag.");
+                alert("Tag disattivata. Rinnova per modificarla.");
             };
-        }
-        if (btnRinnova) {
-            const utenteCorrente = record.username_system || localStorage.getItem("mqt_logged_user");
-            btnRinnova.href = `checkout.html?u=${utenteCorrente}`;
         }
     }
 
