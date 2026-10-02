@@ -386,9 +386,13 @@
                         return;
                     }
 
-                    // Se il profilo è già attivo, lo mandiamo via a protezione del sistema
+                    // Tag già attiva (es. "Fai l'Upgrade" dalla dashboard): il cambio di piano arriverà
+                    // con i pagamenti veri (vedi PRE-LANCIO.md). Per ora lo diciamo, invece di un 404.
                     if (stato === "attivo") {
-                        window.location.href = `/${targetUserClean}`;
+                        document.getElementById("loading-screen").innerHTML = `
+                            <h2 class="main-title">Upgrade in arrivo</h2>
+                            <p class="subtitle">I piani Premium e Gold saranno disponibili con l'apertura dei pagamenti.</p>
+                            <a href="/profile.html?u=${targetUserClean}" class="action-button" style="text-decoration:none;">Torna alla dashboard</a>`;
                         return;
                     }
 

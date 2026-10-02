@@ -18,6 +18,12 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
   - `lib/abbonamento.js` → durate (`GIORNI_PIANO`, `GIORNI_GRAZIA`) e regole del rinnovo
 - Con il pagamento vero (Stripe) l'attivazione e il rinnovo dovranno essere confermati da Stripe al server (webhook), non dal browser.
 
+### Piani Premium / Gold (upgrade)
+- Oggi il piano scelto nell'editor è solo un'**anteprima** salvata sul telefono: il server non lo vede.
+  Il piano vero è la colonna `plan` del database (vuota = Base) e deve scriverlo solo il server, dopo il pagamento.
+- "Fai l'Upgrade" (dashboard) e il checkout di una tag già attiva mostrano per ora "Upgrade in arrivo".
+- Per i test si può impostare il piano a mano su Supabase (tabella `tags`, colonna `plan`: `PREMIUM` o `GOLD`).
+
 ### Prezzo mostrato nel checkout di attivazione
 - `checkout.html` mostra **"€19,00"**, ma oggi l'attivazione è gratuita (scelta voluta per i primi 3 mesi).
 - Decidere cosa mostrare (es. "Gratis per 3 mesi") e allineare i testi del checkout.
