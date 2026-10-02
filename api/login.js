@@ -49,6 +49,7 @@ const pwdProtetta = String(pwd).replace(/[^a-fA-F0-9]/g, '');
             res.status(401).json({ success: false, message: 'Credenziali non valide' });
         }
     } catch (error) {
+        console.error("CRASH LOGIN:", error);
         res.status(500).json({ success: false, message: 'Errore server' });
     }
 }
