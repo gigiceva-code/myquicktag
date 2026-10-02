@@ -338,7 +338,7 @@
                 </div>
             </div>
 
-            <button class="action-button" onclick="vaiAllaTag()">
+            <button class="action-button" id="btn-vai-alla-tag" onclick="vaiAllaTag()">
                 Accedi alla tua PWA
             </button>
         </div>
@@ -493,6 +493,7 @@
                 const nuovaScadenza = new Date(resData.abbonamento.data_scadenza + 'T12:00:00Z').toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
                 document.querySelector("#step-success .main-title").innerText = "Rinnovo completato";
                 document.querySelector("#step-success .subtitle").innerText = `La tua tag è attiva fino al ${nuovaScadenza}.`;
+                document.getElementById("btn-vai-alla-tag").innerText = "Torna alla dashboard";
                 document.getElementById("step-payment").style.display = "none";
                 document.getElementById("step-success").style.display = "block";
             } catch (e) {
