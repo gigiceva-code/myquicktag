@@ -143,6 +143,12 @@ export default async function handler(req, res) {
     }
 
     if (recordAttuale) {
+      // La password qui si imposta SOLO la prima volta (attivazione dal checkout).
+      // Per cambiarla serve anche quella attuale: api/change-password.js (pagina Account).
+      if (fieldsToSave.password && recordAttuale.fields.password) {
+        delete fieldsToSave.password;
+      }
+
       // Attivazione (prima password): il server scrive le date del piano, mai il browser
       if (fieldsToSave.password && !recordAttuale.fields.password) {
         Object.assign(fieldsToSave, dateAttivazione());

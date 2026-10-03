@@ -62,5 +62,6 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 - **Prenotazione:** dura 24 ore ed è legata al browser che l'ha fatta (ricevuta firmata).
 - **iPhone:** l'app installata ha dati separati da Safari, quindi dopo l'installazione il proprietario deve rifare il login una volta dentro l'app (limite di Apple).
 - **Dati privati del proprietario:** contatti lasciati dai visitatori, statistiche, Pocket e bozza non arrivano mai ai visitatori: `get-profile` li restituisce solo al proprietario con sessione valida. I visitatori aggiungono contatti e click tramite `api/add-lead.js` e `api/track-click.js`, che aggiungono una voce senza poter leggere o cancellare le altre. Ogni altra scrittura richiede il login.
+- **Password:** si imposta la prima volta dal checkout; dopo si cambia solo da Account & Piano (`api/change-password.js`), che chiede anche quella attuale. Nota: cambiare password non fa uscire gli altri dispositivi già collegati (le sessioni restano valide fino alla loro scadenza).
 - **Database:** solo le funzioni in `api/` parlano con Supabase (tramite `lib/db.js`), con la chiave segreta. Il browser non ha accesso diretto.
 - **Durata tag:** 90 giorni + 14 di grazia (tag ancora online e modificabile), poi disattivata finché non viene rinnovata. I contenuti non vengono cancellati.

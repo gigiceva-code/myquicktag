@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Account & Piano | myquicktag</title>
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="migrate-storage.js"></script>
+    <script src="/session.js"></script>
+
+<style>
+    :root {
+        --bg-color: #000000;
+        --accent-smeraldo: #50C878;
+        --text-sec: #8e8e93;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.06);
+        --warning: #ffab00;
+        --danger: #ff4444;
+    }
+
+    body {
+        margin: 0;
+        padding: 16px 16px 40px 16px;
+        background-color: var(--bg-color);
+        font-family: 'Inter', sans-serif;
+        color: #ffffff;
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
+
+    .wrap { max-width: 480px; margin: 0 auto; }
+
+    .top-bar { display: flex; align-items: center; gap: 14px; margin: 10px 0 24px; }
+    .btn-back {
+        width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        color: #ffffff; text-decoration: none;
+    }
+    .top-bar h1 { font-size: 1.3rem; margin: 0; font-weight: 600; color: var(--accent-smeraldo); }
+    .top-bar p { margin: 2px 0 0; font-size: 0.85rem; text-transform: uppercase; }
+
+    .card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 16px; padding: 20px; margin-bottom: 14px;
+    }
+    .card-title {
+        font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase;
+        color: var(--text-sec); margin: 0 0 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .card-title i { color: var(--accent-smeraldo); }
+
+    .row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 0.9rem; }
+    .row + .row { border-top: 1px solid var(--card-border); }
+    .row .label { color: var(--text-sec); }
+    .row .value { font-weight: 600; text-align: right; }
+
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-ok { background: rgba(80, 200, 120, 0.15); color: var(--accent-smeraldo); }
+    .badge-warn { background: rgba(255, 171, 0, 0.15); color: var(--warning); }
+    .badge-ko { background: rgba(255, 68, 68, 0.15); color: var(--danger); }
+
+    .note { font-size: 0.8rem; color: var(--text-sec); line-height: 1.4; margin: 12px 0 0; }
+
+    .btn {
+        display: block; width: 100%; box-sizing: border-box; margin-top: 14px;
+        padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+        font-family: inherit; font-size: 0.85rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.5px; text-align: center; text-decoration: none;
+    }
+    .btn-primary { background: var(--accent-smeraldo); color: #000000; }
+    .btn-secondary { background: transparent; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.15); }
+    .btn-danger { background: transparent; color: var(--danger); border: 1px solid rgba(255, 68, 68, 0.35); }
+    .btn:disabled { opacity: 0.5; cursor: default; }
+
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 0.75rem; color: var(--text-sec); margin-bottom: 6px; }
+    .field input {
+        width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ffffff; font-family: inherit; font-size: 16px;
+    }
+    .field input:focus { outline: none; border-color: var(--accent-smeraldo); }
+
+    .messaggio { font-size: 0.85rem; margin-top: 10px; min-height: 1em; }
+    .messaggio.ok { color: var(--accent-smeraldo); }
+    .messaggio.ko { color: var(--danger); }
+
+    #loading { text-align: center; color: var(--text-sec); padding: 60px 0; }
+    #contenuto { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+    <div class="top-bar">
+        <a href="/profile.html" id="btn-back" class="btn-back" aria-label="Torna alla dashboard"><i class="fas fa-chevron-left"></i></a>
+        <div>
+            <h1>Account & Piano</h1>
+            <p id="nome-tag">@</p>
+        </div>
+    </div>
+
+    <div id="loading"><i class="fas fa-spinner fa-spin"></i></div>
+
+    <div id="contenuto">
+
+        <!-- PIANO -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-crown"></i> Il tuo piano</h2>
+            <div class="row"><span class="label">Piano</span><span class="value" id="piano-nome">—</span></div>
+            <div class="row"><span class="label">Stato</span><span class="value"><span class="badge" id="piano-stato">—</span></span></div>
+            <div class="row"><span class="label">Scadenza</span><span class="value" id="piano-scadenza">—</span></div>
+            <p class="note" id="piano-nota"></p>
+            <a href="#" class="btn btn-primary" id="btn-rinnova" style="display: none;">Rinnova gratis per 90 giorni</a>
+            <a href="#" class="btn btn-secondary" id="btn-cambia-piano">Cambia piano</a>
+        </div>
+
+        <!-- CONTATTI RACCOLTI -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-inbox"></i> Contatti raccolti</h2>
+            <div class="row"><span class="label">Dal vasetto della tua tag</span><span class="value" id="lead-count">0</span></div>
+            <p class="note">L'elenco completo, con nomi e recapiti, è nell'editor alla voce <strong>Lead Capture</strong>.</p>
+            <a href="#" class="btn btn-secondary" id="btn-vedi-contatti">Apri l'editor</a>
+        </div>
+
+        <!-- SICUREZZA -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-shield-alt"></i> Cambia password</h2>
+            <form id="form-password" autocomplete="on">
+                <input type="text" name="username" id="pwd-username" autocomplete="username" hidden>
+                <div class="field">
+                    <label for="pwd-attuale">Password attuale</label>
+                    <input type="password" id="pwd-attuale" autocomplete="current-password" required>
+                </div>
+                <div class="field">
+                    <label for="pwd-nuova">Nuova password (almeno 6 caratteri)</label>
+                    <input type="password" id="pwd-nuova" autocomplete="new-password" minlength="6" required>
+                </div>
+                <div class="field">
+                    <label for="pwd-conferma">Ripeti la nuova password</label>
+                    <input type="password" id="pwd-conferma" autocomplete="new-password" minlength="6" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-salva-password">Salva nuova password</button>
+                <div class="messaggio" id="msg-password" role="status"></div>
+            </form>
+        </div>
+
+        <!-- ESCI -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-mobile-alt"></i> Questo dispositivo</h2>
+            <p class="note" style="margin-top: 0;">Esci da questo telefono o computer. La tua tag resta online e potrai rientrare con la password.</p>
+            <button type="button" class="btn btn-danger" id="btn-esci">Esci da questo dispositivo</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tag = String(urlParams.get('u') || localStorage.getItem('mqt_logged_user') || '')
+        .replace('@', '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+
+    if (!tag) { window.location.href = '/index.html'; return; }
+    // Pagina riservata al proprietario: serve una sessione valida su questo dispositivo
+    if (!mqtSessione.valida(tag)) { mqtSessione.scaduta(tag); return; }
+
+    const dashboard = `/profile.html?u=${encodeURIComponent(tag)}`;
+    document.getElementById('btn-back').href = dashboard;
+    document.getElementById('nome-tag').textContent = '@' + tag;
+    document.getElementById('pwd-username').value = tag;
+    document.getElementById('btn-vedi-contatti').href = `/edit.html?u=${encodeURIComponent(tag)}`;
+    document.getElementById('btn-cambia-piano').href = `/checkout.html?u=${encodeURIComponent(tag)}`;
+    document.getElementById('btn-rinnova').href = `/checkout.html?u=${encodeURIComponent(tag)}&rinnovo=1`;
+
+    const formattaData = d => new Date(d + 'T12:00:00Z').toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const NOMI_PIANO = { BASE: 'Base', PREMIUM: 'Premium', GOLD: 'Gold' };
+
+    function mostraPiano(fields, abb) {
+        const piano = String(fields.plan || 'BASE').toUpperCase().trim();
+        document.getElementById('piano-nome').textContent = NOMI_PIANO[piano] || piano;
+
+        const statoEl = document.getElementById('piano-stato');
+        const notaEl = document.getElementById('piano-nota');
+        const btnRinnova = document.getElementById('btn-rinnova');
+
+        if (!abb) {
+            statoEl.textContent = 'In attesa di attivazione';
+            statoEl.className = 'badge badge-warn';
+            return;
+        }
+
+        document.getElementById('piano-scadenza').textContent = formattaData(abb.data_scadenza);
+        // Stesse regole del server (lib/abbonamento.js): rinnovo negli ultimi 14 giorni, in grazia o dopo
+        const rinnovoConsentito = abb.fase !== 'attiva' || abb.giorni_alla_scadenza <= 14;
+        btnRinnova.style.display = rinnovoConsentito ? 'block' : 'none';
+
+        if (abb.fase === 'attiva') {
+            const inScadenza = abb.giorni_alla_scadenza <= 14;
+            statoEl.textContent = inScadenza ? `Scade tra ${abb.giorni_alla_scadenza} gg` : 'Attiva';
+            statoEl.className = 'badge ' + (inScadenza ? 'badge-warn' : 'badge-ok');
+            notaEl.textContent = inScadenza
+                ? 'Rinnova ora: i giorni che ti restano non vanno persi.'
+                : `Mancano ${abb.giorni_alla_scadenza} giorni alla scadenza. Potrai rinnovare negli ultimi 14 giorni.`;
+        } else if (abb.fase === 'grazia') {
+            statoEl.textContent = 'Scaduta';
+            statoEl.className = 'badge badge-warn';
+            notaEl.textContent = `La tua tag resta online ancora ${abb.giorni_alla_disattivazione} giorni: rinnova per non perderla.`;
+        } else {
+            statoEl.textContent = 'Disattivata';
+            statoEl.className = 'badge badge-ko';
+            notaEl.textContent = 'La tag non è visibile al pubblico. Rinnova per riattivarla con tutti i tuoi contenuti.';
+        }
+    }
+
+    async function carica() {
+        try {
+            const response = await fetch(`/api/get-profile?u=${encodeURIComponent(tag)}&token=${encodeURIComponent(mqtSessione.token(tag))}&_cb=${Date.now()}`);
+            const data = await response.json();
+            if (!data.success || !data.fields) throw new Error('Profilo non trovato');
+            if (data.sessionToken) mqtSessione.salva(tag, data.sessionToken);
+
+            mostraPiano(data.fields, data.abbonamento);
+
+            let leads = [];
+            try { leads = JSON.parse(data.fields.lead_capture_leads || '[]'); } catch (e) {}
+            document.getElementById('lead-count').textContent = Array.isArray(leads) ? leads.length : 0;
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('contenuto').style.display = 'block';
+        } catch (e) {
+            console.error('Errore caricamento account:', e);
+            document.getElementById('loading').textContent = 'Impossibile caricare i dati. Controlla la connessione e riprova.';
+        }
+    }
+
+    async function hashPassword(password) {
+        const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    document.getElementById('form-password').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const msg = document.getElementById('msg-password');
+        const btn = document.getElementById('btn-salva-password');
+        const attuale = document.getElementById('pwd-attuale').value;
+        const nuova = document.getElementById('pwd-nuova').value;
+        const conferma = document.getElementById('pwd-conferma').value;
+
+        msg.className = 'messaggio ko';
+        if (nuova.trim().length < 6) { msg.textContent = 'La nuova password deve avere almeno 6 caratteri.'; return; }
+        if (nuova !== conferma) { msg.textContent = 'Le due nuove password non coincidono.'; return; }
+        if (nuova === attuale) { msg.textContent = 'La nuova password è uguale a quella attuale.'; return; }
+
+        btn.disabled = true;
+        msg.className = 'messaggio';
+        msg.textContent = 'Salvataggio…';
+        try {
+            const response = await fetch('/api/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    u: tag,
+                    sessionToken: mqtSessione.token(tag),
+                    attuale: await hashPassword(attuale),
+                    nuova: await hashPassword(nuova)
+                })
+            });
+            if (response.status === 401) { mqtSessione.scaduta(tag); return; }
+            const data = await response.json();
+            if (!data.success) throw new Error(data.error || 'Cambio password non riuscito');
+            if (data.sessionToken) mqtSessione.salva(tag, data.sessionToken);
+            this.reset();
+            document.getElementById('pwd-username').value = tag;
+            msg.className = 'messaggio ok';
+            msg.textContent = 'Password aggiornata ✅';
+        } catch (err) {
+            msg.className = 'messaggio ko';
+            msg.textContent = err.message === 'Failed to fetch' ? 'Errore di connessione. Riprova.' : err.message;
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
+    document.getElementById('btn-esci').addEventListener('click', function () {
+        if (!confirm('Vuoi uscire da questo dispositivo?')) return;
+        mqtSessione.rimuovi(tag);
+        window.location.href = '/index.html';
+    });
+
+    carica();
+})();
+</script>
+</body>
+</html>

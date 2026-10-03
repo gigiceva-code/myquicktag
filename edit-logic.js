@@ -925,6 +925,11 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                 if (localDraft) {
                     try { Object.assign(f, JSON.parse(localDraft)); } catch(e) {}
                 }
+
+                // I contatti lasciati dai visitatori li scrive solo il server (api/add-lead.js):
+                // valgono sempre quelli appena letti dal server, mai la copia vecchia di una bozza.
+                if (liveData.lead_capture_leads !== undefined) f.lead_capture_leads = liveData.lead_capture_leads;
+                else delete f.lead_capture_leads;
                 // ========================================================
 
                 if (f) {
