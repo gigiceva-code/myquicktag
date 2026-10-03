@@ -656,7 +656,7 @@ async function caricaDatiDashboard(nomeMinuto) {
     if (!nomeMinuto) return;
 
     try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}&token=${encodeURIComponent(mqtSessione.token(nomeMinuto))}`);
         const data = await response.json();
 
         if (data && data.success) {

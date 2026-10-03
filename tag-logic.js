@@ -1391,7 +1391,7 @@ async function fondiPocketConCloud(pocketLocale, utenteLoggato) {
     if (!utenteLoggato) return pocketLocale;
     try {
         const cacheBuster = Date.now();
-        const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}`);
+        const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}&token=${encodeURIComponent(mqtSessione.token(utenteLoggato))}`);
         const data = await response.json();
 
         if (!data.success || !data.fields || !data.fields.pocket_cloud) {
@@ -2005,38 +2005,22 @@ tracciaClickSezione('LEAD ACQUISITO');
     btn.style.pointerEvents = "none";
     btn.style.opacity = "0.7";
 
-    let leads = [];
+    // Si invia SOLO il nuovo contatto: il server lo aggiunge all'elenco del proprietario
+    // (api/add-lead.js). L'elenco dei contatti già raccolti non arriva mai ai visitatori.
     try {
-        leads = JSON.parse(cacheDatiUtente.lead_capture_leads || '[]');
-    } catch(e) {
-        leads = [];
-    }
-
-    const nuovoLead = {
-        nome: nome,
-        contatto: contatto,
-        data: new Date().toLocaleDateString('it-IT') + ' ' + new Date().toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'})
-    };
-
-    leads.unshift(nuovoLead); // Aggiunge il nuovo contatto in cima alla lista
-    cacheDatiUtente.lead_capture_leads = JSON.stringify(leads);
-
-    // Salva i dati aggiornati sul server usando l'API di update-profile
-    try {
-        const response = await fetch('/api/update-profile', {
+        const response = await fetch('/api/add-lead', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                username_system: cacheDatiUtente.username_system || getNomeBrandReale(),
-                lead_capture_leads: cacheDatiUtente.lead_capture_leads
-                // Nota: In un'app normale qui andrebbe gestita la sicurezza (es. un endpoint separato /api/add-lead) 
-                // ma per ora sfruttiamo update-profile per salvare la stringa JSON diretta su Airtable come hai richiesto.
+                u: cacheDatiUtente.username_system || getNomeBrandReale(),
+                nome: nome,
+                contatto: contatto
             })
         });
         
         const data = await response.json();
         
-        if (data.success || response.ok) {
+        if (data.success) {
             btn.innerText = "CONTATTO INVIATO ✅";
             btn.style.background = "#10b981";
             btn.style.color = "#fff";
@@ -2173,42 +2157,12 @@ function tracciaClickSezione(nomeSezione) {
     if (usernameCorrente === "tuonome.it") return;
 
     try {
-        const now = new Date();
-        const dataFormattata = now.toLocaleDateString('it-IT'); 
-        const oraFormattata = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-        const timestamp = now.getTime();
-
-        const nuovoClick = {
-            sezione: nomeSezione,
-            data: dataFormattata,
-            ora: oraFormattata,
-            timestamp: timestamp
-        };
-
-        // Recuperiamo il log esistente 
-        let logAttuale = [];
-        try {
-            if (cacheDatiUtente.analytics_log) {
-                logAttuale = JSON.parse(cacheDatiUtente.analytics_log);
-            }
-        } catch (e) {
-            logAttuale = [];
-        }
-
-        // Aggiungiamo il click in cima alla lista (massimo 1000 per non appesantire)
-        logAttuale.unshift(nuovoClick);
-        if (logAttuale.length > 1000) logAttuale = logAttuale.slice(0, 1000);
-
-        cacheDatiUtente.analytics_log = JSON.stringify(logAttuale);
-
-        // Sparo silenzioso ad Airtable (senza await, così l'utente non aspetta)
-        fetch('/api/update-profile', {
+        // Si invia solo la sezione aperta: il server aggiunge la voce al registro
+        // (api/track-click.js), senza leggere né riscrivere i click degli altri visitatori.
+        fetch('/api/track-click', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username_system: usernameCorrente,
-                analytics_log: cacheDatiUtente.analytics_log
-            })
+            body: JSON.stringify({ u: usernameCorrente, sezione: nomeSezione })
         }).catch(() => {}); // Fallisce in silenzio se manca la rete
 
     } catch (e) {}

@@ -308,7 +308,7 @@ async function caricaPocket() {
 
         try {
             const cacheBuster = Date.now();
-            const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}`);
+            const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}&token=${encodeURIComponent(mqtSessione.token(utenteLoggato))}`);
             const data = await response.json();
 
             if (!data.success || !data.fields || !data.fields.pocket_cloud) {

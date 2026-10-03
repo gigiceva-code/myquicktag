@@ -43,21 +43,14 @@ export default async function handler(req, res) {
     // Usiamo il nome utente pulito e sicuro per cercare nel database
     const recordAttuale = await trovaTag(safeUsername);
 
-      // --- FIX SICUREZZA: blocco scritture su account già attivi senza token valido ---
-    // Eccezione: questi campi sono pensati per essere scritti anche da visitatori anonimi
-    // (form di contatto pubblico, tracking click) e restano scrivibili senza token.
-    const PUBLIC_WRITABLE_FIELDS = ['analytics_log', 'lead_capture_leads'];
-
-
-    const campiRichiesti = Object.keys(body).filter(k => k !== 'username_system' && k !== 'sessionToken');
-    const soloCampiPubblici = campiRichiesti.every(k => PUBLIC_WRITABLE_FIELDS.includes(k));
-
-    // --- FIX SICUREZZA: ogni scrittura (tranne i campi pubblici) richiede un token valido.
+    // --- FIX SICUREZZA: ogni scrittura richiede un token valido.
     // - Account attivo: il token arriva dal login.
     // - Tag "in attesa": il token è la ricevuta data da check-and-create.js a chi l'ha prenotata
     //   (vale 24h). Così nessun altro può modificarla o impostarne la prima password.
+    // I visitatori anonimi non scrivono più qui: contatti e click passano da api/add-lead.js
+    // e api/track-click.js, che aggiungono una voce senza poter leggere o cancellare le altre.
     const tokenValido = verifyToken(safeUsername, sessionToken);
-    if (!soloCampiPubblici && !tokenValido) {
+    if (!tokenValido) {
       return res.status(401).json({ error: "Non autorizzato: sessione mancante o non valida" });
     }
 
@@ -67,7 +60,7 @@ export default async function handler(req, res) {
 
     // Rinnovo: solo il proprietario (token valido), solo negli ultimi 14 giorni, in grazia o dopo
     if (body.rinnova === true) {
-      if (!abbonamento || !tokenValido) {
+      if (!abbonamento) {
         return res.status(403).json({ error: "Rinnovo non consentito" });
       }
       if (!rinnovoConsentito(abbonamento)) {
@@ -85,7 +78,7 @@ export default async function handler(req, res) {
     }
 
     // Tag scaduta (finita anche la grazia): niente modifiche finché non viene rinnovata
-    if (abbonamento && abbonamento.fase === 'scaduta' && !soloCampiPubblici) {
+    if (abbonamento && abbonamento.fase === 'scaduta') {
       return res.status(403).json({ error: "Tag scaduta: rinnova per modificarla", scaduta: true, abbonamento });
     }
     const fieldsToSave = {};
@@ -103,16 +96,17 @@ export default async function handler(req, res) {
       "pocket_cloud", "review_url", "review_contact",
       "video_url", "video_cta_text", "video_cta_url",
      "partners_data",
-     "lead_capture_attivo", "lead_capture_titolo", "lead_capture_leads",
-      "shop_attivo", "shop_titolo", "shop_prezzo", "shop_link", "shop_scadenza",
-      "analytics_data", "analytics_log"
+     "lead_capture_attivo", "lead_capture_titolo",
+      "shop_attivo", "shop_titolo", "shop_prezzo", "shop_link", "shop_scadenza"
     ];
+    // Non sono qui di proposito: lead_capture_leads (api/add-lead.js), analytics_log
+    // (api/track-click.js), analytics_data e views (api/track-view.js) li scrive solo il server.
 
     nativeFields.forEach(f => {
       if (body[f] !== undefined && body[f] !== null) {
         if (typeof body[f] === 'string') {
           
-          let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud' || f === 'partners_data' || f === 'lead_capture_leads' || f === 'analytics_data' || f === 'analytics_log')
+          let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud' || f === 'partners_data')
           ? body[f].trim() 
           : body[f].replace(/['"]+/g, '').trim(); 
           

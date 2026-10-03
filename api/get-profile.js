@@ -25,6 +25,8 @@ function generateToken(username) {
   return `${payload}.${signature}`;
 }
 
+const CAMPI_PRIVATI = ['draft_json', 'lead_capture_leads', 'analytics_data', 'analytics_log', 'pocket_cloud'];
+
 export default async function handler(req, res) {
   const { u, token } = req.query;
 
@@ -39,16 +41,16 @@ export default async function handler(req, res) {
     const record = await trovaTag(safeUsername);
 
     if (record) {
-          const { password, draft_json, ...fieldsPubblici } = record.fields;
+      const { password, ...fieldsPubblici } = record.fields;
       fieldsPubblici.has_password = !!(password && String(password).trim() !== "");
 
-      // --- FIX SICUREZZA: draft_json è la bozza privata dell'utente, non deve essere
-      // leggibile da chiunque conosca lo username. Torna nella risposta SOLO se chi chiama
-      // dimostra di essere il proprietario tramite sessionToken valido.
+      // --- FIX SICUREZZA: campi privati del proprietario, mai mostrati sulla tag pubblica.
+      // Tornano nella risposta SOLO se chi chiama dimostra di essere il proprietario (token valido):
+      // bozza, contatti lasciati dai visitatori (dati personali di terzi), statistiche, Pocket.
       const tokenValido = verifyToken(safeUsername, token);
-      if (draft_json !== undefined && tokenValido) {
-        fieldsPubblici.draft_json = draft_json;
-      } 
+      if (!tokenValido) {
+        CAMPI_PRIVATI.forEach(campo => { delete fieldsPubblici[campo]; });
+      }
       const risposta = {
         success: true,
         id: record.id,

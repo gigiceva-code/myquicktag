@@ -250,7 +250,7 @@
         if (!usernameCorrente) return;
 
         try {
-            const response = await fetch(`/api/get-profile?u=${usernameCorrente}&_cb=${Date.now()}`);
+            const response = await fetch(`/api/get-profile?u=${usernameCorrente}&_cb=${Date.now()}&token=${encodeURIComponent(mqtSessione.token(usernameCorrente))}`);
             const data = await response.json();
 
             if (data.success && data.fields) {

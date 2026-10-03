@@ -1508,11 +1508,15 @@ function gestisciVIPSwitch(checkbox) {
                 item.style.cssText = "display: flex; flex-direction: column; gap: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 12px 14px; border-radius: 10px;";
                 item.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #fff; font-size: 0.85rem; font-weight: 600;">${lead.nome || 'Senza nome'}</span>
-                        <span style="font-size: 0.6rem; color: rgba(255,255,255,0.4);">${lead.data || ''}</span>
+                        <span class="lead-nome" style="color: #fff; font-size: 0.85rem; font-weight: 600;"></span>
+                        <span class="lead-data" style="font-size: 0.6rem; color: rgba(255,255,255,0.4);"></span>
                     </div>
-                    <span style="color: #e5c158; font-size: 0.75rem;">${lead.contatto}</span>
+                    <span class="lead-contatto" style="color: #e5c158; font-size: 0.75rem;"></span>
                 `;
+                // Scritti dai visitatori: sempre come testo semplice, mai come HTML
+                item.querySelector('.lead-nome').textContent = lead.nome || 'Senza nome';
+                item.querySelector('.lead-data').textContent = lead.data || '';
+                item.querySelector('.lead-contatto').textContent = lead.contatto || '';
                 track.appendChild(item);
             });
         } 
