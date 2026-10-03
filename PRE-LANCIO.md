@@ -24,6 +24,15 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 - "Fai l'Upgrade" (dashboard) e il checkout di una tag già attiva mostrano per ora "Upgrade in arrivo".
 - Per i test si può impostare il piano a mano su Supabase (tabella `tags`, colonna `plan`: `PREMIUM` o `GOLD`).
 
+### Modello dei piani e pagamenti (in sospeso)
+- Proposta discussa: Base gratis per sempre (con "Creato con myquicktag"), Premium e Gold a pagamento,
+  prova con tutto sbloccato (Gold) e cambio piano libero durante la prova; a fine prova si torna al Base
+  senza perdere contenuti (sezioni nascoste, non cancellate).
+- Prezzi indicativi emersi dal confronto con i concorrenti: Premium ~4,90 €/mese, Gold ~14,90 €/mese
+  (annuale scontato), eventuale prezzo fondatori. Da validare con clienti veri.
+- Fiscale: finché tutto è gratis non c'è incasso. Prima di attivare i pagamenti: consulenza con un
+  commercialista (codice ATECO, forfettario da dipendente, esonero INPS commercianti, IVA vendite online).
+
 ### Prezzo mostrato nel checkout di attivazione
 - `checkout.html` mostra **"€19,00"**, ma oggi l'attivazione è gratuita (scelta voluta per i primi 3 mesi).
 - Decidere cosa mostrare (es. "Gratis per 3 mesi") e allineare i testi del checkout.
