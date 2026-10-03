@@ -1498,32 +1498,11 @@ function gestisciVIPSwitch(checkbox) {
             });
         } 
 
+        // L'elenco completo dei contatti è nella pagina "I miei contatti" (contatti.html):
+        // qui nell'editor si mostra solo quanti ne sono arrivati.
         function disegnaListaLeads(leadsArray) {
-            const track = document.getElementById('leads-internal-track');
             const badge = document.getElementById('lead-count-badge');
-            if (!track || !badge) return;
-
-            badge.textContent = leadsArray.length;
-            track.innerHTML = '';
-
-            if (leadsArray.length === 0) { track.innerHTML = `<div style="font-size: 0.75rem; color: rgba(255,255,255,0.3); text-align: center; padding: 15px;">Nessun contatto raccolto ancora.</div>`; return; }
-
-            leadsArray.forEach((lead) => {
-                const item = document.createElement('div');
-                item.style.cssText = "display: flex; flex-direction: column; gap: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 12px 14px; border-radius: 10px;";
-                item.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="lead-nome" style="color: #fff; font-size: 0.85rem; font-weight: 600;"></span>
-                        <span class="lead-data" style="font-size: 0.6rem; color: rgba(255,255,255,0.4);"></span>
-                    </div>
-                    <span class="lead-contatto" style="color: #e5c158; font-size: 0.75rem;"></span>
-                `;
-                // Scritti dai visitatori: sempre come testo semplice, mai come HTML
-                item.querySelector('.lead-nome').textContent = lead.nome || 'Senza nome';
-                item.querySelector('.lead-data').textContent = lead.data || '';
-                item.querySelector('.lead-contatto').textContent = lead.contatto || '';
-                track.appendChild(item);
-            });
+            if (badge) badge.textContent = Array.isArray(leadsArray) ? leadsArray.length : 0;
         } 
 
         function spegniFlash() {
@@ -1863,7 +1842,7 @@ function gestisciVIPSwitch(checkbox) {
             },
             'lead': { 
                 titolo: "LA MACCHINA DEI CONTATTI", 
-                testo: '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">Il Traffico Anonimo non Genera Fatturato</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Centinaia di persone visitano i tuoi link e spariscono nel nulla. Senza un sistema di acquisizione, stai letteralmente perdendo potenziali clienti ogni giorno. Il modulo Lead Capture trasforma i visitatori anonimi in contatti reali e profilati, permettendoti di costruire un database aziendale di tua esclusiva proprietà, su cui hai il controllo assoluto.</div></div><div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-bottom: 12px;">L\'Esca Strategica (Lead Magnet)</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6; margin-bottom: 12px;">Nessuno lascia i propri dati personali senza un motivo valido. Per far funzionare la raccolta, devi offrire un incentivo immediato in cambio del contatto. Ecco come strutturarlo:</div><ul style="list-style: none; padding: 0; margin: 0; font-size: 0.75rem; color: #9ca3af; line-height: 1.6;"><li style="margin-bottom: 12px;"><i class="fas fa-store" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Locali e Negozi:</strong> "Inserisci la tua email per ricevere subito uno sconto del 10% sul tuo primo acquisto".</li><li style="margin-bottom: 12px;"><i class="fas fa-laptop" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Professionisti:</strong> "Lascia i tuoi dati per ricevere gratuitamente la nostra guida in formato PDF" oppure "Prenota un check-up gratuito".</li><li><i class="fas fa-cog" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">La Regola:</strong> L\'offerta deve avere un valore percepito superiore allo "sforzo" di lasciare il contatto.</li></ul></div><div style="background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px; padding: 18px;"><div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">Remarketing a Costo Zero</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Questo è il vero vantaggio del sistema: una volta acquisito il dato del cliente, non dovrai più pagare gli algoritmi dei social network per farti vedere da lui. Potrai inviargli offerte mirate, aggiornamenti o promozioni direttamente via mail o telefono, generando vendite ripetute nel tempo con un costo pubblicitario matematicamente azzerato.</div></div>' 
+                testo: '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">Il Traffico Anonimo non Genera Fatturato</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Centinaia di persone visitano i tuoi link e spariscono nel nulla. Senza un sistema di acquisizione, stai letteralmente perdendo potenziali clienti ogni giorno. Il modulo Lead Capture trasforma i visitatori anonimi in contatti reali e profilati, permettendoti di costruire un database aziendale di tua esclusiva proprietà, su cui hai il controllo assoluto.</div></div><div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-bottom: 12px;">L\'Esca Strategica (Lead Magnet)</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6; margin-bottom: 12px;">Nessuno lascia i propri dati personali senza un motivo valido. Per far funzionare la raccolta, devi offrire un incentivo immediato in cambio del contatto. Ecco come strutturarlo:</div><ul style="list-style: none; padding: 0; margin: 0; font-size: 0.75rem; color: #9ca3af; line-height: 1.6;"><li style="margin-bottom: 12px;"><i class="fas fa-store" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Locali e Negozi:</strong> "Inserisci la tua email per ricevere subito uno sconto del 10% sul tuo primo acquisto".</li><li style="margin-bottom: 12px;"><i class="fas fa-laptop" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">Professionisti:</strong> "Lascia i tuoi dati per ricevere gratuitamente la nostra guida in formato PDF" oppure "Prenota un check-up gratuito".</li><li><i class="fas fa-cog" style="color: #e5c158; margin-right: 6px; width: 14px;"></i><strong style="color: #ffffff;">La Regola:</strong> L\'offerta deve avere un valore percepito superiore allo "sforzo" di lasciare il contatto.</li></ul></div><div style="background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.2); border-radius: 12px; padding: 18px;"><div style="font-size: 0.95rem; font-weight: 800; color: #e5c158; margin-bottom: 8px;">Remarketing a Costo Zero</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Questo è il vero vantaggio del sistema: una volta acquisito il dato del cliente, non dovrai più pagare gli algoritmi dei social network per farti vedere da lui. Potrai inviargli offerte mirate, aggiornamenti o promozioni direttamente via mail o telefono, generando vendite ripetute nel tempo con un costo pubblicitario matematicamente azzerato.</div></div><div style="background: rgba(80, 200, 120, 0.06); border: 1px solid rgba(80, 200, 120, 0.25); border-radius: 12px; padding: 18px; margin-top: 15px;"><div style="font-size: 0.95rem; font-weight: 800; color: #50C878; margin-bottom: 8px;"><i class="fas fa-inbox" style="margin-right: 6px;"></i>Dove Trovi i Tuoi Contatti</div><div style="font-size: 0.8rem; color: #d1d5db; line-height: 1.6;">Ogni contatto lasciato dai tuoi clienti arriva in <strong style="color: #ffffff;">Dashboard → I miei contatti</strong>. Il campanello e il pulsante ti segnalano quanti sono nuovi; da lì puoi chiamarli, scrivergli su WhatsApp o via email con un tocco, e segnarli come richiamati.</div></div>' 
             },
             'status': { 
                 titolo: "IL SEMAFORO DELLE VENDITE", 

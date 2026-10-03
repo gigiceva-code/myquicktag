@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>I miei contatti | myquicktag</title>
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="migrate-storage.js"></script>
+    <script src="/session.js"></script>
+
+<style>
+    :root {
+        --bg-color: #000000;
+        --accent-smeraldo: #50C878;
+        --gold: #e5c158;
+        --text-sec: #8e8e93;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.06);
+        --danger: #ff4444;
+    }
+
+    body {
+        margin: 0;
+        padding: 16px 16px 40px 16px;
+        background-color: var(--bg-color);
+        font-family: 'Inter', sans-serif;
+        color: #ffffff;
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
+
+    .wrap { max-width: 480px; margin: 0 auto; }
+
+    .top-bar { display: flex; align-items: center; gap: 14px; margin: 10px 0 24px; }
+    .btn-back {
+        width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        color: #ffffff; text-decoration: none;
+    }
+    .top-bar h1 { font-size: 1.3rem; margin: 0; font-weight: 600; color: var(--accent-smeraldo); }
+    .top-bar p { margin: 2px 0 0; font-size: 0.85rem; color: var(--text-sec); }
+
+    .sezione-titolo {
+        font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase;
+        color: var(--text-sec); margin: 22px 0 10px;
+    }
+
+    .lead {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 16px; padding: 16px; margin-bottom: 10px;
+    }
+    .lead.nuovo { border-color: rgba(80, 200, 120, 0.45); }
+    .lead.richiamato { opacity: 0.55; }
+
+    .lead-testa { display: flex; align-items: center; gap: 8px; }
+    .lead-nome { font-weight: 600; font-size: 1rem; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .badge-nuovo {
+        font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+        background: rgba(80, 200, 120, 0.15); color: var(--accent-smeraldo);
+        padding: 3px 8px; border-radius: 20px; flex-shrink: 0;
+    }
+    .lead-data { font-size: 0.75rem; color: var(--text-sec); margin-top: 4px; }
+    .lead-contatto { font-size: 0.95rem; color: var(--gold); margin-top: 8px; overflow-wrap: anywhere; }
+
+    .azioni { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .azione {
+        flex: 1 1 0; min-width: 88px; display: flex; align-items: center; justify-content: center; gap: 6px;
+        padding: 11px 8px; border-radius: 10px; text-decoration: none; font-size: 0.8rem; font-weight: 600;
+        background: rgba(255, 255, 255, 0.06); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .azione.whatsapp i { color: #25D366; }
+    .azione.chiama i, .azione.email i { color: var(--accent-smeraldo); }
+
+    .piede { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+    .btn-stato {
+        background: none; border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff;
+        border-radius: 20px; padding: 7px 12px; font-family: inherit; font-size: 0.75rem; cursor: pointer;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .lead.richiamato .btn-stato { border-color: rgba(80, 200, 120, 0.5); color: var(--accent-smeraldo); }
+    .btn-elimina {
+        background: none; border: none; color: var(--danger); opacity: 0.8; cursor: pointer;
+        padding: 8px; font-size: 0.95rem;
+    }
+
+    .vuoto {
+        text-align: center; padding: 40px 20px; background: var(--card-bg);
+        border: 1px solid var(--card-border); border-radius: 16px;
+    }
+    .vuoto i { font-size: 2rem; color: var(--gold); margin-bottom: 12px; }
+    .vuoto h2 { font-size: 1.05rem; margin: 0 0 8px; }
+    .vuoto p { font-size: 0.85rem; color: var(--text-sec); line-height: 1.5; margin: 0; }
+    .btn-editor {
+        display: inline-block; margin-top: 18px; padding: 12px 20px; border-radius: 12px;
+        background: var(--accent-smeraldo); color: #000000; text-decoration: none;
+        font-weight: 600; font-size: 0.85rem; text-transform: uppercase;
+    }
+
+    #loading { text-align: center; color: var(--text-sec); padding: 60px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+    <div class="top-bar">
+        <a href="/profile.html" id="btn-back" class="btn-back" aria-label="Torna alla dashboard"><i class="fas fa-chevron-left"></i></a>
+        <div>
+            <h1>I miei contatti</h1>
+            <p id="sottotitolo">Chi ti ha lasciato un recapito dal vasetto</p>
+        </div>
+    </div>
+
+    <div id="loading"><i class="fas fa-spinner fa-spin"></i></div>
+    <div id="elenco"></div>
+
+</div>
+
+<script>
+(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tag = String(urlParams.get('u') || localStorage.getItem('mqt_logged_user') || '')
+        .replace('@', '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+
+    if (!tag) { window.location.href = '/index.html'; return; }
+    // Pagina riservata al proprietario: serve una sessione valida su questo dispositivo
+    if (!mqtSessione.valida(tag)) { mqtSessione.scaduta(tag); return; }
+
+    document.getElementById('btn-back').href = `/profile.html?u=${encodeURIComponent(tag)}`;
+    const elenco = document.getElementById('elenco');
+    let leads = [];
+
+    // Riconosce il tipo di recapito per proporre il pulsante giusto
+    function analizzaContatto(testo) {
+        const t = String(testo || '').trim();
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return { email: t };
+        const tel = t.replace(/[^\d+]/g, '');
+        if (tel.replace(/\D/g, '').length < 6) return {};
+        let wa = tel.replace(/^\+/, '').replace(/^00/, '');
+        // Cellulare italiano scritto senza prefisso (3xx xxxxxxx): aggiungiamo il +39
+        if (wa.length === 10 && wa.startsWith('3')) wa = '39' + wa;
+        // I fissi italiani (0...) non hanno WhatsApp
+        const haWhatsapp = !(wa.startsWith('0')) && wa.length >= 8;
+        return { tel, wa: haWhatsapp ? wa : null };
+    }
+
+    function creaAzione(classe, icona, testo, href) {
+        const a = document.createElement('a');
+        a.className = 'azione ' + classe;
+        a.href = href;
+        if (classe === 'whatsapp') { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+        const i = document.createElement('i');
+        i.className = icona;
+        a.appendChild(i);
+        a.appendChild(document.createTextNode(testo));
+        return a;
+    }
+
+    function creaScheda(lead) {
+        const scheda = document.createElement('div');
+        scheda.className = 'lead' + (lead.visto === false ? ' nuovo' : '') + (lead.richiamato ? ' richiamato' : '');
+
+        // Testi scritti dai visitatori: sempre come testo semplice, mai come HTML
+        const testa = document.createElement('div');
+        testa.className = 'lead-testa';
+        const nome = document.createElement('div');
+        nome.className = 'lead-nome';
+        nome.textContent = lead.nome || 'Senza nome';
+        testa.appendChild(nome);
+        if (lead.visto === false) {
+            const badge = document.createElement('span');
+            badge.className = 'badge-nuovo';
+            badge.textContent = 'Nuovo';
+            testa.appendChild(badge);
+        }
+        scheda.appendChild(testa);
+
+        const data = document.createElement('div');
+        data.className = 'lead-data';
+        data.textContent = lead.data || '';
+        scheda.appendChild(data);
+
+        const contatto = document.createElement('div');
+        contatto.className = 'lead-contatto';
+        contatto.textContent = lead.contatto || '';
+        scheda.appendChild(contatto);
+
+        const info = analizzaContatto(lead.contatto);
+        const azioni = document.createElement('div');
+        azioni.className = 'azioni';
+        if (info.tel) azioni.appendChild(creaAzione('chiama', 'fas fa-phone', 'Chiama', 'tel:' + info.tel));
+        if (info.wa) azioni.appendChild(creaAzione('whatsapp', 'fab fa-whatsapp', 'WhatsApp', 'https://wa.me/' + info.wa));
+        if (info.email) azioni.appendChild(creaAzione('email', 'fas fa-envelope', 'Email', 'mailto:' + info.email));
+        if (azioni.children.length) scheda.appendChild(azioni);
+
+        const piede = document.createElement('div');
+        piede.className = 'piede';
+
+        const btnStato = document.createElement('button');
+        btnStato.type = 'button';
+        btnStato.className = 'btn-stato';
+        btnStato.innerHTML = lead.richiamato ? '<i class="fas fa-check"></i>' : '<i class="far fa-circle"></i>';
+        btnStato.appendChild(document.createTextNode(lead.richiamato ? 'Richiamato' : 'Segna come richiamato'));
+        btnStato.addEventListener('click', () => azione('richiamato', lead.id, !lead.richiamato));
+        piede.appendChild(btnStato);
+
+        const btnElimina = document.createElement('button');
+        btnElimina.type = 'button';
+        btnElimina.className = 'btn-elimina';
+        btnElimina.setAttribute('aria-label', 'Elimina contatto');
+        btnElimina.innerHTML = '<i class="fas fa-trash"></i>';
+        btnElimina.addEventListener('click', () => {
+            if (confirm(`Eliminare il contatto di ${lead.nome || 'questa persona'}? Non si potrà recuperare.`)) azione('elimina', lead.id);
+        });
+        piede.appendChild(btnElimina);
+
+        scheda.appendChild(piede);
+        return scheda;
+    }
+
+    function disegna() {
+        elenco.innerHTML = '';
+        const daRichiamare = leads.filter(l => !l.richiamato);
+        const richiamati = leads.filter(l => l.richiamato);
+        const nuovi = leads.filter(l => l.visto === false).length;
+
+        document.getElementById('sottotitolo').textContent = leads.length === 0
+            ? 'Chi ti ha lasciato un recapito dal vasetto'
+            : `${leads.length} ${leads.length === 1 ? 'contatto' : 'contatti'}` + (nuovi ? ` · ${nuovi} ${nuovi === 1 ? 'nuovo' : 'nuovi'}` : '');
+
+        if (leads.length === 0) {
+            elenco.innerHTML = `
+                <div class="vuoto">
+                    <i class="fas fa-inbox"></i>
+                    <h2>Ancora nessun contatto</h2>
+                    <p>Accendi il vasetto nell'editor (Business → Lead Capture): i clienti che aprono la tua tag potranno lasciarti nome e recapito, e li troverai qui.</p>
+                    <a class="btn-editor" href="/edit.html?u=${encodeURIComponent(tag)}">Apri l'editor</a>
+                </div>`;
+            return;
+        }
+
+        if (daRichiamare.length) {
+            const t = document.createElement('div');
+            t.className = 'sezione-titolo';
+            t.textContent = `Da richiamare (${daRichiamare.length})`;
+            elenco.appendChild(t);
+            daRichiamare.forEach(l => elenco.appendChild(creaScheda(l)));
+        }
+        if (richiamati.length) {
+            const t = document.createElement('div');
+            t.className = 'sezione-titolo';
+            t.textContent = `Già richiamati (${richiamati.length})`;
+            elenco.appendChild(t);
+            richiamati.forEach(l => elenco.appendChild(creaScheda(l)));
+        }
+    }
+
+    async function chiamaServer(nomeAzione, id, valore) {
+        const response = await fetch('/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ u: tag, sessionToken: mqtSessione.token(tag), azione: nomeAzione, id, valore })
+        });
+        if (response.status === 401) { mqtSessione.scaduta(tag); throw new Error('sessione'); }
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || 'Operazione non riuscita');
+        return data.leads;
+    }
+
+    async function azione(nomeAzione, id, valore) {
+        try {
+            const aggiornati = await chiamaServer(nomeAzione, id, valore);
+            // Lo stato "nuovo" resta visibile per tutta questa visita, anche dopo l'aggiornamento
+            const nuoviOra = new Set(leads.filter(l => l.visto === false).map(l => l.id));
+            leads = aggiornati.map(l => (nuoviOra.has(l.id) && !l.richiamato) ? { ...l, visto: false } : l);
+            disegna();
+        } catch (e) {
+            if (e.message !== 'sessione') alert(e.message === 'Failed to fetch' ? 'Errore di connessione. Riprova.' : e.message);
+        }
+    }
+
+    async function carica() {
+        try {
+            const response = await fetch(`/api/get-profile?u=${encodeURIComponent(tag)}&token=${encodeURIComponent(mqtSessione.token(tag))}&_cb=${Date.now()}`);
+            const data = await response.json();
+            if (!data.success || !data.fields) throw new Error('Profilo non trovato');
+            if (data.sessionToken) mqtSessione.salva(tag, data.sessionToken);
+
+            try { leads = JSON.parse(data.fields.lead_capture_leads || '[]'); } catch (e) { leads = []; }
+            if (!Array.isArray(leads)) leads = [];
+
+            document.getElementById('loading').style.display = 'none';
+            disegna();
+
+            // Aperta la pagina, i contatti nuovi diventano "visti" (si azzera il numero in dashboard)
+            if (leads.some(l => l.visto === false)) chiamaServer('visti').catch(() => {});
+        } catch (e) {
+            console.error('Errore caricamento contatti:', e);
+            document.getElementById('loading').textContent = 'Impossibile caricare i contatti. Controlla la connessione e riprova.';
+        }
+    }
+
+    carica();
+})();
+</script>
+</body>
+</html>

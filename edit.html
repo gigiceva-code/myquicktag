@@ -573,9 +573,13 @@
                 <label style="font-size: 0.65rem; color: rgba(255,255,255,0.5); margin-bottom: 3px; display: block; letter-spacing: 1px;">MESSAGGIO PER IL CLIENTE</label>
                 <input type="text" id="input-lead-titolo" placeholder="Es. Lascia la tua email per ricevere il listino" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 10px; font-family: 'Inter', sans-serif; outline: none; font-size: 0.85rem;">
             </div>
-            <div style="margin-top: 10px;">
-                <label style="font-size: 0.65rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; display: block; letter-spacing: 1px;">CONTATTI RACCOLTI (<span id="lead-count-badge">0</span>)</label>
-                <div id="leads-internal-track" style="display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto;"></div>
+            <div style="margin-top: 10px; background: rgba(80, 200, 120, 0.06); border: 1px solid rgba(80, 200, 120, 0.25); border-radius: 12px; padding: 15px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <i class="fas fa-inbox" style="color: #50C878;"></i>
+                    <span style="font-size: 0.8rem; color: #fff; font-weight: 600;">Dove trovi i contatti</span>
+                    <span style="margin-left: auto; font-size: 0.7rem; color: rgba(255,255,255,0.6);">Raccolti: <span id="lead-count-badge">0</span></span>
+                </div>
+                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.65); line-height: 1.5;">Ogni volta che un cliente ti lascia nome e recapito, lo trovi in <strong style="color: #fff;">Dashboard → I miei contatti</strong>, con i pulsanti per chiamarlo o scrivergli su WhatsApp. Il numero dei nuovi contatti compare anche sul campanello.</div>
             </div>
             <input type="hidden" id="field-lead-leads-data" value="[]">
         </div>

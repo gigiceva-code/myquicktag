@@ -119,14 +119,6 @@
             <a href="#" class="btn btn-secondary" id="btn-cambia-piano">Cambia piano</a>
         </div>
 
-        <!-- CONTATTI RACCOLTI -->
-        <div class="card">
-            <h2 class="card-title"><i class="fas fa-inbox"></i> Contatti raccolti</h2>
-            <div class="row"><span class="label">Dal vasetto della tua tag</span><span class="value" id="lead-count">0</span></div>
-            <p class="note">L'elenco completo, con nomi e recapiti, è nell'editor alla voce <strong>Lead Capture</strong>.</p>
-            <a href="#" class="btn btn-secondary" id="btn-vedi-contatti">Apri l'editor</a>
-        </div>
-
         <!-- SICUREZZA -->
         <div class="card">
             <h2 class="card-title"><i class="fas fa-shield-alt"></i> Cambia password</h2>
@@ -173,7 +165,6 @@
     document.getElementById('btn-back').href = dashboard;
     document.getElementById('nome-tag').textContent = '@' + tag;
     document.getElementById('pwd-username').value = tag;
-    document.getElementById('btn-vedi-contatti').href = `/edit.html?u=${encodeURIComponent(tag)}`;
     document.getElementById('btn-cambia-piano').href = `/checkout.html?u=${encodeURIComponent(tag)}`;
     document.getElementById('btn-rinnova').href = `/checkout.html?u=${encodeURIComponent(tag)}&rinnovo=1`;
 
@@ -225,10 +216,6 @@
             if (data.sessionToken) mqtSessione.salva(tag, data.sessionToken);
 
             mostraPiano(data.fields, data.abbonamento);
-
-            let leads = [];
-            try { leads = JSON.parse(data.fields.lead_capture_leads || '[]'); } catch (e) {}
-            document.getElementById('lead-count').textContent = Array.isArray(leads) ? leads.length : 0;
 
             document.getElementById('loading').style.display = 'none';
             document.getElementById('contenuto').style.display = 'block';

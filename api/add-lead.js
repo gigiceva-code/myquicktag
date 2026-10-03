@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { trovaTag, aggiungiLead } from '../lib/db.js';
 import { calcolaAbbonamento } from '../lib/abbonamento.js';
 
@@ -41,7 +42,11 @@ export default async function handler(req, res) {
       return res.status(404).json({ success: false, error: 'Raccolta contatti non disponibile' });
     }
 
-    await aggiungiLead(username, { nome, contatto, data: dataOraItaliana(Date.now()) });
+    const ora = Date.now();
+    await aggiungiLead(username, {
+      id: crypto.randomUUID(), nome, contatto, data: dataOraItaliana(ora), ts: ora,
+      visto: false, richiamato: false // il proprietario lo vede come "nuovo" in dashboard
+    });
     return res.status(200).json({ success: true });
   } catch (e) {
     console.error('CRASH ADD-LEAD:', e.dettagli || e);
