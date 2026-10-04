@@ -57,10 +57,10 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Prossimi passi (in ordine)
 
-1. **Audit di UI, UX e marketing** (prossima sessione) sul sito pubblico: percorso del cliente nuovo
-   (home → prenotazione → editor → pubblicazione), testi e tono (misto italiano/inglese), home come pagina
-   di vendita, uso da telefono e accessibilità. Includere il tasto **"Segnala questa tag"** e la regola nei
-   termini di servizio (vedi `PRE-LANCIO.md`). Risultato: elenco di interventi per priorità, con schermate.
+1. **Audit di UI, UX e marketing: fatto (04/10/2026)** → `AUDIT-UI-UX-MARKETING.md` (schermate in `audit/`).
+   Contiene il piano di lavoro A/B/C: prima le correzioni (A, a partire dall'errore "contenuti non pubblicati
+   all'attivazione"), poi i testi (B, serve l'ok del titolare) e le decisioni di prodotto (C).
+   Per rifare le schermate: copia locale del sito con finto database + Playwright (vedi "Come è stato fatto" nel file).
 2. **Nomi protetti**: sistema e liste attivi (3.238 nomi, sorgente `supabase/nomi-protetti/`). Correggere i
    buchi o i blocchi sbagliati che segnala il titolare (Table Editor, o `liste.py` → `genera.py` → caricamento).
 3. **Test con due telefoni** (in sospeso): un visitatore lascia un contatto nel vasetto → il titolare lo
