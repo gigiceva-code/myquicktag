@@ -1,0 +1,2864 @@
+nome,tipo,regola,categoria,nota
+404,system,esatto,sistema,serve al funzionamento del sito
+500,system,esatto,sistema,serve al funzionamento del sito
+abbonamento,system,esatto,sistema,serve al funzionamento del sito
+about,system,esatto,sistema,serve al funzionamento del sito
+abuse,system,esatto,sistema,serve al funzionamento del sito
+abusi,system,esatto,sistema,serve al funzionamento del sito
+accedi,system,esatto,sistema,serve al funzionamento del sito
+accesso,system,esatto,sistema,serve al funzionamento del sito
+account,system,esatto,sistema,serve al funzionamento del sito
+accounts,system,esatto,sistema,serve al funzionamento del sito
+admin,system,esatto,sistema,serve al funzionamento del sito
+administrator,system,esatto,sistema,serve al funzionamento del sito
+aiuto,system,esatto,sistema,serve al funzionamento del sito
+alpha,system,esatto,sistema,serve al funzionamento del sito
+amministratore,system,esatto,sistema,serve al funzionamento del sito
+amministrazione,system,esatto,sistema,serve al funzionamento del sito
+analytics,system,esatto,sistema,serve al funzionamento del sito
+anonimo,system,esatto,sistema,serve al funzionamento del sito
+anonymous,system,esatto,sistema,serve al funzionamento del sito
+api,system,esatto,sistema,serve al funzionamento del sito
+apis,system,esatto,sistema,serve al funzionamento del sito
+app,system,esatto,sistema,serve al funzionamento del sito
+assets,system,esatto,sistema,serve al funzionamento del sito
+auth,system,esatto,sistema,serve al funzionamento del sito
+beta,system,esatto,sistema,serve al funzionamento del sito
+billing,system,esatto,sistema,serve al funzionamento del sito
+card,system,esatto,sistema,serve al funzionamento del sito
+carrello,system,esatto,sistema,serve al funzionamento del sito
+cart,system,esatto,sistema,serve al funzionamento del sito
+cdn,system,esatto,sistema,serve al funzionamento del sito
+celebration,system,esatto,sistema,serve al funzionamento del sito
+checkout,system,esatto,sistema,serve al funzionamento del sito
+chisiamo,system,esatto,sistema,serve al funzionamento del sito
+condizioni,system,esatto,sistema,serve al funzionamento del sito
+config,system,esatto,sistema,serve al funzionamento del sito
+configurazione,system,esatto,sistema,serve al funzionamento del sito
+console,system,esatto,sistema,serve al funzionamento del sito
+contact,system,esatto,sistema,serve al funzionamento del sito
+contacts,system,esatto,sistema,serve al funzionamento del sito
+contatti,system,esatto,sistema,serve al funzionamento del sito
+cookie,system,esatto,sistema,serve al funzionamento del sito
+cookies,system,esatto,sistema,serve al funzionamento del sito
+copyright,system,esatto,sistema,serve al funzionamento del sito
+daemon,system,esatto,sistema,serve al funzionamento del sito
+dashboard,system,esatto,sistema,serve al funzionamento del sito
+default,system,esatto,sistema,serve al funzionamento del sito
+demo,system,esatto,sistema,serve al funzionamento del sito
+dev,system,esatto,sistema,serve al funzionamento del sito
+developer,system,esatto,sistema,serve al funzionamento del sito
+developers,system,esatto,sistema,serve al funzionamento del sito
+dmca,system,esatto,sistema,serve al funzionamento del sito
+dns,system,esatto,sistema,serve al funzionamento del sito
+docs,system,esatto,sistema,serve al funzionamento del sito
+documentazione,system,esatto,sistema,serve al funzionamento del sito
+donotreply,system,esatto,sistema,serve al funzionamento del sito
+download,system,esatto,sistema,serve al funzionamento del sito
+downloads,system,esatto,sistema,serve al funzionamento del sito
+edit,system,esatto,sistema,serve al funzionamento del sito
+email,system,esatto,sistema,serve al funzionamento del sito
+error,system,esatto,sistema,serve al funzionamento del sito
+errore,system,esatto,sistema,serve al funzionamento del sito
+esci,system,esatto,sistema,serve al funzionamento del sito
+false,system,esatto,sistema,serve al funzionamento del sito
+faq,system,esatto,sistema,serve al funzionamento del sito
+fatturazione,system,esatto,sistema,serve al funzionamento del sito
+favicon,system,esatto,sistema,serve al funzionamento del sito
+files,system,esatto,sistema,serve al funzionamento del sito
+ftp,system,esatto,sistema,serve al funzionamento del sito
+gdpr,system,esatto,sistema,serve al funzionamento del sito
+guest,system,esatto,sistema,serve al funzionamento del sito
+health,system,esatto,sistema,serve al funzionamento del sito
+help,system,esatto,sistema,serve al funzionamento del sito
+home,system,esatto,sistema,serve al funzionamento del sito
+host,system,esatto,sistema,serve al funzionamento del sito
+hostmaster,system,esatto,sistema,serve al funzionamento del sito
+http,system,esatto,sistema,serve al funzionamento del sito
+https,system,esatto,sistema,serve al funzionamento del sito
+icon,system,esatto,sistema,serve al funzionamento del sito
+icons,system,esatto,sistema,serve al funzionamento del sito
+imap,system,esatto,sistema,serve al funzionamento del sito
+impostazioni,system,esatto,sistema,serve al funzionamento del sito
+index,system,esatto,sistema,serve al funzionamento del sito
+info,system,esatto,sistema,serve al funzionamento del sito
+informazioni,system,esatto,sistema,serve al funzionamento del sito
+legal,system,esatto,sistema,serve al funzionamento del sito
+legale,system,esatto,sistema,serve al funzionamento del sito
+localhost,system,esatto,sistema,serve al funzionamento del sito
+login,system,esatto,sistema,serve al funzionamento del sito
+logout,system,esatto,sistema,serve al funzionamento del sito
+mail,system,esatto,sistema,serve al funzionamento del sito
+mailer,system,esatto,sistema,serve al funzionamento del sito
+main,system,esatto,sistema,serve al funzionamento del sito
+manifest,system,esatto,sistema,serve al funzionamento del sito
+media,system,esatto,sistema,serve al funzionamento del sito
+mod,system,esatto,sistema,serve al funzionamento del sito
+moderator,system,esatto,sistema,serve al funzionamento del sito
+moderatore,system,esatto,sistema,serve al funzionamento del sito
+modifica,system,esatto,sistema,serve al funzionamento del sito
+mods,system,esatto,sistema,serve al funzionamento del sito
+nan,system,esatto,sistema,serve al funzionamento del sito
+new,system,esatto,sistema,serve al funzionamento del sito
+nfc,system,esatto,sistema,serve al funzionamento del sito
+nil,system,esatto,sistema,serve al funzionamento del sito
+none,system,esatto,sistema,serve al funzionamento del sito
+noreply,system,esatto,sistema,serve al funzionamento del sito
+note,system,esatto,sistema,serve al funzionamento del sito
+notelegali,system,esatto,sistema,serve al funzionamento del sito
+null,system,esatto,sistema,serve al funzionamento del sito
+nuovo,system,esatto,sistema,serve al funzionamento del sito
+oauth,system,esatto,sistema,serve al funzionamento del sito
+official,system,esatto,sistema,serve al funzionamento del sito
+orders,system,esatto,sistema,serve al funzionamento del sito
+ordine,system,esatto,sistema,serve al funzionamento del sito
+ordini,system,esatto,sistema,serve al funzionamento del sito
+ospite,system,esatto,sistema,serve al funzionamento del sito
+owner,system,esatto,sistema,serve al funzionamento del sito
+pagamento,system,esatto,sistema,serve al funzionamento del sito
+pannello,system,esatto,sistema,serve al funzionamento del sito
+password,system,esatto,sistema,serve al funzionamento del sito
+piani,system,esatto,sistema,serve al funzionamento del sito
+plans,system,esatto,sistema,serve al funzionamento del sito
+pocket,system,esatto,sistema,serve al funzionamento del sito
+pop,system,esatto,sistema,serve al funzionamento del sito
+postmaster,system,esatto,sistema,serve al funzionamento del sito
+prezzi,system,esatto,sistema,serve al funzionamento del sito
+pricing,system,esatto,sistema,serve al funzionamento del sito
+privacy,system,esatto,sistema,serve al funzionamento del sito
+profile,system,esatto,sistema,serve al funzionamento del sito
+profiles,system,esatto,sistema,serve al funzionamento del sito
+profilo,system,esatto,sistema,serve al funzionamento del sito
+proprietario,system,esatto,sistema,serve al funzionamento del sito
+pwa,system,esatto,sistema,serve al funzionamento del sito
+qrcode,system,esatto,sistema,serve al funzionamento del sito
+quickpass,system,esatto,sistema,serve al funzionamento del sito
+register,system,esatto,sistema,serve al funzionamento del sito
+registrati,system,esatto,sistema,serve al funzionamento del sito
+registrazione,system,esatto,sistema,serve al funzionamento del sito
+report,system,esatto,sistema,serve al funzionamento del sito
+reset,system,esatto,sistema,serve al funzionamento del sito
+robots,system,esatto,sistema,serve al funzionamento del sito
+root,system,esatto,sistema,serve al funzionamento del sito
+security,system,esatto,sistema,serve al funzionamento del sito
+segnala,system,esatto,sistema,serve al funzionamento del sito
+segnalazioni,system,esatto,sistema,serve al funzionamento del sito
+self,system,esatto,sistema,serve al funzionamento del sito
+server,system,esatto,sistema,serve al funzionamento del sito
+settings,system,esatto,sistema,serve al funzionamento del sito
+sicurezza,system,esatto,sistema,serve al funzionamento del sito
+signin,system,esatto,sistema,serve al funzionamento del sito
+signout,system,esatto,sistema,serve al funzionamento del sito
+signup,system,esatto,sistema,serve al funzionamento del sito
+sistema,system,esatto,sistema,serve al funzionamento del sito
+sitemap,system,esatto,sistema,serve al funzionamento del sito
+smtp,system,esatto,sistema,serve al funzionamento del sito
+ssl,system,esatto,sistema,serve al funzionamento del sito
+sso,system,esatto,sistema,serve al funzionamento del sito
+staff,system,esatto,sistema,serve al funzionamento del sito
+staging,system,esatto,sistema,serve al funzionamento del sito
+static,system,esatto,sistema,serve al funzionamento del sito
+statistiche,system,esatto,sistema,serve al funzionamento del sito
+stato,system,esatto,sistema,serve al funzionamento del sito
+status,system,esatto,sistema,serve al funzionamento del sito
+subscription,system,esatto,sistema,serve al funzionamento del sito
+superuser,system,esatto,sistema,serve al funzionamento del sito
+support,system,esatto,sistema,serve al funzionamento del sito
+supporto,system,esatto,sistema,serve al funzionamento del sito
+sviluppatori,system,esatto,sistema,serve al funzionamento del sito
+sysadmin,system,esatto,sistema,serve al funzionamento del sito
+system,system,esatto,sistema,serve al funzionamento del sito
+tag,system,esatto,sistema,serve al funzionamento del sito
+tags,system,esatto,sistema,serve al funzionamento del sito
+team,system,esatto,sistema,serve al funzionamento del sito
+termini,system,esatto,sistema,serve al funzionamento del sito
+terms,system,esatto,sistema,serve al funzionamento del sito
+test,system,esatto,sistema,serve al funzionamento del sito
+testing,system,esatto,sistema,serve al funzionamento del sito
+true,system,esatto,sistema,serve al funzionamento del sito
+ufficiale,system,esatto,sistema,serve al funzionamento del sito
+undefined,system,esatto,sistema,serve al funzionamento del sito
+uploads,system,esatto,sistema,serve al funzionamento del sito
+user,system,esatto,sistema,serve al funzionamento del sito
+users,system,esatto,sistema,serve al funzionamento del sito
+utente,system,esatto,sistema,serve al funzionamento del sito
+utenti,system,esatto,sistema,serve al funzionamento del sito
+verificato,system,esatto,sistema,serve al funzionamento del sito
+verified,system,esatto,sistema,serve al funzionamento del sito
+vetrina,system,esatto,sistema,serve al funzionamento del sito
+webmaster,system,esatto,sistema,serve al funzionamento del sito
+www,system,esatto,sistema,serve al funzionamento del sito
+americanexpress,black,contiene,banca,banche e pagamenti (anti-truffa)
+bancaditalia,black,contiene,banca,banche e pagamenti (anti-truffa)
+bancomat,black,contiene,banca,banche e pagamenti (anti-truffa)
+binance,black,contiene,banca,banche e pagamenti (anti-truffa)
+coinbase,black,contiene,banca,banche e pagamenti (anti-truffa)
+finecobank,black,contiene,banca,banche e pagamenti (anti-truffa)
+intesasanpaolo,black,contiene,banca,banche e pagamenti (anti-truffa)
+mastercard,black,contiene,banca,banche e pagamenti (anti-truffa)
+mediolanum,black,contiene,banca,banche e pagamenti (anti-truffa)
+moneygram,black,contiene,banca,banche e pagamenti (anti-truffa)
+montepaschi,black,contiene,banca,banche e pagamenti (anti-truffa)
+paypal,black,contiene,banca,banche e pagamenti (anti-truffa)
+satispay,black,contiene,banca,banche e pagamenti (anti-truffa)
+telepass,black,contiene,banca,banche e pagamenti (anti-truffa)
+unicredit,black,contiene,banca,banche e pagamenti (anti-truffa)
+westernunion,black,contiene,banca,banche e pagamenti (anti-truffa)
+afterpay,black,esatto,banca,banche e pagamenti (anti-truffa)
+agos,black,esatto,banca,banche e pagamenti (anti-truffa)
+allfunds,black,esatto,banca,banche e pagamenti (anti-truffa)
+allianz,black,esatto,banca,banche e pagamenti (anti-truffa)
+amazonpay,black,esatto,banca,banche e pagamenti (anti-truffa)
+amex,black,esatto,banca,banche e pagamenti (anti-truffa)
+applepay,black,esatto,banca,banche e pagamenti (anti-truffa)
+assicurazionigenerali,black,esatto,banca,banche e pagamenti (anti-truffa)
+axa,black,esatto,banca,banche e pagamenti (anti-truffa)
+banca,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancadesio,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancadeutsche,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancafideuram,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancagenerali,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancaifis,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancalavoro,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancamediolanum,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancamps,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancapopolaredisondrio,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancaprofilo,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancaprogetto,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancasella,black,esatto,banca,banche e pagamenti (anti-truffa)
+banche,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancoazzurro,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancobpm,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancoditesoro,black,esatto,banca,banche e pagamenti (anti-truffa)
+bancomatpay,black,esatto,banca,banche e pagamenti (anti-truffa)
+bank,black,esatto,banca,banche e pagamenti (anti-truffa)
+bankitalia,black,esatto,banca,banche e pagamenti (anti-truffa)
+bankofamerica,black,esatto,banca,banche e pagamenti (anti-truffa)
+barclays,black,esatto,banca,banche e pagamenti (anti-truffa)
+bbva,black,esatto,banca,banche e pagamenti (anti-truffa)
+bcc,black,esatto,banca,banche e pagamenti (anti-truffa)
+bitfinex,black,esatto,banca,banche e pagamenti (anti-truffa)
+bitpanda,black,esatto,banca,banche e pagamenti (anti-truffa)
+bnl,black,esatto,banca,banche e pagamenti (anti-truffa)
+bnlbnpparibas,black,esatto,banca,banche e pagamenti (anti-truffa)
+bnpparibas,black,esatto,banca,banche e pagamenti (anti-truffa)
+bper,black,esatto,banca,banche e pagamenti (anti-truffa)
+bperbanca,black,esatto,banca,banche e pagamenti (anti-truffa)
+bpm,black,esatto,banca,banche e pagamenti (anti-truffa)
+bunq,black,esatto,banca,banche e pagamenti (anti-truffa)
+bybit,black,esatto,banca,banche e pagamenti (anti-truffa)
+cartabcc,black,esatto,banca,banche e pagamenti (anti-truffa)
+cassacentrale,black,esatto,banca,banche e pagamenti (anti-truffa)
+cassadepositieprestiti,black,esatto,banca,banche e pagamenti (anti-truffa)
+cdp,black,esatto,banca,banche e pagamenti (anti-truffa)
+chebanca,black,esatto,banca,banche e pagamenti (anti-truffa)
+citi,black,esatto,banca,banche e pagamenti (anti-truffa)
+citibank,black,esatto,banca,banche e pagamenti (anti-truffa)
+cofidis,black,esatto,banca,banche e pagamenti (anti-truffa)
+conteit,black,esatto,banca,banche e pagamenti (anti-truffa)
+credem,black,esatto,banca,banche e pagamenti (anti-truffa)
+creditagricole,black,esatto,banca,banche e pagamenti (anti-truffa)
+creditagricoleitalia,black,esatto,banca,banche e pagamenti (anti-truffa)
+creditoemiliano,black,esatto,banca,banche e pagamenti (anti-truffa)
+creditsuisse,black,esatto,banca,banche e pagamenti (anti-truffa)
+cryptocom,black,esatto,banca,banche e pagamenti (anti-truffa)
+deutschebank,black,esatto,banca,banche e pagamenti (anti-truffa)
+dinersclub,black,esatto,banca,banche e pagamenti (anti-truffa)
+directline,black,esatto,banca,banche e pagamenti (anti-truffa)
+fideuram,black,esatto,banca,banche e pagamenti (anti-truffa)
+findomestic,black,esatto,banca,banche e pagamenti (anti-truffa)
+fineco,black,esatto,banca,banche e pagamenti (anti-truffa)
+generali,black,esatto,banca,banche e pagamenti (anti-truffa)
+genertel,black,esatto,banca,banche e pagamenti (anti-truffa)
+goldmansachs,black,esatto,banca,banche e pagamenti (anti-truffa)
+googlepay,black,esatto,banca,banche e pagamenti (anti-truffa)
+groupama,black,esatto,banca,banche e pagamenti (anti-truffa)
+hsbc,black,esatto,banca,banche e pagamenti (anti-truffa)
+iccrea,black,esatto,banca,banche e pagamenti (anti-truffa)
+ifis,black,esatto,banca,banche e pagamenti (anti-truffa)
+illimity,black,esatto,banca,banche e pagamenti (anti-truffa)
+ing,black,esatto,banca,banche e pagamenti (anti-truffa)
+ingitalia,black,esatto,banca,banche e pagamenti (anti-truffa)
+jpmorgan,black,esatto,banca,banche e pagamenti (anti-truffa)
+jpmorganchase,black,esatto,banca,banche e pagamenti (anti-truffa)
+klarna,black,esatto,banca,banche e pagamenti (anti-truffa)
+kucoin,black,esatto,banca,banche e pagamenti (anti-truffa)
+lloyds,black,esatto,banca,banche e pagamenti (anti-truffa)
+lottomatica,black,esatto,banca,banche e pagamenti (anti-truffa)
+mediobanca,black,esatto,banca,banche e pagamenti (anti-truffa)
+metamask,black,esatto,banca,banche e pagamenti (anti-truffa)
+montedeipaschi,black,esatto,banca,banche e pagamenti (anti-truffa)
+mooney,black,esatto,banca,banche e pagamenti (anti-truffa)
+morganstanley,black,esatto,banca,banche e pagamenti (anti-truffa)
+mps,black,esatto,banca,banche e pagamenti (anti-truffa)
+n26,black,esatto,banca,banche e pagamenti (anti-truffa)
+natwest,black,esatto,banca,banche e pagamenti (anti-truffa)
+nexi,black,esatto,banca,banche e pagamenti (anti-truffa)
+okx,black,esatto,banca,banche e pagamenti (anti-truffa)
+pagobancomat,black,esatto,banca,banche e pagamenti (anti-truffa)
+popolaredisondrio,black,esatto,banca,banche e pagamenti (anti-truffa)
+postepayevolution,black,esatto,banca,banche e pagamenti (anti-truffa)
+postevita,black,esatto,banca,banche e pagamenti (anti-truffa)
+primaassicurazioni,black,esatto,banca,banche e pagamenti (anti-truffa)
+quixa,black,esatto,banca,banche e pagamenti (anti-truffa)
+raiffeisen,black,esatto,banca,banche e pagamenti (anti-truffa)
+realemutua,black,esatto,banca,banche e pagamenti (anti-truffa)
+revolut,black,esatto,banca,banche e pagamenti (anti-truffa)
+samsungpay,black,esatto,banca,banche e pagamenti (anti-truffa)
+santander,black,esatto,banca,banche e pagamenti (anti-truffa)
+santanderconsumer,black,esatto,banca,banche e pagamenti (anti-truffa)
+scalapay,black,esatto,banca,banche e pagamenti (anti-truffa)
+sisal,black,esatto,banca,banche e pagamenti (anti-truffa)
+snai,black,esatto,banca,banche e pagamenti (anti-truffa)
+societegenerale,black,esatto,banca,banche e pagamenti (anti-truffa)
+stripe,black,esatto,banca,banche e pagamenti (anti-truffa)
+sumup,black,esatto,banca,banche e pagamenti (anti-truffa)
+transferwise,black,esatto,banca,banche e pagamenti (anti-truffa)
+trezor,black,esatto,banca,banche e pagamenti (anti-truffa)
+ubs,black,esatto,banca,banche e pagamenti (anti-truffa)
+unipol,black,esatto,banca,banche e pagamenti (anti-truffa)
+unipolmove,black,esatto,banca,banche e pagamenti (anti-truffa)
+unipolsai,black,esatto,banca,banche e pagamenti (anti-truffa)
+verti,black,esatto,banca,banche e pagamenti (anti-truffa)
+visa,black,esatto,banca,banche e pagamenti (anti-truffa)
+volksbank,black,esatto,banca,banche e pagamenti (anti-truffa)
+webank,black,esatto,banca,banche e pagamenti (anti-truffa)
+wellsfargo,black,esatto,banca,banche e pagamenti (anti-truffa)
+widiba,black,esatto,banca,banche e pagamenti (anti-truffa)
+youngplatform,black,esatto,banca,banche e pagamenti (anti-truffa)
+zurich,black,esatto,banca,banche e pagamenti (anti-truffa)
+abbigliamento,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+abitidasposa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+academy,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+accademia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+acconciature,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+addestratore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+affittacamere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+affitti,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+affitto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+agente,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+agenzia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+agenziaimmobiliare,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+agenziaviaggi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+agriturismo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+agronomo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+alberghi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+albergo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+alimentari,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+allevamento,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ambulatorio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+analisi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+animali,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+animatore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+animazione,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+annunci,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+aperitivo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+apps,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+architetti,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+architetto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+art,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+arte,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+artigianato,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+artigiano,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+artista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+artisti,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+asilo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+asilonido,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+asporto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+assicurazione,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+assicurazioni,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+assistenzaanziani,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+assistenzapc,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+attore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+attrice,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+autofficina,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+autolavaggio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+autonoleggio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+autosalone,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+autoscuola,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+avvocati,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+avvocato,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+azienda,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+aziende,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+babysitter,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+badante,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bakery,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ballo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+band,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+banqueting,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bar,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+barber,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+barbershop,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+barbiere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bazar,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+beauty,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bedandbreakfast,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+beer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bellezza,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+benessere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+biologico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+birra,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+birreria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bistro,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bistrot,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+blog,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+blogger,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+bnb,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+borse,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+boutique,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+boxe,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+braceria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+broker,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+burger,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+business,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+businesscoach,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cafe,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+caffe,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+caffetteria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+calcetto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+calzature,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+calzolaio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+campeggio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+camping,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+canile,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cantante,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cardiologo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+carrozzeria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+carrozziere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cartoleria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+casa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+casadiriposo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+casavacanze,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+case,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+catering,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+centroestetico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ceramica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+chef,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+chiropratico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ciabattino,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ciglia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cinema,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cioccolateria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+clinica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+clinicaveterinaria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+club,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+coach,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cocktail,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cocktailbar,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+coffee,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+coffeeshop,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+colorificio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+commercialista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+commercialisti,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+company,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+computer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+comunicazione,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+concessionaria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+consulente,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+consulentedellavoro,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+consulenza,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+consulting,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+contentcreator,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+copywriter,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+corsi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+corso,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cosmetica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cosmetici,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+costruzioni,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+coupon,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+creatorcontent,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+creperia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+crossfit,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cucina,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cuochi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+cuoco,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+danza,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+delivery,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+dentist,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+dentista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+dermatologo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+design,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+designer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+dietista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+dietologo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+digital,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+digitale,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+digitalmarketing,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+disco,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+discoteca,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+discount,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ditta,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+doctor,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+dogsitter,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+doposcuola,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+dottore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+drogheria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ecommerce,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+edicola,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+edilizia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+elettrauto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+elettricista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+emporio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+enoteca,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+erboristeria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+estetica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+estetista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+eventi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+events,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fabbro,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+falegname,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+falegnameria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+farmacia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+farmacista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fashion,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ferramenta,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+feste,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fioraio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fiori,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fiorista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fisioterapia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fisioterapista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fitness,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+florist,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+food,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+foodtruck,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+formatore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+formazione,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fornaio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+forno,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+foto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fotografa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fotografia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fotografo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+freelance,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+friggitoria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+frutta,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+fruttivendolo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+galleria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gallery,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gamer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gastronomia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gelateria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gelati,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gelato,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+geometra,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+giardinaggio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+giardiniere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ginecologo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gioielleria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gioielli,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+giornale,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+golf,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gommista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+grafica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+grafico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+graphicdesigner,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+griglieria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+guidaturistica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+guide,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+gym,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+hairstylist,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+hamburger,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+hamburgeria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+handmade,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+hostel,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+hotel,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+idraulico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+imbianchino,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+immobiliare,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+impresa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+impresadipulizie,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+impresaedile,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+imprese,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+infermiere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+infissi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+influencer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+informatica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ingegnere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ingegneri,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+insegnante,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+internet,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+intimo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+intrattenimento,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ipermercato,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+jobs,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+karaoke,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+kebab,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+laboratorio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+lashes,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+lavanderia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+lavori,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+lavoro,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+lawyer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+lezioni,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+libreria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+libri,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+lifecoach,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+locanda,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+logopedista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+lounge,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ludoteca,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+macellaio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+macelleria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+makeup,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+makeupartist,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+market,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+marketing,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+massaggi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+massaggio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+matrimoni,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+matrimonio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+meccanico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+medici,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+medico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+mentor,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+mercato,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+meteo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+minimarket,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+moda,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+model,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+modella,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+modello,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+muratore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+music,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+musica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+musicista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+mutui,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+mutuo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+nails,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ncc,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+negozi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+negozio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+news,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+nido,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+nightclub,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+noleggio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+notaio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+notizie,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+nuoto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+nutrizionista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+oculista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+odontoiatra,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+offerta,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+offerte,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+officina,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+onicotecnica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+online,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+optometrista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+orologeria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+orologi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+oroscopo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ortodontista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ortodonzia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ortofrutta,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ostello,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+osteopata,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+osteria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ottica,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ottico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+outlet,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+padel,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+palestra,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+panetteria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+panificio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+panini,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+paninoteca,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+parafarmacia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+parrucchiera,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+parrucchiere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+parrucchieri,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+party,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pasticcere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pasticceria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pediatra,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+perito,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+personaltrainer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pescheria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+petshop,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+petsitter,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+photographer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+photography,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+piadineria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+piercing,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pilates,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+piscina,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pittore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pittoreedile,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pizza,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pizzaiolo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pizze,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pizzeria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+podcast,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+podcaster,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+podologo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+poke,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+poliambulatorio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pro,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+professionista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+professore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+profumeria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+profumi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+programmatore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+promo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+promozioni,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+psichiatra,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+psicologa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+psicologo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+psicoterapeuta,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pub,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pubblicita,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+pulizie,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ragioniere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ramen,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+realestate,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+regista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+rent,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+resort,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+restaurant,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ricette,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+riparazione,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+riparazioni,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ripetizioni,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ristorante,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ristoranti,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ristrutturazioni,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+rosticceria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+rsa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+saldi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+salon,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+salone,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+salumeria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sarta,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sarto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sartoria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+scarpe,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+school,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sconti,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sconto,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+scultore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+scuola,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+scuoladiballo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+scuoladidanza,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+scuolaguida,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+seo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+serramenti,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+service,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+services,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+servizi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+servizio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+shop,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+shoponline,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+siti,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sitoweb,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+smm,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+social,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+socialmediamanager,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+software,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+solarium,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+spa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sport,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sports,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sposa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sposi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+srl,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+startup,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+steakhouse,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+stilista,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+store,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+streamer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+streetfood,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+studiolegale,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+supermercato,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sushi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+sviluppatore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tabaccheria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tabacchi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tappezziere,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tata,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tattoo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tatuaggi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tatuatore,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+taverna,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+taxi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+teatro,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tech,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+technology,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tecnico,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tecnologia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+telefonia,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tennis,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tintoria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+toelettatura,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tour,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+trainer,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+traslochi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+trasloco,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+trattoria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+travel,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+truccatrice,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+turismo,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+tutor,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+ufficiostampa,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+unghie,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vacanze,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vendita,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+verdura,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vet,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+veterinario,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vetraio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+viaggi,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+video,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+videomaker,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vineria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vini,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vino,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vivaio,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+vlogger,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+web,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+webdesign,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+webdesigner,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+wedding,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+weddingplanner,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+wellness,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+wine,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+winebar,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+yoga,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+yogurteria,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+youtuber,black,esatto,generico,riservato a myquicktag: futura vetrina di categoria
+accountrecovery,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+accountsecurity,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+alert,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+alerts,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+amministrazionecondominio,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+assistenza,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+assistenzaclienti,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+assistenzatecnica,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+avvisi,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+avviso,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+bollette,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+callcenter,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+centroassistenza,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+comunicazioni,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+concorso,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+customercare,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+customerservice,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+customersupport,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+fatture,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+giveaway,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+haivinto,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+helpdesk,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+lotteria,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+multa,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+multe,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+notifica,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+notifiche,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+numeroverde,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+officialitalia,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+omaggi,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+omaggio,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+pagamenti,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+payment,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+payments,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+premi,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+premio,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+reclami,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+recuperapassword,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+recuperoaccount,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+refund,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+refunds,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+rimborsi,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+rimborso,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+riscossione,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+sbloccaaccount,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+servizioclienti,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+sicurezzaaccount,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+supportotecnico,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+techsupport,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+ufficialeitalia,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+ufficioreclami,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+verifica,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+verificaaccount,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+verificaidentita,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+verification,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+verifiche,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+verify,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+vincita,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+vincite,black,esatto,ingannevole,nomi che imitano assistenza o verifiche (truffe)
+agenziadelleentrate,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+agenziaentrate,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+bancoposta,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cameradeideputati,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+carabinieri,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+crocerossa,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+guardiadifinanza,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+inail,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+inps,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+motorizzazione,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+poliziadistato,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+posteitaliane,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+postepay,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+presidenzadelconsiglio,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+protezionecivile,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+quirinale,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+vigilidelfuoco,black,contiene,istituzione,istituzioni e servizi pubblici (anti-truffa)
+112,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+113,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+115,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+118,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+1500,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+aci,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+actionaid,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ader,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+adm,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+aeronauticamilitare,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+agcm,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+agcom,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+agenziadogane,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+agenziadoganemonopoli,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+agenziaentrateriscossione,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+agid,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+aifa,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+airc,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+aise,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+aisi,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+amnesty,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+amnestyinternational,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+anac,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+anas,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+antitrust,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+appio,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+arera,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+armadeicarabinieri,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+asl,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+aslroma,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+bancacentraleeuropea,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+bancamondiale,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+bce,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+capitaneria,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+caritas,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cartadidentita,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cartaidentita,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cassazione,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cia,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cie,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cio,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cip,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cittadelvaticano,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+commissioneeuropea,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+comune,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+comunedi,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+coni,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+consigliodistato,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+consiglioeuropeo,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+consob,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cortecostituzionale,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cortedeiconti,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+cortedicassazione,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+covip,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+crocerossaitaliana,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+csm,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ecb,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+enac,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+enav,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+equitalia,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+esercito,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+esercitoitaliano,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+europeancommission,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+europeanparliament,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+europol,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+fao,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+farnesina,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+fascicolosanitario,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+fbi,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+figc,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+fmi,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+garanteperlaprivacy,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+garanteprivacy,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+gdf,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+governo,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+governoitaliano,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+greenpeace,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+guardiacostiera,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+imf,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+interpol,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ioapp,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ioc,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+iss,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+istat,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+istitutosuperioredisanita,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ivass,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+lilt,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+magistratura,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+marinamilitare,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+masaf,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+mase,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+medicisenzafrontiere,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+mef,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+mim,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+mimit,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministeri,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministero,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodegliesteri,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodellacultura,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodelladifesa,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodellagiustizia,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodellambiente,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodellasalute,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodellavoro,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodelleconomia,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodellinterno,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodellistruzione,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ministerodelturismo,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+miur,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+montecitorio,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+motorizzazionecivile,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+msf,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+mur,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+nato,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+nazioniunite,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+nsa,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ocse,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+oecd,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+oms,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+onu,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+otan,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+pagopa,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+palazzochigi,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+palazzomadama,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+parlamento,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+parlamentoeuropeo,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+polizia,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+polizialocale,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+poliziamunicipale,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+poliziapenitenziaria,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+poliziapostale,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+pompieri,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+portaleautomobilista,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+poste,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+postemobile,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+pra,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+prefettura,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+presidentedellarepubblica,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+presidenzadellarepubblica,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+procura,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+provincia,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+questura,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+redcross,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+regione,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+rfi,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+sanita,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+santasede,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+savethechildren,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+senato,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+senatodellarepubblica,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+servizionazionale,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+spid,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+ssn,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+telethon,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+tesserasanitaria,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+tribunale,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+unesco,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+unhcr,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+unicef,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+unicefitalia,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+unioneeuropea,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+unitednations,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+vatican,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+vaticano,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+vigilidifuoco,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+viminale,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+wfp,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+who,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+worldbank,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+wto,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+wwf,black,esatto,istituzione,istituzioni e servizi pubblici (anti-truffa)
+myquicktag,black,contiene,myquicktag,nessuno può spacciarsi per myquicktag
+quicktag,black,contiene,myquicktag,nessuno può spacciarsi per myquicktag
+mqt,black,esatto,myquicktag,nessuno può spacciarsi per myquicktag
+myqt,black,esatto,myquicktag,nessuno può spacciarsi per myquicktag
+myquick,black,esatto,myquicktag,nessuno può spacciarsi per myquicktag
+brazzers,black,contiene,offensivo,"volgarità, odio, estremismo"
+coglion,black,contiene,offensivo,"volgarità, odio, estremismo"
+culatton,black,contiene,offensivo,"volgarità, odio, estremismo"
+diocane,black,contiene,offensivo,"volgarità, odio, estremismo"
+dioporco,black,contiene,offensivo,"volgarità, odio, estremismo"
+faggot,black,contiene,offensivo,"volgarità, odio, estremismo"
+froci,black,contiene,offensivo,"volgarità, odio, estremismo"
+frocio,black,contiene,offensivo,"volgarità, odio, estremismo"
+fuck,black,contiene,offensivo,"volgarità, odio, estremismo"
+heilhitler,black,contiene,offensivo,"volgarità, odio, estremismo"
+hitler,black,contiene,offensivo,"volgarità, odio, estremismo"
+kukluxklan,black,contiene,offensivo,"volgarità, odio, estremismo"
+madonnaputtana,black,contiene,offensivo,"volgarità, odio, estremismo"
+merdos,black,contiene,offensivo,"volgarità, odio, estremismo"
+mignott,black,contiene,offensivo,"volgarità, odio, estremismo"
+minchia,black,contiene,offensivo,"volgarità, odio, estremismo"
+motherfucker,black,contiene,offensivo,"volgarità, odio, estremismo"
+nigga,black,contiene,offensivo,"volgarità, odio, estremismo"
+nigger,black,contiene,offensivo,"volgarità, odio, estremismo"
+pedofil,black,contiene,offensivo,"volgarità, odio, estremismo"
+pedopornografia,black,contiene,offensivo,"volgarità, odio, estremismo"
+porcamadonna,black,contiene,offensivo,"volgarità, odio, estremismo"
+porcoddio,black,contiene,offensivo,"volgarità, odio, estremismo"
+porcodio,black,contiene,offensivo,"volgarità, odio, estremismo"
+pornhub,black,contiene,offensivo,"volgarità, odio, estremismo"
+ricchion,black,contiene,offensivo,"volgarità, odio, estremismo"
+siegheil,black,contiene,offensivo,"volgarità, odio, estremismo"
+stronz,black,contiene,offensivo,"volgarità, odio, estremismo"
+vaffanculo,black,contiene,offensivo,"volgarità, odio, estremismo"
+xvideos,black,contiene,offensivo,"volgarità, odio, estremismo"
+adolfhitler,black,esatto,offensivo,"volgarità, odio, estremismo"
+affanculo,black,esatto,offensivo,"volgarità, odio, estremismo"
+alqaeda,black,esatto,offensivo,"volgarità, odio, estremismo"
+alqaida,black,esatto,offensivo,"volgarità, odio, estremismo"
+asshole,black,esatto,offensivo,"volgarità, odio, estremismo"
+bagascia,black,esatto,offensivo,"volgarità, odio, estremismo"
+baldracca,black,esatto,offensivo,"volgarità, odio, estremismo"
+bastard,black,esatto,offensivo,"volgarità, odio, estremismo"
+bastarda,black,esatto,offensivo,"volgarità, odio, estremismo"
+bastardi,black,esatto,offensivo,"volgarità, odio, estremismo"
+bastardo,black,esatto,offensivo,"volgarità, odio, estremismo"
+benitomussolini,black,esatto,offensivo,"volgarità, odio, estremismo"
+bitch,black,esatto,offensivo,"volgarità, odio, estremismo"
+bitches,black,esatto,offensivo,"volgarità, odio, estremismo"
+brigaterosse,black,esatto,offensivo,"volgarità, odio, estremismo"
+bullshit,black,esatto,offensivo,"volgarità, odio, estremismo"
+camgirl,black,esatto,offensivo,"volgarità, odio, estremismo"
+camorra,black,esatto,offensivo,"volgarità, odio, estremismo"
+cazzata,black,esatto,offensivo,"volgarità, odio, estremismo"
+cazzi,black,esatto,offensivo,"volgarità, odio, estremismo"
+cazzo,black,esatto,offensivo,"volgarità, odio, estremismo"
+cazzona,black,esatto,offensivo,"volgarità, odio, estremismo"
+cazzone,black,esatto,offensivo,"volgarità, odio, estremismo"
+cocaina,black,esatto,offensivo,"volgarità, odio, estremismo"
+cock,black,esatto,offensivo,"volgarità, odio, estremismo"
+cogliona,black,esatto,offensivo,"volgarità, odio, estremismo"
+coglionata,black,esatto,offensivo,"volgarità, odio, estremismo"
+coglione,black,esatto,offensivo,"volgarità, odio, estremismo"
+coglioni,black,esatto,offensivo,"volgarità, odio, estremismo"
+cornuta,black,esatto,offensivo,"volgarità, odio, estremismo"
+cornuto,black,esatto,offensivo,"volgarità, odio, estremismo"
+cosanostra,black,esatto,offensivo,"volgarità, odio, estremismo"
+cristodio,black,esatto,offensivo,"volgarità, odio, estremismo"
+culattone,black,esatto,offensivo,"volgarità, odio, estremismo"
+culo,black,esatto,offensivo,"volgarità, odio, estremismo"
+culone,black,esatto,offensivo,"volgarità, odio, estremismo"
+cunt,black,esatto,offensivo,"volgarità, odio, estremismo"
+dick,black,esatto,offensivo,"volgarità, odio, estremismo"
+diobestia,black,esatto,offensivo,"volgarità, odio, estremismo"
+dioboia,black,esatto,offensivo,"volgarità, odio, estremismo"
+droga,black,esatto,offensivo,"volgarità, odio, estremismo"
+duce,black,esatto,offensivo,"volgarità, odio, estremismo"
+escort,black,esatto,offensivo,"volgarità, odio, estremismo"
+escorts,black,esatto,offensivo,"volgarità, odio, estremismo"
+fanculo,black,esatto,offensivo,"volgarità, odio, estremismo"
+fascista,black,esatto,offensivo,"volgarità, odio, estremismo"
+fascisti,black,esatto,offensivo,"volgarità, odio, estremismo"
+fica,black,esatto,offensivo,"volgarità, odio, estremismo"
+figa,black,esatto,offensivo,"volgarità, odio, estremismo"
+fighe,black,esatto,offensivo,"volgarità, odio, estremismo"
+fucker,black,esatto,offensivo,"volgarità, odio, estremismo"
+fucking,black,esatto,offensivo,"volgarità, odio, estremismo"
+hamas,black,esatto,offensivo,"volgarità, odio, estremismo"
+handicappato,black,esatto,offensivo,"volgarità, odio, estremismo"
+hentai,black,esatto,offensivo,"volgarità, odio, estremismo"
+hezbollah,black,esatto,offensivo,"volgarità, odio, estremismo"
+ilduce,black,esatto,offensivo,"volgarità, odio, estremismo"
+inculare,black,esatto,offensivo,"volgarità, odio, estremismo"
+inculata,black,esatto,offensivo,"volgarità, odio, estremismo"
+isis,black,esatto,offensivo,"volgarità, odio, estremismo"
+kkk,black,esatto,offensivo,"volgarità, odio, estremismo"
+mafia,black,esatto,offensivo,"volgarità, odio, estremismo"
+mafioso,black,esatto,offensivo,"volgarità, odio, estremismo"
+merda,black,esatto,offensivo,"volgarità, odio, estremismo"
+merdoso,black,esatto,offensivo,"volgarità, odio, estremismo"
+mignotta,black,esatto,offensivo,"volgarità, odio, estremismo"
+mignotte,black,esatto,offensivo,"volgarità, odio, estremismo"
+milf,black,esatto,offensivo,"volgarità, odio, estremismo"
+minchione,black,esatto,offensivo,"volgarità, odio, estremismo"
+mongoloide,black,esatto,offensivo,"volgarità, odio, estremismo"
+mussolini,black,esatto,offensivo,"volgarità, odio, estremismo"
+nazi,black,esatto,offensivo,"volgarità, odio, estremismo"
+naziskin,black,esatto,offensivo,"volgarità, odio, estremismo"
+nazista,black,esatto,offensivo,"volgarità, odio, estremismo"
+nazisti,black,esatto,offensivo,"volgarità, odio, estremismo"
+ndrangheta,black,esatto,offensivo,"volgarità, odio, estremismo"
+negra,black,esatto,offensivo,"volgarità, odio, estremismo"
+negro,black,esatto,offensivo,"volgarità, odio, estremismo"
+nude,black,esatto,offensivo,"volgarità, odio, estremismo"
+nudes,black,esatto,offensivo,"volgarità, odio, estremismo"
+nudi,black,esatto,offensivo,"volgarità, odio, estremismo"
+pedofili,black,esatto,offensivo,"volgarità, odio, estremismo"
+pedofilia,black,esatto,offensivo,"volgarità, odio, estremismo"
+pedofilo,black,esatto,offensivo,"volgarità, odio, estremismo"
+polentone,black,esatto,offensivo,"volgarità, odio, estremismo"
+pompini,black,esatto,offensivo,"volgarità, odio, estremismo"
+pompino,black,esatto,offensivo,"volgarità, odio, estremismo"
+porn,black,esatto,offensivo,"volgarità, odio, estremismo"
+porno,black,esatto,offensivo,"volgarità, odio, estremismo"
+pussy,black,esatto,offensivo,"volgarità, odio, estremismo"
+puttana,black,esatto,offensivo,"volgarità, odio, estremismo"
+puttane,black,esatto,offensivo,"volgarità, odio, estremismo"
+puttaniere,black,esatto,offensivo,"volgarità, odio, estremismo"
+redtube,black,esatto,offensivo,"volgarità, odio, estremismo"
+retard,black,esatto,offensivo,"volgarità, odio, estremismo"
+ricchione,black,esatto,offensivo,"volgarità, odio, estremismo"
+ricchioni,black,esatto,offensivo,"volgarità, odio, estremismo"
+ritardato,black,esatto,offensivo,"volgarità, odio, estremismo"
+rottinculo,black,esatto,offensivo,"volgarità, odio, estremismo"
+sacracoronaunita,black,esatto,offensivo,"volgarità, odio, estremismo"
+sesso,black,esatto,offensivo,"volgarità, odio, estremismo"
+sex,black,esatto,offensivo,"volgarità, odio, estremismo"
+sexy,black,esatto,offensivo,"volgarità, odio, estremismo"
+shit,black,esatto,offensivo,"volgarità, odio, estremismo"
+slut,black,esatto,offensivo,"volgarità, odio, estremismo"
+spaccio,black,esatto,offensivo,"volgarità, odio, estremismo"
+sticazzi,black,esatto,offensivo,"volgarità, odio, estremismo"
+stronza,black,esatto,offensivo,"volgarità, odio, estremismo"
+stronzata,black,esatto,offensivo,"volgarità, odio, estremismo"
+stronzi,black,esatto,offensivo,"volgarità, odio, estremismo"
+stronzo,black,esatto,offensivo,"volgarità, odio, estremismo"
+suicidio,black,esatto,offensivo,"volgarità, odio, estremismo"
+talebani,black,esatto,offensivo,"volgarità, odio, estremismo"
+taliban,black,esatto,offensivo,"volgarità, odio, estremismo"
+terrone,black,esatto,offensivo,"volgarità, odio, estremismo"
+terroni,black,esatto,offensivo,"volgarità, odio, estremismo"
+troia,black,esatto,offensivo,"volgarità, odio, estremismo"
+troie,black,esatto,offensivo,"volgarità, odio, estremismo"
+whitepower,black,esatto,offensivo,"volgarità, odio, estremismo"
+whore,black,esatto,offensivo,"volgarità, odio, estremismo"
+xhamster,black,esatto,offensivo,"volgarità, odio, estremismo"
+xnxx,black,esatto,offensivo,"volgarità, odio, estremismo"
+xxx,black,esatto,offensivo,"volgarità, odio, estremismo"
+youporn,black,esatto,offensivo,"volgarità, odio, estremismo"
+zingari,black,esatto,offensivo,"volgarità, odio, estremismo"
+zingaro,black,esatto,offensivo,"volgarità, odio, estremismo"
+zoccola,black,esatto,offensivo,"volgarità, odio, estremismo"
+zoccole,black,esatto,offensivo,"volgarità, odio, estremismo"
+zoccolona,black,esatto,offensivo,"volgarità, odio, estremismo"
+a2a,gold,esatto,brand,marchio italiano
+abarth,gold,esatto,brand,marchio italiano
+absolut,gold,esatto,brand,marchio internazionale
+accor,gold,esatto,brand,marchio internazionale
+acea,gold,esatto,brand,marchio italiano
+acer,gold,esatto,brand,marchio internazionale
+acquadiparma,gold,esatto,brand,marchio italiano
+acquaesapone,gold,esatto,brand,marchio italiano
+acquapanna,gold,esatto,brand,marchio italiano
+activia,gold,esatto,brand,marchio internazionale
+adidas,gold,esatto,brand,marchio internazionale
+airfrance,gold,esatto,brand,marchio internazionale
+aldi,gold,esatto,brand,marchio internazionale
+alemagna,gold,esatto,brand,marchio italiano
+alessi,gold,esatto,brand,marchio italiano
+alfaromeo,gold,esatto,brand,marchio italiano
+algida,gold,esatto,brand,marchio internazionale
+alitalia,gold,esatto,brand,marchio italiano
+allianzstadium,gold,esatto,brand,marchio italiano
+amadori,gold,esatto,brand,marchio italiano
+amarenafabbri,gold,esatto,brand,marchio italiano
+amarettodisaronno,gold,esatto,brand,marchio italiano
+amaromontenegro,gold,esatto,brand,marchio italiano
+amd,gold,esatto,brand,marchio internazionale
+amg,gold,esatto,brand,marchio internazionale
+ansa,gold,esatto,brand,marchio italiano
+aperol,gold,esatto,brand,marchio italiano
+aprilia,gold,esatto,brand,marchio italiano
+ariel,gold,esatto,brand,marchio internazionale
+ariston,gold,esatto,brand,marchio italiano
+armani,gold,esatto,brand,marchio internazionale
+asics,gold,esatto,brand,marchio internazionale
+astonmartin,gold,esatto,brand,marchio internazionale
+asus,gold,esatto,brand,marchio internazionale
+atac,gold,esatto,brand,marchio italiano
+atlantia,gold,esatto,brand,marchio italiano
+atm,gold,esatto,brand,marchio italiano
+auchan,gold,esatto,brand,marchio internazionale
+audemarspiguet,gold,esatto,brand,marchio internazionale
+audi,gold,esatto,brand,marchio internazionale
+autogrill,gold,esatto,brand,marchio italiano
+autostrade,gold,esatto,brand,marchio italiano
+autostradeperlitalia,gold,esatto,brand,marchio italiano
+averna,gold,esatto,brand,marchio italiano
+avis,gold,esatto,brand,marchio internazionale
+avvenire,gold,esatto,brand,marchio italiano
+azimut,gold,esatto,brand,marchio italiano
+bacardi,gold,esatto,brand,marchio internazionale
+bacioperugina,gold,esatto,brand,marchio italiano
+baciperugina,gold,esatto,brand,marchio italiano
+baileys,gold,esatto,brand,marchio internazionale
+balenciaga,gold,esatto,brand,marchio internazionale
+balocco,gold,esatto,brand,marchio italiano
+barbie,gold,esatto,brand,marchio internazionale
+barilla,gold,esatto,brand,marchio italiano
+bartolini,gold,esatto,brand,marchio internazionale
+bauli,gold,esatto,brand,marchio italiano
+bbc,gold,esatto,brand,marchio internazionale
+beats,gold,esatto,brand,marchio internazionale
+becks,gold,esatto,brand,marchio internazionale
+benelli,gold,esatto,brand,marchio italiano
+benetton,gold,esatto,brand,marchio italiano
+bennet,gold,esatto,brand,marchio italiano
+bentley,gold,esatto,brand,marchio internazionale
+bershka,gold,esatto,brand,marchio internazionale
+bestwestern,gold,esatto,brand,marchio internazionale
+bialetti,gold,esatto,brand,marchio italiano
+birramoretti,gold,esatto,brand,marchio italiano
+bloomberg,gold,esatto,brand,marchio internazionale
+bmw,gold,esatto,brand,marchio internazionale
+boggi,gold,esatto,brand,marchio italiano
+borbone,gold,esatto,brand,marchio italiano
+borsalino,gold,esatto,brand,marchio italiano
+bosch,gold,esatto,brand,marchio internazionale
+bose,gold,esatto,brand,marchio internazionale
+bottegaveneta,gold,esatto,brand,marchio internazionale
+braun,gold,esatto,brand,marchio internazionale
+breil,gold,esatto,brand,marchio italiano
+breitling,gold,esatto,brand,marchio internazionale
+brembo,gold,esatto,brand,marchio italiano
+bricocenter,gold,esatto,brand,marchio internazionale
+bricoio,gold,esatto,brand,marchio italiano
+bridgestone,gold,esatto,brand,marchio internazionale
+brioni,gold,esatto,brand,marchio italiano
+britishairways,gold,esatto,brand,marchio internazionale
+brt,gold,esatto,brand,marchio internazionale
+brunellocucinelli,gold,esatto,brand,marchio italiano
+buccellati,gold,esatto,brand,marchio italiano
+budweiser,gold,esatto,brand,marchio internazionale
+bugatti,gold,esatto,brand,marchio internazionale
+buitoni,gold,esatto,brand,marchio italiano
+bulgari,gold,esatto,brand,marchio italiano
+burberry,gold,esatto,brand,marchio internazionale
+burgerking,gold,esatto,brand,marchio internazionale
+bvlgari,gold,esatto,brand,marchio italiano
+byd,gold,esatto,brand,marchio internazionale
+cadillac,gold,esatto,brand,marchio internazionale
+caffarel,gold,esatto,brand,marchio italiano
+caffeborbone,gold,esatto,brand,marchio italiano
+calvinklein,gold,esatto,brand,marchio internazionale
+calzedonia,gold,esatto,brand,marchio italiano
+campari,gold,esatto,brand,marchio italiano
+canale5,gold,esatto,brand,marchio italiano
+canali,gold,esatto,brand,marchio italiano
+carlsberg,gold,esatto,brand,marchio internazionale
+carpisa,gold,esatto,brand,marchio italiano
+carrefour,gold,esatto,brand,marchio internazionale
+carrefouritalia,gold,esatto,brand,marchio italiano
+cartier,gold,esatto,brand,marchio internazionale
+chanel,gold,esatto,brand,marchio internazionale
+chevrolet,gold,esatto,brand,marchio internazionale
+chivas,gold,esatto,brand,marchio internazionale
+chrysler,gold,esatto,brand,marchio internazionale
+ciaocafe,gold,esatto,brand,marchio italiano
+ciesse,gold,esatto,brand,marchio italiano
+cirio,gold,esatto,brand,marchio italiano
+cisco,gold,esatto,brand,marchio internazionale
+citroen,gold,esatto,brand,marchio internazionale
+clinique,gold,esatto,brand,marchio internazionale
+cnn,gold,esatto,brand,marchio internazionale
+cocacola,gold,esatto,brand,marchio internazionale
+coke,gold,esatto,brand,marchio internazionale
+collistar,gold,esatto,brand,marchio italiano
+colmar,gold,esatto,brand,marchio italiano
+columbia,gold,esatto,brand,marchio internazionale
+conad,gold,esatto,brand,marchio italiano
+converse,gold,esatto,brand,marchio internazionale
+coop,gold,esatto,brand,marchio italiano
+coopitalia,gold,esatto,brand,marchio italiano
+coopvoce,gold,esatto,brand,marchio italiano
+corriere,gold,esatto,brand,marchio italiano
+corrieredellasera,gold,esatto,brand,marchio italiano
+corrieredellosport,gold,esatto,brand,marchio italiano
+cosmopolitan,gold,esatto,brand,marchio internazionale
+costco,gold,esatto,brand,marchio internazionale
+cpcompany,gold,esatto,brand,marchio italiano
+crai,gold,esatto,brand,marchio italiano
+cupra,gold,esatto,brand,marchio internazionale
+dacia,gold,esatto,brand,marchio internazionale
+damiani,gold,esatto,brand,marchio italiano
+danone,gold,esatto,brand,marchio internazionale
+dccomics,gold,esatto,brand,marchio internazionale
+decathlon,gold,esatto,brand,marchio internazionale
+dececco,gold,esatto,brand,marchio italiano
+dell,gold,esatto,brand,marchio internazionale
+delonghi,gold,esatto,brand,marchio italiano
+despar,gold,esatto,brand,marchio internazionale
+dhl,gold,esatto,brand,marchio internazionale
+diadora,gold,esatto,brand,marchio internazionale
+dior,gold,esatto,brand,marchio internazionale
+disaronno,gold,esatto,brand,marchio italiano
+divella,gold,esatto,brand,marchio italiano
+dji,gold,esatto,brand,marchio internazionale
+dodge,gold,esatto,brand,marchio internazionale
+dolceegabbana,gold,esatto,brand,marchio internazionale
+dolcegabbana,gold,esatto,brand,marchio internazionale
+dominos,gold,esatto,brand,marchio internazionale
+domperignon,gold,esatto,brand,marchio internazionale
+doritos,gold,esatto,brand,marchio internazionale
+douglas,gold,esatto,brand,marchio internazionale
+dreamworks,gold,esatto,brand,marchio internazionale
+ducati,gold,esatto,brand,marchio italiano
+dunkin,gold,esatto,brand,marchio internazionale
+dyson,gold,esatto,brand,marchio internazionale
+eataly,gold,esatto,brand,marchio italiano
+edison,gold,esatto,brand,marchio italiano
+electrolux,gold,esatto,brand,marchio internazionale
+emiliopucci,gold,esatto,brand,marchio italiano
+emirates,gold,esatto,brand,marchio internazionale
+emporioarmani,gold,esatto,brand,marchio internazionale
+enel,gold,esatto,brand,marchio italiano
+enelenergia,gold,esatto,brand,marchio italiano
+eni,gold,esatto,brand,marchio italiano
+eniplenitude,gold,esatto,brand,marchio italiano
+ermenegildozegna,gold,esatto,brand,marchio italiano
+esselunga,gold,esatto,brand,marchio italiano
+esso,gold,esatto,brand,marchio internazionale
+estathe,gold,esatto,brand,marchio italiano
+esteelauder,gold,esatto,brand,marchio internazionale
+etro,gold,esatto,brand,marchio italiano
+eurobet,gold,esatto,brand,marchio italiano
+euronics,gold,esatto,brand,marchio internazionale
+europcar,gold,esatto,brand,marchio internazionale
+eurospin,gold,esatto,brand,marchio italiano
+falconeri,gold,esatto,brand,marchio italiano
+famila,gold,esatto,brand,marchio italiano
+fanpage,gold,esatto,brand,marchio italiano
+fanta,gold,esatto,brand,marchio internazionale
+fastweb,gold,esatto,brand,marchio italiano
+fedex,gold,esatto,brand,marchio internazionale
+feltrinelli,gold,esatto,brand,marchio italiano
+fendi,gold,esatto,brand,marchio internazionale
+fernetbranca,gold,esatto,brand,marchio italiano
+ferragamo,gold,esatto,brand,marchio italiano
+ferrarelle,gold,esatto,brand,marchio italiano
+ferrari,gold,esatto,brand,marchio italiano
+ferrarif1,gold,esatto,brand,marchio internazionale
+ferrarispumante,gold,esatto,brand,marchio italiano
+ferrero,gold,esatto,brand,marchio italiano
+ferrerorocher,gold,esatto,brand,marchio italiano
+fiat,gold,esatto,brand,marchio italiano
+fileni,gold,esatto,brand,marchio italiano
+financialtimes,gold,esatto,brand,marchio internazionale
+fincantieri,gold,esatto,brand,marchio italiano
+findus,gold,esatto,brand,marchio italiano
+finmeccanica,gold,esatto,brand,marchio italiano
+fiorucci,gold,esatto,brand,marchio italiano
+forbes,gold,esatto,brand,marchio internazionale
+ford,gold,esatto,brand,marchio internazionale
+fourseasons,gold,esatto,brand,marchio internazionale
+foxnews,gold,esatto,brand,marchio internazionale
+frecciarossa,gold,esatto,brand,marchio italiano
+fujifilm,gold,esatto,brand,marchio internazionale
+galbani,gold,esatto,brand,marchio italiano
+garnier,gold,esatto,brand,marchio internazionale
+garofalo,gold,esatto,brand,marchio italiano
+gazzetta,gold,esatto,brand,marchio italiano
+gazzettadellosport,gold,esatto,brand,marchio italiano
+geox,gold,esatto,brand,marchio italiano
+gillette,gold,esatto,brand,marchio internazionale
+giorgioarmani,gold,esatto,brand,marchio internazionale
+giovannirana,gold,esatto,brand,marchio italiano
+givenchy,gold,esatto,brand,marchio internazionale
+gls,gold,esatto,brand,marchio internazionale
+gocciole,gold,esatto,brand,marchio italiano
+goldbet,gold,esatto,brand,marchio italiano
+goldengoose,gold,esatto,brand,marchio italiano
+goldenpoint,gold,esatto,brand,marchio italiano
+goodyear,gold,esatto,brand,marchio internazionale
+gopro,gold,esatto,brand,marchio internazionale
+granarolo,gold,esatto,brand,marchio italiano
+grandapadano,gold,esatto,brand,marchio italiano
+gtt,gold,esatto,brand,marchio italiano
+gucci,gold,esatto,brand,marchio internazionale
+guinness,gold,esatto,brand,marchio internazionale
+handm,gold,esatto,brand,marchio internazionale
+haribo,gold,esatto,brand,marchio internazionale
+harleydavidson,gold,esatto,brand,marchio internazionale
+hasbro,gold,esatto,brand,marchio internazionale
+hbo,gold,esatto,brand,marchio internazionale
+headandshoulders,gold,esatto,brand,marchio internazionale
+heineken,gold,esatto,brand,marchio internazionale
+heinz,gold,esatto,brand,marchio internazionale
+hennessy,gold,esatto,brand,marchio internazionale
+hera,gold,esatto,brand,marchio italiano
+hermes,gold,esatto,brand,marchio internazionale
+hertz,gold,esatto,brand,marchio internazionale
+hilton,gold,esatto,brand,marchio internazionale
+hogan,gold,esatto,brand,marchio italiano
+hometv,gold,esatto,brand,marchio italiano
+honda,gold,esatto,brand,marchio internazionale
+hoover,gold,esatto,brand,marchio italiano
+hotwheels,gold,esatto,brand,marchio internazionale
+huawei,gold,esatto,brand,marchio internazionale
+hublot,gold,esatto,brand,marchio internazionale
+hugoboss,gold,esatto,brand,marchio internazionale
+hyatt,gold,esatto,brand,marchio internazionale
+hyundai,gold,esatto,brand,marchio internazionale
+iberia,gold,esatto,brand,marchio internazionale
+ibm,gold,esatto,brand,marchio internazionale
+ichnusa,gold,esatto,brand,marchio italiano
+ikea,gold,esatto,brand,marchio internazionale
+ilfattoquotidiano,gold,esatto,brand,marchio italiano
+ilgiornale,gold,esatto,brand,marchio italiano
+iliad,gold,esatto,brand,marchio italiano
+illy,gold,esatto,brand,marchio italiano
+illycaffe,gold,esatto,brand,marchio italiano
+ilmessaggero,gold,esatto,brand,marchio italiano
+ilpost,gold,esatto,brand,marchio italiano
+ilsole24ore,gold,esatto,brand,marchio italiano
+imetec,gold,esatto,brand,marchio italiano
+indesit,gold,esatto,brand,marchio italiano
+inditex,gold,esatto,brand,marchio internazionale
+intel,gold,esatto,brand,marchio internazionale
+intimissimi,gold,esatto,brand,marchio italiano
+ipercoop,gold,esatto,brand,marchio italiano
+iren,gold,esatto,brand,marchio italiano
+itaairways,gold,esatto,brand,marchio italiano
+italia1,gold,esatto,brand,marchio italiano
+italotreno,gold,esatto,brand,marchio italiano
+iveco,gold,esatto,brand,marchio italiano
+jackdaniels,gold,esatto,brand,marchio internazionale
+jagermeister,gold,esatto,brand,marchio internazionale
+jbl,gold,esatto,brand,marchio internazionale
+jeep,gold,esatto,brand,marchio internazionale
+johnniewalker,gold,esatto,brand,marchio internazionale
+juventusstadium,gold,esatto,brand,marchio italiano
+kartell,gold,esatto,brand,marchio italiano
+kaufland,gold,esatto,brand,marchio internazionale
+kawasaki,gold,esatto,brand,marchio internazionale
+kellogg,gold,esatto,brand,marchio internazionale
+kelloggs,gold,esatto,brand,marchio internazionale
+kena,gold,esatto,brand,marchio italiano
+kfc,gold,esatto,brand,marchio internazionale
+kia,gold,esatto,brand,marchio internazionale
+kiko,gold,esatto,brand,marchio italiano
+kikomilano,gold,esatto,brand,marchio italiano
+kimbo,gold,esatto,brand,marchio italiano
+kinder,gold,esatto,brand,marchio italiano
+kitkat,gold,esatto,brand,marchio internazionale
+kiton,gold,esatto,brand,marchio italiano
+klm,gold,esatto,brand,marchio internazionale
+knorr,gold,esatto,brand,marchio internazionale
+kraft,gold,esatto,brand,marchio internazionale
+ktm,gold,esatto,brand,marchio internazionale
+la7,gold,esatto,brand,marchio italiano
+lacoste,gold,esatto,brand,marchio internazionale
+lafeltrinelli,gold,esatto,brand,marchio italiano
+lagostina,gold,esatto,brand,marchio italiano
+lamborghini,gold,esatto,brand,marchio italiano
+lamborghinitrattori,gold,esatto,brand,marchio italiano
+lamolisana,gold,esatto,brand,marchio italiano
+lancia,gold,esatto,brand,marchio italiano
+lancome,gold,esatto,brand,marchio internazionale
+landrover,gold,esatto,brand,marchio internazionale
+larepubblica,gold,esatto,brand,marchio italiano
+lastampa,gold,esatto,brand,marchio italiano
+lavazza,gold,esatto,brand,marchio italiano
+lays,gold,esatto,brand,marchio internazionale
+lego,gold,esatto,brand,marchio internazionale
+lenor,gold,esatto,brand,marchio internazionale
+lenovo,gold,esatto,brand,marchio internazionale
+leonardocompany,gold,esatto,brand,marchio italiano
+leroymerlin,gold,esatto,brand,marchio internazionale
+lete,gold,esatto,brand,marchio italiano
+levis,gold,esatto,brand,marchio internazionale
+levissima,gold,esatto,brand,marchio italiano
+lexus,gold,esatto,brand,marchio internazionale
+lidl,gold,esatto,brand,marchio internazionale
+lindt,gold,esatto,brand,marchio internazionale
+lipton,gold,esatto,brand,marchio internazionale
+loacker,gold,esatto,brand,marchio italiano
+loewe,gold,esatto,brand,marchio internazionale
+longines,gold,esatto,brand,marchio internazionale
+loreal,gold,esatto,brand,marchio internazionale
+lorealparis,gold,esatto,brand,marchio internazionale
+louisvuitton,gold,esatto,brand,marchio internazionale
+lucasfilm,gold,esatto,brand,marchio internazionale
+lufthansa,gold,esatto,brand,marchio internazionale
+luxottica,gold,esatto,brand,marchio italiano
+maccosmetics,gold,esatto,brand,marchio internazionale
+marella,gold,esatto,brand,marchio italiano
+mariofiorucci,gold,esatto,brand,marchio italiano
+marriott,gold,esatto,brand,marchio internazionale
+marshall,gold,esatto,brand,marchio internazionale
+martiniandrossi,gold,esatto,brand,marchio italiano
+marvel,gold,esatto,brand,marchio internazionale
+maserati,gold,esatto,brand,marchio italiano
+massimodutti,gold,esatto,brand,marchio internazionale
+mattel,gold,esatto,brand,marchio internazionale
+maxmara,gold,esatto,brand,marchio italiano
+maybelline,gold,esatto,brand,marchio internazionale
+mazda,gold,esatto,brand,marchio internazionale
+mcdonald,gold,esatto,brand,marchio internazionale
+mcdonalds,gold,esatto,brand,marchio internazionale
+mclaren,gold,esatto,brand,marchio internazionale
+mediamarkt,gold,esatto,brand,marchio internazionale
+mediaset,gold,esatto,brand,marchio italiano
+mediaworld,gold,esatto,brand,marchio internazionale
+menabrea,gold,esatto,brand,marchio italiano
+mercedes,gold,esatto,brand,marchio internazionale
+mercedesamg,gold,esatto,brand,marchio internazionale
+mercedesbenz,gold,esatto,brand,marchio internazionale
+michelin,gold,esatto,brand,marchio internazionale
+miele,gold,esatto,brand,marchio internazionale
+milka,gold,esatto,brand,marchio internazionale
+missoni,gold,esatto,brand,marchio italiano
+mitsubishi,gold,esatto,brand,marchio internazionale
+miumiu,gold,esatto,brand,marchio italiano
+mms,gold,esatto,brand,marchio internazionale
+moet,gold,esatto,brand,marchio internazionale
+moncler,gold,esatto,brand,marchio internazionale
+mondadori,gold,esatto,brand,marchio italiano
+montenegro,gold,esatto,brand,marchio italiano
+morellato,gold,esatto,brand,marchio italiano
+moschino,gold,esatto,brand,marchio italiano
+motoguzzi,gold,esatto,brand,marchio italiano
+motorola,gold,esatto,brand,marchio internazionale
+mulinobianco,gold,esatto,brand,marchio italiano
+muller,gold,esatto,brand,marchio italiano
+mundys,gold,esatto,brand,marchio italiano
+mutti,gold,esatto,brand,marchio italiano
+mvagusta,gold,esatto,brand,marchio italiano
+napapijri,gold,esatto,brand,marchio italiano
+nastroazzurro,gold,esatto,brand,marchio italiano
+nationalgeographic,gold,esatto,brand,marchio internazionale
+nescafe,gold,esatto,brand,marchio internazionale
+nespresso,gold,esatto,brand,marchio internazionale
+nestle,gold,esatto,brand,marchio internazionale
+newbalance,gold,esatto,brand,marchio internazionale
+newholland,gold,esatto,brand,marchio italiano
+newyorktimes,gold,esatto,brand,marchio internazionale
+nike,gold,esatto,brand,marchio internazionale
+nikon,gold,esatto,brand,marchio internazionale
+nissan,gold,esatto,brand,marchio internazionale
+nivea,gold,esatto,brand,marchio internazionale
+nokia,gold,esatto,brand,marchio internazionale
+northface,gold,esatto,brand,marchio internazionale
+novotel,gold,esatto,brand,marchio internazionale
+nutella,gold,esatto,brand,marchio internazionale
+nytimes,gold,esatto,brand,marchio internazionale
+oakley,gold,esatto,brand,marchio italiano
+oldwildwest,gold,esatto,brand,marchio italiano
+oneplus,gold,esatto,brand,marchio internazionale
+opel,gold,esatto,brand,marchio internazionale
+oppo,gold,esatto,brand,marchio internazionale
+oralb,gold,esatto,brand,marchio internazionale
+oreo,gold,esatto,brand,marchio internazionale
+orogel,gold,esatto,brand,marchio italiano
+ovs,gold,esatto,brand,marchio italiano
+pampers,gold,esatto,brand,marchio internazionale
+panasonic,gold,esatto,brand,marchio internazionale
+pandora,gold,esatto,brand,marchio italiano
+pantene,gold,esatto,brand,marchio internazionale
+paramount,gold,esatto,brand,marchio internazionale
+parmacotto,gold,esatto,brand,marchio italiano
+parmalat,gold,esatto,brand,marchio italiano
+parmigianoreggiano,gold,esatto,brand,marchio italiano
+pastarana,gold,esatto,brand,marchio italiano
+patagonia,gold,esatto,brand,marchio internazionale
+patekphilippe,gold,esatto,brand,marchio internazionale
+paulandshark,gold,esatto,brand,marchio italiano
+pavesi,gold,esatto,brand,marchio italiano
+pellini,gold,esatto,brand,marchio italiano
+pennyblack,gold,esatto,brand,marchio italiano
+pepsi,gold,esatto,brand,marchio internazionale
+pepsico,gold,esatto,brand,marchio internazionale
+pernigotti,gold,esatto,brand,marchio italiano
+peroni,gold,esatto,brand,marchio italiano
+persol,gold,esatto,brand,marchio italiano
+perugina,gold,esatto,brand,marchio italiano
+peugeot,gold,esatto,brand,marchio internazionale
+philips,gold,esatto,brand,marchio internazionale
+piaggio,gold,esatto,brand,marchio italiano
+pirelli,gold,esatto,brand,marchio italiano
+pixar,gold,esatto,brand,marchio internazionale
+pizzahut,gold,esatto,brand,marchio internazionale
+playmobil,gold,esatto,brand,marchio internazionale
+plenitude,gold,esatto,brand,marchio italiano
+pocketcoffee,gold,esatto,brand,marchio italiano
+polestar,gold,esatto,brand,marchio internazionale
+pomellato,gold,esatto,brand,marchio italiano
+porsche,gold,esatto,brand,marchio internazionale
+prada,gold,esatto,brand,marchio internazionale
+premiata,gold,esatto,brand,marchio italiano
+primark,gold,esatto,brand,marchio internazionale
+pringles,gold,esatto,brand,marchio internazionale
+procterandgamble,gold,esatto,brand,marchio internazionale
+prosciuttodiparma,gold,esatto,brand,marchio italiano
+prysmian,gold,esatto,brand,marchio italiano
+pullandbear,gold,esatto,brand,marchio internazionale
+puma,gold,esatto,brand,marchio internazionale
+qatarairways,gold,esatto,brand,marchio internazionale
+qualcomm,gold,esatto,brand,marchio internazionale
+radisson,gold,esatto,brand,marchio internazionale
+raffaello,gold,esatto,brand,marchio italiano
+rai,gold,esatto,brand,marchio italiano
+raidue,gold,esatto,brand,marchio italiano
+rainews,gold,esatto,brand,marchio italiano
+raitre,gold,esatto,brand,marchio italiano
+raiuno,gold,esatto,brand,marchio italiano
+ralphlauren,gold,esatto,brand,marchio internazionale
+ramazzotti,gold,esatto,brand,marchio italiano
+rangerover,gold,esatto,brand,marchio internazionale
+rayban,gold,esatto,brand,marchio italiano
+realme,gold,esatto,brand,marchio internazionale
+redbull,gold,esatto,brand,marchio internazionale
+reebok,gold,esatto,brand,marchio internazionale
+refrigiwear,gold,esatto,brand,marchio italiano
+renault,gold,esatto,brand,marchio internazionale
+repubblica,gold,esatto,brand,marchio italiano
+rete4,gold,esatto,brand,marchio italiano
+reuters,gold,esatto,brand,marchio internazionale
+rinascente,gold,esatto,brand,marchio italiano
+risparmiocasa,gold,esatto,brand,marchio italiano
+ritzcarlton,gold,esatto,brand,marchio internazionale
+rivayachts,gold,esatto,brand,marchio italiano
+roadhouse,gold,esatto,brand,marchio italiano
+robertocavalli,gold,esatto,brand,marchio italiano
+rocchetta,gold,esatto,brand,marchio italiano
+rolex,gold,esatto,brand,marchio internazionale
+rollsroyce,gold,esatto,brand,marchio internazionale
+rossopomodoro,gold,esatto,brand,marchio italiano
+rovagnati,gold,esatto,brand,marchio italiano
+rummo,gold,esatto,brand,marchio italiano
+sacla,gold,esatto,brand,marchio italiano
+safilo,gold,esatto,brand,marchio italiano
+saintlaurent,gold,esatto,brand,marchio internazionale
+saipem,gold,esatto,brand,marchio italiano
+salesforce,gold,esatto,brand,marchio internazionale
+salomon,gold,esatto,brand,marchio internazionale
+salvatoreferragamo,gold,esatto,brand,marchio italiano
+sametdeutzfahr,gold,esatto,brand,marchio italiano
+sammontana,gold,esatto,brand,marchio italiano
+samsung,gold,esatto,brand,marchio internazionale
+sanbenedetto,gold,esatto,brand,marchio italiano
+sanlorenzo,gold,esatto,brand,marchio italiano
+sanpellegrino,gold,esatto,brand,marchio italiano
+sansiro,gold,esatto,brand,marchio italiano
+schweppes,gold,esatto,brand,marchio internazionale
+sda,gold,esatto,brand,marchio internazionale
+sectorno,gold,esatto,brand,marchio italiano
+segafredo,gold,esatto,brand,marchio italiano
+sennheiser,gold,esatto,brand,marchio internazionale
+sephora,gold,esatto,brand,marchio internazionale
+sheraton,gold,esatto,brand,marchio internazionale
+siemens,gold,esatto,brand,marchio internazionale
+sisley,gold,esatto,brand,marchio italiano
+sixt,gold,esatto,brand,marchio internazionale
+skoda,gold,esatto,brand,marchio internazionale
+sky,gold,esatto,brand,marchio italiano
+skyitalia,gold,esatto,brand,marchio italiano
+skytg24,gold,esatto,brand,marchio italiano
+smeg,gold,esatto,brand,marchio italiano
+smirnoff,gold,esatto,brand,marchio internazionale
+snam,gold,esatto,brand,marchio italiano
+snickers,gold,esatto,brand,marchio internazionale
+sole24ore,gold,esatto,brand,marchio italiano
+sony,gold,esatto,brand,marchio internazionale
+sonypictures,gold,esatto,brand,marchio internazionale
+sorgenia,gold,esatto,brand,marchio italiano
+spacex,gold,esatto,brand,marchio internazionale
+spontini,gold,esatto,brand,marchio italiano
+sprite,gold,esatto,brand,marchio internazionale
+starbene,gold,esatto,brand,marchio italiano
+starbucks,gold,esatto,brand,marchio internazionale
+starlink,gold,esatto,brand,marchio internazionale
+stellaartois,gold,esatto,brand,marchio internazionale
+stellantis,gold,esatto,brand,marchio italiano
+stoneisland,gold,esatto,brand,marchio italiano
+stradivarius,gold,esatto,brand,marchio internazionale
+stroili,gold,esatto,brand,marchio italiano
+subaru,gold,esatto,brand,marchio internazionale
+subway,gold,esatto,brand,marchio internazionale
+superga,gold,esatto,brand,marchio italiano
+suzuki,gold,esatto,brand,marchio internazionale
+swatch,gold,esatto,brand,marchio internazionale
+tagheuer,gold,esatto,brand,marchio internazionale
+tamoil,gold,esatto,brand,marchio internazionale
+telecomitalia,gold,esatto,brand,marchio italiano
+terna,gold,esatto,brand,marchio italiano
+tesla,gold,esatto,brand,marchio internazionale
+tezenis,gold,esatto,brand,marchio italiano
+tgcom24,gold,esatto,brand,marchio italiano
+theeconomist,gold,esatto,brand,marchio internazionale
+thenorthface,gold,esatto,brand,marchio internazionale
+tictac,gold,esatto,brand,marchio italiano
+tiffany,gold,esatto,brand,marchio internazionale
+tigota,gold,esatto,brand,marchio italiano
+tim,gold,esatto,brand,marchio italiano
+timberland,gold,esatto,brand,marchio internazionale
+tissot,gold,esatto,brand,marchio internazionale
+tnt,gold,esatto,brand,marchio internazionale
+toblerone,gold,esatto,brand,marchio internazionale
+tods,gold,esatto,brand,marchio italiano
+tommyhilfiger,gold,esatto,brand,marchio internazionale
+totalenergies,gold,esatto,brand,marchio internazionale
+toyota,gold,esatto,brand,marchio internazionale
+trenitalia,gold,esatto,brand,marchio italiano
+trony,gold,esatto,brand,marchio internazionale
+trussardi,gold,esatto,brand,marchio italiano
+turkishairlines,gold,esatto,brand,marchio internazionale
+tuttosport,gold,esatto,brand,marchio italiano
+twix,gold,esatto,brand,marchio internazionale
+uliveto,gold,esatto,brand,marchio italiano
+umbro,gold,esatto,brand,marchio internazionale
+underarmour,gold,esatto,brand,marchio internazionale
+unieuro,gold,esatto,brand,marchio internazionale
+unilever,gold,esatto,brand,marchio internazionale
+uniqlo,gold,esatto,brand,marchio internazionale
+unitedcolorsofbenetton,gold,esatto,brand,marchio italiano
+upim,gold,esatto,brand,marchio italiano
+ups,gold,esatto,brand,marchio internazionale
+valentinogaravani,gold,esatto,brand,marchio internazionale
+vanityfair,gold,esatto,brand,marchio internazionale
+venchi,gold,esatto,brand,marchio italiano
+versace,gold,esatto,brand,marchio internazionale
+verymobile,gold,esatto,brand,marchio italiano
+vespa,gold,esatto,brand,marchio italiano
+vespaitalia,gold,esatto,brand,marchio italiano
+veuveclicquot,gold,esatto,brand,marchio internazionale
+vodafone,gold,esatto,brand,marchio italiano
+vogue,gold,esatto,brand,marchio internazionale
+voiello,gold,esatto,brand,marchio italiano
+volkswagen,gold,esatto,brand,marchio internazionale
+volvo,gold,esatto,brand,marchio internazionale
+vueling,gold,esatto,brand,marchio internazionale
+walmart,gold,esatto,brand,marchio internazionale
+warnerbros,gold,esatto,brand,marchio internazionale
+washingtonpost,gold,esatto,brand,marchio internazionale
+whirlpool,gold,esatto,brand,marchio internazionale
+windtre,gold,esatto,brand,marchio italiano
+wizzair,gold,esatto,brand,marchio internazionale
+wrangler,gold,esatto,brand,marchio internazionale
+wycon,gold,esatto,brand,marchio italiano
+xiaomi,gold,esatto,brand,marchio internazionale
+yamaha,gold,esatto,brand,marchio internazionale
+yamamay,gold,esatto,brand,marchio italiano
+yomo,gold,esatto,brand,marchio italiano
+ysl,gold,esatto,brand,marchio internazionale
+zara,gold,esatto,brand,marchio internazionale
+zegna,gold,esatto,brand,marchio italiano
+abruzzo,gold,esatto,citta,"capoluogo, regione o territorio"
+agrigento,gold,esatto,citta,"capoluogo, regione o territorio"
+alessandria,gold,esatto,citta,"capoluogo, regione o territorio"
+altamura,gold,esatto,citta,"capoluogo, regione o territorio"
+altoadige,gold,esatto,citta,"capoluogo, regione o territorio"
+amalfi,gold,esatto,citta,"capoluogo, regione o territorio"
+amsterdam,gold,esatto,citta,"capoluogo, regione o territorio"
+ancona,gold,esatto,citta,"capoluogo, regione o territorio"
+andria,gold,esatto,citta,"capoluogo, regione o territorio"
+aosta,gold,esatto,citta,"capoluogo, regione o territorio"
+apulia,gold,esatto,citta,"capoluogo, regione o territorio"
+arezzo,gold,esatto,citta,"capoluogo, regione o territorio"
+ascolipiceno,gold,esatto,citta,"capoluogo, regione o territorio"
+asti,gold,esatto,citta,"capoluogo, regione o territorio"
+barcellona,gold,esatto,citta,"capoluogo, regione o territorio"
+barcelona,gold,esatto,citta,"capoluogo, regione o territorio"
+bari,gold,esatto,citta,"capoluogo, regione o territorio"
+barletta,gold,esatto,citta,"capoluogo, regione o territorio"
+basilicata,gold,esatto,citta,"capoluogo, regione o territorio"
+belluno,gold,esatto,citta,"capoluogo, regione o territorio"
+benevento,gold,esatto,citta,"capoluogo, regione o territorio"
+bergamo,gold,esatto,citta,"capoluogo, regione o territorio"
+berlin,gold,esatto,citta,"capoluogo, regione o territorio"
+berlino,gold,esatto,citta,"capoluogo, regione o territorio"
+biella,gold,esatto,citta,"capoluogo, regione o territorio"
+bologna,gold,esatto,citta,"capoluogo, regione o territorio"
+bolzano,gold,esatto,citta,"capoluogo, regione o territorio"
+brindisi,gold,esatto,citta,"capoluogo, regione o territorio"
+cagliari,gold,esatto,citta,"capoluogo, regione o territorio"
+calabria,gold,esatto,citta,"capoluogo, regione o territorio"
+caltanissetta,gold,esatto,citta,"capoluogo, regione o territorio"
+campania,gold,esatto,citta,"capoluogo, regione o territorio"
+campobasso,gold,esatto,citta,"capoluogo, regione o territorio"
+capri,gold,esatto,citta,"capoluogo, regione o territorio"
+carbonia,gold,esatto,citta,"capoluogo, regione o territorio"
+carrara,gold,esatto,citta,"capoluogo, regione o territorio"
+caserta,gold,esatto,citta,"capoluogo, regione o territorio"
+catania,gold,esatto,citta,"capoluogo, regione o territorio"
+cesena,gold,esatto,citta,"capoluogo, regione o territorio"
+chieti,gold,esatto,citta,"capoluogo, regione o territorio"
+cinqueterre,gold,esatto,citta,"capoluogo, regione o territorio"
+como,gold,esatto,citta,"capoluogo, regione o territorio"
+cortina,gold,esatto,citta,"capoluogo, regione o territorio"
+cortinadampezzo,gold,esatto,citta,"capoluogo, regione o territorio"
+cosenza,gold,esatto,citta,"capoluogo, regione o territorio"
+cremona,gold,esatto,citta,"capoluogo, regione o territorio"
+crotone,gold,esatto,citta,"capoluogo, regione o territorio"
+cuneo,gold,esatto,citta,"capoluogo, regione o territorio"
+dubai,gold,esatto,citta,"capoluogo, regione o territorio"
+emiliaromagna,gold,esatto,citta,"capoluogo, regione o territorio"
+enna,gold,esatto,citta,"capoluogo, regione o territorio"
+europa,gold,esatto,citta,"capoluogo, regione o territorio"
+europe,gold,esatto,citta,"capoluogo, regione o territorio"
+fermo,gold,esatto,citta,"capoluogo, regione o territorio"
+ferrara,gold,esatto,citta,"capoluogo, regione o territorio"
+firenze,gold,esatto,citta,"capoluogo, regione o territorio"
+florence,gold,esatto,citta,"capoluogo, regione o territorio"
+foggia,gold,esatto,citta,"capoluogo, regione o territorio"
+forli,gold,esatto,citta,"capoluogo, regione o territorio"
+friuli,gold,esatto,citta,"capoluogo, regione o territorio"
+friuliveneziagiulia,gold,esatto,citta,"capoluogo, regione o territorio"
+frosinone,gold,esatto,citta,"capoluogo, regione o territorio"
+geneva,gold,esatto,citta,"capoluogo, regione o territorio"
+genova,gold,esatto,citta,"capoluogo, regione o territorio"
+giugliano,gold,esatto,citta,"capoluogo, regione o territorio"
+gorizia,gold,esatto,citta,"capoluogo, regione o territorio"
+grosseto,gold,esatto,citta,"capoluogo, regione o territorio"
+iglesias,gold,esatto,citta,"capoluogo, regione o territorio"
+imola,gold,esatto,citta,"capoluogo, regione o territorio"
+imperia,gold,esatto,citta,"capoluogo, regione o territorio"
+ischia,gold,esatto,citta,"capoluogo, regione o territorio"
+isernia,gold,esatto,citta,"capoluogo, regione o territorio"
+istanbul,gold,esatto,citta,"capoluogo, regione o territorio"
+italia,gold,esatto,citta,"capoluogo, regione o territorio"
+italy,gold,esatto,citta,"capoluogo, regione o territorio"
+lamezia,gold,esatto,citta,"capoluogo, regione o territorio"
+laquila,gold,esatto,citta,"capoluogo, regione o territorio"
+laspezia,gold,esatto,citta,"capoluogo, regione o territorio"
+lasvegas,gold,esatto,citta,"capoluogo, regione o territorio"
+latina,gold,esatto,citta,"capoluogo, regione o territorio"
+lazio,gold,esatto,citta,"capoluogo, regione o territorio"
+lecce,gold,esatto,citta,"capoluogo, regione o territorio"
+lecco,gold,esatto,citta,"capoluogo, regione o territorio"
+legnano,gold,esatto,citta,"capoluogo, regione o territorio"
+liguria,gold,esatto,citta,"capoluogo, regione o territorio"
+lisbon,gold,esatto,citta,"capoluogo, regione o territorio"
+lisbona,gold,esatto,citta,"capoluogo, regione o territorio"
+livorno,gold,esatto,citta,"capoluogo, regione o territorio"
+lodi,gold,esatto,citta,"capoluogo, regione o territorio"
+lombardia,gold,esatto,citta,"capoluogo, regione o territorio"
+london,gold,esatto,citta,"capoluogo, regione o territorio"
+londra,gold,esatto,citta,"capoluogo, regione o territorio"
+losangeles,gold,esatto,citta,"capoluogo, regione o territorio"
+lucca,gold,esatto,citta,"capoluogo, regione o territorio"
+macerata,gold,esatto,citta,"capoluogo, regione o territorio"
+madrid,gold,esatto,citta,"capoluogo, regione o territorio"
+mantova,gold,esatto,citta,"capoluogo, regione o territorio"
+marche,gold,esatto,citta,"capoluogo, regione o territorio"
+massa,gold,esatto,citta,"capoluogo, regione o territorio"
+massacarrara,gold,esatto,citta,"capoluogo, regione o territorio"
+matera,gold,esatto,citta,"capoluogo, regione o territorio"
+messina,gold,esatto,citta,"capoluogo, regione o territorio"
+miami,gold,esatto,citta,"capoluogo, regione o territorio"
+milan,gold,esatto,citta,"capoluogo, regione o territorio"
+milano,gold,esatto,citta,"capoluogo, regione o territorio"
+modena,gold,esatto,citta,"capoluogo, regione o territorio"
+molise,gold,esatto,citta,"capoluogo, regione o territorio"
+monza,gold,esatto,citta,"capoluogo, regione o territorio"
+mosca,gold,esatto,citta,"capoluogo, regione o territorio"
+moscow,gold,esatto,citta,"capoluogo, regione o territorio"
+naples,gold,esatto,citta,"capoluogo, regione o territorio"
+napoli,gold,esatto,citta,"capoluogo, regione o territorio"
+newyork,gold,esatto,citta,"capoluogo, regione o territorio"
+novara,gold,esatto,citta,"capoluogo, regione o territorio"
+nuoro,gold,esatto,citta,"capoluogo, regione o territorio"
+nyc,gold,esatto,citta,"capoluogo, regione o territorio"
+olbia,gold,esatto,citta,"capoluogo, regione o territorio"
+oristano,gold,esatto,citta,"capoluogo, regione o territorio"
+padova,gold,esatto,citta,"capoluogo, regione o territorio"
+palermo,gold,esatto,citta,"capoluogo, regione o territorio"
+parigi,gold,esatto,citta,"capoluogo, regione o territorio"
+paris,gold,esatto,citta,"capoluogo, regione o territorio"
+parma,gold,esatto,citta,"capoluogo, regione o territorio"
+pavia,gold,esatto,citta,"capoluogo, regione o territorio"
+pesaro,gold,esatto,citta,"capoluogo, regione o territorio"
+pesarourbino,gold,esatto,citta,"capoluogo, regione o territorio"
+pescara,gold,esatto,citta,"capoluogo, regione o territorio"
+piacenza,gold,esatto,citta,"capoluogo, regione o territorio"
+piemonte,gold,esatto,citta,"capoluogo, regione o territorio"
+pistoia,gold,esatto,citta,"capoluogo, regione o territorio"
+pordenone,gold,esatto,citta,"capoluogo, regione o territorio"
+portofino,gold,esatto,citta,"capoluogo, regione o territorio"
+positano,gold,esatto,citta,"capoluogo, regione o territorio"
+potenza,gold,esatto,citta,"capoluogo, regione o territorio"
+praga,gold,esatto,citta,"capoluogo, regione o territorio"
+prague,gold,esatto,citta,"capoluogo, regione o territorio"
+prato,gold,esatto,citta,"capoluogo, regione o territorio"
+puglia,gold,esatto,citta,"capoluogo, regione o territorio"
+ragusa,gold,esatto,citta,"capoluogo, regione o territorio"
+ravenna,gold,esatto,citta,"capoluogo, regione o territorio"
+reggiocalabria,gold,esatto,citta,"capoluogo, regione o territorio"
+reggioemilia,gold,esatto,citta,"capoluogo, regione o territorio"
+rieti,gold,esatto,citta,"capoluogo, regione o territorio"
+rimini,gold,esatto,citta,"capoluogo, regione o territorio"
+roma,gold,esatto,citta,"capoluogo, regione o territorio"
+rome,gold,esatto,citta,"capoluogo, regione o territorio"
+rovigo,gold,esatto,citta,"capoluogo, regione o territorio"
+salerno,gold,esatto,citta,"capoluogo, regione o territorio"
+sanremo,gold,esatto,citta,"capoluogo, regione o territorio"
+sardegna,gold,esatto,citta,"capoluogo, regione o territorio"
+sardinia,gold,esatto,citta,"capoluogo, regione o territorio"
+sassari,gold,esatto,citta,"capoluogo, regione o territorio"
+savona,gold,esatto,citta,"capoluogo, regione o territorio"
+sicilia,gold,esatto,citta,"capoluogo, regione o territorio"
+sicily,gold,esatto,citta,"capoluogo, regione o territorio"
+siena,gold,esatto,citta,"capoluogo, regione o territorio"
+siracusa,gold,esatto,citta,"capoluogo, regione o territorio"
+sondrio,gold,esatto,citta,"capoluogo, regione o territorio"
+taormina,gold,esatto,citta,"capoluogo, regione o territorio"
+taranto,gold,esatto,citta,"capoluogo, regione o territorio"
+teramo,gold,esatto,citta,"capoluogo, regione o territorio"
+terni,gold,esatto,citta,"capoluogo, regione o territorio"
+tokyo,gold,esatto,citta,"capoluogo, regione o territorio"
+torino,gold,esatto,citta,"capoluogo, regione o territorio"
+toscana,gold,esatto,citta,"capoluogo, regione o territorio"
+trani,gold,esatto,citta,"capoluogo, regione o territorio"
+trapani,gold,esatto,citta,"capoluogo, regione o territorio"
+trentino,gold,esatto,citta,"capoluogo, regione o territorio"
+trentinoaltoadige,gold,esatto,citta,"capoluogo, regione o territorio"
+trento,gold,esatto,citta,"capoluogo, regione o territorio"
+treviso,gold,esatto,citta,"capoluogo, regione o territorio"
+trieste,gold,esatto,citta,"capoluogo, regione o territorio"
+turin,gold,esatto,citta,"capoluogo, regione o territorio"
+tuscany,gold,esatto,citta,"capoluogo, regione o territorio"
+udine,gold,esatto,citta,"capoluogo, regione o territorio"
+umbria,gold,esatto,citta,"capoluogo, regione o territorio"
+urbino,gold,esatto,citta,"capoluogo, regione o territorio"
+valledaosta,gold,esatto,citta,"capoluogo, regione o territorio"
+varese,gold,esatto,citta,"capoluogo, regione o territorio"
+veneto,gold,esatto,citta,"capoluogo, regione o territorio"
+venezia,gold,esatto,citta,"capoluogo, regione o territorio"
+venice,gold,esatto,citta,"capoluogo, regione o territorio"
+verbania,gold,esatto,citta,"capoluogo, regione o territorio"
+vercelli,gold,esatto,citta,"capoluogo, regione o territorio"
+verona,gold,esatto,citta,"capoluogo, regione o territorio"
+vibovalentia,gold,esatto,citta,"capoluogo, regione o territorio"
+vicenza,gold,esatto,citta,"capoluogo, regione o territorio"
+vienna,gold,esatto,citta,"capoluogo, regione o territorio"
+vigevano,gold,esatto,citta,"capoluogo, regione o territorio"
+viterbo,gold,esatto,citta,"capoluogo, regione o territorio"
+zurigo,gold,esatto,citta,"capoluogo, regione o territorio"
+007,gold,esatto,franchise,personaggi e franchise di intrattenimento
+avengers,gold,esatto,franchise,personaggi e franchise di intrattenimento
+batman,gold,esatto,franchise,personaggi e franchise di intrattenimento
+blackwidow,gold,esatto,franchise,personaggi e franchise di intrattenimento
+bluey,gold,esatto,franchise,personaggi e franchise di intrattenimento
+breakingbad,gold,esatto,franchise,personaggi e franchise di intrattenimento
+captainamerica,gold,esatto,franchise,personaggi e franchise di intrattenimento
+cars,gold,esatto,franchise,personaggi e franchise di intrattenimento
+darthvader,gold,esatto,franchise,personaggi e franchise di intrattenimento
+deadpool,gold,esatto,franchise,personaggi e franchise di intrattenimento
+donaldduck,gold,esatto,franchise,personaggi e franchise di intrattenimento
+donmatteo,gold,esatto,franchise,personaggi e franchise di intrattenimento
+dragonball,gold,esatto,franchise,personaggi e franchise di intrattenimento
+gameofthrones,gold,esatto,franchise,personaggi e franchise di intrattenimento
+goku,gold,esatto,franchise,personaggi e franchise di intrattenimento
+gomorra,gold,esatto,franchise,personaggi e franchise di intrattenimento
+goofy,gold,esatto,franchise,personaggi e franchise di intrattenimento
+gormiti,gold,esatto,franchise,personaggi e franchise di intrattenimento
+harleyquinn,gold,esatto,franchise,personaggi e franchise di intrattenimento
+harrypotter,gold,esatto,franchise,personaggi e franchise di intrattenimento
+hellokitty,gold,esatto,franchise,personaggi e franchise di intrattenimento
+hermione,gold,esatto,franchise,personaggi e franchise di intrattenimento
+hogwarts,gold,esatto,franchise,personaggi e franchise di intrattenimento
+homersimpson,gold,esatto,franchise,personaggi e franchise di intrattenimento
+houseofthedragon,gold,esatto,franchise,personaggi e franchise di intrattenimento
+hulk,gold,esatto,franchise,personaggi e franchise di intrattenimento
+ilcommissariomontalbano,gold,esatto,franchise,personaggi e franchise di intrattenimento
+ilreleone,gold,esatto,franchise,personaggi e franchise di intrattenimento
+jamesbond,gold,esatto,franchise,personaggi e franchise di intrattenimento
+joker,gold,esatto,franchise,personaggi e franchise di intrattenimento
+jurassicpark,gold,esatto,franchise,personaggi e franchise di intrattenimento
+justiceleague,gold,esatto,franchise,personaggi e franchise di intrattenimento
+kenbarbie,gold,esatto,franchise,personaggi e franchise di intrattenimento
+lacasadepapel,gold,esatto,franchise,personaggi e franchise di intrattenimento
+lionking,gold,esatto,franchise,personaggi e franchise di intrattenimento
+luigibros,gold,esatto,franchise,personaggi e franchise di intrattenimento
+lukeskywalker,gold,esatto,franchise,personaggi e franchise di intrattenimento
+marefuori,gold,esatto,franchise,personaggi e franchise di intrattenimento
+mariobros,gold,esatto,franchise,personaggi e franchise di intrattenimento
+mickeymouse,gold,esatto,franchise,personaggi e franchise di intrattenimento
+minions,gold,esatto,franchise,personaggi e franchise di intrattenimento
+minnie,gold,esatto,franchise,personaggi e franchise di intrattenimento
+montalbano,gold,esatto,franchise,personaggi e franchise di intrattenimento
+naruto,gold,esatto,franchise,personaggi e franchise di intrattenimento
+onepiece,gold,esatto,franchise,personaggi e franchise di intrattenimento
+pacman,gold,esatto,franchise,personaggi e franchise di intrattenimento
+paperino,gold,esatto,franchise,personaggi e franchise di intrattenimento
+paperone,gold,esatto,franchise,personaggi e franchise di intrattenimento
+pawpatrol,gold,esatto,franchise,personaggi e franchise di intrattenimento
+peppapig,gold,esatto,franchise,personaggi e franchise di intrattenimento
+pikachu,gold,esatto,franchise,personaggi e franchise di intrattenimento
+pokemon,gold,esatto,franchise,personaggi e franchise di intrattenimento
+sailormoon,gold,esatto,franchise,personaggi e franchise di intrattenimento
+sherlockholmes,gold,esatto,franchise,personaggi e franchise di intrattenimento
+shrek,gold,esatto,franchise,personaggi e franchise di intrattenimento
+simpsons,gold,esatto,franchise,personaggi e franchise di intrattenimento
+sonic,gold,esatto,franchise,personaggi e franchise di intrattenimento
+spiderman,gold,esatto,franchise,personaggi e franchise di intrattenimento
+spidermen,gold,esatto,franchise,personaggi e franchise di intrattenimento
+squidgame,gold,esatto,franchise,personaggi e franchise di intrattenimento
+starwars,gold,esatto,franchise,personaggi e franchise di intrattenimento
+strangerthings,gold,esatto,franchise,personaggi e franchise di intrattenimento
+superman,gold,esatto,franchise,personaggi e franchise di intrattenimento
+supermario,gold,esatto,franchise,personaggi e franchise di intrattenimento
+tetris,gold,esatto,franchise,personaggi e franchise di intrattenimento
+thesimpsons,gold,esatto,franchise,personaggi e franchise di intrattenimento
+thor,gold,esatto,franchise,personaggi e franchise di intrattenimento
+topolino,gold,esatto,franchise,personaggi e franchise di intrattenimento
+toystory,gold,esatto,franchise,personaggi e franchise di intrattenimento
+winx,gold,esatto,franchise,personaggi e franchise di intrattenimento
+winxclub,gold,esatto,franchise,personaggi e franchise di intrattenimento
+wolverine,gold,esatto,franchise,personaggi e franchise di intrattenimento
+wonderwoman,gold,esatto,franchise,personaggi e franchise di intrattenimento
+xmen,gold,esatto,franchise,personaggi e franchise di intrattenimento
+yoda,gold,esatto,franchise,personaggi e franchise di intrattenimento
+zelda,gold,esatto,franchise,personaggi e franchise di intrattenimento
+883,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+acdc,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+achillelauro,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+adrianocelentano,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+albanocarrisi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alberteinstein,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+albertoangela,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+albertosordi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+albertotomba,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alcaraz,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+aldogiovanniegiacomo,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alessandraamoroso,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alessandroborghi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alessandrocattelan,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alessandrodelpiero,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alessandronesta,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alexzanardi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+alpacino,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+amadeus,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ancelotti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+andreabocelli,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+andreakimiantonelli,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+andreapirlo,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+angelinajolie,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+angelinamango,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+annamagnani,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+annapepe,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+antonellaclerici,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+antonellovenditti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+antonioconte,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+antoniotajani,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+arianafontana,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+arianagrande,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+arnoldschwarzenegger,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+arrigosacchi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+articolo31,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+audreyhepburn,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ayrtonsenna,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+barackobama,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+barbaradurso,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+battiato,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+beatles,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+beavio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+beethoven,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+belenrodriguez,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+benaffleck,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+benigni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+berlusconi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+berrettini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+beyonce,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+biden,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+billgates,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+billieeilish,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+blackpink,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+bobdylan,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+bobovieri,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+bocelli,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+bonjovi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+bonolis,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+bradpitt,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+brucespringsteen,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+brunomars,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+brunovespa,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+bts,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+buffon,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+calenda,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+caparezza,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+caravaggio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+carloancelotti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+carlocalenda,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+carloconti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+carlosalcaraz,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+carlossainz,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+carloverdone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+cattelan,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+celinedion,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+charlesleclerc,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+charliechaplin,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+checcozalone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+chiaraferragni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+chrisevans,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+chrishemsworth,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+chrismartin,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+christianvieri,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+christophernolan,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+cicciogamer,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+cicciogamer89,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+cicciolina,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ciroimmobile,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+claudiacardinale,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+claudiobaglioni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+claudioranieri,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+coldplay,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+conormcgregor,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+cortellesi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+cr7,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+cristianoronaldo,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+cristoforocolombo,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+damianodavid,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+danielederossi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+dantealighieri,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+davidbeckham,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+davidbowie,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+deandre,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+deborahcompagnoni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+degregori,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+delpiero,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+denzelwashington,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+dicaprio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+diegomaradona,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+djokovic,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+donaldtrump,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+donnarumma,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+dualipa,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+dwaynejohnson,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+edsheeran,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+einstein,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ellyschlein,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+elonmusk,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+elvispresley,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+eminem,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+emmamarrone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+emmanuelmacron,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+erlinghaaland,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+erosramazzotti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ethantorchio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+fabiocannavaro,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+fabiocapello,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+fabiofazio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+fabriziodeandre,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+favij,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+favino,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+federer,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+federicabrignone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+federicapellegrini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+federicochiesa,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+federicofellini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+fedez,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+fellini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+fernandoalonso,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ferragni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ficarraepicone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+filippoinzaghi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+fiorello,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+flaviacobolli,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+francescobagnaia,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+francescobaresi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+francescodegregori,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+francescototti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+francobattiato,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+freddiemercury,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+galileogalilei,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gandhi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gennarogattuso,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+geolier,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+georgeclooney,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gerryscotti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ghali,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giacomopuccini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gianlucavacchi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gianluigibuffon,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gianluigidonnarumma,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gianmarcotamberi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giannimorandi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gigidag,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gigidalessio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ginalollobrigida,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giorgiameloni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giorgiochiellini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giuliadebenedetti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giuseppeconte,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giuseppegaribaldi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giuseppetornatore,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+giuseppeverdi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+gregoriopaltrinieri,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+guardiola,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+guepequeno,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+haaland,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+harrykane,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+harrystyles,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ibrahimovic,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ilaryblasi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ilonastaller,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ipantellas,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+irama,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ironmaiden,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+jamescameron,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+janniksinner,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+jasminepaolini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+jasonstatham,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+jaxofficial,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+jayz,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+jeffbezos,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+jenniferlawrence,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+joebiden,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+johnlennon,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+johnnydepp,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+josemourinho,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+jovanotti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+judebellingham,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+justinbieber,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kaka,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kamalaharris,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kanye,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kanyewest,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kardashian,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+katemiddleton,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+keanureeves,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kevindebruyne,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+khaby,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+khabylame,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kimiantonelli,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kimkardashian,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kingcharles,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kobebryant,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kurtcobain,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kylianmbappe,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+kyliejenner,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ladygaga,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lamineyamal,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+laurapausini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lazza,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lebronjames,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ledzeppelin,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+leomessi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+leonardobonucci,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+leonardodavinci,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+leonardodicaprio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+leonexiv,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lewandowski,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lewishamilton,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lionelmessi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lorenzoinsigne,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lorenzojovanotti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lorenzomusetti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lucadalla,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lucamarinelli,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lucianoligabue,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lucianopavarotti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lucianospalletti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+luciobattisti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+luismodric,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+lukamodric,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+macron,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+madonna,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+madreteresa,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mahmood,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+maneskin,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+maradona,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+maravenier,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marcelljacobs,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marcellomastroianni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marcelolippi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marcmarquez,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marcobezzecchi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marcomaterazzi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marcomengoni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marcopolo,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+margotrobbie,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mariadefilippi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mariahcarey,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marilynmonroe,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mariodraghi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+markzuckerberg,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+marracash,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+martinlutherking,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+martinscorsese,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+massimilianoallegri,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+massimopericolo,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mattarella,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mattdamon,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+matteoberrettini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+matteorenzi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+matteosalvini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mattiaretegui,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+maxpezzali,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+maxverstappen,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mbappe,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+meghanmarkle,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+merylstreep,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+metallica,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+michaeljackson,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+michaeljordan,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+michaelschumacher,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+michellehunziker,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+michelleobama,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+micjagger,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mikebongiorno,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+miketyson,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+minamazzini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+moanapozzi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mohamedsalah,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+monicabellucci,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+morganfreeman,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mourinho,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mozart,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+mrbeast,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+muhammadali,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+nadal,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+nannimoretti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+nelsonmandela,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+neymar,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+neymarjr,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+nicolekidman,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+nicolobarella,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+nirvana,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+novakdjokovic,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+obama,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+olafscholz,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+onedirection,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+padrepio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+paolacortellesi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+paolobonolis,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+paolomaldini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+paolosorrentino,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+papafrancesco,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+papagiovannipaoloii,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+papaleone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+papaleonexiv,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+parishilton,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+paulmccartney,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pavarotti,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+peccobagnaia,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pele,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pepguardiola,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pewdiepie,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pierfrancescofavino,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pieroangela,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pinkfloyd,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pinodaniele,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+pippobaudo,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+princeharry,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+princewilliam,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+principewilliam,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+puccini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+putin,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+quentintarantino,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+rafaelnadal,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+raffaellacarra,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+raffaellosanzio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+renatozero,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+riccardoscamarcio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+rihanna,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+rkomi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+robertdeniro,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+robertdowneyjr,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+robertlewandowski,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+robertobaggio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+robertobenigni,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+robertomancini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+roccosiffredi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+rogerfederer,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+rollingstones,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+romanoprodi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ronaldinho,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ronaldonazario,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+rosariofiorello,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+salvini,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+samaltman,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+samsmith,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+sandrotonali,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+scamarcio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+scarlettjohansson,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+schlein,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+selenagomez,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+serenawilliams,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+sergioleone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+sergiomattarella,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+sferaebbasta,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+shakira,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+shaquilleoneal,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+silvioberlusconi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+simonebiles,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+simoneinzaghi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+snoopdogg,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+sofiagoggia,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+sophialoren,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+stefanoaccorsi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+stephencurry,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+stevejobs,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+stevenspielberg,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+stmpodcast,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+sylvesterstallone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tajani,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tamberi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tananai,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tarantino,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+taylorswift,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+thasiotorchio,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+thebeatles,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+therock,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+therollingstones,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+theweeknd,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+thierryhenry,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+thomasceccon,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tigerwoods,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+timcook,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+timotheechalamet,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tizianoferro,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tomcruise,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tomhanks,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tomholland,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+tornatore,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+ugotognazzi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+umbertotozzi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+usainbolt,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+vacchi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+valentinanappi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+valentinorossi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+vascorossi,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+verdone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+verstappen,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+victoriadeangelis,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+vindiesel,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+viniciusjr,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+vittoriogassman,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+vladimirputin,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+volodymyrzelensky,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+vr46,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+warrenbuffett,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+whitneyhouston,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+willsmith,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+xijinping,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zalone,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zdenekzeman,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zelensky,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zendaya,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zidane,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zinedinezidane,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zlatanibrahimovic,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zuccherofornaciari,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+zuckerberg,gold,esatto,persona,personaggio pubblico (il titolare può richiederlo)
+airbnb,gold,contiene,piattaforma,piattaforme digitali e social
+aliexpress,gold,contiene,piattaforma,piattaforme digitali e social
+amazonprime,gold,contiene,piattaforma,piattaforme digitali e social
+chatgpt,gold,contiene,piattaforma,piattaforme digitali e social
+deliveroo,gold,contiene,piattaforma,piattaforme digitali e social
+disneyplus,gold,contiene,piattaforma,piattaforme digitali e social
+facebook,gold,contiene,piattaforma,piattaforme digitali e social
+google,gold,contiene,piattaforma,piattaforme digitali e social
+instagram,gold,contiene,piattaforma,piattaforme digitali e social
+justeat,gold,contiene,piattaforma,piattaforme digitali e social
+linkedin,gold,contiene,piattaforma,piattaforme digitali e social
+microsoft,gold,contiene,piattaforma,piattaforme digitali e social
+netflix,gold,contiene,piattaforma,piattaforme digitali e social
+onlyfans,gold,contiene,piattaforma,piattaforme digitali e social
+openai,gold,contiene,piattaforma,piattaforme digitali e social
+pinterest,gold,contiene,piattaforma,piattaforme digitali e social
+playstation,gold,contiene,piattaforma,piattaforme digitali e social
+snapchat,gold,contiene,piattaforma,piattaforme digitali e social
+spotify,gold,contiene,piattaforma,piattaforme digitali e social
+tiktok,gold,contiene,piattaforma,piattaforme digitali e social
+tripadvisor,gold,contiene,piattaforma,piattaforme digitali e social
+ubereats,gold,contiene,piattaforma,piattaforme digitali e social
+whatsapp,gold,contiene,piattaforma,piattaforme digitali e social
+youtube,gold,contiene,piattaforma,piattaforme digitali e social
+adobe,gold,esatto,piattaforma,piattaforme digitali e social
+alibaba,gold,esatto,piattaforma,piattaforme digitali e social
+aliceit,gold,esatto,piattaforma,piattaforme digitali e social
+amazon,gold,esatto,piattaforma,piattaforme digitali e social
+anthropic,gold,esatto,piattaforma,piattaforme digitali e social
+apple,gold,esatto,piattaforma,piattaforme digitali e social
+applemusic,gold,esatto,piattaforma,piattaforme digitali e social
+appletv,gold,esatto,piattaforma,piattaforme digitali e social
+appstore,gold,esatto,piattaforma,piattaforme digitali e social
+asos,gold,esatto,piattaforma,piattaforme digitali e social
+audible,gold,esatto,piattaforma,piattaforme digitali e social
+aws,gold,esatto,piattaforma,piattaforme digitali e social
+babbel,gold,esatto,piattaforma,piattaforme digitali e social
+badoo,gold,esatto,piattaforma,piattaforme digitali e social
+bereal,gold,esatto,piattaforma,piattaforme digitali e social
+bing,gold,esatto,piattaforma,piattaforme digitali e social
+bluesky,gold,esatto,piattaforma,piattaforme digitali e social
+bookingcom,gold,esatto,piattaforma,piattaforme digitali e social
+bytedance,gold,esatto,piattaforma,piattaforme digitali e social
+callofduty,gold,esatto,piattaforma,piattaforme digitali e social
+canva,gold,esatto,piattaforma,piattaforme digitali e social
+capcut,gold,esatto,piattaforma,piattaforme digitali e social
+copilot,gold,esatto,piattaforma,piattaforme digitali e social
+coursera,gold,esatto,piattaforma,piattaforme digitali e social
+crunchyroll,gold,esatto,piattaforma,piattaforme digitali e social
+dazn,gold,esatto,piattaforma,piattaforme digitali e social
+deepseek,gold,esatto,piattaforma,piattaforme digitali e social
+deezer,gold,esatto,piattaforma,piattaforme digitali e social
+discord,gold,esatto,piattaforma,piattaforme digitali e social
+disney,gold,esatto,piattaforma,piattaforme digitali e social
+dropbox,gold,esatto,piattaforma,piattaforme digitali e social
+duolingo,gold,esatto,piattaforma,piattaforme digitali e social
+eafc,gold,esatto,piattaforma,piattaforme digitali e social
+easyjet,gold,esatto,piattaforma,piattaforme digitali e social
+ebay,gold,esatto,piattaforma,piattaforme digitali e social
+edreams,gold,esatto,piattaforma,piattaforme digitali e social
+epicgames,gold,esatto,piattaforma,piattaforme digitali e social
+etsy,gold,esatto,piattaforma,piattaforme digitali e social
+expedia,gold,esatto,piattaforma,piattaforme digitali e social
+fifa,gold,esatto,piattaforma,piattaforme digitali e social
+figma,gold,esatto,piattaforma,piattaforme digitali e social
+firefox,gold,esatto,piattaforma,piattaforme digitali e social
+fortnite,gold,esatto,piattaforma,piattaforme digitali e social
+freenow,gold,esatto,piattaforma,piattaforme digitali e social
+github,gold,esatto,piattaforma,piattaforme digitali e social
+glovo,gold,esatto,piattaforma,piattaforme digitali e social
+gmail,gold,esatto,piattaforma,piattaforme digitali e social
+godaddy,gold,esatto,piattaforma,piattaforme digitali e social
+googlemaps,gold,esatto,piattaforma,piattaforme digitali e social
+googleplay,gold,esatto,piattaforma,piattaforme digitali e social
+gpt,gold,esatto,piattaforma,piattaforme digitali e social
+grindr,gold,esatto,piattaforma,piattaforme digitali e social
+happn,gold,esatto,piattaforma,piattaforme digitali e social
+hbomax,gold,esatto,piattaforma,piattaforme digitali e social
+hotmail,gold,esatto,piattaforma,piattaforme digitali e social
+huggingface,gold,esatto,piattaforma,piattaforme digitali e social
+icloud,gold,esatto,piattaforma,piattaforme digitali e social
+infinity,gold,esatto,piattaforma,piattaforme digitali e social
+ipad,gold,esatto,piattaforma,piattaforme digitali e social
+iphone,gold,esatto,piattaforma,piattaforme digitali e social
+leagueoflegends,gold,esatto,piattaforma,piattaforme digitali e social
+liberomail,gold,esatto,piattaforma,piattaforme digitali e social
+lyft,gold,esatto,piattaforma,piattaforme digitali e social
+macbook,gold,esatto,piattaforma,piattaforme digitali e social
+mastodon,gold,esatto,piattaforma,piattaforme digitali e social
+mediasetinfinity,gold,esatto,piattaforma,piattaforme digitali e social
+meetic,gold,esatto,piattaforma,piattaforme digitali e social
+messenger,gold,esatto,piattaforma,piattaforme digitali e social
+microsoft365,gold,esatto,piattaforma,piattaforme digitali e social
+midjourney,gold,esatto,piattaforma,piattaforme digitali e social
+minecraft,gold,esatto,piattaforma,piattaforme digitali e social
+mozilla,gold,esatto,piattaforma,piattaforme digitali e social
+nintendo,gold,esatto,piattaforma,piattaforme digitali e social
+nowtv,gold,esatto,piattaforma,piattaforme digitali e social
+nvidia,gold,esatto,piattaforma,piattaforme digitali e social
+oculus,gold,esatto,piattaforma,piattaforme digitali e social
+office365,gold,esatto,piattaforma,piattaforme digitali e social
+outlook,gold,esatto,piattaforma,piattaforme digitali e social
+paramountplus,gold,esatto,piattaforma,piattaforme digitali e social
+patreon,gold,esatto,piattaforma,piattaforme digitali e social
+photoshop,gold,esatto,piattaforma,piattaforme digitali e social
+playstore,gold,esatto,piattaforma,piattaforme digitali e social
+primevideo,gold,esatto,piattaforma,piattaforme digitali e social
+quora,gold,esatto,piattaforma,piattaforme digitali e social
+raiplay,gold,esatto,piattaforma,piattaforme digitali e social
+reddit,gold,esatto,piattaforma,piattaforme digitali e social
+roblox,gold,esatto,piattaforma,piattaforme digitali e social
+ryanair,gold,esatto,piattaforma,piattaforme digitali e social
+shazam,gold,esatto,piattaforma,piattaforme digitali e social
+shein,gold,esatto,piattaforma,piattaforme digitali e social
+shopify,gold,esatto,piattaforma,piattaforme digitali e social
+skygo,gold,esatto,piattaforma,piattaforme digitali e social
+skype,gold,esatto,piattaforma,piattaforme digitali e social
+skyscanner,gold,esatto,piattaforma,piattaforme digitali e social
+soundcloud,gold,esatto,piattaforma,piattaforme digitali e social
+squarespace,gold,esatto,piattaforma,piattaforme digitali e social
+strava,gold,esatto,piattaforma,piattaforme digitali e social
+subitoit,gold,esatto,piattaforma,piattaforme digitali e social
+substack,gold,esatto,piattaforma,piattaforme digitali e social
+tannico,gold,esatto,piattaforma,piattaforme digitali e social
+telegram,gold,esatto,piattaforma,piattaforme digitali e social
+temu,gold,esatto,piattaforma,piattaforme digitali e social
+thefork,gold,esatto,piattaforma,piattaforme digitali e social
+tidal,gold,esatto,piattaforma,piattaforme digitali e social
+timvision,gold,esatto,piattaforma,piattaforme digitali e social
+tiscali,gold,esatto,piattaforma,piattaforme digitali e social
+trivago,gold,esatto,piattaforma,piattaforme digitali e social
+truecaller,gold,esatto,piattaforma,piattaforme digitali e social
+tumblr,gold,esatto,piattaforma,piattaforme digitali e social
+twitch,gold,esatto,piattaforma,piattaforme digitali e social
+twitter,gold,esatto,piattaforma,piattaforme digitali e social
+uber,gold,esatto,piattaforma,piattaforme digitali e social
+udemy,gold,esatto,piattaforma,piattaforme digitali e social
+valorant,gold,esatto,piattaforma,piattaforme digitali e social
+viber,gold,esatto,piattaforma,piattaforme digitali e social
+vinted,gold,esatto,piattaforma,piattaforme digitali e social
+virgilio,gold,esatto,piattaforma,piattaforme digitali e social
+wallapop,gold,esatto,piattaforma,piattaforme digitali e social
+waze,gold,esatto,piattaforma,piattaforme digitali e social
+wechat,gold,esatto,piattaforma,piattaforme digitali e social
+wikimedia,gold,esatto,piattaforma,piattaforme digitali e social
+wikipedia,gold,esatto,piattaforma,piattaforme digitali e social
+wix,gold,esatto,piattaforma,piattaforme digitali e social
+wordpress,gold,esatto,piattaforma,piattaforme digitali e social
+xbox,gold,esatto,piattaforma,piattaforme digitali e social
+xcorp,gold,esatto,piattaforma,piattaforme digitali e social
+yahoo,gold,esatto,piattaforma,piattaforme digitali e social
+yahoomail,gold,esatto,piattaforma,piattaforme digitali e social
+zalando,gold,esatto,piattaforma,piattaforme digitali e social
+24hlemans,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+acffiorentina,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+acmilan,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+acmonza,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+ajax,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+alnassr,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+arsenalfc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+ascoli,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+asroma,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+atalanta,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+atleticomadrid,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+atp,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+atpfinals,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+australianopen,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+avellino,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+bari1908,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+bayern,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+bayernmunchen,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+benfica,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+billiejeancup,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+bocajuniors,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+bolognafc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+borussiadortmund,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+brescia,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+bundesliga,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+bvb,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+cagliaricalcio,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+catanzaro,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+celtics,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+championsleague,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+chelseafc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+chicagobulls,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+cittadella,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+como1907,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+conferenceleague,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+copaamerica,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+coppadavis,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+coppaitalia,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+cremonese,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+daviscup,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+empoli,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+eredivisie,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+euro2024,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+euro2028,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+euro2032,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+europaleague,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+europei,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+fcbarcelona,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+fcinter,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+federugby,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+fenerbahce,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+fidal,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+fifaworldcup,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+fiorentina,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+fipav,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+fisi,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+flamengo,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+formula1,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+formulauno,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+frosinonecalcio,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+galatasaray,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+genoa,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+genoacfc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+giochiolimpici,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+girodiitalia,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+giroditalia,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+goldenstatewarriors,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+hellasverona,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+ilombardia,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+indycar,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+inter,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+intermiami,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+intermilano,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+internazionale,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+internazionalibnl,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+internazionaliditalia,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+ironman,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+juve,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+juventus,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+juventusfc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+knicks,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+lakers,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+lalakers,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+laliga,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+laziocalcio,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+leccecalcio,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+legaseriea,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+lemans,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+ligue1,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+liverpoolfc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+manchestercity,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+manchesterunited,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+mancity,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+manutd,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+maratonadiroma,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+mastersaugusta,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+miamiheat,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+milanac,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+milanocortina,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+milanocortina2026,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+milanomarathon,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+milanosanremo,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+mlb,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+mls,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+modenafc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+mondiali,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+motogp,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+napolicalcio,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+nascar,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+nationsleague,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+nba,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+nfl,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+nhl,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+nittoatpfinals,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+nycmarathon,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+olimpiadi,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+olympics,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+palermofc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+paralimpiadi,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+paralympics,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+parisroubaix,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+parissaintgermain,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+parmacalcio,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+perugia,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+pisa,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+premierleague,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+psg,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+realmadrid,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+reggiana,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+riverplate,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+rolandgarros,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+romacalcio,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+romamarathon,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+rydercup,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+salernitana,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+sampdoria,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+sassuolo,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+seinazioni,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+seriea,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+serieb,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+seriec,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+sixnations,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+spal,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+spezia,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+sscbari,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+sscnapoli,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+sslazio,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+sudtirol,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+superbike,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+superbowl,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+supercoppa,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+supercoppaitaliana,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+ternana,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+torinofc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+tottenham,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+tourdefrance,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+triestina,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+udinese,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+uefa,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+uefachampionsleague,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+ufc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+uslecce,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+usopen,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+veneziafc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+vuelta,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+wimbledon,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+worldcup,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+worldsbk,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+wrc,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+wta,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
+wwe,gold,esatto,sport,"squadre, competizioni e organizzazioni sportive"
