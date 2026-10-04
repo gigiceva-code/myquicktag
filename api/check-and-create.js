@@ -26,19 +26,20 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Tag non valido o con caratteri non consentiti' });
     }
 
-    // Black list e gold list (lib/nomi-riservati.js): valgono anche per chi chiama direttamente l'API
-    const nomeNonDisponibile = controllaNome(tag);
-    if (nomeNonDisponibile) {
-        return res.status(400).json({ success: false, codice: nomeNonDisponibile.codice, message: nomeNonDisponibile.messaggio });
-    }
-
     // Limiti: niente prenotazioni a raffica di nomi (ognuno resta bloccato 24 ore)
     if (!(await entroILimiti(req, tag, [{ nome: 'prenota', per: 'ip', max: 10, finestra: 3600 }]))) {
         return rispondiTroppiTentativi(res);
     }
 
-    // 1. Verifica se il tag è già occupato o prenotato
     try {
+        // Black list e gold list (tabella nomi_riservati + lib/nomi-riservati.js):
+        // valgono anche per chi chiama direttamente l'API
+        const nomeNonDisponibile = await controllaNome(tag);
+        if (nomeNonDisponibile) {
+            return res.status(400).json({ success: false, codice: nomeNonDisponibile.codice, message: nomeNonDisponibile.messaggio });
+        }
+
+        // 1. Verifica se il tag è già occupato o prenotato
         const record = await trovaTag(tag, ['stato']);
 
         if (record) {

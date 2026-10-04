@@ -1,0 +1,306 @@
+nome,tipo,regola,nota
+posteitaliane,black,contiene,istituzioni: anti-truffa
+agenziaentrate,black,contiene,istituzioni: anti-truffa
+agenziadelleentrate,black,contiene,istituzioni: anti-truffa
+guardiadifinanza,black,contiene,istituzioni: anti-truffa
+carabinieri,black,contiene,istituzioni: anti-truffa
+poliziadistato,black,contiene,istituzioni: anti-truffa
+poliziapostale,black,contiene,istituzioni: anti-truffa
+ministero,black,contiene,istituzioni: anti-truffa
+prefettura,black,contiene,istituzioni: anti-truffa
+questura,black,contiene,istituzioni: anti-truffa
+inps,black,contiene,istituzioni: anti-truffa
+inail,black,esatto,istituzioni: anti-truffa
+quirinale,black,contiene,istituzioni: anti-truffa
+protezionecivile,black,contiene,istituzioni: anti-truffa
+vigilidelfuoco,black,contiene,istituzioni: anti-truffa
+poste,black,esatto,istituzioni
+polizia,black,esatto,istituzioni
+comune,black,esatto,istituzioni
+regione,black,esatto,istituzioni
+provincia,black,esatto,istituzioni
+governo,black,esatto,istituzioni
+parlamento,black,esatto,istituzioni
+senato,black,esatto,istituzioni
+tribunale,black,esatto,istituzioni
+procura,black,esatto,istituzioni
+asl,black,esatto,istituzioni
+sanita,black,esatto,istituzioni
+salute,black,esatto,istituzioni
+crocerossa,black,esatto,istituzioni
+emergenza,black,esatto,istituzioni
+prontosoccorso,black,esatto,istituzioni
+112,black,esatto,istituzioni
+113,black,esatto,istituzioni
+115,black,esatto,istituzioni
+118,black,esatto,istituzioni
+spid,black,esatto,istituzioni
+pagopa,black,esatto,istituzioni
+ioapp,black,esatto,istituzioni
+intesasanpaolo,black,contiene,banche e pagamenti: anti-truffa
+unicredit,black,contiene,banche e pagamenti: anti-truffa
+bancaditalia,black,contiene,banche e pagamenti: anti-truffa
+bancoposta,black,contiene,banche e pagamenti: anti-truffa
+postepay,black,contiene,banche e pagamenti: anti-truffa
+paypal,black,contiene,banche e pagamenti: anti-truffa
+satispay,black,contiene,banche e pagamenti: anti-truffa
+mediolanum,black,contiene,banche e pagamenti: anti-truffa
+finecobank,black,contiene,banche e pagamenti: anti-truffa
+mastercard,black,contiene,banche e pagamenti: anti-truffa
+americanexpress,black,contiene,banche e pagamenti: anti-truffa
+intesa,black,esatto,banche e pagamenti
+bnl,black,esatto,banche e pagamenti
+bpm,black,esatto,banche e pagamenti
+bancobpm,black,esatto,banche e pagamenti
+mps,black,esatto,banche e pagamenti
+montepaschi,black,esatto,banche e pagamenti
+credem,black,esatto,banche e pagamenti
+bper,black,esatto,banche e pagamenti
+fineco,black,esatto,banche e pagamenti
+ing,black,esatto,banche e pagamenti
+n26,black,esatto,banche e pagamenti
+revolut,black,esatto,banche e pagamenti
+hype,black,esatto,banche e pagamenti
+widiba,black,esatto,banche e pagamenti
+mediobanca,black,esatto,banche e pagamenti
+chebanca,black,esatto,banche e pagamenti
+visa,black,esatto,banche e pagamenti
+amex,black,esatto,banche e pagamenti
+nexi,black,esatto,banche e pagamenti
+bancomat,black,esatto,banche e pagamenti
+google,black,esatto,piattaforme imitate nelle truffe
+gmail,black,esatto,piattaforme imitate nelle truffe
+facebook,black,esatto,piattaforme imitate nelle truffe
+instagram,black,esatto,piattaforme imitate nelle truffe
+whatsapp,black,esatto,piattaforme imitate nelle truffe
+tiktok,black,esatto,piattaforme imitate nelle truffe
+youtube,black,esatto,piattaforme imitate nelle truffe
+telegram,black,esatto,piattaforme imitate nelle truffe
+amazon,black,esatto,piattaforme imitate nelle truffe
+microsoft,black,esatto,piattaforme imitate nelle truffe
+outlook,black,esatto,piattaforme imitate nelle truffe
+netflix,black,esatto,piattaforme imitate nelle truffe
+spotify,black,esatto,piattaforme imitate nelle truffe
+linkedin,black,esatto,piattaforme imitate nelle truffe
+twitter,black,esatto,piattaforme imitate nelle truffe
+apple,black,esatto,piattaforme imitate nelle truffe
+icloud,black,esatto,piattaforme imitate nelle truffe
+assistenza,black,esatto,finto staff myquicktag
+supporto,black,esatto,finto staff myquicktag
+servizioclienti,black,esatto,finto staff myquicktag
+customercare,black,esatto,finto staff myquicktag
+helpdesk,black,esatto,finto staff myquicktag
+moderatore,black,esatto,finto staff myquicktag
+moderator,black,esatto,finto staff myquicktag
+sicurezza,black,esatto,finto staff myquicktag
+verifica,black,esatto,finto staff myquicktag
+verified,black,esatto,finto staff myquicktag
+verificato,black,esatto,finto staff myquicktag
+staffmyquicktag,black,esatto,finto staff myquicktag
+vaffanculo,black,contiene,volgarità e odio
+porcodio,black,contiene,volgarità e odio
+diocane,black,contiene,volgarità e odio
+porcamadonna,black,contiene,volgarità e odio
+madonnaputtana,black,contiene,volgarità e odio
+fuck,black,contiene,volgarità e odio
+hitler,black,contiene,volgarità e odio
+pedofil,black,contiene,volgarità e odio
+cazzo,black,esatto,volgarità e odio
+merda,black,esatto,volgarità e odio
+stronzo,black,esatto,volgarità e odio
+stronza,black,esatto,volgarità e odio
+puttana,black,esatto,volgarità e odio
+troia,black,esatto,volgarità e odio
+figa,black,esatto,volgarità e odio
+coglione,black,esatto,volgarità e odio
+minchia,black,esatto,volgarità e odio
+bastardo,black,esatto,volgarità e odio
+shit,black,esatto,volgarità e odio
+bitch,black,esatto,volgarità e odio
+porn,black,esatto,volgarità e odio
+porno,black,esatto,volgarità e odio
+sex,black,esatto,volgarità e odio
+xxx,black,esatto,volgarità e odio
+nazi,black,esatto,volgarità e odio
+isis,black,esatto,volgarità e odio
+gucci,gold,esatto,marchio
+prada,gold,esatto,marchio
+armani,gold,esatto,marchio
+versace,gold,esatto,marchio
+dolcegabbana,gold,esatto,marchio
+valentino,gold,esatto,marchio
+fendi,gold,esatto,marchio
+bulgari,gold,esatto,marchio
+moncler,gold,esatto,marchio
+lamborghini,gold,esatto,marchio
+maserati,gold,esatto,marchio
+fiat,gold,esatto,marchio
+alfaromeo,gold,esatto,marchio
+lancia,gold,esatto,marchio
+ducati,gold,esatto,marchio
+vespa,gold,esatto,marchio
+piaggio,gold,esatto,marchio
+barilla,gold,esatto,marchio
+lavazza,gold,esatto,marchio
+ferrero,gold,esatto,marchio
+nutella,gold,esatto,marchio
+illy,gold,esatto,marchio
+peroni,gold,esatto,marchio
+campari,gold,esatto,marchio
+aperol,gold,esatto,marchio
+martini,gold,esatto,marchio
+eni,gold,esatto,marchio
+enel,gold,esatto,marchio
+tim,gold,esatto,marchio
+vodafone,gold,esatto,marchio
+windtre,gold,esatto,marchio
+iliad,gold,esatto,marchio
+fastweb,gold,esatto,marchio
+mediaset,gold,esatto,marchio
+rai,gold,esatto,marchio
+juventus,gold,esatto,marchio
+inter,gold,esatto,marchio
+milan,gold,esatto,marchio
+napoli,gold,esatto,marchio
+lazio,gold,esatto,marchio
+samsung,gold,esatto,marchio
+huawei,gold,esatto,marchio
+xiaomi,gold,esatto,marchio
+meta,gold,esatto,marchio
+adidas,gold,esatto,marchio
+puma,gold,esatto,marchio
+zara,gold,esatto,marchio
+ikea,gold,esatto,marchio
+mcdonalds,gold,esatto,marchio
+starbucks,gold,esatto,marchio
+pepsi,gold,esatto,marchio
+redbull,gold,esatto,marchio
+tesla,gold,esatto,marchio
+bmw,gold,esatto,marchio
+mercedes,gold,esatto,marchio
+audi,gold,esatto,marchio
+porsche,gold,esatto,marchio
+toyota,gold,esatto,marchio
+volkswagen,gold,esatto,marchio
+esselunga,gold,esatto,marchio
+conad,gold,esatto,marchio
+coop,gold,esatto,marchio
+carrefour,gold,esatto,marchio
+lidl,gold,esatto,marchio
+eurospin,gold,esatto,marchio
+pizzeria,gold,esatto,nome generico di valore
+ristorante,gold,esatto,nome generico di valore
+trattoria,gold,esatto,nome generico di valore
+osteria,gold,esatto,nome generico di valore
+bar,gold,esatto,nome generico di valore
+caffe,gold,esatto,nome generico di valore
+gelateria,gold,esatto,nome generico di valore
+pasticceria,gold,esatto,nome generico di valore
+panificio,gold,esatto,nome generico di valore
+macelleria,gold,esatto,nome generico di valore
+pescheria,gold,esatto,nome generico di valore
+enoteca,gold,esatto,nome generico di valore
+birreria,gold,esatto,nome generico di valore
+pub,gold,esatto,nome generico di valore
+sushi,gold,esatto,nome generico di valore
+kebab,gold,esatto,nome generico di valore
+farmacia,gold,esatto,nome generico di valore
+parrucchiere,gold,esatto,nome generico di valore
+barbiere,gold,esatto,nome generico di valore
+estetista,gold,esatto,nome generico di valore
+palestra,gold,esatto,nome generico di valore
+hotel,gold,esatto,nome generico di valore
+bnb,gold,esatto,nome generico di valore
+agriturismo,gold,esatto,nome generico di valore
+avvocato,gold,esatto,nome generico di valore
+notaio,gold,esatto,nome generico di valore
+commercialista,gold,esatto,nome generico di valore
+dentista,gold,esatto,nome generico di valore
+medico,gold,esatto,nome generico di valore
+dottore,gold,esatto,nome generico di valore
+psicologo,gold,esatto,nome generico di valore
+fisioterapista,gold,esatto,nome generico di valore
+architetto,gold,esatto,nome generico di valore
+ingegnere,gold,esatto,nome generico di valore
+geometra,gold,esatto,nome generico di valore
+idraulico,gold,esatto,nome generico di valore
+elettricista,gold,esatto,nome generico di valore
+meccanico,gold,esatto,nome generico di valore
+carrozzeria,gold,esatto,nome generico di valore
+gommista,gold,esatto,nome generico di valore
+fotografo,gold,esatto,nome generico di valore
+wedding,gold,esatto,nome generico di valore
+matrimoni,gold,esatto,nome generico di valore
+immobiliare,gold,esatto,nome generico di valore
+assicurazioni,gold,esatto,nome generico di valore
+consulente,gold,esatto,nome generico di valore
+marketing,gold,esatto,nome generico di valore
+design,gold,esatto,nome generico di valore
+moda,gold,esatto,nome generico di valore
+food,gold,esatto,nome generico di valore
+travel,gold,esatto,nome generico di valore
+viaggi,gold,esatto,nome generico di valore
+sport,gold,esatto,nome generico di valore
+musica,gold,esatto,nome generico di valore
+arte,gold,esatto,nome generico di valore
+fitness,gold,esatto,nome generico di valore
+yoga,gold,esatto,nome generico di valore
+beauty,gold,esatto,nome generico di valore
+spa,gold,esatto,nome generico di valore
+roma,gold,esatto,città o regione
+milano,gold,esatto,città o regione
+torino,gold,esatto,città o regione
+palermo,gold,esatto,città o regione
+genova,gold,esatto,città o regione
+bologna,gold,esatto,città o regione
+firenze,gold,esatto,città o regione
+bari,gold,esatto,città o regione
+catania,gold,esatto,città o regione
+venezia,gold,esatto,città o regione
+verona,gold,esatto,città o regione
+messina,gold,esatto,città o regione
+padova,gold,esatto,città o regione
+trieste,gold,esatto,città o regione
+brescia,gold,esatto,città o regione
+parma,gold,esatto,città o regione
+taranto,gold,esatto,città o regione
+prato,gold,esatto,città o regione
+modena,gold,esatto,città o regione
+reggiocalabria,gold,esatto,città o regione
+reggioemilia,gold,esatto,città o regione
+perugia,gold,esatto,città o regione
+livorno,gold,esatto,città o regione
+ravenna,gold,esatto,città o regione
+cagliari,gold,esatto,città o regione
+foggia,gold,esatto,città o regione
+rimini,gold,esatto,città o regione
+salerno,gold,esatto,città o regione
+ferrara,gold,esatto,città o regione
+sassari,gold,esatto,città o regione
+latina,gold,esatto,città o regione
+bergamo,gold,esatto,città o regione
+monza,gold,esatto,città o regione
+pescara,gold,esatto,città o regione
+trento,gold,esatto,città o regione
+bolzano,gold,esatto,città o regione
+vicenza,gold,esatto,città o regione
+lombardia,gold,esatto,città o regione
+piemonte,gold,esatto,città o regione
+veneto,gold,esatto,città o regione
+liguria,gold,esatto,città o regione
+toscana,gold,esatto,città o regione
+campania,gold,esatto,città o regione
+puglia,gold,esatto,città o regione
+calabria,gold,esatto,città o regione
+sicilia,gold,esatto,città o regione
+sardegna,gold,esatto,città o regione
+abruzzo,gold,esatto,città o regione
+marche,gold,esatto,città o regione
+umbria,gold,esatto,città o regione
+molise,gold,esatto,città o regione
+basilicata,gold,esatto,città o regione
+valledaosta,gold,esatto,città o regione
+trentino,gold,esatto,città o regione
+friuli,gold,esatto,città o regione
+emiliaromagna,gold,esatto,città o regione
+italia,gold,esatto,città o regione

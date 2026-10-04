@@ -1,0 +1,67 @@
+# Passaggio di consegne — myquicktag
+
+Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md`
+(decisioni aperte e cose da fare prima del lancio). Aggiornato al 04/10/2026.
+
+---
+
+## Come lavorare con il titolare
+
+- Scrivere **in italiano**, con spiegazioni semplici e concrete: il titolare non è uno sviluppatore.
+  Dire cosa cambia per lui e per i clienti, non i dettagli tecnici.
+- Prima di cambiare il **prodotto** (piani, prezzi, cosa vede il cliente) chiedere; per correzioni e
+  sicurezza si può procedere spiegando dopo.
+- **Flusso git:** si lavora sul ramo `sviluppo-v2`; quando è pronto si apre una pull request verso
+  `main` e, se il titolare lo chiede, la si unisce con "merge commit" (finora l'ha sempre chiesto).
+  Dopo l'unione riallineare `sviluppo-v2` a `main` (fast-forward).
+- **Prove:** il titolare prova dal telefono. Il Preview di Vercel è protetto (serve l'accesso a Vercel
+  o un "link di condivisione"), quindi le prove con altri telefoni si fanno sul sito pubblico.
+- Il titolare non vuole spese: piano gratuito di Supabase e di Vercel.
+
+## Dove sta cosa
+
+- **Sito pubblico:** https://myquicktag.it (Vercel, ramo `main`). Tag pubblica: `/u/<nome>`.
+- **Vercel:** team `gigiceva-codes-projects`, progetto `myquicktag`.
+  Variabili: `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (Preview e Production).
+  Funzioni server: 11 su 12 consentite dal piano gratuito → prima di aggiungerne, accorparne.
+- **Supabase:** progetto `myquicktag` (id `atlhrkkfovblkhgzfeuo`, Francoforte).
+  Tabelle: `tags` (una riga per tag), `limiti` (contatori anti-abuso), `nomi_riservati` (black/gold list).
+  Tutte con RLS attivo e nessuna policy: ci accede solo il server con la chiave segreta.
+  Struttura e funzioni SQL in `supabase/migrations/` (vanno applicate anche al database, non bastano nel codice).
+- **Airtable:** non più usato (le basi restano solo come archivio).
+
+## Come è fatto il codice
+
+- Pagine statiche HTML/JS (`index`, `tag` + `tag-logic.js`, `edit` + `edit-logic.js`, `profile`
+  = dashboard, `contatti`, `account`, `pocket`, `analytics`, `checkout`, `celebration`).
+- `api/` = funzioni server Vercel; `lib/` = moduli comuni del server:
+  `db.js` (Supabase), `pulizia.js` (testi senza codice), `password.js` (scrypt), `limiti.js`,
+  `nomi-riservati.js`, `abbonamento.js` (90 giorni + 14 di grazia).
+- `session.js` (caricato da tutte le pagine): `mqtSessione` (token di sessione del dispositivo) e
+  `mqtPulisci` (pulizia dei testi prima di mostrarli).
+- I dati privati del proprietario (contatti del vasetto, statistiche, Pocket, bozza) arrivano solo con
+  sessione valida. I visitatori scrivono solo tramite `api/add-lead.js` e `api/track-click.js`.
+- `.vercelignore` esclude dal sito pubblico documenti interni, test e `supabase/`.
+
+## Test
+
+- `node test/api.test.mjs` → 56 prove delle funzioni `api/` con un finto database (nessuna installazione).
+  Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
+- `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
+  (istruzioni d'uso in testa al file; serve Playwright).
+- Dalla sessione cloud non si raggiungono `*.vercel.app` né molti siti esterni: le prove sul sito vero
+  le fa il titolare, poi si controllano i log/dati su Supabase.
+
+## Prossimi passi (in ordine)
+
+1. **Rivedere con il titolare la proposta di nomi riservati** `supabase/proposta-nomi-riservati.csv`
+   (305 nomi: enti e banche contro le truffe, parolacce, marchi, attività, città). Dopo l'ok caricarla
+   nella tabella `nomi_riservati` (si può anche importare il CSV dal Table Editor di Supabase).
+   Attenzione: "apple" oggi è gold, nella proposta è black.
+2. **Audit di UI, UX e marketing** sul sito pubblico: percorso del cliente nuovo (home → prenotazione →
+   editor → pubblicazione), testi e tono (misto italiano/inglese), home come pagina di vendita, uso da
+   telefono e accessibilità. Risultato: elenco di interventi per priorità, con schermate.
+3. **Test con due telefoni** (in sospeso): un visitatore lascia un contatto nel vasetto → il titolare lo
+   trova in Dashboard → I miei contatti.
+4. Decisioni di prodotto aperte (vedi `PRE-LANCIO.md`): modello dei piani e prezzi, pagamenti Stripe,
+   aspetti fiscali (prima di incassare: commercialista).
