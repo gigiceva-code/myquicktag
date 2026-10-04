@@ -7,35 +7,40 @@ export default function handler(req, res) {
       u = urlParams.get('u');
     }
 
-    // Se non trova nulla, usa 'user' come paracadute, ma ora l'estrazione è a prova di bomba
+    // Pulisci e formatta il nome utente in modo sicuro
     const utente = u ? u.toUpperCase() : 'USER';
     const utenteMinuscolo = utente.replace('@', '').trim().toLowerCase();
-    const displayUtente = `@${utenteMinuscolo.toUpperCase()}`;
+    
+    // --- FIX SICUREZZA & PULIZIA ---
+    const safeUser = utenteMinuscolo.replace(/[^a-zA-Z0-9_-]/g, '');
+    const finalUser = safeUser || 'user';
+    const displayUtente = `@${finalUser.toUpperCase()}`;
 
-    // LA CHIAVE DI VOLTA: Chiamiamo il nostro generatore interno che disegna il logo Q-@ d'autore
-    // Passiamo comunque il parametro ?u= per retrocompatibilità, anche se l'icona ora mostra il brand di lusso
-    const icon192 = `/api/generate-icons?u=${utenteMinuscolo}`;
-    const icon512 = `/api/generate-icons?u=${utenteMinuscolo}`;
+        // Icona unica del brand, uguale per tutti gli utenti
+    const icon192 = `/api/generate-icons`;
+    const icon512 = `/api/generate-icons`;
 
-  // Costruiamo il manifest dinamico con Pretty URL isolati per utente
+    // Costruiamo il manifest dinamico con i link corretti (usando i backticks ``)
     const manifest = {
-      "id": `/u/${utenteMinuscolo}`,
+      "id": `/u/${finalUser}`,
       "name": `myquicktag ${displayUtente}`,
       "short_name": displayUtente,
       "description": "Luxury Digital Identity",
-      "start_url": `/u/${utenteMinuscolo}`,
-     "scope": "/u/${utenteMinuscolo}/",
+      "start_url": `/u/${finalUser}`,
+      "scope": `/u/${finalUser}`,
       "display": "fullscreen",     
-      "background_color": "#050505", // <-- SPLASH SCREEN BLACK LUXURY
-      "theme_color": "#050505",      // <-- COLORA LA BARRA DI STATO DI NERO
+      "background_color": "#050505", // Schermata di avvio nera in stile luxury
+      "theme_color": "#050505",      // Colora la barra di stato del telefono di nero
       "orientation": "portrait",
       "icons": [
-        { "src": icon192, "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
-        { "src": icon512, "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+        { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+        { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+        { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+        { "src": icon512, "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
       ]
     };
     
-    // Forziamo il browser a non tenere MAI in cache questo file per non mischiare gli utenti
+    // Forziamo il browser a non tenere MAI in cache questo file per evitare mix di utenti
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');

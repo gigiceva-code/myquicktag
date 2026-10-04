@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Benvenuto in MyQuickTag</title>
-    
+     <script src="migrate-storage.js"></script>
+     <script src="/session.js"></script>
     <script>
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const utenteUrl = urlParams.get('u');
-            const utenteLocal = localStorage.getItem('myquicktag_pending');
+            const utenteLocal = localStorage.getItem('mqt_pending');
             
             // Priorità all'URL, altrimenti usa il localStorage, altrimenti 'user'
             let utenteTrovato = utenteUrl || utenteLocal || 'user';
@@ -22,12 +23,13 @@
             const manifestLink = document.createElement('link');
             manifestLink.id = "dynamic-manifest";
             manifestLink.rel = "manifest";
+            manifestLink.crossOrigin = "use-credentials"; // serve sui Preview Vercel protetti da login
             manifestLink.href = `/api/manifest?u=${utenteTrovato}`;
 
             const iconLink = document.createElement('link');
             iconLink.id = "dynamic-icon";
             iconLink.rel = "apple-touch-icon";
-            iconLink.href = `/api/generate-icon?u=${utenteTrovato}`;
+            iconLink.href = "/icons/apple-touch-icon.png"; // PNG: iPhone non accetta SVG
 
             // Li infiliamo nella testa della pagina prima che Chrome si muova
             document.head.appendChild(manifestLink);
@@ -138,9 +140,10 @@
         }
 
         // Se l'utente ha già installato l'app con successo, portalo direttamente al profilo
-        window.addEventListener('appinstalled', () => {
+               window.addEventListener('appinstalled', () => {
             deferredPrompt = null;
             window.location.href = `/tag.html?u=${nomeUtenteGlobale}`;
         });
     </script>
-</head>
+</body>
+</html>

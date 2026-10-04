@@ -1,9 +1,14 @@
+import { trovaTag, aggiornaTag } from '../lib/db.js';
 export default async function handler(req, res) {
   // Accetta solo richieste POST
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
 
   const { u } = req.query;
   if (!u) return res.status(400).json({ error: "Utente mancante" });
+
+  // --- FIX SICUREZZA: Protezione da iniezioni ---
+  // Filtriamo la variabile 'u' per accettare solo lettere, numeri, trattini e underscore.
+  const safeUsername = u.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
 
   try {
     // ====================================================
@@ -28,22 +33,15 @@ export default async function handler(req, res) {
     const locationKey = city !== 'Sconosciuta' ? `${city}, ${country}` : 'Sconosciuta';
 
     // ====================================================
-    // 2. RECUPERA I DATI ATTUALI DA AIRTABLE
+    // 2. RECUPERA I DATI ATTUALI DAL DATABASE
     // ====================================================
-    const formula = `{username_system}='${u}'`;
-    // Ora chiediamo ad Airtable sia le 'views' che gli 'analytics_data'
-    const searchUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}&fields%5B%5D=views&fields%5B%5D=analytics_data`;
-    
-    const response = await fetch(searchUrl, {
-      headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}` }
-    });
-    const data = await response.json();
+    // Leggiamo solo 'views' e 'analytics_data'
+    const record = await trovaTag(safeUsername, ['views', 'analytics_data']);
 
-    if (!data.records || data.records.length === 0) {
+    if (!record) {
         return res.status(404).json({ error: "Utente non trovato" });
     }
 
-    const record = data.records[0];
     const recordId = record.id;
     const currentViews = record.fields.views || 0;
     
@@ -71,36 +69,28 @@ export default async function handler(req, res) {
         analyticsData.os[os] = 1;
     }
 
-    // Aggiungi 1 alla città corretta
-    if (analyticsData.geo[locationKey]) {
+     // Aggiungi 1 alla città corretta, con limite di dimensione (top 15 città)
+    const MAX_CITIES = 15;
+    const existingKeys = Object.keys(analyticsData.geo).filter(k => k !== 'Altre');
+
+    if (analyticsData.geo[locationKey] !== undefined) {
+        // Città già tracciata: incrementa normalmente
         analyticsData.geo[locationKey]++;
-    } else {
+    } else if (existingKeys.length < MAX_CITIES) {
+        // Non c'è ancora, ma c'è spazio: la aggiungiamo come nuova voce
         analyticsData.geo[locationKey] = 1;
-    }
-
-    // ====================================================
-    // 4. SALVA IL PACCHETTO COMPRESSO SU AIRTABLE
-    // ====================================================
-    const update = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_ID}/${recordId}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        fields: { 
-            views: currentViews + 1,
-            analytics_data: JSON.stringify(analyticsData) // Impacchettiamo tutto in una sola cella
-        }
-      })
-    });
-
-    if (update.ok) {
-        return res.status(200).json({ success: true });
     } else {
-        const err = await update.json();
-        return res.status(500).json({ error: "Errore aggiornamento Airtable", details: err });
+        // Non c'è spazio: confluisce nel bucket generico
+        analyticsData.geo['Altre'] = (analyticsData.geo['Altre'] || 0) + 1;
     }
+    // ====================================================
+    // 4. SALVA IL PACCHETTO COMPRESSO NEL DATABASE
+    // ====================================================
+    await aggiornaTag(recordId, {
+        views: currentViews + 1,
+        analytics_data: JSON.stringify(analyticsData) // Impacchettiamo tutto in una sola cella
+    });
+    return res.status(200).json({ success: true });
 
   } catch (e) {
     console.error("CRASH TRACK-VIEW:", e);

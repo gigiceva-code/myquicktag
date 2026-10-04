@@ -12,7 +12,5 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-self.addEventListener('fetch', (event) => {
-  // Lascia passare tutto senza intercettare nulla
-  return;
-});
+// Nessun gestore 'fetch': il sito va sempre in rete. Un gestore vuoto rallenta solo le
+// navigazioni (avviso di Chrome) e non serve più per rendere l'app installabile.

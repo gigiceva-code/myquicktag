@@ -28,8 +28,9 @@
     <meta name="twitter:description" content="Tutto il tuo ecosistema digitale in un singolo tocco. Verifica la disponibilità e prenota ora il tuo @nome.">
     <meta name="twitter:image" content="https://myquicktag.it/assets/og-image.jpg">
 
-    <link id="dynamic-manifest" rel="manifest" href="/api/manifest?u=user">
-    <link id="dynamic-icon" rel="apple-touch-icon" href="/api/generate-icon?u=user">
+    <!-- La home non è installabile come app: ogni app è la tag di un utente (vedi tag.html) -->
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
@@ -358,6 +359,8 @@
             </div>
 
             <!-- JAVASCRIPT SWITCHER INFALLIBILE -->
+            <script src="migrate-storage.js"></script>
+            <script src="/session.js"></script>
             <script>
                 function switchTarget(targetId, clickedBtn, dotNumber) {
                     // 1. Reset stile di tutti i bottoni
@@ -690,6 +693,15 @@ function scrollToSection(id) {
 function openLogin() { apriOverlay('login-overlay'); }
 function closeLogin() { chiudiOverlay('login-overlay'); }
 
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
 async function checkAccess() {
     const tagInput = document.getElementById('login-tag').value;
     const passwordInput = document.getElementById('login-password').value;
@@ -708,10 +720,11 @@ async function checkAccess() {
     btn.style.opacity = "0.7";
 
     try {
+        const pwdHashata = await hashPassword(passwordInput);
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: formattedTag, pwd: passwordInput })
+            body: JSON.stringify({ tag: formattedTag, pwd: pwdHashata })
         });
         const data = await response.json();
 
@@ -727,7 +740,7 @@ async function checkAccess() {
             
             let chiaviSalvate = [];
             try {
-                chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+                chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
             } catch(e) {
                 chiaviSalvate = [];
             }
@@ -736,12 +749,22 @@ async function checkAccess() {
                 chiaviSalvate.push(nuovoUtente);
             }
             
-            localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviSalvate));
-            localStorage.setItem('loggedUser', nuovoUtente);
-            // ==========================================
+                               localStorage.setItem('mqt_keys', JSON.stringify(chiaviSalvate));
+            localStorage.setItem('mqt_logged_user', nuovoUtente);
+            if (data.sessionToken) {
+                let tokenSalvati = {};
+                try {
+                    tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+                } catch(e) {
+                    tokenSalvati = {};
+                }
+                tokenSalvati[nuovoUtente] = data.sessionToken;
+                localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
+            }
+            // ========================================== 
             
             // L'utente è ufficiale, puliamo eventuali bozze in sospeso
-            localStorage.removeItem('myquicktag_reserved'); 
+            localStorage.removeItem('mqt_reserved'); 
             
             setTimeout(() => {
                 window.location.href = `profile.html?u=${data.username}`;
@@ -827,7 +850,7 @@ async function vaiAllaVerifica() {
    // ==========================================
     // SE PASSA I CONTROLLI, PROCEDIAMO NORMALMENTE
     // ==========================================
-    const reservedDataStr = localStorage.getItem('myquicktag_reserved');
+    const reservedDataStr = localStorage.getItem('mqt_reserved');
     if (reservedDataStr) {
         try {
             const reservedData = JSON.parse(reservedDataStr);
@@ -845,14 +868,32 @@ async function vaiAllaVerifica() {
     // ==========================================
     // 3. ZERO-LATENCY BYPASS (Controllo Proprietario)
     // ==========================================
-    const utenteLoggato = localStorage.getItem('loggedUser');
+    const utenteLoggato = localStorage.getItem('mqt_logged_user');
     let chiaviSalvate = [];
     try {
-        chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]');
+        chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
     } catch(e) {}
 
-    if (utenteLoggato === rawTag || chiaviSalvate.includes(rawTag)) {
-        // L'utente possiede già la tag. Bypassiamo Airtable e lo facciamo entrare all'istante.
+    let eraSuQuestoDispositivo = utenteLoggato === rawTag || chiaviSalvate.includes(rawTag);
+    if (eraSuQuestoDispositivo && !mqtSessione.valida(rawTag)) {
+        // La tag era su questo dispositivo ma la sessione è scaduta
+        mqtSessione.rimuovi(rawTag);
+        eraSuQuestoDispositivo = false;
+        try {
+            const r = await fetch(`/api/get-profile?u=${encodeURIComponent(rawTag)}`);
+            const d = await r.json();
+            if (d && d.fields && d.fields.has_password) {
+                // Account attivo: login con la tag già compilata
+                document.getElementById('login-tag').value = '@' + rawTag;
+                apriOverlay('login-overlay');
+                return;
+            }
+        } catch (e) {}
+        // Prenotazione scaduta o tag inesistente: prosegue con la verifica normale
+    }
+
+    if (eraSuQuestoDispositivo) {
+        // L'utente possiede già la tag (sessione valida). Bypassiamo Airtable e lo facciamo entrare all'istante.
         btn.innerHTML = "BENTORNATO...";
         btn.style.background = "#ffffff";
         btn.style.color = "#000000";
@@ -878,8 +919,19 @@ async function vaiAllaVerifica() {
         const data = await response.json();
 
         if (data.success) {
-            const scadenza = new Date().getTime() + 86400000; // 24 ore esatte di tempo
-            localStorage.setItem('myquicktag_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
+            // Scadenza calcolata sul createdTime restituito dal server (non sull'orologio del client,
+            // per evitare disallineamenti se il dispositivo ha l'ora sbagliata)
+            const baseCreatedTime = data.createdTime ? new Date(data.createdTime).getTime() : new Date().getTime();
+            const scadenza = baseCreatedTime + 86400000; // 24 ore esatte dalla creazione reale del record
+            localStorage.setItem('mqt_reserved', JSON.stringify({ tag: rawTag, expire: scadenza }));
+
+            // Ricevuta della prenotazione: serve per salvare la tag e scegliere la password al checkout
+            if (data.sessionToken) {
+                let tokenSalvati = {};
+                try { tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}'); } catch(e) {}
+                tokenSalvati[data.username || rawTag] = data.sessionToken;
+                localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
+            }
 
             document.getElementById('welcome-tag-name').innerText = formattedTag; 
             apriOverlay('welcome-overlay');
@@ -904,15 +956,15 @@ function procediAllaRegistrazione() {
     // =========================================================
     // IL PEZZO MANCANTE: CONSEGNA DELLE CHIAVI DI PROPRIETÀ
     // =========================================================
-    localStorage.setItem('loggedUser', rawTag);
+    localStorage.setItem('mqt_logged_user', rawTag);
     let chiaviSalvate = [];
     try { 
-        chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]'); 
+        chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]'); 
     } catch(e) {}
     
     if (!chiaviSalvate.includes(rawTag)) {
         chiaviSalvate.push(rawTag);
-        localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviSalvate));
+        localStorage.setItem('mqt_keys', JSON.stringify(chiaviSalvate));
     }
     // =========================================================
 
@@ -991,16 +1043,27 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 7. REVEAL ENGINE E MEMORIA SCROLL
-window.addEventListener('beforeunload', () => localStorage.setItem('scrollPos', window.scrollY));
+window.addEventListener('beforeunload', () => localStorage.setItem('mqt_scroll_pos', window.scrollY));
 
 function controllaMemoriaProprieta() {
-    const reservedDataStr = localStorage.getItem('myquicktag_reserved');
+    const reservedDataStr = localStorage.getItem('mqt_reserved');
     if (reservedDataStr) {
         try {
             const reservedData = JSON.parse(reservedDataStr);
             const now = new Date().getTime();
             
             if (now < reservedData.expire) {
+                // Se nel frattempo la tag è stata attivata (checkout completato) il promemoria non serve più
+                fetch(`/api/get-profile?u=${encodeURIComponent(reservedData.tag)}`)
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d && d.fields && (d.fields.stato || '').toLowerCase().trim() === 'attivo') {
+                            localStorage.removeItem('mqt_reserved');
+                            location.reload();
+                        }
+                    })
+                    .catch(() => {});
+
                 const searchWidget = document.getElementById('search-widget');
                 if (searchWidget) {
                     searchWidget.innerHTML = `
@@ -1018,25 +1081,34 @@ function controllaMemoriaProprieta() {
                                 RIPRENDI E COMPLETA
                             </button>
                             
-                            <button onclick="localStorage.removeItem('myquicktag_reserved'); location.reload();" style="width: 100%; padding: 12px 0; background: transparent; color: #888888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline; letter-spacing: 0.5px;">
+                            <button onclick="localStorage.removeItem('mqt_reserved'); location.reload();" style="width: 100%; padding: 12px 0; background: transparent; color: #888888; border: none; font-size: 11px; margin-top: 5px; cursor: pointer; text-decoration: underline; letter-spacing: 0.5px;">
                                 Annulla e cerca un nuovo nome
                             </button>
                         </div>
                     `;
                 }
             } else {
-                localStorage.removeItem('myquicktag_reserved');
+                localStorage.removeItem('mqt_reserved');
             }
         } catch(e) {
-            localStorage.removeItem('myquicktag_reserved');
+            localStorage.removeItem('mqt_reserved');
         }
     }
 }
     function initMyquicktag() {
-    const scrollPos = localStorage.getItem('scrollPos');
+    const scrollPos = localStorage.getItem('mqt_scroll_pos');
     if (scrollPos) setTimeout(() => { window.scrollTo(0, parseInt(scrollPos)); }, 50);
 
     controllaMemoriaProprieta();
+
+    // Arrivo da "Sessione scaduta" (session.js): apre il login con la tag già compilata
+    const tagDaRiloggare = new URLSearchParams(window.location.search).get('login');
+    if (tagDaRiloggare) {
+        const campoTag = document.getElementById('login-tag');
+        if (campoTag) campoTag.value = '@' + tagDaRiloggare.replace(/[^a-zA-Z0-9_-]/g, '');
+        history.replaceState(null, '', window.location.pathname);
+        apriOverlay('login-overlay');
+    }
 
     const tagInput = document.getElementById('tag-input');
     if (tagInput) {

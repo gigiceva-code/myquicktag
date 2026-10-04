@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link id="dynamic-manifest" rel="manifest" href="">
+    <link id="dynamic-manifest" rel="manifest" crossorigin="use-credentials" href="">
     <link id="dynamic-icon" rel="icon" href="">
 
 <style>
@@ -315,6 +315,7 @@
     }
 
     .notif-icon.draft { color: #ffab00; background: rgba(255, 171, 0, 0.1); }
+    .notif-icon.lead { color: #50C878; background: rgba(80, 200, 120, 0.1); }
 
     .notif-content { display: flex; flex-direction: column; gap: 3px; }
     .notif-content strong { color: #ffffff; font-size: 0.85rem; font-weight: 500; }
@@ -381,6 +382,14 @@
                             <div class="notif-content">
                                 <strong>Hai una bozza in sospeso</strong>
                                 <span>Tocca per completare la pubblicazione</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="notif-item" id="notif-lead-item" style="display: none;">
+                            <div class="notif-icon lead"><i class="fas fa-inbox"></i></div>
+                            <div class="notif-content">
+                                <strong id="notif-lead-titolo">Nuovi contatti</strong>
+                                <span>Tocca per vederli e richiamarli</span>
                             </div>
                         </a>
 
@@ -457,6 +466,16 @@
             <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
         </a>
         
+        <a href="#" id="link-contatti" class="action-btn btn-main" style="margin-bottom: 0; display: none;">
+            <i class="fas fa-inbox btn-icon"></i>
+            <div class="btn-text-box">
+                <span>I miei contatti</span>
+                <small id="contatti-sottotitolo">Chi ti ha lasciato un recapito dal vasetto</small>
+            </div>
+            <span id="contatti-badge" style="display: none; background: var(--accent-smeraldo); color: #000; font-size: 0.7rem; font-weight: 700; border-radius: 20px; padding: 3px 9px; margin-right: 8px; flex-grow: 0;"></span>
+            <i class="fas fa-chevron-right" style="color: var(--accent-smeraldo); font-size: 0.85rem; opacity: 0.8;"></i>
+        </a>
+
         <a href="#" id="link-pocket" class="action-btn btn-main" style="margin-bottom: 0;">
             <i class="far fa-address-book btn-icon"></i>
             <div class="btn-text-box">
@@ -501,7 +520,8 @@
         <a href="#" id="btn-upsell-checkout" style="display: block; width: 100%; background: #ffffff; color: #000000; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.8px; text-align: center; transition: all 0.2s ease;">Fai l'Upgrade</a>
     </div>
 </div>
-       
+  <script src="migrate-storage.js"></script>
+  <script src="/session.js"></script>     
 <script>
 // ====================================================
 // 🟩 BLOCCO 1 — FUNZIONI DI SUPPORTO & LUXURY NAVIGATE
@@ -562,7 +582,7 @@ function luxuryNavigate(event, url) {
 
 function determinaModalitaAnteprima(record, nomeMinuto) {
     const stato = (record.stato || "").toLowerCase().trim();
-    const haPassword = record.password && record.password.trim() !== "";
+    const haPassword = record.has_password === true;
     const haBozza = record.draft_json && record.draft_json.trim() !== "";
     
     const linkView = document.getElementById("link-view");
@@ -577,9 +597,9 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     }
 
     if (!record.draft_json || record.draft_json.trim() === "") {
-        localStorage.removeItem("haVistoAnteprima");
+        localStorage.removeItem("mqt_ha_visto_anteprima");
     }
-    localStorage.removeItem("haVistoAnteprima"); 
+    localStorage.removeItem("mqt_ha_visto_anteprima"); 
 
     // --- LOGICA CAMPANELLA ---
     const bellIcon = document.getElementById('btn-notifications');
@@ -590,7 +610,7 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     if (notifDraftItem) notifDraftItem.style.display = 'none';
     if (notifEmptyState) notifEmptyState.style.display = 'flex';
 
-    if ((haBozza && localStorage.getItem("loggedUser") === nomeMinuto) || (!haPassword && haBozza)) {
+    if ((haBozza && localStorage.getItem("mqt_logged_user") === nomeMinuto) || (!haPassword && haBozza)) {
         if (bellIcon) bellIcon.classList.add('has-notifications');
         if (notifDraftItem) {
             notifDraftItem.style.display = 'flex';
@@ -609,15 +629,15 @@ function determinaModalitaAnteprima(record, nomeMinuto) {
     // --- ASSEGNAZIONE DEL LINK ANTEPRIMA ---
     const claimLuxury = "Il tuo nome nel mondo.";
 
-    if (localStorage.getItem("justPublished")) {
-        localStorage.removeItem("justPublished");
+    if (localStorage.getItem("mqt_just_published")) {
+        localStorage.removeItem("mqt_just_published");
         aggiornaCard("Digital Identity", claimLuxury, "Online");
         aggiornaBadge("online");
         if (linkView) linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
         return;
     }
 
-    if (localStorage.getItem("loggedUser") !== nomeMinuto) {
+    if (localStorage.getItem("mqt_logged_user") !== nomeMinuto) {
         if (linkView) linkView.dataset.url = `tag.html?u=${nomeMinuto}&mode=public`;
         aggiornaCard("Digital Identity", claimLuxury, "Online");
         aggiornaBadge("online");
@@ -655,10 +675,15 @@ async function caricaDatiDashboard(nomeMinuto) {
     if (!nomeMinuto) return;
 
     try {
-        const response = await fetch(`/api/get-profile?u=${nomeMinuto}`);
+        const response = await fetch(`/api/get-profile?u=${nomeMinuto}&token=${encodeURIComponent(mqtSessione.token(nomeMinuto))}`);
         const data = await response.json();
 
         if (data && data.success) {
+            // Account attivo ma sessione scaduta su questo dispositivo: login prima di entrare
+            if (data.fields.has_password && !mqtSessione.valida(nomeMinuto)) {
+                mqtSessione.scaduta(nomeMinuto);
+                return;
+            }
             if (data.fields.pocket_cloud && data.fields.pocket_cloud.trim() !== "") {
                 try {
                     const pocketDalCloud = JSON.parse(data.fields.pocket_cloud);
@@ -668,6 +693,7 @@ async function caricaDatiDashboard(nomeMinuto) {
                 }
             }
             
+            data.fields.abbonamento = data.abbonamento; // fase della tag (attiva / grazia / scaduta)
             determinaModalitaAnteprima(data.fields, nomeMinuto);
             if (typeof aggiornaContatoriDashboard === "function") aggiornaContatoriDashboard(data.fields);
             
@@ -675,11 +701,7 @@ async function caricaDatiDashboard(nomeMinuto) {
             // La tag non esiste (più) sul server: probabilmente una prenotazione scaduta
             // e riciclata, o un account rimosso. Il "bypass zero-latenza" in index.html
             // si basa sulla cache locale, quindi va ripulita per non restare bloccati qui.
-            let chiaviSalvate = [];
-            try { chiaviSalvate = JSON.parse(localStorage.getItem('myquicktag_keys') || '[]'); } catch(e) {}
-            const chiaviAggiornate = chiaviSalvate.filter(k => k !== nomeMinuto);
-            localStorage.setItem('myquicktag_keys', JSON.stringify(chiaviAggiornate));
-            if (localStorage.getItem('loggedUser') === nomeMinuto) localStorage.removeItem('loggedUser');
+            mqtSessione.rimuovi(nomeMinuto);
 
             aggiornaCard("Questa Tag non è più disponibile", "Ti reindirizziamo alla home\u2026", "");
             aggiornaBadge("offline");
@@ -706,38 +728,82 @@ function aggiornaContatoriDashboard(record) {
     const btnEdit = document.getElementById("link-edit");
     const btnRinnova = document.getElementById("btn-rinnova");
 
-    let giorniRimanenti = 90; 
-    if (record.data_scadenza) {
-        const dataScadenza = new Date(record.data_scadenza);
-        const oggi = new Date();
-        const diffTempo = dataScadenza - oggi;
-        giorniRimanenti = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+    // DURATA TAG: 90 giorni + 14 di grazia, fase calcolata dal server (lib/abbonamento.js)
+    const abb = record.abbonamento;
+    const utenteCorrente = record.username_system || localStorage.getItem("mqt_logged_user");
+    const paywallText = document.getElementById("paywall-text");
+    const formattaData = d => new Date(d + 'T12:00:00Z').toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    if (btnRinnova) {
+        btnRinnova.href = `checkout.html?u=${utenteCorrente}&rinnovo=1`;
+        btnRinnova.innerText = "Rinnova gratis per 90 giorni";
     }
-    
-    if (trialEl) {
-        if (giorniRimanenti > 0) {
-            trialEl.innerText = giorniRimanenti + " gg";
-            trialEl.style.color = (giorniRimanenti <= 7) ? "#ffab00" : "#ffffff";
+
+    if (abb && trialEl) {
+        if (abb.fase === 'attiva') {
+            trialEl.innerText = abb.giorni_alla_scadenza + " gg";
+            trialEl.style.color = (abb.giorni_alla_scadenza <= 14) ? "#ffab00" : "#ffffff";
+        } else if (abb.fase === 'grazia') {
+            trialEl.innerText = "Scaduta";
+            trialEl.style.color = "#ffab00";
         } else {
-            trialEl.innerText = "Scaduto";
-            trialEl.style.color = "#ff4444"; 
+            trialEl.innerText = "Disattivata";
+            trialEl.style.color = "#ff4444";
         }
     }
 
-    if (giorniRimanenti <= 0) {
+    // Avviso di rinnovo: ultimi 14 giorni del piano e periodo di grazia (tag ancora online)
+    if (abb && (abb.fase === 'grazia' || (abb.fase === 'attiva' && abb.giorni_alla_scadenza <= 14))) {
         if (paywallBanner) paywallBanner.style.display = "block";
+        if (paywallText) {
+            paywallText.innerText = abb.fase === 'grazia'
+                ? `Il piano è scaduto il ${formattaData(abb.data_scadenza)}. La tua tag resta online ancora ${abb.giorni_alla_disattivazione} giorni: rinnova per non perderla.`
+                : `Il tuo piano scade il ${formattaData(abb.data_scadenza)} (tra ${abb.giorni_alla_scadenza} giorni). Rinnova ora: i giorni rimasti non vanno persi.`;
+        }
+    }
+
+    // Tag disattivata (finita anche la grazia): non è più visibile e non si può modificare
+    if (abb && abb.fase === 'scaduta') {
+        if (paywallBanner) paywallBanner.style.display = "block";
+        if (paywallText) paywallText.innerText = "La tua tag è disattivata: non è più visibile al pubblico. Rinnova per riattivarla subito con tutti i tuoi contenuti.";
         if (btnEdit) {
             btnEdit.style.opacity = "0.4"; 
             btnEdit.style.pointerEvents = "none"; 
             btnEdit.onclick = function(e) {
                 e.preventDefault();
-                alert("Piano scaduto. Rinnova per modificare la Tag.");
+                alert("Tag disattivata. Rinnova per modificarla.");
             };
         }
-        if (btnRinnova) {
-            const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
-            btnRinnova.href = `checkout.html?u=${utenteCorrente}`;
+    }
+
+    // CONTATTI RACCOLTI DAL VASETTO: pulsante con il numero dei nuovi + avviso nel campanello
+    let leads = [];
+    try { leads = JSON.parse(record.lead_capture_leads || '[]'); } catch (e) {}
+    if (!Array.isArray(leads)) leads = [];
+    const nuoviLead = leads.filter(l => l && l.visto === false).length;
+    const linkContatti = document.getElementById("link-contatti");
+    const urlContatti = `contatti.html?u=${encodeURIComponent(utenteCorrente)}`;
+    if (linkContatti && (record.lead_capture_attivo === 'true' || leads.length > 0)) {
+        linkContatti.style.display = "flex";
+        linkContatti.onclick = function(e) { luxuryNavigate(e, urlContatti); };
+        const badgeContatti = document.getElementById("contatti-badge");
+        if (badgeContatti) {
+            badgeContatti.textContent = nuoviLead === 1 ? "1 nuovo" : `${nuoviLead} nuovi`;
+            badgeContatti.style.display = nuoviLead > 0 ? "inline-block" : "none";
         }
+        const sottotitoloContatti = document.getElementById("contatti-sottotitolo");
+        if (sottotitoloContatti && leads.length > 0) {
+            sottotitoloContatti.textContent = `${leads.length} ${leads.length === 1 ? 'contatto raccolto' : 'contatti raccolti'} dal vasetto`;
+        }
+    }
+    const notifLead = document.getElementById("notif-lead-item");
+    if (notifLead && nuoviLead > 0) {
+        document.getElementById("notif-lead-titolo").textContent = nuoviLead === 1 ? "Hai 1 nuovo contatto" : `Hai ${nuoviLead} nuovi contatti`;
+        notifLead.style.display = "flex";
+        notifLead.onclick = function(e) { luxuryNavigate(e, urlContatti); };
+        const bell = document.getElementById("btn-notifications");
+        if (bell) bell.classList.add("has-notifications");
+        const vuoto = document.getElementById("notif-empty-state");
+        if (vuoto) vuoto.style.display = "none";
     }
 
     // LOGICA ANALYTICS
@@ -745,7 +811,7 @@ function aggiornaContatoriDashboard(record) {
     if (statScansioni) {
         statScansioni.onclick = function() {
             const userPlan = String(record.plan || "base").toLowerCase().trim();
-            const utenteCorrente = record.username_system || localStorage.getItem("loggedUser");
+            const utenteCorrente = record.username_system || localStorage.getItem("mqt_logged_user");
 
             if (userPlan.includes("gold") || userPlan.includes("premium")) {
                 window.location.href = `analytics.html?u=${utenteCorrente}`;
@@ -766,7 +832,7 @@ function aggiornaContatoriDashboard(record) {
 
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
-    let nomeMinuto = urlParams.get("u") || urlParams.get("user") || localStorage.getItem("loggedUser");
+    let nomeMinuto = urlParams.get("u") || urlParams.get("user") || localStorage.getItem("mqt_logged_user");
 
     if (!nomeMinuto) return;
     nomeMinuto = nomeMinuto.trim();

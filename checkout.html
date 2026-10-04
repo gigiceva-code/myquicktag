@@ -338,28 +338,31 @@
                 </div>
             </div>
 
-            <button class="action-button" onclick="vaiAllaTag()">
+            <button class="action-button" id="btn-vai-alla-tag" onclick="vaiAllaTag()">
                 Accedi alla tua PWA
             </button>
         </div>
 
     </div>
-
+ <script src="migrate-storage.js"></script>
+ <script src="/session.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         let usernameScelto = urlParams.get("u") || "";
         let targetUserClean = usernameScelto.replace('@', '').trim().toLowerCase();
+        // Rinnovo (dalla dashboard): stessa pagina, ma per una tag già attiva del proprietario
+        const modalitaRinnovo = urlParams.get("rinnovo") === "1";
 
         document.addEventListener("DOMContentLoaded", function() {
             if (!targetUserClean) {
                 document.getElementById("loading-screen").innerHTML = "<p style='color:red;'>Errore: Nessun profilo selezionato per il checkout.</p>";
                 return;
             }
-            verificalndirizzoEInizializza();
+                       verificaIndirizzoEInizializza();
         });
 
         // 1. CHIAMATA fetch AL DATABASE PER ACCERTARSI DELLO STATO DELL'UTENTE
-        async function verificalndirizzoEInizializza() {
+        async function verificaIndirizzoEInizializza() {
             try {
                 const response = await fetch(`/api/get-profile?u=${targetUserClean}`);
                 const data = await response.json();
@@ -369,9 +372,27 @@
                     const stato = (record.stato || "").toLowerCase().trim();
                     const usernameDisplay = record.username_display || targetUserClean.toUpperCase();
 
-                    // Se il profilo è già attivo, lo mandiamo via a protezione del sistema
+                    // RINNOVO: tag attiva + proprietario con sessione valida
+                    if (stato === "attivo" && modalitaRinnovo) {
+                        if (!mqtSessione.valida(targetUserClean)) { mqtSessione.scaduta(targetUserClean); return; }
+                        const nomeRinnovo = usernameDisplay.replace('@', '');
+                        document.querySelector("#step-payment .main-title").innerText = "Rinnova la tua tag";
+                        document.getElementById("display-username").innerText = `Rinnovo @${nomeRinnovo}`;
+                        document.getElementById("receipt-username").innerText = `@${nomeRinnovo}`;
+                        document.getElementById("display-price").innerText = "Gratis";
+                        document.querySelector('button[onclick="eseguiTransazione()"]').innerText = "Rinnova per 90 giorni";
+                        document.getElementById("loading-screen").style.display = "none";
+                        document.getElementById("step-payment").style.display = "block";
+                        return;
+                    }
+
+                    // Tag già attiva (es. "Fai l'Upgrade" dalla dashboard): il cambio di piano arriverà
+                    // con i pagamenti veri (vedi PRE-LANCIO.md). Per ora lo diciamo, invece di un 404.
                     if (stato === "attivo") {
-                        window.location.href = `/${targetUserClean}`;
+                        document.getElementById("loading-screen").innerHTML = `
+                            <h2 class="main-title">Upgrade in arrivo</h2>
+                            <p class="subtitle">I piani Premium e Gold saranno disponibili con l'apertura dei pagamenti.</p>
+                            <a href="/profile.html?u=${targetUserClean}" class="action-button" style="text-decoration:none;">Torna alla dashboard</a>`;
                         return;
                     }
 
@@ -397,21 +418,25 @@
             if (!targetUserClean) return false;
 
             try {
-                // Interroga il database per sapere l'età reale della Tag
+                // Interroga il database per sapere se la prenotazione e' ancora valida.
+                // FIX: prima si leggeva data.createdTime, che get-profile.js non ha mai restituito a
+                // livello radice; il fallback su "adesso" azzerava sempre l'eta' calcolata e il controllo
+                // non scattava mai. Ora si usa reservation_expires_at/server_now, calcolati dal server
+                // stesso in get-profile.js per i record "in attesa".
                 const res = await fetch(`/api/get-profile?u=${targetUserClean}`);
                 const data = await res.json();
-                
-                // Cerca la data di creazione nel database
-                const baseTime = data.createdTime || (data.record && data.record.createdTime) || new Date().toISOString();
-                const createdTime = new Date(baseTime).getTime();
-                const now = new Date().getTime();
-                const ageInMinutes = (now - createdTime) / (1000 * 60);
 
-                // Se è in attesa ed è più vecchia di 24 ore (1440 min)
-                if (data.fields && data.fields.stato === 'in attesa' && ageInMinutes >= 1440) {
+                const statoAttuale = data.fields && data.fields.stato;
+                const prenotazioneScaduta = statoAttuale === 'in attesa'
+                    && data.reservation_expires_at
+                    && data.server_now
+                    && new Date(data.server_now).getTime() >= new Date(data.reservation_expires_at).getTime();
+
+                // Se è in attesa ed è scaduta secondo l'orologio del server
+                if (prenotazioneScaduta) {
                     alert("⚠️ Prenotazione Scaduta\n\nSono trascorse oltre 24 ore dalla riserva iniziale. Questa identità digitale potrebbe essere stata liberata o riassegnata.\n\nVerrai reindirizzato alla Home per verificarne la disponibilità.");
                     
-                    // Pulizia locale e reindirizzamento
+                    // Pulizia locale (chiave dismessa, per compatibilita' con dispositivi non ancora aggiornati) e reindirizzamento
                     localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
                     window.location.href = '/'; 
                     return false; // Blocca il pagamento
@@ -432,6 +457,8 @@
             const testoOriginale = btn ? btn.innerText : "";
             if(btn) { btn.innerText = "VERIFICA IN CORSO..."; btn.disabled = true; }
 
+            if (modalitaRinnovo) { await eseguiRinnovo(btn, testoOriginale); return; }
+
             const puoPagare = await verificaCoperturaPrenotazione();
             
             if (!puoPagare) {
@@ -449,6 +476,35 @@
             // Successo transazione -> Passaggio allo Step 2 (Password)
             document.getElementById("step-payment").style.display = "none";
             document.getElementById("step-password").style.display = "block";
+        }
+
+        // RINNOVO: il server allunga la scadenza di 90 giorni (lib/abbonamento.js)
+        async function eseguiRinnovo(btn, testoOriginale) {
+            try {
+                const response = await fetch('/api/update-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username_system: targetUserClean, rinnova: true, sessionToken: mqtSessione.token(targetUserClean) })
+                });
+                if (response.status === 401) { mqtSessione.scaduta(targetUserClean); return; }
+                const resData = await response.json();
+                if (!resData.success) {
+                    alert(resData.error || "Rinnovo non riuscito. Riprova.");
+                    if (btn) { btn.innerText = testoOriginale; btn.disabled = false; }
+                    return;
+                }
+                if (resData.sessionToken) mqtSessione.salva(targetUserClean, resData.sessionToken);
+                const nuovaScadenza = new Date(resData.abbonamento.data_scadenza + 'T12:00:00Z').toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                document.querySelector("#step-success .main-title").innerText = "Rinnovo completato";
+                document.querySelector("#step-success .subtitle").innerText = `La tua tag è attiva fino al ${nuovaScadenza}.`;
+                document.getElementById("btn-vai-alla-tag").innerText = "Torna alla dashboard";
+                document.getElementById("step-payment").style.display = "none";
+                document.getElementById("step-success").style.display = "block";
+            } catch (e) {
+                console.error("Errore rinnovo:", e);
+                alert("Errore di connessione. Riprova tra poco.");
+                if (btn) { btn.innerText = testoOriginale; btn.disabled = false; }
+            }
         }
 
         // 3. CHIAMATA fetch AL DATABASE PER SALVARE LA PASSWORD ED ATTIVARE IL PROFILO
@@ -469,6 +525,10 @@
                 return;
             }
 
+            // Ricevuta della prenotazione (salvata in index.html): prova che la tag è stata prenotata da questo dispositivo
+            let tokenPrenotazione = '';
+            try { tokenPrenotazione = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}')[targetUserClean] || ''; } catch(e) {}
+
             try {
                 // Utilizziamo la tua API ufficiale per salvare i dati su Airtable
                 const response = await fetch('/api/update-profile', {
@@ -477,15 +537,30 @@
                     body: JSON.stringify({
                         username_system: targetUserClean,
                         password: await hashPassword(passwordSelezionata),
-                        stato: "attivo" // Cambiamo definitivamente lo stato sul database
+                        stato: "attivo", // Cambiamo definitivamente lo stato sul database
+                        sessionToken: tokenPrenotazione
                     })
                 });
                 
                 const resData = await response.json();
                 
-                if (resData.success) {
+                               if (resData.success) {
                     // Pulizia finale del lucchetto della sessione
                     localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
+                    // La tag ora è attiva: la home non deve più mostrare "Riprendi e completa"
+                    localStorage.removeItem('mqt_reserved');
+
+                                     // Salviamo il token di sessione ricevuto dal server
+                    if (resData.sessionToken) {
+                        let tokenSalvati = {};
+                        try {
+                            tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+                        } catch(e) {
+                            tokenSalvati = {};
+                        }
+                        tokenSalvati[targetUserClean] = resData.sessionToken;
+                        localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
+                    }
 
                     // Successo totale -> Mostriamo lo Step 3 di conferma
                     document.getElementById("step-password").style.display = "none";
@@ -502,7 +577,8 @@
      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
         function vaiAllaTag() {
             if (!targetUserClean) return;
-            localStorage.setItem('loggedUser', targetUserClean);
+            if (modalitaRinnovo) { window.location.href = `/profile.html?u=${targetUserClean}`; return; }
+            localStorage.setItem('mqt_logged_user', targetUserClean);
             window.location.href = `/tag.html?u=${targetUserClean}&welcome=1`;
         }   
 </script>

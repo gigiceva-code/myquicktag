@@ -212,7 +212,8 @@
     </section>
 
 </div>
-
+<script src="migrate-storage.js"></script>
+<script src="/session.js"></script>
 <script>
     // --- ANIMAZIONE CONTATORI ---
     function animaContatore(idElemento, valoreFinale) {
@@ -236,7 +237,7 @@
     // --- CARICAMENTO DATI ---
     document.addEventListener("DOMContentLoaded", async () => {
         const urlParams = new URLSearchParams(window.location.search);
-        let usernameCorrente = urlParams.get("u") || localStorage.getItem("loggedUser");
+        let usernameCorrente = urlParams.get("u") || localStorage.getItem("mqt_logged_user");
 
         const btnBack = document.getElementById('btn-back-console');
         if(btnBack) {
@@ -249,7 +250,7 @@
         if (!usernameCorrente) return;
 
         try {
-            const response = await fetch(`/api/get-profile?u=${usernameCorrente}&_cb=${Date.now()}`);
+            const response = await fetch(`/api/get-profile?u=${usernameCorrente}&_cb=${Date.now()}&token=${encodeURIComponent(mqtSessione.token(usernameCorrente))}`);
             const data = await response.json();
 
             if (data.success && data.fields) {
