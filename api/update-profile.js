@@ -3,6 +3,8 @@ import { trovaTag, aggiornaTag } from '../lib/db.js';
 import { pulisciTesto, pulisciJson, pulisciValore } from '../lib/pulizia.js';
 import { proteggiPassword, hashClienteValido } from '../lib/password.js';
 import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito } from '../lib/abbonamento.js';
+import { nomeTag, formaCanonica } from '../lib/nome-canonico.js';
+import { controllaNome } from '../lib/nomi-riservati.js';
 
 // Campi salvati come testo JSON: si puliscono i valori, non la sintassi
 const CAMPI_JSON = ['draft_json', 'modulo_vcf', 'config_canali', 'sedi_json', 'gallery_data', 'pocket_cloud', 'partners_data'];
@@ -39,10 +41,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "username_system mancante" });
   }
 
-  // --- FIX SICUREZZA 1: Protezione da iniezioni ---
-  // Puliamo il nome utente tenendo solo lettere, numeri, trattini e underscore.
-  // Questo distrugge qualsiasi tentativo di inserire codici dannosi come ' OR '1'='1
-  const safeUsername = username_system.replace(/[^a-zA-Z0-9_-]/g, '');
+  // --- FIX SICUREZZA 1: forma canonica del nome (lib/nome-canonico.js), solo lettere e numeri.
+  // Il nome serve solo a trovare la tag: username_system non si può modificare da qui.
+  const safeUsername = nomeTag(username_system);
 
   try {
     // Usiamo il nome utente pulito e sicuro per cercare nel database
@@ -162,13 +163,24 @@ export default async function handler(req, res) {
       if (!attivazione) delete fieldsToSave.stato;
     }
 
-    // Il nome mostrato può solo aggiungere spazi al nome della tag (stessa regola dell'editor)
+    // Il nome mostrato può solo aggiungere spazi/maiuscole al nome della tag: la sua forma canonica deve coincidere
     if (fieldsToSave.username_display !== undefined) {
-      const senzaSpazi = String(fieldsToSave.username_display).replace('@', '').replace(/\s+/g, '').toLowerCase();
-      if (senzaSpazi !== safeUsername.toLowerCase()) delete fieldsToSave.username_display;
+      if (formaCanonica(fieldsToSave.username_display).nome !== safeUsername) delete fieldsToSave.username_display;
     }
 
     if (recordAttuale) {
+      // Attivazione (da "in attesa" ad attiva, cioè prima password): si ricontrollano i nomi protetti.
+      // Se il nome è entrato nella lista dopo la prenotazione, la tag non si attiva (né si cancella):
+      // il titolare può richiederlo tramite il canale dedicato.
+      const staAttivando = statoAttuale === 'in attesa' &&
+        (fieldsToSave.stato === 'attivo' || (fieldsToSave.password && !recordAttuale.fields.password));
+      if (staAttivando) {
+        const protetto = await controllaNome(safeUsername);
+        if (protetto) {
+          return res.status(403).json({ error: protetto.messaggio, codice: protetto.codice, email: protetto.email });
+        }
+      }
+
       // La password qui si imposta SOLO la prima volta (attivazione dal checkout).
       // Per cambiarla serve anche quella attuale: api/change-password.js (pagina Account).
       if (fieldsToSave.password && recordAttuale.fields.password) {

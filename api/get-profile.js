@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { trovaTag, aggiornaTag } from '../lib/db.js';
 import { calcolaAbbonamento, dateAttivazione } from '../lib/abbonamento.js';
+import { nomeTag } from '../lib/nome-canonico.js';
 
 // Stessa logica di verifyToken usata in update-profile.js (HMAC + confronto a tempo costante).
 function verifyToken(username, token) {
@@ -33,8 +34,8 @@ export default async function handler(req, res) {
   if (!u) return res.status(400).json({ success: false, error: "Username mancante" });
 
   // --- FIX SICUREZZA: Protezione da iniezioni ---
-  // Puliamo il nome utente mantenendo solo lettere, numeri, trattini e underscore.
-  const safeUsername = u.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+  // Forma canonica del nome (lib/nome-canonico.js): solo lettere e numeri.
+  const safeUsername = nomeTag(u);
 
   try {
     // Cerchiamo nella colonna "username_system" usando SOLO il nome pulito

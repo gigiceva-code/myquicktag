@@ -25,7 +25,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Variabili: `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (Preview e Production).
   Funzioni server: 11 su 12 consentite dal piano gratuito → prima di aggiungerne, accorparne.
 - **Supabase:** progetto `myquicktag` (id `atlhrkkfovblkhgzfeuo`, Francoforte).
-  Tabelle: `tags` (una riga per tag), `limiti` (contatori anti-abuso), `nomi_riservati` (black/gold list).
+  Tabelle: `tags` (una riga per tag), `limiti` (contatori anti-abuso), `nomi_riservati` (nomi protetti: system/black/gold, con `categoria` e `attivo`).
   Tutte con RLS attivo e nessuna policy: ci accede solo il server con la chiave segreta.
   Struttura e funzioni SQL in `supabase/migrations/` (vanno applicate anche al database, non bastano nel codice).
 - **Airtable:** non più usato (le basi restano solo come archivio).
@@ -36,6 +36,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   = dashboard, `contatti`, `account`, `pocket`, `analytics`, `checkout`, `celebration`).
 - `api/` = funzioni server Vercel; `lib/` = moduli comuni del server:
   `db.js` (Supabase), `pulizia.js` (testi senza codice), `password.js` (scrypt), `limiti.js`,
+  `nome-canonico.js` (forma unica dei @nomi: usarla per ogni nome che arriva dal browser),
   `nomi-riservati.js`, `abbonamento.js` (90 giorni + 14 di grazia).
 - `session.js` (caricato da tutte le pagine): `mqtSessione` (token di sessione del dispositivo) e
   `mqtPulisci` (pulizia dei testi prima di mostrarli).
@@ -45,7 +46,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 56 prove delle funzioni `api/` con un finto database (nessuna installazione).
+- `node test/api.test.mjs` → 108 prove delle funzioni `api/` con un finto database (nessuna installazione).
   Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).
@@ -54,10 +55,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Prossimi passi (in ordine)
 
-1. **Rivedere con il titolare la proposta di nomi riservati** `supabase/proposta-nomi-riservati.csv`
-   (305 nomi: enti e banche contro le truffe, parolacce, marchi, attività, città). Dopo l'ok caricarla
-   nella tabella `nomi_riservati` (si può anche importare il CSV dal Table Editor di Supabase).
-   Attenzione: "apple" oggi è gold, nella proposta è black.
+1. **Ampliare le liste dei nomi protetti** (il sistema è pronto, vedi `PRE-LANCIO.md`): rivedere
+   `supabase/proposta-nomi-riservati.csv` per qualità e falsi positivi e caricarla per categorie.
+   "contiene" solo per pochi casi ad alto rischio. Attenzione: "apple" oggi è gold, nella proposta è black.
 2. **Audit di UI, UX e marketing** sul sito pubblico: percorso del cliente nuovo (home → prenotazione →
    editor → pubblicazione), testi e tono (misto italiano/inglese), home come pagina di vendita, uso da
    telefono e accessibilità. Risultato: elenco di interventi per priorità, con schermate.

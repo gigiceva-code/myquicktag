@@ -1,4 +1,5 @@
 import { trovaTag, aggiornaTag } from '../lib/db.js';
+import { nomeTag } from '../lib/nome-canonico.js';
 export default async function handler(req, res) {
   // Accetta solo richieste POST
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
@@ -7,8 +8,8 @@ export default async function handler(req, res) {
   if (!u) return res.status(400).json({ error: "Utente mancante" });
 
   // --- FIX SICUREZZA: Protezione da iniezioni ---
-  // Filtriamo la variabile 'u' per accettare solo lettere, numeri, trattini e underscore.
-  const safeUsername = u.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+  // Forma canonica del nome (lib/nome-canonico.js): solo lettere e numeri.
+  const safeUsername = nomeTag(u);
 
   try {
     // ====================================================

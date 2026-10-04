@@ -9,11 +9,22 @@ import crypto from 'crypto';
 process.env.SUPABASE_URL='https://fake.supabase.co'; process.env.SUPABASE_SECRET_KEY='sb_secret_x'; process.env.SESSION_SECRET='s';
 const R=new URL('../api/', import.meta.url).href;
 const rows=[]; const calls=[]; const limiti=new Map();
+// Lista protetta di prova (nel database vero: tabella nomi_riservati)
+const nomiProtetti=[
+  {nome:'admin',tipo:'system',regola:'esatto'}, {nome:'myquicktag',tipo:'black',regola:'contiene'},
+  {nome:'fuck',tipo:'black',regola:'contiene'}, {nome:'poliziadistato',tipo:'black',regola:'esatto'},
+  {nome:'ferrari',tipo:'gold',regola:'esatto'}, {nome:'cocacola',tipo:'gold',regola:'esatto'}, {nome:'netflix',tipo:'gold',regola:'esatto'},
+  {nome:'gianluigibuffon',tipo:'gold',regola:'esatto'}, {nome:'cristianoronaldo',tipo:'gold',regola:'esatto'}
+];
 globalThis.fetch=async (url,opt={})=>{
   const u=new URL(url); const m=opt.method||'GET'; calls.push(m+' '+u.search);
   if(opt.headers.apikey!=='sb_secret_x') return new Response('{}',{status:401});
-  if(u.pathname.endsWith('/rpc/controlla_nome')){ const b=JSON.parse(opt.body); const norm=b.p_nome.replace(/[-_.]/g,'').replace(/[013457]/g,c=>({0:'o',1:'i',3:'e',4:'a',5:'s',7:'t'})[c]);
-    const black=['admin'], gold=['ferrari']; const t=black.includes(norm)||norm.includes('myquicktag')?'black':gold.includes(norm)?'gold':null; return new Response(JSON.stringify(t),{status:200}); }
+  if(u.pathname.endsWith('/rpc/controlla_nome')){ // stessa logica di public.controlla_nome (migrazione 20261005000000)
+    const b=JSON.parse(opt.body); const base=b.p_nome.toLowerCase(); const ss=base.replace(/[-_.]/g,'');
+    const forme=[base, ...['i','l'].map(uno=>ss.replace(/[013457]/g,c=>({0:'o',1:uno,3:'e',4:'a',5:'s',7:'t'})[c]))];
+    const trovati=nomiProtetti.filter(n=>n.attivo!==false && (n.regola==='esatto' ? forme.includes(n.nome) : forme.some(f=>f.includes(n.nome))));
+    trovati.sort((x,y)=>['system','black','gold'].indexOf(x.tipo)-['system','black','gold'].indexOf(y.tipo));
+    return new Response(JSON.stringify(trovati[0]?.tipo ?? null),{status:200}); }
   if(u.pathname.endsWith('/rpc/consuma_tentativo')){ const b=JSON.parse(opt.body); const n=(limiti.get(b.p_chiave)||0)+1; limiti.set(b.p_chiave,n); return new Response(JSON.stringify(n<=b.p_max),{status:200}); }
   if(u.pathname.endsWith('/rpc/gestisci_lead')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null',{status:200});
     let l=JSON.parse(r.lead_capture_leads||'[]');
@@ -25,7 +36,7 @@ globalThis.fetch=async (url,opt={})=>{
     const campo=u.pathname.endsWith('aggiungi_lead')?'lead_capture_leads':'analytics_log'; const voce=b.p_lead||b.p_click; const lista=JSON.parse(r[campo]||'[]'); lista.unshift(voce); r[campo]=JSON.stringify(lista); return new Response('true',{status:200}); }
   const f=(r)=>{for(const [k,v] of u.searchParams){ if(v.startsWith('eq.')&&String(r[k])!==decodeURIComponent(v.slice(3)))return false;}return true;};
   if(m==='GET'){ let out=rows.filter(f); const sel=u.searchParams.get('select'); if(sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out),{status:200}); }
-  if(m==='POST'){ const b=JSON.parse(opt.body); if(rows.some(r=>r.username_system===b.username_system)) return new Response('{"code":"23505"}',{status:409}); const r={id:crypto.randomUUID(),created_at:new Date().toISOString().replace('Z','123+00:00'),views:0,password:null,draft_json:null,...b}; rows.push(r); return new Response(JSON.stringify([r]),{status:201}); }
+  if(m==='POST'){ const b=JSON.parse(opt.body); if(!/^[a-z0-9]{1,30}$/.test(b.username_system)) return new Response('{"code":"23514"}',{status:400}); if(rows.some(r=>r.username_system===b.username_system)) return new Response('{"code":"23505"}',{status:409}); const r={id:crypto.randomUUID(),created_at:new Date().toISOString().replace('Z','123+00:00'),views:0,password:null,draft_json:null,...b}; rows.push(r); return new Response(JSON.stringify([r]),{status:201}); }
   if(m==='PATCH'){ const b=JSON.parse(opt.body); rows.filter(f).forEach(r=>Object.assign(r,b)); return new Response(null,{status:204}); }
   if(m==='DELETE'){ for(let i=rows.length-1;i>=0;i--) if(f(rows[i])) rows.splice(i,1); return new Response(null,{status:204}); }
 };
@@ -156,9 +167,9 @@ ok(ultimo.code===429,'prenotazioni: l\'11° nome in un\'ora dallo stesso IP è b
 r=await call('check-and-create.js',{method:'POST',body:{tag:'admin'}});
 ok(r.code===400 && r.body.codice==='riservato' && !rows.some(x=>x.username_system==='admin'),'black list: "admin" non prenotabile via API');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'ferrari'}});
-ok(r.code===400 && r.body.codice==='premium' && !rows.some(x=>x.username_system==='ferrari'),'gold list: "ferrari" non prenotabile via API');
+ok(r.code===400 && r.body.codice==='su_richiesta' && r.body.email==='vip@myquicktag.it' && !rows.some(x=>x.username_system==='ferrari'),'gold list: "ferrari" non prenotabile via API, con l\'indirizzo per la richiesta');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'ab'}});
-ok(r.code===400 && r.body.codice==='premium','nomi sotto i 3 caratteri trattati come premium');
+ok(r.code===400 && r.body.codice==='su_richiesta','nomi sotto i 3 caratteri solo su richiesta');
 const tokProva=(await call('login.js',{method:'POST',body:{tag:'prova',pwd:nuovaHash}})).body.sessionToken;
 r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',stato:'in attesa',sessionToken:tokProva}});
 ok(rows[0].stato==='attivo','una tag attiva non può tornare "in attesa" dal browser');
@@ -173,3 +184,73 @@ r=await call('check-and-create.js',{method:'POST',body:{tag:'myquicktag-assisten
 ok(r.code===400 && r.body.codice==='riservato','"myquicktag-assistenza" bloccato (regola contiene)');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'account'}});
 ok(r.code===400 && r.body.codice==='riservato','nome di una pagina del sito bloccato dal codice');
+
+// ---- Nomi protetti: forma canonica, varianti, unicità, attivazione ----
+const { formaCanonica, nomeTag } = await import(new URL('../lib/nome-canonico.js', import.meta.url).href);
+ok(['Cristiano Ronaldo','cristiano-ronaldo','cristiáno_ronaldo','CRISTIANORONALDO','@Cristiano.Ronaldo'].every(v=>formaCanonica(v).nome==='cristianoronaldo'),'forma canonica: maiuscole, spazi, trattini, underscore, punti e accenti → "cristianoronaldo"');
+ok(formaCanonica('Cristiáno').nome==='cristiano','accento: "Cristiáno" → "cristiano"');
+ok(formaCanonica('mario1').nome==='mario1' && formaCanonica('marioi').nome==='marioi','"mario1" e "marioi" restano nomi diversi (niente leetspeak per l\'unicità)');
+ok(formaCanonica('mario!').errore && formaCanonica('mario🔥').errore && formaCanonica('a'.repeat(31)).errore && formaCanonica('ß').errore,'simboli, emoji, oltre 30 caratteri: rifiutati (non cancellati in silenzio)');
+ok(nomeTag('@Mario-') === 'mario','ricerca di una tag esistente con la stessa forma canonica');
+r=await call('check-and-create.js',{method:'POST',body:{tag:'mario!'}});
+ok(r.code===400 && r.body.codice==='non_valido' && !rows.some(x=>x.username_system.startsWith('mario')),'API: nome con simboli rifiutato, nessuna tag creata');
+r=await call('check-and-create.js',{method:'POST',body:{tag:'Mario'}});
+ok(r.code===200 && r.body.username==='mario','API: "Mario" prenotato come "mario"');
+for (const v of ['mario','@MARIO','mario-','mario_','ma.rio']) {
+  r=await call('check-and-create.js',{method:'POST',body:{tag:v}});
+  ok(r.code===400 && rows.filter(x=>x.username_system==='mario').length===1,`unicità: "${v}" non diventa una seconda tag`);
+}
+r=await call('check-and-create.js',{method:'POST',body:{tag:'mario1'}});
+ok(r.code===200 && r.body.username==='mario1','"mario1" è una tag diversa da "mario" e si prenota');
+r=await call('check-and-create.js',{method:'POST',body:{tag:'marioi'}});
+ok(r.code===200 && r.body.username==='marioi','"marioi" si prenota anche se esiste "mario1"');
+for (const v of ['cocacola','coca-cola','coca_cola','CocaCola','Coca Cola','netflix','netf1ix','NETFL1X','gianluigibuffon','gianluigi-buffon','Gianluigi Buffon','cristianoronaldo','cristiano-ronaldo','cristiáno_ronaldo']) {
+  r=await call('check-and-create.js',{method:'POST',body:{tag:v}});
+  ok(r.code===400 && r.body.codice==='su_richiesta' && r.body.email==='vip@myquicktag.it','gold via API: "'+v+'" bloccato, si richiede via email');
+}
+ok(!rows.some(x=>/cocacola|netflix|netfiix|buffon|ronaldo/.test(x.username_system)),'nessuna tag gold creata');
+for (const v of ['poliziadistato','Polizia-di-Stato','p0l1z1ad1stat0','fuck','FuckYou','f-u-c-k','super_fuck_99','myquicktag-assistenza','admin','Admin','ADM1N']) {
+  r=await call('check-and-create.js',{method:'POST',body:{tag:v}});
+  ok(r.code===400 && r.body.codice==='riservato' && !r.body.email,'black/system via API: "'+v+'" riservato');
+}
+r=await call('check-and-create.js',{method:'POST',body:{tag:'fuchsia'}});
+ok(r.code===200,'regola "contiene" non blocca nomi normali ("fuchsia" con "fuck" in lista)');
+r=await call('check-and-create.js',{method:'POST',body:{tag:'ferrarista'}});
+ok(r.code===200,'regola "esatto" non blocca i nomi più lunghi ("ferrarista" con "ferrari" gold)');
+r=await call('check-and-create.js',{method:'POST',body:{tag:'armando'}});
+ok(r.code===200,'nome comune non in lista ("armando") libero');
+
+// Due prenotazioni simultanee dello stesso nome canonico: ne passa una sola
+const [p1,p2]=await Promise.all([call('check-and-create.js',{method:'POST',body:{tag:'gara-nome'}}),call('check-and-create.js',{method:'POST',body:{tag:'Gara_Nome'}})]);
+ok([p1.code,p2.code].sort().join()==='200,400' && rows.filter(x=>x.username_system==='garanome').length===1,'prenotazioni simultanee di "gara-nome" e "Gara_Nome": una sola riesce');
+
+// Nome libero prenotato, poi messo in lista: l'attivazione viene bloccata (la tag non si cancella)
+r=await call('check-and-create.js',{method:'POST',body:{tag:'futurobrand'}});
+const tokFuturo=r.body.sessionToken;
+nomiProtetti.push({nome:'futurobrand',tipo:'gold',regola:'esatto'});
+r=await call('update-profile.js',{method:'POST',body:{username_system:'futurobrand',password:hash,stato:'attivo',sessionToken:tokFuturo}});
+const tf=rows.find(x=>x.username_system==='futurobrand');
+ok(r.code===403 && r.body.codice==='su_richiesta' && tf && tf.stato==='in attesa' && !tf.password,'nome messo in lista dopo la prenotazione: attivazione bloccata, tag non cancellata');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'futurobrand',password:hash,sessionToken:tokFuturo}});
+ok(r.code===403 && !rows.find(x=>x.username_system==='futurobrand').password,'bloccata anche l\'attivazione con la sola password');
+nomiProtetti.find(n=>n.nome==='futurobrand').attivo=false;
+r=await call('update-profile.js',{method:'POST',body:{username_system:'futurobrand',password:hash,stato:'attivo',sessionToken:tokFuturo}});
+ok(r.code===200 && rows.find(x=>x.username_system==='futurobrand').stato==='attivo','con il nome disattivato in lista (attivo=false) il titolare verificato attiva la tag');
+
+// username_system non si cambia da update-profile, nemmeno col token
+const tokMario=(await call('check-and-create.js',{method:'POST',body:{tag:'mariobis'}})).body.sessionToken;
+r=await call('update-profile.js',{method:'POST',body:{username_system:'mariobis',sessionToken:tokMario,bio:'x',username_system_nuovo:'cocacola'}});
+ok(rows.some(x=>x.username_system==='mariobis') && !rows.some(x=>x.username_system==='cocacola'),'username_system non modificabile');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'cocacola',sessionToken:tokMario,stato:'attivo',password:hash}});
+ok(r.code===401 && !rows.some(x=>x.username_system==='cocacola'),'il token di un\'altra tag non apre un nome protetto');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'mariobis',sessionToken:tokMario,username_display:'@COCA COLA'}});
+ok(rows.find(x=>x.username_system==='mariobis').username_display===undefined,'il nome mostrato non può essere un altro nome');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'mariobis',sessionToken:tokMario,username_display:'@Mario Bis'}});
+ok(rows.find(x=>x.username_system==='mariobis').username_display==='@Mario Bis','il nome mostrato può avere spazi e maiuscole');
+
+// Database non raggiungibile durante il controllo: nessuna tag creata
+const fetchVero=globalThis.fetch;
+globalThis.fetch=async (url,opt)=>String(url).includes('controlla_nome') ? new Response('boom',{status:500}) : fetchVero(url,opt);
+r=await call('check-and-create.js',{method:'POST',body:{tag:'guastodb'}});
+globalThis.fetch=fetchVero;
+ok(r.code===500 && !rows.some(x=>x.username_system==='guastodb'),'controllo nomi non disponibile: la prenotazione si ferma');

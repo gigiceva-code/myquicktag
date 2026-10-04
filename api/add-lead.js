@@ -3,6 +3,7 @@ import { trovaTag, aggiungiLead } from '../lib/db.js';
 import { calcolaAbbonamento } from '../lib/abbonamento.js';
 import { pulisciTesto } from '../lib/pulizia.js';
 import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
+import { nomeTag } from '../lib/nome-canonico.js';
 
 // ============================================================
 // RACCOLTA CONTATTI: un visitatore lascia nome e contatto sulla tag pubblica
@@ -28,7 +29,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Metodo non consentito' });
 
   const body = req.body || {};
-  const username = String(body.u || '').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+  const username = nomeTag(body.u);
   const nome = pulisciTesto(pulisci(body.nome, MAX_NOME));
   const contatto = pulisciTesto(pulisci(body.contatto, MAX_CONTATTO));
 

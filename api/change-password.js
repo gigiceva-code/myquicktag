@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { trovaTag, aggiornaTag } from '../lib/db.js';
 import { verificaPassword, proteggiPassword } from '../lib/password.js';
 import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
+import { nomeTag } from '../lib/nome-canonico.js';
 
 // ============================================================
 // CAMBIO PASSWORD (pagina Account & Piano)
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Metodo non consentito' });
 
   const body = req.body || {};
-  const username = String(body.u || '').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+  const username = nomeTag(body.u);
   const attuale = pulisciHash(body.attuale);
   const nuova = pulisciHash(body.nuova);
 
