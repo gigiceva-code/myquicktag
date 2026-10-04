@@ -1,4 +1,5 @@
 import { registraClick } from '../lib/db.js';
+import { nomeTag } from '../lib/nome-canonico.js';
 
 // ============================================================
 // STATISTICHE: un visitatore apre una sezione della tag pubblica
@@ -9,7 +10,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Metodo non consentito' });
 
   const body = req.body || {};
-  const username = String(body.u || '').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+  const username = nomeTag(body.u);
   const sezione = String(body.sezione || '').replace(/[^\p{L}\p{N} _.-]/gu, '').trim().slice(0, 40);
   if (!username || !sezione) return res.status(400).json({ success: false, error: 'Dati mancanti' });
 

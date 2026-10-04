@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { trovaTag, creaTag, eliminaTag } from '../lib/db.js';
 import { controllaNome } from '../lib/nomi-riservati.js';
+import { formaCanonica } from '../lib/nome-canonico.js';
 import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
 
 // "Ricevuta" della prenotazione: un token di sessione firmato dal server (stesso formato
@@ -17,13 +18,11 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Metodo non consentito' });
     }
 
-    // --- FIX SICUREZZA: Pulizia e protezione del tag ---
-    // Manteniamo solo lettere, numeri, trattini e underscore, scartando tutto il resto
-    const rawTag = req.body.tag || "";
-    const tag = rawTag.replace('@', '').trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '');
-
-    if (!tag) {
-        return res.status(400).json({ success: false, message: 'Tag non valido o con caratteri non consentiti' });
+    // Forma canonica del nome (lib/nome-canonico.js): "Coca-Cola", "coca_cola", "CocaCola"
+    // diventano tutti "cocacola". Caratteri non ammessi → errore, non cancellati in silenzio.
+    const { nome: tag, errore } = formaCanonica(typeof req.body?.tag === 'string' ? req.body.tag : '');
+    if (errore) {
+        return res.status(400).json({ success: false, codice: 'non_valido', message: errore });
     }
 
     // Limiti: niente prenotazioni a raffica di nomi (ognuno resta bloccato 24 ore)
@@ -32,11 +31,11 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Black list e gold list (tabella nomi_riservati + lib/nomi-riservati.js):
+        // Nomi di sistema, black list e gold list (tabella nomi_riservati + lib/nomi-riservati.js):
         // valgono anche per chi chiama direttamente l'API
         const nomeNonDisponibile = await controllaNome(tag);
         if (nomeNonDisponibile) {
-            return res.status(400).json({ success: false, codice: nomeNonDisponibile.codice, message: nomeNonDisponibile.messaggio });
+            return res.status(400).json({ success: false, codice: nomeNonDisponibile.codice, message: nomeNonDisponibile.messaggio, email: nomeNonDisponibile.email });
         }
 
         // 1. Verifica se il tag è già occupato o prenotato

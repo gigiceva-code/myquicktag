@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { gestisciLead } from '../lib/db.js';
+import { nomeTag } from '../lib/nome-canonico.js';
 
 // ============================================================
 // CONTATTI RACCOLTI: azioni del proprietario (pagina "I miei contatti")
@@ -28,7 +29,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Metodo non consentito' });
 
   const body = req.body || {};
-  const username = String(body.u || '').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+  const username = nomeTag(body.u);
   const azione = String(body.azione || '');
   const id = body.id ? String(body.id).replace(/[^a-zA-Z0-9-]/g, '').slice(0, 64) : null;
 

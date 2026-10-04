@@ -1,6 +1,7 @@
 import { trovaTag, aggiornaTag } from '../lib/db.js';
 import { verificaPassword, proteggiPassword } from '../lib/password.js';
 import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
+import { nomeTag } from '../lib/nome-canonico.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
@@ -11,8 +12,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Tag o password mancanti' });
     }
     
-       // --- FIX SICUREZZA: Pulizia del tag da caratteri pericolosi ---
-    const tagPulito = tag.replace('@', '').trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '');
+    // --- FIX SICUREZZA: forma canonica del nome (lib/nome-canonico.js) ---
+    const tagPulito = nomeTag(tag);
 
     // La password arriva già hashata SHA-256 dal client (index.html): qui la usiamo così com'è,
     // non viene mai calcolato né visto l'hash a partire dalla password in chiaro sul server.

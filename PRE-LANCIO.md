@@ -54,9 +54,17 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
   - testi del proprietario ripuliti prima di salvarli e prima di mostrarli (`lib/pulizia.js`, `session.js` → `mqtPulisci`): nessun codice nascosto o link `javascript:` nella tag pubblica; Pocket mostrato in modo sicuro;
   - password protette con scrypt (`lib/password.js`); le vecchie si aggiornano da sole al primo login;
   - limiti ai tentativi (`lib/limiti.js`, tabella `limiti`): login, cambio password, prenotazioni, contatti del vasetto;
-  - black list e gold list controllate dal server: le liste sono nella tabella `nomi_riservati` del database (si gestiscono dal Table Editor di Supabase, con regole "esatto"/"contiene" e riconoscimento delle varianti come "p0ste"); nel codice restano solo i nomi delle pagine del sito (`lib/nomi-riservati.js`);
+  - black list e gold list controllate dal server: le liste sono nella tabella `nomi_riservati` del database (si gestiscono dal Table Editor di Supabase, con regole "esatto"/"contiene" e riconoscimento delle varianti come "p0ste"); nel codice restano solo i nomi delle pagine del sito (`lib/nomi-riservati.js`); vedi sotto "sistema dei nomi protetti";
   - lo stato della tag si cambia solo all'attivazione ("in attesa" → "attivo" con la password).
 - [ ] Rivedere e caricare la proposta di nomi riservati: `supabase/proposta-nomi-riservati.csv` (305 nomi).
+  - Deciso (04/10/2026): i nomi generici di attività (`@pizzeria`, `@avvocato`, `@fotografo`…, fisiche e digitali) sono **riservati a myquicktag** come future vetrine di categoria. Solo la parola nuda: `@pizzeriadamario` resta libero. Si possono liberare in seguito.
+  - Fatto (04/10/2026, specifica concordata con ChatGPT): **sistema dei nomi protetti**.
+    - Forma canonica unica (`lib/nome-canonico.js`): "Coca-Cola", "coca_cola", "Cristiáno Ronaldo" → `cocacola`, `cristianoronaldo`. Simboli/emoji rifiutati, max 30 caratteri. Il database accetta solo questa forma, quindi `mario`, `Mario`, `mario-` sono la stessa tag; `mario1` e `marioi` restano diverse.
+    - Tabella `nomi_riservati`: `tipo` = system / black (riservato) / gold (il titolare lo chiede a vip@myquicktag.it); `categoria`; `attivo`. Nel Table Editor il nome si può scrivere come viene ("Coca-Cola"): si salva da solo in forma canonica. Somiglianze riconosciute: 0→o, 1→i/l, 3→e, 4→a, 5→s, 7→t ("netf1ix").
+    - Il controllo si ripete all'attivazione: un nome entrato in lista dopo la prenotazione non si attiva.
+    - **Come assegnare un nome gold al titolare verificato** (finché non c'è il codice di sblocco): nella riga del nome metti `attivo` = false → il titolare prenota e attiva la tag → rimetti `attivo` = true (le tag già attive non vengono toccate dalla lista).
+    - Caricate finora: 26 parolacce/odio + i nomi iniziali. La proposta da 305 nomi NON è caricata: va rivista (qualità e falsi positivi) prima.
+    - Futuro: codice di sblocco per le assegnazioni manuali; eventuale tipo "segnala"; liste ampliate per categoria.
 - [x] Documenti interni, test e `supabase/` esclusi dal sito pubblico (`.vercelignore`).
 - [ ] Prima del lancio: svuotare la tabella `tags` dalle tag di prova.
 - [ ] Ancora aperti (minori): cambiare password non fa uscire gli altri dispositivi; visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel.

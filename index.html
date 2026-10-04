@@ -595,7 +595,7 @@
         </button>
     </div>
 </div>
-      <!-- OVERLAY NOMI PREMIUM (GOLDLIST) -->
+      <!-- OVERLAY NOMI PROTETTI (GOLD LIST): richiesta del titolare via email -->
 <div id="premium-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
     
     <!-- Tasto Chiudi X -->
@@ -610,20 +610,20 @@
         <!-- BADGE GOLD -->
         <div style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 20px; margin-bottom: 20px;">
             <span style="width: 6px; height: 6px; background: #D4AF37; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);"></span>
-            <span style="color: #D4AF37; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Global Premium Tag</span>
+            <span style="color: #D4AF37; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Nome protetto</span>
         </div>
 
         <h2 id="premium-tag-name" style="color: #ffffff; font-size: 26px; font-weight: 300; margin: 0 0 15px 0; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 10px; box-sizing: border-box;">
             @nome
         </h2>
 
-        <p style="color: #A0A0A0; font-size: 14px; font-weight: 300; margin-bottom: 35px; line-height: 1.6; padding: 0 10px;">
-            Questa identità digitale è classificata come <strong style="color: #D4AF37; font-weight: 600;">Premium</strong>. L'assegnazione è trattata privatamente dal nostro team per garantirne la tutela.
+        <p id="premium-messaggio" style="color: #A0A0A0; font-size: 14px; font-weight: 300; margin-bottom: 35px; line-height: 1.6; padding: 0 10px;">
+            Questo nome è protetto: può essere richiesto dal legittimo titolare tramite il canale dedicato. Ogni richiesta viene verificata dal nostro team.
         </p>
 
         <!-- BOTTONE MAILTO CON GRADIENTE LUXURY -->
         <button id="btn-premium-mail" style="width: 100%; padding: 20px; background: linear-gradient(135deg, #F3D078 0%, #D4AF37 50%, #AA771C 100%); color: #000000; border: none; font-weight: 900; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.25);">
-            CONTATTA IL TEAM VIP
+            RICHIEDI QUESTO NOME
         </button> 
     </div>
 </div>
@@ -783,13 +783,15 @@ async function checkAccess() {
         btn.style.opacity = "1";
     }
 }
-// Nome Premium (gold list): popup dorato con richiesta via email a vip@myquicktag.it
-function mostraPopupPremium(formattedTag) {
+// Nome protetto (gold list): popup dorato con richiesta via email al canale dedicato.
+// Testo e indirizzo arrivano dal server (lib/nomi-riservati.js), così l'email è scritta in un posto solo.
+function mostraPopupPremium(formattedTag, messaggio, email) {
     document.getElementById('premium-tag-name').innerText = formattedTag;
+    if (messaggio) document.getElementById('premium-messaggio').innerText = messaggio;
 
-    const oggettoMail = encodeURIComponent(`Richiesta sblocco nome Premium: ${formattedTag}`);
-    const corpoMail = encodeURIComponent(`Salve Team myquicktag,\n\nVorrei richiedere informazioni per lo sblocco e l'assegnazione dell'identità digitale ${formattedTag}.\n\nDati di contatto:\nNome/Azienda: \nTelefono: \n\nIn attesa di un vostro riscontro.\nCordiali saluti.`);
-    const mailtoLink = `mailto:vip@myquicktag.it?subject=${oggettoMail}&body=${corpoMail}`;
+    const oggettoMail = encodeURIComponent(`Richiesta nome protetto: ${formattedTag}`);
+    const corpoMail = encodeURIComponent(`Salve Team myquicktag,\n\nsono il legittimo titolare del nome ${formattedTag} e vorrei richiederne l'assegnazione.\n\nDati di contatto:\nNome/Azienda: \nTelefono: \nSito o profilo ufficiale: \n\nIn attesa di un vostro riscontro.\nCordiali saluti.`);
+    const mailtoLink = `mailto:${email}?subject=${oggettoMail}&body=${corpoMail}`;
 
     // Assegnazione robusta dell'evento click (Risolve il blocco su mobile)
     document.getElementById('btn-premium-mail').onclick = function() {
@@ -801,7 +803,7 @@ function mostraPopupPremium(formattedTag) {
 
 async function vaiAllaVerifica() {
     const inputField = document.getElementById('tag-input');
-    const tagValue = inputField.value.trim().toLowerCase();
+    const tagValue = inputField.value.trim();
     const btn = document.getElementById('btn-verifica-principale');
 
     if (tagValue === "") {
@@ -809,20 +811,19 @@ async function vaiAllaVerifica() {
         return;
     }
 
-    // 1. RIMUOVE LA CHIOCCIOLA
-    const stringaSenzaChiocciola = tagValue.replace(/@/g, '').trim();
-    
-    // 2. FILTRO BLINDATO: Se c'è anche solo un punto, uno spazio o un simbolo, lo blocca subito!
-    if (/[^a-z0-9]/.test(stringaSenzaChiocciola)) {
-        alert("⚠️ Formato non valido: Il tuo @nome può contenere solo lettere e numeri. Non sono ammessi punti, spazi o caratteri speciali.");
+    // Forma canonica (session.js → mqtNome, stessa regola del server): "Coca-Cola" → "cocacola".
+    // Accenti, spazi, punti e trattini vengono adattati; altri simboli fanno rifiutare il nome.
+    const canonico = mqtNome.canonico(tagValue);
+    if (canonico.errore) {
+        alert("⚠️ " + canonico.errore);
         return;
     }
 
-    const rawTag = stringaSenzaChiocciola;
+    const rawTag = canonico.nome;
     const formattedTag = '@' + rawTag;
 
-    // Black list e gold list: le controlla il server (tabella nomi_riservati nel database).
-    // La risposta arriva con codice 'riservato' o 'premium' (vedi più sotto).
+    // Nomi protetti: li controlla il server (tabella nomi_riservati nel database).
+    // La risposta arriva con codice 'riservato' o 'su_richiesta' (vedi più sotto).
 
    // ==========================================
     // SE PASSA I CONTROLLI, PROCEDIAMO NORMALMENTE
@@ -912,8 +913,8 @@ async function vaiAllaVerifica() {
 
             document.getElementById('welcome-tag-name').innerText = formattedTag; 
             apriOverlay('welcome-overlay');
-        } else if (data.codice === 'premium') {
-            mostraPopupPremium(formattedTag);
+        } else if (data.codice === 'su_richiesta' && data.email) {
+            mostraPopupPremium(formattedTag, data.message, data.email);
         } else {
             alert(data.message || "Nome non disponibile. Scegli un altro tag.");
         }
@@ -929,8 +930,8 @@ async function vaiAllaVerifica() {
 // 4. REGISTRAZIONE & SCUDO ANTI-RITORNO PERFETTO
 function procediAllaRegistrazione() {
     const inputField = document.getElementById('tag-input');
-    // MODIFICA: Pulisce via qualsiasi punto o carattere strano che potrebbe essere sfuggito
-    const rawTag = inputField.value.trim().toLowerCase().replace(/@/g, '').replace(/[^a-z0-9]/g, '');
+    // Stessa forma canonica usata per la verifica (session.js → mqtNome)
+    const rawTag = mqtNome.canonico(inputField.value).nome || '';
 
     // =========================================================
     // IL PEZZO MANCANTE: CONSEGNA DELLE CHIAVI DI PROPRIETÀ

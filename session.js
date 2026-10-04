@@ -115,3 +115,25 @@
 
     window.mqtPulisci = { testo, valore, campi };
 })();
+
+// ============================================================
+// ANTEPRIMA DELLA FORMA CANONICA DEL @NOME (solo aiuto per l'utente)
+// ============================================================
+// Stessa trasformazione di lib/nome-canonico.js: "Cristiáno Ronaldo" → "cristianoronaldo".
+// La decisione vera la prende sempre il server (api/check-and-create.js).
+(function () {
+    function canonico(v) {
+        const nome = String(v == null ? '' : v)
+            .normalize('NFKD')
+            .replace(/[̀-ͯ]/g, '')
+            .toLowerCase()
+            .trim()
+            .replace(/^@+/, '')
+            .replace(/[\s._-]+/g, '');
+        if (!nome) return { errore: 'Scrivi un @nome.' };
+        if (/[^a-z0-9]/.test(nome)) return { errore: 'Il @nome può contenere solo lettere e numeri (spazi, punti, trattini e accenti vengono adattati automaticamente).' };
+        if (nome.length > 30) return { errore: 'Il @nome può avere al massimo 30 caratteri.' };
+        return { nome };
+    }
+    window.mqtNome = { canonico };
+})();
