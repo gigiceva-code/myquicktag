@@ -55,9 +55,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Prossimi passi (in ordine)
 
-1. **Ampliare le liste dei nomi protetti** (il sistema è pronto, vedi `PRE-LANCIO.md`): rivedere
-   `supabase/proposta-nomi-riservati.csv` per qualità e falsi positivi e caricarla per categorie.
-   "contiene" solo per pochi casi ad alto rischio. Attenzione: "apple" oggi è gold, nella proposta è black.
+1. **Nomi protetti**: liste caricate (3.238 nomi, sorgente `supabase/nomi-protetti/`). Correggere i buchi che
+   emergono dai test del titolare. Da valutare: link "Segnala questa tag" e clausola nei termini per
+   riprendersi nomi usati per impersonare persone o marchi non in lista.
 2. **Audit di UI, UX e marketing** sul sito pubblico: percorso del cliente nuovo (home → prenotazione →
    editor → pubblicazione), testi e tono (misto italiano/inglese), home come pagina di vendita, uso da
    telefono e accessibilità. Risultato: elenco di interventi per priorità, con schermate.
