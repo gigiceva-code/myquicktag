@@ -783,6 +783,22 @@ async function checkAccess() {
         btn.style.opacity = "1";
     }
 }
+// Nome Premium (gold list): popup dorato con richiesta via email a vip@myquicktag.it
+function mostraPopupPremium(formattedTag) {
+    document.getElementById('premium-tag-name').innerText = formattedTag;
+
+    const oggettoMail = encodeURIComponent(`Richiesta sblocco nome Premium: ${formattedTag}`);
+    const corpoMail = encodeURIComponent(`Salve Team myquicktag,\n\nVorrei richiedere informazioni per lo sblocco e l'assegnazione dell'identità digitale ${formattedTag}.\n\nDati di contatto:\nNome/Azienda: \nTelefono: \n\nIn attesa di un vostro riscontro.\nCordiali saluti.`);
+    const mailtoLink = `mailto:vip@myquicktag.it?subject=${oggettoMail}&body=${corpoMail}`;
+
+    // Assegnazione robusta dell'evento click (Risolve il blocco su mobile)
+    document.getElementById('btn-premium-mail').onclick = function() {
+        window.location.href = mailtoLink;
+    };
+
+    apriOverlay('premium-overlay');
+}
+
 async function vaiAllaVerifica() {
     const inputField = document.getElementById('tag-input');
     const tagValue = inputField.value.trim().toLowerCase();
@@ -805,51 +821,9 @@ async function vaiAllaVerifica() {
     const rawTag = stringaSenzaChiocciola;
     const formattedTag = '@' + rawTag;
 
-    // ==========================================
-    // 1. BLACKLIST 
-    // ==========================================
-    // Stesse liste di lib/nomi-riservati.js (il controllo che conta è sul server)
-    const blacklist = [
-        "admin", "administrator", "root", "support", "info", "help", "api", 
-        "login", "logout", "register", "index", "home", "mail", "test",
-        "error", "null", "undefined",
-        "u", "www", "icons", "account", "contatti", "profile", "edit", "tag", "pocket",
-        "analytics", "checkout", "celebration", "myquicktag"
-    ];
+    // Black list e gold list: le controlla il server (tabella nomi_riservati nel database).
+    // La risposta arriva con codice 'riservato' o 'premium' (vedi più sotto).
 
-    if (blacklist.includes(rawTag)) {
-        alert("Questo nome è riservato per funzioni di sistema o non è valido. Scegli un altro tag.");
-        return; 
-    }
-
-    // ==========================================
-    // 2. GOLDLIST (Tappeto Rosso - Trattativa VIP)
-    // ==========================================
-    const goldlist = [
-        "official", "team", "staff", "security",
-        "vip", "pro", "premium", "business", "agency", "brand", "creator", "shop", "store",
-        "cocacola", "ferrari", "nike", "apple" 
-    ];
-
-    if (goldlist.includes(rawTag) || rawTag.length < 3) {
-        // Mostra il nome nel popup dorato
-        document.getElementById('premium-tag-name').innerText = formattedTag;
-        
-        // Costruisci l'email precompilata
-        const oggettoMail = encodeURIComponent(`Richiesta sblocco nome Premium: ${formattedTag}`);
-        const corpoMail = encodeURIComponent(`Salve Team myquicktag,\n\nVorrei richiedere informazioni per lo sblocco e l'assegnazione dell'identità digitale ${formattedTag}.\n\nDati di contatto:\nNome/Azienda: \nTelefono: \n\nIn attesa di un vostro riscontro.\nCordiali saluti.`);
-        
-        const mailtoLink = `mailto:vip@myquicktag.it?subject=${oggettoMail}&body=${corpoMail}`;
-        
-        // Assegnazione robusta dell'evento click (Risolve il blocco su mobile)
-        document.getElementById('btn-premium-mail').onclick = function() {
-            window.location.href = mailtoLink;
-        };
-        
-        // Apri il popup VIP
-        apriOverlay('premium-overlay');
-        return; // Ferma l'esecuzione (non chiama il server)
-    }
    // ==========================================
     // SE PASSA I CONTROLLI, PROCEDIAMO NORMALMENTE
     // ==========================================
@@ -938,6 +912,8 @@ async function vaiAllaVerifica() {
 
             document.getElementById('welcome-tag-name').innerText = formattedTag; 
             apriOverlay('welcome-overlay');
+        } else if (data.codice === 'premium') {
+            mostraPopupPremium(formattedTag);
         } else {
             alert(data.message || "Nome non disponibile. Scegli un altro tag.");
         }

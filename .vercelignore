@@ -1,0 +1,7 @@
+# File del progetto che NON devono finire sul sito pubblico (myquicktag.it):
+# documenti interni, test e struttura del database.
+PRE-LANCIO.md
+PASSAGGIO-CONSEGNE.md
+README.md
+test/
+supabase/

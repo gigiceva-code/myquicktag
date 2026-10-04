@@ -2,6 +2,7 @@
 
 Cose da decidere o completare **prima di andare online** su myquicktag.it.
 Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno.
+Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-CONSEGNE.md`.
 
 ---
 
@@ -53,8 +54,10 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
   - testi del proprietario ripuliti prima di salvarli e prima di mostrarli (`lib/pulizia.js`, `session.js` → `mqtPulisci`): nessun codice nascosto o link `javascript:` nella tag pubblica; Pocket mostrato in modo sicuro;
   - password protette con scrypt (`lib/password.js`); le vecchie si aggiornano da sole al primo login;
   - limiti ai tentativi (`lib/limiti.js`, tabella `limiti`): login, cambio password, prenotazioni, contatti del vasetto;
-  - black list e gold list controllate anche dal server (`lib/nomi-riservati.js`, da tenere allineate con `index.html`);
+  - black list e gold list controllate dal server: le liste sono nella tabella `nomi_riservati` del database (si gestiscono dal Table Editor di Supabase, con regole "esatto"/"contiene" e riconoscimento delle varianti come "p0ste"); nel codice restano solo i nomi delle pagine del sito (`lib/nomi-riservati.js`);
   - lo stato della tag si cambia solo all'attivazione ("in attesa" → "attivo" con la password).
+- [ ] Rivedere e caricare la proposta di nomi riservati: `supabase/proposta-nomi-riservati.csv` (305 nomi).
+- [x] Documenti interni, test e `supabase/` esclusi dal sito pubblico (`.vercelignore`).
 - [ ] Prima del lancio: svuotare la tabella `tags` dalle tag di prova.
 - [ ] Ancora aperti (minori): cambiare password non fa uscire gli altri dispositivi; visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel.
 
