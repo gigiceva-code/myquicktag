@@ -67,6 +67,7 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
     - Futuro: codice di sblocco per le assegnazioni manuali; eventuale tipo "segnala"; liste ampliate per categoria.
 - [x] Documenti interni, test e `supabase/` esclusi dal sito pubblico (`.vercelignore`).
 - [ ] Prima del lancio: svuotare la tabella `tags` dalle tag di prova.
+- [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** tasto **"Segnala questa tag"** sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio**: myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
 - [ ] Ancora aperti (minori): cambiare password non fa uscire gli altri dispositivi; visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel.
 
 ---

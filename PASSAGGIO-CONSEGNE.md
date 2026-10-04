@@ -17,6 +17,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - **Prove:** il titolare prova dal telefono. Il Preview di Vercel è protetto (serve l'accesso a Vercel
   o un "link di condivisione"), quindi le prove con altri telefoni si fanno sul sito pubblico.
 - Il titolare non vuole spese: piano gratuito di Supabase e di Vercel.
+- ChatGPT fa da "product strategist": il titolare a volte incolla i suoi messaggi. Valutarli nel merito
+  (si può dissentire motivando); l'ultima parola è del titolare.
 
 ## Dove sta cosa
 
@@ -55,12 +57,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Prossimi passi (in ordine)
 
-1. **Nomi protetti**: liste caricate (3.238 nomi, sorgente `supabase/nomi-protetti/`). Correggere i buchi che
-   emergono dai test del titolare. Da valutare: link "Segnala questa tag" e clausola nei termini per
-   riprendersi nomi usati per impersonare persone o marchi non in lista.
-2. **Audit di UI, UX e marketing** sul sito pubblico: percorso del cliente nuovo (home → prenotazione →
-   editor → pubblicazione), testi e tono (misto italiano/inglese), home come pagina di vendita, uso da
-   telefono e accessibilità. Risultato: elenco di interventi per priorità, con schermate.
+1. **Audit di UI, UX e marketing** (prossima sessione) sul sito pubblico: percorso del cliente nuovo
+   (home → prenotazione → editor → pubblicazione), testi e tono (misto italiano/inglese), home come pagina
+   di vendita, uso da telefono e accessibilità. Includere il tasto **"Segnala questa tag"** e la regola nei
+   termini di servizio (vedi `PRE-LANCIO.md`). Risultato: elenco di interventi per priorità, con schermate.
+2. **Nomi protetti**: sistema e liste attivi (3.238 nomi, sorgente `supabase/nomi-protetti/`). Correggere i
+   buchi o i blocchi sbagliati che segnala il titolare (Table Editor, o `liste.py` → `genera.py` → caricamento).
 3. **Test con due telefoni** (in sospeso): un visitatore lascia un contatto nel vasetto → il titolare lo
    trova in Dashboard → I miei contatti.
 4. Decisioni di prodotto aperte (vedi `PRE-LANCIO.md`): modello dei piani e prezzi, pagamenti Stripe,
