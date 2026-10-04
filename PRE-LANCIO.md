@@ -57,6 +57,8 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
   - black list e gold list controllate dal server: le liste sono nella tabella `nomi_riservati` del database (si gestiscono dal Table Editor di Supabase, con regole "esatto"/"contiene" e riconoscimento delle varianti come "p0ste"); nel codice restano solo i nomi delle pagine del sito (`lib/nomi-riservati.js`);
   - lo stato della tag si cambia solo all'attivazione ("in attesa" → "attivo" con la password).
 - [ ] Rivedere e caricare la proposta di nomi riservati: `supabase/proposta-nomi-riservati.csv` (305 nomi).
+  - Deciso (04/10/2026): i nomi generici di attività (`@pizzeria`, `@avvocato`, `@fotografo`…, fisiche e digitali) sono **riservati a myquicktag** come future vetrine di categoria. Solo la parola nuda: `@pizzeriadamario` resta libero. Si possono liberare in seguito.
+  - In corso: progettazione del sistema completo dei nomi riservati con ChatGPT (product strategist). Proposta di Claude: forma canonica unica per tag, azioni sistema / blocca / su richiesta / segnala, codice di sblocco per assegnazioni manuali. Si realizza dopo la specifica definitiva.
 - [x] Documenti interni, test e `supabase/` esclusi dal sito pubblico (`.vercelignore`).
 - [ ] Prima del lancio: svuotare la tabella `tags` dalle tag di prova.
 - [ ] Ancora aperti (minori): cambiare password non fa uscire gli altri dispositivi; visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel.
