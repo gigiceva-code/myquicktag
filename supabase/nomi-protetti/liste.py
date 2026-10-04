@@ -417,3 +417,13 @@ vaffanculo,porcodio,diocane,dioporco,porcamadonna,madonnaputtana,porcoddio,fuck,
 hitler,nigger,nigga,faggot,pornhub,xvideos,brazzers,siegheil,heilhitler,kukluxklan,coglion,stronz,minchia,mignott,
 ricchion,culatton,merdos,frocio,froci
 """)
+
+# ------------------------------------------------------------------ BESTEMMIE: ogni combinazione, in entrambi gli ordini
+_sacri = ['dio', 'ddio', 'madonna', 'cristo', 'gesu', 'gesucristo', 'signore', 'santo', 'santi']
+_insulti = ['porco', 'porca', 'porci', 'cane', 'cani', 'maiale', 'maiala', 'boia', 'bestia', 'troia', 'puttana',
+            'ladro', 'serpente', 'merda', 'bastardo', 'infame', 'lurido', 'schifoso', 'stronzo', 'zoccola', 'impestato']
+_comb = set()
+for s in _sacri:
+    for i in _insulti:
+        _comb.add(s + i); _comb.add(i + s)
+g('black', 'offensivo', 'bestemmia (tutte le combinazioni)', '', sorted(_comb))
