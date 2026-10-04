@@ -60,3 +60,58 @@
         }
     };
 })();
+
+// ============================================================
+// PULIZIA DEI TESTI DEGLI UTENTI PRIMA DI MOSTRARLI (stessa logica di lib/pulizia.js)
+// ============================================================
+// Protegge anche i dati salvati prima della pulizia lato server e le bozze locali:
+// niente caratteri per scrivere codice HTML, niente link "javascript:" e simili.
+(function () {
+    const SOSTITUZIONI = { '<': '‹', '>': '›', '"': '”', '`': "'" };
+    const ENTITA = { colon: ':', tab: '\t', newline: '\n', sol: '/', lpar: '(', rpar: ')', period: '.', comma: ',', excl: '!', num: '#', amp: '&', semi: ';' };
+
+    function decodificaEntita(s) {
+        return s
+            .replace(/&#x([0-9a-f]+);?/gi, (m, h) => String.fromCodePoint(parseInt(h, 16) || 32))
+            .replace(/&#(\d+);?/g, (m, d) => String.fromCodePoint(Number(d) || 32))
+            .replace(/&([a-z]+);/gi, (m, n) => (ENTITA[n.toLowerCase()] !== undefined ? ENTITA[n.toLowerCase()] : m));
+    }
+
+    function linkPericoloso(s) {
+        const normale = decodificaEntita(s).replace(/[\s\u0000-\u001f\u007f-\u009f]+/g, '').toLowerCase();
+        return /^(javascript|vbscript|livescript):/.test(normale) || /^data:(text|application|image\/svg)/.test(normale);
+    }
+
+    function testo(valore) {
+        if (typeof valore !== 'string') return valore;
+        if (linkPericoloso(valore)) return '';
+        return valore.replace(/[<>"`]/g, c => SOSTITUZIONI[c]);
+    }
+
+    function valore(v) {
+        if (typeof v === 'string') return testo(v);
+        if (Array.isArray(v)) return v.map(valore);
+        if (v && typeof v === 'object') {
+            const pulito = {};
+            Object.keys(v).forEach(k => { pulito[k] = valore(v[k]); });
+            return pulito;
+        }
+        return v;
+    }
+
+    // Campi di una tag: i testi JSON (canali, partner, galleria...) si puliscono dentro
+    function campi(fields) {
+        const pulito = {};
+        Object.keys(fields || {}).forEach(k => {
+            const v = fields[k];
+            const t = typeof v === 'string' ? v.trim() : '';
+            if (t && (t[0] === '[' || t[0] === '{')) {
+                try { pulito[k] = JSON.stringify(valore(JSON.parse(t))); return; } catch (e) {}
+            }
+            pulito[k] = valore(v);
+        });
+        return pulito;
+    }
+
+    window.mqtPulisci = { testo, valore, campi };
+})();

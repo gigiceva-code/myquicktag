@@ -180,21 +180,34 @@ async function caricaPocket() {
             let nomePulito = contatto.nome.replace(/^@/, '').trim();
             const iniziale = nomePulito ? nomePulito.charAt(0).toUpperCase() : '';
 
+            // Nomi e link arrivano da tag di altre persone: solo testo e link verificati,
+            // mai inseriti come codice (un nome "costruito ad arte" non può eseguire nulla)
+            const usernameSicuro = String(contatto.username || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
+            const urlSicuro = /^https?:\/\//i.test(String(contatto.url || '')) ? contatto.url : `/u/${usernameSicuro}`;
+
             row.innerHTML = `
-                <a href="${contatto.url}" class="contact-link">
+                <a class="contact-link">
                     <div class="avatar-ring">
-                        <span>${iniziale}</span>
+                        <span class="pocket-iniziale"></span>
                     </div>
                     <div class="contact-data">
-                        <span class="contact-name">${contatto.nome}</span>
-                        <span class="contact-username">@${contatto.username}</span>
+                        <span class="contact-name"></span>
+                        <span class="contact-username"></span>
                     </div>
                 </a>
                 <div style="display: flex; gap: 5px; align-items: center; padding-left: 10px;">
-                    <i class="fas fa-share-nodes share-single-btn" onclick="condividiSingolo('${contatto.nome}', '${contatto.url}', event)"></i>
-                    <i class="far fa-trash-can delete-single-btn" onclick="eliminaContatto('${contatto.username}', this, event)"></i>
+                    <i class="fas fa-share-nodes share-single-btn"></i>
+                    <i class="far fa-trash-can delete-single-btn"></i>
                 </div>
             `;
+            row.querySelector('.contact-link').href = urlSicuro;
+            row.querySelector('.pocket-iniziale').textContent = iniziale;
+            row.querySelector('.contact-name').textContent = contatto.nome;
+            row.querySelector('.contact-username').textContent = '@' + usernameSicuro;
+            const btnCondividi = row.querySelector('.share-single-btn');
+            btnCondividi.addEventListener('click', e => condividiSingolo(contatto.nome, urlSicuro, e));
+            const btnElimina = row.querySelector('.delete-single-btn');
+            btnElimina.addEventListener('click', e => eliminaContatto(contatto.username, btnElimina, e));
             contenitoreLista.appendChild(row);
          });
      }

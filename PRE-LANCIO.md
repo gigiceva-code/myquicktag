@@ -39,20 +39,24 @@ Aggiornare questo file ogni volta che un punto viene chiuso o se ne aggiunge uno
 
 ---
 
-## 2. Da fare prima del passaggio su `main`
+## 2. Stato del passaggio su `main` e prima del lancio
 
-- [ ] Test completi sul Preview di `sviluppo-v2`, usando sempre l'indirizzo **fisso** del branch:
-  `https://myquicktag-git-sviluppo-v2-gigiceva-codes-projects.vercel.app`
-  (ogni deploy ha anche un indirizzo suo, ma i dati salvati nel browser e le app installate restano legati all'indirizzo usato).
 - [x] **Database migrato da Airtable a Supabase** (progetto `myquicktag`, Francoforte, tabella `tags`).
   Struttura in `supabase/migrations/`; importate le 8 tag di prova della base "MyQuickTag (Copy)".
-- [ ] **Variabili d'ambiente su Vercel (Preview e Production):** `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`.
+- [x] **Variabili d'ambiente su Vercel (Preview e Production):** `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`.
   - `SUPABASE_URL` = `https://atlhrkkfovblkhgzfeuo.supabase.co`
   - `SUPABASE_SECRET_KEY` = dashboard Supabase → Project Settings → API Keys → **Secret key** (`sb_secret_…`). Mai nel codice o nel browser.
-  - Dopo il test, le variabili `AIRTABLE_*` si possono togliere.
+  - Le variabili `AIRTABLE_*` non servono più e si possono togliere.
+- [x] Unito `sviluppo-v2` in `main` (pull request #2, 04/10/2026).
+- [ ] Test con due telefoni sul sito pubblico: contatto lasciato da un visitatore → Dashboard → I miei contatti.
+- [x] **Secondo giro di sicurezza** (su `sviluppo-v2`, da unire in `main`):
+  - testi del proprietario ripuliti prima di salvarli e prima di mostrarli (`lib/pulizia.js`, `session.js` → `mqtPulisci`): nessun codice nascosto o link `javascript:` nella tag pubblica; Pocket mostrato in modo sicuro;
+  - password protette con scrypt (`lib/password.js`); le vecchie si aggiornano da sole al primo login;
+  - limiti ai tentativi (`lib/limiti.js`, tabella `limiti`): login, cambio password, prenotazioni, contatti del vasetto;
+  - black list e gold list controllate anche dal server (`lib/nomi-riservati.js`, da tenere allineate con `index.html`);
+  - lo stato della tag si cambia solo all'attivazione ("in attesa" → "attivo" con la password).
 - [ ] Prima del lancio: svuotare la tabella `tags` dalle tag di prova.
-- [ ] Unire `sviluppo-v2` in `main` (pull request) e ricontrollare il sito pubblico.
-- [ ] Dopo il passaggio, le tag già attive ricevono 90 giorni pieni dal primo accesso (nessuna viene disattivata d'ufficio): verificare su un paio di tag reali.
+- [ ] Ancora aperti (minori): cambiare password non fa uscire gli altri dispositivi; visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel.
 
 ---
 

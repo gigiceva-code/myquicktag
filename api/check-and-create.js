@@ -1,5 +1,7 @@
 import crypto from 'crypto';
 import { trovaTag, creaTag, eliminaTag } from '../lib/db.js';
+import { controllaNome } from '../lib/nomi-riservati.js';
+import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
 
 // "Ricevuta" della prenotazione: un token di sessione firmato dal server (stesso formato
 // di login.js), valido solo fino alla scadenza delle 24h. Solo chi ha prenotato lo riceve,
@@ -22,6 +24,17 @@ export default async function handler(req, res) {
 
     if (!tag) {
         return res.status(400).json({ success: false, message: 'Tag non valido o con caratteri non consentiti' });
+    }
+
+    // Black list e gold list (lib/nomi-riservati.js): valgono anche per chi chiama direttamente l'API
+    const nomeNonDisponibile = controllaNome(tag);
+    if (nomeNonDisponibile) {
+        return res.status(400).json({ success: false, codice: nomeNonDisponibile.codice, message: nomeNonDisponibile.messaggio });
+    }
+
+    // Limiti: niente prenotazioni a raffica di nomi (ognuno resta bloccato 24 ore)
+    if (!(await entroILimiti(req, tag, [{ nome: 'prenota', per: 'ip', max: 10, finestra: 3600 }]))) {
+        return rispondiTroppiTentativi(res);
     }
 
     // 1. Verifica se il tag è già occupato o prenotato

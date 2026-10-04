@@ -262,7 +262,7 @@
                 // 2. DISPOSITIVI E LOCALITÀ (Macro - da analytics_data)
                 if (data.fields.analytics_data) {
                     try {
-                        const macroAnalytics = JSON.parse(data.fields.analytics_data);
+                        const macroAnalytics = mqtPulisci.valore(JSON.parse(data.fields.analytics_data));
                         elaboraMacroAnalytics(macroAnalytics);
                     } catch(e) { console.error("Errore macro analytics", e); }
                 } else {
@@ -272,7 +272,7 @@
                 // 3. CLICK E ORARI (Micro - dal nuovo analytics_log)
                 if (data.fields.analytics_log) {
                     try {
-                        const microLog = JSON.parse(data.fields.analytics_log);
+                        const microLog = mqtPulisci.valore(JSON.parse(data.fields.analytics_log));
                         if (microLog.length > 0) elaboraMicroLog(microLog);
                     } catch(e) { console.error("Errore micro log", e); }
                 }
