@@ -20,6 +20,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - ChatGPT fa da "product strategist": il titolare a volte incolla i suoi messaggi. Valutarli nel merito
   (si può dissentire motivando); l'ultima parola è del titolare.
 
+## Scelte volute (non segnalarle come errori negli audit)
+
+- **Checkout con pagamento simulato** (`checkout.html`: prezzo, loghi delle carte, "pagamento sicuro",
+  "Transazione approvata"): è lasciato apposta come segnaposto del futuro pagamento con Stripe.
+  Durante i test l'attivazione resta gratuita. Va collegato a Stripe quando il titolare decide prezzi e aspetti fiscali.
+- Se il titolare indica altre scelte volute, aggiungerle qui.
+
 ## Dove sta cosa
 
 - **Sito pubblico:** https://myquicktag.it (Vercel, ramo `main`). Tag pubblica: `/u/<nome>`.
