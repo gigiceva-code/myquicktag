@@ -1,6 +1,11 @@
 import crypto from 'crypto';
 import { trovaTag, aggiornaTag } from '../lib/db.js';
+import { pulisciTesto, pulisciJson, pulisciValore } from '../lib/pulizia.js';
+import { proteggiPassword, hashClienteValido } from '../lib/password.js';
 import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito } from '../lib/abbonamento.js';
+
+// Campi salvati come testo JSON: si puliscono i valori, non la sintassi
+const CAMPI_JSON = ['draft_json', 'modulo_vcf', 'config_canali', 'sedi_json', 'gallery_data', 'pocket_cloud', 'partners_data'];
 
 function generateToken(username) {
   const expiry = Date.now() + (1000 * 60 * 60 * 24 * 90); // 90 giorni
@@ -106,9 +111,8 @@ export default async function handler(req, res) {
       if (body[f] !== undefined && body[f] !== null) {
         if (typeof body[f] === 'string') {
           
-          let valueClean = (f === 'draft_json' || f === 'modulo_vcf' || f === 'config_canali' || f === 'sedi_json' || f === 'gallery_data' || f === 'pocket_cloud' || f === 'partners_data')
-          ? body[f].trim() 
-          : body[f].replace(/['"]+/g, '').trim(); 
+          // Gli apostrofi restano ("Un'azienda"): la protezione è la pulizia più sotto (lib/pulizia.js)
+          let valueClean = body[f].trim();
           
           if (f === 'draft_json' || valueClean !== "") {
             if (f === "digital_style") {
@@ -142,11 +146,40 @@ export default async function handler(req, res) {
       fieldsToSave.config_canali = typeof body.config_canali === 'object' ? JSON.stringify(body.config_canali) : body.config_canali;
     }
 
+    // --- FIX SICUREZZA: nessun codice nascosto nei testi mostrati sulla tag pubblica ---
+    for (const [campo, valore] of Object.entries(fieldsToSave)) {
+      if (campo === 'password') continue;
+      if (CAMPI_JSON.includes(campo)) fieldsToSave[campo] = pulisciJson(typeof valore === 'string' ? valore : JSON.stringify(valore));
+      else if (typeof valore === 'string') fieldsToSave[campo] = pulisciTesto(valore);
+      else if (valore && typeof valore === 'object') fieldsToSave[campo] = JSON.stringify(pulisciValore(valore));
+    }
+
+    // Lo stato si cambia solo all'attivazione: da "in attesa" ad "attivo", insieme alla password.
+    // (Con i pagamenti veri l'attivazione la confermerà il server dopo il pagamento.)
+    if (fieldsToSave.stato !== undefined) {
+      const attivazione = fieldsToSave.stato === 'attivo' && statoAttuale === 'in attesa' &&
+        !!(fieldsToSave.password || recordAttuale?.fields?.password);
+      if (!attivazione) delete fieldsToSave.stato;
+    }
+
+    // Il nome mostrato può solo aggiungere spazi al nome della tag (stessa regola dell'editor)
+    if (fieldsToSave.username_display !== undefined) {
+      const senzaSpazi = String(fieldsToSave.username_display).replace('@', '').replace(/\s+/g, '').toLowerCase();
+      if (senzaSpazi !== safeUsername.toLowerCase()) delete fieldsToSave.username_display;
+    }
+
     if (recordAttuale) {
       // La password qui si imposta SOLO la prima volta (attivazione dal checkout).
       // Per cambiarla serve anche quella attuale: api/change-password.js (pagina Account).
       if (fieldsToSave.password && recordAttuale.fields.password) {
         delete fieldsToSave.password;
+      }
+      // Prima password: deve essere un hash SHA-256 dal browser e si salva protetta con scrypt
+      if (fieldsToSave.password !== undefined) {
+        if (!hashClienteValido(String(fieldsToSave.password))) {
+          return res.status(400).json({ error: "Password non valida" });
+        }
+        fieldsToSave.password = await proteggiPassword(String(fieldsToSave.password));
       }
 
       // Attivazione (prima password): il server scrive le date del piano, mai il browser

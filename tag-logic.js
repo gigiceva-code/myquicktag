@@ -159,6 +159,9 @@ const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}$
             }
         } 
 
+        // Testi del proprietario ripuliti prima di mostrarli (session.js → mqtPulisci):
+        // nessun codice nascosto può partire sul telefono di chi apre la tag
+        fields = mqtPulisci.campi(fields);
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
 
@@ -2034,11 +2037,13 @@ tracciaClickSezione('LEAD ACQUISITO');
                 btn.style.opacity = "1";
             }, 3000);
         } else {
-            throw new Error("Risposta server non ok");
+            throw new Error(data.error || "Risposta server non ok");
         }
     } catch(err) {
         console.error("Errore salvataggio lead:", err);
-        alert('Si è verificato un errore di connessione. Riprova tra poco.');
+        alert(err.message && err.message !== "Risposta server non ok" && err.message !== "Failed to fetch"
+            ? err.message
+            : 'Si è verificato un errore di connessione. Riprova tra poco.');
         btn.innerText = testoOriginale;
         btn.style.pointerEvents = "auto";
         btn.style.opacity = "1";

@@ -808,10 +808,13 @@ async function vaiAllaVerifica() {
     // ==========================================
     // 1. BLACKLIST 
     // ==========================================
+    // Stesse liste di lib/nomi-riservati.js (il controllo che conta è sul server)
     const blacklist = [
         "admin", "administrator", "root", "support", "info", "help", "api", 
         "login", "logout", "register", "index", "home", "mail", "test",
-        "error", "null", "undefined"
+        "error", "null", "undefined",
+        "u", "www", "icons", "account", "contatti", "profile", "edit", "tag", "pocket",
+        "analytics", "checkout", "celebration", "myquicktag"
     ];
 
     if (blacklist.includes(rawTag)) {

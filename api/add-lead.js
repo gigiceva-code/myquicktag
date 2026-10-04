@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 import { trovaTag, aggiungiLead } from '../lib/db.js';
 import { calcolaAbbonamento } from '../lib/abbonamento.js';
+import { pulisciTesto } from '../lib/pulizia.js';
+import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
 
 // ============================================================
 // RACCOLTA CONTATTI: un visitatore lascia nome e contatto sulla tag pubblica
@@ -27,11 +29,19 @@ export default async function handler(req, res) {
 
   const body = req.body || {};
   const username = String(body.u || '').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
-  const nome = pulisci(body.nome, MAX_NOME);
-  const contatto = pulisci(body.contatto, MAX_CONTATTO);
+  const nome = pulisciTesto(pulisci(body.nome, MAX_NOME));
+  const contatto = pulisciTesto(pulisci(body.contatto, MAX_CONTATTO));
 
   if (!username) return res.status(400).json({ success: false, error: 'Tag mancante' });
   if (!contatto) return res.status(400).json({ success: false, error: 'Contatto mancante' });
+
+  // Limiti: niente vasetti riempiti di contatti finti
+  if (!(await entroILimiti(req, username, [
+    { nome: 'lead', per: 'ip+tag', max: 3, finestra: 600 },
+    { nome: 'lead-tag', per: 'tag', max: 60, finestra: 3600 }
+  ]))) {
+    return rispondiTroppiTentativi(res);
+  }
 
   try {
     // Si accettano contatti solo per tag attive, online e con la raccolta contatti accesa

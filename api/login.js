@@ -1,4 +1,6 @@
-import { trovaTag } from '../lib/db.js';
+import { trovaTag, aggiornaTag } from '../lib/db.js';
+import { verificaPassword, proteggiPassword } from '../lib/password.js';
+import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
@@ -23,12 +25,27 @@ const pwdProtetta = String(pwd).replace(/[^a-fA-F0-9]/g, '');
     if (pwdProtetta.length !== 64 || !tagPulito) {
         return res.status(401).json({ success: false, message: 'Credenziali non valide' });
     }
+    // Limiti ai tentativi: niente password provate a raffica
+    if (!(await entroILimiti(req, tagPulito, [
+        { nome: 'login', per: 'ip+tag', max: 10, finestra: 900 },
+        { nome: 'login-ip', per: 'ip', max: 50, finestra: 900 }
+    ]))) {
+        return rispondiTroppiTentativi(res);
+    }
+
     try {
-        // Confronto dell'hash a tempo costante (non rivela quanti caratteri coincidono)
+        // Verifica con scrypt (lib/password.js); le password nel vecchio formato si aggiornano qui
         const record = await trovaTag(tagPulito, ['password']);
-        const salvata = String(record?.fields?.password || '').toLowerCase();
-        const passwordOk = salvata.length === 64 &&
-            crypto.timingSafeEqual(Buffer.from(salvata), Buffer.from(pwdProtetta.toLowerCase()));
+        const verifica = await verificaPassword(pwdProtetta, record?.fields?.password);
+        const passwordOk = verifica.ok;
+
+        if (passwordOk && verifica.daAggiornare) {
+            try {
+                await aggiornaTag(record.id, { password: await proteggiPassword(pwdProtetta) });
+            } catch (e) {
+                console.error("Aggiornamento formato password non riuscito:", e.dettagli || e);
+            }
+        }
 
         if (passwordOk) {
             const expiry = Date.now() + (1000 * 60 * 60 * 24 * 90); // 90 giorni, rinnovati a ogni utilizzo (get-profile / update-profile)
