@@ -43,6 +43,9 @@ nel **racconto** e nel **primo percorso del cliente**:
 - Da controllare sul sito vero: le tag di prova attivate finora potrebbero essere "vuote" per i visitatori.
 
 ### 1.2 Checkout: prezzo e pagamento che non esistono
+
+> **Nota del titolare (05/10/2026): scelta voluta.** Il checkout con pagamento simulato è il segnaposto del
+> futuro pagamento con Stripe (vedi "Scelte volute" in `PASSAGGIO-CONSEGNE.md`). Non va corretto ora.
 ![Checkout](audit/3-checkout.png)
 
 - Mostra **"Totale €19,00"**, "Connessione cifrata **PCI-DSS**", loghi **Visa, Mastercard, Apple Pay,
