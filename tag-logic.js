@@ -326,7 +326,10 @@ function gestisciVisibilitaCaselle(fields) {
 
     let canali = [];
     try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
-    const hasNetwork = !!fields.sito_web || !!fields.telefono1 || !!fields.email || (fields.config_canali && fields.config_canali !== '[]') || (fields.partners_data && fields.partners_data !== '[]');
+    // Telefoni e indirizzo stanno dentro modulo_vcf (testo JSON): basta un valore compilato
+    let haRubrica = false;
+    try { haRubrica = Object.values(JSON.parse(fields.modulo_vcf || '{}')).some(v => String(v || '').trim() !== ''); } catch (e) {}
+    const hasNetwork = !!fields.sito_web || haRubrica || !!fields.email || (fields.config_canali && fields.config_canali !== '[]') || (fields.partners_data && fields.partners_data !== '[]');
     const elNetwork = document.getElementById('room-network');
     if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
 

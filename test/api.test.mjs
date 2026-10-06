@@ -254,3 +254,23 @@ globalThis.fetch=async (url,opt)=>String(url).includes('controlla_nome') ? new R
 r=await call('check-and-create.js',{method:'POST',body:{tag:'guastodb'}});
 globalThis.fetch=fetchVero;
 ok(r.code===500 && !rows.some(x=>x.username_system==='guastodb'),'controllo nomi non disponibile: la prenotazione si ferma');
+
+// ---- Attivazione: la bozza scritta prima dell'attivazione diventa la tag pubblica ----
+r=await call('check-and-create.js',{method:'POST',body:{tag:'bottegaverdi'}});
+const ricBV=r.body.sessionToken;
+const bozzaBV={username_system:'bottegaverdi',username_display:'@Bottega Verdi',bio:'Frutta <img src=x onerror=alert(1)>a km zero',
+  modulo_vcf:'{"telefono1":"+39 333 1234567"}',config_canali:JSON.stringify([{nome:'Insta<b>',url:'javascript:alert(1)'}]),stato:'attivo',password:'x',lead_capture_leads:'[]'};
+r=await call('update-profile.js',{method:'POST',body:{username_system:'bottegaverdi',draft_json:JSON.stringify(bozzaBV),sessionToken:ricBV}});
+const rigaBV=()=>rows.find(x=>x.username_system==='bottegaverdi');
+ok(r.code===200 && rigaBV().stato==='in attesa' && !rigaBV().bio,'prima dell\'attivazione la bozza resta privata');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'bottegaverdi',password:hash,stato:'attivo',sessionToken:ricBV}});
+ok(r.code===200 && rigaBV().stato==='attivo' && rigaBV().draft_json==='','attivazione riuscita e bozza svuotata');
+ok(rigaBV().username_display==='@Bottega Verdi' && /^Frutta ‹img.*›a km zero$/.test(rigaBV().bio) && !rigaBV().bio.includes('<') && JSON.parse(rigaBV().modulo_vcf).telefono1==='+39 333 1234567','contenuti della bozza pubblicati (e ripuliti)');
+const canaliBV=JSON.parse(rigaBV().config_canali); ok(canaliBV[0].nome==='Insta‹b›' && canaliBV[0].url==='','elenchi dentro la bozza (social) restano leggibili e ripuliti');
+ok(rigaBV().password.startsWith('scrypt$') && rigaBV().lead_capture_leads===undefined,'dalla bozza non passano password né campi riservati al server');
+r=await call('get-profile.js',{query:{u:'bottegaverdi'}});
+ok(r.body.fields.bio && r.body.fields.username_display==='@Bottega Verdi','il visitatore vede i contenuti subito dopo l\'attivazione');
+// Dopo l'attivazione la bozza torna a essere solo una bozza (si pubblica col tasto Pubblica)
+const tokBV=r.body.sessionToken || (await call('login.js',{method:'POST',body:{tag:'bottegaverdi',pwd:hash}})).body.sessionToken;
+r=await call('update-profile.js',{method:'POST',body:{username_system:'bottegaverdi',draft_json:JSON.stringify({bio:'nuova bozza'}),sessionToken:tokBV}});
+ok(r.code===200 && /^Frutta/.test(rigaBV().bio) && JSON.parse(rigaBV().draft_json).bio==='nuova bozza','bozza di una tag attiva: non pubblicata finché non si preme Pubblica');

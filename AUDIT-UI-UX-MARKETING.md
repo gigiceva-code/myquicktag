@@ -29,7 +29,7 @@ nel **racconto** e nel **primo percorso del cliente**:
 
 ## Priorità 1 — da sistemare prima del lancio
 
-### 1.1 I contenuti dell'editor non vengono pubblicati all'attivazione (errore)
+### 1.1 I contenuti dell'editor non vengono pubblicati all'attivazione (errore) — ✅ corretto il 06/10/2026
 ![Bug pubblicazione](audit/4-bug-pubblicazione.png)
 
 - **Cosa succede.** Il cliente nuovo scrive nome, presentazione, contatti e preme "Completa tag".
@@ -38,8 +38,12 @@ nel **racconto** e nel **primo percorso del cliente**:
   mostrata), ma **chi la apre da un altro telefono vede solo il @nome**.
 - L'unico segnale è nel campanello della dashboard ("Hai una bozza in sospeso"). Il pulsante
   "Pubblica la tua tag" compare solo aprendo l'anteprima dalla dashboard.
-- **Correzione proposta:** al momento dell'attivazione la bozza diventa direttamente la tag pubblica.
-  È una correzione, non un cambio di prodotto: posso farla subito con la relativa prova automatica.
+- **Corretto (06/10/2026):** all'attivazione il server (`api/update-profile.js`) copia la bozza nella tag
+  pubblica e la svuota. Corretti anche due errori trovati nelle prove:
+  - la pulizia di sicurezza rovinava gli elenchi dentro la bozza (telefono/indirizzo, social, partner,
+    galleria), rendendoli illeggibili anche col tasto "Pubblica" della dashboard (`lib/pulizia.js`);
+  - una tag con il solo telefono non mostrava la stanza NETWORK, quindi il telefono era irraggiungibile
+    (`tag-logic.js`).
 - Da controllare sul sito vero: le tag di prova attivate finora potrebbero essere "vuote" per i visitatori.
 
 ### 1.2 Checkout: prezzo e pagamento che non esistono
@@ -223,7 +227,7 @@ Frasi da rivedere: "ecosistema d'élite", "spazio assoluto", "Preparati alla riv
 ## Piano di lavoro proposto
 
 **A. Correzioni (posso procedere subito, spiegando dopo)**
-1. Pubblicazione dei contenuti all'attivazione (1.1) + prova automatica.
+1. ✅ Pubblicazione dei contenuti all'attivazione (1.1) + prova automatica.
 2. Email del supporto, icone doppie e "X" del menu, zoom, versione fissa della libreria (1.6, 3).
 3. Stessa regola dei piani tra editor e tag pubblica, appena deciso il punto 1.5.
 

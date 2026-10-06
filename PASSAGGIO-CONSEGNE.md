@@ -55,7 +55,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 108 prove delle funzioni `api/` con un finto database (nessuna installazione).
+- `node test/api.test.mjs` → 115 prove delle funzioni `api/` con un finto database (nessuna installazione).
   Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).
