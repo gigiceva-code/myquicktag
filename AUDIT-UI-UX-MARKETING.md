@@ -228,7 +228,7 @@ Frasi da rivedere: "ecosistema d'élite", "spazio assoluto", "Preparati alla riv
 
 **A. Correzioni (posso procedere subito, spiegando dopo)**
 1. ✅ Pubblicazione dei contenuti all'attivazione (1.1) + prova automatica.
-2. Email del supporto, icone doppie e "X" del menu, zoom, versione fissa della libreria (1.6, 3).
+2. ✅ Email del supporto (anche il link "Powered by" della tag puntava a myquicktag.com), icone doppie e "X" del menu, zoom (campi dell'editor a 16 px), versione fissa della libreria, piè di pagina "© 2026 myquicktag" (marchio non ancora registrato) (1.6, 3). Fatto il 06/10/2026.
 3. Stessa regola dei piani tra editor e tag pubblica, appena deciso il punto 1.5.
 
 **B. Testi (serve il tuo ok sul tono e sul glossario)**

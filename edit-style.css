@@ -312,3 +312,10 @@
             justify-content: flex-start !important; 
             height: 100% !important; 
         }
+
+/* Campi da scrivere a 16px: sotto questa misura l'iPhone ingrandisce la pagina da solo quando
+   si tocca un campo (lo zoom con due dita ora è consentito per chi vuole ingrandire i testi). */
+input[type="text"], input[type="url"], input[type="tel"], input[type="email"], input[type="number"],
+input[type="password"], input:not([type]), textarea, select {
+    font-size: 16px !important;
+}
