@@ -84,8 +84,8 @@ nel **racconto** e nel **primo percorso del cliente**:
   piano è **Base**: nell'editor le funzioni avanzate sono bloccate e sfocate.
 - Al contrario, sulla tag pubblica alcune funzioni Premium (es. "Azione rapida") **compaiono anche
   ai Base**, perché il codice tratta il piano vuoto come "non Base". Risultato: regole diverse tra editor e tag.
-- **Da decidere:** durante i 3 mesi tutto sbloccato (come nella proposta "prova Gold") oppure Base
-  con testo della home corretto. Poi allineo editor e tag pubblica alla stessa regola.
+- **Deciso (09/10/2026):** durante i 3 mesi tutto sbloccato; si mette nel codice nell'ultima settimana
+  prima del lancio. Motivi e dettagli in `PRE-LANCIO.md` → "Strategia di lancio".
 
 ### 1.6 Piccoli errori visibili
 - Email del supporto: si legge `info@myquicktag.it` ma il link apre `info@myquicktag.com`.
@@ -229,7 +229,7 @@ Frasi da rivedere: "ecosistema d'élite", "spazio assoluto", "Preparati alla riv
 **A. Correzioni (posso procedere subito, spiegando dopo)**
 1. ✅ Pubblicazione dei contenuti all'attivazione (1.1) + prova automatica.
 2. ✅ Email del supporto (anche il link "Powered by" della tag puntava a myquicktag.com), icone doppie e "X" del menu, zoom (campi dell'editor a 16 px), versione fissa della libreria, piè di pagina "© 2026 myquicktag" (marchio non ancora registrato) (1.6, 3). Fatto il 06/10/2026.
-3. Stessa regola dei piani tra editor e tag pubblica, appena deciso il punto 1.5.
+3. Stessa regola dei piani tra editor e tag pubblica (1.5): deciso "tutto sbloccato per 3 mesi", da fare nell'ultima settimana prima del lancio.
 
 **B. Testi (serve il tuo ok sul tono e sul glossario)**
 4. Checkout "gratis per 3 mesi" senza diciture di pagamento (1.2).
@@ -238,7 +238,7 @@ Frasi da rivedere: "ecosistema d'élite", "spazio assoluto", "Preparati alla riv
 
 **C. Decisioni di prodotto (tue)**
 7. Email del cliente all'attivazione e recupero password (1.4).
-8. Durante i 3 mesi: tutto sbloccato o Base? (1.5)
+8. ✅ Durante i 3 mesi: tutto sbloccato (1.5, deciso il 09/10/2026).
 9. Privacy, Termini e "Segnala questa tag" (1.3).
 10. Copertina della tag con pulsanti diretti (2.5) e anteprima dei link su WhatsApp con nome e foto (1.6).
 

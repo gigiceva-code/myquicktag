@@ -9,7 +9,8 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
 ## 1. Da decidere (prodotto)
 
 ### Rinnovo e checkout prima/dopo i 90 giorni
-- **Regola già decisa:** i 90 giorni gratuiti valgono **una sola volta**, alla prima attivazione della tag.
+- ~~Regola: i 90 giorni gratuiti valgono una sola volta.~~ **Superata il 09/10/2026:** vedi "Strategia di lancio"
+  qui sotto (se i rinnovi non bastano, altri 3 mesi gratis con tutto sbloccato).
 - **Da decidere al lancio:** prezzi dei piani (Base / Premium / Gold), periodicità (mensile, annuale…), cosa paga il cliente alla scadenza.
 - **Stato attuale del codice (solo per i test):** il pulsante "Rinnova gratis per 90 giorni" nella dashboard allunga la scadenza di 90 giorni **gratis e all'infinito**. ⚠️ **Non deve arrivare così sul sito pubblico.**
 - Dove si cambia:
@@ -25,7 +26,27 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
 - "Fai l'Upgrade" (dashboard) e il checkout di una tag già attiva mostrano per ora "Upgrade in arrivo".
 - Per i test si può impostare il piano a mano su Supabase (tabella `tags`, colonna `plan`: `PREMIUM` o `GOLD`).
 
-### Modello dei piani e pagamenti (in sospeso)
+### Strategia di lancio: 3 mesi gratis con tutto sbloccato (deciso il 09/10/2026)
+- **Perché (il titolare non vuole doverlo ripetere):** il titolare è lavoratore dipendente e la famiglia
+  (moglie e tre figli) vive del suo unico stipendio. Non vuole aprire partita IVA e pagare tasse e
+  contributi prima di sapere se il prodotto vende. Quindi al lancio **nessun incasso**: tutto è gratis.
+- **Durante i 3 mesi:** ogni tag attiva ha **tutto sbloccato** (come il Gold), nell'editor e sulla tag
+  pubblica. La frase della home "Tre mesi di accesso completo" diventa vera.
+- **Alla fine dei 3 mesi (da decidere allora, in base ai numeri):**
+  - se ci sono abbastanza clienti pronti a rinnovare → si apre l'attività (prima: commercialista) e si
+    attiva il pagamento con Stripe;
+  - altrimenti → messaggio di ringraziamento ai clienti e **altri 3 mesi gratis, sempre tutto sbloccato**.
+- **Quando si fa nel codice:** il titolare propone il giorno del lancio. Concordato: **nell'ultima
+  settimana prima del lancio**, non il giorno stesso (vedi sezione 2). Il lavoro:
+  - una regola sola decisa dal server ("questa tag ha tutto sbloccato fino al…"), letta da editor e
+    tag pubblica; oggi editor e tag usano regole diverse e "Simula Gold" nell'editor sblocca tutto per sempre;
+  - togliere i blocchi/sfocature e "Simula" durante la prova;
+  - rinnovo gratuito di altri 3 mesi attivabile dal titolare (oggi c'è un pulsante di prova "Rinnova
+    gratis" da rivedere, vedi sopra).
+- **Collegato:** per mandare il messaggio a fine prova serve l'**email del cliente**, che oggi non chiediamo
+  (audit, punto 1.4): va raccolta dal lancio, altrimenti non si potrà avvisare nessuno.
+
+### Modello dei piani e pagamenti (dopo la prova, in sospeso)
 - Proposta discussa: Base gratis per sempre (con "Creato con myquicktag"), Premium e Gold a pagamento,
   prova con tutto sbloccato (Gold) e cambio piano libero durante la prova; a fine prova si torna al Base
   senza perdere contenuti (sezioni nascoste, non cancellate).
@@ -67,6 +88,8 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
     - Futuro: codice di sblocco per le assegnazioni manuali; eventuale tipo "segnala"; liste ampliate per categoria.
 - [x] Documenti interni, test e `supabase/` esclusi dal sito pubblico (`.vercelignore`).
 - [ ] Prima del lancio: svuotare la tabella `tags` dalle tag di prova.
+- [ ] **Ultima settimana prima del lancio:** regola "3 mesi tutto sbloccato" nel codice (sezione 1,
+  "Strategia di lancio"), provata dal titolare sul telefono prima del giorno del lancio.
 - [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** tasto **"Segnala questa tag"** sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio**: myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
 - [ ] Ancora aperti (minori): cambiare password non fa uscire gli altri dispositivi; visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel.
 
