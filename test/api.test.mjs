@@ -1,14 +1,16 @@
 // ============================================================
-// TEST DELLE FUNZIONI DEL SERVER (api/) CON UN FINTO DATABASE IN MEMORIA
+// TEST DELLE FUNZIONI DEL SERVER (api/) CON UN FINTO DATABASE E UN FINTO SUPABASE AUTH
 // ============================================================
 // Uso:   node test/api.test.mjs
 // Nessuna dipendenza da installare e nessun accesso al database vero: fetch viene sostituito
-// da un finto Supabase (tabella tags + funzioni SQL usate dal server). Ogni riga stampa OK o FAIL;
-// alla fine il processo esce con codice 1 se qualcosa non va.
+// da un finto Supabase (tabella tags + funzioni SQL usate dal server + /auth/v1/user).
+// Ogni riga stampa OK o FAIL; alla fine il processo esce con codice 1 se qualcosa non va.
 import crypto from 'crypto';
+import fs from 'fs';
 process.env.SUPABASE_URL='https://fake.supabase.co'; process.env.SUPABASE_SECRET_KEY='sb_secret_x'; process.env.SESSION_SECRET='s';
+delete process.env.RINNOVO_GRATUITO;
 const R=new URL('../api/', import.meta.url).href;
-const rows=[]; const calls=[]; const limiti=new Map();
+const rows=[]; const limiti=new Map();
 // Lista protetta di prova (nel database vero: tabella nomi_riservati)
 const nomiProtetti=[
   {nome:'admin',tipo:'system',regola:'esatto'}, {nome:'myquicktag',tipo:'black',regola:'contiene'},
@@ -16,8 +18,25 @@ const nomiProtetti=[
   {nome:'ferrari',tipo:'gold',regola:'esatto'}, {nome:'cocacola',tipo:'gold',regola:'esatto'}, {nome:'netflix',tipo:'gold',regola:'esatto'},
   {nome:'gianluigibuffon',tipo:'gold',regola:'esatto'}, {nome:'cristianoronaldo',tipo:'gold',regola:'esatto'}
 ];
+
+// ---- Finto Supabase Auth: sessioni (JWT) → utenti ----
+const sessioni=new Map(); // jwt → { id, email, email_confirmed_at }
+const b64=o=>Buffer.from(JSON.stringify(o)).toString('base64url');
+let nSess=0;
+function apriSessione(utente){ const jwt=`${b64({alg:'ES256',typ:'JWT'})}.${b64({sub:utente.id,email:utente.email,n:++nSess})}.${crypto.randomBytes(16).toString('base64url')}`; sessioni.set(jwt,utente); return jwt; }
+const anna={id:'11111111-1111-1111-1111-111111111111',email:'anna@esempio.it',email_confirmed_at:'2026-10-01T00:00:00Z'};
+const bruno={id:'22222222-2222-2222-2222-222222222222',email:'bruno@esempio.it',email_confirmed_at:'2026-10-01T00:00:00Z'};
+const nonConfermato={id:'33333333-3333-3333-3333-333333333333',email:'carla@esempio.it',email_confirmed_at:null};
+let authGiu=false;
+
 globalThis.fetch=async (url,opt={})=>{
-  const u=new URL(url); const m=opt.method||'GET'; calls.push(m+' '+u.search);
+  const u=new URL(url); const m=opt.method||'GET';
+  if(u.pathname==='/auth/v1/user'){
+    if(authGiu) return new Response('{}',{status:503});
+    const jwt=String(opt.headers?.Authorization||'').replace(/^Bearer /,'');
+    const ut=sessioni.get(jwt); if(!ut) return new Response('{"message":"invalid JWT"}',{status:401});
+    return new Response(JSON.stringify({id:ut.id,email:ut.email,email_confirmed_at:ut.email_confirmed_at}),{status:200});
+  }
   if(opt.headers.apikey!=='sb_secret_x') return new Response('{}',{status:401});
   if(u.pathname.endsWith('/rpc/controlla_nome')){ // stessa logica di public.controlla_nome (migrazione 20261005000000)
     const b=JSON.parse(opt.body); const base=b.p_nome.toLowerCase(); const ss=base.replace(/[-_.]/g,'');
@@ -25,6 +44,9 @@ globalThis.fetch=async (url,opt={})=>{
     const trovati=nomiProtetti.filter(n=>n.attivo!==false && (n.regola==='esatto' ? forme.includes(n.nome) : forme.some(f=>f.includes(n.nome))));
     trovati.sort((x,y)=>['system','black','gold'].indexOf(x.tipo)-['system','black','gold'].indexOf(y.tipo));
     return new Response(JSON.stringify(trovati[0]?.tipo ?? null),{status:200}); }
+  if(u.pathname.endsWith('/rpc/nome_assegnato_a')){ // migrazione 20261011000000
+    const b=JSON.parse(opt.body); const n=nomiProtetti.find(x=>x.attivo!==false && x.regola==='esatto' && x.nome===b.p_nome.toLowerCase() && x.assegnato_a);
+    return new Response(JSON.stringify(n?n.assegnato_a:null),{status:200}); }
   if(u.pathname.endsWith('/rpc/consuma_tentativo')){ const b=JSON.parse(opt.body); const n=(limiti.get(b.p_chiave)||0)+1; limiti.set(b.p_chiave,n); return new Response(JSON.stringify(n<=b.p_max),{status:200}); }
   if(u.pathname.endsWith('/rpc/gestisci_lead')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null',{status:200});
     let l=JSON.parse(r.lead_capture_leads||'[]');
@@ -34,158 +56,217 @@ globalThis.fetch=async (url,opt={})=>{
     r.lead_capture_leads=JSON.stringify(l); return new Response(JSON.stringify(r.lead_capture_leads),{status:200}); }
   if(u.pathname.includes('/rpc/')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null',{status:200});
     const campo=u.pathname.endsWith('aggiungi_lead')?'lead_capture_leads':'analytics_log'; const voce=b.p_lead||b.p_click; const lista=JSON.parse(r[campo]||'[]'); lista.unshift(voce); r[campo]=JSON.stringify(lista); return new Response('true',{status:200}); }
-  const f=(r)=>{for(const [k,v] of u.searchParams){ if(v.startsWith('eq.')&&String(r[k])!==decodeURIComponent(v.slice(3)))return false;}return true;};
+  const f=(r)=>{for(const [k,v] of u.searchParams){ if(v.startsWith('eq.')&&String(r[k])!==decodeURIComponent(v.slice(3)))return false; if(v==='is.null'&&r[k]!=null)return false;}return true;};
   if(m==='GET'){ let out=rows.filter(f); const sel=u.searchParams.get('select'); if(sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out),{status:200}); }
-  if(m==='POST'){ const b=JSON.parse(opt.body); if(!/^[a-z0-9]{1,30}$/.test(b.username_system)) return new Response('{"code":"23514"}',{status:400}); if(rows.some(r=>r.username_system===b.username_system)) return new Response('{"code":"23505"}',{status:409}); const r={id:crypto.randomUUID(),created_at:new Date().toISOString().replace('Z','123+00:00'),views:0,password:null,draft_json:null,...b}; rows.push(r); return new Response(JSON.stringify([r]),{status:201}); }
-  if(m==='PATCH'){ const b=JSON.parse(opt.body); rows.filter(f).forEach(r=>Object.assign(r,b)); return new Response(null,{status:204}); }
+  if(m==='POST'){ const b=JSON.parse(opt.body); if(!/^[a-z0-9]{1,30}$/.test(b.username_system)) return new Response('{"code":"23514"}',{status:400}); if(rows.some(r=>r.username_system===b.username_system)) return new Response('{"code":"23505"}',{status:409}); const r={id:crypto.randomUUID(),created_at:new Date().toISOString().replace('Z','123+00:00'),views:0,password:null,draft_json:null,proprietario_id:null,...b}; rows.push(r); return new Response(JSON.stringify([r]),{status:201}); }
+  if(m==='PATCH'){ const b=JSON.parse(opt.body); const toccate=rows.filter(f); toccate.forEach(r=>Object.assign(r,b)); return String(opt.headers.Prefer||'').includes('representation') ? new Response(JSON.stringify(toccate),{status:200}) : new Response(null,{status:204}); }
   if(m==='DELETE'){ for(let i=rows.length-1;i>=0;i--) if(f(rows[i])) rows.splice(i,1); return new Response(null,{status:204}); }
 };
 function res(){ const o={code:0,body:null,h:{}}; o.status=c=>{o.code=c;return o}; o.json=b=>{o.body=b;return o}; o.send=b=>{o.body=b;return o}; o.setHeader=(k,v)=>o.h[k]=v; return o;}
 let ipN=0;
 const call=async(f,req)=>{const m=await import(R+f); const r=res(); await m.default({query:{},...req,headers:{'x-forwarded-for':req.ip||('10.0.0.'+(++ipN%250)),...(req.headers||{})}},r); return r;};
+const conSessione=jwt=>({authorization:'Bearer '+jwt});
 const ok=(c,msg)=>{console.log((c?'OK  ':'FAIL')+' '+msg); if(!c) process.exitCode=1;};
+const riga=nome=>rows.find(x=>x.username_system===nome);
 
+const jwtAnna=apriSessione(anna), jwtBruno=apriSessione(bruno), jwtCarla=apriSessione(nonConfermato);
+
+// ============================================================
+// 1. PRENOTAZIONE (senza account) E ATTIVAZIONE CON ACCOUNT
+// ============================================================
 let r=await call('check-and-create.js',{method:'POST',body:{tag:'@Prova'}});
-ok(r.code===200 && r.body.sessionToken && r.body.username==='prova','prenotazione '+JSON.stringify(r.body).slice(0,80));
+ok(r.code===200 && r.body.sessionToken && r.body.username==='prova' && r.body.proprietario===false,'prenotazione senza account: ricevuta, nessun proprietario');
 const ric=r.body.sessionToken;
+ok(riga('prova').proprietario_id===null,'tag in attesa senza proprietario');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'prova'}});
 ok(r.code===400 && /riservato/.test(r.body.message),'seconda prenotazione bloccata 24h');
 r=await call('get-profile.js',{query:{u:'prova'}});
-ok(r.code===200 && r.body.fields.stato==='in attesa' && r.body.reservation_expires_at && r.body.fields.has_password===false && !('password' in r.body.fields),'get-profile in attesa');
-const hash=crypto.createHash('sha256').update('123456').digest('hex');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',password:hash,stato:'attivo',bio:'ciao',sessionToken:ric}});
-ok(r.code===200 && r.body.sessionToken,'attivazione '+JSON.stringify(r.body).slice(0,60));
-ok(String(rows[0].password).startsWith('scrypt$') && !rows[0].password.includes(hash),'password salvata protetta con scrypt (non l\'hash nudo)');
-ok(rows[0].data_scadenza && rows[0].data_inizio,'date abbonamento scritte '+rows[0].data_inizio+'→'+rows[0].data_scadenza);
+ok(r.code===200 && r.body.fields.stato==='in attesa' && r.body.reservation_expires_at && r.body.fields.has_password===false && !('password' in r.body.fields) && !('proprietario_id' in r.body.fields),'get-profile in attesa (niente password né proprietario)');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',draft_json:JSON.stringify({bio:'ciao',username_display:'@Prova'}),sessionToken:ric}});
+ok(r.code===200 && !riga('prova').bio,'con la ricevuta si salva la bozza (resta privata)');
+r=await call('get-profile.js',{query:{u:'prova',token:ric}});
+ok(r.body.fields.draft_json && !r.body.fields.sei_proprietario,'con la ricevuta si rilegge la propria bozza');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',stato:'attivo',sessionToken:ric}});
+ok(r.code===401 && r.body.serve_account && riga('prova').stato==='in attesa','attivazione senza account rifiutata (serve un account)');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtCarla),body:{username_system:'prova',stato:'attivo',sessionToken:ric}});
+ok(r.code===401 && riga('prova').stato==='in attesa','attivazione con account NON verificato rifiutata');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',stato:'attivo',password:'a'.repeat(64),proprietario_id:bruno.id,sessionToken:ric}});
+const p=riga('prova');
+ok(r.code===200 && r.body.action==='activated' && p.stato==='attivo' && p.proprietario_id===anna.id,'attivazione: ricevuta + account verificato → attiva e di proprietà dell\'account');
+ok(p.bio==='ciao' && p.username_display==='@Prova' && p.draft_json==='','attivazione: la bozza diventa la tag pubblica');
+ok(p.data_inizio && p.data_scadenza && !p.password,'attivazione: date scritte dal server, nessuna password salvata nella tag');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',bio:'hack',sessionToken:ric}});
+ok(r.code===401 && riga('prova').bio==='ciao','dopo l\'attivazione la ricevuta non vale più');
 r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',bio:'hack'}});
-ok(r.code===401,'scrittura senza token rifiutata');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'nessuno',bio:'x',sessionToken:'a.b.c'}});
-ok(r.code===401||r.code===404,'tag inesistente');
-r=await call('login.js',{method:'POST',body:{tag:'@PROVA',pwd:hash}});
-ok(r.code===200 && r.body.sessionToken,'login corretto');
-const tok=r.body.sessionToken;
-r=await call('login.js',{method:'POST',body:{tag:'prova',pwd:'0'.repeat(64)}});
-ok(r.code===401,'login password errata');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',draft_json:'{"a":1}',sessionToken:tok}});
-ok(r.code===200,'salva bozza');
+ok(r.code===401,'scrittura senza sessione rifiutata');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtBruno),body:{username_system:'prova',bio:'hack'}});
+ok(r.code===401 && riga('prova').bio==='ciao','un altro account non può modificare la tag');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',bio:'nuova bio',proprietario_id:bruno.id}});
+ok(r.code===200 && riga('prova').bio==='nuova bio' && riga('prova').proprietario_id===anna.id,'il proprietario salva; proprietario_id dal browser ignorato');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',bio:'x',sessionToken:jwtAnna}});
+ok(r.code===200,'sessione accettata anche nel campo sessionToken (pagine esistenti)');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'nessuno',bio:'x'}});
+ok(r.code===404,'tag inesistente');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',stato:'in attesa'}});
+ok(riga('prova').stato==='attivo','una tag attiva non può tornare "in attesa" dal browser');
+
+// get-profile: visitatore, proprietario, altro account
+rows.find(x=>x.username_system==='prova').pocket_cloud='[{"username":"x"}]';
 r=await call('get-profile.js',{query:{u:'prova'}});
-ok(r.code===200 && r.body.fields.draft_json===undefined && r.body.abbonamento.fase==='attiva','bozza nascosta ai visitatori, fase attiva');
-r=await call('get-profile.js',{query:{u:'prova',token:tok}});
-ok(r.body.fields.draft_json==='{"a":1}' && r.body.sessionToken,'bozza visibile al proprietario + token rinnovato');
-r=await call('track-view.js',{method:'POST',query:{u:'prova'},headers:{'user-agent':'iPhone','x-vercel-ip-city':'Milano','x-vercel-ip-country':'IT'}});
-ok(r.code===200 && rows[0].views===1 && JSON.parse(rows[0].analytics_data).geo['Milano, IT']===1,'track-view');
-// riciclo prenotazione scaduta
+ok(r.body.fields.bio==='x' && !('pocket_cloud' in r.body.fields) && !r.body.fields.sei_proprietario && r.body.fields.has_password===true,'visitatore: contenuti pubblici, niente campi privati');
+r=await call('get-profile.js',{query:{u:'prova',token:jwtAnna}});
+ok(r.body.fields.pocket_cloud && r.body.fields.sei_proprietario===true && !('proprietario_id' in r.body.fields),'proprietario: vede i campi privati (non l\'id dell\'account)');
+r=await call('get-profile.js',{query:{u:'prova',token:jwtBruno}});
+ok(!('pocket_cloud' in r.body.fields) && !r.body.fields.sei_proprietario,'altro account: come un visitatore');
+
+// Sessione chiusa (uscita / cambio o recupero password su Supabase): non vale più
+const jwtAnna2=apriSessione(anna); sessioni.delete(jwtAnna2);
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna2),body:{username_system:'prova',bio:'revocata'}});
+ok(r.code===401 && riga('prova').bio!=='revocata','sessione revocata rifiutata su update-profile');
+r=await call('get-profile.js',{query:{u:'prova',token:jwtAnna2}});
+ok(!r.body.fields.sei_proprietario,'sessione revocata rifiutata su get-profile');
+r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna2),body:{azione:'mie-tag'}});
+ok(r.code===401,'sessione revocata rifiutata su account');
+authGiu=true; const ceG=console.error; console.error=()=>{};
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',bio:'senza verifica'}});
+console.error=ceG; authGiu=false;
+ok(r.code===500 && riga('prova').bio!=='senza verifica','Supabase Auth non raggiungibile: nessuna scrittura (niente via libera)');
+
+// Riciclo prenotazione scaduta, tag attiva occupata
 rows.push({id:'old',username_system:'vecchia',stato:'in attesa',created_at:new Date(Date.now()-25*3600e3).toISOString()});
 r=await call('check-and-create.js',{method:'POST',body:{tag:'vecchia'}});
 ok(r.code===200 && rows.filter(x=>x.username_system==='vecchia').length===1 && !rows.some(x=>x.id==='old'),'riciclo prenotazione >24h');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'prova'}});
 ok(r.code===400 && /occupato/.test(r.body.message),'tag attiva occupata');
+// Ricevuta scaduta
+const exp=Date.now()-1000; const firmaVecchia=crypto.createHmac('sha256','s').update(`vecchia.${exp}`).digest('hex');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'vecchia',bio:'x',sessionToken:`vecchia.${exp}.${firmaVecchia}`}});
+ok(r.code===401,'ricevuta scaduta rifiutata');
 
-// ---- Sicurezza: contatti, click, campi privati ----
-rows[0].lead_capture_attivo='true'; rows[0].pocket_cloud='[{"username":"x"}]';
+// ============================================================
+// 2. MULTI-TAG: un account, più tag
+// ============================================================
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtAnna),body:{tag:'annabar'}});
+ok(r.code===200 && r.body.proprietario===true && riga('annabar').proprietario_id===anna.id,'seconda tag prenotata dentro l\'account: è già dell\'account');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'annabar',bio:'x',sessionToken:r.body.sessionToken}});
+ok(r.code===401,'tag in attesa con proprietario: la sola ricevuta non basta');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'annabar',draft_json:JSON.stringify({bio:'Bar di Anna'})}});
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'annabar',stato:'attivo'}});
+ok(r.code===200 && riga('annabar').stato==='attivo' && riga('annabar').bio==='Bar di Anna','seconda tag attivata dal proprietario (bozza pubblicata)');
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtCarla),body:{tag:'carlanome'}});
+ok(r.code===401 && !riga('carlanome'),'prenotazione con sessione non valida/non verificata: si chiede di riaccedere');
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtBruno),body:{tag:'brunoshop'}});
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtBruno),body:{username_system:'brunoshop',stato:'attivo'}});
+ok(riga('brunoshop').proprietario_id===bruno.id && riga('brunoshop').stato==='attivo','un altro account ha la sua tag');
+r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
+const nomiAnna=(r.body.tags||[]).map(t=>t.username_system).sort().join();
+ok(r.code===200 && nomiAnna==='annabar,prova','dashboard di Anna: le sue due tag e nessun\'altra');
+ok(r.body.tags.every(t=>t.stato==='attivo' && t.abbonamento && t.abbonamento.fase==='attiva') && !JSON.stringify(r.body).includes('draft_json') && !JSON.stringify(r.body).includes('proprietario_id'),'dashboard: stato e scadenza, nessun dato interno');
+r=await call('account.js',{method:'POST',headers:conSessione(jwtBruno),body:{azione:'mie-tag'}});
+ok(r.body.tags.map(t=>t.username_system).join()==='brunoshop','dashboard di Bruno: solo la sua tag');
+r=await call('account.js',{method:'POST',body:{azione:'mie-tag'}});
+ok(r.code===401,'dashboard senza sessione rifiutata');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'annabar',bio:'solo annabar'}});
+ok(riga('annabar').bio==='solo annabar' && riga('prova').bio!=='solo annabar','le modifiche a una tag non toccano l\'altra');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'brunoshop',bio:'hack'}});
+ok(r.code===401 && riga('brunoshop').bio!=='hack','un account non modifica la tag di un altro');
+
+// Attivazione concorrente della stessa tag da due account: ne vince uno
+r=await call('check-and-create.js',{method:'POST',body:{tag:'contesa'}});
+const ricC=r.body.sessionToken;
+const [a1,a2]=await Promise.all([
+  call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'contesa',stato:'attivo',sessionToken:ricC}}),
+  call('update-profile.js',{method:'POST',headers:conSessione(jwtBruno),body:{username_system:'contesa',stato:'attivo',sessionToken:ricC}})]);
+ok([a1.code,a2.code].filter(c=>c===200).length===1 && [anna.id,bruno.id].includes(riga('contesa').proprietario_id),'stessa ricevuta usata da due account insieme: un solo proprietario');
+
+// ============================================================
+// 3. TAG CREATE COL VECCHIO ACCESSO: collegamento all'account (una volta sola)
+// ============================================================
+const { proteggiPassword } = await import(new URL('../lib/password.js', import.meta.url).href);
+const vecchiaHash=crypto.createHash('sha256').update('vecchia1').digest('hex');
+rows.push({id:'leg',username_system:'legacy',stato:'attivo',password:await proteggiPassword(vecchiaHash),created_at:new Date().toISOString(),data_scadenza:'2099-01-01',proprietario_id:null});
+r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'collega-vecchia',tag:'legacy',pwd:'1'.repeat(64)}});
+ok(r.code===403 && !riga('legacy').proprietario_id,'collega tag vecchia: password sbagliata rifiutata');
+r=await call('account.js',{method:'POST',body:{azione:'collega-vecchia',tag:'legacy',pwd:vecchiaHash}});
+ok(r.code===401,'collega tag vecchia: serve la sessione dell\'account');
+r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'collega-vecchia',tag:'legacy',pwd:vecchiaHash}});
+ok(r.code===200 && riga('legacy').proprietario_id===anna.id && riga('legacy').password===null,'collega tag vecchia: collegata all\'account e vecchia password cancellata');
+r=await call('account.js',{method:'POST',headers:conSessione(jwtBruno),body:{azione:'collega-vecchia',tag:'legacy',pwd:vecchiaHash}});
+ok(r.code===403 && riga('legacy').proprietario_id===anna.id,'collega tag vecchia: non si ricollega a un altro account');
+let ultimo;
+for (let i=0;i<6;i++) ultimo=await call('account.js',{method:'POST',ip:'5.5.5.5',headers:conSessione(jwtBruno),body:{azione:'collega-vecchia',tag:'legacy',pwd:'2'.repeat(64)}});
+ok(ultimo.code===429,'collega tag vecchia: il 6° tentativo in 15 minuti è bloccato');
+
+// ============================================================
+// 4. CONTATTI DEL VASETTO, CLICK, CAMPI PRIVATI
+// ============================================================
+riga('prova').lead_capture_attivo='true';
 r=await call('add-lead.js',{method:'POST',body:{u:'prova',nome:'<img src=x onerror=alert(1)>Mario',contatto:'333 1234567'}});
-ok(r.code===200 && JSON.parse(rows[0].lead_capture_leads)[0].contatto==='333 1234567','add-lead aggiunge il contatto');
+ok(r.code===200 && JSON.parse(riga('prova').lead_capture_leads)[0].contatto==='333 1234567','add-lead aggiunge il contatto');
 r=await call('add-lead.js',{method:'POST',body:{u:'prova',nome:'Lucia',contatto:'lucia@x.it'}});
-ok(JSON.parse(rows[0].lead_capture_leads).length===2 && JSON.parse(rows[0].lead_capture_leads)[0].nome==='Lucia','secondo contatto in cima, il primo resta');
+ok(JSON.parse(riga('prova').lead_capture_leads).length===2 && JSON.parse(riga('prova').lead_capture_leads)[0].nome==='Lucia','secondo contatto in cima, il primo resta');
 r=await call('add-lead.js',{method:'POST',body:{u:'prova',nome:'X',contatto:''}});
 ok(r.code===400,'contatto vuoto rifiutato');
 r=await call('add-lead.js',{method:'POST',body:{u:'nessuno',nome:'X',contatto:'1'}});
 ok(r.code===404,'add-lead su tag inesistente');
-rows[0].lead_capture_attivo='false';
+riga('prova').lead_capture_attivo='false';
 r=await call('add-lead.js',{method:'POST',body:{u:'prova',nome:'X',contatto:'1'}});
-ok(r.code===404,'add-lead con raccolta spenta rifiutato'); rows[0].lead_capture_attivo='true';
+ok(r.code===404,'add-lead con raccolta spenta rifiutato'); riga('prova').lead_capture_attivo='true';
 r=await call('track-click.js',{method:'POST',body:{u:'prova',sezione:'BIO<script>'}});
-const log=JSON.parse(rows[0].analytics_log); ok(r.code===200 && log[0].sezione==='BIOscript' && log[0].timestamp,'track-click registra (sezione ripulita)');
+const log=JSON.parse(riga('prova').analytics_log); ok(r.code===200 && log[0].sezione==='BIOscript' && log[0].timestamp,'track-click registra (sezione ripulita)');
+r=await call('track-view.js',{method:'POST',query:{u:'prova'},headers:{'user-agent':'iPhone','x-vercel-ip-city':'Milano','x-vercel-ip-country':'IT'}});
+ok(r.code===200 && riga('prova').views===1 && JSON.parse(riga('prova').analytics_data).geo['Milano, IT']===1,'track-view');
 r=await call('get-profile.js',{query:{u:'prova'}});
-ok(!('lead_capture_leads' in r.body.fields) && !('analytics_log' in r.body.fields) && !('analytics_data' in r.body.fields) && !('pocket_cloud' in r.body.fields) && r.body.fields.bio==='ciao','visitatore: niente campi privati, contenuti pubblici sì');
-r=await call('get-profile.js',{query:{u:'prova',token:tok}});
-ok(r.body.fields.lead_capture_leads && r.body.fields.analytics_log && r.body.fields.pocket_cloud,'proprietario: vede i campi privati');
+ok(!('lead_capture_leads' in r.body.fields) && !('analytics_log' in r.body.fields) && !('analytics_data' in r.body.fields) && !('pocket_cloud' in r.body.fields),'visitatore: niente contatti, statistiche, Pocket');
+r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
+ok(r.body.tags.find(t=>t.username_system==='prova').contatti_nuovi===2,'dashboard: numero di contatti nuovi per tag');
 r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',lead_capture_leads:'[]'}});
-ok(r.code===401 && JSON.parse(rows[0].lead_capture_leads).length===2,'anonimo non può cancellare i contatti');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',analytics_log:'[]'}});
-ok(r.code===401,'anonimo non può azzerare le statistiche');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',lead_capture_leads:'[]',analytics_log:'[]',bio:'nuova',sessionToken:tok}});
-ok(r.code===200 && JSON.parse(rows[0].lead_capture_leads).length===2 && JSON.parse(rows[0].analytics_log).length===1 && rows[0].bio==='nuova','proprietario salva: contatti e statistiche non vengono sovrascritti');
-
-// ---- Cambio password ----
-const nuovaHash=crypto.createHash('sha256').update('nuova123').digest('hex');
-const pwdPrima=rows[0].password;
-r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',password:nuovaHash,sessionToken:tok}});
-ok(rows[0].password===pwdPrima,'update-profile non cambia una password già impostata');
-r=await call('change-password.js',{method:'POST',body:{u:'prova',sessionToken:tok,attuale:'0'.repeat(64),nuova:nuovaHash}});
-ok(r.code===403 && rows[0].password===pwdPrima,'cambio password con password attuale sbagliata rifiutato');
-r=await call('change-password.js',{method:'POST',body:{u:'prova',sessionToken:'x.y.z',attuale:hash,nuova:nuovaHash}});
-ok(r.code===401,'cambio password senza sessione rifiutato');
-r=await call('change-password.js',{method:'POST',body:{u:'prova',sessionToken:tok,attuale:hash,nuova:nuovaHash}});
-ok(r.code===200 && rows[0].password!==pwdPrima && rows[0].password.startsWith('scrypt$') && r.body.sessionToken,'cambio password riuscito (salvata con scrypt)');
-r=await call('login.js',{method:'POST',body:{tag:'prova',pwd:nuovaHash}});
-ok(r.code===200,'login con la nuova password');
-r=await call('login.js',{method:'POST',body:{tag:'prova',pwd:hash}});
-ok(r.code===401,'la vecchia password non funziona più');
-
-// ---- Gestione contatti del proprietario ----
-let l0=JSON.parse(rows[0].lead_capture_leads);
+ok(r.code===401 && JSON.parse(riga('prova').lead_capture_leads).length===2,'anonimo non può cancellare i contatti');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',lead_capture_leads:'[]',analytics_log:'[]',bio:'nuova'}});
+ok(r.code===200 && JSON.parse(riga('prova').lead_capture_leads).length===2 && JSON.parse(riga('prova').analytics_log).length===1 && riga('prova').bio==='nuova','proprietario salva: contatti e statistiche non vengono sovrascritti');
+let l0=JSON.parse(riga('prova').lead_capture_leads);
 ok(l0[0].id && l0[0].visto===false && l0[0].richiamato===false && l0[0].ts,'nuovo contatto: id, nuovo, non richiamato');
-const tok2=(await call('login.js',{method:'POST',body:{tag:'prova',pwd:nuovaHash}})).body.sessionToken;
 r=await call('leads.js',{method:'POST',body:{u:'prova',azione:'visti'}});
 ok(r.code===401,'leads senza sessione rifiutato');
-r=await call('leads.js',{method:'POST',body:{u:'prova',sessionToken:tok2,azione:'boh'}});
+r=await call('leads.js',{method:'POST',headers:conSessione(jwtBruno),body:{u:'prova',azione:'visti'}});
+ok(r.code===401,'leads: un altro account non vede né tocca i contatti');
+r=await call('leads.js',{method:'POST',body:{u:'prova',sessionToken:jwtAnna,azione:'boh'}});
 ok(r.code===400,'azione non valida rifiutata');
-r=await call('leads.js',{method:'POST',body:{u:'prova',sessionToken:tok2,azione:'visti'}});
+r=await call('leads.js',{method:'POST',body:{u:'prova',sessionToken:jwtAnna,azione:'visti'}});
 ok(r.code===200 && r.body.leads.every(x=>x.visto===true),'segna tutti visti');
-r=await call('leads.js',{method:'POST',body:{u:'prova',sessionToken:tok2,azione:'richiamato',id:l0[0].id,valore:true}});
+r=await call('leads.js',{method:'POST',headers:conSessione(jwtAnna),body:{u:'prova',azione:'richiamato',id:l0[0].id,valore:true}});
 ok(r.body.leads.find(x=>x.id===l0[0].id).richiamato===true,'segna come richiamato');
-r=await call('leads.js',{method:'POST',body:{u:'prova',sessionToken:tok2,azione:'elimina',id:l0[0].id}});
+r=await call('leads.js',{method:'POST',headers:conSessione(jwtAnna),body:{u:'prova',azione:'elimina',id:l0[0].id}});
 ok(r.code===200 && r.body.leads.length===l0.length-1 && !r.body.leads.some(x=>x.id===l0[0].id),'elimina contatto');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',bio:'<img src=x onerror=alert(1)> Un\'azienda',sito_web:'javascript:alert(1)',config_canali:JSON.stringify([{nome:'IG',url:'javascript:x'}]),username_display:'@ALTRONOME'}});
+ok(riga('prova').bio==="‹img src=x onerror=alert(1)› Un'azienda" && !riga('prova').sito_web && JSON.parse(riga('prova').config_canali)[0].url==='','salvataggio: testi ripuliti, link javascript svuotati, apostrofi tenuti');
+ok(riga('prova').username_display!=='@ALTRONOME','nome mostrato diverso dal nome della tag rifiutato');
 
-// ---- Password nel vecchio formato: login e aggiornamento automatico ----
-const legacyHash=crypto.createHash('sha256').update('vecchia1').digest('hex');
-rows.push({id:'leg',username_system:'legacy',stato:'attivo',password:legacyHash,created_at:new Date().toISOString()});
-r=await call('login.js',{method:'POST',body:{tag:'legacy',pwd:legacyHash}});
-const rl=rows.find(x=>x.id==='leg');
-ok(r.code===200 && rl.password.startsWith('scrypt$'),'login con password vecchio formato: riuscito e aggiornato a scrypt');
-r=await call('login.js',{method:'POST',body:{tag:'legacy',pwd:legacyHash}});
-ok(r.code===200,'login dopo l\'aggiornamento continua a funzionare');
-r=await call('login.js',{method:'POST',body:{tag:'legacy',pwd:'1'.repeat(64)}});
-ok(r.code===401,'password sbagliata rifiutata anche col nuovo formato');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',bio:'<img src=x onerror=alert(1)> Un\'azienda',sito_web:'javascript:alert(1)',config_canali:JSON.stringify([{nome:'IG',url:'javascript:x'}]),username_display:'@ALTRONOME',sessionToken:tok2}});
-ok(rows[0].bio==="‹img src=x onerror=alert(1)› Un'azienda" && (rows[0].sito_web===''||rows[0].sito_web===undefined||rows[0].sito_web===null) && JSON.parse(rows[0].config_canali)[0].url==='' ,'salvataggio: testi ripuliti, link javascript svuotati, apostrofi tenuti');
-ok(rows[0].username_display!=='@ALTRONOME','nome mostrato diverso dal nome della tag rifiutato');
-
-// ---- Limiti ai tentativi ----
-let ultimo;
-for (let i=0;i<11;i++) ultimo=await call('login.js',{method:'POST',ip:'9.9.9.9',body:{tag:'prova',pwd:'2'.repeat(64)}});
-ok(ultimo.code===429,'login: l\'11° tentativo in 15 minuti dallo stesso IP è bloccato');
-r=await call('login.js',{method:'POST',ip:'9.9.9.8',body:{tag:'prova',pwd:nuovaHash}});
-ok(r.code===200,'login da un altro IP non è bloccato');
+// ============================================================
+// 5. LIMITI AI TENTATIVI
+// ============================================================
 for (let i=0;i<4;i++) ultimo=await call('add-lead.js',{method:'POST',ip:'8.8.8.8',body:{u:'prova',nome:'X',contatto:'1'+i}});
 ok(ultimo.code===429,'vasetto: il 4° contatto in 10 minuti dallo stesso IP è bloccato');
 for (let i=0;i<11;i++) ultimo=await call('check-and-create.js',{method:'POST',ip:'7.7.7.7',body:{tag:'nome'+i}});
 ok(ultimo.code===429,'prenotazioni: l\'11° nome in un\'ora dallo stesso IP è bloccato');
 
-// ---- Black list, gold list e stato ----
+// ============================================================
+// 6. NOMI PROTETTI: black list, gold list, forma canonica, nomi assegnati
+// ============================================================
 r=await call('check-and-create.js',{method:'POST',body:{tag:'admin'}});
-ok(r.code===400 && r.body.codice==='riservato' && !rows.some(x=>x.username_system==='admin'),'black list: "admin" non prenotabile via API');
+ok(r.code===400 && r.body.codice==='riservato' && !riga('admin'),'black list: "admin" non prenotabile via API');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'ferrari'}});
-ok(r.code===400 && r.body.codice==='su_richiesta' && r.body.email==='vip@myquicktag.it' && !rows.some(x=>x.username_system==='ferrari'),'gold list: "ferrari" non prenotabile via API, con l\'indirizzo per la richiesta');
+ok(r.code===400 && r.body.codice==='su_richiesta' && r.body.email==='vip@myquicktag.it' && !riga('ferrari'),'gold list: "ferrari" non prenotabile via API, con l\'indirizzo per la richiesta');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'ab'}});
 ok(r.code===400 && r.body.codice==='su_richiesta','nomi sotto i 3 caratteri solo su richiesta');
-const tokProva=(await call('login.js',{method:'POST',body:{tag:'prova',pwd:nuovaHash}})).body.sessionToken;
-r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',stato:'in attesa',sessionToken:tokProva}});
-ok(rows[0].stato==='attivo','una tag attiva non può tornare "in attesa" dal browser');
-r=await call('check-and-create.js',{method:'POST',body:{tag:'nuovissima'}});
-const tokRes=r.body.sessionToken;
-r=await call('update-profile.js',{method:'POST',body:{username_system:'nuovissima',stato:'attivo',sessionToken:tokRes}});
-ok(rows.find(x=>x.username_system==='nuovissima').stato==='in attesa','attivazione senza password rifiutata');
-
 r=await call('check-and-create.js',{method:'POST',body:{tag:'adm1n'}});
 ok(r.code===400 && r.body.codice==='riservato','variante "adm1n" riconosciuta come riservata (dal database)');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'myquicktag-assistenza'}});
 ok(r.code===400 && r.body.codice==='riservato','"myquicktag-assistenza" bloccato (regola contiene)');
-r=await call('check-and-create.js',{method:'POST',body:{tag:'account'}});
-ok(r.code===400 && r.body.codice==='riservato','nome di una pagina del sito bloccato dal codice');
-
-// ---- Nomi protetti: forma canonica, varianti, unicità, attivazione ----
+for (const v of ['account','accesso','dashboard','recupero']) {
+  r=await call('check-and-create.js',{method:'POST',body:{tag:v}});
+  ok(r.code===400 && r.body.codice==='riservato','nome di una pagina del sito bloccato dal codice: '+v);
+}
 const { formaCanonica, nomeTag } = await import(new URL('../lib/nome-canonico.js', import.meta.url).href);
 ok(['Cristiano Ronaldo','cristiano-ronaldo','cristiáno_ronaldo','CRISTIANORONALDO','@Cristiano.Ronaldo'].every(v=>formaCanonica(v).nome==='cristianoronaldo'),'forma canonica: maiuscole, spazi, trattini, underscore, punti e accenti → "cristianoronaldo"');
 ok(formaCanonica('Cristiáno').nome==='cristiano','accento: "Cristiáno" → "cristiano"');
@@ -219,86 +300,117 @@ r=await call('check-and-create.js',{method:'POST',body:{tag:'ferrarista'}});
 ok(r.code===200,'regola "esatto" non blocca i nomi più lunghi ("ferrarista" con "ferrari" gold)');
 r=await call('check-and-create.js',{method:'POST',body:{tag:'armando'}});
 ok(r.code===200,'nome comune non in lista ("armando") libero');
-
-// Due prenotazioni simultanee dello stesso nome canonico: ne passa una sola
 const [p1,p2]=await Promise.all([call('check-and-create.js',{method:'POST',body:{tag:'gara-nome'}}),call('check-and-create.js',{method:'POST',body:{tag:'Gara_Nome'}})]);
 ok([p1.code,p2.code].sort().join()==='200,400' && rows.filter(x=>x.username_system==='garanome').length===1,'prenotazioni simultanee di "gara-nome" e "Gara_Nome": una sola riesce');
+
+// Tag Gold regalate: nome assegnato all'email della persona (nomi_riservati.assegnato_a)
+nomiProtetti.push({nome:'barsport',tipo:'gold',regola:'esatto',assegnato_a:'bruno@esempio.it'});
+r=await call('check-and-create.js',{method:'POST',body:{tag:'Bar Sport'}});
+ok(r.code===400 && r.body.codice==='su_richiesta' && !riga('barsport'),'nome assegnato: senza account resta protetto');
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtAnna),body:{tag:'barsport'}});
+ok(r.code===400 && r.body.codice==='su_richiesta' && !riga('barsport'),'nome assegnato: un altro account non lo prende');
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtBruno),body:{tag:'barsport'}});
+ok(r.code===200 && riga('barsport').proprietario_id===bruno.id,'nome assegnato: l\'account con quell\'email lo prenota e ne è proprietario');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtBruno),body:{username_system:'barsport',stato:'attivo'}});
+ok(r.code===200 && riga('barsport').stato==='attivo','nome assegnato: attivazione riuscita (controllo ripetuto all\'attivazione)');
+nomiProtetti.push({nome:'zz',tipo:'gold',regola:'esatto',assegnato_a:'anna@esempio.it'});
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtAnna),body:{tag:'zz'}});
+ok(r.code===200 && riga('zz').proprietario_id===anna.id,'nome corto assegnato a una persona: prenotabile solo da lei');
 
 // Nome libero prenotato, poi messo in lista: l'attivazione viene bloccata (la tag non si cancella)
 r=await call('check-and-create.js',{method:'POST',body:{tag:'futurobrand'}});
 const tokFuturo=r.body.sessionToken;
 nomiProtetti.push({nome:'futurobrand',tipo:'gold',regola:'esatto'});
-r=await call('update-profile.js',{method:'POST',body:{username_system:'futurobrand',password:hash,stato:'attivo',sessionToken:tokFuturo}});
-const tf=rows.find(x=>x.username_system==='futurobrand');
-ok(r.code===403 && r.body.codice==='su_richiesta' && tf && tf.stato==='in attesa' && !tf.password,'nome messo in lista dopo la prenotazione: attivazione bloccata, tag non cancellata');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'futurobrand',password:hash,sessionToken:tokFuturo}});
-ok(r.code===403 && !rows.find(x=>x.username_system==='futurobrand').password,'bloccata anche l\'attivazione con la sola password');
-nomiProtetti.find(n=>n.nome==='futurobrand').attivo=false;
-r=await call('update-profile.js',{method:'POST',body:{username_system:'futurobrand',password:hash,stato:'attivo',sessionToken:tokFuturo}});
-ok(r.code===200 && rows.find(x=>x.username_system==='futurobrand').stato==='attivo','con il nome disattivato in lista (attivo=false) il titolare verificato attiva la tag');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'futurobrand',stato:'attivo',sessionToken:tokFuturo}});
+ok(r.code===403 && r.body.codice==='su_richiesta' && riga('futurobrand').stato==='in attesa' && !riga('futurobrand').proprietario_id,'nome messo in lista dopo la prenotazione: attivazione bloccata, tag non cancellata');
+nomiProtetti.find(n=>n.nome==='futurobrand').assegnato_a='anna@esempio.it';
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'futurobrand',stato:'attivo',sessionToken:tokFuturo}});
+ok(r.code===200 && riga('futurobrand').stato==='attivo' && riga('futurobrand').proprietario_id===anna.id,'assegnato all\'email del titolare verificato: attivazione consentita');
 
-// username_system non si cambia da update-profile, nemmeno col token
+// username_system e nome mostrato
 const tokMario=(await call('check-and-create.js',{method:'POST',body:{tag:'mariobis'}})).body.sessionToken;
-r=await call('update-profile.js',{method:'POST',body:{username_system:'mariobis',sessionToken:tokMario,bio:'x',username_system_nuovo:'cocacola'}});
-ok(rows.some(x=>x.username_system==='mariobis') && !rows.some(x=>x.username_system==='cocacola'),'username_system non modificabile');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'cocacola',sessionToken:tokMario,stato:'attivo',password:hash}});
-ok(r.code===401 && !rows.some(x=>x.username_system==='cocacola'),'il token di un\'altra tag non apre un nome protetto');
+r=await call('update-profile.js',{method:'POST',body:{username_system:'mariobis',sessionToken:tokMario,draft_json:'{}',username_system_nuovo:'cocacola'}});
+ok(riga('mariobis') && !riga('cocacola'),'username_system non modificabile');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'cocacola',sessionToken:tokMario,stato:'attivo'}});
+ok(r.code===404 && !riga('cocacola'),'la ricevuta di un\'altra tag non apre un nome protetto');
 r=await call('update-profile.js',{method:'POST',body:{username_system:'mariobis',sessionToken:tokMario,username_display:'@COCA COLA'}});
-ok(rows.find(x=>x.username_system==='mariobis').username_display===undefined,'il nome mostrato non può essere un altro nome');
+ok(riga('mariobis').username_display===undefined,'il nome mostrato non può essere un altro nome');
 r=await call('update-profile.js',{method:'POST',body:{username_system:'mariobis',sessionToken:tokMario,username_display:'@Mario Bis'}});
-ok(rows.find(x=>x.username_system==='mariobis').username_display==='@Mario Bis','il nome mostrato può avere spazi e maiuscole');
+ok(riga('mariobis').username_display==='@Mario Bis','il nome mostrato può avere spazi e maiuscole');
 
 // Database non raggiungibile durante il controllo: nessuna tag creata
 const fetchVero=globalThis.fetch;
 globalThis.fetch=async (url,opt)=>String(url).includes('controlla_nome') ? new Response('boom',{status:500}) : fetchVero(url,opt);
+const ceN=console.error; console.error=()=>{};
 r=await call('check-and-create.js',{method:'POST',body:{tag:'guastodb'}});
-globalThis.fetch=fetchVero;
-ok(r.code===500 && !rows.some(x=>x.username_system==='guastodb'),'controllo nomi non disponibile: la prenotazione si ferma');
+console.error=ceN; globalThis.fetch=fetchVero;
+ok(r.code===500 && !riga('guastodb'),'controllo nomi non disponibile: la prenotazione si ferma');
 
-// ---- Attivazione: la bozza scritta prima dell'attivazione diventa la tag pubblica ----
+// ============================================================
+// 7. BOZZE: pubblicazione all'attivazione e dopo
+// ============================================================
 r=await call('check-and-create.js',{method:'POST',body:{tag:'bottegaverdi'}});
 const ricBV=r.body.sessionToken;
 const bozzaBV={username_system:'bottegaverdi',username_display:'@Bottega Verdi',bio:'Frutta <img src=x onerror=alert(1)>a km zero',
-  modulo_vcf:'{"telefono1":"+39 333 1234567"}',config_canali:JSON.stringify([{nome:'Insta<b>',url:'javascript:alert(1)'}]),stato:'attivo',password:'x',lead_capture_leads:'[]'};
+  modulo_vcf:'{"telefono1":"+39 333 1234567"}',config_canali:JSON.stringify([{nome:'Insta<b>',url:'javascript:alert(1)'}]),stato:'attivo',password:'x',lead_capture_leads:'[]',proprietario_id:bruno.id};
 r=await call('update-profile.js',{method:'POST',body:{username_system:'bottegaverdi',draft_json:JSON.stringify(bozzaBV),sessionToken:ricBV}});
-const rigaBV=()=>rows.find(x=>x.username_system==='bottegaverdi');
+const rigaBV=()=>riga('bottegaverdi');
 ok(r.code===200 && rigaBV().stato==='in attesa' && !rigaBV().bio,'prima dell\'attivazione la bozza resta privata');
-r=await call('update-profile.js',{method:'POST',body:{username_system:'bottegaverdi',password:hash,stato:'attivo',sessionToken:ricBV}});
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'bottegaverdi',stato:'attivo',sessionToken:ricBV}});
 ok(r.code===200 && rigaBV().stato==='attivo' && rigaBV().draft_json==='','attivazione riuscita e bozza svuotata');
 ok(rigaBV().username_display==='@Bottega Verdi' && /^Frutta ‹img.*›a km zero$/.test(rigaBV().bio) && !rigaBV().bio.includes('<') && JSON.parse(rigaBV().modulo_vcf).telefono1==='+39 333 1234567','contenuti della bozza pubblicati (e ripuliti)');
 const canaliBV=JSON.parse(rigaBV().config_canali); ok(canaliBV[0].nome==='Insta‹b›' && canaliBV[0].url==='','elenchi dentro la bozza (social) restano leggibili e ripuliti');
-ok(rigaBV().password.startsWith('scrypt$') && rigaBV().lead_capture_leads===undefined,'dalla bozza non passano password né campi riservati al server');
+ok(!rigaBV().password && rigaBV().lead_capture_leads===undefined && rigaBV().proprietario_id===anna.id,'dalla bozza non passano password, campi del server né il proprietario');
 r=await call('get-profile.js',{query:{u:'bottegaverdi'}});
 ok(r.body.fields.bio && r.body.fields.username_display==='@Bottega Verdi','il visitatore vede i contenuti subito dopo l\'attivazione');
-// Dopo l'attivazione la bozza torna a essere solo una bozza (si pubblica col tasto Pubblica)
-const tokBV=r.body.sessionToken || (await call('login.js',{method:'POST',body:{tag:'bottegaverdi',pwd:hash}})).body.sessionToken;
-r=await call('update-profile.js',{method:'POST',body:{username_system:'bottegaverdi',draft_json:JSON.stringify({bio:'nuova bozza'}),sessionToken:tokBV}});
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'bottegaverdi',draft_json:JSON.stringify({bio:'nuova bozza'})}});
 ok(r.code===200 && /^Frutta/.test(rigaBV().bio) && JSON.parse(rigaBV().draft_json).bio==='nuova bozza','bozza di una tag attiva: non pubblicata finché non si preme Pubblica');
 
-// ---- Fase 1: elenchi espliciti dei campi, errori senza dettagli, limiti "chiusi" ----
+// ============================================================
+// 8. RINNOVO GRATUITO: spento salvo decisione del titolare (RINNOVO_GRATUITO=si)
+// ============================================================
+riga('annabar').data_scadenza=new Date(Date.now()+5*864e5).toISOString().slice(0,10);
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'annabar',rinnova:true}});
+ok(r.code===403 && r.body.rinnovo_non_disponibile,'rinnovo gratuito spento: rifiutato anche negli ultimi giorni');
+process.env.RINNOVO_GRATUITO='si';
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtBruno),body:{username_system:'annabar',rinnova:true}});
+ok(r.code===401,'rinnovo: un altro account non può rinnovare');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'annabar',rinnova:true}});
+ok(r.code===200 && r.body.action==='renewed' && riga('annabar').data_scadenza>new Date(Date.now()+90*864e5).toISOString().slice(0,10),'rinnovo acceso: il proprietario rinnova negli ultimi 14 giorni');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',rinnova:true}});
+ok(r.code===400,'rinnovo acceso: non prima degli ultimi 14 giorni');
+delete process.env.RINNOVO_GRATUITO;
+
+// ============================================================
+// 9. CAMPI PER ELENCO ESPLICITO, ERRORI SENZA DETTAGLI, LIMITI "CHIUSI"
+// ============================================================
 {
   const gp=await import(R+'get-profile.js');
-  const sql=(await import('fs')).readFileSync(new URL('../supabase/migrations/20261001000000_tabella_tags.sql', import.meta.url),'utf8');
+  const dir=new URL('../supabase/migrations/', import.meta.url);
+  const sql=fs.readdirSync(dir).sort().map(f=>fs.readFileSync(new URL(f,dir),'utf8')).join('\n');
   const colonne=[...sql.split('create table public.tags (')[1].split(');')[0].matchAll(/^\s+([a-z_0-9]+)\s+/gm)].map(m=>m[1]);
+  const aggiunte=[...sql.matchAll(/alter table public\.tags\s+add column\s+([a-z_0-9]+)/g)].map(m=>m[1]);
+  const tutte=[...colonne,...aggiunte];
   const classificate=new Set([...gp.CAMPI_PUBBLICI,...gp.CAMPI_PROPRIETARIO,...gp.CAMPI_MAI]);
-  const nonClassificate=colonne.filter(c=>!classificate.has(c));
-  ok(colonne.length>50 && nonClassificate.length===0,'ogni colonna di tags è classificata (pubblica/proprietario/mai): '+nonClassificate.join(','));
-  rows.push({id:'colnuova',username_system:'colnuova',stato:'attivo',created_at:new Date().toISOString(),data_scadenza:'2099-01-01',bio:'ok',password:'scrypt$a$b',colonna_segreta:'NON DEVE USCIRE',draft_json:'{"x":1}'});
+  const nonClassificate=tutte.filter(c=>!classificate.has(c));
+  ok(tutte.length>50 && aggiunte.includes('proprietario_id') && nonClassificate.length===0,'ogni colonna di tags (anche quelle aggiunte dopo) è classificata: '+nonClassificate.join(','));
+  ok(gp.CAMPI_MAI.includes('proprietario_id') && gp.CAMPI_MAI.includes('password'),'proprietario e password non escono mai');
+  rows.push({id:'colnuova',username_system:'colnuova',stato:'attivo',created_at:new Date().toISOString(),data_scadenza:'2099-01-01',bio:'ok',password:'scrypt$a$b',colonna_segreta:'NON DEVE USCIRE',draft_json:'{"x":1}',proprietario_id:anna.id});
   r=await call('get-profile.js',{query:{u:'colnuova'}});
-  ok(r.code===200 && r.body.fields.bio==='ok' && !('colonna_segreta' in r.body.fields) && !('password' in r.body.fields) && !('draft_json' in r.body.fields) && r.body.fields.has_password===true,'visitatore: solo campi elencati (colonna nuova e password non escono)');
-  const fetchVero=globalThis.fetch;
+  ok(r.code===200 && r.body.fields.bio==='ok' && !('colonna_segreta' in r.body.fields) && !('password' in r.body.fields) && !('draft_json' in r.body.fields) && !('proprietario_id' in r.body.fields),'visitatore: solo campi elencati (colonna nuova, password, proprietario non escono)');
   globalThis.fetch=async (url,opt)=>{ if((opt.method||'GET')==='PATCH') return new Response(JSON.stringify({code:'23514',message:'violates check',details:'Failing row contains (scrypt$segreto)'}),{status:400}); return fetchVero(url,opt); };
-  const exp=Date.now()+3600e3; const firma=(await import('crypto')).createHmac('sha256','s').update(`colnuova.${exp}`).digest('hex');
   const logs=[]; const ce=console.error; console.error=(...a)=>logs.push(JSON.stringify(a));
-  r=await call('update-profile.js',{method:'POST',body:{username_system:'colnuova',bio:'x',sessionToken:`colnuova.${exp}.${firma}`}});
+  r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'colnuova',bio:'x'}});
   console.error=ce; globalThis.fetch=fetchVero;
   ok(r.code===500 && !JSON.stringify(r.body).includes('segreto') && !('dettagli' in r.body) && !('stack' in r.body),'errore del database: nessun dettaglio al browser');
   ok(!logs.join(' ').includes('segreto'),'errore del database: i valori della riga non finiscono nei log');
   globalThis.fetch=async (url,opt)=>String(url).includes('consuma_tentativo') ? new Response('boom',{status:500}) : fetchVero(url,opt);
   const ce2=console.error; console.error=()=>{};
-  r=await call('login.js',{method:'POST',body:{tag:'prova',pwd:'0'.repeat(64)}});
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtBruno),body:{azione:'collega-vecchia',tag:'colnuova',pwd:'0'.repeat(64)}});
   const rPren=await call('check-and-create.js',{method:'POST',body:{tag:'limitiaperti'}});
   console.error=ce2; globalThis.fetch=fetchVero;
-  ok(r.code===429,'limiti non verificabili: login rifiutato (limite "chiuso")');
+  ok(r.code===429,'limiti non verificabili: collegamento tag vecchia rifiutato (limite "chiuso")');
   ok(rPren.code===200,'limiti non verificabili: la prenotazione resta consentita (limite "aperto")');
+  ok(!fs.existsSync(new URL('login.js',R)) && !fs.existsSync(new URL('change-password.js',R)),'vecchio accesso "@nome + password" dismesso (login.js e change-password.js rimossi)');
+  ok(fs.readdirSync(new URL(R)).filter(f=>f.endsWith('.js')).length<=11,'funzioni Vercel entro il limite (≤ 11 su 12)');
 }

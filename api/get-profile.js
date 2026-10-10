@@ -1,30 +1,7 @@
-import crypto from 'crypto';
 import { trovaTag, aggiornaTag } from '../lib/db.js';
 import { calcolaAbbonamento, dateAttivazione } from '../lib/abbonamento.js';
 import { nomeTag } from '../lib/nome-canonico.js';
-
-// Stessa logica di verifyToken usata in update-profile.js (HMAC + confronto a tempo costante).
-function verifyToken(username, token) {
-  if (!token || typeof token !== 'string') return false;
-  const parts = token.split('.');
-  if (parts.length !== 3) return false;
-  const [tokenUser, expiry, signature] = parts;
-  if (tokenUser !== username) return false;
-  if (Date.now() > Number(expiry)) return false;
-  const expected = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(`${tokenUser}.${expiry}`).digest('hex');
-  try {
-    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
-  } catch {
-    return false;
-  }
-}
-
-function generateToken(username) {
-  const expiry = Date.now() + (1000 * 60 * 60 * 24 * 90); // 90 giorni
-  const payload = `${username}.${expiry}`;
-  const signature = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(payload).digest('hex');
-  return `${payload}.${signature}`;
-}
+import { dirittiSullaTag } from '../lib/sessione.js';
 
 // ELENCHI ESPLICITI dei campi che escono da qui (test/api.test.mjs controlla che ogni colonna della
 // tabella "tags" sia in uno di questi elenchi o tra quelli mai inviati): una colonna nuova non esce
@@ -46,7 +23,7 @@ export const CAMPI_PUBBLICI = [
 // Solo al proprietario (sessione valida): bozza, contatti lasciati dai visitatori, statistiche, Pocket
 export const CAMPI_PROPRIETARIO = ['draft_json', 'lead_capture_leads', 'analytics_data', 'analytics_log', 'pocket_cloud'];
 // Mai inviati al browser
-export const CAMPI_MAI = ['id', 'password', 'created_at', 'updated_at'];
+export const CAMPI_MAI = ['id', 'password', 'created_at', 'updated_at', 'proprietario_id'];
 
 function scegli(fields, elenco) {
   const out = {};
@@ -70,10 +47,17 @@ export default async function handler(req, res) {
     if (record) {
       // --- FIX SICUREZZA: solo i campi elencati sopra. I campi privati del proprietario (bozza,
       // contatti lasciati dai visitatori, statistiche, Pocket) tornano SOLO con sessione valida.
-      const tokenValido = verifyToken(safeUsername, token);
+      // Proprietario = sessione dell'account indicato in proprietario_id (lib/sessione.js).
+      // Chi ha solo la ricevuta di prenotazione vede la propria bozza (tag in attesa, senza proprietario).
+      const diritti = await dirittiSullaTag({ req, token, record, tag: safeUsername });
+      const tokenValido = diritti.proprietario || diritti.ricevuta;
       const fieldsPubblici = scegli(record.fields, tokenValido ? [...CAMPI_PUBBLICI, ...CAMPI_PROPRIETARIO] : CAMPI_PUBBLICI);
+      // has_password (nome storico, usato dalle pagine): la tag ha un titolare con un accesso
+      // (account proprietario o, per le tag di prova vecchie, la vecchia password)
       const password = record.fields.password;
-      fieldsPubblici.has_password = !!(password && String(password).trim() !== "");
+      fieldsPubblici.has_password = !!(record.fields.proprietario_id || (password && String(password).trim() !== ""));
+      fieldsPubblici.ha_proprietario = !!record.fields.proprietario_id;
+      if (diritti.proprietario) fieldsPubblici.sei_proprietario = true;
       const risposta = {
         success: true,
         id: record.id,
@@ -106,13 +90,8 @@ export default async function handler(req, res) {
         }
       }
 
-      // Sessione "scorrevole": il proprietario di un account attivo che apre la sua tag o
-      // l'editor riceve un token rinnovato per altri 90 giorni. Le ricevute di prenotazione
-      // (account senza password) non vengono rinnovate.
-      if (tokenValido && fieldsPubblici.has_password) {
-        risposta.sessionToken = generateToken(safeUsername);
-        res.setHeader('Cache-Control', 'no-store');
-      }
+      // Le risposte con dati privati non vanno mai in cache
+      if (tokenValido) res.setHeader('Cache-Control', 'no-store');
 
       // PRENOTAZIONE 24H: unica fonte di verità = createdTime del database (stesso criterio di check-and-create.js)
       const stato = (fieldsPubblici.stato || "").toLowerCase().trim();
