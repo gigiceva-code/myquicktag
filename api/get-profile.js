@@ -1,5 +1,5 @@
 import { trovaTag, aggiornaTag } from '../lib/db.js';
-import { calcolaAbbonamento, dateAttivazione } from '../lib/abbonamento.js';
+import { calcolaAbbonamento, dateAttivazione, rinnovoDisponibile } from '../lib/abbonamento.js';
 import { nomeTag } from '../lib/nome-canonico.js';
 import { dirittiSullaTag } from '../lib/sessione.js';
 
@@ -79,6 +79,7 @@ export default async function handler(req, res) {
           }
         }
         risposta.abbonamento = calcolaAbbonamento(record);
+        risposta.abbonamento.rinnovo_disponibile = rinnovoDisponibile(risposta.abbonamento);
         // Tag scaduta: ai visitatori non si mostrano più i contenuti, solo il nome
         if (risposta.abbonamento.fase === 'scaduta' && !tokenValido) {
           risposta.fields = {

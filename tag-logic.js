@@ -111,7 +111,7 @@ async function avviaFlusso(username) {
         
         // Verifica se l'utente è proprietario tramite array multiplo O tramite il vecchio login
         // Proprietario = la tag è nel portachiavi del dispositivo E la sua sessione non è scaduta
-        const isOwner = (chiaviSalvate.some(u => u.toLowerCase() === username.toLowerCase()) || 
+        let isOwner = (chiaviSalvate.some(u => u.toLowerCase() === username.toLowerCase()) || 
                         (singleLoggedUser && singleLoggedUser.toLowerCase() === username.toLowerCase())) &&
                         mqtSessione.valida(username);
 
@@ -137,8 +137,8 @@ if (isOwner) {
 const tokenParam = tokenPerBozza ? `&token=${encodeURIComponent(tokenPerBozza)}` : '';
 const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}${tokenParam}`);
         const data = await response.json();
-        // Sessione scorrevole: il server restituisce un token rinnovato al proprietario
-        if (data.sessionToken) mqtSessione.salva(username, data.sessionToken);
+        // Il proprietario lo conferma il server (sessione dell'account che possiede la tag)
+        if (data.fields && data.fields.has_password && !data.fields.sei_proprietario) isOwner = false;
         
         if (!data.success || !data.fields) {
             mostraShowroom(username);

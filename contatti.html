@@ -286,7 +286,7 @@
             const response = await fetch(`/api/get-profile?u=${encodeURIComponent(tag)}&token=${encodeURIComponent(mqtSessione.token(tag))}&_cb=${Date.now()}`);
             const data = await response.json();
             if (!data.success || !data.fields) throw new Error('Profilo non trovato');
-            if (data.sessionToken) mqtSessione.salva(tag, data.sessionToken);
+            if (!mqtSessione.proprietarioOppureEsci(data.fields, tag)) return;
 
             try { leads = JSON.parse(data.fields.lead_capture_leads || '[]'); } catch (e) { leads = []; }
             if (!Array.isArray(leads)) leads = [];

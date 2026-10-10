@@ -1,18 +1,12 @@
 import { trovaTag, aggiornaTag, assegnaProprietario } from '../lib/db.js';
 import { pulisciTesto, pulisciJson, pulisciValore } from '../lib/pulizia.js';
-import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito } from '../lib/abbonamento.js';
+import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito, rinnovoGratuitoAttivo } from '../lib/abbonamento.js';
 import { nomeTag, formaCanonica } from '../lib/nome-canonico.js';
 import { controllaNome } from '../lib/nomi-riservati.js';
 import { dirittiSullaTag } from '../lib/sessione.js';
 
 // Campi salvati come testo JSON: si puliscono i valori, non la sintassi
 const CAMPI_JSON = ['draft_json', 'modulo_vcf', 'config_canali', 'sedi_json', 'gallery_data', 'pocket_cloud', 'partners_data'];
-
-// Rinnovo gratuito dalla dashboard: spento finché il titolare del progetto non decide
-// (PRE-LANCIO.md, "Strategia di lancio"). Si accende con la variabile RINNOVO_GRATUITO=si su Vercel.
-export function rinnovoGratuitoAttivo() {
-  return String(process.env.RINNOVO_GRATUITO || '').toLowerCase() === 'si';
-}
 
 // Campi che si possono scrivere da qui, letti da un oggetto (la richiesta o la bozza), ripuliti
 function estraiCampi(sorgente) {

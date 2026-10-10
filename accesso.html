@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex">
+    <title>Accedi | myquicktag</title>
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/account.css">
+    <script src="migrate-storage.js"></script>
+    <script src="/session.js"></script>
+</head>
+<body>
+<div class="wrap">
+    <div class="logo"><i class="fas fa-at"></i><span>myquicktag</span></div>
+
+    <!-- ACCEDI -->
+    <section class="vista" id="v-accedi">
+        <h1 class="titolo">Accedi</h1>
+        <p class="sottotitolo">Entra con l'email e la password del tuo account: troverai tutte le tue tag.</p>
+        <form class="card" id="f-accedi">
+            <div class="field"><label for="a-email">Email</label><input type="email" id="a-email" autocomplete="email" inputmode="email" required></div>
+            <div class="field mostra"><label for="a-pwd">Password</label><input type="password" id="a-pwd" autocomplete="current-password" required><button type="button" data-mostra="a-pwd">Mostra</button></div>
+            <button class="btn btn-primary" type="submit">Accedi</button>
+            <div class="messaggio" role="status"></div>
+            <div class="riga-link">
+                <button type="button" class="link" data-vai="dimenticata">Password dimenticata?</button>
+                <button type="button" class="link" data-vai="registrati">Crea un account</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- CREA ACCOUNT -->
+    <section class="vista" id="v-registrati">
+        <h1 class="titolo">Crea il tuo account</h1>
+        <p class="sottotitolo">Con un solo account gestisci tutte le tue tag. L'email resta privata: non compare sulle tag.</p>
+        <form class="card" id="f-registrati">
+            <div class="field"><label for="r-email">Email (privata)</label><input type="email" id="r-email" autocomplete="email" inputmode="email" required></div>
+            <div class="field mostra"><label for="r-pwd">Password (almeno 8 caratteri)</label><input type="password" id="r-pwd" autocomplete="new-password" minlength="8" required><button type="button" data-mostra="r-pwd">Mostra</button></div>
+            <div class="field"><label for="r-pwd2">Ripeti la password</label><input type="password" id="r-pwd2" autocomplete="new-password" minlength="8" required></div>
+            <label class="check"><input type="checkbox" id="r-promo"><span>Facoltativo: voglio ricevere novità e offerte di myquicktag. Puoi cambiare idea quando vuoi.</span></label>
+            <p class="note">Useremo l'email per verificare l'account, per recuperare l'accesso e per gli avvisi sul servizio (per esempio la scadenza del periodo gratuito).</p>
+            <button class="btn btn-primary" type="submit">Crea account</button>
+            <div class="messaggio" role="status"></div>
+            <div class="riga-link"><button type="button" class="link" data-vai="accedi">Ho già un account</button></div>
+        </form>
+    </section>
+
+    <!-- CODICE DI VERIFICA (dopo la registrazione) -->
+    <section class="vista" id="v-codice">
+        <h1 class="titolo">Controlla la tua email</h1>
+        <p class="sottotitolo" id="codice-testo">Ti abbiamo mandato un codice: scrivilo qui. Puoi anche toccare il link nell'email.</p>
+        <form class="card" id="f-codice">
+            <div class="field"><label for="c-codice">Codice ricevuto via email</label><input type="text" id="c-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
+            <button class="btn btn-primary" type="submit">Verifica</button>
+            <div class="messaggio" role="status"></div>
+            <div class="riga-link">
+                <button type="button" class="link" id="c-reinvia">Rimanda il codice</button>
+                <button type="button" class="link" data-vai="accedi">Torna all'accesso</button>
+            </div>
+            <p class="note">Non trovi l'email? Guarda nella posta indesiderata. Se l'indirizzo ha già un account, accedi con la tua password.</p>
+        </form>
+    </section>
+
+    <!-- PASSWORD DIMENTICATA -->
+    <section class="vista" id="v-dimenticata">
+        <h1 class="titolo">Password dimenticata</h1>
+        <p class="sottotitolo">Scrivi l'email del tuo account: ti mandiamo un codice per sceglierne una nuova.</p>
+        <form class="card" id="f-dimenticata">
+            <div class="field"><label for="d-email">Email</label><input type="email" id="d-email" autocomplete="email" inputmode="email" required></div>
+            <button class="btn btn-primary" type="submit">Mandami il codice</button>
+            <div class="messaggio" role="status"></div>
+            <div class="riga-link"><button type="button" class="link" data-vai="accedi">Torna all'accesso</button></div>
+        </form>
+    </section>
+
+    <!-- CODICE DI RECUPERO -->
+    <section class="vista" id="v-codice-recupero">
+        <h1 class="titolo">Inserisci il codice</h1>
+        <p class="sottotitolo">Se l'email corrisponde a un account, ti abbiamo mandato un codice. Puoi anche toccare il link nell'email.</p>
+        <form class="card" id="f-codice-recupero">
+            <div class="field"><label for="cr-codice">Codice ricevuto via email</label><input type="text" id="cr-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
+            <button class="btn btn-primary" type="submit">Continua</button>
+            <div class="messaggio" role="status"></div>
+            <div class="riga-link"><button type="button" class="link" data-vai="dimenticata">Chiedi un nuovo codice</button></div>
+        </form>
+    </section>
+
+    <!-- NUOVA PASSWORD -->
+    <section class="vista" id="v-nuova-password">
+        <h1 class="titolo">Scegli la nuova password</h1>
+        <p class="sottotitolo">Dopo il cambio, gli altri dispositivi dovranno accedere di nuovo.</p>
+        <form class="card" id="f-nuova-password">
+            <input type="email" id="np-email" autocomplete="username" hidden>
+            <div class="field mostra"><label for="np-pwd">Nuova password (almeno 8 caratteri)</label><input type="password" id="np-pwd" autocomplete="new-password" minlength="8" required><button type="button" data-mostra="np-pwd">Mostra</button></div>
+            <div class="field"><label for="np-pwd2">Ripeti la nuova password</label><input type="password" id="np-pwd2" autocomplete="new-password" minlength="8" required></div>
+            <button class="btn btn-primary" type="submit">Salva la nuova password</button>
+            <div class="messaggio" role="status"></div>
+        </form>
+    </section>
+
+    <p class="note" style="text-align:center; margin-top: 24px;"><a href="/" style="color: var(--text-sec);">← Torna a myquicktag</a></p>
+</div>
+
+<script>
+(function () {
+    const params = new URLSearchParams(location.search);
+    // Dove tornare dopo l'accesso: solo pagine di questo sito
+    const torna = (function () {
+        const t = params.get('torna') || '';
+        return /^\/(?!\/)[\w\-./?=&%@]*$/.test(t) ? t : '/dashboard.html';
+    })();
+    let emailInCorso = '';
+
+    function mostra(vista) {
+        document.querySelectorAll('.vista').forEach(v => v.classList.toggle('attiva', v.id === 'v-' + vista));
+        document.querySelectorAll('.messaggio').forEach(m => { m.textContent = ''; m.className = 'messaggio'; });
+        const primo = document.querySelector('#v-' + vista + ' input:not([hidden])');
+        if (primo && !('ontouchstart' in window)) primo.focus();
+    }
+    function msg(form, testo, ok) {
+        const m = form.querySelector('.messaggio');
+        m.textContent = testo; m.className = 'messaggio ' + (ok ? 'ok' : 'ko');
+    }
+    function occupato(form, si) {
+        const b = form.querySelector('button[type=submit]');
+        if (!b.dataset.testo) b.dataset.testo = b.textContent;
+        b.disabled = si; b.textContent = si ? 'Un momento…' : b.dataset.testo;
+    }
+    // Messaggi comprensibili, senza dettagli tecnici
+    function spiega(errore) {
+        const c = (errore && (errore.code || errore.error_code)) || '';
+        const t = String((errore && errore.message) || '').toLowerCase();
+        if (c === 'invalid_credentials' || t.includes('invalid login')) return 'Email o password non corretti.';
+        if (c === 'email_not_confirmed' || t.includes('not confirmed')) return 'L\'email non è ancora verificata: inserisci il codice che ti abbiamo mandato.';
+        if (c.includes('rate_limit') || t.includes('rate limit') || t.includes('security purposes')) return 'Troppi tentativi: riprova tra qualche minuto.';
+        if (c === 'otp_expired' || t.includes('expired') || t.includes('invalid') && t.includes('token')) return 'Codice o link non valido, scaduto o già usato: chiedine uno nuovo.';
+        if (c === 'weak_password' || t.includes('weak') || t.includes('at least')) return 'Password troppo debole: usa almeno 8 caratteri, meglio con lettere e numeri.';
+        if (c === 'same_password' || t.includes('different from the old')) return 'La nuova password deve essere diversa da quella attuale.';
+        if (c === 'email_address_invalid' || t.includes('invalid format') || t.includes('email address')) return 'Controlla l\'indirizzo email.';
+        if (t.includes('failed to fetch') || t.includes('network')) return 'Connessione assente: riprova.';
+        return 'Non è stato possibile completare l\'operazione. Riprova tra poco.';
+    }
+
+    async function dopoAccesso() {
+        // Ricorda su questo dispositivo le tag dell'account, poi torna dove serviva
+        try {
+            const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ azione: 'mie-tag' }) });
+            const d = await r.json();
+            if (d.success) mqtSessione.ricordaTags(d.tags.map(t => t.username_system));
+        } catch (e) {}
+        location.replace(torna);
+    }
+
+    document.querySelectorAll('[data-vai]').forEach(b => b.addEventListener('click', () => mostra(b.dataset.vai)));
+    document.querySelectorAll('[data-mostra]').forEach(b => b.addEventListener('click', () => {
+        const i = document.getElementById(b.dataset.mostra);
+        i.type = i.type === 'password' ? 'text' : 'password';
+        b.textContent = i.type === 'password' ? 'Mostra' : 'Nascondi';
+    }));
+
+    let sb;
+    async function avvia() {
+        try { sb = await mqtSessione.client(); }
+        catch (e) {
+            document.querySelector('.wrap').insertAdjacentHTML('beforeend', '<p class="messaggio ko" style="text-align:center">Servizio di accesso non raggiungibile. Controlla la connessione e ricarica la pagina.</p>');
+            return;
+        }
+
+        // Errori arrivati da un link nell'email (scaduto o già usato)
+        const hash = new URLSearchParams(location.hash.slice(1));
+        if (hash.get('error') || hash.get('error_code')) {
+            history.replaceState(null, '', location.pathname + location.search);
+            mostra(params.get('modo') === 'nuova-password' ? 'dimenticata' : 'accedi');
+            msg(document.querySelector('.vista.attiva form'), spiega({ code: hash.get('error_code'), message: hash.get('error_description') }), false);
+            return;
+        }
+
+        sb.auth.onAuthStateChange(function (evento) {
+            if (evento === 'PASSWORD_RECOVERY') mostra('nuova-password');
+        });
+
+        let { data } = await sb.auth.getSession();
+        const modo = params.get('modo');
+        // Una sessione salvata sul telefono si verifica con Supabase prima di fidarsi: potrebbe essere
+        // stata chiusa altrove (uscita da tutti i dispositivi, cambio o recupero password)
+        if (data.session) {
+            const verifica = await sb.auth.getUser();
+            if (!(verifica.data && verifica.data.user)) {
+                try { await sb.auth.signOut({ scope: 'local' }); } catch (e) {}
+                data = { session: null };
+            } else if (params.get('motivo') === 'sessione') {
+                // Sessione valida: il problema non è l'accesso ma la tag (non è di questo account)
+                location.replace('/dashboard.html?avviso=non-tua');
+                return;
+            }
+        }
+        if (data.session && modo === 'nuova-password') return mostra('nuova-password');
+        if (data.session && !modo) return dopoAccesso(); // già dentro (o appena verificato col link)
+        mostra(['registrati', 'dimenticata'].includes(modo) ? modo : 'accedi');
+        if (data.session && modo) location.hash = '';
+    }
+
+    // ---- ACCEDI ----
+    document.getElementById('f-accedi').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('a-email').value.trim().toLowerCase();
+        occupato(this, true);
+        const { error } = await sb.auth.signInWithPassword({ email, password: document.getElementById('a-pwd').value });
+        occupato(this, false);
+        if (error) {
+            if ((error.code || '') === 'email_not_confirmed') { emailInCorso = email; mostra('codice'); return; }
+            return msg(this, spiega(error), false);
+        }
+        dopoAccesso();
+    });
+
+    // ---- CREA ACCOUNT ----
+    document.getElementById('f-registrati').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('r-email').value.trim().toLowerCase();
+        const pwd = document.getElementById('r-pwd').value, pwd2 = document.getElementById('r-pwd2').value;
+        if (pwd.length < 8) return msg(this, 'La password deve avere almeno 8 caratteri.', false);
+        if (pwd !== pwd2) return msg(this, 'Le due password non coincidono.', false);
+        const promo = document.getElementById('r-promo').checked;
+        occupato(this, true);
+        const { data, error } = await sb.auth.signUp({
+            email, password: pwd,
+            options: {
+                emailRedirectTo: location.origin + '/accesso.html?torna=' + encodeURIComponent(torna),
+                // Consenso promozionale facoltativo, con data e versione del testo (non dà permessi)
+                data: promo ? { consenso_promo: true, consenso_promo_il: new Date().toISOString(), consenso_promo_testo: '2026-10' } : { consenso_promo: false }
+            }
+        });
+        occupato(this, false);
+        if (error) return msg(this, spiega(error), false);
+        if (data.session) return dopoAccesso(); // verifica email disattivata nel progetto (solo prove)
+        emailInCorso = email;
+        mostra('codice');
+    });
+
+    // ---- CODICE DI VERIFICA ----
+    document.getElementById('f-codice').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const token = document.getElementById('c-codice').value.replace(/\s/g, '');
+        if (!emailInCorso) { mostra('accedi'); return; }
+        occupato(this, true);
+        let { error } = await sb.auth.verifyOtp({ email: emailInCorso, token, type: 'email' });
+        if (error) ({ error } = await sb.auth.verifyOtp({ email: emailInCorso, token, type: 'signup' }));
+        occupato(this, false);
+        if (error) return msg(this, spiega(error), false);
+        dopoAccesso();
+    });
+    document.getElementById('c-reinvia').addEventListener('click', async function () {
+        const form = document.getElementById('f-codice');
+        if (!emailInCorso) return mostra('accedi');
+        const { error } = await sb.auth.resend({ type: 'signup', email: emailInCorso, options: { emailRedirectTo: location.origin + '/accesso.html?torna=' + encodeURIComponent(torna) } });
+        msg(form, error ? spiega(error) : 'Codice rimandato. Controlla anche la posta indesiderata.', !error);
+    });
+
+    // ---- PASSWORD DIMENTICATA ----
+    document.getElementById('f-dimenticata').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('d-email').value.trim().toLowerCase();
+        occupato(this, true);
+        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/accesso.html?modo=nuova-password' });
+        occupato(this, false);
+        // Stessa risposta che l'email abbia un account o no: si segnala solo il troppo spesso
+        if (error && /rate|security purposes/i.test((error.code || '') + error.message)) return msg(this, spiega(error), false);
+        emailInCorso = email;
+        mostra('codice-recupero');
+    });
+    document.getElementById('f-codice-recupero').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const token = document.getElementById('cr-codice').value.replace(/\s/g, '');
+        occupato(this, true);
+        const { error } = await sb.auth.verifyOtp({ email: emailInCorso, token, type: 'recovery' });
+        occupato(this, false);
+        if (error) return msg(this, spiega(error), false);
+        mostra('nuova-password');
+    });
+
+    // ---- NUOVA PASSWORD ----
+    document.getElementById('f-nuova-password').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const pwd = document.getElementById('np-pwd').value, pwd2 = document.getElementById('np-pwd2').value;
+        if (pwd.length < 8) return msg(this, 'La password deve avere almeno 8 caratteri.', false);
+        if (pwd !== pwd2) return msg(this, 'Le due password non coincidono.', false);
+        occupato(this, true);
+        const { error } = await sb.auth.updateUser({ password: pwd });
+        occupato(this, false);
+        if (error) return msg(this, spiega(error), false);
+        // Chiude le sessioni dell'account sugli altri dispositivi: qui resta aperta solo questa
+        try { await sb.auth.signOut({ scope: 'others' }); } catch (e2) {}
+        msg(this, 'Password aggiornata ✅', true);
+        setTimeout(dopoAccesso, 900);
+    });
+
+    avvia();
+})();
+</script>
+</body>
+</html>

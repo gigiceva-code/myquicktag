@@ -1,0 +1,104 @@
+/* Stile comune delle pagine dell'account (accesso.html, dashboard.html, account.html) */
+    :root {
+        --bg-color: #000000;
+        --accent-smeraldo: #50C878;
+        --text-sec: #8e8e93;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.06);
+        --warning: #ffab00;
+        --danger: #ff4444;
+    }
+
+    body {
+        margin: 0;
+        padding: 16px 16px 40px 16px;
+        background-color: var(--bg-color);
+        font-family: 'Inter', sans-serif;
+        color: #ffffff;
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
+
+    .wrap { max-width: 480px; margin: 0 auto; }
+
+    .top-bar { display: flex; align-items: center; gap: 14px; margin: 10px 0 24px; }
+    .btn-back {
+        width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        color: #ffffff; text-decoration: none;
+    }
+    .top-bar h1 { font-size: 1.3rem; margin: 0; font-weight: 600; color: var(--accent-smeraldo); }
+    .top-bar p { margin: 2px 0 0; font-size: 0.85rem; text-transform: uppercase; }
+
+    .card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 16px; padding: 20px; margin-bottom: 14px;
+    }
+    .card-title {
+        font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase;
+        color: var(--text-sec); margin: 0 0 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .card-title i { color: var(--accent-smeraldo); }
+
+    .row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 0.9rem; }
+    .row + .row { border-top: 1px solid var(--card-border); }
+    .row .label { color: var(--text-sec); }
+    .row .value { font-weight: 600; text-align: right; }
+
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-ok { background: rgba(80, 200, 120, 0.15); color: var(--accent-smeraldo); }
+    .badge-warn { background: rgba(255, 171, 0, 0.15); color: var(--warning); }
+    .badge-ko { background: rgba(255, 68, 68, 0.15); color: var(--danger); }
+
+    .note { font-size: 0.8rem; color: var(--text-sec); line-height: 1.4; margin: 12px 0 0; }
+
+    .btn {
+        display: block; width: 100%; box-sizing: border-box; margin-top: 14px;
+        padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+        font-family: inherit; font-size: 0.85rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.5px; text-align: center; text-decoration: none;
+    }
+    .btn-primary { background: var(--accent-smeraldo); color: #000000; }
+    .btn-secondary { background: transparent; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.15); }
+    .btn-danger { background: transparent; color: var(--danger); border: 1px solid rgba(255, 68, 68, 0.35); }
+    .btn:disabled { opacity: 0.5; cursor: default; }
+
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 0.75rem; color: var(--text-sec); margin-bottom: 6px; }
+    .field input {
+        width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ffffff; font-family: inherit; font-size: 16px;
+    }
+    .field input:focus { outline: none; border-color: var(--accent-smeraldo); }
+
+    .messaggio { font-size: 0.85rem; margin-top: 10px; min-height: 1em; }
+    .messaggio.ok { color: var(--accent-smeraldo); }
+    .messaggio.ko { color: var(--danger); }
+
+    #loading { text-align: center; color: var(--text-sec); padding: 60px 0; }
+    #contenuto { display: none; }
+
+    .logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin: 24px 0 8px; }
+    .logo span { font-size: 18px; font-weight: 800; letter-spacing: 1px; }
+    .logo i { color: var(--accent-smeraldo); font-size: 22px; }
+    h1.titolo { text-align: center; font-size: 1.35rem; font-weight: 600; margin: 8px 0 6px; }
+    p.sottotitolo { text-align: center; color: var(--text-sec); font-size: 0.9rem; margin: 0 0 22px; line-height: 1.45; }
+    .link { background: none; border: none; color: var(--accent-smeraldo); font-family: inherit; font-size: 0.85rem; cursor: pointer; padding: 6px 0; text-decoration: underline; }
+    .riga-link { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .check { display: flex; gap: 10px; align-items: flex-start; font-size: 0.8rem; color: var(--text-sec); line-height: 1.4; margin: 6px 0 4px; }
+    .check input { width: 20px; height: 20px; margin: 0; flex-shrink: 0; accent-color: var(--accent-smeraldo); }
+    .codice { letter-spacing: 8px; text-align: center; font-size: 22px !important; }
+    .mostra { position: relative; }
+    .mostra button { position: absolute; right: 8px; top: 31px; background: none; border: none; color: var(--text-sec); font-size: 0.75rem; cursor: pointer; padding: 8px; font-family: inherit; }
+    .vista { display: none; }
+    .vista.attiva { display: block; }
+    .tag-card { display: block; }
+    .tag-card .testa { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .tag-card .nome { font-size: 1.05rem; font-weight: 600; word-break: break-all; }
+    .tag-card .sub { font-size: 0.78rem; color: var(--text-sec); margin-top: 4px; }
+    .azioni { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+    .azioni a { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 6px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); min-height: 44px; box-sizing: border-box; text-align: center; }
+    .azioni a i { color: var(--accent-smeraldo); }
+    .pallino { display: inline-block; min-width: 18px; padding: 1px 6px; border-radius: 10px; background: var(--danger); color: #fff; font-size: 0.7rem; }

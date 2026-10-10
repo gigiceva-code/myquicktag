@@ -527,6 +527,11 @@
         <span style="color: #A0A0A0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px;">Risposte veloci ai tuoi dubbi</span>
     </a>
 
+    <a href="javascript:void(0)" onclick="openLogin()" style="color: #ffffff; text-decoration: none; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Accedi</span>
+        <span style="color: #A0A0A0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px;">Le tue tag, il tuo account</span>
+    </a>
+
     <a href="javascript:void(0)" onclick="chiudiOverlay('menu-overlay'); scrollToSection('s1')" style="margin-top: 10px; background: #50C878; color: #000; text-decoration: none; padding: 18px; text-align: center; font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px;">
         Ottieni la tua Tag
     </a>
@@ -559,31 +564,6 @@
  
 </div>  
   </div>
-<div id="login-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
-    
-    <div onclick="closeLogin()" style="position: absolute; top: 25px; right: 25px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-    </div>
-
-    <div style="width: 100%; max-width: 300px; text-align: center;">
-        <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px;">Identity Portal</p>
-        
-        <div style="margin-bottom: 40px;">
-            <input type="text" id="login-tag" placeholder="@tag" autocomplete="username" style="background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 24px; font-weight: 300; width: 100%; padding: 10px 0; outline: none; text-align: center; letter-spacing: 1px;">
-        </div>
-
-        <div style="margin-bottom: 40px;">
-            <input type="password" id="login-password" placeholder="password" autocomplete="current-password" style="background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 24px; font-weight: 300; width: 100%; padding: 10px 0; outline: none; text-align: center; letter-spacing: 4px;">
-        </div>
-
-        <button onclick="checkAccess()" style="width: 100%; padding: 20px; background: #50C878; color: #000; border: none; font-weight: 900; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
-            ACCEDI
-        </button>
-    </div>
-</div>
       <!-- OVERLAY NOMI PROTETTI (GOLD LIST): richiesta del titolare via email -->
 <div id="premium-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
     
@@ -678,100 +658,11 @@ function scrollToSection(id) {
     }
 }
 
-// 2. GESTIONE IDENTITY PORTAL (LOGIN)
-function openLogin() { apriOverlay('login-overlay'); }
-function closeLogin() { chiudiOverlay('login-overlay'); }
-
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
+// 2. ACCESSO: pagina dedicata (accesso.html, account con email e password). Già dentro → le mie tag
+function openLogin() {
+    window.location.href = (window.mqtSessione && mqtSessione.haAccount()) ? '/dashboard.html' : '/accesso.html';
 }
 
-async function checkAccess() {
-    const tagInput = document.getElementById('login-tag').value;
-    const passwordInput = document.getElementById('login-password').value;
-    const btn = document.querySelector('#login-overlay button');
-
-    if (!tagInput || !passwordInput) {
-        alert("Inserisci credenziali valide.");
-        return;
-    }
-
-    const rawTag = tagInput.toLowerCase().trim().replace(/\s+/g, '').replace(/@/g, '');
-    const formattedTag = '@' + rawTag;
-
-    btn.innerText = "VERIFICA IDENTITY...";
-    btn.disabled = true;
-    btn.style.opacity = "0.7";
-
-    try {
-        const pwdHashata = await hashPassword(passwordInput);
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: formattedTag, pwd: pwdHashata })
-        });
-        const data = await response.json();
-
-        if (data.success) {
-            btn.style.background = "#ffffff";
-            btn.innerText = "IDENTITÀ CONFERMATA";
-            btn.style.opacity = "1";
-            
-            // ==========================================
-            // GESTIONE SESSIONI PWA MULTIPLE: ARRAY DI AUTORIZZAZIONE
-            // ==========================================
-            const nuovoUtente = data.username.replace('@', '').toLowerCase().trim();
-            
-            let chiaviSalvate = [];
-            try {
-                chiaviSalvate = JSON.parse(localStorage.getItem('mqt_keys') || '[]');
-            } catch(e) {
-                chiaviSalvate = [];
-            }
-            
-            if (!chiaviSalvate.includes(nuovoUtente)) {
-                chiaviSalvate.push(nuovoUtente);
-            }
-            
-                               localStorage.setItem('mqt_keys', JSON.stringify(chiaviSalvate));
-            localStorage.setItem('mqt_logged_user', nuovoUtente);
-            if (data.sessionToken) {
-                let tokenSalvati = {};
-                try {
-                    tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
-                } catch(e) {
-                    tokenSalvati = {};
-                }
-                tokenSalvati[nuovoUtente] = data.sessionToken;
-                localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
-            }
-            // ========================================== 
-            
-            // L'utente è ufficiale, puliamo eventuali bozze in sospeso
-            localStorage.removeItem('mqt_reserved'); 
-            
-            setTimeout(() => {
-                window.location.href = `profile.html?u=${data.username}`;
-            }, 800);
-        } else {
-            alert(data.message || "Accesso negato. Riprova.");
-            btn.innerText = "ACCEDI";
-            btn.disabled = false;
-            btn.style.opacity = "1";
-        }
-    } catch (error) {
-        console.error("Errore Portale:", error);
-        alert("Sistema momentaneamente non raggiungibile.");
-        btn.innerText = "ACCEDI";
-        btn.disabled = false;
-        btn.style.opacity = "1";
-    }
-}
 // Nome protetto (gold list): popup dorato con richiesta via email al canale dedicato.
 // Testo e indirizzo arrivano dal server (lib/nomi-riservati.js), così l'email è scritta in un posto solo.
 function mostraPopupPremium(formattedTag, messaggio, email) {
@@ -850,9 +741,8 @@ async function vaiAllaVerifica() {
             const r = await fetch(`/api/get-profile?u=${encodeURIComponent(rawTag)}`);
             const d = await r.json();
             if (d && d.fields && d.fields.has_password) {
-                // Account attivo: login con la tag già compilata
-                document.getElementById('login-tag').value = '@' + rawTag;
-                apriOverlay('login-overlay');
+                // Tag attiva: si entra con l'account
+                window.location.href = '/accesso.html?torna=' + encodeURIComponent('/profile.html?u=' + rawTag);
                 return;
             }
         } catch (e) {}
@@ -956,7 +846,6 @@ function procediAllaRegistrazione() {
 // 5. LOGICA PWA E OVERLAY
 window.addEventListener('popstate', function(event) {
     document.getElementById('welcome-overlay').style.display = 'none';
-    document.getElementById('login-overlay').style.display = 'none';
     document.getElementById('menu-overlay').style.display = 'none';
     document.body.style.overflow = 'auto';
 });
@@ -1064,13 +953,10 @@ function controllaMemoriaProprieta() {
 
     controllaMemoriaProprieta();
 
-    // Arrivo da "Sessione scaduta" (session.js): apre il login con la tag già compilata
-    const tagDaRiloggare = new URLSearchParams(window.location.search).get('login');
-    if (tagDaRiloggare) {
-        const campoTag = document.getElementById('login-tag');
-        if (campoTag) campoTag.value = '@' + tagDaRiloggare.replace(/[^a-zA-Z0-9_-]/g, '');
-        history.replaceState(null, '', window.location.pathname);
-        apriOverlay('login-overlay');
+    // Vecchi collegamenti "?login=nome": l'accesso ora è con l'account
+    if (new URLSearchParams(window.location.search).get('login')) {
+        window.location.replace('/accesso.html');
+        return;
     }
 
     const tagInput = document.getElementById('tag-input');
@@ -1079,14 +965,6 @@ function controllaMemoriaProprieta() {
             if (e.key === 'Enter') { e.preventDefault(); vaiAllaVerifica(); }
         });
     }
-
-    const loginPassword = document.getElementById('login-password');
-    const loginTag = document.getElementById('login-tag');
-    function triggerLoginOnEnter(e) {
-        if (e.key === 'Enter') { e.preventDefault(); checkAccess(); }
-    }
-    if (loginPassword) loginPassword.addEventListener('keypress', triggerLoginOnEnter);
-    if (loginTag) loginTag.addEventListener('keypress', triggerLoginOnEnter);
 
     setTimeout(() => {
         const elementiS1 = document.querySelectorAll('#s1 .reveal-item');

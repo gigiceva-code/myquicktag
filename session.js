@@ -1,23 +1,106 @@
 // ============================================================
-// SESSIONI MULTI-TAG (portachiavi del dispositivo)
+// ACCOUNT E SESSIONI (Supabase Auth) + PORTACHIAVI DELLE TAG
 // ============================================================
-// Regola unica: su questo dispositivo sei proprietario di una tag solo se hai il suo
-// token di sessione (mqt_session_tokens) e non è scaduto. mqt_keys e mqt_logged_user
-// restano per compatibilità, ma da soli non bastano più.
-//
-// Il token ha la forma "tag.scadenzaMs.firma": la scadenza si legge senza chiamare il
-// server. Il server lo rinnova a ogni utilizzo (sessione scorrevole, 90 giorni).
+// L'accesso dei titolari è un ACCOUNT (email verificata + password) gestito da Supabase Auth:
+// registrazione, verifica, recupero e cambio password li fa la libreria ufficiale di Supabase
+// (caricata solo quando serve) e la password non passa mai dal nostro server.
+// - Ogni chiamata a /api/ parte con la sessione dell'account (intestazione Authorization): il
+//   server verifica con Supabase chi sei e se la tag è tua (lib/sessione.js).
+// - mqt_session_tokens conserva solo le RICEVUTE di prenotazione (tag in attesa, 24 ore).
+// - mqt_keys / mqt_logged_user ricordano su questo dispositivo quali tag apri (comodità, non
+//   sono una prova di identità).
 (function () {
+    // Progetto Supabase: produzione solo sul dominio pubblico, il progetto di prova altrove
+    // (anteprime Vercel e prove in locale). Le chiavi "publishable" sono pubbliche per natura.
+    const PRODUZIONE = location.hostname === 'myquicktag.it' || location.hostname === 'www.myquicktag.it';
+    const CONFIG = PRODUZIONE
+        ? { url: 'https://atlhrkkfovblkhgzfeuo.supabase.co', chiave: 'sb_publishable_HrX_oradnt5sRX6YHqGB-w_gYZe0u4U' }
+        : { url: 'https://lmxxoxrsrwmtunyqlpbh.supabase.co', chiave: 'sb_publishable_mCn8LbCxhDoNZMJS-E043Q_hKEte5F0' };
+    const LIBRERIA = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js';
+    const INTEGRITA = 'sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R';
+    const CHIAVE_SESSIONE = 'sb-' + new URL(CONFIG.url).hostname.split('.')[0] + '-auth-token';
+
     function leggiTokens() {
         try { return JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}') || {}; }
         catch (e) { return {}; }
     }
-
     function normalizza(tag) {
         return String(tag || '').replace('@', '').trim().toLowerCase();
     }
+    // C'è una sessione dell'account salvata su questo dispositivo? (la validità la decide Supabase)
+    function haSessioneSalvata() {
+        try {
+            const s = JSON.parse(localStorage.getItem(CHIAVE_SESSIONE) || 'null');
+            return !!(s && (s.refresh_token || (s.currentSession && s.currentSession.refresh_token)));
+        } catch (e) { return false; }
+    }
+
+    let promessaClient = null;
+    function client() {
+        if (promessaClient) return promessaClient;
+        promessaClient = new Promise(function (risolvi, rifiuta) {
+            function crea() {
+                try {
+                    risolvi(window.supabase.createClient(CONFIG.url, CONFIG.chiave, {
+                        auth: { flowType: 'implicit', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: CHIAVE_SESSIONE }
+                    }));
+                } catch (e) { rifiuta(e); }
+            }
+            if (window.supabase && window.supabase.createClient) return crea();
+            const s = document.createElement('script');
+            s.src = LIBRERIA; s.integrity = INTEGRITA; s.crossOrigin = 'anonymous';
+            s.onload = crea;
+            s.onerror = function () { promessaClient = null; rifiuta(new Error('Libreria di accesso non disponibile')); };
+            document.head.appendChild(s);
+        });
+        return promessaClient;
+    }
+
+    // Token di accesso aggiornato (la libreria lo rinnova da sola se è scaduto), oppure null
+    async function tokenAccount() {
+        if (!haSessioneSalvata()) return null;
+        try {
+            const sb = await client();
+            const { data } = await sb.auth.getSession();
+            return data && data.session ? data.session.access_token : null;
+        } catch (e) { return null; }
+    }
+
+    // Ogni chiamata alle nostre API parte con la sessione dell'account, se c'è
+    const fetchOriginale = window.fetch.bind(window);
+    window.fetch = async function (risorsa, opzioni) {
+        try {
+            const url = typeof risorsa === 'string' ? risorsa : (risorsa && risorsa.url) || '';
+            const nostra = url.startsWith('/api/') || url.startsWith(location.origin + '/api/');
+            if (nostra) {
+                const token = await tokenAccount();
+                if (token) {
+                    opzioni = Object.assign({}, opzioni || {});
+                    const h = new Headers(opzioni.headers || (typeof risorsa !== 'string' && risorsa.headers) || {});
+                    if (!h.has('Authorization')) h.set('Authorization', 'Bearer ' + token);
+                    opzioni.headers = h;
+                }
+            }
+        } catch (e) { /* in caso di problemi la chiamata parte comunque, senza sessione */ }
+        return fetchOriginale(risorsa, opzioni);
+    };
+
+    function aggiungiChiave(tag) {
+        tag = normalizza(tag);
+        if (!tag) return;
+        let chiavi = [];
+        try { chiavi = JSON.parse(localStorage.getItem('mqt_keys') || '[]'); } catch (e) {}
+        if (!chiavi.includes(tag)) chiavi.push(tag);
+        try { localStorage.setItem('mqt_keys', JSON.stringify(chiavi)); } catch (e) {}
+    }
 
     window.mqtSessione = {
+        config: CONFIG,
+        client: client,
+        tokenAccount: tokenAccount,
+        haAccount: haSessioneSalvata,
+
+        // Ricevuta di prenotazione della tag (le vecchie sessioni "@nome + password" non valgono più)
         token: function (tag) {
             return leggiTokens()[normalizza(tag)] || '';
         },
@@ -30,14 +113,21 @@
             try { localStorage.setItem('mqt_session_tokens', JSON.stringify(tokens)); } catch (e) {}
         },
 
+        // Puoi provare a lavorare su questa tag da qui? Account collegato su questo dispositivo, oppure
+        // ricevuta di prenotazione non scaduta. L'ultima parola è del server (proprietario o no).
         valida: function (tag) {
+            if (haSessioneSalvata()) return true;
             const parti = this.token(tag).split('.');
-            if (parti.length !== 3) return false;
-            return Number(parti[1]) > Date.now();
+            return parti.length === 3 && Number(parti[1]) > Date.now();
         },
 
-        // Toglie la tag dal portachiavi del dispositivo (chiave, token, utente attivo).
-        // Bozze locali e Pocket restano: dopo il nuovo login il lavoro non è perso.
+        // Ricorda su questo dispositivo le tag dell'account (dashboard, login)
+        ricordaTags: function (tags) {
+            (tags || []).forEach(aggiungiChiave);
+        },
+        ricorda: aggiungiChiave,
+
+        // Toglie la tag dal portachiavi del dispositivo. Bozze locali e Pocket restano.
         rimuovi: function (tag) {
             tag = normalizza(tag);
             try {
@@ -51,14 +141,34 @@
             } catch (e) {}
         },
 
-        // Sessione scaduta: avvisa e porta al login con la tag già compilata
+        // Esci dall'account su questo dispositivo (ovunque = tutti i dispositivi)
+        esci: async function (ovunque) {
+            try { const sb = await client(); await sb.auth.signOut({ scope: ovunque ? 'global' : 'local' }); } catch (e) {}
+            try {
+                localStorage.removeItem(CHIAVE_SESSIONE);
+                localStorage.removeItem('mqt_keys');
+                localStorage.removeItem('mqt_logged_user');
+            } catch (e) {}
+        },
+
+        // Pagine del proprietario: il server dice se la tag è dell'account (fields.sei_proprietario).
+        // false → si va alle proprie tag (o all'accesso, se su questo dispositivo non c'è un account).
+        proprietarioOppureEsci: function (fields, tag) {
+            if (!fields || !fields.has_password || fields.sei_proprietario) return true;
+            if (haSessioneSalvata()) window.location.href = '/dashboard.html?avviso=non-tua';
+            else this.scaduta(tag);
+            return false;
+        },
+
+        // Sessione scaduta o mancante: avvisa e porta all'accesso, poi si torna qui
         scaduta: function (tag) {
-            tag = normalizza(tag);
-            this.rimuovi(tag);
-            alert('Sessione scaduta\n\nPer sicurezza accedi di nuovo con la tua password. Le modifiche non pubblicate restano salvate su questo dispositivo.');
-            window.location.href = '/index.html?login=' + encodeURIComponent(tag);
+            alert('Accedi al tuo account\n\nPer sicurezza entra di nuovo con la tua email e la tua password. Le modifiche non pubblicate restano salvate su questo dispositivo.');
+            window.location.href = '/accesso.html?motivo=sessione&torna=' + encodeURIComponent(location.pathname + location.search);
         }
     };
+
+    // Se c'è una sessione salvata, la libreria si prepara subito (rinnovo del token in anticipo)
+    if (haSessioneSalvata()) client().catch(function () {});
 })();
 
 // ============================================================

@@ -755,7 +755,7 @@
 
                 if (response.status === 401) {
                     // Il lavoro è già al sicuro nella bozza locale (mqt_draft_full_): non va perso
-                    if (statoUtente === 'attivo') {
+                    if (statoUtente === 'attivo' || mqtSessione.haAccount()) {
                         mqtSessione.scaduta(NOME_SISTEMA);
                     } else {
                         alert("Prenotazione non valida su questo dispositivo\n\nLa prenotazione è scaduta oppure è stata fatta da un altro dispositivo o browser. Torna alla home per verificare il nome.");
@@ -770,7 +770,6 @@
                     return;
                 }
                 const data = await response.json();
-                if (data.sessionToken) mqtSessione.salva(NOME_SISTEMA, data.sessionToken);
                 
                 if (data.success) {
                     window.onbeforeunload = null; // Rimuove eventuali blocchi di uscita
@@ -853,13 +852,16 @@ const tokenAttuale = tokenPerLettura[NOME_SISTEMA] || '';
 const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeURIComponent(tokenAttuale)}`);
                 const data = await response.json();
 
-                // Account attivo ma sessione scaduta: login prima di iniziare a modificare
-                if (data.fields && data.fields.has_password && !mqtSessione.valida(NOME_SISTEMA)) {
-                    mqtSessione.scaduta(NOME_SISTEMA);
+                // Tag con un titolare: si modifica solo con l'account che la possiede (verificato dal server)
+                if (data.fields && data.fields.has_password && !data.fields.sei_proprietario) {
+                    if (mqtSessione.haAccount()) {
+                        alert("Questa tag non è collegata al tuo account.");
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        mqtSessione.scaduta(NOME_SISTEMA);
+                    }
                     return;
                 }
-                // Sessione scorrevole: token rinnovato dal server
-                if (data.sessionToken) mqtSessione.salva(NOME_SISTEMA, data.sessionToken);
                 // Tag disattivata (90 giorni + 14 di grazia trascorsi): si torna alla dashboard per rinnovare
                 if (data.abbonamento && data.abbonamento.fase === 'scaduta') {
                     alert("Tag disattivata\n\nIl piano e il periodo di grazia sono terminati. Rinnova dalla dashboard per riattivarla e modificarla.");

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex">
+    <title>Le mie tag | myquicktag</title>
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/account.css">
+    <script src="migrate-storage.js"></script>
+    <script src="/session.js"></script>
+</head>
+<body>
+<div class="wrap">
+    <div class="top-bar">
+        <a href="/" class="btn-back" aria-label="Torna al sito"><i class="fas fa-home"></i></a>
+        <div>
+            <h1>Le mie tag</h1>
+            <p id="email-account" style="text-transform: none; color: var(--text-sec);"></p>
+        </div>
+    </div>
+
+    <div id="loading" role="status"><i class="fas fa-spinner fa-spin"></i></div>
+
+    <div id="contenuto">
+        <div class="card" id="avviso-non-tua" style="display: none; border-color: rgba(255,171,0,0.4);">
+            <p class="note" style="margin: 0; color: #ffab00;">La tag che stavi aprendo non è collegata a questo account. Qui trovi le tue tag; se è una tag creata prima degli account, collegala qui sotto.</p>
+        </div>
+        <div id="elenco"></div>
+
+        <a href="/?nuova=1#s1" class="btn btn-primary" id="btn-aggiungi"><i class="fas fa-plus"></i> Aggiungi una tag</a>
+
+        <details class="card" style="margin-top: 14px;">
+            <summary style="cursor: pointer; font-size: 0.85rem;">Hai una tag creata prima degli account?</summary>
+            <p class="note">Collegala una volta sola con il @nome e la vecchia password: da quel momento si entra solo con questo account.</p>
+            <form id="f-collega" style="margin-top: 12px;">
+                <div class="field"><label for="cv-tag">@nome della tag</label><input type="text" id="cv-tag" autocomplete="off" autocapitalize="off" required></div>
+                <div class="field"><label for="cv-pwd">Vecchia password della tag</label><input type="password" id="cv-pwd" autocomplete="off" required></div>
+                <button class="btn btn-secondary" type="submit">Collega al mio account</button>
+                <div class="messaggio" role="status"></div>
+            </form>
+        </details>
+
+        <!-- ACCOUNT -->
+        <div class="card" style="margin-top: 22px;">
+            <h2 class="card-title"><i class="fas fa-user-shield"></i> Il tuo account</h2>
+            <div class="row"><span class="label">Email (privata)</span><span class="value" id="acc-email" style="word-break: break-all;">—</span></div>
+
+            <details style="margin-top: 10px;">
+                <summary style="cursor: pointer; font-size: 0.85rem;">Cambia password</summary>
+                <form id="f-password" style="margin-top: 12px;">
+                    <input type="email" id="p-user" autocomplete="username" hidden>
+                    <div class="field"><label for="p-attuale">Password attuale</label><input type="password" id="p-attuale" autocomplete="current-password" required></div>
+                    <div class="field"><label for="p-nuova">Nuova password (almeno 8 caratteri)</label><input type="password" id="p-nuova" autocomplete="new-password" minlength="8" required></div>
+                    <div class="field"><label for="p-nuova2">Ripeti la nuova password</label><input type="password" id="p-nuova2" autocomplete="new-password" minlength="8" required></div>
+                    <button class="btn btn-primary" type="submit">Salva la nuova password</button>
+                    <div class="messaggio" role="status"></div>
+                </form>
+            </details>
+
+            <details style="margin-top: 10px;">
+                <summary style="cursor: pointer; font-size: 0.85rem;">Cambia email</summary>
+                <form id="f-email" style="margin-top: 12px;">
+                    <div class="field"><label for="e-nuova">Nuova email</label><input type="email" id="e-nuova" autocomplete="email" required></div>
+                    <p class="note">La nuova email vale solo dopo la conferma dal link che ti mandiamo.</p>
+                    <button class="btn btn-secondary" type="submit">Cambia email</button>
+                    <div class="messaggio" role="status"></div>
+                </form>
+            </details>
+
+            <label class="check" style="margin-top: 14px;"><input type="checkbox" id="acc-promo"><span>Voglio ricevere novità e offerte di myquicktag (facoltativo). Gli avvisi sul servizio arrivano comunque.</span></label>
+            <div class="messaggio" id="msg-promo" role="status"></div>
+
+            <button type="button" class="btn btn-secondary" id="btn-esci">Esci da questo dispositivo</button>
+            <button type="button" class="btn btn-danger" id="btn-esci-ovunque">Esci da tutti i dispositivi</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const elenco = document.getElementById('elenco');
+    let sb, utente;
+
+    function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
+    function data(d) { try { return new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return d; } }
+    function msg(el, t, ok) { el.textContent = t; el.className = 'messaggio ' + (ok ? 'ok' : 'ko'); }
+
+    function statoTag(t) {
+        if (t.stato === 'in attesa') return { badge: 'badge-warn', testo: 'Da attivare', sub: 'Prenotata: completa e attiva entro 24 ore' };
+        const a = t.abbonamento || {};
+        if (a.fase === 'scaduta') return { badge: 'badge-ko', testo: 'Disattivata', sub: 'Non è visibile al pubblico' };
+        if (a.fase === 'grazia') return { badge: 'badge-warn', testo: 'Scaduta', sub: `Resta online ancora ${a.giorni_alla_disattivazione} giorni` };
+        if (a.giorni_alla_scadenza <= 14) return { badge: 'badge-warn', testo: `Scade tra ${a.giorni_alla_scadenza} gg`, sub: 'Attiva fino al ' + data(a.data_scadenza) };
+        return { badge: 'badge-ok', testo: 'Attiva', sub: 'Attiva fino al ' + data(a.data_scadenza) };
+    }
+
+    function disegna(tags) {
+        if (!tags.length) {
+            elenco.innerHTML = '<div class="card"><p class="note" style="margin:0">Non hai ancora nessuna tag in questo account. Scegli il tuo @nome per crearne una.</p></div>';
+            return;
+        }
+        elenco.innerHTML = tags.map(t => {
+            const s = statoTag(t);
+            const n = encodeURIComponent(t.username_system);
+            const nome = t.username_display ? t.username_display.replace(/^@?/, '@') : '@' + t.username_system;
+            const azioni = t.stato === 'in attesa'
+                ? `<a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-pen"></i> Completa e attiva</a>`
+                : `<a href="/u/${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-eye"></i> Apri la tag</a>
+                   <a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-pen"></i> Modifica</a>
+                   <a href="/analytics.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-chart-line"></i> Statistiche</a>
+                   <a href="/contatti.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-inbox"></i> Contatti ${t.contatti_nuovi ? '<span class="pallino">' + t.contatti_nuovi + '</span>' : ''}</a>
+                   <a href="/profile.html?u=${n}" data-tag="${esc(t.username_system)}" style="grid-column: 1 / -1;"><i class="fas fa-sliders-h"></i> Gestisci (piano, bozza, QR)</a>`;
+            return `<div class="card tag-card">
+                <div class="testa"><div><div class="nome">${esc(nome)}</div><div class="sub">${esc(s.sub)}${t.ha_bozza && t.stato === 'attivo' ? ' · bozza non pubblicata' : ''}</div></div>
+                <span class="badge ${s.badge}">${esc(s.testo)}</span></div>
+                <div class="azioni">${azioni}</div></div>`;
+        }).join('');
+        // Le pagine della singola tag ricordano quale tag stai gestendo su questo dispositivo
+        elenco.querySelectorAll('a[data-tag]').forEach(a => a.addEventListener('click', () => {
+            try { localStorage.setItem('mqt_logged_user', a.dataset.tag); } catch (e) {}
+        }));
+    }
+
+    async function caricaTags() {
+        const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ azione: 'mie-tag' }) });
+        if (r.status === 401) { mqtSessione.scaduta(); return null; }
+        const d = await r.json();
+        if (!d.success) throw new Error(d.error || 'Errore');
+        mqtSessione.ricordaTags(d.tags.map(t => t.username_system));
+        return d.tags;
+    }
+
+    async function avvia() {
+        if (!mqtSessione.haAccount()) { location.replace('/accesso.html?torna=/dashboard.html'); return; }
+        try {
+            sb = await mqtSessione.client();
+            const { data } = await sb.auth.getUser();
+            utente = data && data.user;
+            if (!utente) { await mqtSessione.esci(false); location.replace('/accesso.html?torna=/dashboard.html'); return; }
+            document.getElementById('email-account').textContent = utente.email;
+            document.getElementById('acc-email').textContent = utente.email;
+            document.getElementById('p-user').value = utente.email;
+            document.getElementById('acc-promo').checked = !!(utente.user_metadata && utente.user_metadata.consenso_promo);
+            const tags = await caricaTags();
+            if (!tags) return;
+            disegna(tags);
+            if (new URLSearchParams(location.search).get('avviso') === 'non-tua') document.getElementById('avviso-non-tua').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('contenuto').style.display = 'block';
+        } catch (e) {
+            document.getElementById('loading').textContent = 'Impossibile caricare le tue tag. Controlla la connessione e riprova.';
+        }
+    }
+
+    // Collega una tag creata col vecchio accesso
+    async function sha256(t) {
+        const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+        return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    document.getElementById('f-collega').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const m = this.querySelector('.messaggio');
+        const tag = document.getElementById('cv-tag').value.trim();
+        try {
+            const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ azione: 'collega-vecchia', tag, pwd: await sha256(document.getElementById('cv-pwd').value) }) });
+            const d = await r.json();
+            if (!d.success) return msg(m, d.error || 'Collegamento non riuscito', false);
+            msg(m, 'Tag collegata ✅', true);
+            this.reset();
+            disegna(await caricaTags());
+        } catch (err) { msg(m, 'Errore di connessione. Riprova.', false); }
+    });
+
+    // Cambio password: si conferma prima quella attuale
+    document.getElementById('f-password').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const m = this.querySelector('.messaggio');
+        const attuale = document.getElementById('p-attuale').value, nuova = document.getElementById('p-nuova').value;
+        if (nuova.length < 8) return msg(m, 'La nuova password deve avere almeno 8 caratteri.', false);
+        if (nuova !== document.getElementById('p-nuova2').value) return msg(m, 'Le due nuove password non coincidono.', false);
+        if (nuova === attuale) return msg(m, 'La nuova password è uguale a quella attuale.', false);
+        const verifica = await sb.auth.signInWithPassword({ email: utente.email, password: attuale });
+        if (verifica.error) return msg(m, /rate|security/i.test(verifica.error.message) ? 'Troppi tentativi: riprova tra qualche minuto.' : 'La password attuale non è corretta.', false);
+        const { error } = await sb.auth.updateUser({ password: nuova });
+        if (error) return msg(m, /weak|at least/i.test(error.message) ? 'Password troppo debole.' : 'Cambio password non riuscito. Riprova.', false);
+        try { await sb.auth.signOut({ scope: 'others' }); } catch (e2) {}
+        this.reset(); document.getElementById('p-user').value = utente.email;
+        msg(m, 'Password aggiornata ✅ Gli altri dispositivi dovranno accedere di nuovo.', true);
+    });
+
+    // Cambio email: vale dopo la conferma dal link mandato da Supabase
+    document.getElementById('f-email').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const m = this.querySelector('.messaggio');
+        const nuova = document.getElementById('e-nuova').value.trim().toLowerCase();
+        const { error } = await sb.auth.updateUser({ email: nuova }, { emailRedirectTo: location.origin + '/dashboard.html' });
+        if (error) return msg(m, /rate|security/i.test(error.message) ? 'Troppi tentativi: riprova tra qualche minuto.' : 'Non è stato possibile cambiare email. Controlla l\'indirizzo.', false);
+        msg(m, 'Ti abbiamo mandato un link di conferma: la nuova email vale dopo averlo toccato.', true);
+    });
+
+    // Consenso promozionale (facoltativo, revocabile)
+    document.getElementById('acc-promo').addEventListener('change', async function () {
+        const m = document.getElementById('msg-promo');
+        const si = this.checked;
+        const { error } = await sb.auth.updateUser({ data: si
+            ? { consenso_promo: true, consenso_promo_il: new Date().toISOString(), consenso_promo_testo: '2026-10' }
+            : { consenso_promo: false, consenso_promo_revocato_il: new Date().toISOString() } });
+        if (error) { this.checked = !si; return msg(m, 'Non salvato. Riprova.', false); }
+        msg(m, si ? 'Preferenza salvata ✅' : 'Non riceverai più comunicazioni promozionali ✅', true);
+    });
+
+    document.getElementById('btn-esci').addEventListener('click', async function () {
+        if (!confirm('Vuoi uscire da questo dispositivo?')) return;
+        await mqtSessione.esci(false);
+        location.href = '/';
+    });
+    document.getElementById('btn-esci-ovunque').addEventListener('click', async function () {
+        if (!confirm('Vuoi uscire da tutti i dispositivi, compreso questo?')) return;
+        await mqtSessione.esci(true);
+        location.href = '/';
+    });
+
+    avvia();
+})();
+</script>
+</body>
+</html>
