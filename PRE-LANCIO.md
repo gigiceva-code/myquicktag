@@ -6,13 +6,65 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
 
 ---
 
+## 0. Account (Supabase Auth) — da completare prima di unire in `main`
+
+Codice pronto su `sviluppo-v2` (11/10/2026): account con email privata verificata, password, recupero con codice,
+dashboard con più tag, tag Gold assegnate a un'email. Provato con un finto Supabase (152 prove server + 39 nel
+browser). **Mancano le prove con il Supabase vero** (da questa sessione non si raggiunge) e alcune impostazioni che
+può fare solo il titolare (o va autorizzato esplicitamente):
+
+**A. Progetto di prova `myquicktag-prova` (Supabase → Authentication):**
+- [ ] *URL Configuration*: Site URL = l'indirizzo del Preview di Vercel; *Redirect URLs*: `https://*-gigiceva-codes-projects.vercel.app/**`
+      (o l'indirizzo esatto del Preview) e `http://localhost:8788/**`.
+- [ ] *Sign In / Providers → Email*: "Confirm email" **acceso**; lunghezza minima password **8**;
+      "Secure email change" acceso.
+- [ ] *Email Templates*: in "Confirm signup" e "Reset password" aggiungere il codice `{{ .Token }}` accanto al link
+      (es. "Il tuo codice è {{ .Token }}"): la pagina di accesso chiede il codice, comodo su iPhone dove il link può
+      aprirsi in un altro browser.
+- [ ] Le email di prova arrivano solo agli indirizzi del team Supabase (gigi.ceva@gmail.com): per provare con altri
+      indirizzi serve l'SMTP (punto C).
+
+**B. Vercel (Settings → Environment Variables), solo ambiente *Preview*:**
+- [ ] `SUPABASE_URL` = `https://lmxxoxrsrwmtunyqlpbh.supabase.co`
+- [ ] `SUPABASE_SECRET_KEY` = chiave segreta del progetto **myquicktag-prova** (Supabase → Project Settings → API Keys)
+- [ ] (`SESSION_SECRET` può restare uguale). Production resta sul progetto `myquicktag`.
+- Finché B non è fatto, il Preview di `sviluppo-v2` parla col database di **produzione**, che non ha ancora la colonna
+  `proprietario_id`: account e attivazioni lì non funzionano (la produzione non è toccata).
+
+**C. Email ai clienti (prima del lancio, anche per il progetto di produzione):**
+- [ ] Scegliere un servizio di invio con piano gratuito (verificare i limiti sulle pagine ufficiali: Resend, Brevo, Mailjet…),
+      aggiungere i record DNS su register.it (SPF/DKIM, meglio su un sottodominio es. `notifiche.myquicktag.it`) e
+      inserire i dati SMTP in Supabase → Authentication → SMTP Settings. Alzare poi il limite di invio in Rate Limits.
+
+**D. Collaudo sul Preview (titolare, dal telefono) — da annotare qui:**
+- [ ] crea account con la propria email → codice → la tag si attiva; [ ] il visitatore la vede da un altro telefono;
+- [ ] seconda tag dalla dashboard; [ ] "Password dimenticata" → codice → nuova password → l'altro telefono deve
+      riaccedere; [ ] la vecchia password non funziona; [ ] "Esci da tutti i dispositivi";
+- [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari);
+- [ ] tag Gold assegnata: provare con un secondo indirizzo del team.
+
+**E. Rilascio in produzione (dopo D e la revisione):**
+- [ ] Backup: esportare in CSV `tags` e `nomi_riservati` dal Table Editor (conservarli fuori da GitHub).
+- [ ] Applicare `supabase/migrations/20261011000000_account_proprietari.sql` al progetto `myquicktag` (solo aggiunte).
+- [ ] Ripetere A sul progetto di produzione con Site URL `https://myquicktag.it` (Redirect `https://myquicktag.it/**`).
+- [ ] Unire `sviluppo-v2` in `main`. Le tag di prova esistenti restano: si collegano a un account dalla dashboard
+      ("Hai una tag creata prima degli account?") oppure si cancellano quando si svuota la tabella.
+- Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
+  codice vecchio (si può lasciare).
+
+**Note legali (non è una consulenza):** informativa privacy e termini da aggiornare con email dell'account,
+consenso promozionale facoltativo (salvato con data e versione del testo), comunicazioni di servizio, Supabase come
+fornitore dell'autenticazione e il servizio email scelto.
+
+---
+
 ## 1. Da decidere (prodotto)
 
 ### Rinnovo e checkout prima/dopo i 90 giorni
 - ~~Regola: i 90 giorni gratuiti valgono una sola volta.~~ **Superata il 09/10/2026:** vedi "Strategia di lancio"
   qui sotto (se i rinnovi non bastano, altri 3 mesi gratis con tutto sbloccato).
 - **Da decidere al lancio:** prezzi dei piani (Base / Premium / Gold), periodicità (mensile, annuale…), cosa paga il cliente alla scadenza.
-- **Stato attuale del codice (solo per i test):** il pulsante "Rinnova gratis per 90 giorni" nella dashboard allunga la scadenza di 90 giorni **gratis e all'infinito**. ⚠️ **Non deve arrivare così sul sito pubblico.**
+- **Stato attuale del codice:** dall'11/10/2026 il rinnovo gratuito dalla dashboard è **spento** (il pulsante non compare e il server lo rifiuta). Si accende con la variabile `RINNOVO_GRATUITO=si` su Vercel quando il titolare decide di regalare altri 3 mesi.
 - Dove si cambia:
   - `profile.html` → testo e link del pulsante `btn-rinnova`
   - `checkout.html` → modalità rinnovo (`?rinnovo=1`, funzione `eseguiRinnovo`)
@@ -91,7 +143,7 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
 - [ ] **Ultima settimana prima del lancio:** regola "3 mesi tutto sbloccato" nel codice (sezione 1,
   "Strategia di lancio"), provata dal titolare sul telefono prima del giorno del lancio.
 - [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** tasto **"Segnala questa tag"** sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio**: myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
-- [ ] Ancora aperti (minori): cambiare password non fa uscire gli altri dispositivi; visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel.
+- [ ] Ancora aperti (minori): ~~cambiare password non fa uscire gli altri dispositivi~~ (risolto con gli account: dopo cambio/recupero password gli altri dispositivi escono); visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 10 su 12 del piano gratuito di Vercel.
 
 ---
 
