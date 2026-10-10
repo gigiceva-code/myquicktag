@@ -274,3 +274,31 @@ ok(r.body.fields.bio && r.body.fields.username_display==='@Bottega Verdi','il vi
 const tokBV=r.body.sessionToken || (await call('login.js',{method:'POST',body:{tag:'bottegaverdi',pwd:hash}})).body.sessionToken;
 r=await call('update-profile.js',{method:'POST',body:{username_system:'bottegaverdi',draft_json:JSON.stringify({bio:'nuova bozza'}),sessionToken:tokBV}});
 ok(r.code===200 && /^Frutta/.test(rigaBV().bio) && JSON.parse(rigaBV().draft_json).bio==='nuova bozza','bozza di una tag attiva: non pubblicata finché non si preme Pubblica');
+
+// ---- Fase 1: elenchi espliciti dei campi, errori senza dettagli, limiti "chiusi" ----
+{
+  const gp=await import(R+'get-profile.js');
+  const sql=(await import('fs')).readFileSync(new URL('../supabase/migrations/20261001000000_tabella_tags.sql', import.meta.url),'utf8');
+  const colonne=[...sql.split('create table public.tags (')[1].split(');')[0].matchAll(/^\s+([a-z_0-9]+)\s+/gm)].map(m=>m[1]);
+  const classificate=new Set([...gp.CAMPI_PUBBLICI,...gp.CAMPI_PROPRIETARIO,...gp.CAMPI_MAI]);
+  const nonClassificate=colonne.filter(c=>!classificate.has(c));
+  ok(colonne.length>50 && nonClassificate.length===0,'ogni colonna di tags è classificata (pubblica/proprietario/mai): '+nonClassificate.join(','));
+  rows.push({id:'colnuova',username_system:'colnuova',stato:'attivo',created_at:new Date().toISOString(),data_scadenza:'2099-01-01',bio:'ok',password:'scrypt$a$b',colonna_segreta:'NON DEVE USCIRE',draft_json:'{"x":1}'});
+  r=await call('get-profile.js',{query:{u:'colnuova'}});
+  ok(r.code===200 && r.body.fields.bio==='ok' && !('colonna_segreta' in r.body.fields) && !('password' in r.body.fields) && !('draft_json' in r.body.fields) && r.body.fields.has_password===true,'visitatore: solo campi elencati (colonna nuova e password non escono)');
+  const fetchVero=globalThis.fetch;
+  globalThis.fetch=async (url,opt)=>{ if((opt.method||'GET')==='PATCH') return new Response(JSON.stringify({code:'23514',message:'violates check',details:'Failing row contains (scrypt$segreto)'}),{status:400}); return fetchVero(url,opt); };
+  const exp=Date.now()+3600e3; const firma=(await import('crypto')).createHmac('sha256','s').update(`colnuova.${exp}`).digest('hex');
+  const logs=[]; const ce=console.error; console.error=(...a)=>logs.push(JSON.stringify(a));
+  r=await call('update-profile.js',{method:'POST',body:{username_system:'colnuova',bio:'x',sessionToken:`colnuova.${exp}.${firma}`}});
+  console.error=ce; globalThis.fetch=fetchVero;
+  ok(r.code===500 && !JSON.stringify(r.body).includes('segreto') && !('dettagli' in r.body) && !('stack' in r.body),'errore del database: nessun dettaglio al browser');
+  ok(!logs.join(' ').includes('segreto'),'errore del database: i valori della riga non finiscono nei log');
+  globalThis.fetch=async (url,opt)=>String(url).includes('consuma_tentativo') ? new Response('boom',{status:500}) : fetchVero(url,opt);
+  const ce2=console.error; console.error=()=>{};
+  r=await call('login.js',{method:'POST',body:{tag:'prova',pwd:'0'.repeat(64)}});
+  const rPren=await call('check-and-create.js',{method:'POST',body:{tag:'limitiaperti'}});
+  console.error=ce2; globalThis.fetch=fetchVero;
+  ok(r.code===429,'limiti non verificabili: login rifiutato (limite "chiuso")');
+  ok(rPren.code===200,'limiti non verificabili: la prenotazione resta consentita (limite "aperto")');
+}

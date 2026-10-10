@@ -26,7 +26,33 @@ function generateToken(username) {
   return `${payload}.${signature}`;
 }
 
-const CAMPI_PRIVATI = ['draft_json', 'lead_capture_leads', 'analytics_data', 'analytics_log', 'pocket_cloud'];
+// ELENCHI ESPLICITI dei campi che escono da qui (test/api.test.mjs controlla che ogni colonna della
+// tabella "tags" sia in uno di questi elenchi o tra quelli mai inviati): una colonna nuova non esce
+// ai visitatori finché non viene aggiunta qui di proposito.
+export const CAMPI_PUBBLICI = [
+  'username_system', 'stato', 'plan', 'data_inizio', 'data_scadenza', 'views',
+  'username_display', 'bio', 'cv', 'digital_style', 'digital_layout', 'avatar_url', 'email',
+  'modulo_vcf', 'config_canali', 'sito_web', 'sedi_json', 'gallery_data', 'partners_data',
+  'quick_action_tipo', 'quick_action_label', 'quick_action_url', 'quick_action_copertina',
+  'live_status_color', 'live_status_text', 'live_status_micro', 'live_status_action_type', 'live_status_action_label', 'live_status_action_url',
+  'flash_text', 'flash_micro', 'flash_expiry',
+  'pdf_label', 'pdf_url',
+  'quickpass_premio_a', 'quickpass_premio_b', 'quickpass_limite', 'quickpass_scadenza',
+  'review_url', 'review_contact',
+  'video_url', 'video_cta_text', 'video_cta_url',
+  'lead_capture_attivo', 'lead_capture_titolo',
+  'shop_attivo', 'shop_titolo', 'shop_prezzo', 'shop_link', 'shop_scadenza'
+];
+// Solo al proprietario (sessione valida): bozza, contatti lasciati dai visitatori, statistiche, Pocket
+export const CAMPI_PROPRIETARIO = ['draft_json', 'lead_capture_leads', 'analytics_data', 'analytics_log', 'pocket_cloud'];
+// Mai inviati al browser
+export const CAMPI_MAI = ['id', 'password', 'created_at', 'updated_at'];
+
+function scegli(fields, elenco) {
+  const out = {};
+  for (const c of elenco) if (fields[c] !== undefined) out[c] = fields[c];
+  return out;
+}
 
 export default async function handler(req, res) {
   const { u, token } = req.query;
@@ -42,16 +68,12 @@ export default async function handler(req, res) {
     const record = await trovaTag(safeUsername);
 
     if (record) {
-      const { password, ...fieldsPubblici } = record.fields;
-      fieldsPubblici.has_password = !!(password && String(password).trim() !== "");
-
-      // --- FIX SICUREZZA: campi privati del proprietario, mai mostrati sulla tag pubblica.
-      // Tornano nella risposta SOLO se chi chiama dimostra di essere il proprietario (token valido):
-      // bozza, contatti lasciati dai visitatori (dati personali di terzi), statistiche, Pocket.
+      // --- FIX SICUREZZA: solo i campi elencati sopra. I campi privati del proprietario (bozza,
+      // contatti lasciati dai visitatori, statistiche, Pocket) tornano SOLO con sessione valida.
       const tokenValido = verifyToken(safeUsername, token);
-      if (!tokenValido) {
-        CAMPI_PRIVATI.forEach(campo => { delete fieldsPubblici[campo]; });
-      }
+      const fieldsPubblici = scegli(record.fields, tokenValido ? [...CAMPI_PUBBLICI, ...CAMPI_PROPRIETARIO] : CAMPI_PUBBLICI);
+      const password = record.fields.password;
+      fieldsPubblici.has_password = !!(password && String(password).trim() !== "");
       const risposta = {
         success: true,
         id: record.id,
@@ -105,6 +127,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ success: false, error: "Profilo non trovato" });
     }
   } catch (error) {
-    return res.status(500).json({ success: false, error: error.message });
+    console.error('CRASH GET-PROFILE:', error.dettagli || error.message);
+    return res.status(500).json({ success: false, error: 'Errore server' });
   }
 }

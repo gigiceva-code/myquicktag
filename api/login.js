@@ -28,8 +28,8 @@ const pwdProtetta = String(pwd).replace(/[^a-fA-F0-9]/g, '');
     }
     // Limiti ai tentativi: niente password provate a raffica
     if (!(await entroILimiti(req, tagPulito, [
-        { nome: 'login', per: 'ip+tag', max: 10, finestra: 900 },
-        { nome: 'login-ip', per: 'ip', max: 50, finestra: 900 }
+        { nome: 'login', per: 'ip+tag', max: 10, finestra: 900, chiuso: true },
+        { nome: 'login-ip', per: 'ip', max: 50, finestra: 900, chiuso: true }
     ]))) {
         return rispondiTroppiTentativi(res);
     }

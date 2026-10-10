@@ -44,7 +44,7 @@ export default async function handler(req, res) {
   if (!verifyToken(username, body.sessionToken)) {
     return res.status(401).json({ success: false, error: 'Sessione scaduta: accedi di nuovo' });
   }
-  if (!(await entroILimiti(req, username, [{ nome: 'cambio-pwd', per: 'tag', max: 5, finestra: 900 }]))) {
+  if (!(await entroILimiti(req, username, [{ nome: 'cambio-pwd', per: 'tag', max: 5, finestra: 900, chiuso: true }]))) {
     return rispondiTroppiTentativi(res);
   }
   if (attuale.length !== 64 || nuova.length !== 64) {

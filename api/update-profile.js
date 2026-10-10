@@ -228,7 +228,7 @@ export default async function handler(req, res) {
         await aggiornaTag(recordAttuale.id, fieldsToSave);
       } catch (updateError) {
         console.error("DB UPDATE REJECTED:", updateError.dettagli || updateError);
-        return res.status(500).json({ error: "Il database ha rifiutato l'update", dettagli: updateError.dettagli });
+        return res.status(500).json({ error: "Salvataggio non riuscito. Riprova." });
       }
 
       const responseBody = { success: true, action: 'updated' };
@@ -248,7 +248,7 @@ export default async function handler(req, res) {
     }
 
   } catch (e) {
-    console.error("CRASH INTERNO SERVERLESS FUNCTION:", e);
-    return res.status(500).json({ error: e.message, stack: e.stack });
+    console.error("CRASH UPDATE-PROFILE:", e.dettagli || e.message);
+    return res.status(500).json({ error: "Errore server" });
   }
 }
