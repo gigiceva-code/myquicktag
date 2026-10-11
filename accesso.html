@@ -52,13 +52,18 @@
     <!-- CODICE DI VERIFICA (dopo la registrazione) -->
     <section class="vista" id="v-codice">
         <h1 class="titolo">Controlla la tua email</h1>
-        <p class="sottotitolo" id="codice-testo">Ti abbiamo mandato un codice: scrivilo qui. Puoi anche toccare il link nell'email.</p>
+        <p class="sottotitolo" id="codice-testo">Ti abbiamo mandato un'email per confermare l'indirizzo. <b>Tocca il link</b> che contiene, poi torna qui e premi "Ho confermato".</p>
+        <div class="card">
+            <button class="btn btn-primary" type="button" id="c-confermato">Ho confermato l'email</button>
+            <div class="messaggio" id="msg-confermato" role="status"></div>
+        </div>
         <form class="card" id="f-codice">
+            <p class="note" style="margin-top:0">L'email contiene un codice? Puoi scriverlo qui invece di toccare il link.</p>
             <div class="field"><label for="c-codice">Codice ricevuto via email</label><input type="text" id="c-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
-            <button class="btn btn-primary" type="submit">Verifica</button>
+            <button class="btn btn-secondary" type="submit">Verifica il codice</button>
             <div class="messaggio" role="status"></div>
             <div class="riga-link">
-                <button type="button" class="link" id="c-reinvia">Rimanda il codice</button>
+                <button type="button" class="link" id="c-reinvia">Rimanda l'email</button>
                 <button type="button" class="link" data-vai="accedi">Torna all'accesso</button>
             </div>
             <p class="note">Non trovi l'email? Guarda nella posta indesiderata. Se l'indirizzo ha già un account, accedi con la tua password.</p>
@@ -79,9 +84,10 @@
 
     <!-- CODICE DI RECUPERO -->
     <section class="vista" id="v-codice-recupero">
-        <h1 class="titolo">Inserisci il codice</h1>
-        <p class="sottotitolo">Se l'email corrisponde a un account, ti abbiamo mandato un codice. Puoi anche toccare il link nell'email.</p>
+        <h1 class="titolo">Controlla la tua email</h1>
+        <p class="sottotitolo">Se l'email corrisponde a un account, ti abbiamo mandato un messaggio: <b>tocca il link</b> che contiene per scegliere la nuova password (il link vale una volta sola).</p>
         <form class="card" id="f-codice-recupero">
+            <p class="note" style="margin-top:0">L'email contiene un codice? Puoi scriverlo qui.</p>
             <div class="field"><label for="cr-codice">Codice ricevuto via email</label><input type="text" id="cr-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
             <button class="btn btn-primary" type="submit">Continua</button>
             <div class="messaggio" role="status"></div>
@@ -114,6 +120,7 @@
         return /^\/(?!\/)[\w\-./?=&%@]*$/.test(t) ? t : '/dashboard.html';
     })();
     let emailInCorso = '';
+    let passwordInCorso = ''; // solo in memoria finché la pagina è aperta: serve a entrare dopo la conferma via link
 
     function mostra(vista) {
         document.querySelectorAll('.vista').forEach(v => v.classList.toggle('attiva', v.id === 'v-' + vista));
@@ -212,7 +219,7 @@
         const { error } = await sb.auth.signInWithPassword({ email, password: document.getElementById('a-pwd').value });
         occupato(this, false);
         if (error) {
-            if ((error.code || '') === 'email_not_confirmed') { emailInCorso = email; mostra('codice'); return; }
+            if ((error.code || '') === 'email_not_confirmed') { emailInCorso = email; passwordInCorso = document.getElementById('a-pwd').value; mostra('codice'); return; }
             return msg(this, spiega(error), false);
         }
         dopoAccesso();
@@ -238,7 +245,7 @@
         occupato(this, false);
         if (error) return msg(this, spiega(error), false);
         if (data.session) return dopoAccesso(); // verifica email disattivata nel progetto (solo prove)
-        emailInCorso = email;
+        emailInCorso = email; passwordInCorso = pwd;
         mostra('codice');
     });
 
@@ -254,11 +261,28 @@
         if (error) return msg(this, spiega(error), false);
         dopoAccesso();
     });
+    // Conferma col link dell'email (anche aperto in un'altra app): l'account è verificato, si entra qui
+    document.getElementById('c-confermato').addEventListener('click', async function () {
+        const m = document.getElementById('msg-confermato');
+        if (!emailInCorso || !passwordInCorso) { mostra('accedi'); return; }
+        this.disabled = true;
+        const { error } = await sb.auth.signInWithPassword({ email: emailInCorso, password: passwordInCorso });
+        this.disabled = false;
+        if (error) {
+            m.className = 'messaggio ko';
+            m.textContent = (error.code || '') === 'email_not_confirmed'
+                ? 'L\'email non risulta ancora confermata: tocca il link nell\'email e riprova (guarda anche nella posta indesiderata).'
+                : spiega(error);
+            return;
+        }
+        passwordInCorso = '';
+        dopoAccesso();
+    });
     document.getElementById('c-reinvia').addEventListener('click', async function () {
         const form = document.getElementById('f-codice');
         if (!emailInCorso) return mostra('accedi');
         const { error } = await sb.auth.resend({ type: 'signup', email: emailInCorso, options: { emailRedirectTo: location.origin + '/accesso.html?torna=' + encodeURIComponent(torna) } });
-        msg(form, error ? spiega(error) : 'Codice rimandato. Controlla anche la posta indesiderata.', !error);
+        msg(form, error ? spiega(error) : 'Email rimandata. Controlla anche la posta indesiderata.', !error);
     });
 
     // ---- PASSWORD DIMENTICATA ----

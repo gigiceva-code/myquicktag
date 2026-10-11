@@ -414,3 +414,22 @@ delete process.env.RINNOVO_GRATUITO;
   ok(!fs.existsSync(new URL('login.js',R)) && !fs.existsSync(new URL('change-password.js',R)),'vecchio accesso "@nome + password" dismesso (login.js e change-password.js rimossi)');
   ok(fs.readdirSync(new URL(R)).filter(f=>f.endsWith('.js')).length<=11,'funzioni Vercel entro il limite (≤ 11 su 12)');
 }
+
+// ============================================================
+// 10. CONFIGURAZIONE PUBBLICA PER LA LIBRERIA DI ACCESSO (solo chiave pubblica, mai la segreta)
+// ============================================================
+{
+  const urlPrima=process.env.SUPABASE_URL;
+  process.env.SUPABASE_URL='https://lmxxoxrsrwmtunyqlpbh.supabase.co';
+  r=await call('account.js',{method:'GET',query:{azione:'config'}});
+  ok(r.code===200 && r.body.url===process.env.SUPABASE_URL && /^sb_publishable_/.test(r.body.chiave) && !JSON.stringify(r.body).includes('sb_secret'),'config: progetto del server con la sua chiave pubblica (prova)');
+  process.env.SUPABASE_URL='https://atlhrkkfovblkhgzfeuo.supabase.co';
+  r=await call('account.js',{method:'GET',query:{azione:'config'}});
+  ok(r.code===200 && r.body.chiave==='sb_publishable_HrX_oradnt5sRX6YHqGB-w_gYZe0u4U','config: produzione con la chiave pubblica di produzione');
+  process.env.SUPABASE_URL='https://sconosciuto.supabase.co';
+  r=await call('account.js',{method:'GET',query:{azione:'config'}});
+  ok(r.code===500 && !JSON.stringify(r.body).includes('sb_secret'),'config: progetto sconosciuto senza chiave pubblica → errore, nessun segreto');
+  process.env.SUPABASE_URL=urlPrima;
+  r=await call('account.js',{method:'GET',query:{azione:'mie-tag'}});
+  ok(r.code===405,'account: le altre azioni solo in POST con sessione');
+}

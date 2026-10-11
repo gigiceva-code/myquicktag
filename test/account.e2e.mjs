@@ -5,16 +5,20 @@
 // vera, nessun accesso al database. Telefono simulato (390 px).
 // Uso (servono Playwright e la libreria di Supabase, non sono dipendenze del sito):
 //   cd $(mktemp -d) && npm i playwright @supabase/supabase-js@2.117.3
-//   node <progetto>/test/finto-supabase.mjs &
+//   node <progetto>/test/finto-supabase.mjs &   (riavviarlo prima di ogni giro: tiene i dati in memoria)
 //   NODE_PATH=$PWD/node_modules CHROMIUM_PATH=/opt/pw-browsers/chromium node <progetto>/test/account.e2e.mjs
 import { createRequire } from 'module';
 const richiedi = createRequire(process.env.NODE_PATH ? process.env.NODE_PATH + '/' : import.meta.url);
 const { chromium } = richiedi('playwright');
 const LIB_SUPABASE = richiedi.resolve('@supabase/supabase-js/dist/umd/supabase.js');
-async function instradaCdn(ctx){ await ctx.route(/fonts\.googleapis|cdnjs\.cloudflare|cdn\.jsdelivr\.net\/npm\/(?!@supabase)/, r=>r.abort()); }
+let LIB_SORTABLE=null; try { LIB_SORTABLE=richiedi.resolve('sortablejs/Sortable.min.js'); } catch {}
+async function instradaCdn(ctx){
+  if (LIB_SORTABLE) await ctx.route(/cdn\.jsdelivr\.net\/npm\/sortablejs/, r=>r.fulfill({path:LIB_SORTABLE, contentType:'text/javascript'}));
+  await ctx.route(/fonts\.googleapis|cdnjs\.cloudflare|cdn\.jsdelivr\.net\/npm\/(?!@supabase|sortablejs)/, r=>r.abort());
+}
 async function instradaSupabase(ctx){
   await ctx.route(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js/, r=>r.fulfill({path:LIB_SUPABASE, contentType:'text/javascript', headers:{'Access-Control-Allow-Origin':'*'}}));
-  await ctx.route(/lmxxoxrsrwmtunyqlpbh\.supabase\.co/, async r=>{
+  await ctx.route(/fake\.supabase\.co/, async r=>{
     const req=r.request(); const u=new URL(req.url());
     const resp=await fetch('http://localhost:8788'+u.pathname+u.search,{method:req.method(),headers:req.headers(),body:['GET','HEAD'].includes(req.method())?undefined:req.postData()});
     r.fulfill({status:resp.status,body:await resp.text(),headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'*','Access-Control-Allow-Methods':'GET,POST,PUT,DELETE,PATCH,OPTIONS'}});
@@ -46,11 +50,16 @@ ok(await A.evaluate(()=>document.getElementById('r-pwd').validity.tooShort) && a
 await A.fill('#r-pwd','Password123'); await A.fill('#r-pwd2','Password124'); await A.click('#f-registrati button[type=submit]'); await A.waitForTimeout(300);
 ok((await A.textContent('#f-registrati .messaggio')).includes('non coincidono'),'registrazione: password diverse rifiutate');
 await A.fill('#r-pwd2','Password123'); await A.click('#f-registrati button[type=submit]'); await A.waitForTimeout(1200); await shot(A,'03-codice');
-ok(await A.isVisible('#v-codice'),'registrazione: chiede il codice ricevuto via email');
+ok(await A.isVisible('#v-codice'),'registrazione: chiede di confermare l\'email (link o codice)');
+const cfg=await A.evaluate(async()=>(await (await fetch('/api/account?azione=config')).json()));
+ok(cfg.success && cfg.url==='https://fake.supabase.co' && cfg.chiave && !JSON.stringify(cfg).includes('secret'),'il browser usa lo stesso progetto Supabase del server (solo chiave pubblica)');
 await A.fill('#c-codice','000000'); await A.click('#f-codice button[type=submit]'); await A.waitForTimeout(800);
 ok((await A.textContent('#f-codice .messaggio')).includes('non valido'),'codice sbagliato rifiutato con messaggio chiaro');
-const cod=await inbox('mario@bar.it','signup');
-await A.fill('#c-codice',cod); await A.click('#f-codice button[type=submit]');
+await A.click('#c-confermato'); await A.waitForTimeout(800);
+ok((await A.textContent('#msg-confermato')).includes('non risulta ancora confermata') && /accesso/.test(A.url()),'"Ho confermato" prima di toccare il link: non entra, spiega cosa fare');
+// Mario tocca il link nell'email (modello standard di Supabase, senza codice), poi torna e preme "Ho confermato"
+await fetch(B+'/__conferma?email=mario@bar.it');
+await A.click('#c-confermato');
 await A.waitForURL(/checkout/,{timeout:8000}).catch(()=>{}); await A.waitForTimeout(2500); await shot(A,'04-attivata');
 let d=await db(); let barmario=d.rows.find(r=>r.username_system==='barmario');
 ok(barmario && barmario.stato==='attivo' && barmario.proprietario_id && barmario.bio==='Colazioni e aperitivi in piazza.','attivazione: tag attiva, dell\'account di Mario, bozza pubblicata');
@@ -134,6 +143,16 @@ await A.fill('#a-email','mario@bar.it'); await A.fill('#a-pwd','Password123'); a
 ok((await A.textContent('#f-accedi .messaggio')).includes('non corretti'),'la vecchia password non funziona più');
 await A.fill('#a-pwd','NuovaPass456'); await A.click('#f-accedi button[type=submit]'); await A.waitForURL(/dashboard/,{timeout:8000}).catch(()=>{}); await A.waitForTimeout(1500);
 ok(/dashboard/.test(A.url()),'accesso con la nuova password');
+
+// 6b. Link di recupero che arriva sulla home (indirizzo del sito impostato in Supabase): si apre la pagina giusta
+await fetch(B+'/auth/v1/recover',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:'mario@bar.it'})});
+const sess=await (await fetch(B+'/auth/v1/verify',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({type:'recovery',email:'mario@bar.it',token:await inbox('mario@bar.it','recovery')})})).json();
+const cE=await telefono(); const E=await cE.newPage(); att(E,'E');
+await E.goto(B+`/#access_token=${sess.access_token}&refresh_token=${sess.refresh_token}&expires_in=3600&expires_at=${sess.expires_at}&token_type=bearer&type=recovery`);
+await E.waitForTimeout(2500);
+ok(/accesso\.html/.test(E.url()) && await E.isVisible('#v-nuova-password'),'link di recupero aperto sulla home: si arriva a "Scegli la nuova password"');
+await E.goto(B+'/#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired'); await E.waitForTimeout(2000);
+ok(/accesso\.html/.test(E.url()) && /scaduto o già usato/.test(await E.textContent('body')),'link scaduto o già usato: messaggio chiaro');
 
 // 7. Esci
 await A.click('#btn-esci'); await A.waitForTimeout(1500);

@@ -13,23 +13,21 @@ dashboard con più tag, tag Gold assegnate a un'email. Provato con un finto Supa
 browser). **Mancano le prove con il Supabase vero** (da questa sessione non si raggiunge) e alcune impostazioni che
 può fare solo il titolare (o va autorizzato esplicitamente):
 
-**A. Progetto di prova `myquicktag-prova` (Supabase → Authentication):**
-- [ ] *URL Configuration*: Site URL = l'indirizzo del Preview di Vercel; *Redirect URLs*: `https://*-gigiceva-codes-projects.vercel.app/**`
-      (o l'indirizzo esatto del Preview) e `http://localhost:8788/**`.
-- [ ] *Sign In / Providers → Email*: "Confirm email" **acceso**; lunghezza minima password **8**;
-      "Secure email change" acceso.
-- [ ] *Email Templates*: in "Confirm signup" e "Reset password" aggiungere il codice `{{ .Token }}` accanto al link
-      (es. "Il tuo codice è {{ .Token }}"): la pagina di accesso chiede il codice, comodo su iPhone dove il link può
-      aprirsi in un altro browser.
-- [ ] Le email di prova arrivano solo agli indirizzi del team Supabase (gigi.ceva@gmail.com): per provare con altri
-      indirizzi serve l'SMTP (punto C).
+**Semplificato l'11/10/2026:** il browser usa sempre lo stesso progetto Supabase del server
+(`api/account.js?azione=config`), quindi **non serve cambiare le variabili di Vercel**; la conferma dell'email
+funziona col link dell'email standard di Supabase (si tocca il link, si torna e si preme "Ho confermato"), quindi
+**non serve cambiare i modelli delle email**. Resta una sola impostazione, nel pannello di Supabase (non
+raggiungibile dalla sessione cloud):
 
-**B. Vercel (Settings → Environment Variables), solo ambiente *Preview*:**
-- [ ] `SUPABASE_URL` = `https://lmxxoxrsrwmtunyqlpbh.supabase.co`
-- [ ] `SUPABASE_SECRET_KEY` = chiave segreta del progetto **myquicktag-prova** (Supabase → Project Settings → API Keys)
-- [ ] (`SESSION_SECRET` può restare uguale). Production resta sul progetto `myquicktag`.
-- Finché B non è fatto, il Preview di `sviluppo-v2` parla col database di **produzione**, che non ha ancora la colonna
-  `proprietario_id`: account e attivazioni lì non funzionano (la produzione non è toccata).
+**A. Supabase → progetto `myquicktag` → Authentication → URL Configuration:**
+- [ ] *Site URL* = `https://myquicktag.it`
+- [ ] *Redirect URLs* → "Add URL": `https://myquicktag.it/**` (e, per provare sul Preview, `https://*-gigiceva-codes-projects.vercel.app/**`)
+- Facoltativo: *Sign In / Providers → Email* → lunghezza minima password 8 (la pagina la chiede già);
+  *Email Templates* → aggiungere `{{ .Token }}` per mandare anche il codice.
+- Le email arrivano solo agli indirizzi del team Supabase finché non c'è l'SMTP (punto C).
+
+**B. Database di produzione:** serve la migrazione `20261011000000_account_proprietari.sql` (solo aggiunte) prima di
+provare: il Preview usa il database di produzione. Da fare con una copia di sicurezza prima (decisione del titolare).
 
 **C. Email ai clienti (prima del lancio, anche per il progetto di produzione):**
 - [ ] Scegliere un servizio di invio con piano gratuito (verificare i limiti sulle pagine ufficiali: Resend, Brevo, Mailjet…),

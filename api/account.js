@@ -24,7 +24,29 @@ function contaNuovi(testo) {
   } catch { return 0; }
 }
 
+// Chiavi "publishable" (pubbliche per natura) dei progetti Supabase noti: il browser usa sempre lo
+// stesso progetto del server (produzione o prova), senza impostazioni diverse per ambiente.
+const CHIAVI_PUBBLICHE = {
+  'atlhrkkfovblkhgzfeuo': 'sb_publishable_HrX_oradnt5sRX6YHqGB-w_gYZe0u4U', // myquicktag (produzione)
+  'lmxxoxrsrwmtunyqlpbh': 'sb_publishable_mCn8LbCxhDoNZMJS-E043Q_hKEte5F0'  // myquicktag-prova
+};
+
+export function configurazionePubblica() {
+  const url = String(process.env.SUPABASE_URL || '').replace(/\/+$/, '');
+  let ref = '';
+  try { ref = new URL(url).hostname.split('.')[0]; } catch { ref = ''; }
+  const chiave = process.env.SUPABASE_PUBLISHABLE_KEY || CHIAVI_PUBBLICHE[ref] || null;
+  return { url, chiave };
+}
+
 export default async function handler(req, res) {
+  // azione=config (GET, pubblica): indirizzo e chiave pubblica di Supabase per la libreria di accesso
+  if (req.method === 'GET' && String(req.query?.azione || '') === 'config') {
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    const config = configurazionePubblica();
+    if (!config.url || !config.chiave) return res.status(500).json({ success: false, error: 'Configurazione mancante' });
+    return res.status(200).json({ success: true, ...config });
+  }
   if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Metodo non consentito' });
   res.setHeader('Cache-Control', 'no-store');
 

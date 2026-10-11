@@ -10,15 +10,29 @@
 // - mqt_keys / mqt_logged_user ricordano su questo dispositivo quali tag apri (comodità, non
 //   sono una prova di identità).
 (function () {
-    // Progetto Supabase: produzione solo sul dominio pubblico, il progetto di prova altrove
-    // (anteprime Vercel e prove in locale). Le chiavi "publishable" sono pubbliche per natura.
-    const PRODUZIONE = location.hostname === 'myquicktag.it' || location.hostname === 'www.myquicktag.it';
-    const CONFIG = PRODUZIONE
-        ? { url: 'https://atlhrkkfovblkhgzfeuo.supabase.co', chiave: 'sb_publishable_HrX_oradnt5sRX6YHqGB-w_gYZe0u4U' }
-        : { url: 'https://lmxxoxrsrwmtunyqlpbh.supabase.co', chiave: 'sb_publishable_mCn8LbCxhDoNZMJS-E043Q_hKEte5F0' };
+    // Progetto Supabase: SEMPRE quello del server (api/account.js?azione=config), così il sito di prova
+    // e quello pubblico usano ciascuno il proprio database senza impostazioni diverse nel browser.
     const LIBRERIA = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js';
     const INTEGRITA = 'sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R';
-    const CHIAVE_SESSIONE = 'sb-' + new URL(CONFIG.url).hostname.split('.')[0] + '-auth-token';
+    const fetchOriginale = window.fetch.bind(window);
+
+    async function leggiConfig() {
+        try { const c = JSON.parse(sessionStorage.getItem('mqt_supabase') || 'null'); if (c && c.url && c.chiave) return c; } catch (e) {}
+        const r = await fetchOriginale('/api/account?azione=config');
+        const c = await r.json();
+        if (!c.success) throw new Error('Configurazione di accesso non disponibile');
+        try { sessionStorage.setItem('mqt_supabase', JSON.stringify({ url: c.url, chiave: c.chiave })); } catch (e) {}
+        return c;
+    }
+
+    // Link arrivati via email (conferma dell'account, recupero password): li gestisce accesso.html
+    (function () {
+        const h = location.hash || '';
+        if (location.pathname !== '/accesso.html' && /(^#|&)(access_token|error_code)=/.test(h)) {
+            const recupero = /(^#|&)type=recovery(&|$)/.test(h);
+            location.replace('/accesso.html' + (recupero ? '?modo=nuova-password' : '') + h);
+        }
+    })();
 
     function leggiTokens() {
         try { return JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}') || {}; }
@@ -28,21 +42,31 @@
         return String(tag || '').replace('@', '').trim().toLowerCase();
     }
     // C'è una sessione dell'account salvata su questo dispositivo? (la validità la decide Supabase)
+    function chiaviSessione() {
+        const out = [];
+        try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^sb-.+-auth-token$/.test(k)) out.push(k); } } catch (e) {}
+        return out;
+    }
     function haSessioneSalvata() {
-        try {
-            const s = JSON.parse(localStorage.getItem(CHIAVE_SESSIONE) || 'null');
-            return !!(s && (s.refresh_token || (s.currentSession && s.currentSession.refresh_token)));
-        } catch (e) { return false; }
+        return chiaviSessione().some(function (k) {
+            try {
+                const s = JSON.parse(localStorage.getItem(k) || 'null');
+                return !!(s && (s.refresh_token || (s.currentSession && s.currentSession.refresh_token)));
+            } catch (e) { return false; }
+        });
     }
 
     let promessaClient = null;
     function client() {
         if (promessaClient) return promessaClient;
-        promessaClient = new Promise(function (risolvi, rifiuta) {
+        promessaClient = new Promise(async function (risolvi, rifiuta) {
+            let config;
+            try { config = await leggiConfig(); } catch (e) { promessaClient = null; return rifiuta(e); }
             function crea() {
                 try {
-                    risolvi(window.supabase.createClient(CONFIG.url, CONFIG.chiave, {
-                        auth: { flowType: 'implicit', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: CHIAVE_SESSIONE }
+                    const chiave = 'sb-' + new URL(config.url).hostname.split('.')[0] + '-auth-token';
+                    risolvi(window.supabase.createClient(config.url, config.chiave, {
+                        auth: { flowType: 'implicit', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: chiave }
                     }));
                 } catch (e) { rifiuta(e); }
             }
@@ -67,7 +91,6 @@
     }
 
     // Ogni chiamata alle nostre API parte con la sessione dell'account, se c'è
-    const fetchOriginale = window.fetch.bind(window);
     window.fetch = async function (risorsa, opzioni) {
         try {
             const url = typeof risorsa === 'string' ? risorsa : (risorsa && risorsa.url) || '';
@@ -95,7 +118,6 @@
     }
 
     window.mqtSessione = {
-        config: CONFIG,
         client: client,
         tokenAccount: tokenAccount,
         haAccount: haSessioneSalvata,
@@ -145,7 +167,7 @@
         esci: async function (ovunque) {
             try { const sb = await client(); await sb.auth.signOut({ scope: ovunque ? 'global' : 'local' }); } catch (e) {}
             try {
-                localStorage.removeItem(CHIAVE_SESSIONE);
+                chiaviSessione().forEach(function (k) { localStorage.removeItem(k); });
                 localStorage.removeItem('mqt_keys');
                 localStorage.removeItem('mqt_logged_user');
             } catch (e) {}

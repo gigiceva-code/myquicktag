@@ -2,7 +2,7 @@
 // Avvio: node test/finto-supabase.mjs   (nessuna email vera: i codici finiscono in /__inbox)
 import http from 'http'; import fs from 'fs'; import path from 'path'; import crypto from 'crypto';
 const ROOT=new URL('..', import.meta.url).pathname.replace(/\/$/, '');
-process.env.SUPABASE_URL='https://fake.supabase.co'; process.env.SUPABASE_SECRET_KEY='sb_secret_x'; process.env.SESSION_SECRET='s';
+process.env.SUPABASE_URL='https://fake.supabase.co'; process.env.SUPABASE_PUBLISHABLE_KEY='sb_publishable_finta'; process.env.SUPABASE_SECRET_KEY='sb_secret_x'; process.env.SESSION_SECRET='s';
 const rows=[]; const nomiProtetti=[{nome:'admin',tipo:'system',regola:'esatto'},{nome:'ferrari',tipo:'gold',regola:'esatto'},{nome:'barsport',tipo:'gold',regola:'esatto',assegnato_a:'mario@bar.it'}];
 // ---- finto GoTrue ----
 const utenti=new Map(); // email → {id,email,pwd,confermato,data,codice,codiceRec}
@@ -62,6 +62,8 @@ http.createServer(async (req,res)=>{
   let body=''; for await (const c of req) body+=c;
   if(p.startsWith('/__inbox')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify(inbox)); return; }
   if(p.startsWith('/__db')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify({rows,utenti:[...utenti.values()].map(u=>({email:u.email,confermato:u.confermato,data:u.data})),sessioni:sessioni.size})); return; }
+  // Il "link" dell'email di conferma: Supabase conferma l'indirizzo quando viene toccato
+  if(p.startsWith('/__conferma')){ const u=utenti.get(String(url.searchParams.get('email')).toLowerCase()); if(u){u.confermato=new Date().toISOString(); u.codice=null;} res.end(u?'ok':'no'); return; }
   if(p.startsWith('/__seed')){ const b=JSON.parse(body); rows.push({id:crypto.randomUUID(),created_at:new Date().toISOString(),views:0,proprietario_id:null,...b}); res.end('ok'); return; }
   if(p.startsWith('/auth/v1/')){ if(req.method==='OPTIONS'){res.writeHead(204,cors);res.end();return;}
     const [st,b]=gotrue(req.method,url,{authorization:req.headers.authorization},body?JSON.parse(body):{}); res.writeHead(st,{'Content-Type':'application/json',...cors}); res.end(b==null?'':JSON.stringify(b)); return; }
