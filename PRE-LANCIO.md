@@ -9,7 +9,7 @@ Per il contesto di lavoro (come lavorare, dove sta cosa, test) vedi `PASSAGGIO-C
 ## 0. Account (Supabase Auth) — da completare prima di unire in `main`
 
 Codice pronto su `sviluppo-v2` (11/10/2026): account con email privata verificata, password, recupero con codice,
-dashboard con più tag, tag Gold assegnate a un'email. Provato con un finto Supabase (152 prove server + 39 nel
+dashboard con più tag, nomi protetti riservabili a un'email. Provato con un finto Supabase (152 prove server + 39 nel
 browser). **Mancano le prove con il Supabase vero** (da questa sessione non si raggiunge) e alcune impostazioni che
 può fare solo il titolare (o va autorizzato esplicitamente):
 
@@ -44,7 +44,7 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [ ] seconda tag dalla dashboard; [ ] "Password dimenticata" → codice → nuova password → l'altro telefono deve
       riaccedere; [ ] la vecchia password non funziona; [ ] "Esci da tutti i dispositivi";
 - [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari);
-- [ ] tag Gold assegnata: provare con un secondo indirizzo del team.
+- (non necessaria ora) nome protetto riservato a un'email: richiede un secondo indirizzo del team Supabase.
 
 **E. Rilascio in produzione (dopo D e la revisione):**
 - [ ] Backup: esportare in CSV `tags` e `nomi_riservati` dal Table Editor (conservarli fuori da GitHub).
@@ -101,6 +101,11 @@ fornitore dell'autenticazione e il servizio email scelto.
     gratis" da rivedere, vedi sopra).
 - **Collegato:** per mandare il messaggio a fine prova serve l'**email del cliente**, che oggi non chiediamo
   (audit, punto 1.4): va raccolta dal lancio, altrimenti non si potrà avvisare nessuno.
+
+### Account omaggio per persone scelte (al lancio, su richiesta del titolare)
+- Il titolare configurerà personalmente, sul telefono di ciascuno, le tag di alcuni titolari di attività e amici
+  influencer, e vuole che quegli account siano **senza obbligo di rinnovo** per un anno o per sempre.
+- Da fare nel codice **solo quando il titolare lo chiede** (es. una data di scadenza "omaggio" decisa dal server).
 
 ### Modello dei piani e pagamenti (dopo la prova, in sospeso)
 - Proposta discussa: Base gratis per sempre (con "Creato con myquicktag"), Premium e Gold a pagamento,

@@ -71,12 +71,15 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   `proprietarioOppureEsci`) e `mqtPulisci` (pulizia dei testi prima di mostrarli).
 - I dati privati del proprietario (contatti del vasetto, statistiche, Pocket, bozza) arrivano solo al proprietario
   (`api/get-profile.js` usa elenchi espliciti dei campi). I visitatori scrivono solo tramite `api/add-lead.js` e `api/track-click.js`.
-- **Tag Gold regalate (configurate sul telefono del destinatario):** 1) nel Table Editor di Supabase, tabella
-  `nomi_riservati`, si scrive l'email del destinatario nella colonna `assegnato_a` della riga del nome (o si aggiunge
-  una riga `tipo` gold, `regola` esatto); 2) sul **suo** telefono il destinatario crea l'account con la **sua** email e
-  la **sua** password e inserisce il codice ricevuto; 3) da "Le mie tag" → "Aggiungi una tag" prenota il nome: solo
-  il suo account può farlo e la tag nasce già sua; 4) si compila l'editor insieme e si attiva. Il titolare del progetto
-  non conosce mai la password; il destinatario può recuperarla da solo. Dopo l'attivazione si può svuotare `assegnato_a`.
+- **Account omaggio al lancio (intenzione del titolare, chiarita il 12/10/2026):** il titolare regalerà l'uso di
+  myquicktag ad alcune persone scelte (titolari di attività, amici influencer), configurando lui le loro tag **sul
+  telefono di ciascuno**, a mano, con l'account e l'email della persona. Quando lo chiederà, servirà un modo per rendere
+  quegli account **senza obbligo di rinnovo** (per un anno o per sempre): **non è ancora nel codice**, non anticiparlo.
+  ⚠️ Malinteso della sessione precedente: il titolare **non** ha mai chiesto di "assegnare una tag Gold a un'altra persona".
+- **Nome protetto riservato a un'email (`nomi_riservati.assegnato_a`, nel codice dall'11/10):** se il nome di una persona
+  scelta è nella lista dei nomi protetti (es. un nome famoso), si scrive la sua email in `assegnato_a`: solo il suo
+  account può prenotarlo ("Le mie tag" → "Aggiungi una tag") e la tag nasce già sua. Non c'entra con il piano Gold né
+  con la durata. Dopo l'attivazione si può svuotare `assegnato_a`. Il titolare non conosce mai la password della persona.
 - `.vercelignore` esclude dal sito pubblico documenti interni, test e `supabase/`.
 
 ## Test
