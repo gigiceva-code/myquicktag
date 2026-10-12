@@ -33,7 +33,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - **Sito pubblico:** https://myquicktag.it (Vercel, ramo `main`). Tag pubblica: `/u/<nome>`.
 - **Vercel:** team `gigiceva-codes-projects`, progetto `myquicktag`.
   Variabili: `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (Production → progetto `myquicktag`;
-  Preview → progetto `myquicktag-prova`, da impostare: vedi `PRE-LANCIO.md`). Facoltativa: `RINNOVO_GRATUITO=si`
+  Preview → progetto `myquicktag-prova`, impostato il 12/10/2026). Facoltativa: `RINNOVO_GRATUITO=si`
   accende il rinnovo gratuito dalla dashboard (spento di base).
   Funzioni server: 10 su 12 consentite dal piano gratuito (limite riportato da forum/issue, da confermare nel pannello).
 - **Supabase produzione:** progetto `myquicktag` (id `atlhrkkfovblkhgzfeuo`, Francoforte).

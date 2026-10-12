@@ -14,20 +14,25 @@ browser). **Mancano le prove con il Supabase vero** (da questa sessione non si r
 può fare solo il titolare (o va autorizzato esplicitamente):
 
 **Semplificato l'11/10/2026:** il browser usa sempre lo stesso progetto Supabase del server
-(`api/account.js?azione=config`), quindi **non serve cambiare le variabili di Vercel**; la conferma dell'email
+(`api/account.js?azione=config`), quindi basta che le variabili di Vercel puntino al progetto giusto (Preview →
+`myquicktag-prova`, Production → `myquicktag`); la conferma dell'email
 funziona col link dell'email standard di Supabase (si tocca il link, si torna e si preme "Ho confermato"), quindi
-**non serve cambiare i modelli delle email**. Resta una sola impostazione, nel pannello di Supabase (non
-raggiungibile dalla sessione cloud):
+**non serve cambiare i modelli delle email**. Resta una sola impostazione di Supabase (Authentication → URL Configuration),
+da fare su ciascun progetto:
 
-**A. Supabase → progetto `myquicktag` → Authentication → URL Configuration:**
-- [ ] *Site URL* = `https://myquicktag.it`
-- [ ] *Redirect URLs* → "Add URL": `https://myquicktag.it/**` (e, per provare sul Preview, `https://*-gigiceva-codes-projects.vercel.app/**`)
-- Facoltativo: *Sign In / Providers → Email* → lunghezza minima password 8 (la pagina la chiede già);
-  *Email Templates* → aggiungere `{{ .Token }}` per mandare anche il codice.
+**A. Progetto di prova `myquicktag-prova` (usato dal Preview) — fatto il 12/10/2026 via API:**
+- [x] *Site URL* = `https://myquicktag.it`
+- [x] *Redirect URLs*: `https://myquicktag.it/**` e `https://*-gigiceva-codes-projects.vercel.app/**`
+- [x] Lunghezza minima password 8 (la pagina la chiede già).
+- [x] Vercel, solo ambiente **Preview**: `SUPABASE_URL` e `SUPABASE_SECRET_KEY` puntano a `myquicktag-prova`
+      (Production invariato: progetto `myquicktag`).
+- Facoltativo: *Email Templates* → aggiungere `{{ .Token }}` per mandare anche il codice.
+- Il progetto di produzione `myquicktag` **non è ancora configurato**: si fa al rilascio (punto E).
 - Le email arrivano solo agli indirizzi del team Supabase finché non c'è l'SMTP (punto C).
 
-**B. Database di produzione:** serve la migrazione `20261011000000_account_proprietari.sql` (solo aggiunte) prima di
-provare: il Preview usa il database di produzione. Da fare con una copia di sicurezza prima (decisione del titolare).
+**B. Database:** il Preview usa il **database di prova** (`myquicktag-prova`), che ha già tutte le migrazioni: le prove
+si fanno lì e non toccano la produzione. La migrazione `20261011000000_account_proprietari.sql` (solo aggiunte) va
+applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza prima (decisione del titolare).
 
 **C. Email ai clienti (prima del lancio, anche per il progetto di produzione):**
 - [ ] Scegliere un servizio di invio con piano gratuito (verificare i limiti sulle pagine ufficiali: Resend, Brevo, Mailjet…),
@@ -44,7 +49,8 @@ provare: il Preview usa il database di produzione. Da fare con una copia di sicu
 **E. Rilascio in produzione (dopo D e la revisione):**
 - [ ] Backup: esportare in CSV `tags` e `nomi_riservati` dal Table Editor (conservarli fuori da GitHub).
 - [ ] Applicare `supabase/migrations/20261011000000_account_proprietari.sql` al progetto `myquicktag` (solo aggiunte).
-- [ ] Ripetere A sul progetto di produzione con Site URL `https://myquicktag.it` (Redirect `https://myquicktag.it/**`).
+- [ ] Ripetere A sul progetto di produzione `myquicktag` con Site URL `https://myquicktag.it` (Redirect `https://myquicktag.it/**`)
+      e password minima 8.
 - [ ] Unire `sviluppo-v2` in `main`. Le tag di prova esistenti restano: si collegano a un account dalla dashboard
       ("Hai una tag creata prima degli account?") oppure si cancellano quando si svuota la tabella.
 - Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
@@ -116,8 +122,9 @@ fornitore dell'autenticazione e il servizio email scelto.
 - [x] **Database migrato da Airtable a Supabase** (progetto `myquicktag`, Francoforte, tabella `tags`).
   Struttura in `supabase/migrations/`; importate le 8 tag di prova della base "MyQuickTag (Copy)".
 - [x] **Variabili d'ambiente su Vercel (Preview e Production):** `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`.
-  - `SUPABASE_URL` = `https://atlhrkkfovblkhgzfeuo.supabase.co`
-  - `SUPABASE_SECRET_KEY` = dashboard Supabase → Project Settings → API Keys → **Secret key** (`sb_secret_…`). Mai nel codice o nel browser.
+  - Production: `SUPABASE_URL` = `https://atlhrkkfovblkhgzfeuo.supabase.co` (progetto `myquicktag`).
+  - Preview (dal 12/10/2026): `SUPABASE_URL` = `https://lmxxoxrsrwmtunyqlpbh.supabase.co` (progetto `myquicktag-prova`).
+  - `SUPABASE_SECRET_KEY` = dashboard Supabase del progetto corrispondente → Project Settings → API Keys → **Secret key** (`sb_secret_…`). Mai nel codice o nel browser.
   - Le variabili `AIRTABLE_*` non servono più e si possono togliere.
 - [x] Unito `sviluppo-v2` in `main` (pull request #2, 04/10/2026).
 - [ ] Test con due telefoni sul sito pubblico: contatto lasciato da un visitatore → Dashboard → I miei contatti.
