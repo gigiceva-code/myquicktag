@@ -73,10 +73,10 @@
     <!-- PASSWORD DIMENTICATA -->
     <section class="vista" id="v-dimenticata">
         <h1 class="titolo">Password dimenticata</h1>
-        <p class="sottotitolo">Scrivi l'email del tuo account: ti mandiamo un codice per sceglierne una nuova.</p>
+        <p class="sottotitolo">Scrivi l'email del tuo account: ti mandiamo un'email per sceglierne una nuova.</p>
         <form class="card" id="f-dimenticata">
             <div class="field"><label for="d-email">Email</label><input type="email" id="d-email" autocomplete="email" inputmode="email" required></div>
-            <button class="btn btn-primary" type="submit">Mandami il codice</button>
+            <button class="btn btn-primary" type="submit">Mandami l'email</button>
             <div class="messaggio" role="status"></div>
             <div class="riga-link"><button type="button" class="link" data-vai="accedi">Torna all'accesso</button></div>
         </form>
@@ -91,7 +91,7 @@
             <div class="field"><label for="cr-codice">Codice ricevuto via email</label><input type="text" id="cr-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
             <button class="btn btn-primary" type="submit">Continua</button>
             <div class="messaggio" role="status"></div>
-            <div class="riga-link"><button type="button" class="link" data-vai="dimenticata">Chiedi un nuovo codice</button></div>
+            <div class="riga-link"><button type="button" class="link" data-vai="dimenticata">Chiedi una nuova email</button></div>
         </form>
     </section>
 

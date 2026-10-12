@@ -269,3 +269,73 @@
     }
     window.mqtNome = { canonico };
 })();
+
+// ============================================================
+// @NOME NEL BADGE DELLA TAG (tag pubblica ed editor)
+// ============================================================
+// Scrive il nome in modo sicuro (textContent) e rimpicciolisce il carattere finché il nome,
+// insieme alla "@", sta nella capsula: un nome lungo senza spazi (es. CONCESSIONARIAAUDICUNEO)
+// non può andare a capo e prima usciva dai bordi. La misura usa un canvas, quindi funziona
+// anche quando la tag è ancora nascosta dietro la copertina.
+(function () {
+    const LARGHEZZA_TESTO = 196;  // capsula 290px - margini interni (badge) = spazio delle altre forme (220 - 24)
+    const MINIMO_PX = 9;
+    let canvas = null;
+
+    function larghezza(testo, stile, px, peso) {
+        canvas = canvas || document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.font = `${peso || stile.fontWeight} ${px}px ${stile.fontFamily}`;
+        const spaziatura = parseFloat(stile.letterSpacing) || 0;
+        return ctx.measureText(testo).width + spaziatura * testo.length;
+    }
+
+    function scrivi(el, testoBruto) {
+        if (!el) return '';
+        let testo = String(testoBruto || 'TUONOME').replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
+        if (testo.startsWith('@')) testo = testo.substring(1).trim();
+
+        el.textContent = '';
+        const brand = document.createElement('span');
+        brand.className = 'brand-text';
+        brand.style.position = 'relative';
+        const at = document.createElement('span');
+        at.className = 'at-symbol';
+        at.style.cssText = 'position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;';
+        at.textContent = '@';
+        const nome = document.createElement('span');
+        nome.id = 'safe-username-span';
+        nome.textContent = testo;
+        brand.append(at, nome);
+        el.appendChild(brand);
+
+        el.dataset.nomeBadge = testo;
+        el.style.whiteSpace = 'normal'; el.style.wordBreak = 'normal';
+        adatta(el, testo);
+        // Il carattere Inter arriva da Google Fonts: quando è caricato si rimisura.
+        if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(() => { if (el.dataset.nomeBadge === testo) adatta(el, testo); });
+        return testo;
+    }
+
+    function adatta(el, testo) {
+        el.style.overflowWrap = 'break-word';
+        let px = testo.length > 25 ? 13.6 : testo.length > 18 ? 15.2 : 16.8; // 0.85 / 0.95 / 1.05rem
+        el.style.fontSize = px + 'px';
+
+        // Solo l'esagono (layout "badge", quello di base): nelle forme "divider" e "pure" il nome lungo va a capo
+        // apposta, con il rombo tra le due righe.
+        const contenitore = el.closest('[data-layout]');
+        if (contenitore && (contenitore.getAttribute('data-layout') || 'badge') !== 'badge') return;
+
+        // La parola più lunga deve stare su una riga, "@" compresa.
+        const stile = getComputedStyle(el);
+        const spazio = Math.min(LARGHEZZA_TESTO, (window.innerWidth || 400) - 120);
+        const parolaLunga = testo.split(' ').reduce((a, b) => (b.length > a.length ? b : a), '');
+        const serve = (p) => larghezza(parolaLunga, stile, p) + larghezza('@', stile, p, 300) + 4;
+        while (px > MINIMO_PX && serve(px) > spazio) px -= 0.25;
+        el.style.fontSize = px + 'px';
+        if (serve(px) > spazio) el.style.overflowWrap = 'anywhere';
+    }
+
+    window.mqtBadgeNome = { scrivi };
+})();

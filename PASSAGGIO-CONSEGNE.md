@@ -86,7 +86,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 - `node test/api.test.mjs` → 152 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
-- `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 39 prove nel browser (telefono simulato): registrazione con
+- `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 43 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita. Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto

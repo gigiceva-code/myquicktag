@@ -210,22 +210,9 @@ const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}$
 function formattaBadge(testoBruto) {
     const el = document.getElementById('tag-username');
     if(!el) return;
-    if (!testoBruto) testoBruto = "TUONOME";
-    let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
-    if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
+    // Nome scritto in modo sicuro e adattato alla larghezza della capsula (session.js)
+    const testo = mqtBadgeNome.scrivi(el, testoBruto);
 
-    // BLINDAGGIO XSS: Usiamo una struttura sicura con textContent per il nome
-    el.innerHTML = `<span class="brand-text" style="position: relative;"><span class="at-symbol" style="position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;">@</span><span id="safe-username-span"></span></span>`;
-    
-    const safeSpan = document.getElementById('safe-username-span');
-    if (safeSpan) safeSpan.textContent = testo; // Protezione totale contro script malevoli
-
-    el.style.whiteSpace = "normal"; el.style.wordBreak = "normal"; el.style.overflowWrap = "break-word";
-
-    if (testo.length > 25) { el.style.fontSize = "0.85rem"; } 
-    else if (testo.length > 18) { el.style.fontSize = "0.95rem"; } 
-    else { el.style.fontSize = "1.05rem"; }
-    
     const wrapper = document.getElementById('name-capsule-wrapper');
     if (wrapper) {
         if (testo.length < 16) {

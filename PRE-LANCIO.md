@@ -26,7 +26,10 @@ da fare su ciascun progetto:
 - [x] Lunghezza minima password 8 (la pagina la chiede già).
 - [x] Vercel, solo ambiente **Preview**: `SUPABASE_URL` e `SUPABASE_SECRET_KEY` puntano a `myquicktag-prova`
       (Production invariato: progetto `myquicktag`).
-- Facoltativo: *Email Templates* → aggiungere `{{ .Token }}` per mandare anche il codice.
+- *Email Templates* con il codice (`{{ .Token }}`): **non si possono cambiare** sul piano gratuito finché non c'è un
+  servizio SMTP (risposta dell'API di Supabase, 12/10/2026). Fino ad allora l'email contiene **solo il link** (in inglese):
+  la pagina dice "tocca il link, poi torna qui e premi Ho confermato". Con l'SMTP (punto C) si mettono i modelli in
+  italiano con il codice (già pronti nella sessione del 12/10: codice grande + link come alternativa).
 - Il progetto di produzione `myquicktag` **non è ancora configurato**: si fa al rilascio (punto E).
 - Le email arrivano solo agli indirizzi del team Supabase finché non c'è l'SMTP (punto C).
 
@@ -44,6 +47,8 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [ ] seconda tag dalla dashboard; [ ] "Password dimenticata" → codice → nuova password → l'altro telefono deve
       riaccedere; [ ] la vecchia password non funziona; [ ] "Esci da tutti i dispositivi";
 - [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari);
+- [ ] app installata su Android: aprire il link **direttamente in Chrome** (non dal browser interno di Gmail/WhatsApp,
+      che non permette l'installazione: lì compare "Apri dal browser Chrome per installare").
 - (non necessaria ora) nome protetto riservato a un'email: richiede un secondo indirizzo del team Supabase.
 
 **E. Rilascio in produzione (dopo D e la revisione):**
