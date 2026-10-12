@@ -16,9 +16,8 @@ export default function handler(req, res) {
     const finalUser = safeUser || 'user';
     const displayUtente = `@${finalUser.toUpperCase()}`;
 
-        // Icona unica del brand, uguale per tutti gli utenti
-    const icon192 = `/api/generate-icons`;
-    const icon512 = `/api/generate-icons`;
+    // Icone PNG del brand, uguali per tutti. Niente SVG (/api/generate-icons): Chrome lo preferiva ai PNG,
+    // non riusciva a usarlo come icona dell'app e rifiutava l'installazione ("no-acceptable-icon").
 
     // Costruiamo il manifest dinamico con i link corretti (usando i backticks ``)
     const manifest = {
@@ -35,8 +34,7 @@ export default function handler(req, res) {
       "icons": [
         { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
         { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-        { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
-        { "src": icon512, "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+        { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
       ]
     };
     

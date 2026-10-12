@@ -49,6 +49,9 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari);
 - [ ] app installata su Android: aprire il link **direttamente in Chrome** (non dal browser interno di Gmail/WhatsApp,
       che non permette l'installazione: lì compare "Apri dal browser Chrome per installare").
+      L'installazione si fa dalla **tag pubblica** (`/u/<nome>`), non dall'editor (l'editor non è un'app installabile).
+      Corretto il 12/10/2026 su `sviluppo-v2`: il manifest non elenca più l'icona SVG, che Chrome sceglieva e scartava
+      ("Questa app non può essere installata"). **Lo stesso difetto c'è in produzione** finché non si unisce in `main`.
 - (non necessaria ora) nome protetto riservato a un'email: richiede un secondo indirizzo del team Supabase.
 
 **E. Rilascio in produzione (dopo D e la revisione):**
