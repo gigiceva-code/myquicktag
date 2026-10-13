@@ -38,6 +38,11 @@ si fanno lì e non toccano la produzione. La migrazione `20261011000000_account_
 applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza prima (decisione del titolare).
 
 **C. Email ai clienti (prima del lancio, anche per il progetto di produzione):**
+- Scelto **Resend** (13/10/2026: gratis 3.000 email/mese, 100/giorno, nessun marchio nelle email). Il titolare ha creato
+  l'account e una chiave API. Prossima sessione: chiave nell'ambiente come `RESEND_API_KEY` (mai in chat) e `api.resend.com`
+  tra i domini consentiti; poi aggiungere il dominio `notifiche.myquicktag.it` su Resend, guidare il titolare sui record
+  DNS in register.it, collegare l'SMTP (`smtp.resend.com`, utente `resend`, password = chiave) a `myquicktag-prova` e a
+  `myquicktag`, modelli email in italiano con il codice (`{{ .Token }}`), alzare il limite di invio.
 - [ ] Scegliere un servizio di invio con piano gratuito (verificare i limiti sulle pagine ufficiali: Resend, Brevo, Mailjet…),
       aggiungere i record DNS su register.it (SPF/DKIM, meglio su un sottodominio es. `notifiche.myquicktag.it`) e
       inserire i dati SMTP in Supabase → Authentication → SMTP Settings. Alzare poi il limite di invio in Rate Limits.
