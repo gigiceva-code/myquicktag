@@ -43,7 +43,9 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
       inserire i dati SMTP in Supabase → Authentication → SMTP Settings. Alzare poi il limite di invio in Rate Limits.
 
 **D. Collaudo sul Preview (titolare, dal telefono) — da annotare qui:**
-- [ ] crea account con la propria email → codice → la tag si attiva; [ ] il visitatore la vede da un altro telefono;
+- [x] crea account con la propria email → conferma col link → la tag si attiva (12/10/2026);
+- [ ] il visitatore la vede da un altro telefono (QR) e prova "SALVA" → Pocket: **rimandato a dopo l'unione in `main`**
+      (il Preview chiede l'accesso a Vercel a chi non è del team; deciso dal titolare il 13/10/2026);
 - [ ] seconda tag dalla dashboard; [ ] "Password dimenticata" → codice → nuova password → l'altro telefono deve
       riaccedere; [ ] la vecchia password non funziona; [ ] "Esci da tutti i dispositivi";
 - [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari);
