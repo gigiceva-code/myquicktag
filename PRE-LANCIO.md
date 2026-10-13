@@ -61,8 +61,7 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [ ] Applicare `supabase/migrations/20261011000000_account_proprietari.sql` al progetto `myquicktag` (solo aggiunte).
 - [ ] Ripetere A sul progetto di produzione `myquicktag` con Site URL `https://myquicktag.it` (Redirect `https://myquicktag.it/**`)
       e password minima 8.
-- [ ] Unire `sviluppo-v2` in `main`. Le tag di prova esistenti restano: si collegano a un account dalla dashboard
-      ("Hai una tag creata prima degli account?") oppure si cancellano quando si svuota la tabella.
+- [ ] Unire `sviluppo-v2` in `main` (la tabella `tags` della produzione è già vuota dal 13/10/2026).
 - Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
   codice vecchio (si può lasciare).
 
@@ -159,7 +158,8 @@ fornitore dell'autenticazione e il servizio email scelto.
     - Liste caricate il 04/10/2026: 3.238 nomi (sorgente in `supabase/nomi-protetti/`). Se emergono buchi o blocchi sbagliati si correggono dal Table Editor (o in `liste.py` + caricamento).
     - Futuro: codice di sblocco per le assegnazioni manuali; eventuale tipo "segnala"; liste ampliate per categoria.
 - [x] Documenti interni, test e `supabase/` esclusi dal sito pubblico (`.vercelignore`).
-- [ ] Prima del lancio: svuotare la tabella `tags` dalle tag di prova.
+- [x] Svuotata la tabella `tags` della produzione (13/10/2026, 10 tag di prova, su richiesta del titolare). Da ripetere
+      prima del lancio se nel frattempo se ne creano altre di prova.
 - [ ] **Ultima settimana prima del lancio:** regola "3 mesi tutto sbloccato" nel codice (sezione 1,
   "Strategia di lancio"), provata dal titolare sul telefono prima del giorno del lancio.
 - [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** tasto **"Segnala questa tag"** sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio**: myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
