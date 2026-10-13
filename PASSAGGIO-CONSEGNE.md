@@ -67,6 +67,17 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   (`api/login.js`, `api/change-password.js` rimossi); le tag vecchie si collegano a un account una volta sola dalla
   dashboard ("Hai una tag creata prima degli account?", `api/account.js` azione `collega-vecchia`).
 - `api/account.js`: elenco delle tag dell'account (dashboard) e collegamento delle tag vecchie.
+- **Pocket del visitatore (13/10/2026, testi approvati dal titolare):** "SALVA" sulla tag pubblica mette la tag nel
+  Pocket (`pocket.html`) **solo su quel telefono** (`localStorage` `mqt_pocket`), senza account e senza dati al server.
+  Al primo salvataggio un invito facoltativo; nel Pocket un riquadro "Ritrovalo con un tocco" per metterlo sulla
+  schermata Home ("No, grazie" lo nasconde per sempre) e in fondo una sola riga "Hai un'attività? Crea anche tu la tua tag."
+  Va percepito come un servizio, non come pubblicità: niente finestre automatiche, niente richieste di email.
+  Il Pocket ha un suo manifest (`pocket-manifest.json`), ma **non su iPhone**: lì l'app installata avrebbe una memoria
+  separata da Safari e risulterebbe vuota, quindi l'icona sulla Home apre Safari. Rimossa la vecchia sincronizzazione
+  "cloud" del Pocket (era legata al login dismesso). Futuro, dopo il lancio: copia del Pocket legata a un account.
+- **Forma "divider" del @nome:** il rombo va sotto il nome se sta su una riga, esattamente tra le due righe se va a capo.
+  Lo decide `session.js` → `mqtBadgeNome` misurando il nome (non contando le lettere). Nell'esagono il nome lungo si
+  rimpicciolisce fino a stare dentro.
 - `session.js` (caricato da tutte le pagine): `mqtSessione` (account, ricevute, portachiavi del dispositivo,
   `proprietarioOppureEsci`) e `mqtPulisci` (pulizia dei testi prima di mostrarli).
 - I dati privati del proprietario (contatti del vasetto, statistiche, Pocket, bozza) arrivano solo al proprietario

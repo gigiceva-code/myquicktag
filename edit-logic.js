@@ -813,16 +813,9 @@
             const el = document.getElementById('tag-username');
             if(!el) return;
             // Nome scritto in modo sicuro e adattato alla larghezza della capsula (session.js)
-            const testo = mqtBadgeNome.scrivi(el, testoBruto);
+            mqtBadgeNome.scrivi(el, testoBruto);
 
-            const wrapper = document.getElementById('name-capsule-wrapper');
-            if (wrapper) {
-                if (testo.length < 16) {
-                    wrapper.classList.add('nome-corto');
-                } else {
-                    wrapper.classList.remove('nome-corto');
-                }
-            }
+            // Rombo sotto o tra le righe (forma "divider"): lo decide mqtBadgeNome misurando il nome
         }
       async function inizializzaPagina() {  
             if(NOME_SISTEMA === "tuonome.it") {

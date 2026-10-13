@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#050505">
     <title>il mio pocket - myquicktag</title>
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <script>
+        // Manifest solo fuori da iPhone/iPad: su iPhone l'app installata avrebbe una memoria separata da Safari
+        // e il Pocket risulterebbe vuoto. Senza manifest l'icona sulla schermata Home apre Safari, con le tag salvate.
+        (function () {
+            const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (ios) return;
+            const l = document.createElement('link');
+            l.rel = 'manifest'; l.href = '/pocket-manifest.json'; l.crossOrigin = 'use-credentials';
+            document.head.appendChild(l);
+        })();
+    </script>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -103,6 +115,18 @@
         .bottom-bar { flex-shrink: 0; padding-top: 10px; display: flex; justify-content: center; align-items: center; }
         .btn-chiudi { background: transparent; border: none; color: var(--text-sec); font-size: 0.65rem; font-weight: 300; letter-spacing: 5px; text-transform: uppercase; padding: 15px; cursor: pointer; transition: color 0.2s; }
         .btn-chiudi:active { color: #fff; }
+        .bottom-bar { flex-direction: column; gap: 2px; }
+        .riga-attivita { font-size: 0.7rem; font-weight: 300; color: var(--text-sec); text-decoration: none; letter-spacing: 0.5px; padding: 6px; opacity: 0.8; }
+        .riga-attivita b { font-weight: 400; color: #fff; }
+
+        /* INVITO: POCKET SULLA SCHERMATA HOME */
+        .invito-home { flex-shrink: 0; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 16px; padding: 16px; margin-bottom: 18px; display: none; }
+        .invito-home h2 { font-size: 0.85rem; font-weight: 500; color: #fff; margin-bottom: 6px; }
+        .invito-home p { font-size: 0.8rem; font-weight: 300; color: var(--text-sec); line-height: 1.6; }
+        .invito-home .azioni { display: flex; gap: 10px; margin-top: 14px; }
+        .invito-home button { flex: 1; padding: 11px; border-radius: 10px; font-size: 0.75rem; letter-spacing: 1px; cursor: pointer; }
+        .invito-home .si { background: #fff; color: #000; border: none; font-weight: 600; }
+        .invito-home .no { background: transparent; color: var(--text-sec); border: 1px solid rgba(255,255,255,0.1); }
 
         /* TOAST NOTIFICA */
         .toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(50px); background: #ffffff; color: #000000; padding: 12px 24px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.2); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; z-index: 10000; pointer-events: none; }
@@ -124,16 +148,27 @@
             </div>
         </div>
 
+        <div class="invito-home" id="invito-home" role="region" aria-label="Aggiungi il Pocket alla schermata Home">
+            <h2>Ritrovalo con un tocco</h2>
+            <p id="invito-home-testo">Aggiungi il Pocket alla schermata Home: le tag che salvi saranno sempre a portata di mano.</p>
+            <div class="azioni">
+                <button class="no" type="button" id="invito-home-no">No, grazie</button>
+                <button class="si" type="button" id="invito-home-si">Aggiungi</button>
+            </div>
+        </div>
+
         <div class="pocket-list" id="lista-pocket">
             </div>
 
         <div class="empty-state" id="pocket-vuoto">
             <i class="far fa-bookmark"></i>
-            <p>Il tuo archivio<br>è vuoto</p>
+            <p>Il tuo Pocket<br>è vuoto</p>
+            <p style="text-transform: none; letter-spacing: 0.5px; margin-top: 14px; font-size: 0.8rem;">Premi SALVA su una tag per ritrovarla qui.</p>
         </div>
 
         <div class="bottom-bar">
-            <button class="btn-chiudi" onclick="history.back()">CHIUDI</button>
+            <button class="btn-chiudi" id="btn-chiudi" onclick="history.back()">CHIUDI</button>
+            <a class="riga-attivita" href="/">Hai un'attività? <b>Crea anche tu la tua tag.</b></a>
         </div>
 
     </div>
@@ -145,8 +180,12 @@
     document.addEventListener("DOMContentLoaded", () => {
         caricaPocket();
         configuraRicerca();
+        configuraInvitoHome();
+        // "CHIUDI" torna alla tag da cui si arriva; aperto dalla schermata Home non ha dove tornare
+        const daQuestoSito = document.referrer && document.referrer.indexOf(location.origin) === 0;
+        if (!(history.length > 1 && daQuestoSito)) document.getElementById('btn-chiudi').style.display = 'none';
     });
-async function caricaPocket() {
+function caricaPocket() {
         const contenitoreLista = document.getElementById('lista-pocket');
         const statoVuoto = document.getElementById('pocket-vuoto');
         
@@ -159,15 +198,15 @@ async function caricaPocket() {
             console.error("Errore lettura pocket:", e);
         }
 
-        contattiSalvati = await fondiPocketConCloud(contattiSalvati);
 
         if (contattiSalvati.length === 0) {
             statoVuoto.style.display = 'flex';
-            document.querySelector('.btn-share-pocket').style.display = 'none';
+            document.querySelector('.btn-share-pocket').style.visibility = 'hidden';
             return;
         }
 
         statoVuoto.style.display = 'none';
+        document.querySelector('.btn-share-pocket').style.visibility = 'visible';
         
         contattiSalvati.sort((a, b) => a.nome.localeCompare(b.nome));
 
@@ -203,7 +242,10 @@ async function caricaPocket() {
             row.querySelector('.contact-link').href = urlSicuro;
             row.querySelector('.pocket-iniziale').textContent = iniziale;
             row.querySelector('.contact-name').textContent = contatto.nome;
-            row.querySelector('.contact-username').textContent = '@' + usernameSicuro;
+            // Il @nome sotto solo se aggiunge qualcosa al nome mostrato (prima compariva due volte)
+            const nomeUguale = nomePulito.toLowerCase().replace(/[^a-z0-9]/g, '') === usernameSicuro.replace(/[^a-z0-9]/g, '');
+            if (nomeUguale) row.querySelector('.contact-username').remove();
+            else row.querySelector('.contact-username').textContent = '@' + usernameSicuro;
             const btnCondividi = row.querySelector('.share-single-btn');
             btnCondividi.addEventListener('click', e => condividiSingolo(contatto.nome, urlSicuro, e));
             const btnElimina = row.querySelector('.delete-single-btn');
@@ -303,87 +345,53 @@ async function caricaPocket() {
             pocketLocale = pocketLocale.filter(c => c.username !== username);
             localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
             
-            // AGGIUNTA CLOUD SYNC: Se elimino dal telefono, elimino da Airtable
-            const utenteLoggato = localStorage.getItem('mqt_logged_user');
-            if (utenteLoggato) {
-                sincronizzaPocketCloud(utenteLoggato, pocketLocale);
-            }
             
             // Ricarica la grafica
             caricaPocket();
             mostraToast('Contatto rimosso');
         }, 300);
     }
-        // Fonde l'archivio locale con quello salvato su Airtable (multi-dispositivo)
-    async function fondiPocketConCloud(pocketLocale) {
-        const utenteLoggato = localStorage.getItem('mqt_logged_user');
-        if (!utenteLoggato) return pocketLocale;
 
-        try {
-            const cacheBuster = Date.now();
-            const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}&token=${encodeURIComponent(mqtSessione.token(utenteLoggato))}`);
-            const data = await response.json();
+    // ============================================================
+    // INVITO: POCKET SULLA SCHERMATA HOME (facoltativo, "No, grazie" lo nasconde per sempre)
+    // ============================================================
+    let eventoInstallazione = null;
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); eventoInstallazione = e; });
 
-            if (!data.success || !data.fields || !data.fields.pocket_cloud) {
-                return pocketLocale;
+    function configuraInvitoHome() {
+        const box = document.getElementById('invito-home');
+        const giaInstallato = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        let rifiutato = false;
+        try { rifiutato = !!localStorage.getItem('mqt_pocket_home_no'); } catch (e) {}
+        if (giaInstallato || rifiutato) return;
+        box.style.display = 'block';
+
+        const testo = document.getElementById('invito-home-testo');
+        const si = document.getElementById('invito-home-si');
+        const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+        document.getElementById('invito-home-no').addEventListener('click', () => {
+            try { localStorage.setItem('mqt_pocket_home_no', new Date().toISOString()); } catch (e) {}
+            box.style.display = 'none';
+        });
+        si.addEventListener('click', async () => {
+            if (eventoInstallazione) {
+                eventoInstallazione.prompt();
+                const { outcome } = await eventoInstallazione.userChoice;
+                eventoInstallazione = null;
+                if (outcome === 'accepted') box.style.display = 'none';
+                return;
             }
-
-            let pocketCloud = [];
-            try {
-                pocketCloud = JSON.parse(data.fields.pocket_cloud);
-            } catch(e) {
-                return pocketLocale;
-            }
-
-            // Unione per username: in caso di doppione tiene il salvataggio più recente
-            const mappaUnita = {};
-            [...pocketCloud, ...pocketLocale].forEach(contatto => {
-                const esistente = mappaUnita[contatto.username];
-                if (!esistente || new Date(contatto.dataSalvataggio) > new Date(esistente.dataSalvataggio)) {
-                    mappaUnita[contatto.username] = contatto;
-                }
-            });
-
-                      const pocketUnito = Object.values(mappaUnita);
-            localStorage.setItem('mqt_pocket', JSON.stringify(pocketUnito));
-
-            // Se il merge ha aggiunto o aggiornato qualcosa rispetto al cloud, riallinea subito Airtable
-            const cloudEraGiaAggiornato = pocketCloud.length === pocketUnito.length &&
-                pocketCloud.every(c => mappaUnita[c.username] && mappaUnita[c.username].dataSalvataggio === c.dataSalvataggio);
-
-            if (!cloudEraGiaAggiornato) {
-                sincronizzaPocketCloud(utenteLoggato, pocketUnito);
-            }
-
-            return pocketUnito;
-
-        } catch (error) {
-            console.error("Merge pocket cloud fallito, uso solo il dato locale.", error);
-            return pocketLocale;
-        }
+            testo.innerHTML = ios
+                ? 'Tocca <b>Condividi</b> in basso in Safari, poi <b>"Aggiungi alla schermata Home"</b>.'
+                : 'Apri il menu <b>⋮</b> del browser e scegli <b>"Installa app"</b> o <b>"Aggiungi a schermata Home"</b>.';
+            si.style.display = 'none';
+        });
+        window.addEventListener('appinstalled', () => { box.style.display = 'none'; });
     }
 
-      // Motore di Sync (Da incollare sotto eliminaContatto)
-    async function sincronizzaPocketCloud(utente, pocketArray) {
-        try {
-            let tokenSalvatiPocket = {};
-            try {
-                tokenSalvatiPocket = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
-            } catch(e) {
-                tokenSalvatiPocket = {};
-            }
-            await fetch('/api/update-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username_system: utente,
-                    pocket_cloud: JSON.stringify(pocketArray),
-                    sessionToken: tokenSalvatiPocket[utente]
-                })
-            });
-        } catch (error) {
-            console.error("Cloud Sync fallito");
-        }
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
     }
 </script>
 </body>

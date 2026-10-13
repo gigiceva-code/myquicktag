@@ -322,14 +322,21 @@
         let px = testo.length > 25 ? 13.6 : testo.length > 18 ? 15.2 : 16.8; // 0.85 / 0.95 / 1.05rem
         el.style.fontSize = px + 'px';
 
-        // Solo l'esagono (layout "badge", quello di base): nelle forme "divider" e "pure" il nome lungo va a capo
-        // apposta, con il rombo tra le due righe.
+        const stile = getComputedStyle(el);
+        const spazio = Math.min(LARGHEZZA_TESTO, (window.innerWidth || 400) - 120);
+
+        // Forma "divider": se il nome sta su una riga il rombo va sotto (classe nome-corto), se va a capo
+        // il rombo va esattamente tra le due righe. Si decide misurando il nome, non contando le lettere:
+        // "RISTORANTEDALUIGI" (17) sta su una riga e prima aveva il rombo sopra le lettere.
+        const wrapper = el.closest('.username-capsule-wrapper');
+        if (wrapper) wrapper.classList.toggle('nome-corto', larghezza(testo, stile, px) <= spazio);
+
+        // Solo l'esagono (layout "badge", quello di base) rimpicciolisce il nome: nelle forme "divider" e
+        // "pure" il nome lungo va a capo apposta.
         const contenitore = el.closest('[data-layout]');
         if (contenitore && (contenitore.getAttribute('data-layout') || 'badge') !== 'badge') return;
 
         // La parola più lunga deve stare su una riga, "@" compresa.
-        const stile = getComputedStyle(el);
-        const spazio = Math.min(LARGHEZZA_TESTO, (window.innerWidth || 400) - 120);
         const parolaLunga = testo.split(' ').reduce((a, b) => (b.length > a.length ? b : a), '');
         const serve = (p) => larghezza(parolaLunga, stile, p) + larghezza('@', stile, p, 300) + 4;
         while (px > MINIMO_PX && serve(px) > spazio) px -= 0.25;
