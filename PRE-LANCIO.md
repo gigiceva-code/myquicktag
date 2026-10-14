@@ -50,7 +50,7 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
       - TXT `send.notifiche` → `v=spf1 include:amazonses.com ~all`
       - CNAME `rsend.notifiche` → `send.forge.rmta.net`
       Non toccano il sito né altre email del dominio (sono tutti sotto `notifiche`).
-- [x] Dominio verificato su Resend (14/10/2026) e prima email di prova spedita al titolare.
+- [x] Dominio verificato su Resend (14/10/2026) e prima email di prova arrivata al titolare nella posta principale di Gmail (non nello spam).
 - [x] Modelli email in italiano con codice grande + pulsante (`supabase/email/`: conferma, recupero, cambio email,
       accesso) e script `supabase/email/applica.py` che collega l'SMTP di Resend a un progetto Supabase, carica modelli e
       oggetti e alza il limite a 30 email/ora. Mittente: `myquicktag <no-reply@notifiche.myquicktag.it>`.
