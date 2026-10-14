@@ -1,0 +1,6 @@
+{
+  "conferma": "{{ .Token }} è il tuo codice myquicktag",
+  "recupero": "{{ .Token }} è il codice per la nuova password",
+  "cambio-email": "{{ .Token }} è il codice per confermare la nuova email",
+  "accesso": "{{ .Token }} è il tuo codice di accesso myquicktag"
+}

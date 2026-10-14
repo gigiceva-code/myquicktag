@@ -38,14 +38,27 @@ si fanno lì e non toccano la produzione. La migrazione `20261011000000_account_
 applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza prima (decisione del titolare).
 
 **C. Email ai clienti (prima del lancio, anche per il progetto di produzione):**
-- Scelto **Resend** (13/10/2026: gratis 3.000 email/mese, 100/giorno, nessun marchio nelle email). Il titolare ha creato
-  l'account e una chiave API. Prossima sessione: chiave nell'ambiente come `RESEND_API_KEY` (mai in chat) e `api.resend.com`
-  tra i domini consentiti; poi aggiungere il dominio `notifiche.myquicktag.it` su Resend, guidare il titolare sui record
-  DNS in register.it, collegare l'SMTP (`smtp.resend.com`, utente `resend`, password = chiave) a `myquicktag-prova` e a
-  `myquicktag`, modelli email in italiano con il codice (`{{ .Token }}`), alzare il limite di invio.
-- [ ] Scegliere un servizio di invio con piano gratuito (verificare i limiti sulle pagine ufficiali: Resend, Brevo, Mailjet…),
-      aggiungere i record DNS su register.it (SPF/DKIM, meglio su un sottodominio es. `notifiche.myquicktag.it`) e
-      inserire i dati SMTP in Supabase → Authentication → SMTP Settings. Alzare poi il limite di invio in Rate Limits.
+- Scelto **Resend** (13/10/2026: gratis 3.000 email/mese, 100/giorno, nessun marchio nelle email). La chiave è
+  nell'ambiente della sessione come `RESEND_API_KEY` (è "solo invio": basta per l'SMTP, non per gestire i domini; per
+  quello si usa il connettore Resend della sessione).
+- [x] Dominio `notifiche.myquicktag.it` aggiunto su Resend (14/10/2026, regione Europa `eu-west-1`, tracciamento di
+      aperture e click spento). Il DNS di myquicktag.it è su **register.it** (nameserver `ns1/ns2.register.it`).
+- [ ] **Titolare:** aggiungere in register.it → Gestione DNS di myquicktag.it questi 4 record (il "Nome" è la parte prima
+      di `.myquicktag.it`; i valori esatti si rileggono su resend.com → Domains → notifiche.myquicktag.it):
+      - TXT `resend._domainkey.notifiche` → la chiave lunga `p=MIGf…` (DKIM)
+      - MX `send.notifiche` → `feedback-smtp.eu-west-1.amazonses.com`, priorità 10
+      - TXT `send.notifiche` → `v=spf1 include:amazonses.com ~all`
+      - CNAME `rsend.notifiche` → `send.forge.rmta.net`
+      Non toccano il sito né altre email del dominio (sono tutti sotto `notifiche`).
+- [ ] Verifica del dominio su Resend (dalla sessione, dopo i record DNS; possono servire da pochi minuti a qualche ora).
+- [x] Modelli email in italiano con codice grande + pulsante (`supabase/email/`: conferma, recupero, cambio email,
+      accesso) e script `supabase/email/applica.py` che collega l'SMTP di Resend a un progetto Supabase, carica modelli e
+      oggetti e alza il limite a 30 email/ora. Mittente: `myquicktag <no-reply@notifiche.myquicktag.it>`.
+- [ ] Solo **dopo** la verifica del dominio: `python3 supabase/email/applica.py lmxxoxrsrwmtunyqlpbh` (prova), prova del
+      titolare (registrazione e "Password dimenticata" con il codice); al rilascio (punto E) lo stesso con
+      `atlhrkkfovblkhgzfeuo` (produzione). Prima della verifica non va lanciato: Resend rifiuterebbe le email.
+- [ ] Dopo l'SMTP: valutare con il titolare se la pagina di accesso deve mettere il **codice** al primo posto e il link
+      come alternativa (oggi è il contrario, perché finora l'email aveva solo il link).
 
 **D. Collaudo sul Preview (titolare, dal telefono) — da annotare qui:**
 - [x] crea account con la propria email → conferma col link → la tag si attiva (12/10/2026);
