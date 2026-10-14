@@ -48,7 +48,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - **Account (Supabase Auth):** email privata + password, verifica con codice, recupero, sessioni. Le email
   (codici) le manda Supabase: senza un servizio SMTP collegato arrivano **solo ai membri del team del progetto**
   (limite di Supabase), quindi prima del lancio va collegato un servizio di invio (vedi `PRE-LANCIO.md`).
-- **Resend (email):** dominio `notifiche.myquicktag.it` aggiunto il 14/10/2026, in attesa dei record DNS su register.it.
+- **Resend (email):** dominio `notifiche.myquicktag.it` verificato il 14/10/2026 (record DNS su register.it) e collegato a
+  `myquicktag-prova`; la produzione si collega al rilascio.
   Modelli in italiano e script di collegamento in `supabase/email/` (vedi `PRE-LANCIO.md` → C).
   Il Supabase di prova risponde con codici di **8 cifre** (`mailer_otp_length`); la pagina di accesso li accetta.
 - **Airtable:** non più usato (le basi restano solo come archivio).

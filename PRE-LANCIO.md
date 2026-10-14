@@ -43,20 +43,21 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
   quello si usa il connettore Resend della sessione).
 - [x] Dominio `notifiche.myquicktag.it` aggiunto su Resend (14/10/2026, regione Europa `eu-west-1`, tracciamento di
       aperture e click spento). Il DNS di myquicktag.it è su **register.it** (nameserver `ns1/ns2.register.it`).
-- [ ] **Titolare:** aggiungere in register.it → Gestione DNS di myquicktag.it questi 4 record (il "Nome" è la parte prima
+- [x] **Titolare:** (fatto il 14/10/2026) aggiungere in register.it → Gestione DNS di myquicktag.it questi 4 record (il "Nome" è la parte prima
       di `.myquicktag.it`; i valori esatti si rileggono su resend.com → Domains → notifiche.myquicktag.it):
       - TXT `resend._domainkey.notifiche` → la chiave lunga `p=MIGf…` (DKIM)
       - MX `send.notifiche` → `feedback-smtp.eu-west-1.amazonses.com`, priorità 10
       - TXT `send.notifiche` → `v=spf1 include:amazonses.com ~all`
       - CNAME `rsend.notifiche` → `send.forge.rmta.net`
       Non toccano il sito né altre email del dominio (sono tutti sotto `notifiche`).
-- [ ] Verifica del dominio su Resend (dalla sessione, dopo i record DNS; possono servire da pochi minuti a qualche ora).
+- [x] Dominio verificato su Resend (14/10/2026) e prima email di prova spedita al titolare.
 - [x] Modelli email in italiano con codice grande + pulsante (`supabase/email/`: conferma, recupero, cambio email,
       accesso) e script `supabase/email/applica.py` che collega l'SMTP di Resend a un progetto Supabase, carica modelli e
       oggetti e alza il limite a 30 email/ora. Mittente: `myquicktag <no-reply@notifiche.myquicktag.it>`.
-- [ ] Solo **dopo** la verifica del dominio: `python3 supabase/email/applica.py lmxxoxrsrwmtunyqlpbh` (prova), prova del
-      titolare (registrazione e "Password dimenticata" con il codice); al rilascio (punto E) lo stesso con
-      `atlhrkkfovblkhgzfeuo` (produzione). Prima della verifica non va lanciato: Resend rifiuterebbe le email.
+- [x] SMTP di Resend e modelli italiani collegati a `myquicktag-prova` (14/10/2026, `applica.py lmxxoxrsrwmtunyqlpbh`):
+      ora le email arrivano a **qualsiasi** indirizzo, non solo al team Supabase.
+- [ ] Prova del titolare sul Preview: registrazione con il codice e "Password dimenticata" con il codice.
+- [ ] Al rilascio (punto E): `python3 supabase/email/applica.py atlhrkkfovblkhgzfeuo` (produzione).
 - [ ] Dopo l'SMTP: valutare con il titolare se la pagina di accesso deve mettere il **codice** al primo posto e il link
       come alternativa (oggi è il contrario, perché finora l'email aveva solo il link).
 
