@@ -107,6 +107,9 @@ d=await db(); ok(d.rows.find(r=>r.username_system==='barsport').proprietario_id=
 const cL=await telefono(); const L=await cL.newPage(); att(L,'L');
 await L.goto(B+'/accesso.html?modo=registrati'); await L.waitForTimeout(1200);
 await L.fill('#r-email','luca@esempio.it'); await L.fill('#r-pwd','Password999'); await L.fill('#r-pwd2','Password999'); await L.check('#r-promo'); await L.click('#f-registrati button[type=submit]'); await L.waitForTimeout(1000);
+// Luca passa all'app della posta e il telefono ricarica la pagina: si riprende dal codice
+await L.reload(); await L.waitForTimeout(1500);
+ok(await L.isVisible('#v-codice'),'pagina ricaricata mentre si aspetta il codice: resta sulla schermata del codice');
 await L.fill('#c-codice',await inbox('luca@esempio.it','signup')); await L.click('#f-codice button[type=submit]'); await L.waitForURL(/dashboard/); await L.waitForTimeout(1500);
 ok((await L.textContent('#elenco')).includes('Non hai ancora'),'nuovo account: dashboard vuota');
 ok((await db()).utenti.find(u=>u.email==='luca@esempio.it').data.consenso_promo===true,'consenso promozionale spuntato: registrato');
@@ -127,10 +130,14 @@ await D.click('#v-codice-recupero [data-vai=dimenticata]'); await D.fill('#d-ema
 ok(vistaInesistente && await D.isVisible('#v-codice-recupero'),'recupero: stessa risposta per email registrata e non registrata');
 await shot(D,'09-codice-recupero');
 const codRec=await inbox('mario@bar.it','recovery');
+await D.reload(); await D.waitForTimeout(1500);
+ok(await D.isVisible('#v-codice-recupero'),'recupero: pagina ricaricata, resta sulla schermata del codice');
 await D.fill('#cr-codice','111111'); await D.click('#f-codice-recupero button[type=submit]'); await D.waitForTimeout(600);
 ok((await D.textContent('#f-codice-recupero .messaggio')).includes('scaduto o già usato'),'recupero: codice sbagliato rifiutato');
 await D.fill('#cr-codice',codRec); await D.click('#f-codice-recupero button[type=submit]'); await D.waitForTimeout(800);
 ok(await D.isVisible('#v-nuova-password'),'recupero: codice giusto → scegli la nuova password'); await shot(D,'10-nuova-password');
+await D.reload(); await D.waitForTimeout(1500);
+ok(await D.isVisible('#v-nuova-password'),'recupero: pagina ricaricata dopo il codice, si sceglie ancora la nuova password');
 await D.fill('#np-pwd','NuovaPass456'); await D.fill('#np-pwd2','NuovaPass456'); await D.click('#f-nuova-password button[type=submit]'); await D.waitForURL(/dashboard/,{timeout:8000}).catch(()=>{}); await D.waitForTimeout(1500);
 ok(/dashboard/.test(D.url()) && /bar mario/i.test(await D.textContent('#elenco')),'recupero: nuova password salvata, dashboard con le tag');
 // riuso del codice

@@ -122,6 +122,23 @@
     let emailInCorso = '';
     let passwordInCorso = ''; // solo in memoria finché la pagina è aperta: serve a entrare dopo la conferma via link
 
+    // Il passaggio in corso (in attesa del codice, nuova password) resta salvato sul telefono per un'ora:
+    // passando all'app della posta il telefono può ricaricare la pagina, che altrimenti ripartirebbe da capo.
+    // Si salva solo l'email, mai la password.
+    const PASSO = 'mqt_accesso_in_corso';
+    function ricordaPasso(vista, email) {
+        try { localStorage.setItem(PASSO, JSON.stringify({ vista, email, fino: Date.now() + 3600e3 })); } catch (e) {}
+    }
+    function dimenticaPasso() { try { localStorage.removeItem(PASSO); } catch (e) {} }
+    function passoSalvato() {
+        try {
+            const p = JSON.parse(localStorage.getItem(PASSO) || 'null');
+            if (p && p.fino > Date.now() && p.email && ['codice', 'codice-recupero', 'nuova-password'].includes(p.vista)) return p;
+        } catch (e) {}
+        dimenticaPasso();
+        return null;
+    }
+
     function mostra(vista) {
         document.querySelectorAll('.vista').forEach(v => v.classList.toggle('attiva', v.id === 'v-' + vista));
         document.querySelectorAll('.messaggio').forEach(m => { m.textContent = ''; m.className = 'messaggio'; });
@@ -153,6 +170,7 @@
     }
 
     async function dopoAccesso() {
+        dimenticaPasso();
         // Ricorda su questo dispositivo le tag dell'account, poi torna dove serviva
         try {
             const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ azione: 'mie-tag' }) });
@@ -162,7 +180,7 @@
         location.replace(torna);
     }
 
-    document.querySelectorAll('[data-vai]').forEach(b => b.addEventListener('click', () => mostra(b.dataset.vai)));
+    document.querySelectorAll('[data-vai]').forEach(b => b.addEventListener('click', () => { dimenticaPasso(); mostra(b.dataset.vai); }));
     document.querySelectorAll('[data-mostra]').forEach(b => b.addEventListener('click', () => {
         const i = document.getElementById(b.dataset.mostra);
         i.type = i.type === 'password' ? 'text' : 'password';
@@ -206,7 +224,15 @@
             }
         }
         if (data.session && modo === 'nuova-password') return mostra('nuova-password');
+        const passo = passoSalvato();
+        // Codice di recupero già verificato, poi la pagina si è ricaricata: si sceglie ancora la nuova password
+        if (data.session && passo && passo.vista === 'nuova-password') return mostra('nuova-password');
         if (data.session && !modo) return dopoAccesso(); // già dentro (o appena verificato col link)
+        // Si torna dall'app della posta e la pagina è ripartita: si riprende dal codice
+        if (!data.session && passo && passo.vista !== 'nuova-password' && modo !== 'nuova-password') {
+            emailInCorso = passo.email;
+            return mostra(passo.vista);
+        }
         mostra(['registrati', 'dimenticata'].includes(modo) ? modo : 'accedi');
         if (data.session && modo) location.hash = '';
     }
@@ -219,7 +245,7 @@
         const { error } = await sb.auth.signInWithPassword({ email, password: document.getElementById('a-pwd').value });
         occupato(this, false);
         if (error) {
-            if ((error.code || '') === 'email_not_confirmed') { emailInCorso = email; passwordInCorso = document.getElementById('a-pwd').value; mostra('codice'); return; }
+            if ((error.code || '') === 'email_not_confirmed') { emailInCorso = email; passwordInCorso = document.getElementById('a-pwd').value; ricordaPasso('codice', email); mostra('codice'); return; }
             return msg(this, spiega(error), false);
         }
         dopoAccesso();
@@ -246,6 +272,7 @@
         if (error) return msg(this, spiega(error), false);
         if (data.session) return dopoAccesso(); // verifica email disattivata nel progetto (solo prove)
         emailInCorso = email; passwordInCorso = pwd;
+        ricordaPasso('codice', email);
         mostra('codice');
     });
 
@@ -264,7 +291,15 @@
     // Conferma col link dell'email (anche aperto in un'altra app): l'account è verificato, si entra qui
     document.getElementById('c-confermato').addEventListener('click', async function () {
         const m = document.getElementById('msg-confermato');
-        if (!emailInCorso || !passwordInCorso) { mostra('accedi'); return; }
+        if (!emailInCorso) { mostra('accedi'); return; }
+        if (!passwordInCorso) {
+            // La pagina si è ricaricata e la password non è salvata (di proposito): la si riscrive una volta
+            dimenticaPasso();
+            mostra('accedi');
+            document.getElementById('a-email').value = emailInCorso;
+            msg(document.getElementById('f-accedi'), 'Se hai già toccato il link nell\'email, scrivi la password per entrare.', true);
+            return;
+        }
         this.disabled = true;
         const { error } = await sb.auth.signInWithPassword({ email: emailInCorso, password: passwordInCorso });
         this.disabled = false;
@@ -295,15 +330,18 @@
         // Stessa risposta che l'email abbia un account o no: si segnala solo il troppo spesso
         if (error && /rate|security purposes/i.test((error.code || '') + error.message)) return msg(this, spiega(error), false);
         emailInCorso = email;
+        ricordaPasso('codice-recupero', email);
         mostra('codice-recupero');
     });
     document.getElementById('f-codice-recupero').addEventListener('submit', async function (e) {
         e.preventDefault();
         const token = document.getElementById('cr-codice').value.replace(/\s/g, '');
+        if (!emailInCorso) { mostra('dimenticata'); return; }
         occupato(this, true);
         const { error } = await sb.auth.verifyOtp({ email: emailInCorso, token, type: 'recovery' });
         occupato(this, false);
         if (error) return msg(this, spiega(error), false);
+        ricordaPasso('nuova-password', emailInCorso);
         mostra('nuova-password');
     });
 
