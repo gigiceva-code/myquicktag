@@ -56,7 +56,9 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
       oggetti e alza il limite a 30 email/ora. Mittente: `myquicktag <no-reply@notifiche.myquicktag.it>`.
 - [x] SMTP di Resend e modelli italiani collegati a `myquicktag-prova` (14/10/2026, `applica.py lmxxoxrsrwmtunyqlpbh`):
       ora le email arrivano a **qualsiasi** indirizzo, non solo al team Supabase.
-- [ ] Prova del titolare sul Preview: registrazione con il codice e "Password dimenticata" con il codice.
+- [x] Prova del titolare sul Preview (14/10/2026): registrazione con il codice e "Password dimenticata" con il codice
+      funzionano; la vecchia password non è accettata come nuova. Corretto prima un difetto: tornando dall'app della
+      posta il telefono ricaricava la pagina, che ripartiva da email e password (ora ricorda il passaggio in corso).
 - [ ] Al rilascio (punto E): `python3 supabase/email/applica.py atlhrkkfovblkhgzfeuo` (produzione).
 - [ ] Dopo l'SMTP: valutare con il titolare se la pagina di accesso deve mettere il **codice** al primo posto e il link
       come alternativa (oggi è il contrario, perché finora l'email aveva solo il link).
@@ -65,7 +67,7 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [x] crea account con la propria email → conferma col link → la tag si attiva (12/10/2026);
 - [ ] il visitatore la vede da un altro telefono (QR) e prova "SALVA" → Pocket: **rimandato a dopo l'unione in `main`**
       (il Preview chiede l'accesso a Vercel a chi non è del team; deciso dal titolare il 13/10/2026);
-- [ ] seconda tag dalla dashboard; [ ] "Password dimenticata" → codice → nuova password → l'altro telefono deve
+- [ ] seconda tag dalla dashboard; [x] "Password dimenticata" → codice → nuova password (14/10/2026); [ ] l'altro telefono deve
       riaccedere; [ ] la vecchia password non funziona; [ ] "Esci da tutti i dispositivi";
 - [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari);
 - [ ] app installata su Android: aprire il link **direttamente in Chrome** (non dal browser interno di Gmail/WhatsApp,
