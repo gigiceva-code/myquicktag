@@ -90,6 +90,20 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 consenso promozionale facoltativo (salvato con data e versione del testo), comunicazioni di servizio, Supabase come
 fornitore dell'autenticazione e il servizio email scelto.
 
+**Privacy, cookie e termini (prima del lancio pubblico, non prima delle prove):**
+- Oggi i link "Privacy Policy" e "Termini di Vendita" in fondo alla home sono vuoti (`href="#"`): non esistono le pagine.
+- Il sito non usa cookie di profilazione né statistiche esterne: solo memoria tecnica del telefono (accesso, Pocket,
+  bozza). Per i soli strumenti tecnici di norma non serve il banner dei cookie, ma serve l'informativa.
+- Da sistemare nel codice: i caratteri (Google Fonts) e le icone dei link (servizio favicon di Google) si caricano dai
+  server di Google, che così ricevono l'indirizzo IP dei visitatori. Meglio servirli dal sito stesso.
+- Da scrivere: informativa privacy (titolare, email dell'account, contatti lasciati nel vasetto — di cui è titolare
+  l'attività, myquicktag li custodisce per suo conto —, fornitori Supabase, Vercel, Resend, durata, diritti),
+  informativa cookie, termini del servizio (con la regola sui nomi usati per imitare persone o marchi, sezione 2).
+- Serve dal titolare: nome e un recapito da indicare come titolare del trattamento (anche un'email dedicata).
+  Consigliata una revisione da un professionista prima del lancio.
+- Collaudo: 15/10/2026 il titolare prova da PC il secondo dispositivo ("Esci da tutti i dispositivi", riaccesso dopo
+  cambio password); iPhone sabato 17/10 (telefono della figlia); Android = il suo telefono.
+
 ---
 
 ## 1. Da decidere (prodotto)
