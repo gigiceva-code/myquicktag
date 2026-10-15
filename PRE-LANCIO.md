@@ -101,7 +101,7 @@ fornitore dell'autenticazione e il servizio email scelto.
   informativa cookie, termini del servizio (con la regola sui nomi usati per imitare persone o marchi, sezione 2).
 - Serve dal titolare: nome e un recapito da indicare come titolare del trattamento (anche un'email dedicata).
   Consigliata una revisione da un professionista prima del lancio.
-- Collaudo: 15/10/2026 il titolare prova da PC il secondo dispositivo ("Esci da tutti i dispositivi", riaccesso dopo
+- Collaudo: 16/10/2026 il titolare prova da PC il secondo dispositivo ("Esci da tutti i dispositivi", riaccesso dopo
   cambio password); iPhone sabato 17/10 (telefono della figlia); Android = il suo telefono.
 
 ---
