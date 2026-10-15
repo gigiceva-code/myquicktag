@@ -68,9 +68,10 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   (`lib/sessione.js`) chiede a Supabase chi è l'utente e controlla `tags.proprietario_id`: è l'unica prova di proprietà.
   Le **ricevute di prenotazione** (HMAC con `SESSION_SECRET`, 24 ore) valgono solo per una tag "in attesa" senza
   proprietario: servono a provare l'editor prima di avere un account. Il vecchio accesso "@nome + password" è dismesso
-  (`api/login.js`, `api/change-password.js` rimossi); le tag vecchie si collegano a un account una volta sola dalla
-  dashboard ("Hai una tag creata prima degli account?", `api/account.js` azione `collega-vecchia`).
-- `api/account.js`: elenco delle tag dell'account (dashboard) e collegamento delle tag vecchie.
+  (`api/login.js`, `api/change-password.js` rimossi). Tolto il 15/10/2026, su richiesta del titolare, anche il
+  collegamento delle tag "create prima degli account" (riquadro della dashboard e azione `collega-vecchia`): la
+  produzione non ha tag vecchie, quindi non servirà mai.
+- `api/account.js`: elenco delle tag dell'account (dashboard) e configurazione pubblica di Supabase.
 - **Pocket del visitatore (13/10/2026, testi approvati dal titolare):** "SALVA" sulla tag pubblica mette la tag nel
   Pocket (`pocket.html`) **solo su quel telefono** (`localStorage` `mqt_pocket`), senza account e senza dati al server.
   Al primo salvataggio un invito facoltativo; nel Pocket un riquadro "Ritrovalo con un tocco" per metterlo sulla
@@ -99,7 +100,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 152 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 150 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,

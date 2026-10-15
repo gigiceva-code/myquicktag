@@ -67,8 +67,8 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [x] crea account con la propria email → conferma col link → la tag si attiva (12/10/2026);
 - [ ] il visitatore la vede da un altro telefono (QR) e prova "SALVA" → Pocket: **rimandato a dopo l'unione in `main`**
       (il Preview chiede l'accesso a Vercel a chi non è del team; deciso dal titolare il 13/10/2026);
-- [ ] seconda tag dalla dashboard; [x] "Password dimenticata" → codice → nuova password (14/10/2026); [ ] l'altro telefono deve
-      riaccedere; [ ] la vecchia password non funziona; [ ] "Esci da tutti i dispositivi";
+- [x] seconda tag dalla dashboard (15/10/2026); [x] "Password dimenticata" → codice → nuova password (14/10/2026); [ ] l'altro telefono deve
+      riaccedere; [x] la vecchia password non funziona (15/10/2026); [ ] "Esci da tutti i dispositivi";
 - [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari);
 - [ ] app installata su Android: aprire il link **direttamente in Chrome** (non dal browser interno di Gmail/WhatsApp,
       che non permette l'installazione: lì compare "Apri dal browser Chrome per installare").

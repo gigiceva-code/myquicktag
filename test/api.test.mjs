@@ -180,24 +180,6 @@ const [a1,a2]=await Promise.all([
 ok([a1.code,a2.code].filter(c=>c===200).length===1 && [anna.id,bruno.id].includes(riga('contesa').proprietario_id),'stessa ricevuta usata da due account insieme: un solo proprietario');
 
 // ============================================================
-// 3. TAG CREATE COL VECCHIO ACCESSO: collegamento all'account (una volta sola)
-// ============================================================
-const { proteggiPassword } = await import(new URL('../lib/password.js', import.meta.url).href);
-const vecchiaHash=crypto.createHash('sha256').update('vecchia1').digest('hex');
-rows.push({id:'leg',username_system:'legacy',stato:'attivo',password:await proteggiPassword(vecchiaHash),created_at:new Date().toISOString(),data_scadenza:'2099-01-01',proprietario_id:null});
-r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'collega-vecchia',tag:'legacy',pwd:'1'.repeat(64)}});
-ok(r.code===403 && !riga('legacy').proprietario_id,'collega tag vecchia: password sbagliata rifiutata');
-r=await call('account.js',{method:'POST',body:{azione:'collega-vecchia',tag:'legacy',pwd:vecchiaHash}});
-ok(r.code===401,'collega tag vecchia: serve la sessione dell\'account');
-r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'collega-vecchia',tag:'legacy',pwd:vecchiaHash}});
-ok(r.code===200 && riga('legacy').proprietario_id===anna.id && riga('legacy').password===null,'collega tag vecchia: collegata all\'account e vecchia password cancellata');
-r=await call('account.js',{method:'POST',headers:conSessione(jwtBruno),body:{azione:'collega-vecchia',tag:'legacy',pwd:vecchiaHash}});
-ok(r.code===403 && riga('legacy').proprietario_id===anna.id,'collega tag vecchia: non si ricollega a un altro account');
-let ultimo;
-for (let i=0;i<6;i++) ultimo=await call('account.js',{method:'POST',ip:'5.5.5.5',headers:conSessione(jwtBruno),body:{azione:'collega-vecchia',tag:'legacy',pwd:'2'.repeat(64)}});
-ok(ultimo.code===429,'collega tag vecchia: il 6° tentativo in 15 minuti è bloccato');
-
-// ============================================================
 // 4. CONTATTI DEL VASETTO, CLICK, CAMPI PRIVATI
 // ============================================================
 riga('prova').lead_capture_attivo='true';
@@ -245,6 +227,7 @@ ok(riga('prova').username_display!=='@ALTRONOME','nome mostrato diverso dal nome
 // ============================================================
 // 5. LIMITI AI TENTATIVI
 // ============================================================
+let ultimo;
 for (let i=0;i<4;i++) ultimo=await call('add-lead.js',{method:'POST',ip:'8.8.8.8',body:{u:'prova',nome:'X',contatto:'1'+i}});
 ok(ultimo.code===429,'vasetto: il 4° contatto in 10 minuti dallo stesso IP è bloccato');
 for (let i=0;i<11;i++) ultimo=await call('check-and-create.js',{method:'POST',ip:'7.7.7.7',body:{tag:'nome'+i}});
@@ -406,10 +389,8 @@ delete process.env.RINNOVO_GRATUITO;
   ok(!logs.join(' ').includes('segreto'),'errore del database: i valori della riga non finiscono nei log');
   globalThis.fetch=async (url,opt)=>String(url).includes('consuma_tentativo') ? new Response('boom',{status:500}) : fetchVero(url,opt);
   const ce2=console.error; console.error=()=>{};
-  r=await call('account.js',{method:'POST',headers:conSessione(jwtBruno),body:{azione:'collega-vecchia',tag:'colnuova',pwd:'0'.repeat(64)}});
   const rPren=await call('check-and-create.js',{method:'POST',body:{tag:'limitiaperti'}});
   console.error=ce2; globalThis.fetch=fetchVero;
-  ok(r.code===429,'limiti non verificabili: collegamento tag vecchia rifiutato (limite "chiuso")');
   ok(rPren.code===200,'limiti non verificabili: la prenotazione resta consentita (limite "aperto")');
   ok(!fs.existsSync(new URL('login.js',R)) && !fs.existsSync(new URL('change-password.js',R)),'vecchio accesso "@nome + password" dismesso (login.js e change-password.js rimossi)');
   ok(fs.readdirSync(new URL(R)).filter(f=>f.endsWith('.js')).length<=11,'funzioni Vercel entro il limite (≤ 11 su 12)');

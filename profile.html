@@ -683,7 +683,7 @@ async function caricaDatiDashboard(nomeMinuto) {
             // Tag con un titolare: serve l'account che la possiede (lo verifica il server: sei_proprietario)
             if (data.fields.has_password && !data.fields.sei_proprietario) {
                 if (mqtSessione.haAccount()) {
-                    alert("Questa tag non è collegata al tuo account.\n\nSe è una tag creata prima degli account, collegala dalla pagina \"Le mie tag\".");
+                    alert("Questa tag non è collegata al tuo account.");
                     window.location.href = "/dashboard.html";
                 } else {
                     mqtSessione.scaduta(nomeMinuto);

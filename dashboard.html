@@ -26,22 +26,11 @@
 
     <div id="contenuto">
         <div class="card" id="avviso-non-tua" style="display: none; border-color: rgba(255,171,0,0.4);">
-            <p class="note" style="margin: 0; color: #ffab00;">La tag che stavi aprendo non è collegata a questo account. Qui trovi le tue tag; se è una tag creata prima degli account, collegala qui sotto.</p>
+            <p class="note" style="margin: 0; color: #ffab00;">La tag che stavi aprendo non è collegata a questo account. Qui trovi le tue tag.</p>
         </div>
         <div id="elenco"></div>
 
         <a href="/?nuova=1#s1" class="btn btn-primary" id="btn-aggiungi"><i class="fas fa-plus"></i> Aggiungi una tag</a>
-
-        <details class="card" style="margin-top: 14px;">
-            <summary style="cursor: pointer; font-size: 0.85rem;">Hai una tag creata prima degli account?</summary>
-            <p class="note">Collegala una volta sola con il @nome e la vecchia password: da quel momento si entra solo con questo account.</p>
-            <form id="f-collega" style="margin-top: 12px;">
-                <div class="field"><label for="cv-tag">@nome della tag</label><input type="text" id="cv-tag" autocomplete="off" autocapitalize="off" required></div>
-                <div class="field"><label for="cv-pwd">Vecchia password della tag</label><input type="password" id="cv-pwd" autocomplete="off" required></div>
-                <button class="btn btn-secondary" type="submit">Collega al mio account</button>
-                <div class="messaggio" role="status"></div>
-            </form>
-        </details>
 
         <!-- ACCOUNT -->
         <div class="card" style="margin-top: 22px;">
@@ -154,26 +143,6 @@
             document.getElementById('loading').textContent = 'Impossibile caricare le tue tag. Controlla la connessione e riprova.';
         }
     }
-
-    // Collega una tag creata col vecchio accesso
-    async function sha256(t) {
-        const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
-        return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-    document.getElementById('f-collega').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const m = this.querySelector('.messaggio');
-        const tag = document.getElementById('cv-tag').value.trim();
-        try {
-            const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ azione: 'collega-vecchia', tag, pwd: await sha256(document.getElementById('cv-pwd').value) }) });
-            const d = await r.json();
-            if (!d.success) return msg(m, d.error || 'Collegamento non riuscito', false);
-            msg(m, 'Tag collegata ✅', true);
-            this.reset();
-            disegna(await caricaTags());
-        } catch (err) { msg(m, 'Errore di connessione. Riprova.', false); }
-    });
 
     // Cambio password: si conferma prima quella attuale
     document.getElementById('f-password').addEventListener('submit', async function (e) {
