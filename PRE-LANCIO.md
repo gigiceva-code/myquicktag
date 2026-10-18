@@ -59,7 +59,7 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [x] Prova del titolare sul Preview (14/10/2026): registrazione con il codice e "Password dimenticata" con il codice
       funzionano; la vecchia password non è accettata come nuova. Corretto prima un difetto: tornando dall'app della
       posta il telefono ricaricava la pagina, che ripartiva da email e password (ora ricorda il passaggio in corso).
-- [ ] Al rilascio (punto E): `python3 supabase/email/applica.py atlhrkkfovblkhgzfeuo` (produzione).
+- [x] Produzione collegata il 18/10/2026 (`applica.py atlhrkkfovblkhgzfeuo`).
 - [ ] Dopo l'SMTP: valutare con il titolare se la pagina di accesso deve mettere il **codice** al primo posto e il link
       come alternativa (oggi è il contrario, perché finora l'email aveva solo il link).
 
@@ -79,10 +79,10 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - (non necessaria ora) nome protetto riservato a un'email: richiede un secondo indirizzo del team Supabase.
 
 **E. Rilascio in produzione (dopo D e la revisione):**
-- [ ] Backup: esportare in CSV `tags` e `nomi_riservati` dal Table Editor (conservarli fuori da GitHub).
-- [ ] Applicare `supabase/migrations/20261011000000_account_proprietari.sql` al progetto `myquicktag` (solo aggiunte).
-- [ ] Ripetere A sul progetto di produzione `myquicktag` con Site URL `https://myquicktag.it` (Redirect `https://myquicktag.it/**`)
-      e password minima 8.
+- [x] Backup (18/10/2026): `nomi_riservati` esportata in CSV (3.238 nomi) e salvata dal titolare sul suo PC; `tags` vuota.
+- [x] Applicata `20261011000000_account_proprietari.sql` al progetto `myquicktag` (18/10/2026, con conferma del titolare).
+- [x] Produzione `myquicktag` (18/10/2026): Site URL `https://myquicktag.it`, Redirect `https://myquicktag.it/**` e
+      `https://www.myquicktag.it/**`, password minima 8; SMTP di Resend e modelli italiani (`applica.py atlhrkkfovblkhgzfeuo`).
 - [ ] Unire `sviluppo-v2` in `main` (la tabella `tags` della produzione è già vuota dal 13/10/2026).
 - Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
   codice vecchio (si può lasciare).

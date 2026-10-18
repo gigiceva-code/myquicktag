@@ -41,7 +41,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   `nomi_riservati` (nomi protetti: system/black/gold, con `categoria`, `attivo`, `assegnato_a`).
   Tutte con RLS attivo e nessuna policy: ci accede solo il server con la chiave segreta (scelta voluta: il browser non legge mai le tabelle).
   Struttura e funzioni SQL in `supabase/migrations/` (vanno applicate anche al database, non bastano nel codice).
-  ⚠️ La migrazione `20261011000000_account_proprietari.sql` **non è ancora applicata alla produzione**.
+  La migrazione `20261011000000_account_proprietari.sql` è applicata anche alla produzione dal 18/10/2026.
 - **Supabase prova:** progetto `myquicktag-prova` (id `lmxxoxrsrwmtunyqlpbh`, Francoforte, gratuito), creato l'11/10/2026
   con tutte le 7 migrazioni. Serve al Preview di Vercel e alle prove di account/recupero password.
   Contiene il nome gold di prova `barsport` assegnato a `mario@esempio.it`.
@@ -49,7 +49,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   (codici) le manda Supabase: senza un servizio SMTP collegato arrivano **solo ai membri del team del progetto**
   (limite di Supabase), quindi prima del lancio va collegato un servizio di invio (vedi `PRE-LANCIO.md`).
 - **Resend (email):** dominio `notifiche.myquicktag.it` verificato il 14/10/2026 (record DNS su register.it) e collegato a
-  `myquicktag-prova`; la produzione si collega al rilascio.
+  `myquicktag-prova` e, dal 18/10/2026, anche a `myquicktag` (produzione).
   Modelli in italiano e script di collegamento in `supabase/email/` (vedi `PRE-LANCIO.md` → C).
   Il Supabase di prova risponde con codici di **8 cifre** (`mailer_otp_length`); la pagina di accesso li accetta.
 - **Airtable:** non più usato (le basi restano solo come archivio).
