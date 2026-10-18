@@ -247,7 +247,12 @@ function renderizzaTagCompleta(fields) {
     }
     
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('welcome') === '1') { mostraWelcomeOverlay(); }
+    // Invito a installare (subito dopo l'attivazione): mai dentro l'app già installata. Su iPhone l'app
+    // installata da questa pagina può conservare "welcome=1" nell'indirizzo e riaprirebbe l'invito ogni volta.
+    if (urlParams.get('welcome') === '1') {
+        if (appInstallata()) window.history.replaceState({}, '', `${window.location.origin}/tag.html?u=${usernameCorrente}`);
+        else mostraWelcomeOverlay();
+    }
     if (urlParams.get('mode') === 'draft') {
         if (fields.stato === 'attivo') {
             const ctaPubblica = document.getElementById('cta-pubblica-container');
@@ -1632,6 +1637,12 @@ function chiudiWelcomeEMostraTag() {
 // INSTALLAZIONE PWA E SERVICE WORKER
 // ============================================================
 let pwaInstallEvent = null;
+
+// La tag è aperta come app dalla schermata Home (iPhone: navigator.standalone; Android: display-mode)
+function appInstallata() {
+    return window.navigator.standalone === true ||
+        ['standalone', 'fullscreen', 'minimal-ui'].some(m => window.matchMedia(`(display-mode: ${m})`).matches);
+}
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault(); 
