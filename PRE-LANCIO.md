@@ -69,8 +69,9 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
       (il Preview chiede l'accesso a Vercel a chi non è del team; deciso dal titolare il 13/10/2026);
 - [x] seconda tag dalla dashboard (15/10/2026); [x] "Password dimenticata" → codice → nuova password (14/10/2026); [ ] l'altro telefono deve
       riaccedere; [x] la vecchia password non funziona (15/10/2026); [ ] "Esci da tutti i dispositivi";
-- [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari);
-- [ ] app installata su Android: aprire il link **direttamente in Chrome** (non dal browser interno di Gmail/WhatsApp,
+- [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari): **rimandata a dopo l'unione in `main`**,
+      sul sito vero (deciso dal titolare il 18/10/2026: sul Preview serve l'accesso a Vercel anche sull'iPhone);
+- [x] app installata su Android (18/10/2026: due tag dello stesso account installate, tutto a posto): aprire il link **direttamente in Chrome** (non dal browser interno di Gmail/WhatsApp,
       che non permette l'installazione: lì compare "Apri dal browser Chrome per installare").
       L'installazione si fa dalla **tag pubblica** (`/u/<nome>`), non dall'editor (l'editor non è un'app installabile).
       Corretto il 12/10/2026 su `sviluppo-v2`: il manifest non elenca più l'icona SVG, che Chrome sceglieva e scartava
