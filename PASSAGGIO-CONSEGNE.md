@@ -1,7 +1,7 @@
 # Passaggio di consegne — myquicktag
 
 Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md`
-(decisioni aperte e cose da fare prima del lancio). Aggiornato al 14/10/2026.
+(decisioni aperte e cose da fare prima del lancio). Aggiornato al 18/10/2026.
 
 ---
 
@@ -112,9 +112,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Prossimi passi (in ordine)
 
-0. **Account con Supabase Auth (11/10/2026) — da collaudare e configurare**: codice su `sviluppo-v2`, migrazione
-   applicata solo al database di prova. Prima dell'unione in `main` servono le configurazioni manuali e le prove
-   elencate in `PRE-LANCIO.md` → "Account". Non unire in `main` prima della revisione.
+0. **Account con Supabase Auth: online su myquicktag.it dal 18/10/2026** (pull request #7 unita in `main`, produzione
+   configurata). Restano le prove sul sito vero: account del titolare, iPhone (app installata), visitatore da un altro
+   telefono con "SALVA" → Pocket (vedi `PRE-LANCIO.md` → "Account", punti D ed E).
 1. **Audit di UI, UX e marketing: fatto (04/10/2026)** → `AUDIT-UI-UX-MARKETING.md` (schermate in `audit/`).
    Contiene il piano di lavoro A/B/C: prima le correzioni (A, a partire dall'errore "contenuti non pubblicati
    all'attivazione"), poi i testi (B, serve l'ok del titolare) e le decisioni di prodotto (C).

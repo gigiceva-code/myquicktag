@@ -83,7 +83,8 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [x] Applicata `20261011000000_account_proprietari.sql` al progetto `myquicktag` (18/10/2026, con conferma del titolare).
 - [x] Produzione `myquicktag` (18/10/2026): Site URL `https://myquicktag.it`, Redirect `https://myquicktag.it/**` e
       `https://www.myquicktag.it/**`, password minima 8; SMTP di Resend e modelli italiani (`applica.py atlhrkkfovblkhgzfeuo`).
-- [ ] Unire `sviluppo-v2` in `main` (la tabella `tags` della produzione è già vuota dal 13/10/2026).
+- [x] Unito `sviluppo-v2` in `main` (18/10/2026, pull request #7, merge commit).
+- [ ] Prove sul sito vero: account del titolare con email vera, iPhone, visitatore da un altro telefono (SALVA → Pocket).
 - Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
   codice vecchio (si può lasciare).
 
