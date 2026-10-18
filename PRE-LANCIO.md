@@ -95,7 +95,7 @@ fornitore dell'autenticazione e il servizio email scelto.
 - Il sito non usa cookie di profilazione né statistiche esterne: solo memoria tecnica del telefono (accesso, Pocket,
   bozza). Per i soli strumenti tecnici di norma non serve il banner dei cookie, ma serve l'informativa.
 - [x] Caratteri: dal 18/10/2026 il carattere Inter è servito dal sito stesso (`fonts/`, licenza libera OFL), non più da
-      Google Fonts. Dal 18/10 lo carica anche la home (richiesta del titolare); `celebration.html` usa ancora il carattere del telefono.
+      Google Fonts. Dal 18/10 lo caricano anche la home e `celebration.html` (richiesta del titolare): ora tutte le pagine usano Inter.
 - [ ] Icone dei link nell'editor (`edit-logic.js`, servizio favicon di `www.google.com`): ancora da Google.
 - Da scrivere: informativa privacy (titolare, email dell'account, contatti lasciati nel vasetto — di cui è titolare
   l'attività, myquicktag li custodisce per suo conto —, fornitori Supabase, Vercel, Resend, durata, diritti),
