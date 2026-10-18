@@ -94,8 +94,9 @@ fornitore dell'autenticazione e il servizio email scelto.
 - Oggi i link "Privacy Policy" e "Termini di Vendita" in fondo alla home sono vuoti (`href="#"`): non esistono le pagine.
 - Il sito non usa cookie di profilazione né statistiche esterne: solo memoria tecnica del telefono (accesso, Pocket,
   bozza). Per i soli strumenti tecnici di norma non serve il banner dei cookie, ma serve l'informativa.
-- Da sistemare nel codice: i caratteri (Google Fonts) e le icone dei link (servizio favicon di Google) si caricano dai
-  server di Google, che così ricevono l'indirizzo IP dei visitatori. Meglio servirli dal sito stesso.
+- [x] Caratteri: dal 18/10/2026 il carattere Inter è servito dal sito stesso (`fonts/`, licenza libera OFL), non più da
+      Google Fonts. Home e `celebration.html` non lo caricavano nemmeno prima (usano il carattere del telefono): lasciate così.
+- [ ] Icone dei link nell'editor (`edit-logic.js`, servizio favicon di `www.google.com`): ancora da Google.
 - Da scrivere: informativa privacy (titolare, email dell'account, contatti lasciati nel vasetto — di cui è titolare
   l'attività, myquicktag li custodisce per suo conto —, fornitori Supabase, Vercel, Resend, durata, diritti),
   informativa cookie, termini del servizio (con la regola sui nomi usati per imitare persone o marchi, sezione 2).
