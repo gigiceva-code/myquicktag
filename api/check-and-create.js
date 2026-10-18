@@ -1,18 +1,13 @@
-import crypto from 'crypto';
 import { trovaTag, creaTag, eliminaTag } from '../lib/db.js';
 import { controllaNome } from '../lib/nomi-riservati.js';
 import { formaCanonica } from '../lib/nome-canonico.js';
 import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
+import { generaRicevuta, tokenAccount, utenteDaToken } from '../lib/sessione.js';
 
-// "Ricevuta" della prenotazione: un token di sessione firmato dal server (stesso formato
-// di login.js), valido solo fino alla scadenza delle 24h. Solo chi ha prenotato lo riceve,
-// quindi solo lui può modificare la tag in attesa e impostarne la prima password.
-function generateReservationToken(username, createdTime) {
-  const expiry = new Date(createdTime).getTime() + (1000 * 60 * 60 * 24);
-  const payload = `${username}.${expiry}`;
-  const signature = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(payload).digest('hex');
-  return `${payload}.${signature}`;
-}
+// "Ricevuta" della prenotazione (lib/sessione.js): solo chi ha prenotato la riceve, vale 24 ore e
+// permette di usare l'editor e di attivare la tag (con un account) finché nessuno la possiede.
+// Chi prenota già dentro il proprio account (sessione nell'intestazione Authorization) diventa
+// subito proprietario della tag in attesa: la ritrova nella dashboard.
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Metodo non consentito' });
@@ -31,9 +26,16 @@ export default async function handler(req, res) {
     }
 
     try {
+        // Account (facoltativo): se la sessione è indicata ma non è valida si chiede di riaccedere
+        const jwt = tokenAccount(req);
+        const utente = jwt ? await utenteDaToken(jwt) : null;
+        if (jwt && !utente) {
+            return res.status(401).json({ success: false, codice: 'sessione', message: 'Sessione scaduta: accedi di nuovo.' });
+        }
+
         // Nomi di sistema, black list e gold list (tabella nomi_riservati + lib/nomi-riservati.js):
-        // valgono anche per chi chiama direttamente l'API
-        const nomeNonDisponibile = await controllaNome(tag);
+        // valgono anche per chi chiama direttamente l'API. Un nome assegnato vale per quell'email.
+        const nomeNonDisponibile = await controllaNome(tag, utente?.email);
         if (nomeNonDisponibile) {
             return res.status(400).json({ success: false, codice: nomeNonDisponibile.codice, message: nomeNonDisponibile.messaggio, email: nomeNonDisponibile.email });
         }
@@ -73,14 +75,16 @@ export default async function handler(req, res) {
         // 2. Prenotazione: crea il record pulito con stato "in attesa" (Nuovo Timer).
         // ANTI-COLLISIONE: username_system è "unique" nel database, quindi se due richieste
         // arrivano insieme solo la prima riesce a creare la riga; l'altra riceve null.
-        const newRecord = await creaTag({ username_system: tag, stato: "in attesa" });
+        const nuovaTag = { username_system: tag, stato: "in attesa" };
+        if (utente) nuovaTag.proprietario_id = utente.id;
+        const newRecord = await creaTag(nuovaTag);
         if (!newRecord) {
             return res.status(400).json({ success: false, message: 'Spiacente, questo @tag è già occupato' });
         }
 
              // Il client usa questo createdTime (fonte server) per calcolare la scadenza a 24h,
              // invece di affidarsi al proprio orologio locale.
-             res.status(200).json({ success: true, message: 'Tag riservato!', createdTime: newRecord.createdTime, username: tag, sessionToken: generateReservationToken(tag, newRecord.createdTime) });
+             res.status(200).json({ success: true, message: 'Tag riservato!', createdTime: newRecord.createdTime, username: tag, sessionToken: generaRicevuta(tag, newRecord.createdTime), proprietario: !!utente });
 
     } catch (error) {
         console.error("Errore Sistema:", error);

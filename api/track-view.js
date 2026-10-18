@@ -94,7 +94,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true });
 
   } catch (e) {
-    console.error("CRASH TRACK-VIEW:", e);
-    return res.status(500).json({ error: e.message });
+    console.error("CRASH TRACK-VIEW:", e.dettagli || e.message);
+    return res.status(500).json({ error: 'Errore server' });
   }
 }

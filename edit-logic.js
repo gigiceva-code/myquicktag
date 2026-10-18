@@ -755,7 +755,7 @@
 
                 if (response.status === 401) {
                     // Il lavoro è già al sicuro nella bozza locale (mqt_draft_full_): non va perso
-                    if (statoUtente === 'attivo') {
+                    if (statoUtente === 'attivo' || mqtSessione.haAccount()) {
                         mqtSessione.scaduta(NOME_SISTEMA);
                     } else {
                         alert("Prenotazione non valida su questo dispositivo\n\nLa prenotazione è scaduta oppure è stata fatta da un altro dispositivo o browser. Torna alla home per verificare il nome.");
@@ -770,7 +770,6 @@
                     return;
                 }
                 const data = await response.json();
-                if (data.sessionToken) mqtSessione.salva(NOME_SISTEMA, data.sessionToken);
                 
                 if (data.success) {
                     window.onbeforeunload = null; // Rimuove eventuali blocchi di uscita
@@ -813,28 +812,10 @@
        function formattaBadge(testoBruto) {
             const el = document.getElementById('tag-username');
             if(!el) return;
-            if (!testoBruto) testoBruto = "TUONOME";
-            let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
-            if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
+            // Nome scritto in modo sicuro e adattato alla larghezza della capsula (session.js)
+            mqtBadgeNome.scrivi(el, testoBruto);
 
-            // L'ancoraggio esatto della @ come in tag.html
-            el.innerHTML = `<span class="brand-text" style="position: relative;"><span class="at-symbol" style="position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;">@</span>${testo}</span>`;
-
-            el.style.whiteSpace = "normal"; el.style.wordBreak = "normal"; el.style.overflowWrap = "break-word";
-
-            if (testo.length > 25) { el.style.fontSize = "0.85rem"; } 
-            else if (testo.length > 18) { el.style.fontSize = "0.95rem"; } 
-            else { el.style.fontSize = "1.05rem"; }
-            
-            // IL BISTURI PER IL DIVIDER: Nessun blocco sugli spazi, segue solo la naturale larghezza dei caratteri
-            const wrapper = document.getElementById('name-capsule-wrapper');
-            if (wrapper) {
-                if (testo.length < 16) {
-                    wrapper.classList.add('nome-corto');
-                } else {
-                    wrapper.classList.remove('nome-corto');
-                }
-            }
+            // Rombo sotto o tra le righe (forma "divider"): lo decide mqtBadgeNome misurando il nome
         }
       async function inizializzaPagina() {  
             if(NOME_SISTEMA === "tuonome.it") {
@@ -853,13 +834,16 @@ const tokenAttuale = tokenPerLettura[NOME_SISTEMA] || '';
 const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeURIComponent(tokenAttuale)}`);
                 const data = await response.json();
 
-                // Account attivo ma sessione scaduta: login prima di iniziare a modificare
-                if (data.fields && data.fields.has_password && !mqtSessione.valida(NOME_SISTEMA)) {
-                    mqtSessione.scaduta(NOME_SISTEMA);
+                // Tag con un titolare: si modifica solo con l'account che la possiede (verificato dal server)
+                if (data.fields && data.fields.has_password && !data.fields.sei_proprietario) {
+                    if (mqtSessione.haAccount()) {
+                        alert("Questa tag non è collegata al tuo account.");
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        mqtSessione.scaduta(NOME_SISTEMA);
+                    }
                     return;
                 }
-                // Sessione scorrevole: token rinnovato dal server
-                if (data.sessionToken) mqtSessione.salva(NOME_SISTEMA, data.sessionToken);
                 // Tag disattivata (90 giorni + 14 di grazia trascorsi): si torna alla dashboard per rinnovare
                 if (data.abbonamento && data.abbonamento.fase === 'scaduta') {
                     alert("Tag disattivata\n\nIl piano e il periodo di grazia sono terminati. Rinnova dalla dashboard per riattivarla e modificarla.");

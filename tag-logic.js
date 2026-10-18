@@ -111,7 +111,7 @@ async function avviaFlusso(username) {
         
         // Verifica se l'utente è proprietario tramite array multiplo O tramite il vecchio login
         // Proprietario = la tag è nel portachiavi del dispositivo E la sua sessione non è scaduta
-        const isOwner = (chiaviSalvate.some(u => u.toLowerCase() === username.toLowerCase()) || 
+        let isOwner = (chiaviSalvate.some(u => u.toLowerCase() === username.toLowerCase()) || 
                         (singleLoggedUser && singleLoggedUser.toLowerCase() === username.toLowerCase())) &&
                         mqtSessione.valida(username);
 
@@ -137,8 +137,8 @@ if (isOwner) {
 const tokenParam = tokenPerBozza ? `&token=${encodeURIComponent(tokenPerBozza)}` : '';
 const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}${tokenParam}`);
         const data = await response.json();
-        // Sessione scorrevole: il server restituisce un token rinnovato al proprietario
-        if (data.sessionToken) mqtSessione.salva(username, data.sessionToken);
+        // Il proprietario lo conferma il server (sessione dell'account che possiede la tag)
+        if (data.fields && data.fields.has_password && !data.fields.sei_proprietario) isOwner = false;
         
         if (!data.success || !data.fields) {
             mostraShowroom(username);
@@ -210,30 +210,10 @@ const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}$
 function formattaBadge(testoBruto) {
     const el = document.getElementById('tag-username');
     if(!el) return;
-    if (!testoBruto) testoBruto = "TUONOME";
-    let testo = testoBruto.replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
-    if(testo.startsWith('@')) { testo = testo.substring(1).trim(); }
+    // Nome scritto in modo sicuro e adattato alla larghezza della capsula (session.js)
+    mqtBadgeNome.scrivi(el, testoBruto);
 
-    // BLINDAGGIO XSS: Usiamo una struttura sicura con textContent per il nome
-    el.innerHTML = `<span class="brand-text" style="position: relative;"><span class="at-symbol" style="position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;">@</span><span id="safe-username-span"></span></span>`;
-    
-    const safeSpan = document.getElementById('safe-username-span');
-    if (safeSpan) safeSpan.textContent = testo; // Protezione totale contro script malevoli
-
-    el.style.whiteSpace = "normal"; el.style.wordBreak = "normal"; el.style.overflowWrap = "break-word";
-
-    if (testo.length > 25) { el.style.fontSize = "0.85rem"; } 
-    else if (testo.length > 18) { el.style.fontSize = "0.95rem"; } 
-    else { el.style.fontSize = "1.05rem"; }
-    
-    const wrapper = document.getElementById('name-capsule-wrapper');
-    if (wrapper) {
-        if (testo.length < 16) {
-            wrapper.classList.add('nome-corto');
-        } else {
-            wrapper.classList.remove('nome-corto');
-        }
-    }
+    // Rombo sotto o tra le righe (forma "divider"): lo decide mqtBadgeNome misurando il nome
 }
 function renderizzaTagCompleta(fields) {
     const container = document.getElementById('profile-content');
@@ -326,7 +306,10 @@ function gestisciVisibilitaCaselle(fields) {
 
     let canali = [];
     try { canali = JSON.parse(fields.config_canali || '[]'); } catch(e) {}
-    const hasNetwork = !!fields.sito_web || !!fields.telefono1 || !!fields.email || (fields.config_canali && fields.config_canali !== '[]') || (fields.partners_data && fields.partners_data !== '[]');
+    // Telefoni e indirizzo stanno dentro modulo_vcf (testo JSON): basta un valore compilato
+    let haRubrica = false;
+    try { haRubrica = Object.values(JSON.parse(fields.modulo_vcf || '{}')).some(v => String(v || '').trim() !== ''); } catch (e) {}
+    const hasNetwork = !!fields.sito_web || haRubrica || !!fields.email || (fields.config_canali && fields.config_canali !== '[]') || (fields.partners_data && fields.partners_data !== '[]');
     const elNetwork = document.getElementById('room-network');
     if (elNetwork) elNetwork.style.display = hasNetwork ? 'flex' : 'none';
 
@@ -1387,116 +1370,56 @@ window.addEventListener('popstate', (e) => {
 });
 
 // ============================================================
-// GESTIONE TAG POCKET (IBRIDA: LOCALE + CLOUD SYNC)
+// POCKET DEL VISITATORE (solo su questo telefono, senza account)
 // ============================================================
-// Fonde l'archivio locale con quello salvato su Airtable (multi-dispositivo)
-async function fondiPocketConCloud(pocketLocale, utenteLoggato) {
-    if (!utenteLoggato) return pocketLocale;
+// Il visitatore salva la tag con "SALVA" e la ritrova nel Pocket (/pocket.html) insieme alle altre.
+// Niente registrazione e niente dati inviati al server: l'elenco resta nel browser (mqt_pocket).
+function salvaNelPocketCorrente() {
+    const usernameTag = String(cacheDatiUtente.username_system || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    if (!usernameTag) return;
+    const nomeVisualizzato = cacheDatiUtente.username_display || cacheDatiUtente.username_system;
+
+    let pocket = [];
+    try { pocket = JSON.parse(localStorage.getItem('mqt_pocket') || '[]'); } catch (e) { pocket = []; }
+    if (!Array.isArray(pocket)) pocket = [];
+
+    if (pocket.some(item => item.username === usernameTag)) {
+        mostraOverlayPocket("TAG GIÀ SALVATA", "Questa tag è già nel tuo Pocket.");
+        return;
+    }
+
+    pocket.push({
+        username: usernameTag,
+        nome: nomeVisualizzato,
+        url: `${window.location.origin}/u/${usernameTag}`,
+        dataSalvataggio: new Date().toISOString()
+    });
+    try { localStorage.setItem('mqt_pocket', JSON.stringify(pocket)); } catch (e) {
+        mostraToast('Non riesco a salvare su questo browser');
+        return;
+    }
+
+    const btnPocketText = document.getElementById('testo-salva-top');
+    const dotSalva = document.getElementById('dot-salva');
+    if (btnPocketText && dotSalva) {
+        btnPocketText.textContent = 'SALVATO ✓';
+        btnPocketText.style.color = 'var(--theme-border, #d4af37)';
+        dotSalva.style.animation = 'none';
+        dotSalva.style.backgroundColor = 'var(--theme-border, #d4af37)';
+        dotSalva.style.boxShadow = '0 0 8px var(--theme-border, #d4af37)';
+    }
+
+    // Solo al primo salvataggio: invito facoltativo a mettere il Pocket sulla schermata Home
+    let primaVolta = false;
     try {
-        const cacheBuster = Date.now();
-        const response = await fetch(`/api/get-profile?u=${utenteLoggato}&_cb=${cacheBuster}&token=${encodeURIComponent(mqtSessione.token(utenteLoggato))}`);
-        const data = await response.json();
-
-        if (!data.success || !data.fields || !data.fields.pocket_cloud) {
-            return pocketLocale;
-        }
-
-        let pocketCloud = [];
-        try {
-            pocketCloud = JSON.parse(data.fields.pocket_cloud);
-        } catch(e) {
-            return pocketLocale;
-        }
-
-        const mappaUnita = {};
-        [...pocketCloud, ...pocketLocale].forEach(contatto => {
-            const esistente = mappaUnita[contatto.username];
-            if (!esistente || new Date(contatto.dataSalvataggio) > new Date(esistente.dataSalvataggio)) {
-                mappaUnita[contatto.username] = contatto;
-            }
-        });
-
-        return Object.values(mappaUnita);
-
-    } catch (error) {
-        console.error("Merge pocket cloud fallito, uso solo il dato locale.", error);
-        return pocketLocale;
-    }
-}
-
-async function salvaNelPocketCorrente() {
-    const usernameTag = cacheDatiUtente.username_system || window.location.pathname.split('u=')[1] || "Sconosciuto";
-    const nomeVisualizzato = cacheDatiUtente.username_display || cacheDatiUtente.username_system || "myquicktag";
-    
-    let pocketLocale = [];
-    try {
-        pocketLocale = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
-    } catch(e) {
-        pocketLocale = [];
-    }
-
-    const utenteLoggato = localStorage.getItem('mqt_logged_user');
-    pocketLocale = await fondiPocketConCloud(pocketLocale, utenteLoggato);
-    
-    const giaEsistente = pocketLocale.find(item => item.username === usernameTag);
-    
-    if (!giaEsistente) {
-        // 1. NON ESISTE: LO SALVIAMO IN MEMORIA LOCALE (Veloce)
-        pocketLocale.push({
-            username: usernameTag,
-            nome: nomeVisualizzato,
-            url: window.location.href.split('?')[0] + '?u=' + usernameTag,
-            dataSalvataggio: new Date().toISOString()
-        });
-        localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
-        
-        // 2. CLOUD SYNC: Se c'è un utente loggato, salva su Airtable in background
-        if (utenteLoggato) {
-            sincronizzaPocketCloud(utenteLoggato, pocketLocale);
-        }
-        
-        // 3. Aggiorniamo visivamente il led
-        const btnPocketText = document.getElementById('testo-salva-top');
-        const dotSalva = document.getElementById('dot-salva');
-        if (btnPocketText && dotSalva) {
-            btnPocketText.innerHTML = 'SALVATO ✓';
-            btnPocketText.style.color = 'var(--theme-border, #d4af37)';
-            dotSalva.style.animation = 'none';
-            dotSalva.style.backgroundColor = 'var(--theme-border, #d4af37)';
-            dotSalva.style.boxShadow = '0 0 8px var(--theme-border, #d4af37)';
-        }
-        
-        mostraOverlayPocket("TAG SALVATA", "Contatto salvato con successo nel tuo archivio.");
-    } else {
-        // Anche se il contatto esisteva già, il merge potrebbe aver portato dati nuovi da altri dispositivi
-        localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
-        mostraOverlayPocket("TAG PRESENTE", "Questa tag si trova già nel tuo archivio.");
-    }
-}
-// MOTORE DI SINCRONIZZAZIONE SILENZIOSA (Lusso)
-async function sincronizzaPocketCloud(utente, pocketArray) {
-    try {
-                   let tokenSalvatiPocket = {};
-        try {
-            tokenSalvatiPocket = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
-        } catch(e) {
-            tokenSalvatiPocket = {};
-        }
-        await fetch('/api/update-profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username_system: utente,
-                pocket_cloud: JSON.stringify(pocketArray), // Inietta l'intero archivio nella colonna
-                sessionToken: tokenSalvatiPocket[utente]
-            })
-        });
-    } catch (error) {
-        console.error("Cloud Sync fallito, il dato resta comunque al sicuro sul telefono.", error);
-    }
+        primaVolta = !localStorage.getItem('mqt_pocket_invito');
+        if (primaVolta) localStorage.setItem('mqt_pocket_invito', new Date().toISOString());
+    } catch (e) {}
+    mostraOverlayPocket("SALVATA", "La ritrovi nel tuo Pocket, insieme a tutte le tag che salvi.",
+        primaVolta ? "Vuoi ritrovarlo con un tocco? Aggiungi il Pocket alla schermata Home: te lo spieghiamo nel Pocket." : '');
 }
 // MOTORE DELL'OVERLAY IMMERSIVO (Puro lusso fluttuante)
-function mostraOverlayPocket(titolo, messaggio) {
+function mostraOverlayPocket(titolo, messaggio, invito) {
     let overlay = document.getElementById('pocket-immersive-overlay');
     
     // Se non esiste ancora, lo creiamo al volo
@@ -1518,9 +1441,10 @@ function mostraOverlayPocket(titolo, messaggio) {
                 <div style="width: 30px; height: 1px; background: var(--theme-border, rgba(212, 175, 55, 0.5)); margin-bottom: 20px;"></div>
                 
                 <p id="pocket-overlay-msg" style="color: #86868b; font-size: 0.95rem; font-weight: 300; line-height: 1.8; margin-bottom: 45px; padding: 0 10px;"></p>
+                <p id="pocket-overlay-invito" style="display: none; color: #c7c7cc; font-size: 0.85rem; font-weight: 300; line-height: 1.7; margin: -25px 0 35px; padding: 0 10px;"></p>
                 
                 <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
-                    <button onclick="window.location.href='/pocket.html'" style="width: 100%; padding: 18px; background: transparent; border: 1px solid var(--theme-border, #d4af37); border-radius: 12px; color: #fff; font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; cursor: pointer; transition: transform 0.2s; text-transform: uppercase;">Apri Pocket</button>
+                    <button onclick="window.location.href='/pocket.html'" style="width: 100%; padding: 18px; background: transparent; border: 1px solid var(--theme-border, #d4af37); border-radius: 12px; color: #fff; font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; cursor: pointer; transition: transform 0.2s; text-transform: uppercase;">Apri il Pocket</button>
                     
                     <button onclick="chiudiOverlayPocket()" style="width: 100%; padding: 18px; background: transparent; border: none; color: #86868b; font-size: 0.75rem; font-weight: 300; letter-spacing: 3px; cursor: pointer; transition: color 0.2s; text-transform: uppercase;">Chiudi</button>
                 </div>
@@ -1532,6 +1456,9 @@ function mostraOverlayPocket(titolo, messaggio) {
     // Inseriamo i testi dinamici
     document.getElementById('pocket-overlay-titolo').innerText = titolo;
     document.getElementById('pocket-overlay-msg').innerText = messaggio;
+    const invitoEl = document.getElementById('pocket-overlay-invito');
+    invitoEl.textContent = invito || '';
+    invitoEl.style.display = invito ? 'block' : 'none';
     
     // Lo mostriamo con una transizione fluida
     overlay.style.display = 'flex';

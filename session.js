@@ -1,23 +1,128 @@
 // ============================================================
-// SESSIONI MULTI-TAG (portachiavi del dispositivo)
+// ACCOUNT E SESSIONI (Supabase Auth) + PORTACHIAVI DELLE TAG
 // ============================================================
-// Regola unica: su questo dispositivo sei proprietario di una tag solo se hai il suo
-// token di sessione (mqt_session_tokens) e non è scaduto. mqt_keys e mqt_logged_user
-// restano per compatibilità, ma da soli non bastano più.
-//
-// Il token ha la forma "tag.scadenzaMs.firma": la scadenza si legge senza chiamare il
-// server. Il server lo rinnova a ogni utilizzo (sessione scorrevole, 90 giorni).
+// L'accesso dei titolari è un ACCOUNT (email verificata + password) gestito da Supabase Auth:
+// registrazione, verifica, recupero e cambio password li fa la libreria ufficiale di Supabase
+// (caricata solo quando serve) e la password non passa mai dal nostro server.
+// - Ogni chiamata a /api/ parte con la sessione dell'account (intestazione Authorization): il
+//   server verifica con Supabase chi sei e se la tag è tua (lib/sessione.js).
+// - mqt_session_tokens conserva solo le RICEVUTE di prenotazione (tag in attesa, 24 ore).
+// - mqt_keys / mqt_logged_user ricordano su questo dispositivo quali tag apri (comodità, non
+//   sono una prova di identità).
 (function () {
+    // Progetto Supabase: SEMPRE quello del server (api/account.js?azione=config), così il sito di prova
+    // e quello pubblico usano ciascuno il proprio database senza impostazioni diverse nel browser.
+    const LIBRERIA = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js';
+    const INTEGRITA = 'sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R';
+    const fetchOriginale = window.fetch.bind(window);
+
+    async function leggiConfig() {
+        try { const c = JSON.parse(sessionStorage.getItem('mqt_supabase') || 'null'); if (c && c.url && c.chiave) return c; } catch (e) {}
+        const r = await fetchOriginale('/api/account?azione=config');
+        const c = await r.json();
+        if (!c.success) throw new Error('Configurazione di accesso non disponibile');
+        try { sessionStorage.setItem('mqt_supabase', JSON.stringify({ url: c.url, chiave: c.chiave })); } catch (e) {}
+        return c;
+    }
+
+    // Link arrivati via email (conferma dell'account, recupero password): li gestisce accesso.html
+    (function () {
+        const h = location.hash || '';
+        if (location.pathname !== '/accesso.html' && /(^#|&)(access_token|error_code)=/.test(h)) {
+            const recupero = /(^#|&)type=recovery(&|$)/.test(h);
+            location.replace('/accesso.html' + (recupero ? '?modo=nuova-password' : '') + h);
+        }
+    })();
+
     function leggiTokens() {
         try { return JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}') || {}; }
         catch (e) { return {}; }
     }
-
     function normalizza(tag) {
         return String(tag || '').replace('@', '').trim().toLowerCase();
     }
+    // C'è una sessione dell'account salvata su questo dispositivo? (la validità la decide Supabase)
+    function chiaviSessione() {
+        const out = [];
+        try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^sb-.+-auth-token$/.test(k)) out.push(k); } } catch (e) {}
+        return out;
+    }
+    function haSessioneSalvata() {
+        return chiaviSessione().some(function (k) {
+            try {
+                const s = JSON.parse(localStorage.getItem(k) || 'null');
+                return !!(s && (s.refresh_token || (s.currentSession && s.currentSession.refresh_token)));
+            } catch (e) { return false; }
+        });
+    }
+
+    let promessaClient = null;
+    function client() {
+        if (promessaClient) return promessaClient;
+        promessaClient = new Promise(async function (risolvi, rifiuta) {
+            let config;
+            try { config = await leggiConfig(); } catch (e) { promessaClient = null; return rifiuta(e); }
+            function crea() {
+                try {
+                    const chiave = 'sb-' + new URL(config.url).hostname.split('.')[0] + '-auth-token';
+                    risolvi(window.supabase.createClient(config.url, config.chiave, {
+                        auth: { flowType: 'implicit', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: chiave }
+                    }));
+                } catch (e) { rifiuta(e); }
+            }
+            if (window.supabase && window.supabase.createClient) return crea();
+            const s = document.createElement('script');
+            s.src = LIBRERIA; s.integrity = INTEGRITA; s.crossOrigin = 'anonymous';
+            s.onload = crea;
+            s.onerror = function () { promessaClient = null; rifiuta(new Error('Libreria di accesso non disponibile')); };
+            document.head.appendChild(s);
+        });
+        return promessaClient;
+    }
+
+    // Token di accesso aggiornato (la libreria lo rinnova da sola se è scaduto), oppure null
+    async function tokenAccount() {
+        if (!haSessioneSalvata()) return null;
+        try {
+            const sb = await client();
+            const { data } = await sb.auth.getSession();
+            return data && data.session ? data.session.access_token : null;
+        } catch (e) { return null; }
+    }
+
+    // Ogni chiamata alle nostre API parte con la sessione dell'account, se c'è
+    window.fetch = async function (risorsa, opzioni) {
+        try {
+            const url = typeof risorsa === 'string' ? risorsa : (risorsa && risorsa.url) || '';
+            const nostra = url.startsWith('/api/') || url.startsWith(location.origin + '/api/');
+            if (nostra) {
+                const token = await tokenAccount();
+                if (token) {
+                    opzioni = Object.assign({}, opzioni || {});
+                    const h = new Headers(opzioni.headers || (typeof risorsa !== 'string' && risorsa.headers) || {});
+                    if (!h.has('Authorization')) h.set('Authorization', 'Bearer ' + token);
+                    opzioni.headers = h;
+                }
+            }
+        } catch (e) { /* in caso di problemi la chiamata parte comunque, senza sessione */ }
+        return fetchOriginale(risorsa, opzioni);
+    };
+
+    function aggiungiChiave(tag) {
+        tag = normalizza(tag);
+        if (!tag) return;
+        let chiavi = [];
+        try { chiavi = JSON.parse(localStorage.getItem('mqt_keys') || '[]'); } catch (e) {}
+        if (!chiavi.includes(tag)) chiavi.push(tag);
+        try { localStorage.setItem('mqt_keys', JSON.stringify(chiavi)); } catch (e) {}
+    }
 
     window.mqtSessione = {
+        client: client,
+        tokenAccount: tokenAccount,
+        haAccount: haSessioneSalvata,
+
+        // Ricevuta di prenotazione della tag (le vecchie sessioni "@nome + password" non valgono più)
         token: function (tag) {
             return leggiTokens()[normalizza(tag)] || '';
         },
@@ -30,14 +135,21 @@
             try { localStorage.setItem('mqt_session_tokens', JSON.stringify(tokens)); } catch (e) {}
         },
 
+        // Puoi provare a lavorare su questa tag da qui? Account collegato su questo dispositivo, oppure
+        // ricevuta di prenotazione non scaduta. L'ultima parola è del server (proprietario o no).
         valida: function (tag) {
+            if (haSessioneSalvata()) return true;
             const parti = this.token(tag).split('.');
-            if (parti.length !== 3) return false;
-            return Number(parti[1]) > Date.now();
+            return parti.length === 3 && Number(parti[1]) > Date.now();
         },
 
-        // Toglie la tag dal portachiavi del dispositivo (chiave, token, utente attivo).
-        // Bozze locali e Pocket restano: dopo il nuovo login il lavoro non è perso.
+        // Ricorda su questo dispositivo le tag dell'account (dashboard, login)
+        ricordaTags: function (tags) {
+            (tags || []).forEach(aggiungiChiave);
+        },
+        ricorda: aggiungiChiave,
+
+        // Toglie la tag dal portachiavi del dispositivo. Bozze locali e Pocket restano.
         rimuovi: function (tag) {
             tag = normalizza(tag);
             try {
@@ -51,14 +163,34 @@
             } catch (e) {}
         },
 
-        // Sessione scaduta: avvisa e porta al login con la tag già compilata
+        // Esci dall'account su questo dispositivo (ovunque = tutti i dispositivi)
+        esci: async function (ovunque) {
+            try { const sb = await client(); await sb.auth.signOut({ scope: ovunque ? 'global' : 'local' }); } catch (e) {}
+            try {
+                chiaviSessione().forEach(function (k) { localStorage.removeItem(k); });
+                localStorage.removeItem('mqt_keys');
+                localStorage.removeItem('mqt_logged_user');
+            } catch (e) {}
+        },
+
+        // Pagine del proprietario: il server dice se la tag è dell'account (fields.sei_proprietario).
+        // false → si va alle proprie tag (o all'accesso, se su questo dispositivo non c'è un account).
+        proprietarioOppureEsci: function (fields, tag) {
+            if (!fields || !fields.has_password || fields.sei_proprietario) return true;
+            if (haSessioneSalvata()) window.location.href = '/dashboard.html?avviso=non-tua';
+            else this.scaduta(tag);
+            return false;
+        },
+
+        // Sessione scaduta o mancante: avvisa e porta all'accesso, poi si torna qui
         scaduta: function (tag) {
-            tag = normalizza(tag);
-            this.rimuovi(tag);
-            alert('Sessione scaduta\n\nPer sicurezza accedi di nuovo con la tua password. Le modifiche non pubblicate restano salvate su questo dispositivo.');
-            window.location.href = '/index.html?login=' + encodeURIComponent(tag);
+            alert('Accedi al tuo account\n\nPer sicurezza entra di nuovo con la tua email e la tua password. Le modifiche non pubblicate restano salvate su questo dispositivo.');
+            window.location.href = '/accesso.html?motivo=sessione&torna=' + encodeURIComponent(location.pathname + location.search);
         }
     };
+
+    // Se c'è una sessione salvata, la libreria si prepara subito (rinnovo del token in anticipo)
+    if (haSessioneSalvata()) client().catch(function () {});
 })();
 
 // ============================================================
@@ -136,4 +268,81 @@
         return { nome };
     }
     window.mqtNome = { canonico };
+})();
+
+// ============================================================
+// @NOME NEL BADGE DELLA TAG (tag pubblica ed editor)
+// ============================================================
+// Scrive il nome in modo sicuro (textContent) e rimpicciolisce il carattere finché il nome,
+// insieme alla "@", sta nella capsula: un nome lungo senza spazi (es. CONCESSIONARIAAUDICUNEO)
+// non può andare a capo e prima usciva dai bordi. La misura usa un canvas, quindi funziona
+// anche quando la tag è ancora nascosta dietro la copertina.
+(function () {
+    const LARGHEZZA_TESTO = 196;  // capsula 290px - margini interni (badge) = spazio delle altre forme (220 - 24)
+    const MINIMO_PX = 9;
+    let canvas = null;
+
+    function larghezza(testo, stile, px, peso) {
+        canvas = canvas || document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.font = `${peso || stile.fontWeight} ${px}px ${stile.fontFamily}`;
+        const spaziatura = parseFloat(stile.letterSpacing) || 0;
+        return ctx.measureText(testo).width + spaziatura * testo.length;
+    }
+
+    function scrivi(el, testoBruto) {
+        if (!el) return '';
+        let testo = String(testoBruto || 'TUONOME').replace(/[\s\u00A0]+/g, ' ').trim().toUpperCase();
+        if (testo.startsWith('@')) testo = testo.substring(1).trim();
+
+        el.textContent = '';
+        const brand = document.createElement('span');
+        brand.className = 'brand-text';
+        brand.style.position = 'relative';
+        const at = document.createElement('span');
+        at.className = 'at-symbol';
+        at.style.cssText = 'position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;';
+        at.textContent = '@';
+        const nome = document.createElement('span');
+        nome.id = 'safe-username-span';
+        nome.textContent = testo;
+        brand.append(at, nome);
+        el.appendChild(brand);
+
+        el.dataset.nomeBadge = testo;
+        el.style.whiteSpace = 'normal'; el.style.wordBreak = 'normal';
+        adatta(el, testo);
+        // Il carattere Inter arriva da Google Fonts: quando è caricato si rimisura.
+        if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(() => { if (el.dataset.nomeBadge === testo) adatta(el, testo); });
+        return testo;
+    }
+
+    function adatta(el, testo) {
+        el.style.overflowWrap = 'break-word';
+        let px = testo.length > 25 ? 13.6 : testo.length > 18 ? 15.2 : 16.8; // 0.85 / 0.95 / 1.05rem
+        el.style.fontSize = px + 'px';
+
+        const stile = getComputedStyle(el);
+        const spazio = Math.min(LARGHEZZA_TESTO, (window.innerWidth || 400) - 120);
+
+        // Forma "divider": se il nome sta su una riga il rombo va sotto (classe nome-corto), se va a capo
+        // il rombo va esattamente tra le due righe. Si decide misurando il nome, non contando le lettere:
+        // "RISTORANTEDALUIGI" (17) sta su una riga e prima aveva il rombo sopra le lettere.
+        const wrapper = el.closest('.username-capsule-wrapper');
+        if (wrapper) wrapper.classList.toggle('nome-corto', larghezza(testo, stile, px) <= spazio);
+
+        // Solo l'esagono (layout "badge", quello di base) rimpicciolisce il nome: nelle forme "divider" e
+        // "pure" il nome lungo va a capo apposta.
+        const contenitore = el.closest('[data-layout]');
+        if (contenitore && (contenitore.getAttribute('data-layout') || 'badge') !== 'badge') return;
+
+        // La parola più lunga deve stare su una riga, "@" compresa.
+        const parolaLunga = testo.split(' ').reduce((a, b) => (b.length > a.length ? b : a), '');
+        const serve = (p) => larghezza(parolaLunga, stile, p) + larghezza('@', stile, p, 300) + 4;
+        while (px > MINIMO_PX && serve(px) > spazio) px -= 0.25;
+        el.style.fontSize = px + 'px';
+        if (serve(px) > spazio) el.style.overflowWrap = 'anywhere';
+    }
+
+    window.mqtBadgeNome = { scrivi };
 })();

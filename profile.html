@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Identity Console - myquicktag</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="/fonts/inter.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link id="dynamic-manifest" rel="manifest" crossorigin="use-credentials" href="">
@@ -364,6 +364,7 @@
         <div>
             <h1>Identity Console</h1>
             <p id="dash-user">@UTENTE</p>
+            <a href="/dashboard.html" style="display:inline-block; margin-top:6px; color:#50C878; font-size:0.8rem; text-decoration:none;"><i class="fas fa-chevron-left"></i> Le mie tag</a>
         </div>
         
         <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
@@ -679,9 +680,14 @@ async function caricaDatiDashboard(nomeMinuto) {
         const data = await response.json();
 
         if (data && data.success) {
-            // Account attivo ma sessione scaduta su questo dispositivo: login prima di entrare
-            if (data.fields.has_password && !mqtSessione.valida(nomeMinuto)) {
-                mqtSessione.scaduta(nomeMinuto);
+            // Tag con un titolare: serve l'account che la possiede (lo verifica il server: sei_proprietario)
+            if (data.fields.has_password && !data.fields.sei_proprietario) {
+                if (mqtSessione.haAccount()) {
+                    alert("Questa tag non è collegata al tuo account.");
+                    window.location.href = "/dashboard.html";
+                } else {
+                    mqtSessione.scaduta(nomeMinuto);
+                }
                 return;
             }
             if (data.fields.pocket_cloud && data.fields.pocket_cloud.trim() !== "") {
@@ -736,7 +742,10 @@ function aggiornaContatoriDashboard(record) {
     if (btnRinnova) {
         btnRinnova.href = `checkout.html?u=${utenteCorrente}&rinnovo=1`;
         btnRinnova.innerText = "Rinnova gratis per 90 giorni";
+        // Il rinnovo compare solo quando il server lo accetta (rinnovo gratuito acceso, ultimi 14 giorni)
+        btnRinnova.style.display = abb && abb.rinnovo_disponibile ? "inline-block" : "none";
     }
+    const senzaRinnovo = " Ti scriveremo all'email del tuo account prima della scadenza per spiegarti come continuare.";
 
     if (abb && trialEl) {
         if (abb.fase === 'attiva') {
@@ -758,6 +767,7 @@ function aggiornaContatoriDashboard(record) {
             paywallText.innerText = abb.fase === 'grazia'
                 ? `Il piano è scaduto il ${formattaData(abb.data_scadenza)}. La tua tag resta online ancora ${abb.giorni_alla_disattivazione} giorni: rinnova per non perderla.`
                 : `Il tuo piano scade il ${formattaData(abb.data_scadenza)} (tra ${abb.giorni_alla_scadenza} giorni). Rinnova ora: i giorni rimasti non vanno persi.`;
+            if (!abb.rinnovo_disponibile) paywallText.innerText = paywallText.innerText.replace(/: rinnova per non perderla\.|\. Rinnova ora: i giorni rimasti non vanno persi\./, '.') + senzaRinnovo;
         }
     }
 

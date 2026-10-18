@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Secure Checkout - MyQuickTag</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/fonts/inter.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -301,19 +301,25 @@
 
         <div id="step-password" style="display: none;">
             <div class="checkout-header">
-                <h2 class="main-title">Configura la sicurezza</h2>
-                <p class="subtitle">Transazione approvata. Scegli ora le credenziali amministrative per accedere alla tua nuova dashboard.</p>
+                <h2 class="main-title">Il tuo account</h2>
+                <p class="subtitle">La tag sarà collegata al tuo account: con un solo account gestisci tutte le tue tag, e se dimentichi la password la recuperi con la tua email.</p>
             </div>
 
-            <div class="form-group">
-                <label for="checkout-pwd" class="form-label">Scegli una password amministrativa</label>
-                <input type="password" id="checkout-pwd" class="standard-input" placeholder="Inserisci almeno 6 caratteri">
-                <span class="input-help">Questa chiave ti permetterà di modificare i link e i contenuti della tua Tag.</span>
+            <!-- Già dentro un account -->
+            <div id="account-presente" style="display: none;">
+                <p class="input-help" style="margin-bottom: 14px;">Attiverai la tag con l'account <b id="account-email">…</b></p>
+                <button class="action-button btn-success" id="btn-attiva" onclick="attivaConAccount()">Attiva la tag</button>
+                <p class="input-help" style="margin-top: 12px; text-align: center;"><a href="#" onclick="cambiaAccount(); return false;" style="color: inherit;">Usa un altro account</a></p>
             </div>
 
-            <button class="action-button btn-success" onclick="salvaCredenzialiEAttiva()">
-                Conferma e Attiva Account
-            </button>
+            <!-- Nessun account su questo dispositivo -->
+            <div id="account-assente" style="display: none;">
+                <a class="action-button btn-success" id="link-registrati" href="#" style="display: block; text-decoration: none; text-align: center; box-sizing: border-box;">Crea il tuo account</a>
+                <a class="action-button" id="link-accedi" href="#" style="display: block; text-decoration: none; text-align: center; box-sizing: border-box; margin-top: 10px; background: #fff; color: #111; border: 1px solid #e5e7eb;">Ho già un account</a>
+                <span class="input-help" style="display: block; margin-top: 12px;">Ti chiederemo email e password e ti manderemo un'email per verificare l'indirizzo. L'email resta privata e non compare sulla tag.</span>
+            </div>
+
+            <p class="input-help" id="msg-attivazione" role="status" style="color: #dc2626; margin-top: 12px;"></p>
         </div>
 
         <div id="step-success" style="display: none;">
@@ -330,7 +336,7 @@
                 </div>
                 <div class="invoice-row" style="margin-bottom: 8px;">
                     <span style="color: var(--text-muted);">Profilo Assegnato:</span>
-                    <span id="receipt-username" style="font-weight: 600;">@...</span>
+                    <span id="receipt-username" style="font-weight: 600; min-width: 0; margin-left: 12px; text-align: right; overflow-wrap: anywhere;">@...</span>
                 </div>
                 <div class="invoice-row">
                     <span style="color: var(--text-muted);">Licenza Attiva:</span>
@@ -393,6 +399,15 @@
                             <h2 class="main-title">Upgrade in arrivo</h2>
                             <p class="subtitle">I piani Premium e Gold saranno disponibili con l'apertura dei pagamenti.</p>
                             <a href="/profile.html?u=${targetUserClean}" class="action-button" style="text-decoration:none;">Torna alla dashboard</a>`;
+                        return;
+                    }
+
+                    // Ritorno dall'accesso (accesso.html → ?attiva=1): l'ordine era già confermato, si attiva
+                    if (stato === "in attesa" && urlParams.get("attiva") === "1" && mqtSessione.haAccount()) {
+                        document.getElementById("display-username").innerText = `Registrazione @${usernameDisplay.replace('@', '')}`;
+                        document.getElementById("receipt-username").innerText = `@${usernameDisplay.replace('@', '')}`;
+                        document.getElementById("loading-screen").style.display = "none";
+                        if (await mostraStepAccount()) attivaConAccount();
                         return;
                     }
 
@@ -473,9 +488,8 @@
             
             if(btn) { btn.innerText = testoOriginale; btn.disabled = false; }
 
-            // Successo transazione -> Passaggio allo Step 2 (Password)
-            document.getElementById("step-payment").style.display = "none";
-            document.getElementById("step-password").style.display = "block";
+            // Successo transazione -> Passaggio allo Step 2 (account)
+            await mostraStepAccount();
         }
 
         // RINNOVO: il server allunga la scadenza di 90 giorni (lib/abbonamento.js)
@@ -484,7 +498,7 @@
                 const response = await fetch('/api/update-profile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username_system: targetUserClean, rinnova: true, sessionToken: mqtSessione.token(targetUserClean) })
+                    body: JSON.stringify({ username_system: targetUserClean, rinnova: true })
                 });
                 if (response.status === 401) { mqtSessione.scaduta(targetUserClean); return; }
                 const resData = await response.json();
@@ -493,7 +507,6 @@
                     if (btn) { btn.innerText = testoOriginale; btn.disabled = false; }
                     return;
                 }
-                if (resData.sessionToken) mqtSessione.salva(targetUserClean, resData.sessionToken);
                 const nuovaScadenza = new Date(resData.abbonamento.data_scadenza + 'T12:00:00Z').toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
                 document.querySelector("#step-success .main-title").innerText = "Rinnovo completato";
                 document.querySelector("#step-success .subtitle").innerText = `La tua tag è attiva fino al ${nuovaScadenza}.`;
@@ -508,70 +521,66 @@
         }
 
         // 3. CHIAMATA fetch AL DATABASE PER SALVARE LA PASSWORD ED ATTIVARE IL PROFILO
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hash = await crypto.subtle.digest('SHA-256', data);
-            return Array.from(new Uint8Array(hash))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
+        // 3. ACCOUNT E ATTIVAZIONE: la tag diventa dell'account che è entrato (Supabase Auth).
+        // Chi non ha ancora un account lo crea in accesso.html e torna qui con ?attiva=1.
+        async function mostraStepAccount() {
+            document.getElementById("step-payment").style.display = "none";
+            document.getElementById("step-password").style.display = "block";
+            const qui = `/checkout.html?u=${encodeURIComponent(targetUserClean)}&attiva=1`;
+            document.getElementById("link-registrati").href = `/accesso.html?modo=registrati&torna=${encodeURIComponent(qui)}`;
+            document.getElementById("link-accedi").href = `/accesso.html?torna=${encodeURIComponent(qui)}`;
+            let email = null;
+            if (mqtSessione.haAccount()) {
+                try {
+                    const sb = await mqtSessione.client();
+                    const { data } = await sb.auth.getUser();
+                    email = data && data.user ? data.user.email : null;
+                } catch (e) {}
+            }
+            document.getElementById("account-presente").style.display = email ? "block" : "none";
+            document.getElementById("account-assente").style.display = email ? "none" : "block";
+            if (email) document.getElementById("account-email").innerText = email;
+            return !!email;
         }
 
-        async function salvaCredenzialiEAttiva() {
-            const passwordSelezionata = document.getElementById("checkout-pwd").value;
-            
-            if (!passwordSelezionata || passwordSelezionata.trim().length < 6) {
-                alert("Per motivi di sicurezza, la password deve contenere almeno 6 caratteri.");
-                return;
-            }
+        async function cambiaAccount() {
+            await mqtSessione.esci(false);
+            mostraStepAccount();
+        }
 
-            // Ricevuta della prenotazione (salvata in index.html): prova che la tag è stata prenotata da questo dispositivo
-            let tokenPrenotazione = '';
-            try { tokenPrenotazione = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}')[targetUserClean] || ''; } catch(e) {}
-
+        async function attivaConAccount() {
+            const btn = document.getElementById("btn-attiva");
+            const msg = document.getElementById("msg-attivazione");
+            msg.innerText = "";
+            if (btn) { btn.disabled = true; btn.innerText = "Attivazione…"; }
+            // Ricevuta della prenotazione (index.html): prova che la tag è stata prenotata da questo dispositivo
+            const ricevuta = mqtSessione.token(targetUserClean);
             try {
-                // Utilizziamo la tua API ufficiale per salvare i dati su Airtable
                 const response = await fetch('/api/update-profile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username_system: targetUserClean,
-                        password: await hashPassword(passwordSelezionata),
-                        stato: "attivo", // Cambiamo definitivamente lo stato sul database
-                        sessionToken: tokenPrenotazione
-                    })
+                    body: JSON.stringify({ username_system: targetUserClean, stato: "attivo", sessionToken: ricevuta })
                 });
-                
                 const resData = await response.json();
-                
-                               if (resData.success) {
-                    // Pulizia finale del lucchetto della sessione
+                if (response.ok && resData.success) {
                     localStorage.removeItem('mqt_res_expiry_' + targetUserClean);
-                    // La tag ora è attiva: la home non deve più mostrare "Riprendi e completa"
                     localStorage.removeItem('mqt_reserved');
-
-                                     // Salviamo il token di sessione ricevuto dal server
-                    if (resData.sessionToken) {
-                        let tokenSalvati = {};
-                        try {
-                            tokenSalvati = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
-                        } catch(e) {
-                            tokenSalvati = {};
-                        }
-                        tokenSalvati[targetUserClean] = resData.sessionToken;
-                        localStorage.setItem('mqt_session_tokens', JSON.stringify(tokenSalvati));
-                    }
-
-                    // Successo totale -> Mostriamo lo Step 3 di conferma
+                    mqtSessione.ricorda(targetUserClean);
+                    // La ricevuta non serve più: da ora si entra con l'account
+                    const tokens = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
+                    delete tokens[targetUserClean];
+                    localStorage.setItem('mqt_session_tokens', JSON.stringify(tokens));
                     document.getElementById("step-password").style.display = "none";
                     document.getElementById("step-success").style.display = "block";
-                } else {
-                    alert("Errore durante la configurazione: " + (resData.error || "Riprova."));
+                    return;
                 }
+                if (response.status === 401 && resData.serve_account) { await mostraStepAccount(); msg.innerText = "Accedi o crea il tuo account per attivare la tag."; }
+                else if (response.status === 401) msg.innerText = "Questa prenotazione è stata fatta su un altro dispositivo o browser, oppure è scaduta. Apri myquicktag dove hai scelto il nome, oppure prenotalo di nuovo.";
+                else msg.innerText = resData.error || "Attivazione non riuscita. Riprova.";
             } catch (error) {
-                console.error("Errore salvataggio credenziali:", error);
-                alert("Errore di connessione con il server. La transazione è valida, riprova tra qualche istante.");
+                msg.innerText = "Errore di connessione. Riprova tra qualche istante.";
             }
+            if (btn) { btn.disabled = false; btn.innerText = "Attiva la tag"; }
         }
 
      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
