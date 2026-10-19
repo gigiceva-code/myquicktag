@@ -21,9 +21,9 @@
     <style>
         /* Barra SALVA + QR: stessa posizione e misure della card (.app-container in style.css) */
         #mqt-top-bar-layer {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            position: fixed; top: calc(50% + (var(--mqt-sa-top) - var(--mqt-sa-bottom)) / 2); left: 50%; transform: translate(-50%, -50%);
             width: calc(100% - 32px); max-width: 410px;
-            height: calc(100svh - 32px); max-height: 840px;
+            height: calc(100svh - 32px - var(--mqt-sa-top) - var(--mqt-sa-bottom)); max-height: 840px;
             z-index: 20; pointer-events: none;
             visibility: hidden; /* compare solo quando la card è pronta: niente bottoni sulla pagina nera */
         }

@@ -71,7 +71,8 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
       riaccedere; [x] la vecchia password non funziona (15/10/2026); [x] "Esci da tutti i dispositivi" (18/10/2026, da PC → telefono);
 - [ ] app installata su iPhone (18/10/2026, sito vero, iPhone 16 Pro): installazione e flusso ok come su Android, ma l'app
       riapriva ogni volta l'invito "Installa ora / Continua senza installare" (l'indirizzo conservava `welcome=1`).
-      Corretto lo stesso giorno (pull request #8, online): **da ricontrollare** chiudendo e riaprendo l'app;
+      Corretto lo stesso giorno (pull request #8): ricontrollato il 19/10, l'app apre direttamente la tag. Il bordo alto
+      della card spariva sotto la barra di stato: corretto con la pull request #10 (spazi riservati di iPhone);
 - [x] app installata su Android (18/10/2026: due tag dello stesso account installate, tutto a posto): aprire il link **direttamente in Chrome** (non dal browser interno di Gmail/WhatsApp,
       che non permette l'installazione: lì compare "Apri dal browser Chrome per installare").
       L'installazione si fa dalla **tag pubblica** (`/u/<nome>`), non dall'editor (l'editor non è un'app installabile).
@@ -85,7 +86,7 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [x] Produzione `myquicktag` (18/10/2026): Site URL `https://myquicktag.it`, Redirect `https://myquicktag.it/**` e
       `https://www.myquicktag.it/**`, password minima 8; SMTP di Resend e modelli italiani (`applica.py atlhrkkfovblkhgzfeuo`).
 - [x] Unito `sviluppo-v2` in `main` (18/10/2026, pull request #7, merge commit).
-- [ ] Prove sul sito vero: [x] account del titolare con email vera e tag @myquicktog (18/10); [x] visitatore (19/10); [ ] iPhone da ricontrollare.
+- [ ] Prove sul sito vero: [x] account del titolare con email vera e tag @myquicktog (18/10); [x] visitatore (19/10); [x] iPhone (19/10, cornice corretta con #10).
 - Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
   codice vecchio (si può lasciare).
 
