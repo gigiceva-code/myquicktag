@@ -1388,8 +1388,11 @@ function salvaNelPocketCorrente() {
     try { pocket = JSON.parse(localStorage.getItem('mqt_pocket') || '[]'); } catch (e) { pocket = []; }
     if (!Array.isArray(pocket)) pocket = [];
 
+    // Nome mostrato nel messaggio di conferma (sempre con la @ davanti)
+    const nomeConferma = '@' + String(nomeVisualizzato || usernameTag).replace(/^@+/, '');
+
     if (pocket.some(item => item.username === usernameTag)) {
-        mostraOverlayPocket("TAG GIÀ SALVATA", "Questa tag è già nel tuo Pocket.");
+        mostraOverlayPocket("TAG GIÀ SALVATA", " è già nel tuo Pocket.", '', nomeConferma);
         return;
     }
 
@@ -1420,11 +1423,13 @@ function salvaNelPocketCorrente() {
         primaVolta = !localStorage.getItem('mqt_pocket_invito');
         if (primaVolta) localStorage.setItem('mqt_pocket_invito', new Date().toISOString());
     } catch (e) {}
-    mostraOverlayPocket("SALVATA", "La ritrovi nel tuo Pocket, insieme a tutte le tag che salvi.",
-        primaVolta ? "Vuoi ritrovarlo con un tocco? Aggiungi il Pocket alla schermata Home: te lo spieghiamo nel Pocket." : '');
+    mostraOverlayPocket("SALVATA", " è nel tuo Pocket, insieme a tutte le tag che salvi.",
+        primaVolta ? "Vuoi ritrovarlo con un tocco? Aggiungi il Pocket alla schermata Home: te lo spieghiamo nel Pocket." : '',
+        nomeConferma);
 }
 // MOTORE DELL'OVERLAY IMMERSIVO (Puro lusso fluttuante)
-function mostraOverlayPocket(titolo, messaggio, invito) {
+// nome (facoltativo): la tag salvata, mostrata in evidenza all'inizio del messaggio
+function mostraOverlayPocket(titolo, messaggio, invito, nome) {
     let overlay = document.getElementById('pocket-immersive-overlay');
     
     // Se non esiste ancora, lo creiamo al volo
@@ -1460,7 +1465,15 @@ function mostraOverlayPocket(titolo, messaggio, invito) {
     
     // Inseriamo i testi dinamici
     document.getElementById('pocket-overlay-titolo').innerText = titolo;
-    document.getElementById('pocket-overlay-msg').innerText = messaggio;
+    const msgEl = document.getElementById('pocket-overlay-msg');
+    msgEl.textContent = '';
+    if (nome) {
+        const nomeEl = document.createElement('strong');
+        nomeEl.style.cssText = 'color: #fff; font-weight: 500; word-break: break-word;';
+        nomeEl.textContent = nome;
+        msgEl.appendChild(nomeEl);
+    }
+    msgEl.appendChild(document.createTextNode(messaggio));
     const invitoEl = document.getElementById('pocket-overlay-invito');
     invitoEl.textContent = invito || '';
     invitoEl.style.display = invito ? 'block' : 'none';
