@@ -72,7 +72,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   collegamento delle tag "create prima degli account" (riquadro della dashboard e azione `collega-vecchia`): la
   produzione non ha tag vecchie, quindi non servirà mai.
 - `api/account.js`: elenco delle tag dell'account (dashboard) e configurazione pubblica di Supabase.
-- **Pocket del visitatore (13/10/2026, testi approvati dal titolare):** "SALVA" sulla tag pubblica mette la tag nel
+- **Pocket del visitatore (13/10/2026, testi approvati dal titolare; dal 19/10 la conferma dice "@NOME è nel tuo Pocket…"):** "SALVA" sulla tag pubblica mette la tag nel
   Pocket (`pocket.html`) **solo su quel telefono** (`localStorage` `mqt_pocket`), senza account e senza dati al server.
   Al primo salvataggio un invito facoltativo; nel Pocket un riquadro "Ritrovalo con un tocco" per metterlo sulla
   schermata Home ("No, grazie" lo nasconde per sempre) e in fondo una sola riga "Hai un'attività? Crea anche tu la tua tag."

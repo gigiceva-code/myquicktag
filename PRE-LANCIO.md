@@ -65,12 +65,13 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 
 **D. Collaudo sul Preview (titolare, dal telefono) — da annotare qui:**
 - [x] crea account con la propria email → conferma col link → la tag si attiva (12/10/2026);
-- [ ] il visitatore la vede da un altro telefono (QR) e prova "SALVA" → Pocket: **rimandato a dopo l'unione in `main`**
-      (il Preview chiede l'accesso a Vercel a chi non è del team; deciso dal titolare il 13/10/2026);
+- [x] il visitatore la vede da un altro telefono (QR) e prova "SALVA" → Pocket (19/10/2026, sito vero, Android della moglie:
+      "Salvata", poi la tag nel Pocket con l'invito "Ritrovalo con un tocco");
 - [x] seconda tag dalla dashboard (15/10/2026); [x] "Password dimenticata" → codice → nuova password (14/10/2026); [x] l'altro dispositivo deve
       riaccedere; [x] la vecchia password non funziona (15/10/2026); [x] "Esci da tutti i dispositivi" (18/10/2026, da PC → telefono);
-- [ ] app installata su iPhone: accesso dentro l'app (dati separati da Safari): **rimandata a dopo l'unione in `main`**,
-      sul sito vero (deciso dal titolare il 18/10/2026: sul Preview serve l'accesso a Vercel anche sull'iPhone);
+- [ ] app installata su iPhone (18/10/2026, sito vero, iPhone 16 Pro): installazione e flusso ok come su Android, ma l'app
+      riapriva ogni volta l'invito "Installa ora / Continua senza installare" (l'indirizzo conservava `welcome=1`).
+      Corretto lo stesso giorno (pull request #8, online): **da ricontrollare** chiudendo e riaprendo l'app;
 - [x] app installata su Android (18/10/2026: due tag dello stesso account installate, tutto a posto): aprire il link **direttamente in Chrome** (non dal browser interno di Gmail/WhatsApp,
       che non permette l'installazione: lì compare "Apri dal browser Chrome per installare").
       L'installazione si fa dalla **tag pubblica** (`/u/<nome>`), non dall'editor (l'editor non è un'app installabile).
@@ -84,7 +85,7 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - [x] Produzione `myquicktag` (18/10/2026): Site URL `https://myquicktag.it`, Redirect `https://myquicktag.it/**` e
       `https://www.myquicktag.it/**`, password minima 8; SMTP di Resend e modelli italiani (`applica.py atlhrkkfovblkhgzfeuo`).
 - [x] Unito `sviluppo-v2` in `main` (18/10/2026, pull request #7, merge commit).
-- [ ] Prove sul sito vero: account del titolare con email vera, iPhone, visitatore da un altro telefono (SALVA → Pocket).
+- [ ] Prove sul sito vero: [x] account del titolare con email vera e tag @myquicktog (18/10); [x] visitatore (19/10); [ ] iPhone da ricontrollare.
 - Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
   codice vecchio (si può lasciare).
 
