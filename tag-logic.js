@@ -485,6 +485,107 @@ function apriDettaglio(tipo) {
     sheet.classList.add('active');
 } 
 
+// ============================================================
+// SEGNALA QUESTA TAG (imitazioni, marchi, contenuti offensivi, truffe) → api/segnala.js
+// ============================================================
+const MOTIVI_SEGNALAZIONE = [
+    ['impersonazione', "Si spaccia per me o per un'altra persona o attività"],
+    ['marchio', 'Usa un marchio o un nome che non è suo'],
+    ['offensivo', 'Contenuti offensivi o illegali'],
+    ['truffa', 'Truffa o spam'],
+    ['altro', 'Altro']
+];
+
+function apriSegnalazione() {
+    const sheet = document.getElementById('feature-bottom-sheet');
+    const backdrop = document.getElementById('feature-backdrop');
+    const title = document.getElementById('sheet-title');
+    const icon = document.getElementById('sheet-icon');
+    const body = document.getElementById('sheet-body');
+    if (!sheet || !backdrop || !cacheDatiUtente.username_system) return;
+    if (navigator.vibrate) navigator.vibrate(15);
+
+    icon.style.background = 'rgba(255, 69, 58, 0.1)';
+    icon.innerHTML = '<i class="far fa-flag" style="color: #ff453a;"></i>';
+    title.innerText = 'Segnala questa tag';
+    title.style.color = '#fff';
+
+    // Costruito con elementi e textContent: nessun testo diventa codice
+    body.textContent = '';
+    const form = document.createElement('form');
+    form.id = 'form-segnalazione';
+    form.style.cssText = 'display: flex; flex-direction: column; gap: 12px; max-height: 55svh; overflow-y: auto;';
+    const intro = document.createElement('p');
+    intro.style.cssText = 'margin: 0; font-size: 0.85rem; color: #86868b;';
+    intro.textContent = 'Cosa non va in @' + (cacheDatiUtente.username_display || cacheDatiUtente.username_system).replace(/^@+/, '') + '?';
+    form.appendChild(intro);
+    MOTIVI_SEGNALAZIONE.forEach(([valore, testo]) => {
+        const riga = document.createElement('label');
+        riga.style.cssText = 'display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #fff; cursor: pointer;';
+        const radio = document.createElement('input');
+        radio.type = 'radio'; radio.name = 'motivo'; radio.value = valore;
+        radio.style.cssText = 'accent-color: #ff453a; width: 18px; height: 18px; flex-shrink: 0;';
+        riga.appendChild(radio);
+        riga.appendChild(document.createTextNode(testo));
+        form.appendChild(riga);
+    });
+    const stileCampo = 'width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; color: #fff; font-size: 0.9rem; padding: 12px; font-family: inherit;';
+    const descrizione = document.createElement('textarea');
+    descrizione.name = 'descrizione'; descrizione.maxLength = 1000; descrizione.rows = 3;
+    descrizione.placeholder = 'Spiega in breve (facoltativo)';
+    descrizione.style.cssText = stileCampo + ' resize: none;';
+    form.appendChild(descrizione);
+    const email = document.createElement('input');
+    email.type = 'email'; email.name = 'email'; email.maxLength = 200; email.autocomplete = 'email';
+    email.placeholder = 'La tua email, se vuoi essere ricontattato';
+    email.style.cssText = stileCampo;
+    form.appendChild(email);
+    const messaggio = document.createElement('p');
+    messaggio.setAttribute('role', 'status');
+    messaggio.style.cssText = 'margin: 0; font-size: 0.85rem; min-height: 1em;';
+    form.appendChild(messaggio);
+    const invia = document.createElement('button');
+    invia.type = 'submit'; invia.textContent = 'Invia segnalazione';
+    invia.style.cssText = 'width: 100%; padding: 16px; background: #ff453a; border: none; border-radius: 14px; color: #fff; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; cursor: pointer;';
+    form.appendChild(invia);
+    form.addEventListener('submit', inviaSegnalazione);
+    form.addEventListener('change', e => { if (e.target.name === 'motivo') messaggio.textContent = ''; });
+    body.appendChild(form);
+
+    backdrop.classList.add('active');
+    sheet.classList.add('active');
+}
+
+async function inviaSegnalazione(e) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const messaggio = form.querySelector('[role=status]');
+    const invia = form.querySelector('button[type=submit]');
+    const scelto = form.querySelector('input[name=motivo]:checked');
+    const scrivi = (testo, ok) => { messaggio.textContent = testo; messaggio.style.color = ok ? '#30d158' : '#ff453a'; };
+    if (!scelto) return scrivi('Scegli un motivo.', false);
+    invia.disabled = true; invia.textContent = 'Invio…';
+    try {
+        const r = await fetch('/api/segnala', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ u: cacheDatiUtente.username_system, motivo: scelto.value, descrizione: form.descrizione.value, email: form.email.value })
+        });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.success) {
+            form.textContent = '';
+            const grazie = document.createElement('p');
+            grazie.style.cssText = 'margin: 0; text-align: center; color: #fff; line-height: 1.6;';
+            grazie.textContent = 'Grazie, abbiamo ricevuto la segnalazione. La controlleremo al più presto.';
+            form.appendChild(grazie);
+            return;
+        }
+        scrivi(r.status === 429 ? 'Hai già inviato diverse segnalazioni: riprova più tardi.' : (d.error || 'Invio non riuscito. Riprova tra poco.'), false);
+    } catch (err) {
+        scrivi('Connessione assente: riprova.', false);
+    }
+    invia.disabled = false; invia.textContent = 'Invia segnalazione';
+}
+
 function chiudiDettaglio() {
     const sheet = document.getElementById('feature-bottom-sheet');
     const backdrop = document.getElementById('feature-backdrop');
@@ -1015,6 +1116,7 @@ function apriSezione(tipo) {
             <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px;">
                 <div class="qr-wrapper" id="qr-container-interno" style="width:190px !important; height:190px !important; border-radius: 20px !important; padding:10px !important; background:#fff !important;"></div>
                 <div style="font-size: 0.8rem; color: #86868b; text-align: center; line-height: 1.5;">Questo è il tuo pass digitale.<br>Inquadralo per salvare il profilo.</div>
+                <button type="button" onclick="apriSegnalazione()" style="margin-top: 10px; background: none; border: none; color: #6e6e73; font-size: 0.75rem; letter-spacing: 0.5px; cursor: pointer; padding: 8px;"><i class="far fa-flag" style="margin-right: 6px;"></i>Segnala questa tag</button>
             </div>
         `;
         const qrContainer = document.getElementById('qr-container-interno');

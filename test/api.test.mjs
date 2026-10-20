@@ -10,7 +10,7 @@ import fs from 'fs';
 process.env.SUPABASE_URL='https://fake.supabase.co'; process.env.SUPABASE_SECRET_KEY='sb_secret_x'; process.env.SESSION_SECRET='s';
 delete process.env.RINNOVO_GRATUITO;
 const R=new URL('../api/', import.meta.url).href;
-const rows=[]; const limiti=new Map();
+const rows=[]; const limiti=new Map(); const segnalazioni=[]; const emailInviate=[]; let resendGiu=false;
 // Lista protetta di prova (nel database vero: tabella nomi_riservati)
 const nomiProtetti=[
   {nome:'admin',tipo:'system',regola:'esatto'}, {nome:'myquicktag',tipo:'black',regola:'contiene'},
@@ -37,7 +37,13 @@ globalThis.fetch=async (url,opt={})=>{
     const ut=sessioni.get(jwt); if(!ut) return new Response('{"message":"invalid JWT"}',{status:401});
     return new Response(JSON.stringify({id:ut.id,email:ut.email,email_confirmed_at:ut.email_confirmed_at}),{status:200});
   }
+  if(u.hostname==='api.resend.com'){ // email delle segnalazioni (api/segnala.js)
+    if(resendGiu) return new Response('{}',{status:500});
+    emailInviate.push({chiave:String(opt.headers?.Authorization||''),...JSON.parse(opt.body)}); return new Response('{"id":"e1"}',{status:200}); }
   if(opt.headers.apikey!=='sb_secret_x') return new Response('{}',{status:401});
+  if(u.pathname==='/rest/v1/segnalazioni' && m==='POST'){ const b=JSON.parse(opt.body);
+    if(!/^[a-z0-9]{1,30}$/.test(b.tag) || !['impersonazione','marchio','offensivo','truffa','altro'].includes(b.motivo)) return new Response('{"code":"23514"}',{status:400});
+    segnalazioni.push({id:crypto.randomUUID(),stato:'nuova',...b}); return new Response(null,{status:201}); }
   if(u.pathname.endsWith('/rpc/controlla_nome')){ // stessa logica di public.controlla_nome (migrazione 20261005000000)
     const b=JSON.parse(opt.body); const base=b.p_nome.toLowerCase(); const ss=base.replace(/[-_.]/g,'');
     const forme=[base, ...['i','l'].map(uno=>ss.replace(/[013457]/g,c=>({0:'o',1:uno,3:'e',4:'a',5:'s',7:'t'})[c]))];
@@ -413,4 +419,34 @@ delete process.env.RINNOVO_GRATUITO;
   process.env.SUPABASE_URL=urlPrima;
   r=await call('account.js',{method:'GET',query:{azione:'mie-tag'}});
   ok(r.code===405,'account: le altre azioni solo in POST con sessione');
+}
+
+// ============================================================
+// SEGNALA QUESTA TAG (api/segnala.js)
+// ============================================================
+{
+  rows.push({id:'seg1',username_system:'segnalata',stato:'attivo',created_at:new Date().toISOString(),data_scadenza:'2099-01-01'});
+  process.env.RESEND_API_KEY='re_test';
+  let r=await call('segnala.js',{method:'GET'});
+  ok(r.code===405,'segnala: solo POST');
+  r=await call('segnala.js',{method:'POST',body:{u:'segnalata',motivo:'boh'}});
+  ok(r.code===400 && segnalazioni.length===0,'segnala: motivo non valido rifiutato');
+  r=await call('segnala.js',{method:'POST',body:{u:'segnalata',motivo:'truffa',email:'non-una-email'}});
+  ok(r.code===400 && segnalazioni.length===0,'segnala: email non valida rifiutata');
+  r=await call('segnala.js',{method:'POST',body:{u:'nonesiste',motivo:'truffa'}});
+  ok(r.code===404 && segnalazioni.length===0,'segnala: tag inesistente');
+  r=await call('segnala.js',{method:'POST',ip:'9.9.9.1',body:{u:'@Segnalata',motivo:'impersonazione',descrizione:'Si spaccia per la mia pizzeria <script>x</script>\nseconda riga',email:'Mario@Esempio.it'}});
+  const s=segnalazioni[segnalazioni.length-1];
+  ok(r.code===200 && segnalazioni.length===1 && s.tag==='segnalata' && s.motivo==='impersonazione' && s.email==='mario@esempio.it','segnala: salvata con tag in forma canonica ed email in minuscolo');
+  ok(!s.descrizione.includes('<') && s.descrizione.includes('\n') && !('ip' in s),'segnala: descrizione ripulita (a capo tenuti), nessun IP salvato');
+  const e=emailInviate[emailInviate.length-1];
+  ok(e && e.to[0]==='info@myquicktag.it' && e.subject==='Segnalazione tag @segnalata' && e.reply_to==='mario@esempio.it' && e.text.includes('Si spaccia per me') && e.chiave==='Bearer re_test','segnala: email a info@myquicktag.it con oggetto, motivo e risposta al segnalante');
+  resendGiu=true;
+  r=await call('segnala.js',{method:'POST',ip:'9.9.9.2',body:{u:'segnalata',motivo:'offensivo'}});
+  resendGiu=false;
+  ok(r.code===200 && segnalazioni.length===2 && !segnalazioni[1].email,'segnala: se l\'email non parte la segnalazione resta salvata');
+  let ultimo;
+  for(let i=0;i<4;i++) ultimo=await call('segnala.js',{method:'POST',ip:'9.9.9.3',body:{u:'segnalata',motivo:'altro'}});
+  ok(ultimo.code===429 && segnalazioni.length===5,'segnala: la 4ª segnalazione in un\'ora dallo stesso telefono sulla stessa tag è bloccata');
+  delete process.env.RESEND_API_KEY;
 }
