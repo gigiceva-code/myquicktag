@@ -100,7 +100,8 @@ fornitore dell'autenticazione e il servizio email scelto.
   bozza). Per i soli strumenti tecnici di norma non serve il banner dei cookie, ma serve l'informativa.
 - [x] Caratteri: dal 18/10/2026 il carattere Inter è servito dal sito stesso (`fonts/`, licenza libera OFL), non più da
       Google Fonts. Dal 18/10 lo caricano anche la home e `celebration.html` (richiesta del titolare): ora tutte le pagine usano Inter.
-- [ ] Icone dei link nell'editor (`edit-logic.js`, servizio favicon di `www.google.com`): ancora da Google.
+- [x] Icone dei link nell'editor (20/10/2026): tolto il servizio favicon di Google; l'editor mostra la stessa icona della
+      tag pubblica. Ora il sito non carica più niente dai server di Google.
 - Da scrivere: informativa privacy (titolare, email dell'account, contatti lasciati nel vasetto — di cui è titolare
   l'attività, myquicktag li custodisce per suo conto —, fornitori Supabase, Vercel, Resend, durata, diritti),
   informativa cookie, termini del servizio (con la regola sui nomi usati per imitare persone o marchi, sezione 2).
