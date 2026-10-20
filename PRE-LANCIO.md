@@ -167,8 +167,9 @@ fornitore dell'autenticazione e il servizio email scelto.
   commercialista (codice ATECO, forfettario da dipendente, esonero INPS commercianti, IVA vendite online).
 
 ### Prezzo mostrato nel checkout di attivazione
-- `checkout.html` mostra **"€19,00"**, ma oggi l'attivazione è gratuita (scelta voluta per i primi 3 mesi).
-- Decidere cosa mostrare (es. "Gratis per 3 mesi") e allineare i testi del checkout.
+- [x] Deciso dal titolare il 20/10/2026: il totale mostra **"Gratis per 3 mesi"** (prima "€19,00").
+- Restano nel checkout loghi delle carte, "pagamento sicuro" e "Procedi al pagamento sicuro" (segnaposto voluto di Stripe):
+  da valutare con il titolare se cambiarli finché è tutto gratis.
 
 ---
 
