@@ -1052,10 +1052,8 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
 
                                     block.setAttribute('data-nome', canale.nome); block.setAttribute('data-url', canale.url); block.setAttribute('data-vip', isVip); block.setAttribute('data-pin', canale.pin || ""); block.setAttribute('data-official', isOfficial); block.setAttribute('data-icon', canale.iconClass || "fas fa-link");
 
-                                    let iconaVisualizzata = `<i class="${canale.iconClass || 'fas fa-link'}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>`;
-                                    if (!isOfficial && canale.url && canale.url.startsWith('http')) {
-                                        try { const domain = new URL(canale.url).hostname; const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`; iconaVisualizzata = `<img src="${faviconUrl}" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; background: #fff; padding: 2px;">`; } catch(e) {}
-                                    }
+                                    // Stessa icona della tag pubblica (niente icone caricate da servizi esterni)
+                                    const iconaVisualizzata = `<i class="${canale.iconClass || 'fas fa-link'}" style="color: #fff; font-size: 1.2rem; width: 24px; text-align: center;"></i>`;
 
                                     let officialBadge = isOfficial ? `<i class="fas fa-certificate" style="color: #1DA1F2; font-size: 0.75rem; margin-left: 6px;" title="Canale Ufficiale Verificato"></i>` : "";
                                     let vipBadge = isVip ? `<i class="fas fa-lock" style="color: #e5c158; font-size: 0.75rem; margin-left: 6px;" title="Protetto da VIP Vault"></i>` : "";
