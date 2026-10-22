@@ -206,9 +206,9 @@ fornitore dell'autenticazione e il servizio email scelto.
   "Strategia di lancio"), provata dal titolare sul telefono prima del giorno del lancio.
 - [x] Tasto **"Segnala questa tag"** (20/10/2026, su `sviluppo-v2`): nel pannello del QR della tag pubblica; motivo
       (imitazione, marchio, offensivo, truffa, altro), descrizione ed email facoltative. Salvata nella tabella
-      `segnalazioni` (migrazione `20261020000000_segnalazioni.sql`: applicata a `myquicktag-prova`, **da applicare alla
-      produzione**) e inviata per email a info@myquicktag.it (variabile `SEGNALAZIONI_A` per cambiarla). Serve la variabile
-      **`RESEND_API_KEY` su Vercel** (Preview e Production): senza, la segnalazione si salva ma l'email non parte.
+      `segnalazioni` (migrazione `20261020000000_segnalazioni.sql`: applicata a `myquicktag-prova` e, il 22/10/2026, a `myquicktag`) e inviata per email a info@myquicktag.it (variabile `SEGNALAZIONI_A` per cambiarla). `RESEND_API_KEY` su Vercel
+      (Preview e Production) dal 20/10. Provato dal titolare sul Preview il 22/10: email arrivata. Su register.it la casella
+      info@ è **reindirizzata** a gigi.ceva@gmail.com (con "Invia copia a" su Gmail non arrivava).
 - [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** ~~tasto "Segnala questa tag"~~ (fatto, sopra) sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio**: myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
 - [ ] Ancora aperti (minori): ~~cambiare password non fa uscire gli altri dispositivi~~ (risolto con gli account: dopo cambio/recupero password gli altri dispositivi escono); visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel (dal 20/10 con `api/segnala.js`).
 
