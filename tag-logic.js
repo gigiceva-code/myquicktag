@@ -514,14 +514,14 @@ function apriSegnalazione() {
     body.textContent = '';
     const form = document.createElement('form');
     form.id = 'form-segnalazione';
-    form.style.cssText = 'display: flex; flex-direction: column; gap: 12px; max-height: 55svh; overflow-y: auto;';
+    form.style.cssText = 'display: flex; flex-direction: column; gap: 10px;';
     const intro = document.createElement('p');
     intro.style.cssText = 'margin: 0; font-size: 0.85rem; color: #86868b;';
     intro.textContent = 'Cosa non va in @' + (cacheDatiUtente.username_display || cacheDatiUtente.username_system).replace(/^@+/, '') + '?';
     form.appendChild(intro);
     MOTIVI_SEGNALAZIONE.forEach(([valore, testo]) => {
         const riga = document.createElement('label');
-        riga.style.cssText = 'display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #fff; cursor: pointer;';
+        riga.style.cssText = 'display: flex; align-items: center; gap: 10px; font-size: 0.9rem; line-height: 1.35; color: #fff; cursor: pointer; flex-shrink: 0;';
         const radio = document.createElement('input');
         radio.type = 'radio'; radio.name = 'motivo'; radio.value = valore;
         radio.style.cssText = 'accent-color: #ff453a; width: 18px; height: 18px; flex-shrink: 0;';
@@ -529,7 +529,7 @@ function apriSegnalazione() {
         riga.appendChild(document.createTextNode(testo));
         form.appendChild(riga);
     });
-    const stileCampo = 'width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; color: #fff; font-size: 0.9rem; padding: 12px; font-family: inherit;';
+    const stileCampo = 'flex-shrink: 0; width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; color: #fff; font-size: 0.9rem; padding: 12px; font-family: inherit;';
     const descrizione = document.createElement('textarea');
     descrizione.name = 'descrizione'; descrizione.maxLength = 1000; descrizione.rows = 3;
     descrizione.placeholder = 'Spiega in breve (facoltativo)';
@@ -537,7 +537,7 @@ function apriSegnalazione() {
     form.appendChild(descrizione);
     const email = document.createElement('input');
     email.type = 'email'; email.name = 'email'; email.maxLength = 200; email.autocomplete = 'email';
-    email.placeholder = 'La tua email, se vuoi essere ricontattato';
+    email.placeholder = 'La tua email (facoltativa)';
     email.style.cssText = stileCampo;
     form.appendChild(email);
     const messaggio = document.createElement('p');
@@ -546,11 +546,16 @@ function apriSegnalazione() {
     form.appendChild(messaggio);
     const invia = document.createElement('button');
     invia.type = 'submit'; invia.textContent = 'Invia segnalazione';
-    invia.style.cssText = 'width: 100%; padding: 16px; background: #ff453a; border: none; border-radius: 14px; color: #fff; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; cursor: pointer;';
+    invia.style.cssText = 'flex-shrink: 0; width: 100%; padding: 16px; background: #ff453a; border: none; border-radius: 14px; color: #fff; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; cursor: pointer;';
     form.appendChild(invia);
     form.addEventListener('submit', inviaSegnalazione);
     form.addEventListener('change', e => { if (e.target.name === 'motivo') messaggio.textContent = ''; });
     body.appendChild(form);
+
+    // Modulo più alto degli altri pannelli: se non sta nello schermo scorre il pannello intero
+    // (il pulsante "Invia" non resta mai nascosto). chiudiDettaglio toglie questi stili.
+    sheet.style.maxHeight = 'calc(100svh - 40px - var(--mqt-sa-top) - var(--mqt-sa-bottom))';
+    sheet.style.overflowY = 'auto';
 
     backdrop.classList.add('active');
     sheet.classList.add('active');
@@ -589,7 +594,7 @@ async function inviaSegnalazione(e) {
 function chiudiDettaglio() {
     const sheet = document.getElementById('feature-bottom-sheet');
     const backdrop = document.getElementById('feature-backdrop');
-    if (sheet) sheet.classList.remove('active');
+    if (sheet) { sheet.classList.remove('active'); sheet.style.maxHeight = ''; sheet.style.overflowY = ''; }
     if (backdrop) backdrop.classList.remove('active');
 }
 
