@@ -37,6 +37,7 @@ function gotrue(metodo,url,headers,body){
   if(p==='/logout'){ const x=utenteDaBearer(headers.authorization); if(x){ const scope=url.searchParams.get('scope')||'global'; if(scope==='global') chiudi(v=>v.email===x.u.email); else if(scope==='others') chiudi(v=>v.email===x.u.email&&v.sid!==x.s.sid); else chiudi(v=>v.sid===x.s.sid); } return [204,null]; }
   return err(404,'not_found','not found '+p);
 }
+const segnalazioni=[]; // tabella segnalazioni (api/segnala.js); l'email non parte: RESEND_API_KEY assente
 // ---- finto PostgREST (stesse regole di test/api.test.mjs) ----
 globalThis.fetch=async (url,opt={})=>{
   const u=new URL(url); const m=opt.method||'GET';
@@ -49,6 +50,7 @@ globalThis.fetch=async (url,opt={})=>{
     r.lead_capture_leads=JSON.stringify(l); return new Response(JSON.stringify(r.lead_capture_leads)); }
   if(u.pathname.includes('/rpc/')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null');
     const campo=u.pathname.endsWith('aggiungi_lead')?'lead_capture_leads':'analytics_log'; const voce=b.p_lead||b.p_click; const lista=JSON.parse(r[campo]||'[]'); lista.unshift(voce); r[campo]=JSON.stringify(lista); return new Response('true'); }
+  if(u.pathname==='/rest/v1/segnalazioni' && m==='POST'){ segnalazioni.push({id:crypto.randomUUID(),stato:'nuova',...JSON.parse(opt.body)}); return new Response(null,{status:201}); }
   const f=(r)=>{for(const [k,v] of u.searchParams){ if(v.startsWith('eq.')&&String(r[k])!==decodeURIComponent(v.slice(3)))return false; if(v==='is.null'&&r[k]!=null)return false;}return true;};
   if(m==='GET'){ let out=rows.filter(f); const sel=u.searchParams.get('select'); if(sel&&sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out)); }
   if(m==='POST'){ const b=JSON.parse(opt.body); if(rows.some(r=>r.username_system===b.username_system)) return new Response('{"code":"23505"}',{status:409}); const r={id:crypto.randomUUID(),created_at:new Date().toISOString(),views:0,password:null,draft_json:null,proprietario_id:null,...b}; rows.push(r); return new Response(JSON.stringify([r]),{status:201}); }
@@ -60,6 +62,7 @@ const cors={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'*'
 http.createServer(async (req,res)=>{
   const url=new URL(req.url,'http://x'); let p=url.pathname;
   let body=''; for await (const c of req) body+=c;
+  if(p.startsWith('/__segnalazioni')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify(segnalazioni)); return; }
   if(p.startsWith('/__inbox')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify(inbox)); return; }
   if(p.startsWith('/__db')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify({rows,utenti:[...utenti.values()].map(u=>({email:u.email,confermato:u.confermato,data:u.data})),sessioni:sessioni.size})); return; }
   // Il "link" dell'email di conferma: Supabase conferma l'indirizzo quando viene toccato

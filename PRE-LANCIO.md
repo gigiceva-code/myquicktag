@@ -167,8 +167,9 @@ fornitore dell'autenticazione e il servizio email scelto.
   commercialista (codice ATECO, forfettario da dipendente, esonero INPS commercianti, IVA vendite online).
 
 ### Prezzo mostrato nel checkout di attivazione
-- `checkout.html` mostra **"€19,00"**, ma oggi l'attivazione è gratuita (scelta voluta per i primi 3 mesi).
-- Decidere cosa mostrare (es. "Gratis per 3 mesi") e allineare i testi del checkout.
+- [x] Deciso dal titolare il 20/10/2026: il totale mostra **"Gratis per 3 mesi"** (prima "€19,00").
+- Restano nel checkout loghi delle carte, "pagamento sicuro" e "Procedi al pagamento sicuro" (segnaposto voluto di Stripe):
+  da valutare con il titolare se cambiarli finché è tutto gratis.
 
 ---
 
@@ -203,8 +204,13 @@ fornitore dell'autenticazione e il servizio email scelto.
       prima del lancio se nel frattempo se ne creano altre di prova.
 - [ ] **Ultima settimana prima del lancio:** regola "3 mesi tutto sbloccato" nel codice (sezione 1,
   "Strategia di lancio"), provata dal titolare sul telefono prima del giorno del lancio.
-- [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** tasto **"Segnala questa tag"** sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio**: myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
-- [ ] Ancora aperti (minori): ~~cambiare password non fa uscire gli altri dispositivi~~ (risolto con gli account: dopo cambio/recupero password gli altri dispositivi escono); visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 10 su 12 del piano gratuito di Vercel.
+- [x] Tasto **"Segnala questa tag"** (20/10/2026, su `sviluppo-v2`): nel pannello del QR della tag pubblica; motivo
+      (imitazione, marchio, offensivo, truffa, altro), descrizione ed email facoltative. Salvata nella tabella
+      `segnalazioni` (migrazione `20261020000000_segnalazioni.sql`: applicata a `myquicktag-prova` e, il 22/10/2026, a `myquicktag`) e inviata per email a info@myquicktag.it (variabile `SEGNALAZIONI_A` per cambiarla). `RESEND_API_KEY` su Vercel
+      (Preview e Production) dal 20/10. Provato dal titolare sul Preview il 22/10: email arrivata. Su register.it la casella
+      info@ è **reindirizzata** a gigi.ceva@gmail.com (con "Invia copia a" su Gmail non arrivava).
+- [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** ~~tasto "Segnala questa tag"~~ (fatto, sopra) sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio**: myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
+- [ ] Ancora aperti (minori): ~~cambiare password non fa uscire gli altri dispositivi~~ (risolto con gli account: dopo cambio/recupero password gli altri dispositivi escono); visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel (dal 20/10 con `api/segnala.js`).
 
 ---
 

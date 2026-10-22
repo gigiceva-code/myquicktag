@@ -91,6 +91,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
             font-size: 0.9rem;
             margin-bottom: 10px;
         }
@@ -123,6 +124,7 @@
 
         .price-tag {
             font-size: 1.15rem;
+            white-space: nowrap; /* "Gratis per 3 mesi" resta su una riga */
         }
 
         /* Loghi Circuiti di Pagamento Istituzionali */
@@ -266,7 +268,7 @@
 
         <div id="step-payment" style="display: none;">
             <div class="checkout-header">
-                <span class="secure-badge"><i class="fas fa-lock"></i> Connessione cifrata PCI-DSS</span>
+                <span class="secure-badge"><i class="fas fa-lock"></i> Connessione cifrata</span>
                 <h2 class="main-title">Completa il tuo ordine</h2>
             </div>
 
@@ -282,20 +284,14 @@
                 <div class="invoice-divider"></div>
                 <div class="invoice-row total-row">
                     <span>Totale dell'ordine</span>
-                    <span class="price-tag" id="display-price">€19,00</span>
+                    <span class="price-tag" id="display-price">Gratis per 3 mesi</span>
                 </div>
             </div>
 
-            <div class="payment-gateways">
-                <span class="gateway-logo">Visa</span>
-                <span class="gateway-logo">Mastercard</span>
-                <span class="gateway-logo">Apple Pay</span>
-                <span class="gateway-logo">Stripe</span>
-            </div>
-
-            <p class="legal-notice">Verrai indirizzato alla piattaforma di pagamento sicura. I dati della tua carta sono protetti da crittografia end-to-end.</p>
+            <!-- Loghi delle carte e avviso sul pagamento tolti finché l'attivazione è gratuita (20/10/2026):
+                 si rimettono con il pagamento vero (Stripe, vedi PRE-LANCIO.md) -->
             <button class="action-button" onclick="eseguiTransazione()">
-                Procedi al pagamento sicuro
+                Attiva gratis
             </button>
         </div>
 
