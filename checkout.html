@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Secure Checkout - MyQuickTag</title>
+    <title>Attiva la tua tag - myquicktag</title>
     <link href="/fonts/inter.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -127,33 +127,78 @@
             white-space: nowrap; /* "Gratis per 3 mesi" resta su una riga */
         }
 
-        /* Loghi Circuiti di Pagamento Istituzionali */
-        .payment-gateways {
+        /* Passi dell'attivazione: 1 Riepilogo, 2 Account, 3 Fatto */
+        .passi {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
-
-        .gateway-logo {
-            font-size: 0.7rem;
-            font-weight: 700;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            font-size: 0.75rem;
             color: #9ca3af;
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        .passi .passo { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+        .passi .num {
+            width: 18px; height: 18px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            border: 1px solid #d1d5db; font-size: 0.68rem;
+        }
+        .passi .passo.attuale { color: var(--text-dark); font-weight: 600; }
+        .passi .passo.attuale .num { background: #000; border-color: #000; color: #fff; }
+        .passi .passo.fatto .num { background: #dcfce7; border-color: #dcfce7; color: var(--accent-success); }
+        .passi .linea { width: 14px; height: 1px; background: #d1d5db; }
+
+        /* Cosa è incluso */
+        .inclusi {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+            color: #374151;
+        }
+        .inclusi li { display: flex; gap: 10px; align-items: baseline; margin-bottom: 8px; }
+        .inclusi li:last-child { margin-bottom: 0; }
+        .inclusi i { color: var(--accent-success); font-size: 0.8rem; }
+
+        .scadenza-prova {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
         }
 
-        .legal-notice {
+        .note-fiducia {
             font-size: 0.75rem;
             color: var(--text-muted);
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.5;
+            margin-top: 14px;
+        }
+        .note-fiducia .rassicura { display: block; color: #374151; font-weight: 500; margin-bottom: 4px; }
+        .note-fiducia a { color: inherit; }
+
+        /* Ultimo passo: la tag sulla schermata Home */
+        .box-home {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            text-align: left;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 16px;
             margin-bottom: 24px;
         }
+        .box-home .icona {
+            flex: 0 0 auto;
+            width: 36px; height: 36px; border-radius: 9px;
+            background: #000; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+        }
+        .box-home b { display: block; font-size: 0.9rem; margin-bottom: 4px; }
+        .box-home p { margin: 0; font-size: 0.82rem; color: #374151; line-height: 1.45; }
 
         /* Bottoni Standard Internazionali */
         .action-button {
@@ -269,35 +314,51 @@
         <div id="step-payment" style="display: none;">
             <div class="checkout-header">
                 <span class="secure-badge"><i class="fas fa-lock"></i> Connessione cifrata</span>
-                <h2 class="main-title">Completa il tuo ordine</h2>
+                <h2 class="main-title">Attiva la tua tag</h2>
+                <div class="passi" id="passi-attivazione" aria-label="Passo 1 di 3">
+                    <span class="passo attuale"><span class="num">1</span>Riepilogo</span><span class="linea"></span>
+                    <span class="passo"><span class="num">2</span>Account</span><span class="linea"></span>
+                    <span class="passo"><span class="num">3</span>Fatto</span>
+                </div>
             </div>
 
             <div class="invoice-box">
                 <div class="invoice-row">
-                    <span class="item-title" id="display-username">Registrazione @...</span>
-                    <span class="item-spec" style="font-weight: 600; color: var(--text-dark);">Identity Pro</span>
-                </div>
-                <div class="invoice-row">
-                    <span class="item-spec">Licenza d'uso esclusiva + PWA Ecosystem</span>
-                    <span class="item-spec">Incluso</span>
+                    <span class="item-title" id="display-username" style="min-width: 0; overflow-wrap: anywhere;">@...</span>
+                    <span class="item-spec" id="display-offerta" style="white-space: nowrap;">Prova di lancio</span>
                 </div>
                 <div class="invoice-divider"></div>
+                <ul class="inclusi" id="elenco-inclusi">
+                    <li><i class="fas fa-check"></i><span>Il tuo @nome, riservato solo a te</span></li>
+                    <li><i class="fas fa-check"></i><span>La tua tag con il QR, da mostrare e condividere</span></li>
+                    <li><i class="fas fa-check"></i><span>Modifiche quando vuoi, dal telefono</span></li>
+                </ul>
+                <div class="invoice-divider"></div>
                 <div class="invoice-row total-row">
-                    <span>Totale dell'ordine</span>
-                    <span class="price-tag" id="display-price">Gratis per 3 mesi</span>
+                    <span>Oggi paghi</span>
+                    <span class="price-tag" id="display-price">0,00 €</span>
                 </div>
+                <div class="scadenza-prova" id="display-scadenza"></div>
             </div>
 
-            <!-- Loghi delle carte e avviso sul pagamento tolti finché l'attivazione è gratuita (20/10/2026):
-                 si rimettono con il pagamento vero (Stripe, vedi PRE-LANCIO.md) -->
+            <!-- Niente loghi delle carte finché l'attivazione è gratuita: con Stripe li mostra la sua pagina di pagamento -->
             <button class="action-button" onclick="eseguiTransazione()">
                 Attiva gratis
             </button>
+            <p class="note-fiducia">
+                <span class="rassicura"><span style="white-space: nowrap;">Nessuna carta richiesta</span> · <span style="white-space: nowrap;">Nessun rinnovo automatico</span></span>
+                Attivando accetti i <a href="/termini.html" target="_blank" rel="noopener">Termini</a> e l'<a href="/privacy.html" target="_blank" rel="noopener">Informativa privacy</a>
+            </p>
         </div>
 
         <div id="step-password" style="display: none;">
             <div class="checkout-header">
                 <h2 class="main-title">Il tuo account</h2>
+                <div class="passi" aria-label="Passo 2 di 3">
+                    <span class="passo fatto"><span class="num"><i class="fas fa-check"></i></span>Riepilogo</span><span class="linea"></span>
+                    <span class="passo attuale"><span class="num">2</span>Account</span><span class="linea"></span>
+                    <span class="passo"><span class="num">3</span>Fatto</span>
+                </div>
                 <p class="subtitle">La tag sarà collegata al tuo account: con un solo account gestisci tutte le tue tag, e se dimentichi la password la recuperi con la tua email.</p>
             </div>
 
@@ -321,27 +382,36 @@
         <div id="step-success" style="display: none;">
             <div class="success-icon-box">✓</div>
             <div class="checkout-header" style="margin-bottom: 20px;">
-                <h2 class="main-title">Attivazione completata</h2>
-                <p class="subtitle">Il tuo profilo digitale internazionale è ora configurato e visibile pubblicamente.</p>
+                <h2 class="main-title">La tua tag è online</h2>
+                <p class="subtitle">Da adesso chiunque inquadri il QR vede la tua tag.</p>
             </div>
 
             <div class="invoice-box" style="text-align: left; font-size: 0.85rem;">
                 <div class="invoice-row" style="margin-bottom: 8px;">
-                    <span style="color: var(--text-muted);">Stato Identità:</span>
-                    <span class="badge-active">Attivo</span>
-                </div>
-                <div class="invoice-row" style="margin-bottom: 8px;">
-                    <span style="color: var(--text-muted);">Profilo Assegnato:</span>
+                    <span style="color: var(--text-muted);">Tag</span>
                     <span id="receipt-username" style="font-weight: 600; min-width: 0; margin-left: 12px; text-align: right; overflow-wrap: anywhere;">@...</span>
                 </div>
+                <div class="invoice-row" style="margin-bottom: 8px;">
+                    <span style="color: var(--text-muted);">Stato</span>
+                    <span class="badge-active">Attiva</span>
+                </div>
                 <div class="invoice-row">
-                    <span style="color: var(--text-muted);">Licenza Attiva:</span>
-                    <span style="font-weight: 500;">PWA Identity Premium</span>
+                    <span style="color: var(--text-muted);">Gratis fino al</span>
+                    <span style="font-weight: 600;" id="receipt-scadenza">…</span>
+                </div>
+            </div>
+
+            <!-- Invito a installare: la tag installata si apre a tutto schermo, senza le barre del browser -->
+            <div class="box-home" id="box-home">
+                <div class="icona"><i class="fas fa-mobile-screen-button"></i></div>
+                <div>
+                    <b>Ultimo passo: mettila sulla schermata Home</b>
+                    <p>Così si apre con un tocco, a tutto schermo come un'app: è il modo più bello per mostrarla ai tuoi clienti.</p>
                 </div>
             </div>
 
             <button class="action-button" id="btn-vai-alla-tag" onclick="vaiAllaTag()">
-                Accedi alla tua PWA
+                Vai alla tua tag e installala
             </button>
         </div>
 
@@ -354,6 +424,14 @@
         let targetUserClean = usernameScelto.replace('@', '').trim().toLowerCase();
         // Rinnovo (dalla dashboard): stessa pagina, ma per una tag già attiva del proprietario
         const modalitaRinnovo = urlParams.get("rinnovo") === "1";
+
+        // Data in italiano, es. "21 gennaio 2027" (AAAA-MM-GG dal server, oppure un istante in ms)
+        function dataEstesa(valore) {
+            const d = typeof valore === 'string' ? new Date(valore + 'T12:00:00Z') : new Date(valore);
+            return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Rome' });
+        }
+        // Fine della prova se si attiva oggi: la data vera la scrive il server all'attivazione (90 giorni, lib/abbonamento.js)
+        const scadenzaSeAttiviOggi = dataEstesa(Date.now() + 90 * 24 * 60 * 60 * 1000);
 
         document.addEventListener("DOMContentLoaded", function() {
             if (!targetUserClean) {
@@ -379,9 +457,12 @@
                         if (!mqtSessione.valida(targetUserClean)) { mqtSessione.scaduta(targetUserClean); return; }
                         const nomeRinnovo = usernameDisplay.replace('@', '');
                         document.querySelector("#step-payment .main-title").innerText = "Rinnova la tua tag";
-                        document.getElementById("display-username").innerText = `Rinnovo @${nomeRinnovo}`;
+                        document.getElementById("passi-attivazione").style.display = "none";
+                        document.getElementById("elenco-inclusi").style.display = "none";
+                        document.getElementById("display-username").innerText = `@${nomeRinnovo}`;
+                        document.getElementById("display-offerta").innerText = "Rinnovo";
                         document.getElementById("receipt-username").innerText = `@${nomeRinnovo}`;
-                        document.getElementById("display-price").innerText = "Gratis";
+                        document.getElementById("display-scadenza").innerText = "Gratis per altri 90 giorni";
                         document.querySelector('button[onclick="eseguiTransazione()"]').innerText = "Rinnova per 90 giorni";
                         document.getElementById("loading-screen").style.display = "none";
                         document.getElementById("step-payment").style.display = "block";
@@ -400,7 +481,6 @@
 
                     // Ritorno dall'accesso (accesso.html → ?attiva=1): l'ordine era già confermato, si attiva
                     if (stato === "in attesa" && urlParams.get("attiva") === "1" && mqtSessione.haAccount()) {
-                        document.getElementById("display-username").innerText = `Registrazione @${usernameDisplay.replace('@', '')}`;
                         document.getElementById("receipt-username").innerText = `@${usernameDisplay.replace('@', '')}`;
                         document.getElementById("loading-screen").style.display = "none";
                         if (await mostraStepAccount()) attivaConAccount();
@@ -408,8 +488,9 @@
                     }
 
                     // Se è corretto e in attesa, riempiamo i campi e accendiamo lo Step 1
-                  document.getElementById("display-username").innerText = `Registrazione @${usernameDisplay.replace('@', '')}`;
-                  document.getElementById("receipt-username").innerText = `@${usernameDisplay.replace('@', '')}`;
+                    document.getElementById("display-username").innerText = `@${usernameDisplay.replace('@', '')}`;
+                    document.getElementById("receipt-username").innerText = `@${usernameDisplay.replace('@', '')}`;
+                    document.getElementById("display-scadenza").innerText = `Gratis fino al ${scadenzaSeAttiviOggi}`;
                     
                     document.getElementById("loading-screen").style.display = "none";
                     document.getElementById("step-payment").style.display = "block";
@@ -503,9 +584,11 @@
                     if (btn) { btn.innerText = testoOriginale; btn.disabled = false; }
                     return;
                 }
-                const nuovaScadenza = new Date(resData.abbonamento.data_scadenza + 'T12:00:00Z').toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const nuovaScadenza = dataEstesa(resData.abbonamento.data_scadenza);
                 document.querySelector("#step-success .main-title").innerText = "Rinnovo completato";
                 document.querySelector("#step-success .subtitle").innerText = `La tua tag è attiva fino al ${nuovaScadenza}.`;
+                document.getElementById("receipt-scadenza").innerText = nuovaScadenza;
+                document.getElementById("box-home").style.display = "none";
                 document.getElementById("btn-vai-alla-tag").innerText = "Torna alla dashboard";
                 document.getElementById("step-payment").style.display = "none";
                 document.getElementById("step-success").style.display = "block";
@@ -566,6 +649,12 @@
                     const tokens = JSON.parse(localStorage.getItem('mqt_session_tokens') || '{}');
                     delete tokens[targetUserClean];
                     localStorage.setItem('mqt_session_tokens', JSON.stringify(tokens));
+                    document.getElementById("receipt-scadenza").innerText = resData.data_scadenza ? dataEstesa(resData.data_scadenza) : scadenzaSeAttiviOggi;
+                    // Già dentro l'app installata (raro): niente invito a installare
+                    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
+                        document.getElementById("box-home").style.display = "none";
+                        document.getElementById("btn-vai-alla-tag").innerText = "Vai alla tua tag";
+                    }
                     document.getElementById("step-password").style.display = "none";
                     document.getElementById("step-success").style.display = "block";
                     return;

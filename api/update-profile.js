@@ -176,7 +176,8 @@ export default async function handler(req, res) {
         }
       }
       // Il server scrive stato e date del piano, mai il browser
-      Object.assign(fieldsToSave, { stato: 'attivo' }, dateAttivazione());
+      const date = dateAttivazione();
+      Object.assign(fieldsToSave, { stato: 'attivo' }, date);
       try {
         if (diritti.proprietario) {
           await aggiornaTag(recordAttuale.id, fieldsToSave);
@@ -189,7 +190,7 @@ export default async function handler(req, res) {
         console.error("DB ATTIVAZIONE REJECTED:", erroreAttivazione.dettagli || erroreAttivazione.message);
         return res.status(500).json({ error: "Attivazione non riuscita. Riprova." });
       }
-      return res.status(200).json({ success: true, action: 'activated' });
+      return res.status(200).json({ success: true, action: 'activated', data_scadenza: date.data_scadenza });
     }
 
     if (Object.keys(fieldsToSave).length === 0) {

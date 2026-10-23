@@ -171,8 +171,11 @@ fornitore dell'autenticazione e il servizio email scelto.
 
 ### Prezzo mostrato nel checkout di attivazione
 - [x] Deciso dal titolare il 20/10/2026: il totale mostra **"Gratis per 3 mesi"** (prima "€19,00").
-- Restano nel checkout loghi delle carte, "pagamento sicuro" e "Procedi al pagamento sicuro" (segnaposto voluto di Stripe):
-  da valutare con il titolare se cambiarli finché è tutto gratis.
+- [x] 23/10/2026, deciso col titolare: niente loghi delle carte finché è tutto gratis (con Stripe li mostra la sua pagina).
+  Checkout rifatto (`checkout.html`): passi 1 Riepilogo · 2 Account · 3 Fatto, "Oggi paghi 0,00 €", "Gratis fino al <data>",
+  "Nessuna carta richiesta · Nessun rinnovo automatico", link a Termini e Privacy; tolte le parole tecniche ("PWA",
+  "Identity Pro"…). L'ultima schermata invita a mettere la tag sulla schermata Home ("Vai alla tua tag e installala").
+  L'elenco "incluso" dice solo cose vere oggi: con la regola "3 mesi tutto sbloccato" aggiungere "Tutte le funzioni sbloccate".
 
 ---
 
