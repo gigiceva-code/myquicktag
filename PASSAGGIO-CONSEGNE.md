@@ -7,7 +7,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Come lavorare con il titolare
 
-- Scrivere **in italiano**, con spiegazioni semplici e concrete: il titolare non è uno sviluppatore.
+- Scrivere **in italiano** e **dare del tu** al titolare (richiesta del 23/10/2026), con spiegazioni semplici e concrete: il titolare non è uno sviluppatore.
   Dire cosa cambia per lui e per i clienti, non i dettagli tecnici.
 - Prima di cambiare il **prodotto** (piani, prezzi, cosa vede il cliente) chiedere; per correzioni e
   sicurezza si può procedere spiegando dopo.
