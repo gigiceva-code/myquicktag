@@ -98,7 +98,7 @@ r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtCarla),bo
 ok(r.code===401 && riga('prova').stato==='in attesa','attivazione con account NON verificato rifiutata');
 r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',stato:'attivo',password:'a'.repeat(64),proprietario_id:bruno.id,sessionToken:ric}});
 const p=riga('prova');
-ok(r.code===200 && r.body.action==='activated' && p.stato==='attivo' && p.proprietario_id===anna.id,'attivazione: ricevuta + account verificato → attiva e di proprietà dell\'account');
+ok(r.code===200 && r.body.action==='activated' && r.body.data_scadenza===p.data_scadenza && p.stato==='attivo' && p.proprietario_id===anna.id,'attivazione: ricevuta + account verificato → attiva e di proprietà dell\'account');
 ok(p.bio==='ciao' && p.username_display==='@Prova' && p.draft_json==='','attivazione: la bozza diventa la tag pubblica');
 ok(p.data_inizio && p.data_scadenza && !p.password,'attivazione: date scritte dal server, nessuna password salvata nella tag');
 r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',bio:'hack',sessionToken:ric}});

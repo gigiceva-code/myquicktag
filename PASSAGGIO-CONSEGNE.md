@@ -23,9 +23,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Scelte volute (non segnalarle come errori negli audit)
 
-- **Checkout con pagamento simulato** (`checkout.html`: prezzo, loghi delle carte, "pagamento sicuro",
-  "Transazione approvata"): è lasciato apposta come segnaposto del futuro pagamento con Stripe.
-  Durante i test l'attivazione resta gratuita. Va collegato a Stripe quando il titolare decide prezzi e aspetti fiscali.
+- **Checkout senza pagamento** (`checkout.html`, rifatto il 23/10/2026: "Oggi paghi 0,00 €", "Nessuna carta richiesta",
+  niente loghi delle carte): è il segnaposto del futuro pagamento con Stripe. Durante la prova l'attivazione resta gratuita. Va collegato a Stripe quando il titolare decide prezzi e aspetti fiscali.
 - Se il titolare indica altre scelte volute, aggiungerle qui.
 
 ## Dove sta cosa
