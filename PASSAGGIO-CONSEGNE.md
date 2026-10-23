@@ -117,6 +117,10 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 0. **Account con Supabase Auth: online su myquicktag.it dal 18/10/2026** (pull request #7 unita in `main`, produzione
    configurata). Restano le prove sul sito vero: account del titolare, iPhone (app installata), visitatore da un altro
    telefono con "SALVA" → Pocket (vedi `PRE-LANCIO.md` → "Account", punti D ed E).
+   **Stato al 23/10/2026:** online fino alla PR #14 (`main` = `sviluppo-v2`). Prove fatte dal titolare: email e codici,
+   recupero password, seconda tag, "Esci da tutti i dispositivi", Android, iPhone, visitatore → Pocket, segnalazioni
+   (arrivano a info@myquicktag.it, inoltrata a Gmail). Da fare: ricontrollo della cornice su iPhone dopo la PR #10,
+   revisione legale da un professionista, "3 mesi tutto sbloccato" nell'ultima settimana prima del lancio.
 1. **Audit di UI, UX e marketing: fatto (04/10/2026)** → `AUDIT-UI-UX-MARKETING.md` (schermate in `audit/`).
    Contiene il piano di lavoro A/B/C: prima le correzioni (A, a partire dall'errore "contenuti non pubblicati
    all'attivazione"), poi i testi (B, serve l'ok del titolare) e le decisioni di prodotto (C).

@@ -100,6 +100,9 @@ fornitore dell'autenticazione e il servizio email scelto.
       Titolare: **Luigi Micelli**, contatto info@myquicktag.it (confermati dal titolare). Impegni scelti nella bozza, da
       confermare: cancellazione dell'account entro 30 giorni su richiesta via email (non c'è un pulsante), segnalazioni
       conservate al massimo 24 mesi, età minima 18 anni, nessun indirizzo postale indicato.
+- [x] 23/10/2026: pagine legali online sul sito vero (PR #13). Tolti i riferimenti alle etichette NFC (per ora c'è
+      solo il QR) da privacy, termini e home (PR #14). Nella stessa PR il menu ≡ della home si adatta all'altezza dello
+      schermo e sta in una schermata senza scorrere (provato da 360×640 a 430×800).
 - [ ] Revisione da un professionista prima del lancio pubblico.
 - Il sito non usa cookie di profilazione né statistiche esterne: solo memoria tecnica del telefono (accesso, Pocket,
   bozza). Per i soli strumenti tecnici di norma non serve il banner dei cookie, ma serve l'informativa.
