@@ -1,13 +1,13 @@
 # Passaggio di consegne — myquicktag
 
 Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md`
-(decisioni aperte e cose da fare prima del lancio). Aggiornato al 18/10/2026.
+(decisioni aperte e cose da fare prima del lancio). Aggiornato al 23/10/2026.
 
 ---
 
 ## Come lavorare con il titolare
 
-- Scrivere **in italiano**, con spiegazioni semplici e concrete: il titolare non è uno sviluppatore.
+- Scrivere **in italiano** e **dare del tu** al titolare (richiesta del 23/10/2026), con spiegazioni semplici e concrete: il titolare non è uno sviluppatore.
   Dire cosa cambia per lui e per i clienti, non i dettagli tecnici.
 - Prima di cambiare il **prodotto** (piani, prezzi, cosa vede il cliente) chiedere; per correzioni e
   sicurezza si può procedere spiegando dopo.
@@ -72,6 +72,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   collegamento delle tag "create prima degli account" (riquadro della dashboard e azione `collega-vecchia`): la
   produzione non ha tag vecchie, quindi non servirà mai.
 - `api/account.js`: elenco delle tag dell'account (dashboard) e configurazione pubblica di Supabase.
+- `api/track-view.js` e `api/track-click.js` (statistiche): dal 23/10/2026 hanno limiti per IP (`lib/limiti.js`), oltre i quali
+  la visita o il click non si conta (risposta normale, il visitatore non vede nulla).
 - `api/segnala.js` (20/10/2026): "Segnala questa tag" dal pannello del QR; salva in `segnalazioni` (Table Editor,
   colonna `stato`: nuova / in esame / chiusa) e manda un'email a info@myquicktag.it con Resend (`RESEND_API_KEY` su Vercel).
 - **Pocket del visitatore (13/10/2026, testi approvati dal titolare; dal 19/10 la conferma dice "@NOME è nel tuo Pocket…"):** "SALVA" sulla tag pubblica mette la tag nel
@@ -102,7 +104,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 159 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 162 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
@@ -117,6 +119,10 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 0. **Account con Supabase Auth: online su myquicktag.it dal 18/10/2026** (pull request #7 unita in `main`, produzione
    configurata). Restano le prove sul sito vero: account del titolare, iPhone (app installata), visitatore da un altro
    telefono con "SALVA" → Pocket (vedi `PRE-LANCIO.md` → "Account", punti D ed E).
+   **Stato al 23/10/2026:** online fino alla PR #14 (`main` = `sviluppo-v2`). Prove fatte dal titolare: email e codici,
+   recupero password, seconda tag, "Esci da tutti i dispositivi", Android, iPhone, visitatore → Pocket, segnalazioni
+   (arrivano a info@myquicktag.it, inoltrata a Gmail). Da fare: ricontrollo della cornice su iPhone dopo la PR #10,
+   revisione legale da un professionista, "3 mesi tutto sbloccato" nell'ultima settimana prima del lancio.
 1. **Audit di UI, UX e marketing: fatto (04/10/2026)** → `AUDIT-UI-UX-MARKETING.md` (schermate in `audit/`).
    Contiene il piano di lavoro A/B/C: prima le correzioni (A, a partire dall'errore "contenuti non pubblicati
    all'attivazione"), poi i testi (B, serve l'ok del titolare) e le decisioni di prodotto (C).

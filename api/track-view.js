@@ -1,5 +1,6 @@
 import { trovaTag, aggiornaTag } from '../lib/db.js';
 import { nomeTag } from '../lib/nome-canonico.js';
+import { entroILimiti } from '../lib/limiti.js';
 export default async function handler(req, res) {
   // Accetta solo richieste POST
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
@@ -10,6 +11,16 @@ export default async function handler(req, res) {
   // --- FIX SICUREZZA: Protezione da iniezioni ---
   // Forma canonica del nome (lib/nome-canonico.js): solo lettere e numeri.
   const safeUsername = nomeTag(u);
+
+  // Contro le visite gonfiate (ricariche a raffica, programmi): oltre questi numeri la visita
+  // non si conta, ma il visitatore non vede nessun errore. Larghi apposta: dietro lo stesso IP
+  // possono esserci molti telefoni (rete del locale, operatori mobili).
+  if (!(await entroILimiti(req, safeUsername, [
+    { nome: 'visita', per: 'ip+tag', max: 10, finestra: 3600 },
+    { nome: 'visita-ip', per: 'ip', max: 300, finestra: 86400 }
+  ]))) {
+    return res.status(200).json({ success: true, contata: false });
+  }
 
   try {
     // ====================================================

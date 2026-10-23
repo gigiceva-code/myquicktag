@@ -204,6 +204,14 @@ r=await call('track-click.js',{method:'POST',body:{u:'prova',sezione:'BIO<script
 const log=JSON.parse(riga('prova').analytics_log); ok(r.code===200 && log[0].sezione==='BIOscript' && log[0].timestamp,'track-click registra (sezione ripulita)');
 r=await call('track-view.js',{method:'POST',query:{u:'prova'},headers:{'user-agent':'iPhone','x-vercel-ip-city':'Milano','x-vercel-ip-country':'IT'}});
 ok(r.code===200 && riga('prova').views===1 && JSON.parse(riga('prova').analytics_data).geo['Milano, IT']===1,'track-view');
+for(let i=0;i<12;i++) r=await call('track-view.js',{method:'POST',ip:'6.6.6.6',query:{u:'prova'}});
+ok(r.code===200 && r.body.contata===false && riga('prova').views===11,'track-view: oltre 10 visite in un\'ora dallo stesso IP non si contano (senza errori)');
+r=await call('track-view.js',{method:'POST',ip:'6.6.6.7',query:{u:'prova'}});
+ok(riga('prova').views===12,'track-view: un altro IP si conta ancora');
+const logPrima=riga('prova').analytics_log, clickPrima=JSON.parse(logPrima).length;
+for(let i=0;i<62;i++) r=await call('track-click.js',{method:'POST',ip:'6.6.6.8',body:{u:'prova',sezione:'BIO'}});
+ok(r.code===200 && r.body.contato===false && JSON.parse(riga('prova').analytics_log).length===clickPrima+60,'track-click: oltre 60 click in un\'ora dallo stesso IP non si contano (senza errori)');
+riga('prova').analytics_log=logPrima;
 r=await call('get-profile.js',{query:{u:'prova'}});
 ok(!('lead_capture_leads' in r.body.fields) && !('analytics_log' in r.body.fields) && !('analytics_data' in r.body.fields) && !('pocket_cloud' in r.body.fields),'visitatore: niente contatti, statistiche, Pocket');
 r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
