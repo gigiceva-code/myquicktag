@@ -1,0 +1,26 @@
+/* Pagine legali (privacy.html, cookie.html, termini.html): testo lungo, leggibile sul telefono */
+:root { --sfondo: #0d0d0f; --testo: #e8e8ed; --tenue: #86868b; --accento: #50C878; --bordo: rgba(255,255,255,0.1); }
+* { box-sizing: border-box; }
+body {
+    margin: 0; background: var(--sfondo); color: var(--testo);
+    font-family: 'Inter', -apple-system, sans-serif; font-size: 16px; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
+.pagina { max-width: 720px; margin: 0 auto; padding: 32px 20px 64px; }
+.torna { color: var(--tenue); text-decoration: none; font-size: 0.85rem; }
+.torna:hover { color: var(--testo); }
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 24px 0 6px; letter-spacing: -0.3px; }
+.aggiornato { color: var(--tenue); font-size: 0.85rem; margin: 0 0 28px; }
+h2 { font-size: 1.1rem; margin: 34px 0 8px; color: #fff; }
+h3 { font-size: 0.98rem; margin: 20px 0 6px; color: #fff; }
+p, li { margin: 0 0 12px; }
+ul { padding-left: 20px; margin: 0 0 12px; }
+a { color: var(--accento); }
+strong { color: #fff; font-weight: 600; }
+.riquadro { border: 1px solid var(--bordo); border-radius: 14px; padding: 16px 18px; margin: 16px 0 20px; background: rgba(255,255,255,0.03); }
+.riquadro p:last-child, .riquadro ul:last-child { margin-bottom: 0; }
+table { width: 100%; border-collapse: collapse; margin: 8px 0 20px; font-size: 0.9rem; }
+th, td { text-align: left; vertical-align: top; padding: 10px 8px; border-bottom: 1px solid var(--bordo); }
+th { color: #fff; font-weight: 600; }
+.piede { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--bordo); color: var(--tenue); font-size: 0.85rem; }
+.piede a { margin-right: 16px; }

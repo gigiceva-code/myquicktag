@@ -95,18 +95,18 @@ consenso promozionale facoltativo (salvato con data e versione del testo), comun
 fornitore dell'autenticazione e il servizio email scelto.
 
 **Privacy, cookie e termini (prima del lancio pubblico, non prima delle prove):**
-- Oggi i link "Privacy Policy" e "Termini di Vendita" in fondo alla home sono vuoti (`href="#"`): non esistono le pagine.
+- [x] Bozze scritte il 22/10/2026: `privacy.html`, `cookie.html`, `termini.html` (stile in `legale.css`), collegate dal menu (≡)
+      e dal fondo della home ("Privacy", "Cookie", "Termini di servizio") e dalla creazione dell'account ("Creando l'account accetti…").
+      Titolare: **Luigi Micelli**, contatto info@myquicktag.it (confermati dal titolare). Impegni scelti nella bozza, da
+      confermare: cancellazione dell'account entro 30 giorni su richiesta via email (non c'è un pulsante), segnalazioni
+      conservate al massimo 24 mesi, età minima 18 anni, nessun indirizzo postale indicato.
+- [ ] Revisione da un professionista prima del lancio pubblico.
 - Il sito non usa cookie di profilazione né statistiche esterne: solo memoria tecnica del telefono (accesso, Pocket,
   bozza). Per i soli strumenti tecnici di norma non serve il banner dei cookie, ma serve l'informativa.
 - [x] Caratteri: dal 18/10/2026 il carattere Inter è servito dal sito stesso (`fonts/`, licenza libera OFL), non più da
       Google Fonts. Dal 18/10 lo caricano anche la home e `celebration.html` (richiesta del titolare): ora tutte le pagine usano Inter.
 - [x] Icone dei link nell'editor (20/10/2026): tolto il servizio favicon di Google; l'editor mostra la stessa icona della
       tag pubblica. Ora il sito non carica più niente dai server di Google.
-- Da scrivere: informativa privacy (titolare, email dell'account, contatti lasciati nel vasetto — di cui è titolare
-  l'attività, myquicktag li custodisce per suo conto —, fornitori Supabase, Vercel, Resend, durata, diritti),
-  informativa cookie, termini del servizio (con la regola sui nomi usati per imitare persone o marchi, sezione 2).
-- Serve dal titolare: nome e un recapito da indicare come titolare del trattamento (anche un'email dedicata).
-  Consigliata una revisione da un professionista prima del lancio.
 - Collaudo: 16/10/2026 il titolare prova da PC il secondo dispositivo ("Esci da tutti i dispositivi", riaccesso dopo
   cambio password); iPhone sabato 17/10 (telefono della figlia); Android = il suo telefono.
 
@@ -209,7 +209,7 @@ fornitore dell'autenticazione e il servizio email scelto.
       `segnalazioni` (migrazione `20261020000000_segnalazioni.sql`: applicata a `myquicktag-prova` e, il 22/10/2026, a `myquicktag`) e inviata per email a info@myquicktag.it (variabile `SEGNALAZIONI_A` per cambiarla). `RESEND_API_KEY` su Vercel
       (Preview e Production) dal 20/10. Provato dal titolare sul Preview il 22/10: email arrivata. Su register.it la casella
       info@ è **reindirizzata** a gigi.ceva@gmail.com (con "Invia copia a" su Gmail non arrivava).
-- [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** ~~tasto "Segnala questa tag"~~ (fatto, sopra) sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio**: myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
+- [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** ~~tasto "Segnala questa tag"~~ (fatto, sopra) sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio** (scritta il 22/10, `termini.html` punto 3): myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
 - [ ] Ancora aperti (minori): ~~cambiare password non fa uscire gli altri dispositivi~~ (risolto con gli account: dopo cambio/recupero password gli altri dispositivi escono); visite e click delle statistiche non hanno limiti (si possono gonfiare); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel (dal 20/10 con `api/segnala.js`).
 
 ---
