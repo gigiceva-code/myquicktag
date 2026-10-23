@@ -95,8 +95,8 @@ consenso promozionale facoltativo (salvato con data e versione del testo), comun
 fornitore dell'autenticazione e il servizio email scelto.
 
 **Privacy, cookie e termini (prima del lancio pubblico, non prima delle prove):**
-- [x] Bozze scritte il 22/10/2026: `privacy.html`, `cookie.html`, `termini.html` (stile in `legale.css`), collegate dal piede
-      della home ("Privacy", "Cookie", "Termini di servizio") e dalla creazione dell'account ("Creando l'account accetti…").
+- [x] Bozze scritte il 22/10/2026: `privacy.html`, `cookie.html`, `termini.html` (stile in `legale.css`), collegate dal menu (≡)
+      e dal fondo della home ("Privacy", "Cookie", "Termini di servizio") e dalla creazione dell'account ("Creando l'account accetti…").
       Titolare: **Luigi Micelli**, contatto info@myquicktag.it (confermati dal titolare). Impegni scelti nella bozza, da
       confermare: cancellazione dell'account entro 30 giorni su richiesta via email (non c'è un pulsante), segnalazioni
       conservate al massimo 24 mesi, età minima 18 anni, nessun indirizzo postale indicato.
