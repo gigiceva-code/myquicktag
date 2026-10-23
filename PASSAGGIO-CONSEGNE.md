@@ -1,7 +1,7 @@
 # Passaggio di consegne — myquicktag
 
 Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md`
-(decisioni aperte e cose da fare prima del lancio). Aggiornato al 18/10/2026.
+(decisioni aperte e cose da fare prima del lancio). Aggiornato al 23/10/2026.
 
 ---
 
@@ -72,6 +72,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   collegamento delle tag "create prima degli account" (riquadro della dashboard e azione `collega-vecchia`): la
   produzione non ha tag vecchie, quindi non servirà mai.
 - `api/account.js`: elenco delle tag dell'account (dashboard) e configurazione pubblica di Supabase.
+- `api/track-view.js` e `api/track-click.js` (statistiche): dal 23/10/2026 hanno limiti per IP (`lib/limiti.js`), oltre i quali
+  la visita o il click non si conta (risposta normale, il visitatore non vede nulla).
 - `api/segnala.js` (20/10/2026): "Segnala questa tag" dal pannello del QR; salva in `segnalazioni` (Table Editor,
   colonna `stato`: nuova / in esame / chiusa) e manda un'email a info@myquicktag.it con Resend (`RESEND_API_KEY` su Vercel).
 - **Pocket del visitatore (13/10/2026, testi approvati dal titolare; dal 19/10 la conferma dice "@NOME è nel tuo Pocket…"):** "SALVA" sulla tag pubblica mette la tag nel
@@ -102,7 +104,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 159 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 162 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
