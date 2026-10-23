@@ -30,7 +30,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 ## Dove sta cosa
 
 - **Sito pubblico:** https://myquicktag.it (Vercel, ramo `main`). Tag pubblica: `/u/<nome>`.
-- **Vercel:** team `gigiceva-codes-projects`, progetto `myquicktag`.
+- **Vercel:** team `gigiceva-codes-projects`, progetto `myquicktag`. È l'unico progetto collegato al codice: il doppione
+  `myquicktag-e34a` (senza variabili né dominio, rifaceva ogni pubblicazione) è stato eliminato dal titolare il 23/10/2026.
   Variabili: `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (Production → progetto `myquicktag`;
   Preview → progetto `myquicktag-prova`, impostato il 12/10/2026). Facoltativa: `RINNOVO_GRATUITO=si`
   accende il rinnovo gratuito dalla dashboard (spento di base).
