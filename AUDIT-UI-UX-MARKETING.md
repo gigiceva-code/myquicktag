@@ -232,15 +232,15 @@ Frasi da rivedere: "ecosistema d'élite", "spazio assoluto", "Preparati alla riv
 3. Stessa regola dei piani tra editor e tag pubblica (1.5): deciso "tutto sbloccato per 3 mesi", da fare nell'ultima settimana prima del lancio.
 
 **B. Testi (serve il tuo ok sul tono e sul glossario)**
-4. Checkout "gratis per 3 mesi" senza diciture di pagamento (1.2).
-5. Glossario italiano in tutto il sito (2.2) e nuova home (2.1).
+4. ✅ Checkout "gratis per 3 mesi" senza diciture di pagamento (1.2, rifatto il 23/10/2026).
+5. ~~Glossario italiano in tutto il sito (2.2)~~: il titolare ha scelto di mantenere il tono "lusso" (24/10/2026). Nuova home (2.1) da rivalutare in quel tono.
 6. Schermata "e adesso condividi" dopo l'attivazione (2.4).
 
 **C. Decisioni di prodotto (tue)**
 7. Email del cliente all'attivazione e recupero password (1.4).
 8. ✅ Durante i 3 mesi: tutto sbloccato (1.5, deciso il 09/10/2026).
 9. Privacy, Termini e "Segnala questa tag" (1.3).
-10. Copertina della tag con pulsanti diretti (2.5) e anteprima dei link su WhatsApp con nome e foto (1.6).
+10. Copertina della tag con pulsanti diretti (2.5) e ✅ anteprima dei link su WhatsApp con nome e foto (1.6, fatto il 24/10/2026).
 
 **Domande aperte:** si vende anche un oggetto fisico (adesivo/portachiavi NFC)? Esiste una tag di
 esempio da mostrare in home? Chi è il cliente principale da cui partire (attività locali,

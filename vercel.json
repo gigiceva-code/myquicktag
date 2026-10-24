@@ -2,6 +2,17 @@
   "rewrites": [
     {
       "source": "/u/:username",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(WhatsApp|facebookexternalhit|Facebot|Twitterbot|TelegramBot|Slackbot|LinkedInBot|Discordbot|Pinterest|SkypeUriPreview|Viber|Snapchat|redditbot).*"
+        }
+      ],
+      "destination": "/api/manifest?u=:username&anteprima=1"
+    },
+    {
+      "source": "/u/:username",
       "destination": "/tag.html?u=:username"
     },
     {
