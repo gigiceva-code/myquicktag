@@ -1,4 +1,82 @@
-export default function handler(req, res) {
+import { trovaTag } from '../lib/db.js';
+import { nomeTag } from '../lib/nome-canonico.js';
+import { calcolaAbbonamento } from '../lib/abbonamento.js';
+
+// ============================================================
+// ANTEPRIMA DEI LINK (WhatsApp, Facebook, Telegram, iMessage…)
+// ============================================================
+// Chi genera l'anteprima di /u/<nome> non esegue il JavaScript della tag, quindi vedrebbe solo
+// "myquicktag". vercel.json manda QUI solo questi programmi (riconosciuti dallo user-agent), con
+// ?anteprima=1: ricevono una pagina minima con nome, bio e foto della tag. Le persone ricevono
+// sempre tag.html come prima. Sta in questo file per non superare le 12 funzioni del piano gratuito.
+const SITO = 'https://myquicktag.it';
+const IMMAGINE_PREDEFINITA = `${SITO}/icons/og-image.png`;
+
+function esc(t) {
+  return String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Testo semplice su una riga, al massimo n caratteri
+function riga(t, n) {
+  const pulito = String(t ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  return pulito.length > n ? pulito.slice(0, n - 1).trimEnd() + '…' : pulito;
+}
+
+// Foto della tag (caricata su Cloudinary dall'editor) ritagliata quadrata e leggera per WhatsApp
+function fotoAnteprima(url) {
+  const u = String(url || '');
+  if (!/^https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\//.test(u)) return null;
+  return u.replace('/image/upload/', '/image/upload/c_fill,g_face,w_600,h_600,f_jpg,q_auto/');
+}
+
+async function anteprima(req, res, nome) {
+  let titolo = 'myquicktag';
+  let descrizione = 'Il tuo @nome. Il tuo spazio digitale.';
+  let immagine = IMMAGINE_PREDEFINITA;
+  let foto = false;
+  try {
+    const record = nome ? await trovaTag(nome, ['stato', 'username_display', 'bio', 'avatar_url', 'data_scadenza']) : null;
+    const f = record ? record.fields : {};
+    if (record && String(f.stato || '').toLowerCase().trim() === 'attivo') {
+      const nomeVisibile = riga(String(f.username_display || nome).replace(/^@/, ''), 40);
+      titolo = `@${nomeVisibile}`;
+      descrizione = `Scopri @${nomeVisibile} su myquicktag.`;
+      // Tag scaduta: ai visitatori solo il nome (come in get-profile.js)
+      if (calcolaAbbonamento(record).fase !== 'scaduta') {
+        if (riga(f.bio, 160)) descrizione = riga(f.bio, 160);
+        const urlFoto = fotoAnteprima(f.avatar_url);
+        if (urlFoto) { immagine = urlFoto; foto = true; }
+      }
+    }
+  } catch (e) {
+    console.error('Anteprima tag:', e.dettagli || e.message);
+  }
+  const indirizzo = `${SITO}/u/${nome}`;
+  const html = `<!DOCTYPE html>
+<html lang="it"><head><meta charset="utf-8">
+<title>${esc(titolo)}</title>
+<meta name="description" content="${esc(descrizione)}">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="myquicktag">
+<meta property="og:url" content="${esc(indirizzo)}">
+<meta property="og:title" content="${esc(titolo)}">
+<meta property="og:description" content="${esc(descrizione)}">
+<meta property="og:image" content="${esc(immagine)}">
+${foto ? '<meta property="og:image:width" content="600">\n<meta property="og:image:height" content="600">' : '<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">'}
+<meta name="twitter:card" content="${foto ? 'summary' : 'summary_large_image'}">
+<meta name="twitter:title" content="${esc(titolo)}">
+<meta name="twitter:description" content="${esc(descrizione)}">
+<meta name="twitter:image" content="${esc(immagine)}">
+<link rel="canonical" href="${esc(indirizzo)}">
+<meta http-equiv="refresh" content="0;url=/tag.html?u=${esc(nome)}">
+</head><body><a href="/tag.html?u=${esc(nome)}">${esc(titolo)}</a></body></html>`;
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+  return res.status(200).send(html);
+}
+
+export default async function handler(req, res) {
+  if (req.query.anteprima) return anteprima(req, res, nomeTag(req.query.u));
   try {
     // 1. Recupero robusto del parametro 'u' (controlla sia la query classica che l'URL grezzo)
     let u = req.query.u;

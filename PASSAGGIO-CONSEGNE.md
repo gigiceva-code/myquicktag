@@ -23,6 +23,10 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Scelte volute (non segnalarle come errori negli audit)
 
+- **Tono e stile "lusso"** (24/10/2026, decisione del titolare): grafica, testi, manifest ed esperienza restano sulla linea
+  del lusso (es. nero e verde, parole come "Identity", "Elite"). Il glossario "più semplice" proposto nell'audit (punto 2.2)
+  non va applicato d'ufficio: eventuali ritocchi ai testi solo se il titolare li chiede e restando in quel tono.
+
 - **Checkout senza pagamento** (`checkout.html`, rifatto il 23/10/2026: "Oggi paghi 0,00 €", "Nessuna carta richiesta",
   niente loghi delle carte): è il segnaposto del futuro pagamento con Stripe. Durante la prova l'attivazione resta gratuita. Va collegato a Stripe quando il titolare decide prezzi e aspetti fiscali.
 - Se il titolare indica altre scelte volute, aggiungerle qui.
@@ -30,7 +34,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 ## Dove sta cosa
 
 - **Sito pubblico:** https://myquicktag.it (Vercel, ramo `main`). Tag pubblica: `/u/<nome>`.
-- **Vercel:** team `gigiceva-codes-projects`, progetto `myquicktag`.
+- **Vercel:** team `gigiceva-codes-projects`, progetto `myquicktag`. È l'unico progetto collegato al codice: il doppione
+  `myquicktag-e34a` (senza variabili né dominio, rifaceva ogni pubblicazione) è stato eliminato dal titolare il 23/10/2026.
   Variabili: `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (Production → progetto `myquicktag`;
   Preview → progetto `myquicktag-prova`, impostato il 12/10/2026). Facoltativa: `RINNOVO_GRATUITO=si`
   accende il rinnovo gratuito dalla dashboard (spento di base).
@@ -73,6 +78,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - `api/account.js`: elenco delle tag dell'account (dashboard) e configurazione pubblica di Supabase.
 - `api/track-view.js` e `api/track-click.js` (statistiche): dal 23/10/2026 hanno limiti per IP (`lib/limiti.js`), oltre i quali
   la visita o il click non si conta (risposta normale, il visitatore non vede nulla).
+- **Anteprima dei link (24/10/2026):** WhatsApp, Facebook, iMessage, Telegram ecc. non eseguono il JavaScript della tag.
+  `vercel.json` riconosce questi programmi dallo user-agent e li manda a `api/manifest.js?anteprima=1`, che risponde
+  con una pagina minima: titolo `@Nome`, bio come descrizione, foto della tag (Cloudinary, ritagliata 600×600) oppure
+  l'immagine del marchio `icons/og-image.png` (1200×630, usata anche dalla home). Tag non attiva → anteprima generica;
+  tag scaduta → solo il nome. Le persone ricevono sempre `tag.html`. Sta in `manifest.js` per restare a 11 funzioni.
+  WhatsApp tiene in memoria le anteprime: per rivedere un link già mandato può servire qualche ora.
 - `api/segnala.js` (20/10/2026): "Segnala questa tag" dal pannello del QR; salva in `segnalazioni` (Table Editor,
   colonna `stato`: nuova / in esame / chiusa) e manda un'email a info@myquicktag.it con Resend (`RESEND_API_KEY` su Vercel).
 - **Pocket del visitatore (13/10/2026, testi approvati dal titolare; dal 19/10 la conferma dice "@NOME è nel tuo Pocket…"):** "SALVA" sulla tag pubblica mette la tag nel

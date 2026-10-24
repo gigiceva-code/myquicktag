@@ -458,3 +458,30 @@ delete process.env.RINNOVO_GRATUITO;
   ok(ultimo.code===429 && segnalazioni.length===5,'segnala: la 4ª segnalazione in un\'ora dallo stesso telefono sulla stessa tag è bloccata');
   delete process.env.RESEND_API_KEY;
 }
+
+// ============================================================
+// ANTEPRIMA DEI LINK SU WHATSAPP (api/manifest.js?anteprima=1, vercel.json)
+// ============================================================
+{
+  const vj=JSON.parse(fs.readFileSync(new URL('../vercel.json', import.meta.url)));
+  const regola=vj.rewrites[0], re=new RegExp(regola.has[0].value);
+  ok(regola.source==='/u/:username' && regola.destination.includes('anteprima=1') && vj.rewrites[1].destination.startsWith('/tag.html'),'anteprima: vercel.json manda prima i programmi di anteprima, poi tutti gli altri a tag.html');
+  ok(re.test('WhatsApp/2.24.1.6 A') && re.test('facebookexternalhit/1.1') && re.test('TelegramBot (like TwitterBot)'),'anteprima: riconosce WhatsApp, Facebook/iMessage e Telegram');
+  ok(!re.test('Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1') && !re.test('Mozilla/5.0 (Linux; Android 14) Chrome/130.0 Mobile Safari/537.36') && !re.test('Googlebot/2.1'),'anteprima: telefoni veri e motori di ricerca ricevono la tag normale');
+  rows.push({id:'ant1',username_system:'barcentrale',username_display:'@BarCentrale',stato:'attivo',bio:'Il bar <b>dello</b> sport "dal 1980"\nAperti tutti i giorni',avatar_url:'https://res.cloudinary.com/etgsaztr/image/upload/v1/foto.jpg',data_scadenza:'2099-01-01',created_at:new Date().toISOString()});
+  let r=await call('manifest.js',{query:{u:'BarCentrale',anteprima:'1'}});
+  const h=r.body;
+  ok(r.code===200 && h.includes('<meta property="og:title" content="@BarCentrale">') && h.includes('og:url" content="https://myquicktag.it/u/barcentrale"'),'anteprima: titolo con il nome scelto e indirizzo della tag');
+  ok(h.includes('content="Il bar dello sport &quot;dal 1980&quot; Aperti tutti i giorni"') && !h.includes('<b>'),'anteprima: bio su una riga, senza codice, con le virgolette protette');
+  ok(h.includes('https://res.cloudinary.com/etgsaztr/image/upload/c_fill,g_face,w_600,h_600,f_jpg,q_auto/v1/foto.jpg') && h.includes('twitter:card" content="summary"'),'anteprima: foto della tag ritagliata quadrata');
+  rows.push({id:'ant2',username_system:'scaduto',username_display:'Scaduto',stato:'attivo',bio:'segreto',avatar_url:'https://res.cloudinary.com/x/image/upload/a.jpg',data_scadenza:'2020-01-01',created_at:new Date().toISOString()});
+  r=await call('manifest.js',{query:{u:'scaduto',anteprima:'1'}});
+  ok(r.body.includes('content="@Scaduto"') && !r.body.includes('segreto') && r.body.includes('/icons/og-image.png'),'anteprima: tag scaduta → solo il nome, immagine del marchio');
+  rows.push({id:'ant3',username_system:'attesa',stato:'in attesa',bio:'bozza privata',avatar_url:'javascript:alert(1)',created_at:new Date().toISOString()});
+  r=await call('manifest.js',{query:{u:'attesa',anteprima:'1'}});
+  ok(r.body.includes('og:title" content="myquicktag"') && !r.body.includes('bozza privata') && !r.body.includes('javascript:'),'anteprima: tag non attiva → anteprima generica, nessun contenuto della bozza');
+  r=await call('manifest.js',{query:{u:'"><script>x</script>',anteprima:'1'}});
+  ok(r.code===200 && !r.body.includes('<script>'),'anteprima: nome strano nell\'indirizzo non entra nella pagina');
+  r=await call('manifest.js',{query:{u:'barcentrale'}});
+  ok(r.body && r.body.start_url==='/u/barcentrale','manifest dell\'app invariato senza ?anteprima');
+}
