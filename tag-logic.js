@@ -247,12 +247,17 @@ function renderizzaTagCompleta(fields) {
     }
     
     const urlParams = new URLSearchParams(window.location.search);
-    // Invito a installare (subito dopo l'attivazione): mai dentro l'app già installata. Su iPhone l'app
-    // installata da questa pagina può conservare "welcome=1" nell'indirizzo e riaprirebbe l'invito ogni volta.
-    if (urlParams.get('welcome') === '1') {
-        if (appInstallata()) window.history.replaceState({}, '', `${window.location.origin}/tag.html?u=${usernameCorrente}`);
-        else mostraWelcomeOverlay();
-    }
+    // Invito a installare (subito dopo l'attivazione): il checkout lo chiede con un segno in sessionStorage,
+    // NON nell'indirizzo. Su iPhone l'icona sulla schermata Home conserva l'indirizzo da cui è stata creata:
+    // con "?welcome=1" l'invito ricompariva a ogni apertura. Mai dentro l'app già installata.
+    let benvenuto = false;
+    try {
+        benvenuto = sessionStorage.getItem('mqt_benvenuto') === usernameCorrente;
+        sessionStorage.removeItem('mqt_benvenuto');
+    } catch (e) {}
+    // Icone create prima della correzione con "?welcome=1" nell'indirizzo: si pulisce e basta
+    if (urlParams.get('welcome') === '1') window.history.replaceState({}, '', `${window.location.origin}/u/${usernameCorrente}`);
+    if (benvenuto && !appInstallata()) mostraWelcomeOverlay();
     if (urlParams.get('mode') === 'draft') {
         if (fields.stato === 'attivo') {
             const ctaPubblica = document.getElementById('cta-pubblica-container');
@@ -1822,9 +1827,9 @@ window.addEventListener('appinstalled', () => {
 });
 
 function mostraWelcomeOverlay() {
-    const urlPulita = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
-    window.history.replaceState({}, '', urlPulita);
-    
+    // Indirizzo pulito /u/<nome> (lo stesso del manifest): è quello che l'iPhone salva con "Aggiungi a Home"
+    window.history.replaceState({}, '', `${window.location.origin}/u/${usernameCorrente}`);
+
     const overlay = document.getElementById('tag-welcome-overlay');
     if (!overlay) return;
 

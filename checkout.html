@@ -673,7 +673,9 @@
             if (!targetUserClean) return;
             if (modalitaRinnovo) { window.location.href = `/profile.html?u=${targetUserClean}`; return; }
             localStorage.setItem('mqt_logged_user', targetUserClean);
-            window.location.href = `/tag.html?u=${targetUserClean}&welcome=1`;
+            // Invito a installare: segno solo per questa scheda (tag-logic.js), mai nell'indirizzo che l'iPhone salva
+            try { sessionStorage.setItem('mqt_benvenuto', targetUserClean); } catch (e) {}
+            window.location.href = `/u/${targetUserClean}`;
         }   
 </script>
 </body>

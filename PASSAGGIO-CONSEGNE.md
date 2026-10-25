@@ -97,6 +97,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Il Pocket ha un suo manifest (`pocket-manifest.json`), ma **non su iPhone**: lì l'app installata avrebbe una memoria
   separata da Safari e risulterebbe vuota, quindi l'icona sulla Home apre Safari. Rimossa la vecchia sincronizzazione
   "cloud" del Pocket (era legata al login dismesso). Futuro, dopo il lancio: copia del Pocket legata a un account.
+- **Invito a installare dopo il checkout (25/10/2026):** il checkout porta a `/u/<nome>` e chiede l'invito con un segno in
+  `sessionStorage` (`mqt_benvenuto`), non più con `?welcome=1` nell'indirizzo: l'iPhone salva nell'icona l'indirizzo da cui
+  è stata creata e l'invito ricompariva a ogni apertura (segnalato da Martina, iPhone 16). Le icone vecchie con
+  `welcome=1` ora aprono la tag senza invito.
+- **Pulizia nel browser e "Pubblica" (25/10/2026):** `mqtPulisci` (session.js) pulisce anche dentro i JSON annidati nella
+  bozza (recapiti, galleria…), come `lib/pulizia.js`. Prima "Pubblica" dalla tag salvava `{”telefono1”:…}` (illeggibile):
+  è successo solo alla tag `martina` in produzione, riparata a mano il 25/10.
 - **Forma "divider" del @nome:** il rombo va sotto il nome se sta su una riga, esattamente tra le due righe se va a capo.
   Lo decide `session.js` → `mqtBadgeNome` misurando il nome (non contando le lettere). Nell'esagono il nome lungo si
   rimpicciolisce fino a stare dentro.
