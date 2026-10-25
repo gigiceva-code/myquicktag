@@ -84,6 +84,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   l'immagine del marchio `icons/og-image.png` (1200×630, usata anche dalla home). Tag non attiva → anteprima generica;
   tag scaduta → solo il nome. Le persone ricevono sempre `tag.html`. Sta in `manifest.js` per restare a 11 funzioni.
   WhatsApp tiene in memoria le anteprime: per rivedere un link già mandato può servire qualche ora.
+  Provato dal titolare il 24/10 (immagine, @nome e bio compaiono). Il link va scritto con `https://` e serve
+  aspettare qualche secondo prima di inviarlo, altrimenti WhatsApp non prepara l'anteprima. Dal 25/10 "Condividi",
+  QR, condivisione di sezione e Quick Pass usano tutti l'indirizzo `/u/<nome>` (prima `tag.html?u=`, senza anteprima).
 - `api/segnala.js` (20/10/2026): "Segnala questa tag" dal pannello del QR; salva in `segnalazioni` (Table Editor,
   colonna `stato`: nuova / in esame / chiusa) e manda un'email a info@myquicktag.it con Resend (`RESEND_API_KEY` su Vercel).
 - **Pocket del visitatore (13/10/2026, testi approvati dal titolare; dal 19/10 la conferma dice "@NOME è nel tuo Pocket…"):** "SALVA" sulla tag pubblica mette la tag nel

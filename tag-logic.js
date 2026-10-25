@@ -236,7 +236,7 @@ function renderizzaTagCompleta(fields) {
         liveContainer.style.display = 'none';
     }
 
-    const urlPubblico = `${window.location.origin}/tag.html?u=${fields.username_system}`;
+    const urlPubblico = `${window.location.origin}/u/${fields.username_system}`;
     generaQR(urlPubblico);
     renderizzaSitoWeb(fields.sito_web);
     gestisciVisibilitaCaselle(fields);
@@ -442,8 +442,8 @@ function apriDettaglio(tipo) {
         const premioA = cacheDatiUtente.quickpass_premio_a;
         const premioB = cacheDatiUtente.quickpass_premio_b;
         
-        const urlTagCorrente = window.location.href.split('?')[0]; 
-        const linkCondivisione = `${urlTagCorrente}?qp_ref=invito`;
+        // Sempre /u/<nome>: da tag.html?u=<nome> il vecchio calcolo perdeva il nome della tag
+        const linkCondivisione = `${window.location.origin}/u/${usernameCorrente}?qp_ref=invito`;
         const testoWhatsApp = encodeURIComponent(`Ti ho regalato: ${premioB}! 🎁\n\nMostra questo Quick Pass alla cassa per sbloccarlo: ${linkCondivisione}`);
         const apiWhatsApp = `https://wa.me/?text=${testoWhatsApp}`;
 
@@ -1116,7 +1116,7 @@ function apriSezione(tipo) {
             corpo.innerHTML = QR_SIMULATO_HTML;
             return;
         }
-        const url = `${window.location.origin}/tag.html?u=${cacheDatiUtente.username_system}`;
+        const url = `${window.location.origin}/u/${cacheDatiUtente.username_system}`;
         corpo.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px;">
                 <div class="qr-wrapper" id="qr-container-interno" style="width:190px !important; height:190px !important; border-radius: 20px !important; padding:10px !important; background:#fff !important;"></div>
@@ -1149,8 +1149,8 @@ function apriSezione(tipo) {
         const premioA = cacheDatiUtente.quickpass_premio_a;
         const premioB = cacheDatiUtente.quickpass_premio_b;
         
-        const urlTagCorrente = window.location.href.split('?')[0]; 
-        const linkCondivisione = `${urlTagCorrente}?qp_ref=invito`;
+        // Sempre /u/<nome>: da tag.html?u=<nome> il vecchio calcolo perdeva il nome della tag
+        const linkCondivisione = `${window.location.origin}/u/${usernameCorrente}?qp_ref=invito`;
         const testoWhatsApp = encodeURIComponent(`Ti ho regalato: ${premioB}! 🎁\n\nMostra questo Quick Pass alla cassa per sbloccarlo: ${linkCondivisione}`);
         const apiWhatsApp = `https://wa.me/?text=${testoWhatsApp}`;
 
@@ -1658,14 +1658,15 @@ function condividiProfilo(event) {
         mostraToast('Attiva la tua tag per condividerla');
         return;
     }
-    const url = `${window.location.origin}/tag.html?u=${usernameCorrente}`;
+    // Indirizzo /u/<nome>: è quello che WhatsApp & co. trasformano nell'anteprima con nome, bio e foto (vercel.json)
+    const url = `${window.location.origin}/u/${usernameCorrente}`;
     const nome = cacheDatiUtente.username_display || usernameCorrente;
     _condividi('myquicktag di @' + nome, url);
 }
 
 function condividiSezione() {
     const titolo = document.getElementById('titoloSezione').textContent;
-    const url = `${window.location.origin}/tag.html?u=${usernameCorrente}&sezione=${encodeURIComponent(titolo)}`;
+    const url = `${window.location.origin}/u/${usernameCorrente}?sezione=${encodeURIComponent(titolo)}`;
     _condividi('MyQuickTag - ' + titolo, url);
 }
 
