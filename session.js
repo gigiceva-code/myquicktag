@@ -220,8 +220,17 @@
         return valore.replace(/[<>"`]/g, c => SOSTITUZIONI[c]);
     }
 
+    // Un testo che contiene a sua volta un elenco JSON (es. modulo_vcf o gallery_data dentro la bozza
+    // draft_json) si pulisce dentro, senza rovinarne le virgolette: come lib/pulizia.js sul server.
+    // Senza questo, "Pubblica" dalla tag rimandava al server recapiti e galleria con ” al posto di ".
     function valore(v) {
-        if (typeof v === 'string') return testo(v);
+        if (typeof v === 'string') {
+            const t = v.trim();
+            if ((t[0] === '{' && t[t.length - 1] === '}') || (t[0] === '[' && t[t.length - 1] === ']')) {
+                try { return JSON.stringify(valore(JSON.parse(t))); } catch (e) {}
+            }
+            return testo(v);
+        }
         if (Array.isArray(v)) return v.map(valore);
         if (v && typeof v === 'object') {
             const pulito = {};

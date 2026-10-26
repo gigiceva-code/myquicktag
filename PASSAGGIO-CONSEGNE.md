@@ -84,6 +84,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   l'immagine del marchio `icons/og-image.png` (1200×630, usata anche dalla home). Tag non attiva → anteprima generica;
   tag scaduta → solo il nome. Le persone ricevono sempre `tag.html`. Sta in `manifest.js` per restare a 11 funzioni.
   WhatsApp tiene in memoria le anteprime: per rivedere un link già mandato può servire qualche ora.
+  Provato dal titolare il 24/10 (immagine, @nome e bio compaiono). Il link va scritto con `https://` e serve
+  aspettare qualche secondo prima di inviarlo, altrimenti WhatsApp non prepara l'anteprima. Dal 25/10 "Condividi",
+  QR, condivisione di sezione e Quick Pass usano tutti l'indirizzo `/u/<nome>` (prima `tag.html?u=`, senza anteprima).
 - `api/segnala.js` (20/10/2026): "Segnala questa tag" dal pannello del QR; salva in `segnalazioni` (Table Editor,
   colonna `stato`: nuova / in esame / chiusa) e manda un'email a info@myquicktag.it con Resend (`RESEND_API_KEY` su Vercel).
 - **Pocket del visitatore (13/10/2026, testi approvati dal titolare; dal 19/10 la conferma dice "@NOME è nel tuo Pocket…"):** "SALVA" sulla tag pubblica mette la tag nel
@@ -94,6 +97,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Il Pocket ha un suo manifest (`pocket-manifest.json`), ma **non su iPhone**: lì l'app installata avrebbe una memoria
   separata da Safari e risulterebbe vuota, quindi l'icona sulla Home apre Safari. Rimossa la vecchia sincronizzazione
   "cloud" del Pocket (era legata al login dismesso). Futuro, dopo il lancio: copia del Pocket legata a un account.
+- **Invito a installare dopo il checkout (25/10/2026):** il checkout porta a `/u/<nome>` e chiede l'invito con un segno in
+  `sessionStorage` (`mqt_benvenuto`), non più con `?welcome=1` nell'indirizzo: l'iPhone salva nell'icona l'indirizzo da cui
+  è stata creata e l'invito ricompariva a ogni apertura (segnalato da Martina, iPhone 16). Le icone vecchie con
+  `welcome=1` ora aprono la tag senza invito.
+- **Pulizia nel browser e "Pubblica" (25/10/2026):** `mqtPulisci` (session.js) pulisce anche dentro i JSON annidati nella
+  bozza (recapiti, galleria…), come `lib/pulizia.js`. Prima "Pubblica" dalla tag salvava `{”telefono1”:…}` (illeggibile):
+  è successo solo alla tag `martina` in produzione, riparata a mano il 25/10.
 - **Forma "divider" del @nome:** il rombo va sotto il nome se sta su una riga, esattamente tra le due righe se va a capo.
   Lo decide `session.js` → `mqtBadgeNome` misurando il nome (non contando le lettere). Nell'esagono il nome lungo si
   rimpicciolisce fino a stare dentro.

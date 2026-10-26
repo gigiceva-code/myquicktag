@@ -485,3 +485,26 @@ delete process.env.RINNOVO_GRATUITO;
   r=await call('manifest.js',{query:{u:'barcentrale'}});
   ok(r.body && r.body.start_url==='/u/barcentrale','manifest dell\'app invariato senza ?anteprima');
 }
+
+// ============================================================
+// PULIZIA NEL BROWSER (session.js → mqtPulisci) E "PUBBLICA" DALLA TAG
+// ============================================================
+// Bug del 25/10/2026: la bozza ripulita per la visualizzazione rovinava i JSON annidati
+// (modulo_vcf, gallery_data diventavano {”telefono1”:…}) e "Pubblica" li salvava così.
+{
+  const sorgente=fs.readFileSync(new URL('../session.js', import.meta.url),'utf8');
+  const inizio=sorgente.lastIndexOf('(function () {', sorgente.indexOf('window.mqtPulisci'));
+  const fine=sorgente.indexOf('})();', sorgente.indexOf('window.mqtPulisci'))+5;
+  const finestra={}; new Function('window', sorgente.slice(inizio, fine))(finestra);
+  const P=finestra.mqtPulisci;
+  const bozza={bio:'Ciao <script>x</script>', modulo_vcf:JSON.stringify({telefono1:'3498286274',indirizzo:'Via "Roma" 1'}), gallery_data:JSON.stringify(['https://res.cloudinary.com/a/b.jpg'])};
+  const pulito=P.campi({username_system:'martina', draft_json:JSON.stringify(bozza), bio:'<b>vecchia</b>'});
+  const b=JSON.parse(pulito.draft_json);
+  const vcf=JSON.parse(b.modulo_vcf), gal=JSON.parse(b.gallery_data);
+  ok(vcf.telefono1==='3498286274' && gal[0]==='https://res.cloudinary.com/a/b.jpg','mqtPulisci: recapiti e galleria dentro la bozza restano JSON leggibile (Pubblica non li rovina)');
+  ok(!b.bio.includes('<') && vcf.indirizzo==='Via ”Roma” 1' && !pulito.bio.includes('<'),'mqtPulisci: i testi restano ripuliti, anche dentro i JSON annidati');
+  // Il server riceve la bozza pubblicata dalla tag e la salva leggibile
+  rows.push({id:'pub1',username_system:'pubblicami',stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',created_at:new Date().toISOString()});
+  const r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'pubblicami',...b,draft_json:''}});
+  ok(r.code===200 && JSON.parse(riga('pubblicami').modulo_vcf).telefono1==='3498286274' && JSON.parse(riga('pubblicami').gallery_data).length===1,'Pubblica dalla tag: recapiti e galleria salvati leggibili');
+}
