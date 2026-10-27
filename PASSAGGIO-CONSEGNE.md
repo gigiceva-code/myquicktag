@@ -9,6 +9,10 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 - Scrivere **in italiano** e **dare del tu** al titolare (richiesta del 23/10/2026), con spiegazioni semplici e concrete: il titolare non è uno sviluppatore.
   Dire cosa cambia per lui e per i clienti, non i dettagli tecnici.
+- **Marketing e conversione (richiesta del 27/10/2026):** il titolare non è un esperto di web marketing. Per ogni
+  cosa che vedono i clienti proporre sempre, di propria iniziativa, la versione più professionale e orientata alla
+  conversione (testi, posizione dei pulsanti, anteprime, misurazione), spiegando in breve il perché. Non limitarsi a
+  "far funzionare" quello che chiede.
 - Prima di cambiare il **prodotto** (piani, prezzi, cosa vede il cliente) chiedere; per correzioni e
   sicurezza si può procedere spiegando dopo.
 - **Flusso git:** si lavora sul ramo `sviluppo-v2`; quando è pronto si apre una pull request verso
@@ -97,6 +101,14 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Il Pocket ha un suo manifest (`pocket-manifest.json`), ma **non su iPhone**: lì l'app installata avrebbe una memoria
   separata da Safari e risulterebbe vuota, quindi l'icona sulla Home apre Safari. Rimossa la vecchia sincronizzazione
   "cloud" del Pocket (era legata al login dismesso). Futuro, dopo il lancio: copia del Pocket legata a un account.
+- **CONDIVIDI (27/10/2026, richiesta del titolare: "il biglietto da visita a un tocco"):** in copertina pillola
+  CONDIVIDI in alto a sinistra (speculare a SALVA); in ogni stanza e sezione CONDIVIDI in basso accanto a
+  CHIUDI/INDIETRO. Il link `/u/<nome>?sezione=stanza.sezione` (es. `network.contatti`) riapre la tag direttamente lì
+  (`apriSezioneDaLink`, solo stanze/sezioni che la tag mostra). Solo per tag attive. I pulsanti erano stati tolti
+  durante i rifacimenti di giugno e agosto. Prova: `test/condividi.e2e.mjs`.
+  Il link parte con un messaggio ("@Nome: contatti, social e servizi in un unico tocco." / "@Nome · Contatti");
+  l'anteprima di WhatsApp di un link di sezione è "@Nome · Contatti" (`NOMI_SEZIONI` in `api/manifest.js`);
+  le condivisioni dei visitatori si contano nelle statistiche come "CONDIVISIONE TAG" / "CONDIVISIONE <STANZA>".
 - **Invito a installare dopo il checkout (25/10/2026):** il checkout porta a `/u/<nome>` e chiede l'invito con un segno in
   `sessionStorage` (`mqt_benvenuto`), non più con `?welcome=1` nell'indirizzo: l'iPhone salva nell'icona l'indirizzo da cui
   è stata creata e l'invito ricompariva a ogni apertura (segnalato da Martina, iPhone 16). Le icone vecchie con
@@ -124,11 +136,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 162 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 177 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
+- `test/condividi.e2e.mjs` → 9 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).
 - Dalla sessione cloud non si raggiungono `*.vercel.app` né molti siti esterni: le prove sul sito vero

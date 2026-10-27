@@ -508,3 +508,10 @@ delete process.env.RINNOVO_GRATUITO;
   const r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'pubblicami',...b,draft_json:''}});
   ok(r.code===200 && JSON.parse(riga('pubblicami').modulo_vcf).telefono1==='3498286274' && JSON.parse(riga('pubblicami').gallery_data).length===1,'Pubblica dalla tag: recapiti e galleria salvati leggibili');
 }
+{
+  // Link condiviso di una sezione: l'anteprima dice quale (api/manifest.js, NOMI_SEZIONI)
+  let r=await call('manifest.js',{query:{u:'barcentrale',anteprima:'1',sezione:'network.contatti'}});
+  ok(r.body.includes('og:title" content="@BarCentrale · Contatti"') && r.body.includes('og:url" content="https://myquicktag.it/u/barcentrale?sezione=network.contatti"'),'anteprima: link di una sezione → "@Nome · Contatti"');
+  r=await call('manifest.js',{query:{u:'barcentrale',anteprima:'1',sezione:'<script>'}});
+  ok(r.body.includes('og:title" content="@BarCentrale"') && !r.body.includes('<script>'),'anteprima: sezione sconosciuta → solo il nome');
+}
