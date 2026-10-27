@@ -40,6 +40,12 @@
     <!-- BARRA SUPERIORE (SALVA + QR): ricalca posizione e misure della card, contenuti in alto a destra -->
     <div id="mqt-top-bar-layer">
         <div class="mqt-top-bar-inner">
+            <!-- CONDIVIDI: il biglietto da visita, a un tocco (in alto a sinistra, speculare a SALVA). Solo tag attive -->
+            <div id="btn-condividi-top" role="button" aria-label="Condividi la tag" onclick="condividiProfilo(event)" style="display: none; margin-right: auto; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); transition: all 0.3s; color: #fff;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                <span style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">CONDIVIDI</span>
+            </div>
+
             <!-- Bottone Salva Tag con LED pulsante -->
             <div id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); transition: all 0.3s;">
                 <div id="dot-salva" style="width: 6px; height: 6px; background-color: #fff; border-radius: 50%; animation: pulseWhiteDot 2s infinite;"></div>
@@ -149,9 +155,13 @@
             <div id="corpoSezione" class="corpo-sezione" style="flex: 1; overflow-y: auto; overflow-x: hidden;"></div>
 
            <!-- Pulsante Ergonomico in Basso (Sticky) -->
-            <div class="bottom-action-bar">
+            <div class="bottom-action-bar" style="display: flex; justify-content: space-between; align-items: center;">
                 <button onclick="chiudiSezione()" style="background: none; border: none; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; padding: 15px; display: flex; align-items: center; gap: 10px; transition: color 0.2s;">
                     <i class="fas fa-times" id="icona-chiudi"></i> <span id="testo-chiudi">CHIUDI</span>
+                </button>
+                <!-- Condivide la sezione aperta: il link riapre la tag direttamente qui (?sezione=…) -->
+                <button id="btn-condividi-sezione" onclick="condividiSezione()" style="display: none; background: none; border: none; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; padding: 15px; align-items: center; gap: 10px; transition: color 0.2s;">
+                    <span>CONDIVIDI</span> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                 </button>
             </div>
         </div>

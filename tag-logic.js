@@ -7,6 +7,7 @@ let pinRiservato = "";
 let cacheDatiUtente = {};
 let usernameCorrente = "";
 let macroAreaCorrente = ""; // Variabile di stato essenziale
+let sezioneCorrente = ""; // Sezione aperta dentro la stanza (per "Condividi" e i link ?sezione=)
 
 function apriVipVault(url, pin, event) {
     if (event) {
@@ -258,6 +259,11 @@ function renderizzaTagCompleta(fields) {
     // Icone create prima della correzione con "?welcome=1" nell'indirizzo: si pulisce e basta
     if (urlParams.get('welcome') === '1') window.history.replaceState({}, '', `${window.location.origin}/u/${usernameCorrente}`);
     if (benvenuto && !appInstallata()) mostraWelcomeOverlay();
+    // CONDIVIDI in alto: solo per le tag attive (una tag "in attesa" non si condivide)
+    const btnCondividiTop = document.getElementById('btn-condividi-top');
+    if (btnCondividiTop) btnCondividiTop.style.display = tagAttiva() ? 'flex' : 'none';
+    // Link condiviso di una sezione: la tag si apre direttamente lì
+    if (urlParams.get('sezione') && !benvenuto) apriSezioneDaLink(urlParams.get('sezione'));
     if (urlParams.get('mode') === 'draft') {
         if (fields.stato === 'attivo') {
             const ctaPubblica = document.getElementById('cta-pubblica-container');
@@ -923,15 +929,18 @@ function apriMacroArea(area, skipHistory = false) {
     const topBar = document.getElementById('mqt-top-bar-layer');
     if (topBar) topBar.style.display = 'block';
     
-    // --- NASCONDI TASTO SALVA (Dissolvenza per non coprire il titolo) ---
-    const btnSalva = document.getElementById('btn-salva-pocket');
-    if (btnSalva) {
-        btnSalva.style.opacity = '0';
-        btnSalva.style.pointerEvents = 'none';
-    }
-    
+    // --- NASCONDI SALVA E CONDIVIDI IN ALTO (Dissolvenza per non coprire il titolo) ---
+    // Dentro le stanze si condivide dal pulsante in basso, accanto a CHIUDI
+    ['btn-salva-pocket', 'btn-condividi-top'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) { btn.style.opacity = '0'; btn.style.pointerEvents = 'none'; }
+    });
+    const btnCondSez = document.getElementById('btn-condividi-sezione');
+    if (btnCondSez) btnCondSez.style.display = tagAttiva() ? 'flex' : 'none';
+
     // Salva il riferimento per il tasto indietro
     macroAreaCorrente = area;
+    sezioneCorrente = '';
     
     document.getElementById('testo-chiudi').innerText = 'CHIUDI';
     document.getElementById('icona-chiudi').className = 'fas fa-times';
@@ -1084,6 +1093,7 @@ function apriMacroArea(area, skipHistory = false) {
 function apriSezione(tipo) {
     // Accensione Radar Analytics
     tracciaClickSezione(tipo.toUpperCase());
+    sezioneCorrente = tipo;
     const overlay = document.getElementById('overlaySezione');
     const titolo  = document.getElementById('titoloSezione');
     const corpo   = document.getElementById('corpoSezione');
@@ -1447,13 +1457,12 @@ window.addEventListener('popstate', (e) => {
         topBar.style.display = 'block';
     } 
     
-    // --- MOSTRA TASTO SALVA AL RITORNO IN HOME ---
-    const btnSalva = document.getElementById('btn-salva-pocket');
-    if (btnSalva) {
-        if (hash === '' || hash === '#ecosistema') {
-            btnSalva.style.opacity = '1';
-            btnSalva.style.pointerEvents = 'auto';
-        }
+    // --- MOSTRA SALVA E CONDIVIDI AL RITORNO IN HOME ---
+    if (hash === '' || hash === '#ecosistema') {
+        ['btn-salva-pocket', 'btn-condividi-top'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+        });
     }
 
     // Livello 3 (Profondo): Modale Foto o Dettaglio Features
@@ -1665,14 +1674,38 @@ function condividiProfilo(event) {
     }
     // Indirizzo /u/<nome>: è quello che WhatsApp & co. trasformano nell'anteprima con nome, bio e foto (vercel.json)
     const url = `${window.location.origin}/u/${usernameCorrente}`;
-    const nome = cacheDatiUtente.username_display || usernameCorrente;
-    _condividi('myquicktag di @' + nome, url);
+    const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
+    _condividi(`@${nome} · myquicktag`, url);
 }
 
+// Condivide la stanza (es. NETWORK) o la sezione aperta (es. NETWORK → Rubrica & contatti):
+// il link /u/<nome>?sezione=network.contatti riapre la tag direttamente lì (apriSezioneDaLink)
 function condividiSezione() {
+    if (!tagAttiva()) { mostraToast('Attiva la tua tag per condividerla'); return; }
+    if (!macroAreaCorrente) { condividiProfilo(); return; }
+    const chiave = sezioneCorrente ? `${macroAreaCorrente}.${sezioneCorrente}` : macroAreaCorrente;
+    const url = `${window.location.origin}/u/${usernameCorrente}?sezione=${encodeURIComponent(chiave)}`;
+    const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
     const titolo = document.getElementById('titoloSezione').textContent;
-    const url = `${window.location.origin}/u/${usernameCorrente}?sezione=${encodeURIComponent(titolo)}`;
-    _condividi('MyQuickTag - ' + titolo, url);
+    _condividi(`@${nome} · ${titolo}`, url);
+}
+
+// Apertura da un link condiviso (?sezione=stanza oppure stanza.sezione): solo stanze e sezioni
+// che questa tag mostra davvero, altrimenti resta la copertina
+const STANZE_LINK = ['identity', 'business', 'media', 'network', 'action_center'];
+function apriSezioneDaLink(valore) {
+    const [stanza, sezione] = String(valore || '').toLowerCase().split('.');
+    if (!STANZE_LINK.includes(stanza) || !tagAttiva()) return;
+    const pulsante = document.getElementById(stanza === 'action_center' ? 'room-action-center' : `room-${stanza}`);
+    if (!pulsante || pulsante.style.display === 'none') return;
+    sbloccaTag();
+    setTimeout(() => {
+        apriMacroArea(stanza);
+        const corpo = document.getElementById('corpoSezione');
+        if (sezione && /^[a-z_]+$/.test(sezione) && corpo && corpo.innerHTML.includes(`apriSezione('${sezione}')`)) {
+            setTimeout(() => apriSezione(sezione), 300);
+        }
+    }, 400);
 }
 
 function _condividi(titolo, url) {
