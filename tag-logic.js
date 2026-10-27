@@ -1675,7 +1675,8 @@ function condividiProfilo(event) {
     // Indirizzo /u/<nome>: è quello che WhatsApp & co. trasformano nell'anteprima con nome, bio e foto (vercel.json)
     const url = `${window.location.origin}/u/${usernameCorrente}`;
     const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
-    _condividi(`@${nome} · myquicktag`, url);
+    // Il messaggio dice subito cosa c'è dietro il link: chi lo riceve sa perché aprirlo
+    _condividi(`@${nome} · myquicktag`, url, `@${nome}: contatti, social e servizi in un unico tocco.`, 'CONDIVISIONE TAG');
 }
 
 // Condivide la stanza (es. NETWORK) o la sezione aperta (es. NETWORK → Rubrica & contatti):
@@ -1687,7 +1688,8 @@ function condividiSezione() {
     const url = `${window.location.origin}/u/${usernameCorrente}?sezione=${encodeURIComponent(chiave)}`;
     const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
     const titolo = document.getElementById('titoloSezione').textContent;
-    _condividi(`@${nome} · ${titolo}`, url);
+    const sezione = titolo.charAt(0).toUpperCase() + titolo.slice(1).toLowerCase();
+    _condividi(`@${nome} · ${sezione}`, url, `@${nome} · ${sezione}`, 'CONDIVISIONE ' + titolo.toUpperCase());
 }
 
 // Apertura da un link condiviso (?sezione=stanza oppure stanza.sezione): solo stanze e sezioni
@@ -1708,9 +1710,13 @@ function apriSezioneDaLink(valore) {
     }, 400);
 }
 
-function _condividi(titolo, url) {
+// testo: il messaggio che accompagna il link (WhatsApp, Messaggi…). statistica: se indicata, la condivisione
+// di un visitatore si conta nelle statistiche del proprietario (il passaparola), come l'apertura di una sezione
+function _condividi(titolo, url, testo, statistica) {
+    if (statistica) tracciaClickSezione(statistica);
     if (navigator.share) {
-        navigator.share({ title: titolo, url: url }).catch(err => {
+        const dati = testo ? { title: titolo, text: testo, url: url } : { title: titolo, url: url };
+        navigator.share(dati).catch(err => {
             if (err.name !== 'AbortError') console.error("Errore condivisione:", err);
         });
     } else {

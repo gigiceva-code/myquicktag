@@ -10,6 +10,12 @@ import { calcolaAbbonamento } from '../lib/abbonamento.js';
 // ?anteprima=1: ricevono una pagina minima con nome, bio e foto della tag. Le persone ricevono
 // sempre tag.html come prima. Sta in questo file per non superare le 12 funzioni del piano gratuito.
 const SITO = 'https://myquicktag.it';
+// Link condivisi di una sezione (/u/<nome>?sezione=network.contatti): l'anteprima dice quale
+const NOMI_SEZIONI = {
+  identity: 'Identity', business: 'Business', media: 'Vetrina', network: 'Network', action_center: 'Action Center',
+  contatti: 'Contatti', social: 'Social & link', sito: 'Sito web', bio: 'Biografia', cv: 'Curriculum',
+  qr: 'Access Tag', gallery: 'Galleria', pdf: 'Documenti', flash: 'Offerta flash', quickpass: 'Quick Pass'
+};
 const IMMAGINE_PREDEFINITA = `${SITO}/icons/og-image.png`;
 
 function esc(t) {
@@ -30,6 +36,8 @@ function fotoAnteprima(url) {
 }
 
 async function anteprima(req, res, nome) {
+  const parti = String(req.query.sezione || '').toLowerCase().split('.');
+  const nomeSezione = NOMI_SEZIONI[parti[1]] || NOMI_SEZIONI[parti[0]] || '';
   let titolo = 'myquicktag';
   let descrizione = 'Il tuo @nome. Il tuo spazio digitale.';
   let immagine = IMMAGINE_PREDEFINITA;
@@ -39,7 +47,7 @@ async function anteprima(req, res, nome) {
     const f = record ? record.fields : {};
     if (record && String(f.stato || '').toLowerCase().trim() === 'attivo') {
       const nomeVisibile = riga(String(f.username_display || nome).replace(/^@/, ''), 40);
-      titolo = `@${nomeVisibile}`;
+      titolo = nomeSezione ? `@${nomeVisibile} · ${nomeSezione}` : `@${nomeVisibile}`;
       descrizione = `Scopri @${nomeVisibile} su myquicktag.`;
       // Tag scaduta: ai visitatori solo il nome (come in get-profile.js)
       if (calcolaAbbonamento(record).fase !== 'scaduta') {
@@ -51,7 +59,7 @@ async function anteprima(req, res, nome) {
   } catch (e) {
     console.error('Anteprima tag:', e.dettagli || e.message);
   }
-  const indirizzo = `${SITO}/u/${nome}`;
+  const indirizzo = `${SITO}/u/${nome}${nomeSezione ? `?sezione=${encodeURIComponent(req.query.sezione)}` : ''}`;
   const html = `<!DOCTYPE html>
 <html lang="it"><head><meta charset="utf-8">
 <title>${esc(titolo)}</title>

@@ -31,14 +31,15 @@ await p.goto(`${B}/tag.html?u=pizzeriadamario`); await p.waitForTimeout(2500);
 ok(await p.isVisible('#btn-condividi-top'), 'copertina: CONDIVIDI visibile');
 await p.click('#btn-condividi-top');
 let d = await ultimo(p);
-ok(d && d.url.endsWith('/u/pizzeriadamario') && d.title === '@PizzeriaDaMario · myquicktag', 'copertina: condivide /u/<nome> (indirizzo con anteprima)');
+ok(d && d.url.endsWith('/u/pizzeriadamario') && d.title === '@PizzeriaDaMario · myquicktag' && d.text === '@PizzeriaDaMario: contatti, social e servizi in un unico tocco.', 'copertina: condivide /u/<nome> (indirizzo con anteprima) con un messaggio');
 await p.evaluate(() => apriMacroArea('network')); await p.waitForTimeout(1200);
 ok(await p.isVisible('#btn-condividi-sezione'), 'stanza: CONDIVIDI in basso accanto a CHIUDI');
 await p.click('#btn-condividi-sezione');
 ok((await ultimo(p)).url.endsWith('/u/pizzeriadamario?sezione=network'), 'stanza: link alla stanza');
 await p.evaluate(() => apriSezione('contatti')); await p.waitForTimeout(1200);
 await p.click('#btn-condividi-sezione');
-ok((await ultimo(p)).url.endsWith('?sezione=network.contatti'), 'sezione: link alla sezione');
+d = await ultimo(p);
+ok(d.url.endsWith('?sezione=network.contatti') && d.text === '@PizzeriaDaMario · Contatti', 'sezione: link alla sezione con il suo nome');
 
 p = await telefono();
 await p.goto(`${B}/tag.html?u=pizzeriadamario&sezione=network.contatti`); await p.waitForTimeout(3500);
