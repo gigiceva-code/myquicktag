@@ -112,6 +112,14 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Iconcine accanto ai singoli recapiti (28/10/2026): numero/email/indirizzo si condividono come testo + link ai
   contatti della tag (prima il numero diventava un link → 404, segnalato dal titolare); link social senza `https://`
   completati; i canali VIP (con PIN) non hanno più l'iconcina, che condivideva il link privato.
+- **Killer features: testi delle strategie e delle info (audit del 28/10/2026, `edit-logic.js` → `databaseStrategie`,
+  `edit.html` → `mostraInsight`):** stessa struttura per tutte (perché / come usarla con esempi da copiare / cosa ottieni),
+  tono professionale, nessuna statistica senza fonte, nessuna promessa che la funzione non mantiene. Da rispettare anche
+  in futuro: Scudo Reputazione mai "filtro delle recensioni negative" (vietato da Google, vedi sotto); Acquisto Istantaneo
+  solo con scadenze reali; Vasetto: per le promozioni serve il consenso. Prova automatica in `test/api.test.mjs`.
+- **Scudo Reputazione (28/10/2026, in attesa dell'ok del titolare prima di andare online):** chi dà 1-3 stelle riceve
+  prima il contatto diretto, ma vede sempre anche il link alla recensione pubblica. Prima il link a Google era nascosto
+  sotto le 4 stelle: è il "review gating", vietato dalle regole di Google.
 - **Invito a installare dopo il checkout (25/10/2026):** il checkout porta a `/u/<nome>` e chiede l'invito con un segno in
   `sessionStorage` (`mqt_benvenuto`), non più con `?welcome=1` nell'indirizzo: l'iPhone salva nell'icona l'indirizzo da cui
   è stata creata e l'invito ricompariva a ogni apertura (segnalato da Martina, iPhone 16). Le icone vecchie con

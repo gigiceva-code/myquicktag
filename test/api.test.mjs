@@ -515,3 +515,14 @@ delete process.env.RINNOVO_GRATUITO;
   r=await call('manifest.js',{query:{u:'barcentrale',anteprima:'1',sezione:'<script>'}});
   ok(r.body.includes('og:title" content="@BarCentrale"') && !r.body.includes('<script>'),'anteprima: sezione sconosciuta → solo il nome');
 }
+{
+  // Strategie delle killer features (edit-logic.js): tutte presenti, senza promesse vietate o non vere (audit 28/10/2026)
+  const src=fs.readFileSync(new URL('../edit-logic.js', import.meta.url),'utf8');
+  const a=src.indexOf('const _boxStrategia'), b=src.indexOf('\n        };\n', src.indexOf('const databaseStrategie'))+12;
+  const db=new Function(src.slice(a,b)+'; return databaseStrategie;')();
+  const html=fs.readFileSync(new URL('../edit.html', import.meta.url),'utf8');
+  const chiavi=[...html.matchAll(/apriStrategia\('([a-z]+)'/g)].map(m=>m[1]);
+  ok(chiavi.length===9 && chiavi.every(k=>db[k] && db[k].titolo && db[k].testo.includes('Cosa ottieni')),'strategie: ogni pulsante STRATEGIA dell\'editor ha il suo testo (perché, come, cosa ottieni)');
+  const tutto=Object.values(db).map(v=>v.testo).join(' ')+html;
+  ok(!/matematicamente|Dark Mode|filtrando le recensioni negative|Costringendo|L'80%|crollano del 20%/i.test(tutto),'strategie: niente statistiche senza fonte, funzioni inesistenti o recensioni filtrate');
+}
