@@ -2016,8 +2016,11 @@ function selezionaStelle(valore) {
     const actionContainer = document.getElementById('feedback-action-container');
     
     // LOGICA DI SMISTAMENTO (IL VERO SCUDO)
+    // Regole di Google sulle recensioni: non si possono chiedere solo ai clienti soddisfatti ("review gating").
+    // A chi dà 1-3 stelle si propone PRIMA il contatto diretto per rimediare, ma il link pubblico resta sempre.
+    const linkPubblicoScudo = cacheDatiUtente.review_url || '';
     if(valore <= 3) {
-        // RECENSIONE NEGATIVA -> Deviazione in privato
+        // RECENSIONE NEGATIVA -> prima il contatto diretto, poi (più discreto) la recensione pubblica
         const contatto = cacheDatiUtente.review_contact || '';
         let destinazione = '';
         let iconaBtn = '';
@@ -2039,6 +2042,7 @@ function selezionaStelle(valore) {
             <a href="${destinazione}" target="_blank" rel="noopener noreferrer" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: #fff; font-size: 0.85rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; transition: transform 0.2s;">
                 ${iconaBtn} ${testoBtn}
             </a>
+            ${linkPubblicoScudo ? `<a href="${linkPubblicoScudo}" target="_blank" rel="noopener noreferrer" style="display: block; margin-top: 14px; text-align: center; color: rgba(255,255,255,0.45); font-size: 0.75rem; text-decoration: underline;">Preferisci lasciare una recensione pubblica?</a>` : ''}
         `;
     } else {
         // RECENSIONE POSITIVA (4 o 5) -> Via libera a Google
@@ -2059,12 +2063,12 @@ function convertiUrlInEmbed(url) {
     // Converte i link YouTube normali
     if (url.includes('youtube.com/watch?v=')) {
         const videoId = url.split('v=')[1].split('&')[0];
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
     } 
     // Converte i link YouTube corti
     else if (url.includes('youtu.be/')) {
         const videoId = url.split('youtu.be/')[1].split('?')[0];
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
     } 
     // Converte i link Vimeo
     else if (url.includes('vimeo.com/')) {
