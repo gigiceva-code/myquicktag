@@ -120,7 +120,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - **Quick Pass "porta un amico" (Fase 1, 29/10/2026, decisa con il titolare):** `api/quickpass.js` (12ª funzione:
   il piano gratuito di Vercel è al completo, per altre funzioni accorparle), `quickpass-tag.js` (tag pubblica), cassa
   nell'editor (`caricaCassaQuickPass` in `edit-logic.js`), tabelle `quickpass_inviti` e `quickpass_pass` (migrazione
-  `20261029000000_quick_pass.sql`). Percorso: chi consiglia crea dalla tag (Action Center → Quick Pass) il suo invito
+  `20261029000000_quick_pass.sql`, applicata a `myquicktag-prova` e, il 28/10/2026 con l'ok del titolare, a `myquicktag`). Percorso: chi consiglia crea dalla tag (Action Center → Quick Pass) il suo invito
   personale `/u/<tag>?pass=<invito>` → l'amico ritira un pass personale (nome obbligatorio, recapito facoltativo con
   consenso → "I miei contatti") → in cassa il QR apre `/u/<tag>?cassa=<codice>`: convalida il titolare (sessione) o un
   dipendente con il **PIN di cassa** (4-6 cifre, salvato solo come impronta scrypt, 10 tentativi ogni 15 minuti) →
