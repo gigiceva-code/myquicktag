@@ -1841,7 +1841,7 @@ function gestisciVIPSwitch(checkbox) {
                         ['fa-store', 'Negozi e servizi alla persona:', '«10% sul prossimo acquisto a chi porta un amico, e 10% anche a lui.»'],
                         ['fa-briefcase', 'Professionisti:', '«Una sessione extra a chi ci presenta un nuovo cliente; la prima consulenza gratuita per lui.»']
                     ]],
-                    ['Cosa ottieni', 'Ogni cliente soddisfatto diventa un canale di acquisizione: persone già ben disposte, che decidono più in fretta, a un costo pari al solo premio. Calcola il premio sul margine, non sul prezzo, e imposta scadenza e numero massimo di pass: l\'offerta resta desiderabile e sotto il tuo controllo.']
+                    ['Cosa ottieni', 'Ogni cliente soddisfatto diventa un canale di acquisizione: persone già ben disposte, che decidono più in fretta, a un costo pari al solo premio. Calcola il premio sul margine, non sul prezzo, e imposta una scadenza: l\'offerta resta desiderabile e sotto il tuo controllo.']
                 )
             },
             'review': {
