@@ -155,6 +155,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 0. **Account con Supabase Auth: online su myquicktag.it dal 18/10/2026** (pull request #7 unita in `main`, produzione
    configurata). Restano le prove sul sito vero: account del titolare, iPhone (app installata), visitatore da un altro
    telefono con "SALVA" → Pocket (vedi `PRE-LANCIO.md` → "Account", punti D ed E).
+   **Stato al 28/10/2026:** online fino alla PR #20 (`main` = `sviluppo-v2`). Dal 23/10: limiti a visite e click,
+   checkout rifatto, anteprima WhatsApp, CONDIVIDI ovunque, correzioni dalla prova di Martina (iPhone). Tutto provato
+   dal titolare sul sito vero. Il titolare sta per elencare nuove richieste.
    **Stato al 23/10/2026:** online fino alla PR #14 (`main` = `sviluppo-v2`). Prove fatte dal titolare: email e codici,
    recupero password, seconda tag, "Esci da tutti i dispositivi", Android, iPhone, visitatore → Pocket, segnalazioni
    (arrivano a info@myquicktag.it, inoltrata a Gmail). Da fare: ricontrollo della cornice su iPhone dopo la PR #10,
