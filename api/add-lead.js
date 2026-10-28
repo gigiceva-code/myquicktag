@@ -12,6 +12,7 @@ import { nomeTag } from '../lib/nome-canonico.js';
 // database. L'elenco dei contatti già raccolti non passa mai dal browser del visitatore.
 const MAX_NOME = 80;
 const MAX_CONTATTO = 120;
+const MAX_TESTO_CONSENSO = 200;
 
 // Testo semplice su una riga: niente caratteri di controllo, spazi compattati
 function pulisci(valore, max) {
@@ -32,6 +33,9 @@ export default async function handler(req, res) {
   const username = nomeTag(body.u);
   const nome = pulisciTesto(pulisci(body.nome, MAX_NOME));
   const contatto = pulisciTesto(pulisci(body.contatto, MAX_CONTATTO));
+  // Consenso alle offerte (casella facoltativa del modulo): vale solo se esplicito, e si conserva il testo accettato
+  const consenso = body.consenso === true;
+  const testoConsenso = consenso ? pulisciTesto(pulisci(body.consenso_testo, MAX_TESTO_CONSENSO)) : '';
 
   if (!username) return res.status(400).json({ success: false, error: 'Tag mancante' });
   if (!contatto) return res.status(400).json({ success: false, error: 'Contatto mancante' });
@@ -56,7 +60,9 @@ export default async function handler(req, res) {
     const ora = Date.now();
     await aggiungiLead(username, {
       id: crypto.randomUUID(), nome, contatto, data: dataOraItaliana(ora), ts: ora,
-      visto: false, richiamato: false // il proprietario lo vede come "nuovo" in dashboard
+      visto: false, richiamato: false, // il proprietario lo vede come "nuovo" in dashboard
+      consenso_offerte: consenso,
+      ...(consenso ? { consenso_testo: testoConsenso || 'Accetto di ricevere offerte e novità', consenso_data: new Date(ora).toISOString() } : {})
     });
     return res.status(200).json({ success: true });
   } catch (e) {

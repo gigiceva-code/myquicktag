@@ -90,6 +90,10 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
   codice vecchio (si può lasciare).
 
+**Vasetto (contatti dei visitatori):** dal 28/10/2026 casella facoltativa per il consenso alle offerte, salvato con testo e
+data. Da far vedere al professionista insieme a privacy e termini (il titolare della tag è titolare del trattamento di quei
+contatti, myquicktag li conserva per suo conto).
+
 **Note legali (non è una consulenza):** informativa privacy e termini da aggiornare con email dell'account,
 consenso promozionale facoltativo (salvato con data e versione del testo), comunicazioni di servizio, Supabase come
 fornitore dell'autenticazione e il servizio email scelto.
@@ -216,7 +220,7 @@ fornitore dell'autenticazione e il servizio email scelto.
       (Preview e Production) dal 20/10. Provato dal titolare sul Preview il 22/10: email arrivata. Su register.it la casella
       info@ è **reindirizzata** a gigi.ceva@gmail.com (con "Invia copia a" su Gmail non arrivava).
 - [ ] **Da fare prima del lancio pubblico (deciso 04/10/2026):** ~~tasto "Segnala questa tag"~~ (fatto, sopra) sulla tag pubblica (impersonazione, marchi, contenuti offensivi) e **regola nei termini di servizio** (scritta il 22/10, `termini.html` punto 3): myquicktag può riprendersi un nome usato per imitare una persona o che viola un marchio e assegnarlo al legittimo titolare. Coprono i casi che le liste non possono prevedere (come fanno Instagram, X, Google).
-- [ ] Ancora aperti (minori): ~~cambiare password non fa uscire gli altri dispositivi~~ (risolto con gli account: dopo cambio/recupero password gli altri dispositivi escono); ~~visite e click delle statistiche non hanno limiti~~ (23/10/2026: dallo stesso IP si contano al massimo 10 visite e 60 click all'ora per tag, e 300 visite / 600 click al giorno in tutto; oltre, non si contano, senza errori per il visitatore); attivazione senza pagamento finché non c'è Stripe; funzioni server a 11 su 12 del piano gratuito di Vercel (dal 20/10 con `api/segnala.js`).
+- [ ] Ancora aperti (minori): ~~cambiare password non fa uscire gli altri dispositivi~~ (risolto con gli account: dopo cambio/recupero password gli altri dispositivi escono); ~~visite e click delle statistiche non hanno limiti~~ (23/10/2026: dallo stesso IP si contano al massimo 10 visite e 60 click all'ora per tag, e 300 visite / 600 click al giorno in tutto; oltre, non si contano, senza errori per il visitatore); attivazione senza pagamento finché non c'è Stripe; funzioni server a 12 su 12 del piano gratuito di Vercel (dal 29/10 con `api/quickpass.js`): le prossime vanno accorpate.
 
 ---
 

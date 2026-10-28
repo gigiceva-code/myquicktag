@@ -441,6 +441,7 @@
    // 1. MOTORE DI APERTURA (Con Router di Cronologia)
         function apriDrawer(idDrawer) {
             const masterDrawer = document.getElementById('drawer-master');
+            if (idDrawer === 'drawer-quickpass') caricaCassaQuickPass();
             
             if (idDrawer === 'drawer-master' && window.entratoDaPreview === true) {
                 window.entratoDaPreview = false; 
@@ -652,6 +653,7 @@
                 quickpass_premio_b: document.getElementById('field-qp-premio-b')?.value.trim() || "", 
                 quickpass_limite: document.getElementById('field-qp-limite')?.value || "", 
                 quickpass_scadenza: document.getElementById('field-qp-scadenza')?.value || "",
+                quickpass_amici_per_premio: document.getElementById('field-qp-amici')?.value || "1",
                 modulo_vcf: JSON.stringify(vcfObject), 
                 config_canali: JSON.stringify(canaliSocial), 
                 review_url: document.getElementById('field-review-url')?.value.trim() || "", 
@@ -997,6 +999,7 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                     if (f.quickpass_premio_b && document.getElementById('field-qp-premio-b')) document.getElementById('field-qp-premio-b').value = f.quickpass_premio_b;
                     if (f.quickpass_limite && document.getElementById('field-qp-limite')) document.getElementById('field-qp-limite').value = f.quickpass_limite;
                     if (f.quickpass_scadenza && document.getElementById('field-qp-scadenza')) document.getElementById('field-qp-scadenza').value = f.quickpass_scadenza;
+                    if (f.quickpass_amici_per_premio && document.getElementById('field-qp-amici')) document.getElementById('field-qp-amici').value = String(f.quickpass_amici_per_premio);
 
                    
                       // 1. CARICAMENTO AVATAR (Sganciato e Immediato)
@@ -1501,7 +1504,7 @@ function gestisciVIPSwitch(checkbox) {
             else if (tipo === 'social') { const track = document.getElementById('social-internal-track'); if(track) track.innerHTML = ''; aggiornaLimitiSocial(); } 
             else if (tipo === 'contatti') { document.getElementById('field-tel1').value = ''; document.getElementById('field-tel2').value = ''; document.getElementById('field-email').value = ''; document.getElementById('field-indirizzo').value = ''; } 
             else if (tipo === 'gallery') { document.getElementById('field-gallery-data').value = '[]'; const grid = document.getElementById('gallery-preview-grid'); if (grid) grid.innerHTML = ''; } 
-            else if (tipo === 'quickpass') { document.getElementById('field-qp-premio-a').value = ''; document.getElementById('field-qp-premio-b').value = ''; document.getElementById('field-qp-limite').value = ''; document.getElementById('field-qp-scadenza').value = ''; } 
+            else if (tipo === 'quickpass') { if (document.getElementById('field-qp-amici')) document.getElementById('field-qp-amici').value = '1'; document.getElementById('field-qp-premio-a').value = ''; document.getElementById('field-qp-premio-b').value = ''; document.getElementById('field-qp-limite').value = ''; document.getElementById('field-qp-scadenza').value = ''; } 
             else if (tipo === 'review') { if(document.getElementById('field-review-url')) document.getElementById('field-review-url').value = ''; if(document.getElementById('field-review-contact')) document.getElementById('field-review-contact').value = ''; } 
             else if (tipo === 'video') { if(document.getElementById('field-video-url')) document.getElementById('field-video-url').value = ''; if(document.getElementById('field-video-cta-text')) document.getElementById('field-video-cta-text').value = ''; if(document.getElementById('field-video-cta-url')) document.getElementById('field-video-cta-url').value = ''; } 
             else if (tipo === 'shop') { const checkShop = document.getElementById('input-shop-attivo'); if(checkShop) checkShop.checked = false; if(document.getElementById('input-shop-titolo')) document.getElementById('input-shop-titolo').value = ''; if(document.getElementById('input-shop-prezzo')) document.getElementById('input-shop-prezzo').value = ''; if(document.getElementById('input-shop-link')) document.getElementById('input-shop-link').value = ''; if(document.getElementById('input-shop-scadenza')) document.getElementById('input-shop-scadenza').value = ''; } 
@@ -1835,13 +1838,13 @@ function gestisciVIPSwitch(checkbox) {
             'quickpass': {
                 titolo: "IL PASSAPAROLA CHE PREMIA",
                 testo: _strategia(
-                    ['Il cliente più facile da conquistare', 'È quello che arriva su consiglio di un amico: si fida di te prima ancora di entrare. Il Quick Pass trasforma la soddisfazione dei tuoi clienti in nuovi clienti, con un premio per chi consiglia e uno di benvenuto per chi arriva.'],
-                    ['Come impostarlo', 'Il passaparola funziona quando ci guadagnano entrambi. Scegli il Premio A per chi condivide e il Premio B per l\'amico:', [
-                        ['fa-mug-hot', 'Bar e ristoranti:', '«A te il caffè offerto, al tuo amico il dolce in omaggio alla prima cena.»'],
-                        ['fa-store', 'Negozi e servizi alla persona:', '«10% sul prossimo acquisto a chi porta un amico, e 10% anche a lui.»'],
-                        ['fa-briefcase', 'Professionisti:', '«Una sessione extra a chi ci presenta un nuovo cliente; la prima consulenza gratuita per lui.»']
+                    ['Il cliente più facile da conquistare', 'È quello che arriva su consiglio di un amico: si fida di te prima ancora di entrare. Con il Quick Pass ogni cliente soddisfatto può portartene di nuovi, e tu paghi il premio solo quando il nuovo cliente arriva davvero in cassa.'],
+                    ['Come funziona', 'Imposta il regalo per l\'amico e il premio per chi consiglia. Il resto è automatico:', [
+                        ['fa-link', 'Chi consiglia:', 'dalla tua tag crea il suo invito personale e lo manda su WhatsApp con un tocco.'],
+                        ['fa-ticket', 'L\'amico:', 'apre il link, vede «Marco ti ha regalato…» e ritira il suo pass personale, con codice e QR.'],
+                        ['fa-cash-register', 'In cassa:', 'tu o un dipendente con il PIN di cassa inquadrate il QR e convalidate. Il pass vale una volta sola e chi ha consigliato riceve il suo premio, da usare a sua volta in cassa.']
                     ]],
-                    ['Cosa ottieni', 'Ogni cliente soddisfatto diventa un canale di acquisizione: persone già ben disposte, che decidono più in fretta, a un costo pari al solo premio. Calcola il premio sul margine, non sul prezzo, e imposta una scadenza: l\'offerta resta desiderabile e sotto il tuo controllo.']
+                    ['Cosa ottieni', 'Nuovi clienti già ben disposti, a un costo pari al solo premio, e numeri chiari: inviti, pass ritirati, clienti arrivati. Esempi che funzionano: «A te il caffè offerto, al tuo amico il dolce alla prima cena» oppure «10% sul prossimo acquisto a chi porta un amico, e 10% anche a lui». Calcola il premio sul margine, non sul prezzo, e usa scadenza e numero massimo di pass per tenere tutto sotto controllo.']
                 )
             },
             'review': {
@@ -1865,7 +1868,7 @@ function gestisciVIPSwitch(checkbox) {
                         ['fa-briefcase', 'Professionisti:', '«Ricevi la guida gratuita» oppure «Prenota una prima consulenza senza impegno.»'],
                         ['fa-cog', 'La regola:', 'il vantaggio deve valere più del gesto di lasciare il proprio contatto.']
                     ]],
-                    ['Cosa ottieni', 'Un elenco di persone interessate da ricontattare quando vuoi, senza pagare pubblicità per raggiungerle di nuovo. Usa i contatti per ciò che hai promesso nel titolo: per inviare offerte promozionali serve il consenso esplicito della persona.'],
+                    ['Cosa ottieni', 'Un elenco di persone interessate da ricontattare quando vuoi, senza pagare pubblicità per raggiungerle di nuovo. Il modulo chiede al visitatore, con una casella facoltativa, se accetta di ricevere offerte: in I miei contatti vedi chi ha detto sì. A chi non ha spuntato la casella scrivi solo per ciò che hai promesso nel titolo.'],
                     _boxStrategia('<i class="fas fa-inbox" style="margin-right: 6px;"></i>Dove trovi i tuoi contatti', _testoStrategia('Ogni contatto arriva in <strong style="color: #ffffff;">Dashboard → I miei contatti</strong>. Il campanello ti segnala i nuovi; da lì li chiami, scrivi su WhatsApp o via email con un tocco e li segni come richiamati.'), 'verde')
                 )
             },
@@ -2104,4 +2107,54 @@ function chiudiPremiumAlert() {
 function confermaPremiumAlert() {
     chiudiPremiumAlert(); 
     setTimeout(() => { apriDrawer('drawer-piani'); }, 300); 
+}
+
+// ============================================================
+// QUICK PASS: CASSA NELL'EDITOR (PIN per i dipendenti, link della cassa, primi numeri) → api/quickpass.js
+// ============================================================
+async function caricaCassaQuickPass() {
+    const box = document.getElementById('qp-cassa-contenuto');
+    if (!box) return;
+    if (statoUtente !== 'attivo') { box.textContent = "Disponibile dopo l'attivazione della tag."; return; }
+    box.textContent = 'Caricamento…';
+    let r = {};
+    try {
+        const risposta = await fetch('/api/quickpass', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ u: NOME_SISTEMA, azione: 'riepilogo' }) });
+        r = await risposta.json();
+    } catch (e) { r = {}; }
+    if (!r.success) { box.textContent = r.error || 'Numeri non disponibili in questo momento.'; return; }
+    const n = r.numeri || {};
+    const cifra = (v, etichetta) => `<div style="flex: 1; text-align: center;"><div style="font-size: 1.2rem; color: #fff; font-weight: 600;">${v || 0}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px;">${etichetta}</div></div>`;
+    box.innerHTML = `
+        <div style="display: flex; gap: 6px; margin: 4px 0 14px;">${cifra(n.inviti, 'INVITI')}${cifra(n.pass_ritirati, 'PASS RITIRATI')}${cifra(n.pass_usati, 'CLIENTI ARRIVATI')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
+        <div style="margin-bottom: 6px;">Per convalidare un pass, inquadra il suo QR con la fotocamera: se sei collegato come titolare puoi convalidarlo subito. I tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
+        <div style="display: flex; gap: 8px; margin: 10px 0 6px;">
+            <input type="password" id="qp-pin-nuovo" inputmode="numeric" maxlength="6" placeholder="${r.pin_impostato ? 'PIN impostato ••••' : 'Nuovo PIN (4-6 cifre)'}" style="flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 16px; outline: none;">
+            <button type="button" onclick="salvaPinQuickPass()" style="background: #e5c158; color: #111; border: none; border-radius: 10px; padding: 0 16px; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer;">SALVA PIN</button>
+        </div>
+        <div id="qp-pin-esito" style="font-size: 0.72rem; min-height: 1em; color: #9ca3af;">${r.pin_impostato ? 'PIN attivo. Scrivine uno nuovo per cambiarlo.' : 'Nessun PIN: per ora convalidi solo tu.'}</div>
+        <button type="button" onclick="condividiLinkCassa()" style="width: 100%; margin-top: 10px; padding: 12px; background: transparent; border: 1px solid rgba(229,193,88,0.4); color: #e5c158; border-radius: 10px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; cursor: pointer;"><i class="fas fa-share-alt" style="margin-right: 6px;"></i>INVIA IL LINK DELLA CASSA AI DIPENDENTI</button>
+        <button type="button" onclick="window.open('/u/' + NOME_SISTEMA + '?cassa=1', '_blank')" style="width: 100%; margin-top: 8px; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 10px; font-size: 0.72rem; letter-spacing: 1px; cursor: pointer;">APRI LA CASSA</button>`;
+}
+
+async function salvaPinQuickPass() {
+    const campo = document.getElementById('qp-pin-nuovo');
+    const esito = document.getElementById('qp-pin-esito');
+    const pin = (campo && campo.value || '').trim();
+    if (!/^\d{4,6}$/.test(pin)) { esito.style.color = '#ef4444'; esito.textContent = 'Il PIN deve avere da 4 a 6 cifre.'; return; }
+    let r = {};
+    try {
+        const risposta = await fetch('/api/quickpass', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ u: NOME_SISTEMA, azione: 'pin', pin }) });
+        r = await risposta.json();
+    } catch (e) { r = {}; }
+    esito.style.color = r.success ? '#10b981' : '#ef4444';
+    esito.textContent = r.success ? 'PIN salvato. Comunicalo solo ai tuoi dipendenti.' : (r.error || 'PIN non salvato, riprova.');
+    if (r.success) campo.value = '';
+}
+
+function condividiLinkCassa() {
+    const link = `${window.location.origin}/u/${NOME_SISTEMA}?cassa=1`;
+    const testo = 'Link della cassa Quick Pass: aprilo quando un cliente mostra il suo pass (ti servirà il PIN di cassa).';
+    if (navigator.share) navigator.share({ title: 'Cassa Quick Pass', text: testo, url: link }).catch(() => {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => alert('Link della cassa copiato.'));
 }
