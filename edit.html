@@ -998,25 +998,39 @@
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="position: relative;" class="premium-field-container">
                 <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO PER CHI INVITA</label>
-                    <input type="text" id="field-qp-premio-a" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO PER CHI CONSIGLIA</label>
+                    <input type="text" id="field-qp-premio-a" placeholder="Es. Un caffè offerto" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">PREMIO NUOVO CLIENTE</label>
-                    <input type="text" id="field-qp-premio-b" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">REGALO PER L'AMICO</label>
+                    <input type="text" id="field-qp-premio-b" placeholder="Es. Il dolce in omaggio alla prima cena" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">LIMITE COUPON (Opzionale)</label>
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">NUMERO MASSIMO DI PASS (facoltativo)</label>
                     <input type="number" id="field-qp-limite" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">DATA SCADENZA (Opzionale)</label>
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">FINE DELLA CAMPAGNA (facoltativa)</label>
                     <input type="datetime-local" id="field-qp-scadenza" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; color-scheme: dark;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">IL PREMIO DI CHI CONSIGLIA ARRIVA</label>
+                    <select id="field-qp-amici" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; color-scheme: dark;">
+                        <option value="1">A ogni amico che usa il pass</option>
+                        <option value="2">Ogni 2 amici</option>
+                        <option value="3">Ogni 3 amici</option>
+                        <option value="5">Ogni 5 amici</option>
+                    </select>
                 </div>
                 <div class="premium-lock-overlay">
                     <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
                     <span style="color: #d4af37; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">FUNZIONE GOLD</span>
                 </div>
+            </div>
+            <!-- CASSA: PIN per i dipendenti, link della cassa e primi numeri (api/quickpass.js) -->
+            <div id="qp-cassa-editor" style="border: 1px solid rgba(229, 193, 88, 0.3); background: rgba(229, 193, 88, 0.04); border-radius: 14px; padding: 16px;">
+                <div style="font-size: 0.75rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 8px;"><i class="fas fa-cash-register" style="margin-right: 6px;"></i>CASSA</div>
+                <div id="qp-cassa-contenuto" style="font-size: 0.8rem; color: #d1d5db; line-height: 1.5;">Disponibile dopo l'attivazione della tag.</div>
             </div>
             <div style="text-align: center; margin-top: 5px;">
                 <button type="button" onclick="eliminaAsset('quickpass')" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">

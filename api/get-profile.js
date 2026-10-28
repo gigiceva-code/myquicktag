@@ -14,7 +14,7 @@ export const CAMPI_PUBBLICI = [
   'live_status_color', 'live_status_text', 'live_status_micro', 'live_status_action_type', 'live_status_action_label', 'live_status_action_url',
   'flash_text', 'flash_micro', 'flash_expiry',
   'pdf_label', 'pdf_url',
-  'quickpass_premio_a', 'quickpass_premio_b', 'quickpass_limite', 'quickpass_scadenza',
+  'quickpass_premio_a', 'quickpass_premio_b', 'quickpass_limite', 'quickpass_scadenza', 'quickpass_amici_per_premio',
   'review_url', 'review_contact',
   'video_url', 'video_cta_text', 'video_cta_url',
   'lead_capture_attivo', 'lead_capture_titolo',
@@ -23,7 +23,7 @@ export const CAMPI_PUBBLICI = [
 // Solo al proprietario (sessione valida): bozza, contatti lasciati dai visitatori, statistiche, Pocket
 export const CAMPI_PROPRIETARIO = ['draft_json', 'lead_capture_leads', 'analytics_data', 'analytics_log', 'pocket_cloud'];
 // Mai inviati al browser
-export const CAMPI_MAI = ['id', 'password', 'created_at', 'updated_at', 'proprietario_id'];
+export const CAMPI_MAI = ['id', 'password', 'created_at', 'updated_at', 'proprietario_id', 'quickpass_pin_hash'];
 
 function scegli(fields, elenco) {
   const out = {};

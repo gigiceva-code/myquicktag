@@ -10,6 +10,7 @@ import fs from 'fs';
 process.env.SUPABASE_URL='https://fake.supabase.co'; process.env.SUPABASE_SECRET_KEY='sb_secret_x'; process.env.SESSION_SECRET='s';
 delete process.env.RINNOVO_GRATUITO;
 const R=new URL('../api/', import.meta.url).href;
+const tabelleQP={quickpass_inviti:[],quickpass_pass:[]}; // Quick Pass (migrazione 20261029000000)
 const rows=[]; const limiti=new Map(); const segnalazioni=[]; const emailInviate=[]; let resendGiu=false;
 // Lista protetta di prova (nel database vero: tabella nomi_riservati)
 const nomiProtetti=[
@@ -41,6 +42,16 @@ globalThis.fetch=async (url,opt={})=>{
     if(resendGiu) return new Response('{}',{status:500});
     emailInviate.push({chiave:String(opt.headers?.Authorization||''),...JSON.parse(opt.body)}); return new Response('{"id":"e1"}',{status:200}); }
   if(opt.headers.apikey!=='sb_secret_x') return new Response('{}',{status:401});
+  const nomeTab=u.pathname.replace('/rest/v1/','');
+  if(tabelleQP[nomeTab]){ // stesse regole della migrazione: codici unici, (invito, ordine) unico
+    const T=tabelleQP[nomeTab]; const filtra=r=>[...u.searchParams].every(([k,v])=>!v.startsWith('eq.')||String(r[k])===decodeURIComponent(v.slice(3)));
+    if(m==='GET'){ let out=T.filter(filtra); if(u.searchParams.get('order')==='created_at.desc') out=[...out].reverse();
+      const lim=u.searchParams.get('limit'); if(lim) out=out.slice(0,+lim); const sel=u.searchParams.get('select');
+      if(sel&&sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out),{status:200}); }
+    if(m==='POST'){ const b=JSON.parse(opt.body); if(T.some(r=>r.codice===b.codice) || (b.ordine!=null && T.some(r=>r.invito===b.invito&&r.ordine===b.ordine))) return new Response('{"code":"23505"}',{status:409});
+      const r={created_at:new Date().toISOString(),stato:nomeTab==='quickpass_pass'?'attivo':undefined,...b}; T.push(r); return new Response(JSON.stringify([r]),{status:201}); }
+    if(m==='PATCH'){ const b=JSON.parse(opt.body); const t=T.filter(filtra); t.forEach(r=>Object.assign(r,b)); return new Response(JSON.stringify(t),{status:200}); }
+  }
   if(u.pathname==='/rest/v1/segnalazioni' && m==='POST'){ const b=JSON.parse(opt.body);
     if(!/^[a-z0-9]{1,30}$/.test(b.tag) || !['impersonazione','marchio','offensivo','truffa','altro'].includes(b.motivo)) return new Response('{"code":"23514"}',{status:400});
     segnalazioni.push({id:crypto.randomUUID(),stato:'nuova',...b}); return new Response(null,{status:201}); }
@@ -407,7 +418,7 @@ delete process.env.RINNOVO_GRATUITO;
   console.error=ce2; globalThis.fetch=fetchVero;
   ok(rPren.code===200,'limiti non verificabili: la prenotazione resta consentita (limite "aperto")');
   ok(!fs.existsSync(new URL('login.js',R)) && !fs.existsSync(new URL('change-password.js',R)),'vecchio accesso "@nome + password" dismesso (login.js e change-password.js rimossi)');
-  ok(fs.readdirSync(new URL(R)).filter(f=>f.endsWith('.js')).length<=11,'funzioni Vercel entro il limite (≤ 11 su 12)');
+  ok(fs.readdirSync(new URL(R)).filter(f=>f.endsWith('.js')).length<=12,'funzioni Vercel entro il limite del piano gratuito (≤ 12; dal 29/10/2026 sono 12 con api/quickpass.js: per aggiungerne altre, accorparle)');
 }
 
 // ============================================================
@@ -535,4 +546,82 @@ delete process.env.RINNOVO_GRATUITO;
   r=await call('add-lead.js',{method:'POST',ip:'5.5.5.2',body:{u:'consensi',nome:'Bruno',contatto:'3334445555',consenso:'true',consenso_testo:'x'}});
   l=JSON.parse(riga('consensi').lead_capture_leads)[0];
   ok(r.code===200 && l.consenso_offerte===false && !('consenso_testo' in l) && !('consenso_data' in l),'vasetto: senza casella spuntata (o con valori ambigui) nessun consenso');
+}
+
+// ============================================================
+// QUICK PASS (api/quickpass.js): invito → pass dell'amico → convalida in cassa → premio
+// ============================================================
+{
+  const qp=(azione,body={},extra={})=>call('quickpass.js',{method:'POST',ip:extra.ip,headers:extra.headers,body:{u:'pizzeriaqp',azione,...body}});
+  rows.push({id:'qp1',username_system:'pizzeriaqp',username_display:'@PizzeriaQP',stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',
+    quickpass_premio_a:'Un caffè offerto',quickpass_premio_b:'Dolce in omaggio',quickpass_amici_per_premio:2,quickpass_limite:3,lead_capture_attivo:'false',created_at:new Date().toISOString()});
+  const telA='aaaaaaaaaaaaaaaaaaaa', telB='bbbbbbbbbbbbbbbbbbbb', telC='cccccccccccccccccccc', telD='dddddddddddddddddddd', telE='eeeeeeeeeeeeeeeeeeee';
+
+  let r=await qp('invito',{nome:'Marco Rossi <b>',dispositivo:telA},{ip:'4.4.4.1'});
+  const inv=r.body.invito;
+  ok(r.code===200 && /^[A-Z0-9]{8}$/.test(inv.codice) && !inv.nome.includes('<'),'quick pass: chi consiglia ottiene un invito personale (nome ripulito)');
+  r=await qp('invito',{nome:'Marco',dispositivo:telA},{ip:'4.4.4.1'});
+  ok(r.body.invito.codice===inv.codice,'quick pass: stesso telefono → stesso invito, niente doppioni');
+  r=await qp('info',{invito:inv.codice});
+  ok(r.body.attiva && r.body.da==='Marco' && r.body.premio==='Dolce in omaggio' && r.body.posti_rimasti===3,'quick pass: la pagina dell\'amico sa chi lo invita, cosa riceve e quanti pass restano');
+
+  r=await qp('ritira',{invito:inv.codice,nome:'Marco',dispositivo:telA});
+  ok(r.code===403 && tabelleQP.quickpass_pass.length===0,'quick pass: non si può ritirare il pass con il proprio invito');
+  r=await qp('ritira',{invito:inv.codice,nome:'Luca',dispositivo:telB,contatto:'3330001111',consenso:true,consenso_testo:'Accetto di ricevere offerte e novità da @PizzeriaQP'},{ip:'4.4.4.2'});
+  const passB=r.body.pass;
+  ok(r.code===200 && /^[A-Z0-9]{6}$/.test(passB.codice) && passB.premio==='Dolce in omaggio' && passB.stato==='attivo' && !('dispositivo' in passB) && !('contatto' in passB),'quick pass: l\'amico ritira un pass personale (senza dati interni)');
+  const lead=JSON.parse(riga('pizzeriaqp').lead_capture_leads)[0];
+  ok(lead.nome==='Luca' && lead.fonte==='Quick Pass' && lead.consenso_offerte===true,'quick pass: il recapito facoltativo arriva in I miei contatti con il consenso');
+  r=await qp('ritira',{invito:inv.codice,nome:'Luca di nuovo',dispositivo:telB},{ip:'4.4.4.2'});
+  ok(r.body.esistente && r.body.pass.codice===passB.codice,'quick pass: un solo pass per telefono');
+
+  r=await qp('convalida',{codice:passB.codice});
+  ok(r.code===401 && r.body.serve_pin && tabelleQP.quickpass_pass[0].stato==='attivo','quick pass: senza sessione del titolare né PIN la convalida è rifiutata');
+  r=await qp('pin',{pin:'1234'});
+  ok(r.code===401,'quick pass: solo il titolare imposta il PIN di cassa');
+  r=await qp('pin',{pin:'12a'},{headers:conSessione(jwtAnna)});
+  ok(r.code===400,'quick pass: PIN di 4-6 cifre');
+  r=await qp('pin',{pin:'4321'},{headers:conSessione(jwtAnna)});
+  ok(r.code===200 && riga('pizzeriaqp').quickpass_pin_hash.startsWith('scrypt$') && !riga('pizzeriaqp').quickpass_pin_hash.includes('4321'),'quick pass: PIN di cassa salvato solo come impronta');
+  r=await call('get-profile.js',{query:{u:'pizzeriaqp'}});
+  ok(!('quickpass_pin_hash' in r.body.fields) && r.body.fields.quickpass_amici_per_premio===2,'quick pass: l\'impronta del PIN non esce mai, l\'impostazione "ogni N amici" sì');
+  r=await qp('verifica',{codice:passB.codice,pin:'0000'},{ip:'4.4.4.9'});
+  ok(r.code===401 && r.body.error==='PIN di cassa errato','quick pass: PIN errato rifiutato');
+  r=await qp('verifica',{codice:passB.codice.toLowerCase(),pin:'4321'},{ip:'4.4.4.9'});
+  ok(r.code===200 && r.body.pass.nome==='Luca' && tabelleQP.quickpass_pass[0].stato==='attivo','quick pass: verifica con PIN (codice anche minuscolo) senza consumare il pass');
+  r=await qp('convalida',{codice:passB.codice,pin:'4321'},{ip:'4.4.4.9'});
+  ok(r.code===200 && r.body.pass.stato==='usato' && !r.body.premio_sbloccato,'quick pass: convalida in cassa con PIN; premio di chi consiglia non ancora maturato (ogni 2 amici)');
+  r=await qp('convalida',{codice:passB.codice,pin:'4321'},{ip:'4.4.4.9'});
+  ok(r.code===409 && r.body.usato,'quick pass: un pass usato non si riusa');
+
+  r=await qp('ritira',{invito:inv.codice,nome:'Giulia',dispositivo:telC},{ip:'4.4.4.3'});
+  const passC=r.body.pass;
+  r=await qp('convalida',{codice:passC.codice},{headers:conSessione(jwtAnna)});
+  ok(r.code===200 && r.body.premio_sbloccato && r.body.premio_sbloccato.premio==='Un caffè offerto','quick pass: al secondo amico portato chi consiglia sblocca il suo premio (convalida del titolare)');
+  r=await qp('stato',{invito:inv.codice,codici:[passB.codice]});
+  ok(r.body.invito.amici_usati===2 && r.body.invito.premi.length===1 && r.body.invito.premi[0].stato==='attivo' && r.body.pass[0].stato==='usato','quick pass: chi consiglia vede amici portati e premio da usare; l\'amico vede il pass usato');
+  const premioA=r.body.invito.premi[0].codice;
+  r=await qp('convalida',{codice:premioA},{headers:conSessione(jwtAnna)});
+  ok(r.code===200 && r.body.pass.tipo==='premio','quick pass: anche il premio di chi consiglia si convalida in cassa');
+
+  r=await qp('ritira',{nome:'Senza invito',dispositivo:telD},{ip:'4.4.4.4'});
+  ok(r.code===200 && r.body.pass && tabelleQP.quickpass_pass.find(p=>p.codice===r.body.pass.codice).invito===null,'quick pass: i vecchi link generici danno comunque il pass all\'amico');
+  r=await qp('ritira',{invito:inv.codice,nome:'Quarto',dispositivo:telE},{ip:'4.4.4.5'});
+  ok(r.code===410 && r.body.esauriti,'quick pass: oltre il limite di pass impostato, pass esauriti');
+  r=await qp('info',{invito:inv.codice});
+  ok(r.body.esauriti && !r.body.attiva,'quick pass: la pagina dell\'amico sa che i pass sono finiti');
+
+  r=await qp('riepilogo');
+  ok(r.code===401,'quick pass: il riepilogo è solo per il titolare');
+  r=await qp('riepilogo',{},{headers:conSessione(jwtAnna)});
+  ok(r.body.numeri.inviti===1 && r.body.numeri.pass_ritirati===3 && r.body.numeri.pass_usati===2 && r.body.numeri.premi_maturati===1 && r.body.numeri.premi_usati===1 && r.body.pin_impostato,'quick pass: riepilogo con inviti, pass ritirati e usati, premi');
+
+  riga('pizzeriaqp').quickpass_scadenza='2020-01-01T00:00';
+  r=await qp('invito',{nome:'Tardi',dispositivo:'ffffffffffffffffffff'});
+  ok(r.code===410,'quick pass: campagna scaduta → niente nuovi inviti');
+  riga('pizzeriaqp').quickpass_scadenza='';
+  tabelleQP.quickpass_pass.find(p=>p.codice===passC.codice).stato='attivo';
+  tabelleQP.quickpass_pass.find(p=>p.codice===passC.codice).scadenza='2020-01-01T00:00:00Z';
+  r=await qp('convalida',{codice:passC.codice},{headers:conSessione(jwtAnna)});
+  ok(r.code===410 && r.body.scaduto,'quick pass: un pass scaduto non si convalida');
 }

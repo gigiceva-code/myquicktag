@@ -272,7 +272,7 @@ function renderizzaTagCompleta(fields) {
             mostraOverlayAcquisto();
         }
     }
-    controllaInvitoQuickPass(fields);
+    mqtQuickPass.avvio(fields); // link dell'amico (?pass=) e della cassa (?cassa=), quickpass-tag.js
    controllaAcquistoIstantaneo(); 
 }
 // ============================================================
@@ -448,49 +448,7 @@ function apriDettaglio(tipo) {
             </div>
         `;
     }
- if (tipo === 'quickpass') {
-        titolo.textContent = 'QUICK PASS';
-        const premioA = cacheDatiUtente.quickpass_premio_a;
-        const premioB = cacheDatiUtente.quickpass_premio_b;
-        
-        // Sempre /u/<nome>: da tag.html?u=<nome> il vecchio calcolo perdeva il nome della tag
-        const linkCondivisione = `${window.location.origin}/u/${usernameCorrente}?qp_ref=invito`;
-        const testoWhatsApp = encodeURIComponent(`Ti ho regalato: ${premioB}! 🎁\n\nMostra questo Quick Pass alla cassa per sbloccarlo: ${linkCondivisione}`);
-        const apiWhatsApp = `https://wa.me/?text=${testoWhatsApp}`;
 
-        corpo.innerHTML = `
-            <div style="display: flex; flex-direction: column; width: 100%; align-items: center; gap: 30px; padding-top: 15px;">
-                <i class="fas fa-gift" style="font-size: 3.5rem; color: var(--theme-border, #d4af37); filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2));"></i>
-                
-                <div style="text-align:center; font-size:1rem; font-weight:300; color:#e8e8ed; line-height:1.6; padding: 0 10px;">
-                    Regala <strong style="color:#fff; font-weight: 500;">${premioB}</strong> a un amico.<br>
-                    Quando lo utilizzerà, tu sbloccherai:
-                </div>
-
-                <div style="width: 100%; max-width: 320px; padding: 35px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-left: 2px solid var(--theme-border, #d4af37); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
-                    <span style="font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;">IL TUO PREMIO</span>
-                    <span style="font-size: 1.25rem; font-weight: 600; color: #fff; letter-spacing: 2px; text-align: center; text-transform: uppercase;">${premioA}</span>
-                </div>
-                
-                <a href="${apiWhatsApp}" target="_blank" rel="noopener noreferrer" style="width: 100%; max-width: 320px; padding: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--theme-border, #d4af37); border-radius: 14px; color: #fff; font-size: 0.9rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: transform 0.2s; margin-top: 15px;">
-                    <i class="fab fa-whatsapp" style="font-size: 1.4rem; color: var(--theme-border, #d4af37);"></i> INVITA E SBLOCCA
-                </a>
-            </div>
-        `;
-        
-        const btnCondividiSezione = document.getElementById('btnCondividiLink');
-        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
-
-      const elementi = corpo.children;
-        Array.from(elementi).forEach((el, index) => {
-            el.classList.add('cascade-item');
-            el.style.animationDelay = `${index * 0.08}s`; 
-            setTimeout(() => {
-                el.classList.add('overlay-boot-active');
-            }, 10);
-        });
-
-    }
     
     backdrop.classList.add('active');
     sheet.classList.add('active');
@@ -1167,48 +1125,8 @@ function apriSezione(tipo) {
         return;
     }
  if (tipo === 'quickpass') {
-        titolo.textContent = 'QUICK PASS';
-        const premioA = cacheDatiUtente.quickpass_premio_a;
-        const premioB = cacheDatiUtente.quickpass_premio_b;
-        
-        // Sempre /u/<nome>: da tag.html?u=<nome> il vecchio calcolo perdeva il nome della tag
-        const linkCondivisione = `${window.location.origin}/u/${usernameCorrente}?qp_ref=invito`;
-        const testoWhatsApp = encodeURIComponent(`Ti ho regalato: ${premioB}! 🎁\n\nMostra questo Quick Pass alla cassa per sbloccarlo: ${linkCondivisione}`);
-        const apiWhatsApp = `https://wa.me/?text=${testoWhatsApp}`;
-
-        corpo.innerHTML = `
-            <div style="display: flex; flex-direction: column; width: 100%; align-items: center; gap: 30px; padding-top: 15px;">
-                <i class="fas fa-gift" style="font-size: 3.5rem; color: var(--theme-border, #d4af37); filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2));"></i>
-                
-                <div style="text-align:center; font-size:1rem; font-weight:300; color:#e8e8ed; line-height:1.6; padding: 0 10px;">
-                    Regala <strong style="color:#fff; font-weight: 500;">${premioB}</strong> a un amico.<br>
-                    Quando lo utilizzerà, tu sbloccherai:
-                </div>
-
-                <!-- Box Premio Luxury a tutto schermo (Cornice unificata) -->
-                <div style="width: 100%; max-width: 320px; padding: 35px 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--theme-border, #d4af37); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
-                    <span style="font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;">IL TUO PREMIO</span>
-                    <span style="font-size: 1.25rem; font-weight: 600; color: #fff; letter-spacing: 2px; text-align: center; text-transform: uppercase;">${premioA}</span>
-                </div>
-                
-                <a href="${apiWhatsApp}" target="_blank" rel="noopener noreferrer" style="width: 100%; max-width: 320px; padding: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--theme-border, #d4af37); border-radius: 14px; color: #fff; font-size: 0.9rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: transform 0.2s; margin-top: 15px;">
-                    <i class="fab fa-whatsapp" style="font-size: 1.4rem; color: var(--theme-border, #d4af37);"></i> INVITA E SBLOCCA
-                </a>
-            </div>
-        `;
-        
-        const btnCondividiSezione = document.getElementById('btnCondividiLink');
-        if (btnCondividiSezione) btnCondividiSezione.style.display = 'none';
-
-        const elementi = corpo.children;
-        Array.from(elementi).forEach((el, index) => {
-            el.classList.add('cascade-item');
-            el.style.animationDelay = `${index * 0.08}s`; 
-            setTimeout(() => {
-                el.classList.add('overlay-boot-active');
-            }, 10);
-        });
-
+        // Quick Pass "porta un amico": invito personale, amici portati e premi (quickpass-tag.js)
+        mqtQuickPass.sezione(corpo, titolo);
         return;
     }
     if (tipo === 'flash') {
@@ -1912,49 +1830,6 @@ function mostraWelcomeOverlay() {
     if (titoloEl) titoloEl.textContent = '@' + nome.replace('@', '') + ' è attiva'; 
 
     overlay.style.display = 'flex';
-}
-    // ============================================================
-// GESTIONE ATTERRAGGIO QUICK PASS (Nuovo Cliente B)
-// ============================================================
-function controllaInvitoQuickPass(fields) {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('qp_ref') === 'invito') {
-        const qpB = fields.quickpass_premio_b;
-        
-        // Se c'è un premio B configurato dal titolare
-        if (qpB && qpB.trim() !== '') {
-            
-            // Controlli di sicurezza (Scadenza e Limite)
-            if (fields.quickpass_scadenza && new Date() > new Date(fields.quickpass_scadenza)) return;
-            if (fields.quickpass_limite && parseInt(fields.quickpass_limite) <= 0) return;
-
-            const overlay = document.getElementById('qp-landing-overlay');
-            const txtPremio = document.getElementById('qp-landing-premio');
-            const qrContainer = document.getElementById('qp-landing-qr');
-            
-            if (overlay && txtPremio && qrContainer) {
-                txtPremio.innerText = qpB;
-                
-                // Pulisce e Genera il QR Code. 
-                // NOTA: Per ora inseriamo nel QR un link fittizio "action=valida". 
-                // Nella fase successiva collegheremo questo link alla funzione di validazione del barista.
-                qrContainer.innerHTML = '';
-                const scanUrl = `${window.location.origin}/tag.html?u=${fields.username_system}&action=valida`;
-                new QRCode(qrContainer, { text: scanUrl, width: 160, height: 160, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
-                
-                overlay.style.display = 'flex';
-                
-                // Impediamo lo scroll dietro la modale
-                document.body.style.overflow = 'hidden';
-            }
-        }
-    }
-}
-
-function chiudiQPLanding() {
-    const overlay = document.getElementById('qp-landing-overlay');
-    if (overlay) overlay.style.display = 'none';
-    document.body.style.overflow = 'auto'; // Ripristiniamo lo scroll
 }
 // ============================================================
 // QUICK QR SCANNER (LUXURY TRIGGER)

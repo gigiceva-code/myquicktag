@@ -21,7 +21,7 @@ function estraiCampi(sorgente) {
     "flash_text", "flash_micro", "flash_expiry", 
     "pdf_label", "pdf_url", 
     "gallery_data", "draft_json", "sedi_json",
-    "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza",
+    "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza", "quickpass_amici_per_premio",
     "pocket_cloud", "review_url", "review_contact",
     "video_url", "video_cta_text", "video_cta_url",
    "partners_data",
@@ -49,9 +49,10 @@ function estraiCampi(sorgente) {
           if (f === "stato") valueClean = valueClean.toLowerCase();
           if (f === "quick_action_tipo") valueClean = valueClean.toLowerCase();
           
-          if (f === "quickpass_limite") {
+          if (f === "quickpass_limite" || f === "quickpass_amici_per_premio") {
               const parsed = parseInt(valueClean, 10);
-              if (!isNaN(parsed)) fieldsToSave[f] = parsed;
+              // amici per premio: da 1 a 20 (vincolo del database)
+              if (!isNaN(parsed) && (f !== "quickpass_amici_per_premio" || (parsed >= 1 && parsed <= 20))) fieldsToSave[f] = parsed;
           } else {
               fieldsToSave[f] = valueClean;
           }

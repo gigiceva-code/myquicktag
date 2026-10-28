@@ -37,6 +37,7 @@ function gotrue(metodo,url,headers,body){
   if(p==='/logout'){ const x=utenteDaBearer(headers.authorization); if(x){ const scope=url.searchParams.get('scope')||'global'; if(scope==='global') chiudi(v=>v.email===x.u.email); else if(scope==='others') chiudi(v=>v.email===x.u.email&&v.sid!==x.s.sid); else chiudi(v=>v.sid===x.s.sid); } return [204,null]; }
   return err(404,'not_found','not found '+p);
 }
+const tabelleQP={quickpass_inviti:[],quickpass_pass:[]}; // Quick Pass (api/quickpass.js, migrazione 20261029000000)
 const segnalazioni=[]; // tabella segnalazioni (api/segnala.js); l'email non parte: RESEND_API_KEY assente
 // ---- finto PostgREST (stesse regole di test/api.test.mjs) ----
 globalThis.fetch=async (url,opt={})=>{
@@ -50,6 +51,16 @@ globalThis.fetch=async (url,opt={})=>{
     r.lead_capture_leads=JSON.stringify(l); return new Response(JSON.stringify(r.lead_capture_leads)); }
   if(u.pathname.includes('/rpc/')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null');
     const campo=u.pathname.endsWith('aggiungi_lead')?'lead_capture_leads':'analytics_log'; const voce=b.p_lead||b.p_click; const lista=JSON.parse(r[campo]||'[]'); lista.unshift(voce); r[campo]=JSON.stringify(lista); return new Response('true'); }
+  const nomeTab=u.pathname.replace('/rest/v1/','');
+  if(tabelleQP[nomeTab]){ // stesse regole della migrazione: codici unici, (invito, ordine) unico
+    const T=tabelleQP[nomeTab]; const filtra=r=>[...u.searchParams].every(([k,v])=>!v.startsWith('eq.')||String(r[k])===decodeURIComponent(v.slice(3)));
+    if(m==='GET'){ let out=T.filter(filtra); if(u.searchParams.get('order')==='created_at.desc') out=[...out].reverse();
+      const lim=u.searchParams.get('limit'); if(lim) out=out.slice(0,+lim); const sel=u.searchParams.get('select');
+      if(sel&&sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out),{status:200}); }
+    if(m==='POST'){ const b=JSON.parse(opt.body); if(T.some(r=>r.codice===b.codice) || (b.ordine!=null && T.some(r=>r.invito===b.invito&&r.ordine===b.ordine))) return new Response('{"code":"23505"}',{status:409});
+      const r={created_at:new Date().toISOString(),...(nomeTab==='quickpass_pass'?{stato:'attivo'}:{}),...b}; T.push(r); return new Response(JSON.stringify([r]),{status:201}); }
+    if(m==='PATCH'){ const b=JSON.parse(opt.body); const t=T.filter(filtra); t.forEach(r=>Object.assign(r,b)); return new Response(JSON.stringify(t),{status:200}); }
+  }
   if(u.pathname==='/rest/v1/segnalazioni' && m==='POST'){ segnalazioni.push({id:crypto.randomUUID(),stato:'nuova',...JSON.parse(opt.body)}); return new Response(null,{status:201}); }
   const f=(r)=>{for(const [k,v] of u.searchParams){ if(v.startsWith('eq.')&&String(r[k])!==decodeURIComponent(v.slice(3)))return false; if(v==='is.null'&&r[k]!=null)return false;}return true;};
   if(m==='GET'){ let out=rows.filter(f); const sel=u.searchParams.get('select'); if(sel&&sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out)); }

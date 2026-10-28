@@ -222,35 +222,6 @@
             </button>
         </div>
     </div>
-      <!-- OVERLAY QUICK PASS LANDING (PER IL NUOVO CLIENTE) -->
-    <div id="qp-landing-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 100000; background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(15px);">
-        <div style="background: #111; padding: 0; border-radius: 24px; text-align: center; border: 1px solid var(--theme-border, #d4af37); box-shadow: 0 20px 50px rgba(0,0,0,0.8); width: 100%; max-width: 360px; position: relative; overflow: hidden; display: flex; flex-direction: column;">
-            
-            <!-- Header colorato -->
-            <div style="background: rgba(255,255,255,0.05); padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <button onclick="chiudiQPLanding()" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">&times;</button>
-                <i class="fas fa-gift" style="color: var(--theme-border, #d4af37); font-size: 2.5rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));"></i>
-                <h2 style="color: #fff; font-size: 1.2rem; font-weight: 500; letter-spacing: 1px; margin-bottom: 5px;">Hai un regalo!</h2>
-                <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">Mostra questo pass in cassa per ritirarlo</p>
-            </div>
-                
-                <!-- Il QR Code su fondo bianco per massima leggibilità dai lettori -->
-                <div style="background: #fff; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
-                    <div id="qp-landing-qr" style="width: 160px; height: 160px;"></div>
-                </div>
-                <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 3px;">SCANSIONA PER VALIDARE</div>
-            </div>
-
-            <!-- La tua esca NON invasiva -->
-            <a href="https://myquicktag.it" target="_blank" rel="noopener noreferrer" style="display: block; padding: 18px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: background 0.2s;">
-                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; font-weight: 300;">
-                    Powered by <strong style="color: #fff; font-weight: 600;">myquicktag</strong>
-                </div>
-                <div style="font-size: 0.65rem; color: var(--theme-border, #d4af37); margin-top: 6px; letter-spacing: 1px; font-weight: 500;">
-                    CREA LA TUA TAG GRATIS &rarr;
-                </div>
-            </a>
-    </div> 
        <!-- ========================================== -->
     <!-- ⚡ SMART VIDEO VAULT (PLAYER IMMERSIVO)    -->
     <!-- ========================================== -->
@@ -301,6 +272,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="/migrate-storage.js"></script>
 <script src="/session.js"></script>
+<script src="/quickpass-tag.js"></script>
 <script src="/tag-logic.js"></script>
 </body>
 </html>

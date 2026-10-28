@@ -43,7 +43,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Variabili: `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (Production → progetto `myquicktag`;
   Preview → progetto `myquicktag-prova`, impostato il 12/10/2026). Facoltativa: `RINNOVO_GRATUITO=si`
   accende il rinnovo gratuito dalla dashboard (spento di base).
-  Funzioni server: 11 su 12 consentite (dal 20/10/2026, con `api/segnala.js`) dal piano gratuito (limite riportato da forum/issue, da confermare nel pannello).
+  Funzioni server: 12 su 12 consentite (dal 29/10/2026, con `api/quickpass.js`) dal piano gratuito (limite riportato da forum/issue, da confermare nel pannello).
 - **Supabase produzione:** progetto `myquicktag` (id `atlhrkkfovblkhgzfeuo`, Francoforte).
   Tabelle: `tags` (una riga per tag, con `proprietario_id` dopo la migrazione dell'11/10), `limiti` (contatori anti-abuso),
   `nomi_riservati` (nomi protetti: system/black/gold, con `categoria`, `attivo`, `assegnato_a`).
@@ -117,6 +117,19 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   tono professionale, nessuna statistica senza fonte, nessuna promessa che la funzione non mantiene. Da rispettare anche
   in futuro: Scudo Reputazione mai "filtro delle recensioni negative" (vietato da Google, vedi sotto); Acquisto Istantaneo
   solo con scadenze reali; Vasetto: per le promozioni serve il consenso. Prova automatica in `test/api.test.mjs`.
+- **Quick Pass "porta un amico" (Fase 1, 29/10/2026, decisa con il titolare):** `api/quickpass.js` (12ª funzione:
+  il piano gratuito di Vercel è al completo, per altre funzioni accorparle), `quickpass-tag.js` (tag pubblica), cassa
+  nell'editor (`caricaCassaQuickPass` in `edit-logic.js`), tabelle `quickpass_inviti` e `quickpass_pass` (migrazione
+  `20261029000000_quick_pass.sql`). Percorso: chi consiglia crea dalla tag (Action Center → Quick Pass) il suo invito
+  personale `/u/<tag>?pass=<invito>` → l'amico ritira un pass personale (nome obbligatorio, recapito facoltativo con
+  consenso → "I miei contatti") → in cassa il QR apre `/u/<tag>?cassa=<codice>`: convalida il titolare (sessione) o un
+  dipendente con il **PIN di cassa** (4-6 cifre, salvato solo come impronta scrypt, 10 tentativi ogni 15 minuti) →
+  ogni N amici usati (impostazione `quickpass_amici_per_premio`, decisa dal commerciante) chi ha consigliato riceve un
+  pass premio, da usare a sua volta in cassa. Un pass per telefono, niente pass con il proprio invito, codici monouso,
+  limite di pass e fine campagna veri. I vecchi link `?qp_ref=invito` danno ancora il pass all'amico (senza premio).
+  Pass amico valido 30 giorni (o fino a fine campagna), premio 60 giorni. Prove: `test/api.test.mjs`,
+  `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
+  commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
   «Accetto di ricevere offerte e novità da @Nome» sotto il modulo, con nota «Facoltativo…» e link alla Privacy.
   `api/add-lead.js` salva nel contatto `consenso_offerte` (solo se `true` esplicito), `consenso_testo` (il testo accettato)
@@ -151,11 +164,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 177 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 207 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
+- `test/quickpass.e2e.mjs` → 14 prove nel browser del Quick Pass, dall'invito alla cassa (istruzioni in testa al file).
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).
