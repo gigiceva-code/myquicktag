@@ -1336,7 +1336,7 @@ function apriSezione(tipo) {
                 btnCopia.onclick = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    _condividi(campo.label, campo.copia);
+                    condividiContatto(campo.copia);
                 };
 
                 riga.appendChild(sinistro);
@@ -1400,7 +1400,8 @@ function apriSezione(tipo) {
                 };
 
                 riga.appendChild(link);
-                riga.appendChild(btnCondividi);
+                // Canale VIP (protetto da PIN): il suo indirizzo è privato e non si condivide
+                if (!isVip) riga.appendChild(btnCondividi);
                 corpo.appendChild(riga);
             });
         }
@@ -1710,18 +1711,45 @@ function apriSezioneDaLink(valore) {
     }, 400);
 }
 
+// Un singolo recapito (numero, email, indirizzo, P.IVA) non è un indirizzo web: si condivide come testo,
+// insieme al link che riapre i contatti della tag (prima il numero finiva come link e dava "404")
+function condividiContatto(valore) {
+    const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
+    const chiave = macroAreaCorrente ? `${macroAreaCorrente}.contatti` : '';
+    const url = `${window.location.origin}/u/${usernameCorrente}${chiave ? `?sezione=${encodeURIComponent(chiave)}` : ''}`;
+    if (!tagAttiva()) { mostraToast('Attiva la tua tag per condividerla'); return; }
+    if (navigator.share) {
+        tracciaClickSezione('CONDIVISIONE CONTATTO');
+        navigator.share({ title: `@${nome}`, text: `@${nome}: ${valore}`, url: url }).catch(err => {
+            if (err.name !== 'AbortError') console.error("Errore condivisione:", err);
+        });
+    } else {
+        navigator.clipboard.writeText(valore)
+            .then(() => mostraToast('Copiato!'))
+            .catch(() => mostraToast('Errore nella copia'));
+    }
+}
+
 // testo: il messaggio che accompagna il link (WhatsApp, Messaggi…). statistica: se indicata, la condivisione
 // di un visitatore si conta nelle statistiche del proprietario (il passaparola), come l'apertura di una sezione
 function _condividi(titolo, url, testo, statistica) {
+    // Indirizzi scritti a mano senza https:// ("instagram.com/pizzeria"): il telefono li tratterebbe come
+    // pagine di myquicktag (404). Se non sembrano un sito, si condividono come semplice testo.
+    if (url && !/^https?:\/\//i.test(url)) {
+        if (/^[a-z0-9.-]+\.[a-z]{2,}(\/|$)/i.test(url)) url = 'https://' + url;
+        else { testo = testo || url; url = ''; }
+    }
     if (statistica) tracciaClickSezione(statistica);
     if (navigator.share) {
-        const dati = testo ? { title: titolo, text: testo, url: url } : { title: titolo, url: url };
+        const dati = { title: titolo };
+        if (testo) dati.text = testo;
+        if (url) dati.url = url;
         navigator.share(dati).catch(err => {
             if (err.name !== 'AbortError') console.error("Errore condivisione:", err);
         });
     } else {
-        navigator.clipboard.writeText(url)
-            .then(() => mostraToast('🔗 Link copiato!'))
+        navigator.clipboard.writeText(url || testo || '')
+            .then(() => mostraToast(url ? '🔗 Link copiato!' : 'Copiato!'))
             .catch(() => mostraToast('Errore nella copia del link'));
     }
 }

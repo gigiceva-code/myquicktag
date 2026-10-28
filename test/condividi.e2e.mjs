@@ -41,6 +41,21 @@ await p.click('#btn-condividi-sezione');
 d = await ultimo(p);
 ok(d.url.endsWith('?sezione=network.contatti') && d.text === '@PizzeriaDaMario · Contatti', 'sezione: link alla sezione con il suo nome');
 
+// Social: link scritto senza https:// → si completa; canale VIP → niente condivisione del link privato
+await p.evaluate(() => { history.back(); }); await p.waitForTimeout(800);
+await p.evaluate(() => { cacheDatiUtente.config_canali = JSON.stringify([{ nome: 'Instagram', url: 'instagram.com/pizzeria' }, { nome: 'Listino', url: 'https://segreto.it/x', vip: true, pin: '1234' }]); apriSezione('social'); });
+await p.waitForTimeout(800);
+ok(await p.evaluate(() => document.querySelectorAll('#corpoSezione button').length) === 1, 'social: il canale VIP non ha il pulsante di condivisione');
+await p.click('#corpoSezione button');
+ok((await ultimo(p)).url === 'https://instagram.com/pizzeria', 'social: indirizzo senza https:// completato (niente 404)');
+await p.evaluate(() => { history.back(); }); await p.waitForTimeout(800);
+await p.evaluate(() => apriSezione('contatti')); await p.waitForTimeout(800);
+
+// L'iconcina accanto al numero: il numero va nel testo, il link riapre i contatti (prima: numero usato come link → 404)
+await p.click('#corpoSezione button');
+d = await ultimo(p);
+ok(d.text === '@PizzeriaDaMario: 3331234567' && d.url.endsWith('/u/pizzeriadamario?sezione=network.contatti'), 'contatto singolo: numero nel testo e link ai contatti, mai il numero come link');
+
 p = await telefono();
 await p.goto(`${B}/tag.html?u=pizzeriadamario&sezione=network.contatti`); await p.waitForTimeout(3500);
 ok(await p.evaluate(() => document.getElementById('overlaySezione').classList.contains('attiva') && location.hash === '#dettaglio'), 'link condiviso: la tag si apre direttamente sulla sezione');

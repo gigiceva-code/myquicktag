@@ -109,6 +109,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Il link parte con un messaggio ("@Nome: contatti, social e servizi in un unico tocco." / "@Nome · Contatti");
   l'anteprima di WhatsApp di un link di sezione è "@Nome · Contatti" (`NOMI_SEZIONI` in `api/manifest.js`);
   le condivisioni dei visitatori si contano nelle statistiche come "CONDIVISIONE TAG" / "CONDIVISIONE <STANZA>".
+  Iconcine accanto ai singoli recapiti (28/10/2026): numero/email/indirizzo si condividono come testo + link ai
+  contatti della tag (prima il numero diventava un link → 404, segnalato dal titolare); link social senza `https://`
+  completati; i canali VIP (con PIN) non hanno più l'iconcina, che condivideva il link privato.
 - **Invito a installare dopo il checkout (25/10/2026):** il checkout porta a `/u/<nome>` e chiede l'invito con un segno in
   `sessionStorage` (`mqt_benvenuto`), non più con `?welcome=1` nell'indirizzo: l'iPhone salva nell'icona l'indirizzo da cui
   è stata creata e l'invito ricompariva a ogni apertura (segnalato da Martina, iPhone 16). Le icone vecchie con
@@ -141,7 +144,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/condividi.e2e.mjs` → 9 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
+- `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).
 - Dalla sessione cloud non si raggiungono `*.vercel.app` né molti siti esterni: le prove sul sito vero
