@@ -1865,7 +1865,7 @@ function gestisciVIPSwitch(checkbox) {
                         ['fa-briefcase', 'Professionisti:', '«Ricevi la guida gratuita» oppure «Prenota una prima consulenza senza impegno.»'],
                         ['fa-cog', 'La regola:', 'il vantaggio deve valere più del gesto di lasciare il proprio contatto.']
                     ]],
-                    ['Cosa ottieni', 'Un elenco di persone interessate da ricontattare quando vuoi, senza pagare pubblicità per raggiungerle di nuovo. Usa i contatti per ciò che hai promesso nel titolo: per inviare offerte promozionali serve il consenso esplicito della persona.'],
+                    ['Cosa ottieni', 'Un elenco di persone interessate da ricontattare quando vuoi, senza pagare pubblicità per raggiungerle di nuovo. Il modulo chiede al visitatore, con una casella facoltativa, se accetta di ricevere offerte: in I miei contatti vedi chi ha detto sì. A chi non ha spuntato la casella scrivi solo per ciò che hai promesso nel titolo.'],
                     _boxStrategia('<i class="fas fa-inbox" style="margin-right: 6px;"></i>Dove trovi i tuoi contatti', _testoStrategia('Ogni contatto arriva in <strong style="color: #ffffff;">Dashboard → I miei contatti</strong>. Il campanello ti segnala i nuovi; da lì li chiami, scrivi su WhatsApp o via email con un tocco e li segni come richiamati.'), 'verde')
                 )
             },

@@ -526,3 +526,13 @@ delete process.env.RINNOVO_GRATUITO;
   const tutto=Object.values(db).map(v=>v.testo).join(' ')+html;
   ok(!/matematicamente|Dark Mode|filtrando le recensioni negative|Costringendo|L'80%|crollano del 20%/i.test(tutto),'strategie: niente statistiche senza fonte, funzioni inesistenti o recensioni filtrate');
 }
+{
+  // Consenso alle offerte nel Vasetto (28/10/2026): facoltativo, esplicito, salvato con testo e data
+  rows.push({id:'cons1',username_system:'consensi',stato:'attivo',lead_capture_attivo:'true',data_scadenza:'2099-01-01',created_at:new Date().toISOString()});
+  let r=await call('add-lead.js',{method:'POST',ip:'5.5.5.1',body:{u:'consensi',nome:'Anna',contatto:'3331112222',consenso:true,consenso_testo:'Accetto di ricevere offerte e novità da @Consensi <b>'}});
+  let l=JSON.parse(riga('consensi').lead_capture_leads)[0];
+  ok(r.code===200 && l.consenso_offerte===true && l.consenso_testo==='Accetto di ricevere offerte e novità da @Consensi ‹b›' && !isNaN(Date.parse(l.consenso_data)),'vasetto: consenso alle offerte salvato con il testo accettato e la data');
+  r=await call('add-lead.js',{method:'POST',ip:'5.5.5.2',body:{u:'consensi',nome:'Bruno',contatto:'3334445555',consenso:'true',consenso_testo:'x'}});
+  l=JSON.parse(riga('consensi').lead_capture_leads)[0];
+  ok(r.code===200 && l.consenso_offerte===false && !('consenso_testo' in l) && !('consenso_data' in l),'vasetto: senza casella spuntata (o con valori ambigui) nessun consenso');
+}

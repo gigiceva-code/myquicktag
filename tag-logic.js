@@ -969,6 +969,7 @@ function apriMacroArea(area, skipHistory = false) {
       // --- LEAD CAPTURE (IL VASETTO PUBBLICO) ---
         if (cacheDatiUtente.lead_capture_attivo === 'true' || cacheDatiUtente.lead_capture_attivo === true) {
             const titoloVasetto = cacheDatiUtente.lead_capture_titolo || "Lascia il tuo contatto per essere ricontattato";
+            const nomeVasetto = '@' + String(cacheDatiUtente.username_display || cacheDatiUtente.username_system || '').replace(/^@+/, '');
             sottomenuHTML += `
                 <div style="margin-top: 25px; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.3); padding: 20px; border-radius: 16px; text-align: left; box-shadow: inset 0 0 20px rgba(229, 193, 88, 0.02);">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: #e5c158; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;">
@@ -978,6 +979,12 @@ function apriMacroArea(area, skipHistory = false) {
                     <div style="display: flex; flex-direction: column; gap: 10px;">
                         <input type="text" id="visitor-lead-nome" placeholder="Il tuo Nome" style="width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 14px 16px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none;">
                         <input type="text" id="visitor-lead-contatto" placeholder="Email o Telefono" style="width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 14px 16px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none;">
+                        <!-- Consenso alle offerte: facoltativo e MAI già spuntato (GDPR); il testo esatto viene salvato con il contatto -->
+                        <label style="display: flex; align-items: flex-start; gap: 10px; margin-top: 2px; font-size: 0.75rem; font-weight: 400; letter-spacing: normal; text-transform: none; text-align: left; color: rgba(255,255,255,0.8); line-height: 1.45; cursor: pointer;">
+                            <input type="checkbox" id="visitor-lead-consenso" style="margin-top: 2px; width: 16px; height: 16px; accent-color: #e5c158; flex-shrink: 0;">
+                            <span id="visitor-lead-consenso-testo" style="font-size: 0.75rem !important; letter-spacing: normal !important;">Accetto di ricevere offerte e novità da ${nomeVasetto}</span>
+                        </label>
+                        <div style="font-size: 0.65rem; letter-spacing: normal; text-transform: none; color: rgba(255,255,255,0.4); line-height: 1.4;">Facoltativo. I tuoi dati arrivano solo a ${nomeVasetto}, che li usa per ricontattarti. <a href="/privacy.html" target="_blank" rel="noopener" style="color: inherit;">Privacy</a></div>
                         <button type="button" onclick="inviaLeadVisitatore()" style="margin-top: 5px; background: #e5c158; color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">INVIA ORA</button>
                     </div>
                 </div>
@@ -2152,7 +2159,10 @@ tracciaClickSezione('LEAD ACQUISITO');
             body: JSON.stringify({
                 u: cacheDatiUtente.username_system || getNomeBrandReale(),
                 nome: nome,
-                contatto: contatto
+                contatto: contatto,
+                // Consenso alle offerte: si invia anche il testo esatto mostrato, che il server conserva come prova
+                consenso: !!(document.getElementById('visitor-lead-consenso') || {}).checked,
+                consenso_testo: (document.getElementById('visitor-lead-consenso-testo') || {}).textContent || ''
             })
         });
         
@@ -2164,6 +2174,8 @@ tracciaClickSezione('LEAD ACQUISITO');
             btn.style.color = "#fff";
             nomeInput.value = '';
             contattoInput.value = '';
+            const casella = document.getElementById('visitor-lead-consenso');
+            if (casella) casella.checked = false;
             setTimeout(() => {
                 btn.innerText = testoOriginale;
                 btn.style.background = "#e5c158";

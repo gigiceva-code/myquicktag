@@ -63,6 +63,8 @@
         padding: 3px 8px; border-radius: 20px; flex-shrink: 0;
     }
     .lead-data { font-size: 0.75rem; color: var(--text-sec); margin-top: 4px; }
+    .lead-consenso { font-size: 0.72rem; margin-top: 6px; color: var(--text-sec); }
+    .lead-consenso.si { color: var(--accent-smeraldo); }
     .lead-contatto { font-size: 0.95rem; color: var(--gold); margin-top: 8px; overflow-wrap: anywhere; }
 
     .azioni { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
@@ -181,6 +183,13 @@
         data.className = 'lead-data';
         data.textContent = lead.data || '';
         scheda.appendChild(data);
+
+        // Consenso alle offerte: chi ha detto sì si può ricontattare anche con promozioni
+        const consenso = document.createElement('div');
+        consenso.className = 'lead-consenso' + (lead.consenso_offerte ? ' si' : '');
+        consenso.textContent = lead.consenso_offerte ? '✓ Accetta offerte e novità' : 'Solo per essere ricontattato (niente offerte)';
+        if (lead.consenso_offerte && lead.consenso_data) consenso.title = `${lead.consenso_testo || ''} — ${new Date(lead.consenso_data).toLocaleString('it-IT')}`;
+        scheda.appendChild(consenso);
 
         const contatto = document.createElement('div');
         contatto.className = 'lead-contatto';

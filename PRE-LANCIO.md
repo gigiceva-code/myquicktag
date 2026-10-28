@@ -90,6 +90,10 @@ applicata alla produzione solo al rilascio (punto E), con una copia di sicurezza
 - Annullamento: "Instant Rollback" di Vercel al deployment precedente. La colonna `proprietario_id` è innocua per il
   codice vecchio (si può lasciare).
 
+**Vasetto (contatti dei visitatori):** dal 28/10/2026 casella facoltativa per il consenso alle offerte, salvato con testo e
+data. Da far vedere al professionista insieme a privacy e termini (il titolare della tag è titolare del trattamento di quei
+contatti, myquicktag li conserva per suo conto).
+
 **Note legali (non è una consulenza):** informativa privacy e termini da aggiornare con email dell'account,
 consenso promozionale facoltativo (salvato con data e versione del testo), comunicazioni di servizio, Supabase come
 fornitore dell'autenticazione e il servizio email scelto.

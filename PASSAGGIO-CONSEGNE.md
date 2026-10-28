@@ -117,6 +117,10 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   tono professionale, nessuna statistica senza fonte, nessuna promessa che la funzione non mantiene. Da rispettare anche
   in futuro: Scudo Reputazione mai "filtro delle recensioni negative" (vietato da Google, vedi sotto); Acquisto Istantaneo
   solo con scadenze reali; Vasetto: per le promozioni serve il consenso. Prova automatica in `test/api.test.mjs`.
+- **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
+  «Accetto di ricevere offerte e novità da @Nome» sotto il modulo, con nota «Facoltativo…» e link alla Privacy.
+  `api/add-lead.js` salva nel contatto `consenso_offerte` (solo se `true` esplicito), `consenso_testo` (il testo accettato)
+  e `consenso_data`; "I miei contatti" mostra chi ha accettato. Informativa privacy aggiornata (punto 3).
 - **Scudo Reputazione (28/10/2026, approvato dal titolare: "nessuna grana legale"):** chi dà 1-3 stelle riceve
   prima il contatto diretto, ma vede sempre anche il link alla recensione pubblica. Prima il link a Google era nascosto
   sotto le 4 stelle: è il "review gating", vietato dalle regole di Google.
