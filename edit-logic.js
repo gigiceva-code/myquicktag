@@ -391,7 +391,20 @@
                 titolo.textContent = 'QUICK PASS';
                 const pB = document.getElementById('field-qp-premio-b') ? document.getElementById('field-qp-premio-b').value : "Regalo";
                 const pA = document.getElementById('field-qp-premio-a') ? document.getElementById('field-qp-premio-a').value : "Premio";
-                corpo.innerHTML = `<div style="display: flex; flex-direction: column; width: 100%; align-items: center; gap: 20px; padding-top: 15px;"><i class="fas fa-gift" style="font-size: 3.5rem; color: #d4af37;"></i><div style="text-align:center; font-size:1rem; font-weight:300; color:#e8e8ed; line-height:1.6;">Regala <strong style="color:#fff;">${pB}</strong> a un amico.<br>Quando lo utilizzerà, tu sbloccherai:</div><div style="width: 100%; padding: 25px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-left: 2px solid #d4af37; border-radius: 20px; display: flex; flex-direction: column; align-items: center;"><span style="font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;">IL TUO PREMIO</span><span style="font-size: 1.25rem; font-weight: 600; color: #fff; letter-spacing: 2px; text-align: center; text-transform: uppercase;">${pA}</span></div></div>`;
+                // Stessa grafica della tag pubblica (quickpass-tag.js), con il pulsante solo dimostrativo
+                const escQ = t => String(t || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+                const nAmici = parseInt(document.getElementById('field-qp-amici')?.value, 10) || 1;
+                corpo.innerHTML = `<div style="text-align: center; padding: 10px 6px 0; width: 100%;">
+                    <i class="fas fa-gift" style="font-size: 3rem; color: #e5c158; filter: drop-shadow(0 0 20px rgba(212,175,55,0.2)); margin-bottom: 18px;"></i>
+                    <div style="font-size: 1rem; color: #e8e8ed; line-height: 1.6; font-weight: 300;">Regala <strong style="color: #fff; font-weight: 500;">${escQ(pB)}</strong> a un amico.<br>${nAmici > 1 ? `Ogni ${nAmici} amici che lo usano` : 'Quando lo userà'} in cassa, ricevi:</div>
+                    <div style="margin: 18px auto; max-width: 320px; padding: 26px 18px; border: 1px solid #e5c158; border-radius: 20px; background: rgba(0,0,0,0.5);">
+                        <div style="font-size: 0.65rem; color: rgba(255,255,255,0.45); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px;">Il tuo premio</div>
+                        <div style="font-size: 1.15rem; color: #fff; font-weight: 600; letter-spacing: 1px;">${escQ(pA)}</div>
+                    </div>
+                    <div style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.4); padding: 14px 16px; border-radius: 12px; text-align: left; margin-bottom: 16px;">Il tuo nome</div>
+                    <div style="width: 100%; padding: 16px; background: #e5c158; color: #000; border-radius: 12px; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; box-sizing: border-box;">Crea il tuo invito</div>
+                    <div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 12px; line-height: 1.5;">Anteprima: sulla tag pubblica i tuoi clienti scrivono il nome, creano il loro invito personale e lo mandano agli amici su WhatsApp.</div>
+                </div>`;
             }
         }
         function chiudiSezioneAnteprima() {
