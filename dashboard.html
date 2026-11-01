@@ -101,6 +101,7 @@
                    <a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-pen"></i> Modifica</a>
                    <a href="/analytics.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-chart-line"></i> Statistiche</a>
                    <a href="/contatti.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-inbox"></i> Contatti ${t.contatti_nuovi ? '<span class="pallino">' + t.contatti_nuovi + '</span>' : ''}</a>
+                   ${t.quickpass_attivo ? `<a href="/u/${n}?cassa=1" data-tag="${esc(t.username_system)}" style="grid-column: 1 / -1; border-color: rgba(229,193,88,0.5); color: #e5c158;"><i class="fas fa-cash-register"></i> Cassa Quick Pass · convalida i pass</a>` : ''}
                    <a href="/profile.html?u=${n}" data-tag="${esc(t.username_system)}" style="grid-column: 1 / -1;"><i class="fas fa-sliders-h"></i> Gestisci (piano, bozza, QR)</a>`;
             return `<div class="card tag-card">
                 <div class="testa"><div><div class="nome">${esc(nome)}</div><div class="sub">${esc(s.sub)}${t.ha_bozza && t.stato === 'attivo' ? ' · bozza non pubblicata' : ''}</div></div>

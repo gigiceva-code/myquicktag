@@ -625,3 +625,35 @@ delete process.env.RINNOVO_GRATUITO;
   r=await qp('convalida',{codice:passC.codice},{headers:conSessione(jwtAnna)});
   ok(r.code===410 && r.body.scaduto,'quick pass: un pass scaduto non si convalida');
 }
+{
+  // QUICK PASS ANTIFRODE (01/11/2026): la prova del titolare. Invito creato da Chrome, pass ritirato dallo stesso
+  // telefono ma dal browser interno di WhatsApp (identificativo del browser diverso), poi convalidato: premio sbloccato.
+  const qp2=(azione,body={},extra={})=>call('quickpass.js',{method:'POST',ip:extra.ip,headers:extra.headers,body:{u:'cantiereqp',azione,...body}});
+  rows.push({id:'qp2',username_system:'cantiereqp',username_display:'@CantiereQP',stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',
+    quickpass_premio_a:'Un monitor',quickpass_premio_b:'Una cartuccia',created_at:new Date().toISOString()});
+  const telefonoGigi='a'.repeat(64), telefonoMartina='b'.repeat(64);
+  let r=await qp2('invito',{nome:'Gigi',dispositivo:'chrome-gigi-0000000001'},{headers:conSessione(jwtAnna)});
+  ok(r.code===403 && r.body.titolare,'antifrode: il titolare non crea inviti sulla propria tag');
+  r=await qp2('ritira',{nome:'Gigi',dispositivo:'chrome-gigi-0000000001'},{headers:conSessione(jwtAnna)});
+  ok(r.code===403 && r.body.titolare,'antifrode: il titolare non ritira pass sulla propria tag');
+  r=await qp2('invito',{nome:'Gigi',dispositivo:'chrome-gigi-0000000001',telefono:telefonoGigi},{ip:'3.3.3.1'});
+  const inv=r.body.invito.codice;
+  r=await qp2('ritira',{invito:inv,nome:'Gigi',dispositivo:'whatsapp-gigi-000000001',telefono:telefonoGigi},{ip:'3.3.3.1'});
+  ok(r.code===403 && !tabelleQP.quickpass_pass.some(p=>p.tag==='cantiereqp'),'antifrode: stesso telefono e stessa rete (Chrome → WhatsApp) → ritiro bloccato');
+  r=await qp2('ritira',{invito:inv,nome:'Martina',dispositivo:'iphone-martina-00000001',telefono:telefonoMartina},{ip:'3.3.3.1'});
+  const passM=r.body.pass;
+  ok(r.code===200 && !tabelleQP.quickpass_pass.find(p=>p.codice===passM.codice).sospetto,'antifrode: un altro telefono sulla stessa rete di casa ritira il pass normalmente');
+  r=await qp2('ritira',{invito:inv,nome:'Mario',dispositivo:'chrome-gigi-ufficio-0001',telefono:telefonoGigi},{ip:'9.8.7.6'});
+  const passS=r.body.pass;
+  ok(r.code===200 && tabelleQP.quickpass_pass.find(p=>p.codice===passS.codice).sospetto,'antifrode: stesso telefono da un\'altra rete → pass ritirato ma segnato come sospetto');
+  r=await qp2('ritira',{invito:inv,nome:'gigi',dispositivo:'altro-telefono-00000001',telefono:'c'.repeat(64)},{ip:'5.6.7.8'});
+  ok(r.code===200 && tabelleQP.quickpass_pass.find(p=>p.codice===r.body.pass.codice).sospetto,'antifrode: stesso nome di chi ha consigliato → pass segnato come sospetto');
+  r=await qp2('verifica',{codice:passS.codice},{headers:conSessione(jwtAnna)});
+  ok(r.code===200 && r.body.pass.sospetto===true && r.body.pass.consigliato_da==='Gigi','antifrode: in cassa si vede chi ha consigliato e l\'avviso del pass sospetto');
+  r=await qp2('verifica',{codice:passM.codice},{headers:conSessione(jwtAnna)});
+  ok(r.body.pass.sospetto===false && r.body.pass.consigliato_da==='Gigi','antifrode: pass normale, senza avviso');
+  const im=tabelleQP.quickpass_inviti.find(i=>i.codice===inv);
+  ok(im.telefono.length===40 && im.rete.length===40 && !im.telefono.includes('a'.repeat(10)),'antifrode: telefono e rete salvati solo come impronte');
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
+  ok(r.body.tags.find(t=>t.username_system==='cantiereqp').quickpass_attivo===true,'Identity Console: sa quali tag hanno il Quick Pass (pulsante della cassa)');
+}

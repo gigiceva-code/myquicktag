@@ -64,7 +64,9 @@ export default async function handler(req, res) {
           plan: f.plan || null,
           views: f.views || 0,
           ha_bozza: !!(f.draft_json && String(f.draft_json).trim() !== ''),
-          contatti_nuovi: contaNuovi(f.lead_capture_leads)
+          contatti_nuovi: contaNuovi(f.lead_capture_leads),
+          // Quick Pass configurato: l'Identity Console mostra il pulsante della cassa
+          quickpass_attivo: !!(String(f.quickpass_premio_a || '').trim() && String(f.quickpass_premio_b || '').trim())
         };
         if (stato === 'attivo') voce.abbonamento = calcolaAbbonamento(r);
         if (stato === 'in attesa') voce.prenotata_il = r.createdTime;

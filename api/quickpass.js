@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { trovaTag, aggiornaTag, leggiRighe, inserisciRiga, aggiornaRighe, aggiungiLead } from '../lib/db.js';
 import { calcolaAbbonamento } from '../lib/abbonamento.js';
 import { pulisciTesto } from '../lib/pulizia.js';
-import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
+import { entroILimiti, rispondiTroppiTentativi, ipRichiesta } from '../lib/limiti.js';
 import { nomeTag } from '../lib/nome-canonico.js';
 import { dirittiSullaTag } from '../lib/sessione.js';
 import { pinValido, proteggiPin, verificaPin } from '../lib/password.js';
@@ -43,12 +43,23 @@ function codiceValido(c, lunghezza) {
   return typeof c === 'string' && c.length === lunghezza && [...c].every(ch => ALFABETO.includes(ch));
 }
 
-// Impronta del telefono (identificativo casuale salvato nel browser): mai salvato in chiaro
+// Impronte (mai salvate in chiaro), tutte HMAC con SESSION_SECRET:
+// - impronta: identificativo casuale salvato nel browser (cambia tra Chrome e il browser interno di WhatsApp)
+// - improntaTelefono: caratteristiche del telefono calcolate dal browser, uguali in ogni browser dello stesso telefono
+// - improntaRete: l'indirizzo IP della richiesta
+const hmac = (prefisso, valore) => crypto.createHmac('sha256', process.env.SESSION_SECRET || 'mqt').update(`${prefisso}|${valore}`).digest('hex').slice(0, 40);
 function impronta(dispositivo) {
   const d = String(dispositivo || '');
   if (!/^[A-Za-z0-9-]{16,64}$/.test(d)) return null;
-  return crypto.createHmac('sha256', process.env.SESSION_SECRET || 'mqt').update(`qp|${d}`).digest('hex').slice(0, 40);
+  return hmac('qp', d);
 }
+function improntaTelefono(telefono) {
+  const t = String(telefono || '');
+  return /^[a-f0-9]{64}$/.test(t) ? hmac('qp-tel', t) : null;
+}
+const improntaRete = req => hmac('qp-rete', ipRichiesta(req));
+// Nomi confrontati senza maiuscole, spazi e accenti ("Gigi" = "gigi " = "GIGÌ")
+const nomeSemplice = n => String(n || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
 function campagna(record) {
   const f = record?.fields || {};
@@ -103,6 +114,14 @@ export default async function handler(req, res) {
     const f = record.fields;
     const c = campagna(record);
 
+    // Il titolare concede i premi: non può creare inviti né ritirare pass sulla propria tag
+    if (azione === 'invito' || azione === 'ritira') {
+      const titolare = await dirittiSullaTag({ req, token: body.sessionToken, record, tag });
+      if (titolare.proprietario) {
+        return res.status(403).json({ success: false, titolare: true, error: 'Sei il titolare di questa tag: il Quick Pass è per i tuoi clienti. Per convalidare i pass usa la Cassa.' });
+      }
+    }
+
     // ---------- INVITO: chi consiglia ottiene il suo link personale ----------
     if (azione === 'invito') {
       if (!c.attiva) return res.status(410).json({ success: false, error: 'Il Quick Pass non è attivo su questa tag' });
@@ -117,7 +136,7 @@ export default async function handler(req, res) {
         { nome: 'qp-invito', per: 'ip+tag', max: 5, finestra: 3600 },
         { nome: 'qp-invito-ip', per: 'ip', max: 30, finestra: 86400 }
       ]))) return rispondiTroppiTentativi(res);
-      const invito = await nuovoCodice('quickpass_inviti', { tag, nome, dispositivo: disp }, 8);
+      const invito = await nuovoCodice('quickpass_inviti', { tag, nome, dispositivo: disp, telefono: improntaTelefono(body.telefono), rete: improntaRete(req) }, 8);
       return res.status(200).json({ success: true, invito: { codice: invito.codice, nome: invito.nome } });
     }
 
@@ -153,9 +172,18 @@ export default async function handler(req, res) {
       let invito = null;
       if (codiceValido(body.invito, 8)) {
         invito = (await leggiRighe('quickpass_inviti', { codice: body.invito, tag }, { limite: 1 }))[0] || null;
-        if (invito && invito.dispositivo && invito.dispositivo === disp) {
+      }
+      const tel = improntaTelefono(body.telefono), rete = improntaRete(req);
+      let sospetto = false;
+      if (invito) {
+        const stessoBrowser = !!invito.dispositivo && invito.dispositivo === disp;
+        const stessoTelefono = !!invito.telefono && invito.telefono === tel;
+        // Stesso browser, oppure stesso telefono dalla stessa rete: è chi ha creato l'invito
+        if (stessoBrowser || (stessoTelefono && invito.rete === rete)) {
           return res.status(403).json({ success: false, error: 'Questo è il tuo invito: mandalo a un amico, il pass è per lui.' });
         }
+        // Stesso telefono da un'altra rete, o stesso nome: si lascia passare ma la cassa vede un avviso
+        sospetto = stessoTelefono || nomeSemplice(nome) === nomeSemplice(invito.nome);
       }
       if (!(await entroILimiti(req, tag, [{ nome: 'qp-ritira', per: 'ip+tag', max: 5, finestra: 3600 }]))) return rispondiTroppiTentativi(res);
       if (c.limite) {
@@ -167,7 +195,8 @@ export default async function handler(req, res) {
       const contatto = testo(body.contatto, 120) || null;
       const pass = await nuovoCodice('quickpass_pass', {
         tag, tipo: 'amico', invito: invito ? invito.codice : null, nome, contatto,
-        premio: testo(f.quickpass_premio_b, 200), scadenza: new Date(scadenza).toISOString(), dispositivo: disp
+        premio: testo(f.quickpass_premio_b, 200), scadenza: new Date(scadenza).toISOString(), dispositivo: disp,
+        telefono: tel, rete, sospetto
       }, 6);
 
       // Recapito facoltativo: arriva anche in "I miei contatti", con il consenso alle offerte se dato
@@ -219,7 +248,15 @@ export default async function handler(req, res) {
       if (!p) return res.status(404).json({ success: false, error: 'Pass non trovato per questa tag' });
       if (p.stato === 'usato') return res.status(409).json({ success: false, usato: true, pass: vistaPass(p), error: 'Pass già usato' });
       if (Date.parse(p.scadenza) < Date.now()) return res.status(410).json({ success: false, scaduto: true, pass: vistaPass(p), error: 'Pass scaduto' });
-      if (azione === 'verifica') return res.status(200).json({ success: true, pass: vistaPass(p) });
+      if (azione === 'verifica') {
+        // Per la cassa: chi ha consigliato l'amico, e l'avviso se il pass sembra ritirato da lui stesso
+        let consigliatoDa = null;
+        if (p.tipo === 'amico' && p.invito) {
+          const inv = (await leggiRighe('quickpass_inviti', { codice: p.invito }, { limite: 1 }))[0];
+          if (inv) consigliatoDa = inv.nome;
+        }
+        return res.status(200).json({ success: true, pass: { ...vistaPass(p), consigliato_da: consigliatoDa, sospetto: !!p.sospetto } });
+      }
 
       // Atomico: riesce una volta sola anche con due convalide contemporanee
       const usati = await aggiornaRighe('quickpass_pass', { codice, tag, stato: 'attivo' }, { stato: 'usato', usato_il: new Date().toISOString() });

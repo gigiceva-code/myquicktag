@@ -24,8 +24,11 @@ await fetch(`${B}/__seed`, { method: 'POST', body: JSON.stringify({
 }) });
 
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
-async function telefono() {
-  const c = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'it-IT' });
+// Ogni telefono ha il suo schermo (il server riconosce lo stesso telefono anche in browser diversi)
+const SCHERMI = { marco: [390, 844, 2], luca: [375, 812, 3], cassa: [412, 915, 2.6] };
+async function telefono(chi = 'marco') {
+  const [w, h, dpr] = SCHERMI[chi];
+  const c = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: dpr, isMobile: true, hasTouch: true, locale: 'it-IT' });
   await c.route(/cdn\.jsdelivr\.net\/npm\/@supabase|fonts\.googleapis|cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome/, r => r.abort());
   const p = await c.newPage();
   p.on('pageerror', e => console.log('ERRORE PAGINA', e.message));
@@ -48,7 +51,7 @@ ok(!!link && testoMarco.includes('Il tuo invito personale'), 'Marco: invito pers
 await foto(marco, '2-invito-pronto');
 
 // 2. LUCA apre il link e ritira il pass
-const luca = await telefono();
+const luca = await telefono('luca');
 await luca.goto(link.replace(/^https?:\/\/[^/]+/, B)); await luca.waitForTimeout(2000);
 const regalo = await luca.textContent('#mqt-qp-overlay');
 ok(regalo.includes('Marco ti ha regalato') && regalo.includes('Il dolce in omaggio alla prima cena'), 'Luca: vede chi gli fa il regalo e cosa riceve');
@@ -68,16 +71,21 @@ await foto(luca, '4-pass');
 await marco.goto(link.replace(/^https?:\/\/[^/]+/, B)); await marco.waitForTimeout(1800);
 await marco.fill('#qp-nome', 'Marco'); await marco.click('#qp-ritira'); await marco.waitForTimeout(1000);
 ok((await marco.textContent('#qp-errore')).includes('Questo è il tuo invito'), 'Marco: non può ritirare il pass con il suo invito');
+// Marco riapre il link dal browser interno di WhatsApp: stesso telefono, memoria del browser diversa
+const marcoWhatsApp = await telefono('marco');
+await marcoWhatsApp.goto(link.replace(/^https?:\/\/[^/]+/, B)); await marcoWhatsApp.waitForTimeout(1800);
+await marcoWhatsApp.fill('#qp-nome', 'Mario'); await marcoWhatsApp.click('#qp-ritira'); await marcoWhatsApp.waitForTimeout(1000);
+ok((await marcoWhatsApp.textContent('#qp-errore')).includes('Questo è il tuo invito'), 'Marco dal browser di WhatsApp: riconosciuto come lo stesso telefono, niente pass');
 
 // 3. IN CASSA: il dipendente inquadra il QR (apre ?cassa=CODICE), inserisce il PIN e convalida
-const cassa = await telefono();
+const cassa = await telefono('cassa');
 await cassa.goto(`${B}/u/${TAG}?cassa=${codice}`); await cassa.waitForTimeout(2000);
 ok(await cassa.isVisible('#qp-cassa-pin'), 'Cassa: senza essere il titolare chiede il PIN di cassa');
 await cassa.fill('#qp-cassa-pin', '1111'); await cassa.click('#qp-cassa-azione'); await cassa.waitForTimeout(800);
 ok((await cassa.textContent('#qp-cassa-esito')).includes('PIN errato'), 'Cassa: PIN errato rifiutato');
 await cassa.fill('#qp-cassa-pin', '2468'); await cassa.click('#qp-cassa-azione'); await cassa.waitForTimeout(1000);
 const verifica = await cassa.textContent('#qp-cassa-esito');
-ok(verifica.includes('Luca') && verifica.includes('Il dolce in omaggio'), 'Cassa: mostra il pass di Luca prima di convalidare');
+ok(verifica.includes('Luca') && verifica.includes('Il dolce in omaggio') && verifica.includes('Consigliato da Marco Rossi') && !verifica.includes('⚠'), 'Cassa: mostra il pass di Luca, chi l\'ha consigliato e nessun avviso');
 await foto(cassa, '5-cassa-verifica');
 await cassa.click('#qp-cassa-azione'); await cassa.waitForTimeout(1000);
 const esito = await cassa.textContent('#qp-cassa-esito');

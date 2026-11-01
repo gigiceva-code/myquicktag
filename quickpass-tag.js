@@ -33,6 +33,20 @@
         } catch (e) { return null; }
     }
 
+    // Caratteristiche del telefono uguali in ogni browser (Chrome, il browser interno di WhatsApp…):
+    // il server ne conserva solo un'impronta, per riconoscere chi ritira il pass con il proprio invito
+    async function telefono() {
+        try {
+            const n = navigator, sc = window.screen || {};
+            const dati = [sc.width, sc.height, sc.colorDepth, window.devicePixelRatio, n.hardwareConcurrency, n.deviceMemory, n.maxTouchPoints,
+                (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone, (n.languages || [n.language]).join(','), n.platform].join('|');
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(dati));
+            return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+        } catch (e) { return undefined; }
+    }
+    // Il titolare della tag (con la sua sessione) concede i premi: niente inviti né pass per lui
+    function seiTitolare() { return !!(cacheDatiUtente && cacheDatiUtente.sei_proprietario); }
+
     // Memoria locale per questa tag: { invito: {codice, nome}, pass: [codici] }
     function memoria() {
         try { return JSON.parse(localStorage.getItem('mqt_qp_' + nomeTag()) || '{}') || {}; } catch (e) { return {}; }
@@ -104,6 +118,7 @@
     // 2. L'AMICO: pagina del regalo e ritiro del pass
     // ============================================================
     async function paginaAmico(invito) {
+        if (seiTitolare()) { pannelloTitolareOverlay(); return; }
         const m = memoria();
         // Pass già ritirato su questo telefono: si mostra direttamente
         if (m.pass && m.pass.length) {
@@ -148,7 +163,7 @@
         const btn = document.getElementById('qp-ritira');
         if (btn) { btn.disabled = true; btn.textContent = 'Un attimo…'; }
         const r = await chiama('ritira', {
-            invito: invito || undefined, nome, dispositivo: dispositivo(),
+            invito: invito || undefined, nome, dispositivo: dispositivo(), telefono: await telefono(),
             contatto: (document.getElementById('qp-contatto') || {}).value || '',
             consenso: !!(document.getElementById('qp-consenso') || {}).checked,
             consenso_testo: (document.getElementById('qp-consenso-testo') || {}).textContent || ''
@@ -173,8 +188,26 @@
     // ============================================================
     // 1. CHI CONSIGLIA: la sezione Quick Pass dell'Action Center
     // ============================================================
+    // Pannello del titolare: al posto dell'invito, la cassa e i numeri
+    async function htmlTitolare() {
+        let n = {};
+        try { const r = await chiama('riepilogo'); n = r.numeri || {}; } catch (e) {}
+        const cifra = (v, e) => `<div><div style="font-size: 1.3rem; color: #fff; font-weight: 600;">${v || 0}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px;">${e}</div></div>`;
+        return `<div style="text-align: center; padding: 6px 4px;">
+            <div style="font-size: 0.65rem; color: ${ORO}; letter-spacing: 3px; text-transform: uppercase; font-weight: 700;">Sei il titolare</div>
+            <div style="font-size: 0.9rem; color: #e8e8ed; line-height: 1.6; margin: 12px 0 18px;">Qui i tuoi clienti creano il loro invito personale e lo mandano agli amici. Quando un amico ti mostra il suo pass, convalidalo dalla cassa.</div>
+            <button type="button" onclick="mqtQuickPass.cassa('')" style="${stileBottone}">Apri la cassa</button>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 20px;">${cifra(n.inviti, 'INVITI')}${cifra(n.pass_ritirati, 'PASS')}${cifra(n.pass_usati, 'CLIENTI')}${cifra(n.premi_maturati, 'PREMI')}</div>
+            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 14px; line-height: 1.5;">Più veloce: inquadra con la fotocamera il QR del pass del cliente.</div>
+        </div>`;
+    }
+    async function pannelloTitolareOverlay() {
+        overlay(`<div style="padding: 34px 22px 24px;">${await htmlTitolare()}</div>`);
+    }
+
     async function sezione(corpo, titolo) {
         titolo.textContent = 'QUICK PASS';
+        if (seiTitolare()) { corpo.innerHTML = `<div style="width: 100%; padding-top: 10px;">${await htmlTitolare()}</div>`; return; }
         corpo.innerHTML = '<div style="text-align: center; padding: 40px 0; color: rgba(255,255,255,0.5); font-size: 0.85rem;">Caricamento…</div>';
         const m = memoria();
         const s = await chiama('stato', { codici: m.pass || [], invito: m.invito ? m.invito.codice : undefined });
@@ -232,7 +265,7 @@
         if (!nome.trim()) { if (errore) errore.textContent = 'Scrivi il tuo nome.'; return; }
         const btn = document.getElementById('qp-crea');
         if (btn) { btn.disabled = true; btn.textContent = 'Un attimo…'; }
-        const r = await chiama('invito', { nome, dispositivo: dispositivo() });
+        const r = await chiama('invito', { nome, dispositivo: dispositivo(), telefono: await telefono() });
         if (r.success && r.invito) {
             const m = memoria(); m.invito = r.invito; salvaMemoria(m);
             if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICK PASS INVITO');
@@ -321,7 +354,9 @@
         esito.innerHTML = `<div style="border: 1px solid ${ORO}; border-radius: 14px; padding: 16px; margin: 6px 0; background: rgba(0,0,0,0.4);">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase;">${p.tipo === 'premio' ? 'Premio di chi ha consigliato' : 'Pass di un nuovo cliente'}</div>
             <div style="font-size: 1.1rem; font-weight: 600; margin: 6px 0;">${esc(p.premio)}</div>
-            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.65);">${esc(p.nome)} · valido fino al ${dataBreve(p.scadenza)}</div></div>`;
+            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.65);">${esc(p.nome)} · valido fino al ${dataBreve(p.scadenza)}</div>
+            ${p.consigliato_da ? `<div style="font-size: 0.8rem; color: rgba(255,255,255,0.8); margin-top: 8px;">Consigliato da <strong>${esc(p.consigliato_da)}</strong></div>` : ''}
+            ${p.sospetto ? `<div style="font-size: 0.78rem; color: #f59e0b; margin-top: 10px; line-height: 1.45; text-align: left;">⚠ Questo pass sembra ritirato da chi l'ha consigliato (stesso telefono o stesso nome). Verifica che sia davvero un nuovo cliente prima di convalidare.</div>` : ''}</div>`;
         const btn = document.getElementById('qp-cassa-azione');
         btn.textContent = 'Convalida e consegna';
         btn.onclick = convalida;
