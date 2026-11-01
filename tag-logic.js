@@ -731,7 +731,7 @@ function chiudiOverlayAcquisto() {
     document.body.style.overflow = 'auto';
     const appContainer = document.querySelector('.app-container');
     if (appContainer) appContainer.style.overflow = 'auto';
-    window.location.href = `/profile.html?u=${usernameCorrente}`;
+    window.location.href = '/dashboard.html';
 }
 
 function mostraShowroom(username) {

@@ -101,6 +101,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Il Pocket ha un suo manifest (`pocket-manifest.json`), ma **non su iPhone**: lì l'app installata avrebbe una memoria
   separata da Safari e risulterebbe vuota, quindi l'icona sulla Home apre Safari. Rimossa la vecchia sincronizzazione
   "cloud" del Pocket (era legata al login dismesso). Futuro, dopo il lancio: copia del Pocket legata a un account.
+- **Navigazione dashboard (01/11/2026, segnalato dal titolare dopo la prova di Martina):** le dashboard sono due:
+  `dashboard.html` = **"Le mie tag"** (account, nuova) e `profile.html` = gestione della singola tag (piano, rinnovo,
+  bozza, QR; grafica vecchia). Tutti i "torna alla dashboard" portano a "Le mie tag": editor dopo "Salva in dashboard",
+  pulsante "Dashboard" della tag, accesso dalla home con il proprio @nome. `profile.html` resta raggiungibile da
+  "Gestisci (piano, bozza, QR)" e dal checkout del rinnovo. Nell'editor, con un account, pulsante **"‹ LE MIE TAG"** in basso
+  a sinistra (speculare a EDITOR) e freccia in alto a sinistra nel menu: esce senza modificare (con modifiche non salvate
+  chiede conferma e scarta la bozza locale).
 - **CONDIVIDI (27/10/2026, richiesta del titolare: "il biglietto da visita a un tocco"):** in copertina pillola
   CONDIVIDI in alto a sinistra (speculare a SALVA); in ogni stanza e sezione CONDIVIDI in basso accanto a
   CHIUDI/INDIETRO. Il link `/u/<nome>?sezione=stanza.sezione` (es. `network.contatti`) riapre la tag direttamente lì
