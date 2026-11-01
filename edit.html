@@ -96,10 +96,10 @@
                 </button>
             </div>
         </div>
-   <!-- TORNA A "LE MIE TAG" senza modificare la tag (speculare al pulsante EDITOR); compare solo con un account -->
-    <div id="btn-mie-tag" onclick="tornaAMieTag()" role="button" aria-label="Torna a Le mie tag" style="display: none; position: fixed; bottom: 25px; left: 25px; cursor: pointer; z-index: 1500; align-items: center; gap: 8px; background: rgba(0,0,0,0.85); padding: 12px 18px; border-radius: 30px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15);">
+   <!-- TORNA ALL'IDENTITY CONSOLE (dashboard dell'account) senza modificare la tag (speculare al pulsante EDITOR); compare solo con un account -->
+    <div id="btn-mie-tag" onclick="tornaAMieTag()" role="button" aria-label="Torna all'Identity Console" style="display: none; position: fixed; bottom: 25px; left: 25px; cursor: pointer; z-index: 1500; align-items: center; gap: 8px; background: rgba(0,0,0,0.85); padding: 12px 18px; border-radius: 30px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15);">
         <i class="fas fa-chevron-left" style="color: #fff; font-size: 0.8rem;"></i>
-        <span style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; font-weight: 700;">LE MIE TAG</span>
+        <span style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; font-weight: 700;">IDENTITY CONSOLE</span>
     </div>
    <!-- 🚀 TELECOMANDO EDITOR GLOBALE -->
     <div onclick="apriDrawer('drawer-master')" style="position: fixed; bottom: 25px; right: 25px; cursor: pointer; z-index: 1500; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.85); padding: 12px 18px; border-radius: 30px; backdrop-filter: blur(10px); border: 1px solid rgba(80, 200, 120, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.6); transition: transform 0.2s;">
@@ -114,7 +114,7 @@
     <div class="drawer-backdrop" id="drawer-backdrop" onclick="chiudiSenzaSalvare()"></div>
 <div class="drawer-glass" id="drawer-master">
         <div class="drawer-header-liquido" style="margin-bottom: 10px;">
-            <div class="header-back" id="header-mie-tag" onclick="tornaAMieTag()" title="Le mie tag" style="visibility: hidden;"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-back" id="header-mie-tag" onclick="tornaAMieTag()" title="Identity Console" style="visibility: hidden;"><i class="fas fa-chevron-left"></i></div>
            <div class="header-title" style="font-weight: 400; letter-spacing: 3px;">EDITOR</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>

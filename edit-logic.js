@@ -792,7 +792,7 @@
                     if (azione === 'checkout') {
                         window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
                     } else if (azione === 'bozza') {
-                        // La bozza resta privata: si torna a "Le mie tag", dove la tag mostra "bozza non pubblicata"
+                        // La bozza resta privata: si torna all'Identity Console, dove la tag mostra "bozza non pubblicata"
                         window.location.href = '/dashboard.html'; 
                     } else if (azione === 'pubblica') {
                         window.location.href = `/tag.html?u=${NOME_SISTEMA}`; 
@@ -2174,7 +2174,7 @@ function condividiLinkCassa() {
 }
 
 // ============================================================
-// TORNA A "LE MIE TAG" (dashboard dell'account) senza modificare la tag
+// TORNA ALL'IDENTITY CONSOLE (dashboard dell'account) senza modificare la tag
 // ============================================================
 // Le modifiche non salvate restano solo su questo telefono (bozza locale): uscendo da qui si scartano,
 // dopo una conferma, così al prossimo ingresso l'editor riparte dalla tag com'è davvero.
