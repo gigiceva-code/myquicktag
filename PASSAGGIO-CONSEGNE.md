@@ -134,7 +134,16 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   ogni N amici usati (impostazione `quickpass_amici_per_premio`, decisa dal commerciante) chi ha consigliato riceve un
   pass premio, da usare a sua volta in cassa. Un pass per telefono, niente pass con il proprio invito, codici monouso,
   limite di pass e fine campagna veri. I vecchi link `?qp_ref=invito` danno ancora il pass all'amico (senza premio).
-  Pass amico valido 30 giorni (o fino a fine campagna), premio 60 giorni. Prove: `test/api.test.mjs`,
+  Pass amico valido 30 giorni (o fino a fine campagna), premio 60 giorni.
+  **Antifrode (01/11/2026, dopo la prova del titolare: invito da Chrome, pass ritirato dallo stesso telefono con il
+  browser di WhatsApp e convalidato → premio sbloccato a se stesso):** il titolare (sessione) non crea inviti né ritira
+  pass sulla propria tag e vede invece un pannello con "Apri la cassa" e i numeri; si salvano anche le impronte del
+  **telefono** (caratteristiche uguali in ogni browser: schermo, processore, fuso, lingue) e della **rete** (IP): stesso
+  telefono + stessa rete di chi ha creato l'invito → ritiro bloccato; stesso telefono da un'altra rete o stesso nome →
+  pass `sospetto`, la cassa vede "⚠ … verifica che sia davvero un nuovo cliente". In cassa compare sempre "Consigliato da".
+  Migrazione `20261101000000_quick_pass_antifrode.sql`. Limite noto: due telefoni uguali sulla stessa rete risultano
+  "stesso telefono" (raro); un telefono diverso aggira il controllo, ma il pass si usa solo in cassa davanti al commerciante.
+  Nell'**Identity Console** ogni tag con il Quick Pass ha il pulsante "Cassa Quick Pass · convalida i pass" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
