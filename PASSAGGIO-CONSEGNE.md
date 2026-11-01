@@ -143,6 +143,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   pass `sospetto`, la cassa vede "⚠ … verifica che sia davvero un nuovo cliente". In cassa compare sempre "Consigliato da".
   Migrazione `20261101000000_quick_pass_antifrode.sql`. Limite noto: due telefoni uguali sulla stessa rete risultano
   "stesso telefono" (raro); un telefono diverso aggira il controllo, ma il pass si usa solo in cassa davanti al commerciante.
+  **Configurazione guidata (01/11/2026, il titolare la trovava poco intuitiva e con esempi solo da bar):** il cassetto
+  Quick Pass dell'editor è una procedura in 5 schermate: 0 "Come funziona" (3 schermate, solo la prima volta, poi dal
+  tasto in fondo), 1 attività (locale/negozio, servizi e professionisti, vendita online, creator e consulenze: resta solo
+  sul telefono e serve a proporre esempi, `QP_PROPOSTE`), 2 regalo per l'amico, 3 premio per chi consiglia + ogni N amici,
+  4 riepilogo con "Modifica", opzioni avanzate (limite, fine campagna), cassa e "Salva e pubblica" (un tocco per le tag attive).
+  Già configurato → si apre sul riepilogo. Campi `field-qp-*` invariati. Prossimo: modalità online (WhatsApp/email).
   Nell'**Identity Console** ogni tag con il Quick Pass ha il pulsante "Cassa Quick Pass · convalida i pass" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.

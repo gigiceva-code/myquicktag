@@ -454,7 +454,7 @@
    // 1. MOTORE DI APERTURA (Con Router di Cronologia)
         function apriDrawer(idDrawer) {
             const masterDrawer = document.getElementById('drawer-master');
-            if (idDrawer === 'drawer-quickpass') caricaCassaQuickPass();
+            if (idDrawer === 'drawer-quickpass') qpAvvia();
             
             if (idDrawer === 'drawer-master' && window.entratoDaPreview === true) {
                 window.entratoDaPreview = false; 
@@ -2192,3 +2192,119 @@ function mostraPulsanteMieTag() {
     if (freccia) freccia.style.visibility = conAccount ? 'visible' : 'hidden';
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mostraPulsanteMieTag); else mostraPulsanteMieTag();
+
+// ============================================================
+// QUICK PASS: CONFIGURAZIONE GUIDATA (01/11/2026)
+// ============================================================
+// 0 come funziona (solo la prima volta) · 1 attività · 2 regalo per l'amico · 3 premio per chi consiglia ·
+// 4 riepilogo, cassa e opzioni. Già configurato → si apre sul riepilogo, con "Modifica" su ogni voce.
+// L'attività serve solo a proporre esempi adatti: resta su questo telefono, non va al server.
+const QP_PROPOSTE = {
+    locale:     { b: ['Il dolce in omaggio alla prima visita', 'Un caffè offerto', '10% sul primo conto'],
+                  a: ['Un aperitivo offerto', '10% sul prossimo conto', 'Una consumazione omaggio'] },
+    servizi:    { b: ['10% sul primo appuntamento', 'Un trattamento omaggio', 'Il sopralluogo gratuito'],
+                  a: ['10% sul prossimo appuntamento', 'Un servizio omaggio', 'Uno sconto di 20 €'] },
+    online:     { b: ['Spedizione gratuita sul primo ordine', '10% sul primo ordine', 'Un buono da 10 €'],
+                  a: ['Un buono da 10 €', '15% sul prossimo ordine', 'Un regalo nel prossimo pacco'] },
+    consulenze: { b: ['La prima call gratuita', 'Un\'ora di consulenza omaggio', '10% sul primo pacchetto'],
+                  a: ['Una sessione extra gratuita', '20% sul prossimo pacchetto', 'Un contenuto esclusivo'] }
+};
+let qpPassoCorrente = 0, qpSlide = 0;
+const qpVal = id => (document.getElementById(id)?.value || '').trim();
+const qpEsc = t => String(t || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function qpAttivita() { try { return localStorage.getItem('mqt_qp_attivita_' + NOME_SISTEMA) || ''; } catch (e) { return ''; } }
+
+function qpAvvia() {
+    const configurato = qpVal('field-qp-premio-a') && qpVal('field-qp-premio-b');
+    let guidaVista = false;
+    try { guidaVista = !!localStorage.getItem('mqt_qp_guida_vista'); } catch (e) {}
+    qpPasso(configurato ? 4 : (guidaVista ? 1 : 0));
+}
+
+function qpPasso(n) {
+    qpPassoCorrente = n;
+    document.querySelectorAll('#drawer-quickpass .qp-passo').forEach(el => { el.style.display = String(el.dataset.passo) === String(n) ? 'block' : 'none'; });
+    if (n === 0) qpMostraSlide(0);
+    if (n === 1) {
+        const att = qpAttivita();
+        document.querySelectorAll('#qp-attivita .qp-scelta').forEach(b => {
+            const scelta = b.dataset.attivita === att;
+            b.style.borderColor = scelta ? '#e5c158' : 'rgba(255,255,255,0.12)';
+            b.style.background = scelta ? 'rgba(229,193,88,0.08)' : 'rgba(255,255,255,0.03)';
+        });
+    }
+    if (n === 2 || n === 3) qpProposte();
+    if (n === 4) { qpRiepilogo(); caricaCassaQuickPass(); }
+    const indietro = document.getElementById('qp-indietro'), avanti = document.getElementById('qp-avanti');
+    if (indietro) indietro.style.display = (n === 0 && qpSlide === 0) || n === 4 ? 'none' : 'block';
+    if (avanti) avanti.textContent = n === 4 ? (statoUtente === 'attivo' ? 'SALVA E PUBBLICA' : 'APPLICA') : (n === 0 ? 'AVANTI' : (n === 1 ? 'AVANTI' : 'CONTINUA'));
+    const area = document.getElementById('qp-wizard'); if (area) area.scrollTop = 0;
+}
+
+function qpMostraSlide(i) {
+    qpSlide = i;
+    document.querySelectorAll('#qp-guida .qp-slide').forEach(el => { el.style.display = String(el.dataset.slide) === String(i) ? 'block' : 'none'; });
+    const punti = document.getElementById('qp-punti');
+    if (punti) punti.innerHTML = [0, 1, 2].map(k => `<span style="width: ${k === i ? 18 : 6}px; height: 6px; border-radius: 3px; background: ${k === i ? '#e5c158' : 'rgba(255,255,255,0.25)'}; transition: width 0.2s;"></span>`).join('');
+    const indietro = document.getElementById('qp-indietro');
+    if (indietro && qpPassoCorrente === 0) indietro.style.display = i === 0 ? 'none' : 'block';
+    const avanti = document.getElementById('qp-avanti');
+    if (avanti && qpPassoCorrente === 0) avanti.textContent = i === 2 ? 'INIZIA' : 'AVANTI';
+}
+
+function qpProposte() {
+    const att = qpAttivita() || 'locale';
+    document.querySelectorAll('#drawer-quickpass .qp-proposte').forEach(box => {
+        const lista = QP_PROPOSTE[att][box.dataset.campo === 'field-qp-premio-b' ? 'b' : 'a'];
+        const attuale = qpVal(box.dataset.campo);
+        box.innerHTML = lista.map(t => `<button type="button" class="qp-proposta" data-testo="${qpEsc(t)}" style="padding: 9px 13px; border-radius: 20px; font-size: 0.78rem; cursor: pointer; border: 1px solid ${t === attuale ? '#e5c158' : 'rgba(255,255,255,0.18)'}; background: ${t === attuale ? 'rgba(229,193,88,0.12)' : 'transparent'}; color: ${t === attuale ? '#e5c158' : '#e5e7eb'};">${qpEsc(t)}</button>`).join('');
+    });
+}
+
+function qpRiepilogo() {
+    const box = document.getElementById('qp-riepilogo'); if (!box) return;
+    const n = parseInt(qpVal('field-qp-amici'), 10) || 1;
+    const voce = (icona, testo, passo) => `<div style="display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+        <i class="fas ${icona}" style="color: #e5c158; width: 18px; text-align: center; margin-top: 3px;"></i>
+        <div style="flex: 1; font-size: 0.85rem; color: #e5e7eb; line-height: 1.5;">${testo}</div>
+        ${passo ? `<button type="button" onclick="qpPasso(${passo})" style="background: none; border: none; color: #e5c158; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer; padding: 2px 0;">MODIFICA</button>` : ''}</div>`;
+    box.innerHTML = voce('fa-share-nodes', 'Il tuo cliente invita un amico dalla tua tag', 0) +
+        voce('fa-gift', `L'amico riceve <strong style="color: #fff;">${qpEsc(qpVal('field-qp-premio-b')) || '—'}</strong>`, 2) +
+        voce('fa-cash-register', 'Tu convalidi il pass quando l\'amico arriva', 0) +
+        voce('fa-trophy', `Chi ha consigliato riceve <strong style="color: #e5c158;">${qpEsc(qpVal('field-qp-premio-a')) || '—'}</strong> ${n > 1 ? `ogni ${n} amici` : 'a ogni amico'}`, 3);
+}
+
+function qpAvanti() {
+    const n = qpPassoCorrente;
+    if (n === 0) {
+        if (qpSlide < 2) { qpMostraSlide(qpSlide + 1); return; }
+        try { localStorage.setItem('mqt_qp_guida_vista', '1'); } catch (e) {}
+        qpPasso(qpVal('field-qp-premio-a') && qpVal('field-qp-premio-b') ? 4 : 1); return;
+    }
+    if (n === 1) { if (!qpAttivita()) { alert('Scegli la tua attività: serve a proporti esempi adatti.'); return; } qpPasso(2); return; }
+    if (n === 2) { if (!qpVal('field-qp-premio-b')) { alert('Scegli o scrivi il regalo per l\'amico.'); return; } qpPasso(3); return; }
+    if (n === 3) { if (!qpVal('field-qp-premio-a')) { alert('Scegli o scrivi il premio per chi consiglia.'); return; } qpPasso(4); return; }
+    // 4: tag attiva → si pubblica subito (un solo tocco); tag in prenotazione → resta nella bozza fino all'attivazione
+    if (statoUtente === 'attivo') salvaEDirigi('pubblica'); else chiudiSenzaSalvare();
+}
+
+function qpIndietro() {
+    const n = qpPassoCorrente;
+    if (n === 0) { if (qpSlide > 0) qpMostraSlide(qpSlide - 1); return; }
+    qpPasso(n === 1 ? 0 : n - 1);
+}
+
+document.addEventListener('click', e => {
+    const scelta = e.target.closest && e.target.closest('#qp-attivita .qp-scelta');
+    if (scelta) {
+        try { localStorage.setItem('mqt_qp_attivita_' + NOME_SISTEMA, scelta.dataset.attivita); } catch (err) {}
+        qpPasso(1); setTimeout(() => qpPasso(2), 180);
+        return;
+    }
+    const proposta = e.target.closest && e.target.closest('#drawer-quickpass .qp-proposta');
+    if (proposta) {
+        const campo = document.getElementById(proposta.closest('.qp-proposte').dataset.campo);
+        if (campo) { campo.value = proposta.dataset.testo; campo.dispatchEvent(new Event('input', { bubbles: true })); }
+        qpProposte();
+    }
+});
