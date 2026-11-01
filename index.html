@@ -667,7 +667,7 @@ function scrollToSection(id) {
     }
 }
 
-// 2. ACCESSO: pagina dedicata (accesso.html, account con email e password). Già dentro → le mie tag
+// 2. ACCESSO: pagina dedicata (accesso.html, account con email e password). Già dentro → Identity Console
 function openLogin() {
     window.location.href = (window.mqtSessione && mqtSessione.haAccount()) ? '/dashboard.html' : '/accesso.html';
 }
@@ -751,7 +751,7 @@ async function vaiAllaVerifica() {
             const d = await r.json();
             if (d && d.fields && d.fields.has_password) {
                 // Tag attiva: si entra con l'account
-                window.location.href = '/accesso.html?torna=' + encodeURIComponent('/profile.html?u=' + rawTag);
+                window.location.href = '/accesso.html?torna=' + encodeURIComponent('/dashboard.html');
                 return;
             }
         } catch (e) {}
@@ -766,7 +766,7 @@ async function vaiAllaVerifica() {
         btn.style.opacity = "1";
         
         setTimeout(() => {
-            window.location.href = `profile.html?u=${rawTag}`;
+            window.location.href = '/dashboard.html';
         }, 800);
         return; // Termina l'esecuzione qui, risparmiando risorse server.
     }

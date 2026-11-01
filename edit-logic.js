@@ -792,7 +792,8 @@
                     if (azione === 'checkout') {
                         window.location.href = `/checkout.html?u=${NOME_SISTEMA}`;
                     } else if (azione === 'bozza') {
-                        window.location.href = `/profile.html`; 
+                        // La bozza resta privata: si torna all'Identity Console, dove la tag mostra "bozza non pubblicata"
+                        window.location.href = '/dashboard.html'; 
                     } else if (azione === 'pubblica') {
                         window.location.href = `/tag.html?u=${NOME_SISTEMA}`; 
                     }
@@ -2171,3 +2172,23 @@ function condividiLinkCassa() {
     if (navigator.share) navigator.share({ title: 'Cassa Quick Pass', text: testo, url: link }).catch(() => {});
     else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => alert('Link della cassa copiato.'));
 }
+
+// ============================================================
+// TORNA ALL'IDENTITY CONSOLE (dashboard dell'account) senza modificare la tag
+// ============================================================
+// Le modifiche non salvate restano solo su questo telefono (bozza locale): uscendo da qui si scartano,
+// dopo una conferma, così al prossimo ingresso l'editor riparte dalla tag com'è davvero.
+function tornaAMieTag() {
+    if (formModificato && !confirm('Uscire senza salvare?\n\nLe modifiche fatte adesso andranno perse. Per tenerle usa EDITOR → Salva.')) return;
+    try { localStorage.removeItem('mqt_draft_full_' + NOME_SISTEMA); } catch (e) {}
+    window.onbeforeunload = null;
+    window.location.href = '/dashboard.html';
+}
+function mostraPulsanteMieTag() {
+    const conAccount = !!(window.mqtSessione && mqtSessione.haAccount());
+    const pill = document.getElementById('btn-mie-tag');
+    if (pill) pill.style.display = conAccount ? 'flex' : 'none';
+    const freccia = document.getElementById('header-mie-tag');
+    if (freccia) freccia.style.visibility = conAccount ? 'visible' : 'hidden';
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mostraPulsanteMieTag); else mostraPulsanteMieTag();

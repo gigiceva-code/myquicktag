@@ -101,6 +101,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Il Pocket ha un suo manifest (`pocket-manifest.json`), ma **non su iPhone**: lì l'app installata avrebbe una memoria
   separata da Safari e risulterebbe vuota, quindi l'icona sulla Home apre Safari. Rimossa la vecchia sincronizzazione
   "cloud" del Pocket (era legata al login dismesso). Futuro, dopo il lancio: copia del Pocket legata a un account.
+- **Navigazione dashboard (01/11/2026, segnalato dal titolare dopo la prova di Martina):** le dashboard sono due:
+  `dashboard.html` = **"Identity Console"** (account, nuova; nome scelto dal titolare l'01/11) e `profile.html` =
+  **"Gestione tag"** della singola tag (piano, rinnovo, bozza, QR; grafica vecchia). Tutti i "torna alla dashboard" portano all'Identity Console: editor dopo "Salva in dashboard",
+  pulsante "Dashboard" della tag, accesso dalla home con il proprio @nome. `profile.html` resta raggiungibile da
+  "Gestisci (piano, bozza, QR)" e dal checkout del rinnovo. Nell'editor, con un account, pulsante **"‹ IDENTITY CONSOLE"** in basso
+  a sinistra (speculare a EDITOR) e freccia in alto a sinistra nel menu: esce senza modificare (con modifiche non salvate
+  chiede conferma e scarta la bozza locale).
 - **CONDIVIDI (27/10/2026, richiesta del titolare: "il biglietto da visita a un tocco"):** in copertina pillola
   CONDIVIDI in alto a sinistra (speculare a SALVA); in ogni stanza e sezione CONDIVIDI in basso accanto a
   CHIUDI/INDIETRO. Il link `/u/<nome>?sezione=stanza.sezione` (es. `network.contatti`) riapre la tag direttamente lì
@@ -158,7 +165,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   ⚠️ Malinteso della sessione precedente: il titolare **non** ha mai chiesto di "assegnare una tag Gold a un'altra persona".
 - **Nome protetto riservato a un'email (`nomi_riservati.assegnato_a`, nel codice dall'11/10):** se il nome di una persona
   scelta è nella lista dei nomi protetti (es. un nome famoso), si scrive la sua email in `assegnato_a`: solo il suo
-  account può prenotarlo ("Le mie tag" → "Aggiungi una tag") e la tag nasce già sua. Non c'entra con il piano Gold né
+  account può prenotarlo ("Identity Console" → "Aggiungi una tag") e la tag nasce già sua. Non c'entra con il piano Gold né
   con la durata. Dopo l'attivazione si può svuotare `assegnato_a`. Il titolare non conosce mai la password della persona.
 - `.vercelignore` esclude dal sito pubblico documenti interni, test e `supabase/`.
 
