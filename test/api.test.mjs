@@ -657,3 +657,13 @@ delete process.env.RINNOVO_GRATUITO;
   r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
   ok(r.body.tags.find(t=>t.username_system==='cantiereqp').quickpass_attivo===true,'Identity Console: sa quali tag hanno il Quick Pass (pulsante della cassa)');
 }
+{
+  // QUICK PASS ONLINE (02/11/2026): dove si usa il pass e recapito per l'uso online
+  rows.push({id:'qp3',username_system:'negoziowebqp',stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',created_at:new Date().toISOString()});
+  let r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'negoziowebqp',quickpass_modo:'online',quickpass_contatto:'+39 333 1234567'}});
+  ok(r.code===200 && riga('negoziowebqp').quickpass_modo==='online' && riga('negoziowebqp').quickpass_contatto==='+39 333 1234567','quick pass online: modo e recapito salvati');
+  r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'negoziowebqp',quickpass_modo:'ovunque'}});
+  ok(riga('negoziowebqp').quickpass_modo==='online','quick pass online: un modo non previsto viene ignorato');
+  r=await call('get-profile.js',{query:{u:'negoziowebqp'}});
+  ok(r.body.fields.quickpass_modo==='online' && r.body.fields.quickpass_contatto==='+39 333 1234567','quick pass online: la tag pubblica sa dove si usa il pass e a chi scrivere');
+}

@@ -667,6 +667,8 @@
                 quickpass_limite: document.getElementById('field-qp-limite')?.value || "", 
                 quickpass_scadenza: document.getElementById('field-qp-scadenza')?.value || "",
                 quickpass_amici_per_premio: document.getElementById('field-qp-amici')?.value || "1",
+                quickpass_modo: document.getElementById('field-qp-modo')?.value || "negozio",
+                quickpass_contatto: document.getElementById('field-qp-contatto')?.value.trim() || "",
                 modulo_vcf: JSON.stringify(vcfObject), 
                 config_canali: JSON.stringify(canaliSocial), 
                 review_url: document.getElementById('field-review-url')?.value.trim() || "", 
@@ -1014,6 +1016,8 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                     if (f.quickpass_limite && document.getElementById('field-qp-limite')) document.getElementById('field-qp-limite').value = f.quickpass_limite;
                     if (f.quickpass_scadenza && document.getElementById('field-qp-scadenza')) document.getElementById('field-qp-scadenza').value = f.quickpass_scadenza;
                     if (f.quickpass_amici_per_premio && document.getElementById('field-qp-amici')) document.getElementById('field-qp-amici').value = String(f.quickpass_amici_per_premio);
+                    if (f.quickpass_modo && document.getElementById('field-qp-modo')) document.getElementById('field-qp-modo').value = f.quickpass_modo;
+                    if (f.quickpass_contatto && document.getElementById('field-qp-contatto')) document.getElementById('field-qp-contatto').value = f.quickpass_contatto;
 
                    
                       // 1. CARICAMENTO AVATAR (Sganciato e Immediato)
@@ -1518,7 +1522,7 @@ function gestisciVIPSwitch(checkbox) {
             else if (tipo === 'social') { const track = document.getElementById('social-internal-track'); if(track) track.innerHTML = ''; aggiornaLimitiSocial(); } 
             else if (tipo === 'contatti') { document.getElementById('field-tel1').value = ''; document.getElementById('field-tel2').value = ''; document.getElementById('field-email').value = ''; document.getElementById('field-indirizzo').value = ''; } 
             else if (tipo === 'gallery') { document.getElementById('field-gallery-data').value = '[]'; const grid = document.getElementById('gallery-preview-grid'); if (grid) grid.innerHTML = ''; } 
-            else if (tipo === 'quickpass') { if (document.getElementById('field-qp-amici')) document.getElementById('field-qp-amici').value = '1'; document.getElementById('field-qp-premio-a').value = ''; document.getElementById('field-qp-premio-b').value = ''; document.getElementById('field-qp-limite').value = ''; document.getElementById('field-qp-scadenza').value = ''; } 
+            else if (tipo === 'quickpass') { if (document.getElementById('field-qp-amici')) document.getElementById('field-qp-amici').value = '1'; if (document.getElementById('field-qp-modo')) document.getElementById('field-qp-modo').value = 'negozio'; if (document.getElementById('field-qp-contatto')) document.getElementById('field-qp-contatto').value = ''; document.getElementById('field-qp-premio-a').value = ''; document.getElementById('field-qp-premio-b').value = ''; document.getElementById('field-qp-limite').value = ''; document.getElementById('field-qp-scadenza').value = ''; } 
             else if (tipo === 'review') { if(document.getElementById('field-review-url')) document.getElementById('field-review-url').value = ''; if(document.getElementById('field-review-contact')) document.getElementById('field-review-contact').value = ''; } 
             else if (tipo === 'video') { if(document.getElementById('field-video-url')) document.getElementById('field-video-url').value = ''; if(document.getElementById('field-video-cta-text')) document.getElementById('field-video-cta-text').value = ''; if(document.getElementById('field-video-cta-url')) document.getElementById('field-video-cta-url').value = ''; } 
             else if (tipo === 'shop') { const checkShop = document.getElementById('input-shop-attivo'); if(checkShop) checkShop.checked = false; if(document.getElementById('input-shop-titolo')) document.getElementById('input-shop-titolo').value = ''; if(document.getElementById('input-shop-prezzo')) document.getElementById('input-shop-prezzo').value = ''; if(document.getElementById('input-shop-link')) document.getElementById('input-shop-link').value = ''; if(document.getElementById('input-shop-scadenza')) document.getElementById('input-shop-scadenza').value = ''; } 
@@ -2234,7 +2238,7 @@ function qpPasso(n) {
         });
     }
     if (n === 2 || n === 3) qpProposte();
-    if (n === 4) { qpRiepilogo(); caricaCassaQuickPass(); }
+    if (n === 4) { qpMostraModo(); qpRiepilogo(); caricaCassaQuickPass(); }
     const indietro = document.getElementById('qp-indietro'), avanti = document.getElementById('qp-avanti');
     if (indietro) indietro.style.display = (n === 0 && qpSlide === 0) || n === 4 ? 'none' : 'block';
     if (avanti) avanti.textContent = n === 4 ? (statoUtente === 'attivo' ? 'SALVA E PUBBLICA' : 'APPLICA') : (n === 0 ? 'AVANTI' : (n === 1 ? 'AVANTI' : 'CONTINUA'));
@@ -2270,8 +2274,32 @@ function qpRiepilogo() {
         ${passo ? `<button type="button" onclick="qpPasso(${passo})" style="background: none; border: none; color: #e5c158; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer; padding: 2px 0;">MODIFICA</button>` : ''}</div>`;
     box.innerHTML = voce('fa-share-nodes', 'Il tuo cliente invita un amico dalla tua tag', 0) +
         voce('fa-gift', `L'amico riceve <strong style="color: #fff;">${qpEsc(qpVal('field-qp-premio-b')) || '—'}</strong>`, 2) +
-        voce('fa-cash-register', 'Tu convalidi il pass quando l\'amico arriva', 0) +
+        voce(qpVal('field-qp-modo') === 'online' ? 'fa-comment-dots' : 'fa-cash-register', {
+            negozio: 'Tu convalidi il pass in cassa quando l\'amico arriva',
+            online: 'L\'amico ti scrive con il codice e tu convalidi dal link del messaggio',
+            entrambi: 'Tu convalidi il pass in cassa, oppure dal link quando l\'amico ti scrive online'
+        }[qpVal('field-qp-modo') || 'negozio'], 0) +
         voce('fa-trophy', `Chi ha consigliato riceve <strong style="color: #e5c158;">${qpEsc(qpVal('field-qp-premio-a')) || '—'}</strong> ${n > 1 ? `ogni ${n} amici` : 'a ogni amico'}`, 3);
+}
+
+// Dove si usa il pass: evidenzia la scelta e mostra il recapito per l'uso online (precompilato con quelli della tag)
+function qpMostraModo() {
+    const modo = qpVal('field-qp-modo') || 'negozio';
+    document.querySelectorAll('#qp-modi .qp-modo').forEach(b => {
+        const s = b.dataset.modo === modo;
+        b.style.borderColor = s ? '#e5c158' : 'rgba(255,255,255,0.15)';
+        b.style.background = s ? 'rgba(229,193,88,0.1)' : 'transparent';
+        b.style.color = s ? '#e5c158' : '#e5e7eb';
+    });
+    const box = document.getElementById('qp-contatto-box');
+    if (box) box.style.display = modo === 'negozio' ? 'none' : 'block';
+    const campo = document.getElementById('field-qp-contatto');
+    if (campo && modo !== 'negozio' && !campo.value.trim()) campo.value = qpVal('field-tel1') || qpVal('field-email');
+}
+function qpImpostaModo(modo) {
+    const campo = document.getElementById('field-qp-modo');
+    if (campo) { campo.value = modo; campo.dispatchEvent(new Event('change', { bubbles: true })); }
+    qpMostraModo(); qpRiepilogo();
 }
 
 function qpAvanti() {
@@ -2284,6 +2312,7 @@ function qpAvanti() {
     if (n === 1) { if (!qpAttivita()) { alert('Scegli la tua attività: serve a proporti esempi adatti.'); return; } qpPasso(2); return; }
     if (n === 2) { if (!qpVal('field-qp-premio-b')) { alert('Scegli o scrivi il regalo per l\'amico.'); return; } qpPasso(3); return; }
     if (n === 3) { if (!qpVal('field-qp-premio-a')) { alert('Scegli o scrivi il premio per chi consiglia.'); return; } qpPasso(4); return; }
+    if (qpVal('field-qp-modo') !== 'negozio' && !qpVal('field-qp-contatto')) { alert('Scrivi il numero WhatsApp o l\'email a cui i clienti ti scrivono per usare il pass online.'); document.getElementById('field-qp-contatto')?.focus(); return; }
     // 4: tag attiva → si pubblica subito (un solo tocco); tag in prenotazione → resta nella bozza fino all'attivazione
     if (statoUtente === 'attivo') salvaEDirigi('pubblica'); else chiudiSenzaSalvare();
 }
@@ -2298,9 +2327,16 @@ document.addEventListener('click', e => {
     const scelta = e.target.closest && e.target.closest('#qp-attivita .qp-scelta');
     if (scelta) {
         try { localStorage.setItem('mqt_qp_attivita_' + NOME_SISTEMA, scelta.dataset.attivita); } catch (err) {}
+        // Dove si usa il pass: proposta in base all'attività, finché il Quick Pass non è configurato
+        if (!(qpVal('field-qp-premio-a') && qpVal('field-qp-premio-b'))) {
+            const campoModo = document.getElementById('field-qp-modo');
+            if (campoModo) campoModo.value = { locale: 'negozio', servizi: 'entrambi', online: 'online', consulenze: 'online' }[scelta.dataset.attivita] || 'negozio';
+        }
         qpPasso(1); setTimeout(() => qpPasso(2), 180);
         return;
     }
+    const modo = e.target.closest && e.target.closest('#qp-modi .qp-modo');
+    if (modo) { qpImpostaModo(modo.dataset.modo); return; }
     const proposta = e.target.closest && e.target.closest('#drawer-quickpass .qp-proposta');
     if (proposta) {
         const campo = document.getElementById(proposta.closest('.qp-proposte').dataset.campo);

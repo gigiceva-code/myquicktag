@@ -21,7 +21,7 @@ function estraiCampi(sorgente) {
     "flash_text", "flash_micro", "flash_expiry", 
     "pdf_label", "pdf_url", 
     "gallery_data", "draft_json", "sedi_json",
-    "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza", "quickpass_amici_per_premio",
+    "quickpass_premio_a", "quickpass_premio_b", "quickpass_limite", "quickpass_scadenza", "quickpass_amici_per_premio", "quickpass_modo", "quickpass_contatto",
     "pocket_cloud", "review_url", "review_contact",
     "video_url", "video_cta_text", "video_cta_url",
    "partners_data",
@@ -48,6 +48,9 @@ function estraiCampi(sorgente) {
           
           if (f === "stato") valueClean = valueClean.toLowerCase();
           if (f === "quick_action_tipo") valueClean = valueClean.toLowerCase();
+          // Quick Pass: dove si usa il pass (vincolo del database); un valore diverso si ignora
+          if (f === "quickpass_modo" && !["negozio", "online", "entrambi"].includes(valueClean)) return;
+          if (f === "quickpass_contatto") valueClean = valueClean.slice(0, 120);
           
           if (f === "quickpass_limite" || f === "quickpass_amici_per_premio") {
               const parsed = parseInt(valueClean, 10);
