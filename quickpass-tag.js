@@ -93,17 +93,39 @@
             <div style="font-size: 0.65rem; color: ${ORO}; margin-top: 5px; letter-spacing: 1px; font-weight: 600;">CREA LA TUA TAG &rarr;</div></a>`;
 
     // Il pass come "biglietto": premio, nome, QR per la cassa, codice da dettare, scadenza
+    // Quick Pass online: dove si usa il pass (negozio / online / entrambi) e il link "Usa il pass" verso il titolare,
+    // con un messaggio già scritto che contiene il codice e il link della cassa (lo tocca il titolare e convalida)
+    function modoUso() {
+        const m = (cacheDatiUtente && cacheDatiUtente.quickpass_modo) || 'negozio';
+        const contatto = String((cacheDatiUtente && cacheDatiUtente.quickpass_contatto) || '').trim();
+        return (m === 'online' || m === 'entrambi') && contatto ? { modo: m, contatto } : { modo: 'negozio', contatto: '' };
+    }
+    function linkUsoOnline(p) {
+        const { contatto } = modoUso();
+        const cassa = `${window.location.origin}/u/${nomeTag()}?cassa=${p.codice}`;
+        const testo = `Ciao ${nomeVisibile()}, vorrei usare il mio Quick Pass: ${p.premio}. Codice ${p.codice} (a nome di ${p.nome}). Per convalidarlo: ${cassa}`;
+        if (contatto.includes('@')) return `mailto:${encodeURIComponent(contatto)}?subject=${encodeURIComponent('Quick Pass ' + p.codice)}&body=${encodeURIComponent(testo)}`;
+        return `https://wa.me/${contatto.replace(/\D/g, '')}?text=${encodeURIComponent(testo)}`;
+    }
+
     function htmlPass(p, sottotitolo) {
         const usato = p.stato === 'usato', scaduto = p.scaduto;
+        const { modo, contatto } = modoUso();
+        const conQr = modo !== 'online';
+        const istruzioni = modo === 'online'
+            ? 'Usalo online: scrivi a ' + esc(nomeVisibile()) + ' con il pulsante qui sotto, il codice è già nel messaggio.'
+            : modo === 'entrambi' ? 'Mostralo in cassa, oppure usalo online<br>con il pulsante qui sotto.' : 'Mostra questo pass in cassa:<br>lo convaliderà il personale.';
+        const bottoneOnline = modo === 'negozio' || usato || scaduto ? '' : `<a href="${esc(linkUsoOnline(p))}" target="_blank" rel="noopener noreferrer" onclick="if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICK PASS USATO ONLINE')" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 16px; padding: 15px; background: ${ORO}; color: #000; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase;"><i class="${contatto.includes('@') ? 'fas fa-envelope' : 'fab fa-whatsapp'}" style="font-size: 1.1rem;"></i> Usa il pass ${contatto.includes('@') ? 'via email' : 'su WhatsApp'}</a>`;
         const nota = usato ? `Usato il ${dataBreve(p.usato_il)}` : scaduto ? 'Pass scaduto' : `Valido fino al ${dataBreve(p.scadenza)}`;
         return `<div style="padding: 28px 22px 22px; text-align: center;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.5); letter-spacing: 3px; text-transform: uppercase;">${esc(sottotitolo)}</div>
             <div style="font-size: 1.25rem; color: #fff; font-weight: 600; margin: 10px 0 4px; line-height: 1.35;">${esc(p.premio)}</div>
             <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">per ${esc(p.nome)} · ${esc(nomeVisibile())}</div>
-            <div style="margin: 20px auto 14px; width: 176px; height: 176px; padding: 12px; background: #fff; border-radius: 14px; ${usato || scaduto ? 'opacity: 0.25;' : ''}" class="mqt-qp-qr" data-codice="${esc(p.codice)}"></div>
+            ${conQr ? `<div style="margin: 20px auto 14px; width: 176px; height: 176px; padding: 12px; background: #fff; border-radius: 14px; ${usato || scaduto ? 'opacity: 0.25;' : ''}" class="mqt-qp-qr" data-codice="${esc(p.codice)}"></div>` : '<div style="height: 18px;"></div>'}
             <div style="font-family: monospace; font-size: 1.6rem; letter-spacing: 6px; color: #fff; font-weight: 700;">${esc(p.codice)}</div>
             <div style="font-size: 0.75rem; color: ${usato || scaduto ? '#ef4444' : ORO}; margin-top: 8px; letter-spacing: 0.5px;">${nota}</div>
-            ${usato || scaduto ? '' : '<div style="font-size: 0.75rem; color: rgba(255,255,255,0.55); margin-top: 12px; line-height: 1.5;">Mostra questo pass in cassa:<br>lo convaliderà il personale.</div>'}
+            ${usato || scaduto ? '' : `<div style="font-size: 0.75rem; color: rgba(255,255,255,0.55); margin-top: 12px; line-height: 1.5;">${istruzioni}</div>`}
+            ${bottoneOnline}
         </div>`;
     }
     function disegnaQr(contenitore) {

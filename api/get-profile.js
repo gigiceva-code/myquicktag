@@ -14,7 +14,7 @@ export const CAMPI_PUBBLICI = [
   'live_status_color', 'live_status_text', 'live_status_micro', 'live_status_action_type', 'live_status_action_label', 'live_status_action_url',
   'flash_text', 'flash_micro', 'flash_expiry',
   'pdf_label', 'pdf_url',
-  'quickpass_premio_a', 'quickpass_premio_b', 'quickpass_limite', 'quickpass_scadenza', 'quickpass_amici_per_premio',
+  'quickpass_premio_a', 'quickpass_premio_b', 'quickpass_limite', 'quickpass_scadenza', 'quickpass_amici_per_premio', 'quickpass_modo', 'quickpass_contatto',
   'review_url', 'review_contact',
   'video_url', 'video_cta_text', 'video_cta_url',
   'lead_capture_attivo', 'lead_capture_titolo',

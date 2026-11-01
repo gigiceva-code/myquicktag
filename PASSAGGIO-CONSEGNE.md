@@ -148,7 +148,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   tasto in fondo), 1 attività (locale/negozio, servizi e professionisti, vendita online, creator e consulenze: resta solo
   sul telefono e serve a proporre esempi, `QP_PROPOSTE`), 2 regalo per l'amico, 3 premio per chi consiglia + ogni N amici,
   4 riepilogo con "Modifica", opzioni avanzate (limite, fine campagna), cassa e "Salva e pubblica" (un tocco per le tag attive).
-  Già configurato → si apre sul riepilogo. Campi `field-qp-*` invariati. Prossimo: modalità online (WhatsApp/email).
+  Già configurato → si apre sul riepilogo. Campi `field-qp-*` invariati.
+  **Modalità online (02/11/2026):** nel riepilogo "Dove si usa il pass" (`quickpass_modo`: negozio / online / entrambi,
+  proposto in base all'attività) e, per l'online, "Dove ti scrivono" (`quickpass_contatto`: WhatsApp o email, precompilato
+  con i recapiti della tag). Il pass dell'amico e il premio hanno "Usa il pass su WhatsApp / via email": messaggio già
+  scritto con premio, codice e link `/u/<tag>?cassa=<codice>`, che il titolare tocca per convalidare. Solo online: niente QR.
+  Migrazione `20261102000000_quick_pass_online.sql`.
   Nell'**Identity Console** ogni tag con il Quick Pass ha il pulsante "Cassa Quick Pass · convalida i pass" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.

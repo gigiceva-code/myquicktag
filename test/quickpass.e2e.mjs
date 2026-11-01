@@ -109,3 +109,32 @@ const db = await (await fetch(`${B}/__db`)).json();
 const lead = JSON.parse((db.rows.find(r => r.username_system === TAG) || {}).lead_capture_leads || '[]')[0];
 ok(lead && lead.nome === 'Luca' && lead.consenso_offerte === true && lead.fonte === 'Quick Pass', 'Il recapito di Luca arriva in I miei contatti con il consenso');
 await browser.close();
+
+// ---------- QUICK PASS ONLINE: niente cassa fisica, l'amico scrive su WhatsApp con il codice e il link della cassa ----------
+{
+  const TAG2 = 'negoziowebqp' + Date.now().toString(36).slice(-4);
+  await fetch(`${B}/__seed`, { method: 'POST', body: JSON.stringify({
+    username_system: TAG2, username_display: '@NegozioWeb', stato: 'attivo', data_scadenza: '2099-01-01',
+    quickpass_premio_a: 'Un buono da 10 €', quickpass_premio_b: 'Spedizione gratuita sul primo ordine', quickpass_modo: 'online', quickpass_contatto: '+39 333 1234567'
+  }) });
+  const b2 = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
+  const ctx = async (w, h, dpr) => { const c = await b2.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: dpr, isMobile: true });
+    await c.route(/cdn\.jsdelivr\.net\/npm\/@supabase|fonts\.googleapis|cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome/, r => r.abort()); return c.newPage(); };
+  const anna = await ctx(390, 844, 2);
+  await anna.goto(`${B}/u/${TAG2}`); await anna.waitForTimeout(1800);
+  await anna.evaluate(() => { sbloccaTag(); apriMacroArea('action_center'); apriSezione('quickpass'); }); await anna.waitForTimeout(1200);
+  await anna.fill('#qp-mio-nome', 'Anna'); await anna.click('#qp-crea'); await anna.waitForTimeout(1200);
+  const link2 = ((await anna.textContent('#corpoSezione')).match(/https?:\/\/\S+\?pass=[A-Z0-9]{8}/) || [])[0];
+  const bea = await ctx(375, 812, 3);
+  await bea.goto(link2.replace(/^https?:\/\/[^/]+/, B)); await bea.waitForTimeout(1800);
+  await bea.fill('#qp-nome', 'Bea'); await bea.click('#qp-ritira'); await bea.waitForTimeout(1500);
+  await foto(bea, '8-pass-online');
+  const usa = await bea.$('#mqt-qp-overlay a[href*="wa.me"]');
+  const href = usa ? await usa.getAttribute('href') : '';
+  const testoWa = decodeURIComponent((href.split('text=')[1] || ''));
+  const codice2 = (testoWa.match(/Codice ([A-Z0-9]{6})/) || [])[1];
+  ok(!!usa && href.startsWith('https://wa.me/393331234567') && (await bea.textContent('#mqt-qp-overlay')).includes('Usa il pass su WhatsApp'), 'Online: il pass ha "Usa il pass su WhatsApp" verso il recapito del titolare');
+  ok(!!codice2 && testoWa.includes(`/u/${TAG2}?cassa=${codice2}`) && testoWa.includes('Spedizione gratuita'), 'Online: il messaggio contiene premio, codice e link della cassa');
+  ok(!(await bea.$('#mqt-qp-overlay .mqt-qp-qr')), 'Online: niente QR da mostrare in cassa');
+  await b2.close();
+}
