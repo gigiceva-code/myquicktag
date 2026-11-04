@@ -2240,7 +2240,7 @@ function qpPasso(n) {
     if (n === 2 || n === 3) qpProposte();
     if (n === 4) { qpMostraModo(); qpRiepilogo(); caricaCassaQuickPass(); }
     const indietro = document.getElementById('qp-indietro'), avanti = document.getElementById('qp-avanti');
-    if (indietro) indietro.style.display = (n === 0 && qpSlide === 0) || n === 4 ? 'none' : 'block';
+    if (indietro) indietro.style.display = (n === 0 && qpSlide === 0) ? 'none' : 'block';
     if (avanti) avanti.textContent = n === 4 ? (statoUtente === 'attivo' ? 'SALVA E PUBBLICA' : 'APPLICA') : (n === 0 ? 'AVANTI' : (n === 1 ? 'AVANTI' : 'CONTINUA'));
     const area = document.getElementById('qp-wizard'); if (area) area.scrollTop = 0;
 }
@@ -2315,6 +2315,11 @@ function qpAvanti() {
     if (qpVal('field-qp-modo') !== 'negozio' && !qpVal('field-qp-contatto')) { alert('Scrivi il numero WhatsApp o l\'email a cui i clienti ti scrivono per usare il pass online.'); document.getElementById('field-qp-contatto')?.focus(); return; }
     // 4: tag attiva → si pubblica subito (un solo tocco); tag in prenotazione → resta nella bozza fino all'attivazione
     if (statoUtente === 'attivo') salvaEDirigi('pubblica'); else chiudiSenzaSalvare();
+}
+
+// Freccia in alto del Quick Pass: torna al passo precedente; dal primo passo esce verso le killer features
+function qpFrecciaIndietro() {
+    if (qpPassoCorrente > 0 || qpSlide > 0) qpIndietro(); else apriDrawer('env-action');
 }
 
 function qpIndietro() {
