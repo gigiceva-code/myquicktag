@@ -1022,7 +1022,7 @@ function apriMacroArea(area, skipHistory = false) {
                 quickPassValido = false;
             }
             if (quickPassValido) {
-                sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('quickpass')"><i class="fas fa-gift" style="font-size:1.2rem; width:25px; text-align:center; color:var(--theme-border, #d4af37);"></i> <span style="flex:1; text-align:left;">QUICK PASS</span></button>`;
+                sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('quickpass')"><i class="fas fa-gift" style="font-size:1.2rem; width:25px; text-align:center; color:var(--theme-border, #d4af37);"></i> <span style="flex:1; text-align:left;">REGALA A UN AMICO</span></button>`;
             }
         }
 
@@ -1125,7 +1125,7 @@ function apriSezione(tipo) {
         return;
     }
  if (tipo === 'quickpass') {
-        // Quick Pass "porta un amico": invito personale, amici portati e premi (quickpass-tag.js)
+        // QuickGift (ex Quick Pass): link da condividere, amici arrivati e premi (quickpass-tag.js)
         mqtQuickPass.sezione(corpo, titolo);
         return;
     }

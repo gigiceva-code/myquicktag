@@ -9,6 +9,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 - Scrivere **in italiano** e **dare del tu** al titolare (richiesta del 23/10/2026), con spiegazioni semplici e concrete: il titolare non è uno sviluppatore.
   Dire cosa cambia per lui e per i clienti, non i dettagli tecnici.
+- **Nomi e parole (04/11/2026, richiesta del titolare):** il marchio si scrive sempre **myquicktag**, tutto minuscolo
+  (mai "MyQuickTag"). Nei testi usare il maschile universale ("l'amico", non "l'amica").
 - **Marketing e conversione (richiesta del 27/10/2026):** il titolare non è un esperto di web marketing. Per ogni
   cosa che vedono i clienti proporre sempre, di propria iniziativa, la versione più professionale e orientata alla
   conversione (testi, posizione dei pulsanti, anteprime, misurazione), spiegando in breve il perché. Non limitarsi a
@@ -154,7 +156,22 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   con i recapiti della tag). Il pass dell'amico e il premio hanno "Usa il pass su WhatsApp / via email": messaggio già
   scritto con premio, codice e link `/u/<tag>?cassa=<codice>`, che il titolare tocca per convalidare. Solo online: niente QR.
   Migrazione `20261102000000_quick_pass_online.sql`.
-  Nell'**Identity Console** ogni tag con il Quick Pass ha il pulsante "Cassa Quick Pass · convalida i pass" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
+  **QuickGift (04/11/2026, decisione del titolare dopo un audit di ChatGPT valutato insieme):** il Quick Pass si chiama
+  **QuickGift** in tutto ciò che si vede ("Un regalo da condividere. Un premio da guadagnare."). Il nome tecnico resta
+  `quickpass` (file, API, colonne, tabelle, chiavi del telefono, `?pass=`, `?cassa=`): nessuna migrazione, vecchi link e
+  codici validi. **Parole fisse:** *regalo* = quello dell'amico invitato, *premio* = quello del cliente che condivide.
+  Tag: pulsante "REGALA A UN AMICO" nell'Action Center; il cliente vede i tre passi (mandi il regalo → l'amico riceve X →
+  quando lo usa guadagni Y), "Crea il tuo link regalo", poi "Il tuo link da condividere", barra di avanzamento
+  ("Ti manca 1 amico…") e conteggi in parole semplici. L'amico vede: chi gli fa il regalo → il regalo in grande → dove si
+  usa → nome → "Ricevi il tuo regalo"; recapito e consenso dopo, sotto "Facoltativo", mai spuntati. Dopo: riquadro "Come si
+  usa" (negozio: "prima di pagare, mostra il QR…"; online: solo il pulsante). Cassa: "✓ VALIDO", "DA CONSEGNARE", per chi e
+  chi glielo ha mandato, poi "Ho consegnato: conferma". Editor: schema delle tre figure sempre in vista (Tu → il tuo cliente
+  → il suo amico, evidenziata quella del passo) e **3 passi** al posto di 5 (1 regalo + proposte per attività, 2 premio +
+  "dopo quanti amici" 1·3·5 con 1 consigliato, 3 dove si usa + riepilogo + cassa); freccia in alto e INDIETRO tornano al
+  passo precedente. Non adottate (motivato al titolare): le tre configurazioni "Semplice / Crescita / Fidelizzazione"
+  (cambiavano solo il numero di amici: più scelte, più confusione). Da far vedere al legale: premiare chi porta clienti può
+  rientrare nelle "operazioni a premio".
+  Nell'**Identity Console** ogni tag con QuickGift ha il pulsante "Cassa QuickGift · conferma i regali" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
@@ -191,12 +208,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 207 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 220 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/quickpass.e2e.mjs` → 14 prove nel browser del Quick Pass, dall'invito alla cassa (istruzioni in testa al file).
+- `test/quickpass.e2e.mjs` → 31 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).

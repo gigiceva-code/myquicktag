@@ -85,7 +85,7 @@ async function nuovoCodice(tabella, valori, lunghezza) {
     const riga = await inserisciRiga(tabella, { ...valori, codice: codiceCasuale(lunghezza) });
     if (riga) return riga;
   }
-  throw new Error('Codice Quick Pass non disponibile');
+  throw new Error('Codice QuickGift non disponibile');
 }
 
 // Cassa: proprietario con la sua sessione, oppure PIN di cassa corretto (tentativi limitati)
@@ -118,13 +118,13 @@ export default async function handler(req, res) {
     if (azione === 'invito' || azione === 'ritira') {
       const titolare = await dirittiSullaTag({ req, token: body.sessionToken, record, tag });
       if (titolare.proprietario) {
-        return res.status(403).json({ success: false, titolare: true, error: 'Sei il titolare di questa tag: il Quick Pass è per i tuoi clienti. Per convalidare i pass usa la Cassa.' });
+        return res.status(403).json({ success: false, titolare: true, error: 'Sei il titolare di questa tag: QuickGift è per i tuoi clienti. Per confermare i regali usa la Cassa.' });
       }
     }
 
     // ---------- INVITO: chi consiglia ottiene il suo link personale ----------
     if (azione === 'invito') {
-      if (!c.attiva) return res.status(410).json({ success: false, error: 'Il Quick Pass non è attivo su questa tag' });
+      if (!c.attiva) return res.status(410).json({ success: false, error: 'QuickGift non è attivo su questa tag' });
       const nome = testo(body.nome, 40);
       if (!nome) return res.status(400).json({ success: false, error: 'Scrivi il tuo nome' });
       const disp = impronta(body.dispositivo);
@@ -159,7 +159,7 @@ export default async function handler(req, res) {
 
     // ---------- RITIRA: l'amico riceve il suo pass personale ----------
     if (azione === 'ritira') {
-      if (!c.attiva) return res.status(410).json({ success: false, error: 'Il Quick Pass non è più attivo' });
+      if (!c.attiva) return res.status(410).json({ success: false, error: 'Questo regalo non è più disponibile' });
       const nome = testo(body.nome, 40);
       if (!nome) return res.status(400).json({ success: false, error: 'Scrivi il tuo nome' });
       const disp = impronta(body.dispositivo);
@@ -180,7 +180,7 @@ export default async function handler(req, res) {
         const stessoTelefono = !!invito.telefono && invito.telefono === tel;
         // Stesso browser, oppure stesso telefono dalla stessa rete: è chi ha creato l'invito
         if (stessoBrowser || (stessoTelefono && invito.rete === rete)) {
-          return res.status(403).json({ success: false, error: 'Questo è il tuo invito: mandalo a un amico, il pass è per lui.' });
+          return res.status(403).json({ success: false, error: 'Questo è il tuo link: mandalo a un amico, il regalo è per lui.' });
         }
         // Stesso telefono da un'altra rete, o stesso nome: si lascia passare ma la cassa vede un avviso
         sospetto = stessoTelefono || nomeSemplice(nome) === nomeSemplice(invito.nome);
@@ -188,7 +188,7 @@ export default async function handler(req, res) {
       if (!(await entroILimiti(req, tag, [{ nome: 'qp-ritira', per: 'ip+tag', max: 5, finestra: 3600 }]))) return rispondiTroppiTentativi(res);
       if (c.limite) {
         const emessi = await leggiRighe('quickpass_pass', { tag, tipo: 'amico' }, { colonne: 'codice' });
-        if (emessi.length >= c.limite) return res.status(410).json({ success: false, esauriti: true, error: 'I pass disponibili sono esauriti' });
+        if (emessi.length >= c.limite) return res.status(410).json({ success: false, esauriti: true, error: 'I regali disponibili sono esauriti' });
       }
       const ora = Date.now();
       const scadenza = Math.min(c.scadenza || Infinity, ora + GIORNI_PASS * GIORNO_MS);
@@ -204,7 +204,7 @@ export default async function handler(req, res) {
         const consenso = body.consenso === true;
         try {
           await aggiungiLead(tag, {
-            id: crypto.randomUUID(), nome, contatto, ts: ora, fonte: 'Quick Pass',
+            id: crypto.randomUUID(), nome, contatto, ts: ora, fonte: 'QuickGift',
             data: new Date(ora).toLocaleString('it-IT', { timeZone: 'Europe/Rome', dateStyle: 'short', timeStyle: 'short' }),
             visto: false, richiamato: false, consenso_offerte: consenso,
             ...(consenso ? { consenso_testo: testo(body.consenso_testo, 200) || 'Accetto di ricevere offerte e novità', consenso_data: new Date(ora).toISOString() } : {})
@@ -245,9 +245,9 @@ export default async function handler(req, res) {
         error: cassa.pin_errato ? 'PIN di cassa errato' : 'Riservato alla cassa: accedi come titolare o inserisci il PIN di cassa' });
 
       const p = (await leggiRighe('quickpass_pass', { codice, tag }, { limite: 1 }))[0];
-      if (!p) return res.status(404).json({ success: false, error: 'Pass non trovato per questa tag' });
-      if (p.stato === 'usato') return res.status(409).json({ success: false, usato: true, pass: vistaPass(p), error: 'Pass già usato' });
-      if (Date.parse(p.scadenza) < Date.now()) return res.status(410).json({ success: false, scaduto: true, pass: vistaPass(p), error: 'Pass scaduto' });
+      if (!p) return res.status(404).json({ success: false, error: 'Codice non trovato per questa tag' });
+      if (p.stato === 'usato') return res.status(409).json({ success: false, usato: true, pass: vistaPass(p), error: 'Codice già usato' });
+      if (Date.parse(p.scadenza) < Date.now()) return res.status(410).json({ success: false, scaduto: true, pass: vistaPass(p), error: 'Codice scaduto' });
       if (azione === 'verifica') {
         // Per la cassa: chi ha consigliato l'amico, e l'avviso se il pass sembra ritirato da lui stesso
         let consigliatoDa = null;
@@ -260,7 +260,7 @@ export default async function handler(req, res) {
 
       // Atomico: riesce una volta sola anche con due convalide contemporanee
       const usati = await aggiornaRighe('quickpass_pass', { codice, tag, stato: 'attivo' }, { stato: 'usato', usato_il: new Date().toISOString() });
-      if (!usati.length) return res.status(409).json({ success: false, usato: true, error: 'Pass già usato' });
+      if (!usati.length) return res.status(409).json({ success: false, usato: true, error: 'Codice già usato' });
 
       // Pass di un amico: ogni N amici portati, chi ha consigliato riceve il premio
       let premioSbloccato = null;

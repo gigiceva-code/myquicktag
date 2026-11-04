@@ -571,7 +571,7 @@ delete process.env.RINNOVO_GRATUITO;
   const passB=r.body.pass;
   ok(r.code===200 && /^[A-Z0-9]{6}$/.test(passB.codice) && passB.premio==='Dolce in omaggio' && passB.stato==='attivo' && !('dispositivo' in passB) && !('contatto' in passB),'quick pass: l\'amico ritira un pass personale (senza dati interni)');
   const lead=JSON.parse(riga('pizzeriaqp').lead_capture_leads)[0];
-  ok(lead.nome==='Luca' && lead.fonte==='Quick Pass' && lead.consenso_offerte===true,'quick pass: il recapito facoltativo arriva in I miei contatti con il consenso');
+  ok(lead.nome==='Luca' && lead.fonte==='QuickGift' && lead.consenso_offerte===true,'quick pass: il recapito facoltativo arriva in I miei contatti con il consenso');
   r=await qp('ritira',{invito:inv.codice,nome:'Luca di nuovo',dispositivo:telB},{ip:'4.4.4.2'});
   ok(r.body.esistente && r.body.pass.codice===passB.codice,'quick pass: un solo pass per telefono');
 

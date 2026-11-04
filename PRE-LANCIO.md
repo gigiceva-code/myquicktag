@@ -97,6 +97,8 @@ contatti, myquicktag li conserva per suo conto).
 **Note legali (non è una consulenza):** informativa privacy e termini da aggiornare con email dell'account,
 consenso promozionale facoltativo (salvato con data e versione del testo), comunicazioni di servizio, Supabase come
 fornitore dell'autenticazione e il servizio email scelto.
+Da chiedere al legale anche **QuickGift** (04/11/2026): premiare il cliente che porta nuovi clienti (regalo all'amico,
+premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare cosa serve e cosa scrivere nei termini.
 
 **Privacy, cookie e termini (prima del lancio pubblico, non prima delle prove):**
 - [x] Bozze scritte il 22/10/2026: `privacy.html`, `cookie.html`, `termini.html` (stile in `legale.css`), collegate dal menu (≡)
