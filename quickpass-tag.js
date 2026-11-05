@@ -113,7 +113,7 @@
     // Come si usa, in parole semplici: nessuno deve indovinare cosa fare con un QR
     function comeSiUsa(modo) {
         const negozio = `<div><strong style="color: #fff;">Di persona:</strong> mostra il QR o detta il codice a ${esc(nomeVisibile())}, prima di pagare se c'è un acquisto.</div>`;
-        const online = `<div><strong style="color: #fff;">Online:</strong> tocca il pulsante qui sotto e invia il messaggio: il codice è già scritto.</div>`;
+        const online = `<div><strong style="color: #fff;">Online:</strong> fai clic sul pulsante qui sotto e invia il messaggio: il codice è già scritto.</div>`;
         return modo === 'online' ? online : modo === 'entrambi' ? negozio + online : negozio;
     }
 
@@ -266,7 +266,7 @@
             <div style="flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; border: 1px solid ${ORO}; color: ${ORO}; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center;">${n}</div>
             <div style="font-size: 0.86rem; color: #e8e8ed; line-height: 1.5; padding-top: 2px;">${testo}</div></div>`;
         return `<div style="display: flex; flex-direction: column; gap: 12px; margin: 18px 0;">
-            ${riga(1, 'Mandi il regalo a chi vuoi, con un tocco')}
+            ${riga(1, 'Mandi il regalo a chi vuoi, con un clic')}
             ${riga(2, `Chi lo riceve ottiene <strong style="color: #fff;">${premioB}</strong>`)}
             ${riga(3, `${perPremio > 1 ? `Ogni ${perPremio} persone che lo usano` : 'Quando viene usato'}, tu guadagni <strong style="color: ${ORO};">${premioA}</strong>`)}
         </div>`;

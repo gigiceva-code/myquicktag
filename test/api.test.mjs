@@ -692,6 +692,29 @@ delete process.env.RINNOVO_GRATUITO;
   ok(r.code===410 && r.body.esauriti,'scala: raggiunto il numero massimo (1.600) i regali sono esauriti');
 }
 {
+  // QUICKGIFT, CONFERME SIMULTANEE (05/11/2026): due cassieri (o tanti utilizzi online) confermano nello stesso istante
+  // regali dello stesso link. Ogni soglia raggiunta deve dare esattamente un premio: niente doppioni, niente premi persi.
+  for (const [nome,perPremio,quanti,attesi] of [['simultqp1',1,5,5],['simultqp2',2,5,2],['simultqp3',3,6,2]]) {
+    const q=(azione,body={},extra={})=>call('quickpass.js',{method:'POST',ip:extra.ip,headers:extra.headers,body:{u:nome,azione,...body}});
+    rows.push({id:nome,username_system:nome,stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',
+      quickpass_premio_a:'Premio',quickpass_premio_b:'Regalo',quickpass_amici_per_premio:perPremio,created_at:new Date().toISOString()});
+    const inv=(await q('invito',{nome:'Chi condivide',dispositivo:'telefono-condivide-'+nome},{ip:'8.8.1.1'})).body.invito.codice;
+    const codici=[];
+    for(let i=0;i<quanti;i++) codici.push((await q('ritira',{invito:inv,nome:'Persona'+i,dispositivo:'telefono-riceve-'+nome+'-'+i},{ip:'8.8.2.'+i})).body.pass.codice);
+    const esiti=await Promise.all(codici.map(c=>q('convalida',{codice:c},{headers:conSessione(jwtAnna)})));
+    const premi=tabelleQP.quickpass_pass.filter(p=>p.invito===inv&&p.tipo==='premio');
+    const ordini=premi.map(p=>p.ordine).sort((a,b)=>a-b);
+    ok(esiti.every(e=>e.code===200) && premi.length===attesi && ordini.every((o,k)=>o===k+1),
+      `conferme simultanee (premio ogni ${perPremio}, ${quanti} conferme insieme): esattamente ${attesi} premi, nessuno perso né doppio`);
+    if (perPremio===1) {
+      // Una conferma interrotta a metà (premio non creato): lo recupera la pagina di chi condivide
+      const i=tabelleQP.quickpass_pass.findIndex(p=>p.invito===inv&&p.tipo==='premio'&&p.ordine===3); tabelleQP.quickpass_pass.splice(i,1);
+      const r=await q('stato',{invito:inv});
+      ok(r.body.invito.premi_totali===5 && tabelleQP.quickpass_pass.filter(p=>p.invito===inv&&p.tipo==='premio'&&p.ordine===3).length===1,'premio perso per una conferma interrotta: lo ricrea la pagina di chi condivide');
+    }
+  }
+}
+{
   // QUICK PASS ONLINE (02/11/2026): dove si usa il pass e recapito per l'uso online
   rows.push({id:'qp3',username_system:'negoziowebqp',stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',created_at:new Date().toISOString()});
   let r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'negoziowebqp',quickpass_modo:'online',quickpass_contatto:'+39 333 1234567'}});

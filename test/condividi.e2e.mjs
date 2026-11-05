@@ -31,7 +31,7 @@ await p.goto(`${B}/tag.html?u=pizzeriadamario`); await p.waitForTimeout(2500);
 ok(await p.isVisible('#btn-condividi-top'), 'copertina: CONDIVIDI visibile');
 await p.click('#btn-condividi-top');
 let d = await ultimo(p);
-ok(d && d.url.endsWith('/u/pizzeriadamario') && d.title === '@PizzeriaDaMario · myquicktag' && d.text === '@PizzeriaDaMario: contatti, social e servizi in un unico tocco.', 'copertina: condivide /u/<nome> (indirizzo con anteprima) con un messaggio');
+ok(d && d.url.endsWith('/u/pizzeriadamario') && d.title === '@PizzeriaDaMario · myquicktag' && d.text === '@PizzeriaDaMario: contatti, social e servizi in un solo clic.', 'copertina: condivide /u/<nome> (indirizzo con anteprima) con un messaggio');
 await p.evaluate(() => apriMacroArea('network')); await p.waitForTimeout(1200);
 ok(await p.isVisible('#btn-condividi-sezione'), 'stanza: CONDIVIDI in basso accanto a CHIUDI');
 await p.click('#btn-condividi-sezione');

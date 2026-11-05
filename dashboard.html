@@ -169,7 +169,7 @@
         const nuova = document.getElementById('e-nuova').value.trim().toLowerCase();
         const { error } = await sb.auth.updateUser({ email: nuova }, { emailRedirectTo: location.origin + '/dashboard.html' });
         if (error) return msg(m, /rate|security/i.test(error.message) ? 'Troppi tentativi: riprova tra qualche minuto.' : 'Non è stato possibile cambiare email. Controlla l\'indirizzo.', false);
-        msg(m, 'Ti abbiamo mandato un link di conferma: la nuova email vale dopo averlo toccato.', true);
+        msg(m, 'Ti abbiamo mandato un link di conferma: la nuova email vale dopo il clic sul link.', true);
     });
 
     // Consenso promozionale (facoltativo, revocabile)

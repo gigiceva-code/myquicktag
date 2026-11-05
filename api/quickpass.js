@@ -230,6 +230,8 @@ export default async function handler(req, res) {
       if (codiceValido(body.invito, 8)) {
         const inv = (await leggiRighe('quickpass_inviti', { codice: body.invito, tag }, { limite: 1 }))[0];
         if (inv) {
+          // Prima di contare si creano gli eventuali premi mancanti (es. una conferma interrotta a metà)
+          try { await allineaPremi(inv, c, f, tag); } catch (e) { console.error('QUICKPASS premi non allineati:', e.dettagli || e.message); }
           const [ritirati, usati, premiTotali, premi] = await Promise.all([
             contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'amico' }),
             contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'amico', stato: 'usato' }),
@@ -270,14 +272,13 @@ export default async function handler(req, res) {
       const usati = await aggiornaRighe('quickpass_pass', { codice, tag, stato: 'attivo' }, { stato: 'usato', usato_il: new Date().toISOString() });
       if (!usati.length) return res.status(409).json({ success: false, usato: true, error: 'Codice già usato' });
 
-      // Pass di un amico: ogni N amici portati, chi ha consigliato riceve il premio
+      // Regalo di chi ha ricevuto un link personale: ogni N utilizzi, chi l'ha condiviso guadagna il premio
       let premioSbloccato = null;
       if (p.tipo === 'amico' && p.invito) {
         const inv = (await leggiRighe('quickpass_inviti', { codice: p.invito }, { limite: 1 }))[0];
-        const amiciUsati = await contaRighe('quickpass_pass', { invito: p.invito, tipo: 'amico', stato: 'usato' });
-        if (inv && amiciUsati > 0 && amiciUsati % c.perPremio === 0 && String(f.quickpass_premio_a || '').trim()) {
-          const premio = await nuovoCodiceOppureEsistente(inv, amiciUsati / c.perPremio, testo(f.quickpass_premio_a, 200), tag);
-          if (premio) premioSbloccato = { nome: inv.nome, premio: premio.premio };
+        if (inv) {
+          const creati = await allineaPremi(inv, c, f, tag);
+          if (creati.length) premioSbloccato = { nome: inv.nome, premio: creati[0].premio };
         }
       }
       return res.status(200).json({ success: true, pass: vistaPass(usati[0]), premio_sbloccato: premioSbloccato });
@@ -319,7 +320,29 @@ export default async function handler(req, res) {
   }
 }
 
-// Il k-esimo premio di un invito è unico (vincolo unique invito+ordine): se due convalide
+// Premi dovuti a un link personale: uno per ogni soglia raggiunta (ordine 1, 2, 3…). Si ricalcolano da capo a ogni
+// conferma e si creano quelli che mancano. Con conferme simultanee due richieste possono leggere lo stesso conteggio:
+// la conferma che arriva per ultima vede tutti gli utilizzi e completa i premi; i doppioni sono impossibili perché
+// il database rifiuta due premi con lo stesso ordine (vincolo unique invito+ordine). Nessuna migrazione necessaria.
+async function allineaPremi(inv, c, f, tag) {
+  const premio = testo(f.quickpass_premio_a, 200);
+  if (!premio) return [];
+  const [usati, presenti] = await Promise.all([
+    contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'amico', stato: 'usato' }),
+    contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'premio' })
+  ]);
+  const dovuti = Math.floor(usati / c.perPremio);
+  let mancano = dovuti - presenti;
+  const creati = [];
+  // I buchi possono stare solo tra gli ultimi premi: si parte dall'ultimo dovuto e si scende (al massimo 50 tentativi)
+  for (let ordine = dovuti; ordine >= 1 && mancano > 0 && dovuti - ordine < 50; ordine--) {
+    const riga = await nuovoCodiceOppureEsistente(inv, ordine, premio, tag);
+    if (riga) { creati.push(riga); mancano--; }
+  }
+  return creati;
+}
+
+// Il k-esimo premio di un invito è unico (vincolo unique invito+ordine): se due conferme
 // arrivano insieme, il secondo inserimento non crea un doppione
 async function nuovoCodiceOppureEsistente(inv, ordine, premio, tag) {
   for (let i = 0; i < 4; i++) {

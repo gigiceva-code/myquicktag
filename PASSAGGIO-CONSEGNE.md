@@ -11,6 +11,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Dire cosa cambia per lui e per i clienti, non i dettagli tecnici.
 - **Nomi e parole (04/11/2026, richiesta del titolare):** il marchio si scrive sempre **myquicktag**, tutto minuscolo
   (mai "MyQuickTag"). Nei testi usare il maschile universale ("l'amico", non "l'amica").
+- **"Clic", non "tocco" (05/11/2026, richiesta del titolare):** nei testi si scrive "con un clic", "fai clic".
 - **Marketing e conversione (richiesta del 27/10/2026):** il titolare non è un esperto di web marketing. Per ogni
   cosa che vedono i clienti proporre sempre, di propria iniziativa, la versione più professionale e orientata alla
   conversione (testi, posizione dei pulsanti, anteprime, misurazione), spiegando in breve il perché. Non limitarsi a
@@ -190,6 +191,33 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   browser ne riceve due: per i regali di valore impostare il numero massimo). **Prossima fase proposta: consegna
   automatica** per i regali digitali (chi riceve il regalo ottiene subito il contenuto o il link, l'utilizzo si registra
   da solo, senza cassa): da decidere con il titolare.
+  **Dopo il terzo audit (05/11/2026):**
+  - **Conferme simultanee:** due conferme insieme sullo stesso link potevano leggere lo stesso conteggio e far saltare
+    un premio. Ora `allineaPremi` (api/quickpass.js) ricalcola a ogni conferma tutti i premi dovuti (uno per soglia,
+    `ordine` 1, 2, 3…) e crea quelli mancanti; i doppioni li rifiuta il vincolo unique `(invito, ordine)` già esistente,
+    quindi nessuna migrazione. Lo stesso ricalcolo parte quando chi condivide apre la sua pagina (azione `stato`): un
+    premio perso per una conferma interrotta a metà si ricrea lì. Prove: "conferme simultanee" (ogni 1, 2, 3) e
+    "conferma interrotta" in `test/api.test.mjs`, che falliscono con il codice precedente. ChatGPT chiedeva una
+    transazione nel database (funzione SQL): possibile in futuro, ma il ricalcolo dà la stessa garanzia senza migrazioni.
+  - **Avviso nell'editor** (non un blocco) con "1 utilizzo" e nessun numero massimo: "chi condivide guadagnerà un premio
+    per ogni regalo effettivamente utilizzato… non è previsto un tetto ai premi maturabili" (passo 2 e riepilogo).
+  - **Limiti per connessione attuali:** `ritira` 100/ora per IP e tag + 500/giorno per IP; link personali 30/ora per IP e
+    tag + 100/giorno per IP; PIN di cassa 10 tentativi ogni 15 minuti. Altre protezioni non legate all'IP: un regalo per
+    browser, numero massimo di regali facoltativo, codici monouso. Rischio residuo: un grande evento su un unico Wi-Fi
+    (oltre 100 regali all'ora dallo stesso IP). **Proposta (non fatta):** verifica anti-robot invisibile (Cloudflare
+    Turnstile, gratuita) che scatta solo oltre la soglia, al posto del blocco.
+  - **Prove di carico (proposta, non fatte):** le prove "scala" verificano i conti oltre le 1.000 righe su un database
+    finto, non la tenuta sotto migliaia di richieste insieme. Prova realistica, solo su `myquicktag-prova` e sul Preview
+    (mai sulla produzione): 1) caricare 5.000-10.000 righe finte con SQL su una tag di prova; 2) uno script (es. k6 o
+    autocannon) con il bypass della protezione del Preview: 20-50 ritiri al secondo per 2-3 minuti da indirizzi diversi,
+    più conferme simultanee; 3) misurare errori, tempi e i limiti del piano gratuito (Vercel: durata e numero delle
+    chiamate; Supabase: connessioni); 4) cancellare le righe di prova.
+  - **Parole:** "clic" al posto di "tocco" in tutto il sito e nelle email (richiesta del titolare); "CONDIVIDI UN
+    REGALO" anche nell'anteprima dell'editor; corona al posto del negozio per "Tu" nello schema. I modelli in
+    `supabase/email/` vanno ricaricati su entrambi i progetti (`applica.py`, serve `SUPABASE_ACCESS_TOKEN`) oppure
+    corretti a mano in Supabase → Authentication → Email Templates.
+  - **Affiliazione:** il titolare non vuole un programma di affiliazione per ora. Chiunque, influencer compresi, può già
+    creare il suo link personale da una tag: basta così finché myquicktag non sarà molto diffuso.
   Nell'**Identity Console** ogni tag con QuickGift ha il pulsante "Cassa QuickGift · conferma i regali" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
@@ -227,12 +255,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 227 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 231 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/quickpass.e2e.mjs` → 34 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/quickpass.e2e.mjs` → 36 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).

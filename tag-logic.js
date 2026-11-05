@@ -1471,7 +1471,7 @@ function salvaNelPocketCorrente() {
         if (primaVolta) localStorage.setItem('mqt_pocket_invito', new Date().toISOString());
     } catch (e) {}
     mostraOverlayPocket("SALVATA", " è nel tuo Pocket, insieme a tutte le tag che salvi.",
-        primaVolta ? "Vuoi ritrovarlo con un tocco? Aggiungi il Pocket alla schermata Home: te lo spieghiamo nel Pocket." : '',
+        primaVolta ? "Vuoi ritrovarlo con un clic? Aggiungi il Pocket alla schermata Home: te lo spieghiamo nel Pocket." : '',
         nomeConferma);
 }
 // MOTORE DELL'OVERLAY IMMERSIVO (Puro lusso fluttuante)
@@ -1602,7 +1602,7 @@ function condividiProfilo(event) {
     const url = `${window.location.origin}/u/${usernameCorrente}`;
     const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
     // Il messaggio dice subito cosa c'è dietro il link: chi lo riceve sa perché aprirlo
-    _condividi(`@${nome} · myquicktag`, url, `@${nome}: contatti, social e servizi in un unico tocco.`, 'CONDIVISIONE TAG');
+    _condividi(`@${nome} · myquicktag`, url, `@${nome}: contatti, social e servizi in un solo clic.`, 'CONDIVISIONE TAG');
 }
 
 // Condivide la stanza (es. NETWORK) o la sezione aperta (es. NETWORK → Rubrica & contatti):
@@ -1799,7 +1799,7 @@ function mostraIstruzioniIOS() {
     const overlay = document.getElementById('tag-welcome-overlay');
     if (!overlay) return;
     const corpo = document.getElementById('welcome-corpo');
-    if (corpo) corpo.innerHTML = 'Tocca <strong>Condividi</strong> in basso nel browser,<br>poi <strong>"Aggiungi a schermata Home"</strong>.';
+    if (corpo) corpo.innerHTML = 'Fai clic su <strong>Condividi</strong> in basso nel browser,<br>poi <strong>"Aggiungi a schermata Home"</strong>.';
     const btn = document.getElementById('trigger-pwa-install');
     if (btn) btn.style.display = 'none';
     overlay.style.display = 'flex';
