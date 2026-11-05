@@ -45,7 +45,7 @@
             return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
         } catch (e) { return undefined; }
     }
-    // Il titolare della tag (con la sua sessione) concede i premi: niente inviti né pass per lui
+    // Il titolare della tag (con la sua sessione) concede i premi: niente link personali né regali per lui (ha il suo link regalo)
     function seiTitolare() { return !!(cacheDatiUtente && cacheDatiUtente.sei_proprietario); }
 
     // Memoria locale per questa tag: { invito: {codice, nome}, pass: [codici] }
@@ -112,7 +112,7 @@
     }
     // Come si usa, in parole semplici: nessuno deve indovinare cosa fare con un QR
     function comeSiUsa(modo) {
-        const negozio = `<div><strong style="color: #fff;">In negozio:</strong> prima di pagare, mostra il QR o detta il codice al personale di ${esc(nomeVisibile())}.</div>`;
+        const negozio = `<div><strong style="color: #fff;">Di persona:</strong> mostra il QR o detta il codice a ${esc(nomeVisibile())}, prima di pagare se c'è un acquisto.</div>`;
         const online = `<div><strong style="color: #fff;">Online:</strong> tocca il pulsante qui sotto e invia il messaggio: il codice è già scritto.</div>`;
         return modo === 'online' ? online : modo === 'entrambi' ? negozio + online : negozio;
     }
@@ -170,7 +170,7 @@
             return;
         }
         const { modo } = modoUso();
-        const dove = modo === 'online' ? 'Lo usi online, con un messaggio già pronto.' : modo === 'entrambi' ? 'Lo usi in negozio o online.' : 'Lo usi in negozio: basta mostrare il codice prima di pagare.';
+        const dove = modo === 'online' ? 'Lo usi online, con un messaggio già pronto.' : modo === 'entrambi' ? 'Lo usi di persona o online, con un codice personale.' : 'Lo usi di persona: basta mostrare il tuo codice personale.';
         const titolo = info.da ? `${esc(info.da)} ti ha fatto un regalo` : 'Hai ricevuto un regalo';
         overlay(`<div style="padding: 32px 22px 22px; text-align: center;">
             <i class="fas fa-gift" style="font-size: 2.6rem; color: ${ORO}; margin-bottom: 14px; filter: drop-shadow(0 0 14px rgba(212,175,55,0.4));"></i>
@@ -236,11 +236,25 @@
         const cifra = (v, e) => `<div><div style="font-size: 1.3rem; color: #fff; font-weight: 600;">${v || 0}</div><div style="font-size: 0.55rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; line-height: 1.3; margin-top: 2px;">${e}</div></div>`;
         return `<div style="text-align: center; padding: 6px 4px;">
             <div style="font-size: 0.65rem; color: ${ORO}; letter-spacing: 3px; text-transform: uppercase; font-weight: 700;">Sei il titolare</div>
-            <div style="font-size: 0.9rem; color: #e8e8ed; line-height: 1.6; margin: 12px 0 18px;">Qui i tuoi clienti mandano il tuo regalo ai loro amici. Quando un amico ti mostra il suo codice, confermalo dalla cassa.</div>
+            <div style="font-size: 0.9rem; color: #e8e8ed; line-height: 1.6; margin: 12px 0 18px;">Qui chi ti segue condivide il tuo regalo. Quando qualcuno ti mostra o ti manda il suo codice, confermalo dalla cassa.</div>
             <button type="button" onclick="mqtQuickPass.cassa('')" style="${stileBottone}">Apri la cassa</button>
+            <div style="margin-top: 20px; padding: 16px; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; background: rgba(255,255,255,0.03); text-align: left;">
+                <div style="font-size: 0.6rem; color: ${ORO}; letter-spacing: 2px; font-weight: 700;">IL TUO LINK REGALO</div>
+                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.75); line-height: 1.5; margin: 8px 0 12px;">Pubblicalo dove vuoi: storia, bio, post, newsletter. Chi lo apre riceve il regalo con un codice personale.</div>
+                <button type="button" onclick="mqtQuickPass.condividiLinkTitolare()" style="width: 100%; padding: 13px; background: transparent; border: 1px solid ${ORO}; color: ${ORO}; border-radius: 12px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i>Condividi il link regalo</button>
+                <div style="font-size: 0.68rem; color: rgba(255,255,255,0.4); margin-top: 10px; word-break: break-all;">${esc(linkTitolare())}</div>
+            </div>
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 20px;">${cifra(n.inviti, 'LINK CREATI')}${cifra(n.pass_ritirati, 'REGALI RICHIESTI')}${cifra(n.pass_usati, 'REGALI USATI')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
-            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 14px; line-height: 1.5;">Più veloce: inquadra con la fotocamera il QR del cliente.</div>
+            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 14px; line-height: 1.5;">In cassa, più veloce: inquadra con la fotocamera il QR del regalo.</div>
         </div>`;
+    }
+    // Link regalo del titolare (es. un influencer nella sua storia): chi lo apre riceve il regalo, senza premio a nessuno
+    function linkTitolare() { return `${window.location.origin}/u/${nomeTag()}?regalo=1`; }
+    function condividiLinkTitolare() {
+        const link = linkTitolare(), testo = `Ho un regalo per te: ${(cacheDatiUtente && cacheDatiUtente.quickpass_premio_b) || ''}. Lo ricevi qui:`;
+        if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT LINK TITOLARE');
+        if (navigator.share) navigator.share({ title: nomeVisibile(), text: testo, url: link }).catch(() => {});
+        else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => { if (typeof mostraToast === 'function') mostraToast('Link copiato!'); });
     }
     async function pannelloTitolareOverlay() {
         overlay(`<div style="padding: 34px 22px 24px;">${await htmlTitolare()}</div>`);
@@ -252,9 +266,9 @@
             <div style="flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; border: 1px solid ${ORO}; color: ${ORO}; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center;">${n}</div>
             <div style="font-size: 0.86rem; color: #e8e8ed; line-height: 1.5; padding-top: 2px;">${testo}</div></div>`;
         return `<div style="display: flex; flex-direction: column; gap: 12px; margin: 18px 0;">
-            ${riga(1, 'Mandi il regalo a un amico, con un tocco')}
-            ${riga(2, `Il tuo amico riceve <strong style="color: #fff;">${premioB}</strong>`)}
-            ${riga(3, `${perPremio > 1 ? `Ogni ${perPremio} amici che lo usano` : 'Quando lo usa'}, tu guadagni <strong style="color: ${ORO};">${premioA}</strong>`)}
+            ${riga(1, 'Mandi il regalo a chi vuoi, con un tocco')}
+            ${riga(2, `Chi lo riceve ottiene <strong style="color: #fff;">${premioB}</strong>`)}
+            ${riga(3, `${perPremio > 1 ? `Ogni ${perPremio} persone che lo usano` : 'Quando viene usato'}, tu guadagni <strong style="color: ${ORO};">${premioA}</strong>`)}
         </div>`;
     }
 
@@ -278,11 +292,11 @@
         if (s.invito) {
             const link = `${window.location.origin}/u/${nomeTag()}?pass=${s.invito.codice}`;
             const usati = s.invito.amici_usati || 0;
-            const guadagnati = ((s.invito && s.invito.premi) || []).length;
+            const guadagnati = s.invito.premi_totali ?? ((s.invito.premi || []).length);
             const fatti = usati % perPremio, mancano = perPremio - fatti;
             const avanzamento = s.attiva ? `<div style="margin-top: 16px; text-align: left;">
                     <div style="height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); overflow: hidden;"><div style="height: 100%; width: ${Math.round(fatti / perPremio * 100)}%; background: ${ORO}; border-radius: 3px;"></div></div>
-                    <div style="font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 8px; text-align: center;">${perPremio > 1 ? `Ti ${mancano === 1 ? 'manca 1 amico' : `mancano ${mancano} amici`} per il tuo prossimo premio` : 'Al prossimo amico che usa il regalo, guadagni il tuo premio'}</div></div>` : '';
+                    <div style="font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 8px; text-align: center;">${perPremio > 1 ? `Ti ${mancano === 1 ? 'manca 1 utilizzo' : `mancano ${mancano} utilizzi`} per il tuo prossimo premio` : 'Al prossimo utilizzo del regalo guadagni il tuo premio'}</div></div>` : '';
             html += `<div style="text-align: center; padding: 22px 18px; border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; background: rgba(255,255,255,0.03);">
                 <div style="font-size: 0.65rem; color: rgba(255,255,255,0.5); letter-spacing: 3px; text-transform: uppercase;">Il tuo link da condividere</div>
                 ${htmlTrePassi(premioB, premioA, perPremio)}
@@ -291,8 +305,8 @@
                 <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 12px; word-break: break-all;">${esc(link)}</div>
                 ${avanzamento}
                 <div style="display: grid; grid-template-columns: repeat(${guadagnati ? 3 : 2}, 1fr); gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
-                    <div><div style="font-size: 1.4rem; color: #fff; font-weight: 600;">${s.invito.amici_ritirati || 0}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; line-height: 1.35;">AMICI CHE HANNO RICHIESTO IL REGALO</div></div>
-                    <div><div style="font-size: 1.4rem; color: ${ORO}; font-weight: 600;">${usati}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; line-height: 1.35;">AMICI CHE HANNO USATO IL REGALO</div></div>
+                    <div><div style="font-size: 1.4rem; color: #fff; font-weight: 600;">${s.invito.amici_ritirati || 0}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; line-height: 1.35;">PERSONE CHE HANNO RICHIESTO IL REGALO</div></div>
+                    <div><div style="font-size: 1.4rem; color: ${ORO}; font-weight: 600;">${usati}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; line-height: 1.35;">PERSONE CHE L'HANNO USATO</div></div>
                     ${guadagnati ? `<div><div style="font-size: 1.4rem; color: ${ORO}; font-weight: 600;">${guadagnati}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; line-height: 1.35;">PREMI CHE HAI GUADAGNATO</div></div>` : ''}
                 </div>
             </div>`;
@@ -304,7 +318,7 @@
                 <input type="text" id="qp-mio-nome" maxlength="40" placeholder="Il tuo nome" autocomplete="given-name" style="${stileCampo} margin-bottom: 10px;">
                 <div id="qp-mio-errore" role="status" style="color: #ef4444; font-size: 0.8rem; min-height: 1em; margin-bottom: 6px;"></div>
                 <button type="button" id="qp-crea" onclick="mqtQuickPass.creaInvito()" style="${stileBottone}">Crea il tuo link regalo</button>
-                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 10px; line-height: 1.4;">Il tuo nome compare sul regalo che riceve il tuo amico.</div>
+                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 10px; line-height: 1.4;">Il tuo nome compare sul regalo: chi lo riceve sa che arriva da te.</div>
             </div>`;
         } else if (!daUsare.length) {
             html += '<div style="text-align: center; padding: 30px 10px; color: rgba(255,255,255,0.6); font-size: 0.9rem;">QuickGift non è attivo in questo momento.</div>';
@@ -411,10 +425,10 @@
             <div style="display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; color: #10b981; border: 1px solid rgba(16,185,129,0.5); border-radius: 20px; padding: 4px 10px;">✓ VALIDO</div>
             <div style="font-size: 0.62rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-top: 14px;">DA CONSEGNARE</div>
             <div style="font-size: 1.2rem; font-weight: 600; margin: 6px 0;">${esc(p.premio)}</div>
-            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">${premio ? `Premio di <strong>${esc(p.nome)}</strong>, che ti ha portato nuovi clienti` : `Regalo di <strong>${esc(p.nome)}</strong>, nuovo cliente`}</div>
+            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">${premio ? `Premio di <strong>${esc(p.nome)}</strong>, che ha condiviso il tuo regalo` : `Regalo di <strong>${esc(p.nome)}</strong>`}</div>
             ${p.consigliato_da ? `<div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 4px;">Glielo ha mandato <strong>${esc(p.consigliato_da)}</strong></div>` : ''}
             <div style="font-size: 0.72rem; color: rgba(255,255,255,0.45); margin-top: 6px;">Valido fino al ${dataBreve(p.scadenza)}</div>
-            ${p.sospetto ? `<div style="font-size: 0.78rem; color: #f59e0b; margin-top: 10px; line-height: 1.45; text-align: left;">⚠ Questo regalo sembra richiesto da chi l'ha mandato (stesso telefono o stesso nome). Verifica che sia davvero un nuovo cliente prima di confermare.</div>` : ''}
+            ${p.sospetto ? `<div style="font-size: 0.78rem; color: #f59e0b; margin-top: 10px; line-height: 1.45; text-align: left;">⚠ Questo regalo sembra richiesto da chi l'ha mandato (stesso telefono o stesso nome). Verifica che sia davvero una persona nuova prima di confermare.</div>` : ''}
             <div style="font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 12px; line-height: 1.45;">Consegna il ${premio ? 'premio' : 'regalo'} o applica lo sconto, poi conferma qui sotto.</div></div>`;
         const btn = document.getElementById('qp-cassa-azione');
         btn.textContent = 'Ho consegnato: conferma';
@@ -452,8 +466,9 @@
         }
         if (String((fields && fields.stato) || '').toLowerCase() !== 'attivo') return;
         const invito = (p.get('pass') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
-        if (invito.length === 8 || p.get('qp_ref') === 'invito') paginaAmico(invito.length === 8 ? invito : '');
+        // ?regalo=1: link del titolare (storia, bio, post) · ?qp_ref=invito: i primi link generici, ancora validi
+        if (invito.length === 8 || p.get('regalo') || p.get('qp_ref') === 'invito') paginaAmico(invito.length === 8 ? invito : '');
     }
 
-    window.mqtQuickPass = { avvio, sezione, ritira, creaInvito, invia, condividi, cassa, verifica, chiudi, htmlTrePassi };
+    window.mqtQuickPass = { avvio, sezione, ritira, creaInvito, invia, condividi, cassa, verifica, chiudi, condividiLinkTitolare };
 })();

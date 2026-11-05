@@ -55,8 +55,11 @@ globalThis.fetch=async (url,opt={})=>{
   if(tabelleQP[nomeTab]){ // stesse regole della migrazione: codici unici, (invito, ordine) unico
     const T=tabelleQP[nomeTab]; const filtra=r=>[...u.searchParams].every(([k,v])=>!v.startsWith('eq.')||String(r[k])===decodeURIComponent(v.slice(3)));
     if(m==='GET'){ let out=T.filter(filtra); if(u.searchParams.get('order')==='created_at.desc') out=[...out].reverse();
-      const lim=u.searchParams.get('limit'); if(lim) out=out.slice(0,+lim); const sel=u.searchParams.get('select');
-      if(sel&&sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out),{status:200}); }
+      // Come il vero Supabase: al massimo 1.000 righe per lettura; con "Prefer: count=exact" il totale è in Content-Range
+      const totale=out.length; const lim=u.searchParams.get('limit'); out=out.slice(0,Math.min(lim?+lim:1000,1000)); const sel=u.searchParams.get('select');
+      if(sel&&sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null])));
+      const intest=String(opt.headers?.Prefer||'').includes('count=exact')?{'Content-Range':out.length?`0-${out.length-1}/${totale}`:`*/${totale}`}:{};
+      return new Response(JSON.stringify(out),{status:200,headers:intest}); }
     if(m==='POST'){ const b=JSON.parse(opt.body); if(T.some(r=>r.codice===b.codice) || (b.ordine!=null && T.some(r=>r.invito===b.invito&&r.ordine===b.ordine))) return new Response('{"code":"23505"}',{status:409});
       const r={created_at:new Date().toISOString(),...(nomeTab==='quickpass_pass'?{stato:'attivo'}:{}),...b}; T.push(r); return new Response(JSON.stringify([r]),{status:201}); }
     if(m==='PATCH'){ const b=JSON.parse(opt.body); const t=T.filter(filtra); t.forEach(r=>Object.assign(r,b)); return new Response(JSON.stringify(t),{status:200}); }

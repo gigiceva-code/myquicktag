@@ -13,13 +13,13 @@ import { proteggiPin } from '../lib/password.js';
 const richiedi = createRequire(process.env.NODE_PATH ? process.env.NODE_PATH + '/' : import.meta.url);
 const { chromium } = richiedi('playwright');
 const B = 'http://localhost:8788';
-const TAG = 'pizzeriaqp' + Date.now().toString(36).slice(-4);
+const TAG = 'studioqp' + Date.now().toString(36).slice(-4);
 const ok = (c, msg) => { console.log((c ? 'OK  ' : 'FAIL') + ' ' + msg); if (!c) process.exitCode = 1; };
 const foto = async (p, n) => { if (process.env.SCHERMATE) { await p.waitForTimeout(400); await p.screenshot({ path: `${process.env.SCHERMATE}/qp-${n}.png` }); } };
 
 await fetch(`${B}/__seed`, { method: 'POST', body: JSON.stringify({
-  username_system: TAG, username_display: '@PizzeriaDaMario', stato: 'attivo', data_scadenza: '2099-01-01',
-  quickpass_premio_a: 'Un caffè offerto', quickpass_premio_b: 'Il dolce in omaggio alla prima cena', quickpass_amici_per_premio: 1,
+  username_system: TAG, username_display: '@StudioGiulia', stato: 'attivo', data_scadenza: '2099-01-01',
+  quickpass_premio_a: 'Una sessione extra gratuita', quickpass_premio_b: 'Una consulenza introduttiva gratuita', quickpass_amici_per_premio: 1,
   quickpass_pin_hash: await proteggiPin('2468'), lead_capture_attivo: 'false'
 }) });
 
@@ -41,23 +41,23 @@ const marco = await telefono();
 await marco.goto(`${B}/u/${TAG}`); await marco.waitForTimeout(2000);
 await marco.evaluate(() => { sbloccaTag(); }); await marco.waitForTimeout(500);
 ok(await marco.evaluate(() => { apriMacroArea('action_center'); return document.getElementById('corpoSezione').innerHTML.includes("apriSezione('quickpass')"); }), 'Action Center: c\'è QuickGift');
-ok(await marco.evaluate(() => document.getElementById('corpoSezione').textContent.includes('REGALA A UN AMICO')), 'Action Center: il pulsante dice «Regala a un amico»');
+ok(await marco.evaluate(() => document.getElementById('corpoSezione').textContent.includes('CONDIVIDI UN REGALO')), 'Action Center: il pulsante dice «Condividi un regalo»');
 await marco.evaluate(() => apriSezione('quickpass')); await marco.waitForTimeout(1200);
 await foto(marco, '1-invito-vuoto');
 const primaDelLink = await marco.textContent('#corpoSezione');
-ok(primaDelLink.includes('Un regalo da condividere') && primaDelLink.includes('Il tuo amico riceve') && primaDelLink.includes('tu guadagni'), 'Marco: prima di creare il link capisce cosa riceve l\'amico e cosa guadagna lui');
+ok(primaDelLink.includes('Un regalo da condividere') && primaDelLink.includes('Chi lo riceve ottiene') && primaDelLink.includes('tu guadagni'), 'Marco: prima di creare il link capisce cosa riceve chi lo apre e cosa guadagna lui');
 await marco.fill('#qp-mio-nome', 'Marco Rossi');
 await marco.click('#qp-crea'); await marco.waitForTimeout(1200);
 const testoMarco = await marco.textContent('#corpoSezione');
 const link = (testoMarco.match(/https?:\/\/\S+\?pass=[A-Z0-9]{8}/) || [])[0];
-ok(!!link && testoMarco.includes('Il tuo link da condividere') && testoMarco.includes('Al prossimo amico che usa il regalo'), 'Marco: link da condividere creato, con quanto manca al premio');
+ok(!!link && testoMarco.includes('Il tuo link da condividere') && testoMarco.includes('Al prossimo utilizzo del regalo'), 'Marco: link da condividere creato, con quanto manca al premio');
 await foto(marco, '2-invito-pronto');
 
 // 2. LUCA apre il link e ritira il pass
 const luca = await telefono('luca');
 await luca.goto(link.replace(/^https?:\/\/[^/]+/, B)); await luca.waitForTimeout(2000);
 const regalo = await luca.textContent('#mqt-qp-overlay');
-ok(regalo.includes('Marco ti ha fatto un regalo') && regalo.includes('Il dolce in omaggio alla prima cena') && regalo.includes('prima di pagare') && regalo.includes('Ricevi il tuo regalo'), 'Luca: vede chi gli fa il regalo, cosa riceve e come si usa');
+ok(regalo.includes('Marco ti ha fatto un regalo') && regalo.includes('Una consulenza introduttiva gratuita') && regalo.includes('Lo usi di persona') && regalo.includes('Ricevi il tuo regalo'), 'Luca: vede chi gli fa il regalo, cosa riceve e come si usa');
 ok(regalo.indexOf('Ricevi il tuo regalo') < regalo.indexOf('FACOLTATIVO') && !(await luca.isChecked('#qp-consenso')), 'Luca: recapito e consenso dopo il pulsante, facoltativi e non spuntati');
 await foto(luca, '3-regalo');
 await luca.click('#qp-ritira'); await luca.waitForTimeout(500);
@@ -68,7 +68,7 @@ await luca.check('#qp-consenso');
 await luca.click('#qp-ritira'); await luca.waitForTimeout(1500);
 const passTesto = await luca.textContent('#mqt-qp-overlay');
 const codice = (passTesto.match(/\b[A-Z0-9]{6}\b/g) || []).find(c => /\d/.test(c) || /[A-Z]{6}/.test(c));
-ok(passTesto.includes('Il tuo regalo') && passTesto.includes('Valido fino al') && passTesto.includes('COME SI USA') && passTesto.includes('prima di pagare') && !!codice, 'Luca: regalo personale con codice, scadenza e istruzioni chiare');
+ok(passTesto.includes('Il tuo regalo') && passTesto.includes('Valido fino al') && passTesto.includes('COME SI USA') && passTesto.includes('Di persona') && passTesto.includes('prima di pagare se c\'è un acquisto') && !!codice, 'Luca: regalo personale con codice, scadenza e istruzioni chiare');
 await foto(luca, '4-pass');
 
 // Marco non può usare il suo stesso invito
@@ -89,7 +89,7 @@ await cassa.fill('#qp-cassa-pin', '1111'); await cassa.click('#qp-cassa-azione')
 ok((await cassa.textContent('#qp-cassa-esito')).includes('PIN errato'), 'Cassa: PIN errato rifiutato');
 await cassa.fill('#qp-cassa-pin', '2468'); await cassa.click('#qp-cassa-azione'); await cassa.waitForTimeout(1000);
 const verifica = await cassa.textContent('#qp-cassa-esito');
-ok(verifica.includes('VALIDO') && verifica.includes('DA CONSEGNARE') && verifica.includes('Luca') && verifica.includes('Il dolce in omaggio') && verifica.includes('Glielo ha mandato Marco Rossi') && !verifica.includes('⚠'), 'Cassa: codice valido, cosa consegnare, a chi e chi l\'ha mandato');
+ok(verifica.includes('VALIDO') && verifica.includes('DA CONSEGNARE') && verifica.includes('Luca') && verifica.includes('Una consulenza introduttiva') && verifica.includes('Glielo ha mandato Marco Rossi') && !verifica.includes('⚠'), 'Cassa: codice valido, cosa consegnare, a chi e chi l\'ha mandato');
 ok((await cassa.textContent('#qp-cassa-azione')).includes('Ho consegnato'), 'Cassa: si conferma solo dopo aver consegnato');
 await foto(cassa, '5-cassa-verifica');
 await cassa.click('#qp-cassa-azione'); await cassa.waitForTimeout(1000);
@@ -107,9 +107,16 @@ ok((await luca.textContent('#mqt-qp-overlay')).includes('Usato il'), 'Luca: riap
 await marco.goto(`${B}/u/${TAG}`); await marco.waitForTimeout(2000);
 await marco.evaluate(() => { sbloccaTag(); apriMacroArea('action_center'); apriSezione('quickpass'); }); await marco.waitForTimeout(1500);
 const sezioneMarco = await marco.textContent('#corpoSezione');
-ok(sezioneMarco.includes('Il tuo premio') && sezioneMarco.includes('Un caffè offerto') && /1\s*AMICI CHE HANNO USATO IL REGALO/.test(sezioneMarco) && /1\s*PREMI CHE HAI GUADAGNATO/.test(sezioneMarco), 'Marco: trova il premio da usare e i conteggi in parole semplici');
+ok(sezioneMarco.includes('Il tuo premio') && sezioneMarco.includes('Una sessione extra gratuita') && /1\s*PERSONE CHE L'HANNO USATO/.test(sezioneMarco) && /1\s*PREMI CHE HAI GUADAGNATO/.test(sezioneMarco), 'Marco: trova il premio da usare e i conteggi in parole semplici');
 await foto(marco, '7-premio');
 
+// Link regalo del titolare (es. nella sua storia): chi lo apre riceve il regalo con un codice personale
+const follower = await telefono('cassa');
+await follower.goto(`${B}/u/${TAG}?regalo=1`); await follower.waitForTimeout(1800);
+const paginaFollower = await follower.textContent('#mqt-qp-overlay');
+ok(paginaFollower.includes('Hai ricevuto un regalo') && paginaFollower.includes('Una consulenza introduttiva gratuita'), 'Link del titolare: chi lo apre vede il regalo');
+await follower.fill('#qp-nome', 'Sara'); await follower.click('#qp-ritira'); await follower.waitForTimeout(1500);
+ok((await follower.textContent('#mqt-qp-overlay')).includes('Il tuo regalo'), 'Link del titolare: il follower riceve il suo regalo personale');
 const db = await (await fetch(`${B}/__db`)).json();
 const lead = JSON.parse((db.rows.find(r => r.username_system === TAG) || {}).lead_capture_leads || '[]')[0];
 ok(lead && lead.nome === 'Luca' && lead.consenso_offerte === true && lead.fonte === 'QuickGift', 'Il recapito di Luca arriva in I miei contatti con il consenso');
@@ -158,17 +165,18 @@ await browser.close();
   await ed.waitForTimeout(500);
   const passo = () => ed.evaluate(() => [...document.querySelectorAll('#drawer-quickpass .qp-passo')].find(e => e.style.display !== 'none')?.dataset.passo);
   const schema = await ed.textContent('#qp-schema');
-  ok(schema.includes('TU') && schema.includes('IL TUO CLIENTE') && schema.includes('IL SUO AMICO') && schema.includes('il tuo cliente guadagna il premio'), 'Editor: lo schema mostra le tre figure e quando arriva il premio');
-  ok(await passo() === '1' && (await ed.textContent('#drawer-quickpass')).includes('PASSO 1 DI 3') && !(await ed.isVisible('#qp-indietro')), 'Editor: si parte dal regalo per l\'amico, passo 1 di 3');
+  ok(schema.includes('TU') && schema.includes('CHI CONDIVIDE') && schema.includes('CHI RICEVE') && schema.includes('chi l\'ha condiviso guadagna il premio'), 'Editor: lo schema mostra le tre figure e quando arriva il premio');
+  ok(await passo() === '1' && (await ed.textContent('#drawer-quickpass')).includes('PASSO 1 DI 3') && !(await ed.isVisible('#qp-indietro')), 'Editor: si parte da «Che cosa vuoi regalare?», passo 1 di 3');
+  ok(!(await ed.$('#qp-attivita')) && (await ed.textContent('.qp-passo[data-passo="1"] .qp-proposte')).includes('Accesso a un contenuto esclusivo'), 'Editor: nessuna categoria da scegliere, idee universali');
   await ed.click('#qp-avanti'); ok(await passo() === '1', 'Editor: senza regalo non si va avanti');
   await ed.click('.qp-passo[data-passo="1"] .qp-proposta >> nth=1'); await ed.click('#qp-avanti');
-  ok(await passo() === '2', 'Editor: scelto il regalo, passo 2 (premio per il cliente)');
+  ok(await passo() === '2', 'Editor: scelto il regalo, passo 2 (premio per chi condivide)');
   await ed.click('.qp-passo[data-passo="2"] .qp-proposta >> nth=0');
   await ed.click('#qp-soglie .qp-soglia[data-amici="3"]');
   ok(await ed.inputValue('#field-qp-amici') === '3', 'Editor: "dopo quanti amici" si sceglie con un tocco');
   await ed.click('#qp-avanti');
   const riep = await ed.textContent('#qp-riepilogo');
-  ok(await passo() === '3' && riep.includes('Un caffè offerto') && riep.includes('Ogni 3 amici') && riep.includes('prima di pagare'), 'Editor: passo 3 con il riepilogo che rispecchia le scelte');
+  ok(await passo() === '3' && riep.includes('10% sul primo acquisto') && riep.includes('Ogni 3 utilizzi') && riep.includes('Lo usa di persona'), 'Editor: passo 3 con il riepilogo che rispecchia le scelte');
   await foto(ed, '9-editor-riepilogo');
   await ed.$eval('#drawer-quickpass .header-back', el => el.click()); ok(await passo() === '2', 'Editor: la freccia in alto dal passo 3 torna al 2');
   await ed.click('#qp-indietro'); ok(await passo() === '1', 'Editor: INDIETRO dal passo 2 torna all\'1');

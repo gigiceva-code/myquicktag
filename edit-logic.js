@@ -399,13 +399,13 @@
                     <i class="fas fa-gift" style="font-size: 2.8rem; color: #e5c158; filter: drop-shadow(0 0 20px rgba(212,175,55,0.2)); margin-bottom: 14px;"></i>
                     <div style="font-size: 1.05rem; color: #fff; font-weight: 500; line-height: 1.45;">Un regalo da condividere.<br><span style="color: #e5c158;">Un premio da guadagnare.</span></div>
                     <div style="display: flex; flex-direction: column; gap: 12px; margin: 18px 0;">
-                        ${passoQ(1, 'Mandi il regalo a un amico, con un tocco')}
-                        ${passoQ(2, `Il tuo amico riceve <strong style="color: #fff;">${escQ(pB)}</strong>`)}
-                        ${passoQ(3, `${nAmici > 1 ? `Ogni ${nAmici} amici che lo usano` : 'Quando lo usa'}, tu guadagni <strong style="color: #e5c158;">${escQ(pA)}</strong>`)}
+                        ${passoQ(1, 'Mandi il regalo a chi vuoi, con un tocco')}
+                        ${passoQ(2, `Chi lo riceve ottiene <strong style="color: #fff;">${escQ(pB)}</strong>`)}
+                        ${passoQ(3, `${nAmici > 1 ? `Ogni ${nAmici} persone che lo usano` : 'Quando viene usato'}, tu guadagni <strong style="color: #e5c158;">${escQ(pA)}</strong>`)}
                     </div>
                     <div style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.4); padding: 14px 16px; border-radius: 12px; text-align: left; margin-bottom: 16px;">Il tuo nome</div>
                     <div style="width: 100%; padding: 16px; background: #e5c158; color: #000; border-radius: 12px; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; box-sizing: border-box;">Crea il tuo link regalo</div>
-                    <div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 12px; line-height: 1.5;">Anteprima: sulla tag pubblica i tuoi clienti scrivono il nome, creano il loro link regalo e lo mandano agli amici su WhatsApp.</div>
+                    <div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 12px; line-height: 1.5;">Anteprima: sulla tag pubblica chi ti segue scrive il nome, crea il suo link regalo e lo condivide con chi vuole.</div>
                 </div>`;
             }
         }
@@ -1856,15 +1856,15 @@ function gestisciVIPSwitch(checkbox) {
 
         const databaseStrategie = {
             'quickpass': {
-                titolo: "UN REGALO DA CONDIVIDERE",
+                titolo: "QUALCOSA DI VALORE DA CONDIVIDERE",
                 testo: _strategia(
-                    ['Il cliente più facile da conquistare', 'È quello che arriva su consiglio di un amico: si fida di te prima ancora di entrare. Con QuickGift ogni cliente soddisfatto manda il tuo regalo ai suoi amici, e tu paghi il premio solo quando il nuovo cliente arriva davvero.'],
-                    ['Come funziona', 'Scegli il regalo per l\'amico e il premio per il tuo cliente. Il resto è automatico:', [
-                        ['fa-share-nodes', 'Il tuo cliente:', 'dalla tua tag crea il suo link regalo e lo manda su WhatsApp con un tocco.'],
-                        ['fa-gift', 'Il suo amico:', 'apre il link, vede «Marco ti ha fatto un regalo» e lo riceve con il suo nome, con codice e QR.'],
-                        ['fa-cash-register', 'Da te:', 'l\'amico mostra il codice prima di pagare (o te lo manda online); tu o un dipendente con il PIN di cassa consegnate il regalo e confermate. Vale una volta sola, e il tuo cliente guadagna il premio.']
+                    ['La fiducia passa di persona in persona', 'Chi arriva su consiglio di qualcuno di cui si fida è già ben disposto. QuickGift trasforma ogni persona che ti apprezza (un cliente, un follower, un collega) in chi porta il tuo regalo a qualcun altro. E il premio per chi condivide scatta solo quando il regalo viene usato davvero.'],
+                    ['Come funziona', 'Scegli che cosa regalare e che cosa riconoscere a chi condivide. Il resto è automatico:', [
+                        ['fa-share-nodes', 'Chi condivide:', 'dalla tua tag crea il suo link regalo e lo manda con un tocco. Tu puoi pubblicare il tuo link regalo dove vuoi: storia, bio, post, newsletter.'],
+                        ['fa-gift', 'Chi riceve:', 'apre il link, vede «Marco ti ha fatto un regalo» e lo riceve con un codice personale: uno diverso per ogni persona, anche se il link lo aprono in migliaia.'],
+                        ['fa-circle-check', 'Tu confermi:', 'di persona inquadri il QR, online tocchi il link del messaggio. Ogni codice vale una volta sola, e chi ha condiviso guadagna il suo premio.']
                     ]],
-                    ['Cosa ottieni', 'Nuovi clienti già ben disposti, a un costo pari al solo premio, e numeri chiari: link creati, regali richiesti, regali usati. Esempi che funzionano: «Al tuo amico il dolce alla prima cena, a te il caffè offerto» oppure «10% al tuo amico sul primo acquisto, 10% anche a te sul prossimo». Calcola il premio sul margine, non sul prezzo, e usa scadenza e numero massimo di regali per tenere tutto sotto controllo.']
+                    ['Cosa ottieni', 'Persone nuove già ben disposte, a un costo pari al solo premio, e numeri chiari: link creati, regali richiesti, regali usati. Il regalo può essere un vantaggio, un accesso, un contenuto o un\'esperienza: «Una consulenza introduttiva gratuita», «Accesso a un contenuto esclusivo», «10% sul primo acquisto». Scegli il premio in proporzione a quanto vale per te una persona nuova, e usa scadenza e numero massimo di regali per tenere tutto sotto controllo.']
                 )
             },
             'review': {
@@ -2147,14 +2147,20 @@ async function caricaCassaQuickPass() {
     const cifra = (v, etichetta) => `<div style="flex: 1; text-align: center;"><div style="font-size: 1.2rem; color: #fff; font-weight: 600;">${v || 0}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px;">${etichetta}</div></div>`;
     box.innerHTML = `
         <div style="display: flex; gap: 6px; margin: 4px 0 14px;">${cifra(n.inviti, 'LINK CREATI')}${cifra(n.pass_ritirati, 'REGALI RICHIESTI')}${cifra(n.pass_usati, 'REGALI USATI')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
-        <div style="margin-bottom: 6px;">Quando un amico ti mostra il regalo, inquadra il suo QR con la fotocamera: se sei collegato come titolare lo confermi subito. I tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
+        <div style="margin-bottom: 6px;">Quando qualcuno ti mostra il regalo, inquadra il suo QR con la fotocamera: se sei collegato come titolare lo confermi subito. I tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
         <div style="display: flex; gap: 8px; margin: 10px 0 6px;">
             <input type="password" id="qp-pin-nuovo" inputmode="numeric" maxlength="6" placeholder="${r.pin_impostato ? 'PIN impostato ••••' : 'Nuovo PIN (4-6 cifre)'}" style="flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 16px; outline: none;">
             <button type="button" onclick="salvaPinQuickPass()" style="background: #e5c158; color: #111; border: none; border-radius: 10px; padding: 0 16px; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer;">SALVA PIN</button>
         </div>
         <div id="qp-pin-esito" style="font-size: 0.72rem; min-height: 1em; color: #9ca3af;">${r.pin_impostato ? 'PIN attivo. Scrivine uno nuovo per cambiarlo.' : 'Nessun PIN: per ora confermi solo tu.'}</div>
         <button type="button" onclick="condividiLinkCassa()" style="width: 100%; margin-top: 10px; padding: 12px; background: transparent; border: 1px solid rgba(229,193,88,0.4); color: #e5c158; border-radius: 10px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; cursor: pointer;"><i class="fas fa-share-alt" style="margin-right: 6px;"></i>INVIA IL LINK DELLA CASSA AI DIPENDENTI</button>
-        <button type="button" onclick="window.open('/u/' + NOME_SISTEMA + '?cassa=1', '_blank')" style="width: 100%; margin-top: 8px; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 10px; font-size: 0.72rem; letter-spacing: 1px; cursor: pointer;">APRI LA CASSA</button>`;
+        <button type="button" onclick="window.open('/u/' + NOME_SISTEMA + '?cassa=1', '_blank')" style="width: 100%; margin-top: 8px; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 10px; font-size: 0.72rem; letter-spacing: 1px; cursor: pointer;">APRI LA CASSA</button>
+        <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(229,193,88,0.2);">
+            <div style="font-size: 0.7rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;">IL TUO LINK REGALO</div>
+            <div style="margin: 6px 0 10px;">Pubblicalo dove vuoi: storia, bio, post, newsletter. Chi lo apre riceve il regalo con un codice personale.</div>
+            <button type="button" onclick="condividiLinkRegalo()" style="width: 100%; padding: 12px; background: #e5c158; color: #111; border: none; border-radius: 10px; font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; cursor: pointer;"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i>CONDIVIDI IL LINK REGALO</button>
+            <div style="font-size: 0.68rem; color: #9ca3af; margin-top: 8px; word-break: break-all;">${window.location.origin}/u/${NOME_SISTEMA}?regalo=1</div>
+        </div>`;
 }
 
 async function salvaPinQuickPass() {
@@ -2170,6 +2176,14 @@ async function salvaPinQuickPass() {
     esito.style.color = r.success ? '#10b981' : '#ef4444';
     esito.textContent = r.success ? 'PIN salvato. Comunicalo solo ai tuoi dipendenti.' : (r.error || 'PIN non salvato, riprova.');
     if (r.success) campo.value = '';
+}
+
+// Link regalo del titolare (es. un influencer nella sua storia): chi lo apre riceve il regalo con un codice personale
+function condividiLinkRegalo() {
+    const link = `${window.location.origin}/u/${NOME_SISTEMA}?regalo=1`;
+    const testo = `Ho un regalo per te: ${qpVal('field-qp-premio-b')}. Lo ricevi qui:`;
+    if (navigator.share) navigator.share({ title: 'QuickGift', text: testo, url: link }).catch(() => {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => alert('Link regalo copiato.'));
 }
 
 function condividiLinkCassa() {
@@ -2202,25 +2216,18 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 // ============================================================
 // QUICKGIFT: CONFIGURAZIONE GUIDATA (04/11/2026, ex Quick Pass)
 // ============================================================
-// Schema delle tre figure sempre in vista (Tu → il tuo cliente → il suo amico), poi tre passi:
-// 1 regalo per l'amico · 2 premio per il cliente e dopo quanti amici · 3 dove si usa, riepilogo, cassa e opzioni.
+// Schema delle tre figure sempre in vista (Tu → chi condivide → chi riceve), poi tre passi:
+// 1 il regalo · 2 il premio e dopo quanti utilizzi · 3 dove si usa, riepilogo, cassa, link regalo e opzioni.
 // Già configurato → si apre sul passo 3, con "Modifica" su ogni voce del riepilogo.
-// Parole fisse: REGALO = quello dell'amico, PREMIO = quello del cliente che condivide.
-// L'attività serve solo a proporre esempi adatti: resta su questo telefono, non va al server.
+// Parole fisse: REGALO = quello di chi riceve, PREMIO = quello di chi condivide.
+// QuickGift è universale (05/11/2026): idee per tutti (attività, professionisti, creator, influencer), nessuna categoria da scegliere.
 const QP_PROPOSTE = {
-    locale:     { b: ['Il dolce in omaggio alla prima visita', 'Un caffè offerto', '10% sul primo conto'],
-                  a: ['Un aperitivo offerto', '10% sul prossimo conto', 'Una consumazione omaggio'] },
-    servizi:    { b: ['10% sul primo appuntamento', 'Un trattamento omaggio', 'Il sopralluogo gratuito'],
-                  a: ['10% sul prossimo appuntamento', 'Un servizio omaggio', 'Uno sconto di 20 €'] },
-    online:     { b: ['Spedizione gratuita sul primo ordine', '10% sul primo ordine', 'Un buono da 10 €'],
-                  a: ['Un buono da 10 €', '15% sul prossimo ordine', 'Un regalo nel prossimo pacco'] },
-    consulenze: { b: ['La prima call gratuita', 'Un\'ora di consulenza omaggio', '10% sul primo pacchetto'],
-                  a: ['Una sessione extra gratuita', '20% sul prossimo pacchetto', 'Un contenuto esclusivo'] }
+    b: ['Accesso a un contenuto esclusivo', '10% sul primo acquisto', 'Una consulenza introduttiva gratuita', 'Una guida o una risorsa digitale', 'Un\'esperienza riservata', 'Un bonus di benvenuto'],
+    a: ['Un contenuto in anteprima', '10% sul prossimo acquisto', 'Una sessione o un servizio omaggio', 'Un buono da 10 €', 'Un accesso VIP', 'Un omaggio a sorpresa']
 };
 let qpPassoCorrente = 1;
 const qpVal = id => (document.getElementById(id)?.value || '').trim();
 const qpEsc = t => String(t || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-function qpAttivita() { try { return localStorage.getItem('mqt_qp_attivita_' + NOME_SISTEMA) || ''; } catch (e) { return ''; } }
 
 function qpAvvia() {
     const configurato = qpVal('field-qp-premio-a') && qpVal('field-qp-premio-b');
@@ -2230,7 +2237,7 @@ function qpAvvia() {
 function qpPasso(n) {
     qpPassoCorrente = n;
     document.querySelectorAll('#drawer-quickpass .qp-passo').forEach(el => { el.style.display = String(el.dataset.passo) === String(n) ? 'block' : 'none'; });
-    // Lo schema evidenzia di chi si sta parlando: 1 l'amico (regalo), 2 il cliente (premio), 3 tu (dove si usa)
+    // Lo schema evidenzia di chi si sta parlando: 1 chi riceve (regalo), 2 chi condivide (premio), 3 tu (dove si usa)
     const figura = { 1: 'amico', 2: 'cliente', 3: 'tu' }[n];
     document.querySelectorAll('#qp-schema .qp-figura').forEach(el => {
         const attiva = el.dataset.figura === figura;
@@ -2238,15 +2245,6 @@ function qpPasso(n) {
         const icona = el.querySelector('.qp-figura-icona');
         if (icona) { icona.style.borderColor = attiva ? '#e5c158' : 'rgba(255,255,255,0.2)'; icona.style.background = attiva ? 'rgba(229,193,88,0.15)' : 'transparent'; }
     });
-    if (n === 1) {
-        const att = qpAttivita() || 'locale';
-        document.querySelectorAll('#qp-attivita .qp-scelta').forEach(b => {
-            const scelta = b.dataset.attivita === att;
-            b.style.borderColor = scelta ? '#e5c158' : 'rgba(255,255,255,0.12)';
-            b.style.background = scelta ? 'rgba(229,193,88,0.1)' : 'transparent';
-            b.style.color = scelta ? '#e5c158' : '#e5e7eb';
-        });
-    }
     if (n === 1 || n === 2) qpProposte();
     if (n === 2) qpSoglie();
     if (n === 3) { qpMostraModo(); qpRiepilogo(); caricaCassaQuickPass(); }
@@ -2257,27 +2255,26 @@ function qpPasso(n) {
 }
 
 function qpProposte() {
-    const att = qpAttivita() || 'locale';
     document.querySelectorAll('#drawer-quickpass .qp-proposte').forEach(box => {
-        const lista = QP_PROPOSTE[att][box.dataset.campo === 'field-qp-premio-b' ? 'b' : 'a'];
+        const lista = QP_PROPOSTE[box.dataset.campo === 'field-qp-premio-b' ? 'b' : 'a'];
         const attuale = qpVal(box.dataset.campo);
         box.innerHTML = lista.map(t => `<button type="button" class="qp-proposta" data-testo="${qpEsc(t)}" style="padding: 9px 13px; border-radius: 20px; font-size: 0.78rem; cursor: pointer; border: 1px solid ${t === attuale ? '#e5c158' : 'rgba(255,255,255,0.18)'}; background: ${t === attuale ? 'rgba(229,193,88,0.12)' : 'transparent'}; color: ${t === attuale ? '#e5c158' : '#e5e7eb'};">${qpEsc(t)}</button>`).join('');
     });
 }
 
-// Dopo quanti amici arriva il premio: 1 (consigliato) · 3 · 5, più il valore salvato se è un altro (es. 2)
+// Dopo quanti utilizzi arriva il premio: 1 (consigliato) · 3 · 5, più il valore salvato se è un altro (es. 2)
 function qpSoglie() {
     const box = document.getElementById('qp-soglie'); if (!box) return;
     const attuale = parseInt(qpVal('field-qp-amici'), 10) || 1;
     const valori = [...new Set([1, 3, 5, attuale])].sort((x, y) => x - y);
     box.innerHTML = valori.map(v => {
         const s = v === attuale;
-        return `<button type="button" class="qp-soglia" data-amici="${v}" style="flex: 1; padding: 12px 4px; border-radius: 12px; cursor: pointer; border: 1px solid ${s ? '#e5c158' : 'rgba(255,255,255,0.15)'}; background: ${s ? 'rgba(229,193,88,0.1)' : 'transparent'}; color: ${s ? '#e5c158' : '#e5e7eb'}; line-height: 1.3;"><div style="font-size: 1.05rem; font-weight: 700;">${v}</div><div style="font-size: 0.6rem; letter-spacing: 0.5px;">${v === 1 ? 'AMICO' : 'AMICI'}${v === 1 ? ' · CONSIGLIATO' : ''}</div></button>`;
+        return `<button type="button" class="qp-soglia" data-amici="${v}" style="flex: 1; padding: 12px 4px; border-radius: 12px; cursor: pointer; border: 1px solid ${s ? '#e5c158' : 'rgba(255,255,255,0.15)'}; background: ${s ? 'rgba(229,193,88,0.1)' : 'transparent'}; color: ${s ? '#e5c158' : '#e5e7eb'}; line-height: 1.3;"><div style="font-size: 1.05rem; font-weight: 700;">${v}</div><div style="font-size: 0.6rem; letter-spacing: 0.5px;">${v === 1 ? 'UTILIZZO · CONSIGLIATO' : 'UTILIZZI'}</div></button>`;
     }).join('');
     const nota = document.getElementById('qp-soglia-nota');
     if (nota) nota.textContent = attuale === 1
-        ? 'Il premio arriva a ogni amico che usa il regalo: è la scelta che fa condividere di più.'
-        : `Il cliente guadagna il premio ogni ${attuale} amici che usano il regalo. Adatto a premi di valore più alto.`;
+        ? 'Il premio arriva a ogni utilizzo del regalo: è la scelta che fa condividere di più.'
+        : `Chi condivide guadagna il premio ogni ${attuale} utilizzi del regalo. Adatto a premi di valore più alto o a chi condivide con molte persone.`;
 }
 
 function qpRiepilogo() {
@@ -2288,14 +2285,14 @@ function qpRiepilogo() {
         <i class="fas ${icona}" style="color: #e5c158; width: 18px; text-align: center; margin-top: 3px;"></i>
         <div style="flex: 1; font-size: 0.85rem; color: #e5e7eb; line-height: 1.5;">${testo}</div>
         ${passo ? `<button type="button" onclick="qpPasso(${passo})" style="background: none; border: none; color: #e5c158; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer; padding: 2px 0;">MODIFICA</button>` : ''}</div>`;
-    box.innerHTML = voce('fa-share-nodes', 'Il tuo cliente manda il regalo a un amico dalla tua tag, con un tocco', 0) +
-        voce('fa-gift', `L'amico riceve <strong style="color: #fff;">${qpEsc(qpVal('field-qp-premio-b')) || '—'}</strong>`, 1) +
+    box.innerHTML = voce('fa-share-nodes', 'Chi ti segue condivide il tuo regalo dalla tua tag, con un tocco; tu puoi pubblicare il tuo link regalo dove vuoi', 0) +
+        voce('fa-gift', `Chi lo riceve ottiene <strong style="color: #fff;">${qpEsc(qpVal('field-qp-premio-b')) || '—'}</strong>, con un codice personale`, 1) +
         voce(modo === 'online' ? 'fa-comment-dots' : 'fa-cash-register', {
-            negozio: 'Lo usa da te: mostra il codice prima di pagare e tu lo confermi dalla cassa',
+            negozio: 'Lo usa di persona: ti mostra il codice e tu lo confermi dalla cassa',
             online: 'Lo usa online: ti scrive con il codice e tu lo confermi dal link del messaggio',
-            entrambi: 'Lo usa in negozio, mostrando il codice, oppure online scrivendoti: tu lo confermi dalla cassa'
+            entrambi: 'Lo usa di persona o online: tu lo confermi dalla cassa'
         }[modo], 0) +
-        voce('fa-trophy', `${n > 1 ? `Ogni ${n} amici che usano il regalo` : 'Quando l\'amico usa il regalo'}, il tuo cliente guadagna <strong style="color: #e5c158;">${qpEsc(qpVal('field-qp-premio-a')) || '—'}</strong>`, 2);
+        voce('fa-trophy', `${n > 1 ? `Ogni ${n} utilizzi del regalo` : 'Quando il regalo viene usato'}, chi l'ha condiviso guadagna <strong style="color: #e5c158;">${qpEsc(qpVal('field-qp-premio-a')) || '—'}</strong>`, 2);
 }
 
 // Dove si usa il regalo: evidenzia la scelta e mostra il recapito per l'uso online (precompilato con quelli della tag)
@@ -2320,9 +2317,9 @@ function qpImpostaModo(modo) {
 
 function qpAvanti() {
     const n = qpPassoCorrente;
-    if (n === 1) { if (!qpVal('field-qp-premio-b')) { alert('Scegli o scrivi il regalo per l\'amico.'); return; } qpPasso(2); return; }
-    if (n === 2) { if (!qpVal('field-qp-premio-a')) { alert('Scegli o scrivi il premio per il tuo cliente.'); return; } qpPasso(3); return; }
-    if (qpVal('field-qp-modo') !== 'negozio' && !qpVal('field-qp-contatto')) { alert('Scrivi il numero WhatsApp o l\'email a cui i clienti ti scrivono per usare il regalo online.'); document.getElementById('field-qp-contatto')?.focus(); return; }
+    if (n === 1) { if (!qpVal('field-qp-premio-b')) { alert('Scegli o scrivi il regalo.'); return; } qpPasso(2); return; }
+    if (n === 2) { if (!qpVal('field-qp-premio-a')) { alert('Scegli o scrivi il premio per chi condivide.'); return; } qpPasso(3); return; }
+    if (qpVal('field-qp-modo') !== 'negozio' && !qpVal('field-qp-contatto')) { alert('Scrivi il numero WhatsApp o l\'email a cui ti scrivono per usare il regalo online.'); document.getElementById('field-qp-contatto')?.focus(); return; }
     // 3: tag attiva → si pubblica subito (un solo tocco); tag in prenotazione → resta nella bozza fino all'attivazione
     if (statoUtente === 'attivo') salvaEDirigi('pubblica'); else chiudiSenzaSalvare();
 }
@@ -2336,17 +2333,6 @@ function qpIndietro() {
 }
 
 document.addEventListener('click', e => {
-    const scelta = e.target.closest && e.target.closest('#qp-attivita .qp-scelta');
-    if (scelta) {
-        try { localStorage.setItem('mqt_qp_attivita_' + NOME_SISTEMA, scelta.dataset.attivita); } catch (err) {}
-        // Dove si usa il regalo: proposta in base all'attività, finché QuickGift non è configurato
-        if (!(qpVal('field-qp-premio-a') && qpVal('field-qp-premio-b'))) {
-            const campoModo = document.getElementById('field-qp-modo');
-            if (campoModo) campoModo.value = { locale: 'negozio', servizi: 'entrambi', online: 'online', consulenze: 'online' }[scelta.dataset.attivita] || 'negozio';
-        }
-        qpPasso(1);
-        return;
-    }
     const modo = e.target.closest && e.target.closest('#qp-modi .qp-modo');
     if (modo) { qpImpostaModo(modo.dataset.modo); return; }
     const soglia = e.target.closest && e.target.closest('#qp-soglie .qp-soglia');

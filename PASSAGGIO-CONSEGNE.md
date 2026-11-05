@@ -171,6 +171,25 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   passo precedente. Non adottate (motivato al titolare): le tre configurazioni "Semplice / Crescita / Fidelizzazione"
   (cambiavano solo il numero di amici: più scelte, più confusione). Da far vedere al legale: premiare chi porta clienti può
   rientrare nelle "operazioni a premio".
+  **QuickGift universale e su larga scala (05/11/2026, dopo un secondo audit di ChatGPT valutato con il titolare):**
+  "QuickGift non regala necessariamente qualcosa: permette di condividere qualcosa di valore" (materiale, digitale, un
+  accesso, un'esperienza, un vantaggio), per attività, professionisti, creator e influencer. Niente più categorie di
+  attività nell'editor (`QP_PROPOSTE` è un'unica lista di idee universali); domande "Che cosa vuoi regalare?" e "Che cosa
+  riconosci a chi lo condivide?"; schema "Tu → Chi condivide → Chi riceve"; "In negozio" → "Di persona" (valore salvato
+  sempre `negozio`); "dopo quanti utilizzi"; pulsante sulla tag "CONDIVIDI UN REGALO". **Link regalo del titolare**
+  `/u/<tag>?regalo=1` (nel pannello del titolare sulla tag e nel riquadro cassa dell'editor): chi lo apre riceve il regalo
+  con un codice personale, senza premio a nessuno (stessa strada dei vecchi `?qp_ref=invito`). **Conti giusti oltre le
+  1.000 righe:** Supabase restituisce al massimo 1.000 righe per lettura, quindi i numeri ora si contano con
+  `contaRighe` (lib/db.js, `Prefer: count=exact`) in info, ritira (numero massimo), stato, convalida (premio ogni N) e
+  riepilogo (che restituisce solo gli ultimi 30 movimenti). **Limiti per connessione alzati** (molti operatori mobili fanno
+  uscire migliaia di clienti dallo stesso IP): ritira 100/ora per IP e tag + 500/giorno per IP; link personali 30/ora per
+  IP e tag + 100/giorno per IP. Prove "scala" in `test/api.test.mjs` (1.520 regali, 1.500 premi), che falliscono con il
+  codice di prima. **Limiti noti, non risolti:** il premio scatta a ogni utilizzo (un influencer "affiliato" con
+  "ogni 1" riceve un premio per ogni follower: usare "dopo quanti" e il numero massimo); la conferma resta manuale (online
+  ogni persona scrive al titolare: non regge migliaia di utilizzi); un regalo per browser, non per persona (chi usa due
+  browser ne riceve due: per i regali di valore impostare il numero massimo). **Prossima fase proposta: consegna
+  automatica** per i regali digitali (chi riceve il regalo ottiene subito il contenuto o il link, l'utilizzo si registra
+  da solo, senza cassa): da decidere con il titolare.
   Nell'**Identity Console** ogni tag con QuickGift ha il pulsante "Cassa QuickGift · conferma i regali" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
@@ -208,12 +227,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 220 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 227 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/quickpass.e2e.mjs` → 31 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/quickpass.e2e.mjs` → 34 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).
