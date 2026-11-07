@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { trovaTag, aggiornaTag, leggiRighe, inserisciRiga, aggiornaRighe, aggiungiLead } from '../lib/db.js';
+import { trovaTag, aggiornaTag, leggiRighe, contaRighe, inserisciRiga, aggiornaRighe, aggiungiLead } from '../lib/db.js';
 import { calcolaAbbonamento } from '../lib/abbonamento.js';
 import { pulisciTesto } from '../lib/pulizia.js';
 import { entroILimiti, rispondiTroppiTentativi, ipRichiesta } from '../lib/limiti.js';
@@ -85,7 +85,7 @@ async function nuovoCodice(tabella, valori, lunghezza) {
     const riga = await inserisciRiga(tabella, { ...valori, codice: codiceCasuale(lunghezza) });
     if (riga) return riga;
   }
-  throw new Error('Codice Quick Pass non disponibile');
+  throw new Error('Codice QuickGift non disponibile');
 }
 
 // Cassa: proprietario con la sua sessione, oppure PIN di cassa corretto (tentativi limitati)
@@ -118,13 +118,13 @@ export default async function handler(req, res) {
     if (azione === 'invito' || azione === 'ritira') {
       const titolare = await dirittiSullaTag({ req, token: body.sessionToken, record, tag });
       if (titolare.proprietario) {
-        return res.status(403).json({ success: false, titolare: true, error: 'Sei il titolare di questa tag: il Quick Pass è per i tuoi clienti. Per convalidare i pass usa la Cassa.' });
+        return res.status(403).json({ success: false, titolare: true, error: 'Sei il titolare di questa tag: il regalo è per chi ti segue. Per confermare i regali usa la Cassa.' });
       }
     }
 
     // ---------- INVITO: chi consiglia ottiene il suo link personale ----------
     if (azione === 'invito') {
-      if (!c.attiva) return res.status(410).json({ success: false, error: 'Il Quick Pass non è attivo su questa tag' });
+      if (!c.attiva) return res.status(410).json({ success: false, error: 'QuickGift non è attivo su questa tag' });
       const nome = testo(body.nome, 40);
       if (!nome) return res.status(400).json({ success: false, error: 'Scrivi il tuo nome' });
       const disp = impronta(body.dispositivo);
@@ -132,9 +132,10 @@ export default async function handler(req, res) {
         const gia = await leggiRighe('quickpass_inviti', { tag, dispositivo: disp }, { limite: 1 });
         if (gia[0]) return res.status(200).json({ success: true, invito: { codice: gia[0].codice, nome: gia[0].nome } });
       }
+      // Limiti per connessione larghi: molti operatori mobili fanno uscire migliaia di clienti dallo stesso indirizzo
       if (!(await entroILimiti(req, tag, [
-        { nome: 'qp-invito', per: 'ip+tag', max: 5, finestra: 3600 },
-        { nome: 'qp-invito-ip', per: 'ip', max: 30, finestra: 86400 }
+        { nome: 'qp-invito', per: 'ip+tag', max: 30, finestra: 3600 },
+        { nome: 'qp-invito-ip', per: 'ip', max: 100, finestra: 86400 }
       ]))) return rispondiTroppiTentativi(res);
       const invito = await nuovoCodice('quickpass_inviti', { tag, nome, dispositivo: disp, telefono: improntaTelefono(body.telefono), rete: improntaRete(req) }, 8);
       return res.status(200).json({ success: true, invito: { codice: invito.codice, nome: invito.nome } });
@@ -149,8 +150,7 @@ export default async function handler(req, res) {
       }
       let postiRimasti = null;
       if (c.attiva && c.limite) {
-        const dati = await leggiRighe('quickpass_pass', { tag, tipo: 'amico' }, { colonne: 'codice' });
-        postiRimasti = Math.max(0, c.limite - dati.length);
+        postiRimasti = Math.max(0, c.limite - await contaRighe('quickpass_pass', { tag, tipo: 'amico' }));
       }
       return res.status(200).json({ success: true, attiva: c.attiva && postiRimasti !== 0, esauriti: postiRimasti === 0,
         da, premio: c.attiva ? f.quickpass_premio_b : null, premio_invito: c.attiva ? f.quickpass_premio_a : null,
@@ -159,7 +159,7 @@ export default async function handler(req, res) {
 
     // ---------- RITIRA: l'amico riceve il suo pass personale ----------
     if (azione === 'ritira') {
-      if (!c.attiva) return res.status(410).json({ success: false, error: 'Il Quick Pass non è più attivo' });
+      if (!c.attiva) return res.status(410).json({ success: false, error: 'Questo regalo non è più disponibile' });
       const nome = testo(body.nome, 40);
       if (!nome) return res.status(400).json({ success: false, error: 'Scrivi il tuo nome' });
       const disp = impronta(body.dispositivo);
@@ -180,15 +180,19 @@ export default async function handler(req, res) {
         const stessoTelefono = !!invito.telefono && invito.telefono === tel;
         // Stesso browser, oppure stesso telefono dalla stessa rete: è chi ha creato l'invito
         if (stessoBrowser || (stessoTelefono && invito.rete === rete)) {
-          return res.status(403).json({ success: false, error: 'Questo è il tuo invito: mandalo a un amico, il pass è per lui.' });
+          return res.status(403).json({ success: false, error: 'Questo è il tuo link: condividilo, il regalo è per chi lo riceve.' });
         }
         // Stesso telefono da un'altra rete, o stesso nome: si lascia passare ma la cassa vede un avviso
         sospetto = stessoTelefono || nomeSemplice(nome) === nomeSemplice(invito.nome);
       }
-      if (!(await entroILimiti(req, tag, [{ nome: 'qp-ritira', per: 'ip+tag', max: 5, finestra: 3600 }]))) return rispondiTroppiTentativi(res);
+      // Un link può girare tra migliaia di persone (es. in una storia): i limiti per connessione fermano gli abusi
+      // senza respingere i follower veri che escono dallo stesso indirizzo dell'operatore mobile o del Wi-Fi di un evento
+      if (!(await entroILimiti(req, tag, [
+        { nome: 'qp-ritira', per: 'ip+tag', max: 100, finestra: 3600 },
+        { nome: 'qp-ritira-ip', per: 'ip', max: 500, finestra: 86400 }
+      ]))) return rispondiTroppiTentativi(res);
       if (c.limite) {
-        const emessi = await leggiRighe('quickpass_pass', { tag, tipo: 'amico' }, { colonne: 'codice' });
-        if (emessi.length >= c.limite) return res.status(410).json({ success: false, esauriti: true, error: 'I pass disponibili sono esauriti' });
+        if (await contaRighe('quickpass_pass', { tag, tipo: 'amico' }) >= c.limite) return res.status(410).json({ success: false, esauriti: true, error: 'I regali disponibili sono esauriti' });
       }
       const ora = Date.now();
       const scadenza = Math.min(c.scadenza || Infinity, ora + GIORNI_PASS * GIORNO_MS);
@@ -204,7 +208,7 @@ export default async function handler(req, res) {
         const consenso = body.consenso === true;
         try {
           await aggiungiLead(tag, {
-            id: crypto.randomUUID(), nome, contatto, ts: ora, fonte: 'Quick Pass',
+            id: crypto.randomUUID(), nome, contatto, ts: ora, fonte: 'QuickGift',
             data: new Date(ora).toLocaleString('it-IT', { timeZone: 'Europe/Rome', dateStyle: 'short', timeStyle: 'short' }),
             visto: false, richiamato: false, consenso_offerte: consenso,
             ...(consenso ? { consenso_testo: testo(body.consenso_testo, 200) || 'Accetto di ricevere offerte e novità', consenso_data: new Date(ora).toISOString() } : {})
@@ -226,10 +230,16 @@ export default async function handler(req, res) {
       if (codiceValido(body.invito, 8)) {
         const inv = (await leggiRighe('quickpass_inviti', { codice: body.invito, tag }, { limite: 1 }))[0];
         if (inv) {
-          const amici = await leggiRighe('quickpass_pass', { invito: inv.codice, tipo: 'amico' }, { colonne: 'stato' });
-          const premi = await leggiRighe('quickpass_pass', { invito: inv.codice, tipo: 'premio' }, { ordine: 'created_at.desc' });
-          invito = { codice: inv.codice, nome: inv.nome, amici_ritirati: amici.length, amici_usati: amici.filter(a => a.stato === 'usato').length,
-            amici_per_premio: c.perPremio, premi: premi.map(vistaPass) };
+          // Prima di contare si creano gli eventuali premi mancanti (es. una conferma interrotta a metà)
+          try { await allineaPremi(inv, c, f, tag); } catch (e) { console.error('QUICKPASS premi non allineati:', e.dettagli || e.message); }
+          const [ritirati, usati, premiTotali, premi] = await Promise.all([
+            contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'amico' }),
+            contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'amico', stato: 'usato' }),
+            contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'premio' }),
+            leggiRighe('quickpass_pass', { invito: inv.codice, tipo: 'premio', stato: 'attivo' }, { ordine: 'created_at.desc', limite: 20 })
+          ]);
+          invito = { codice: inv.codice, nome: inv.nome, amici_ritirati: ritirati, amici_usati: usati,
+            amici_per_premio: c.perPremio, premi_totali: premiTotali, premi: premi.map(vistaPass) };
         }
       }
       return res.status(200).json({ success: true, pass, invito, attiva: c.attiva });
@@ -245,9 +255,9 @@ export default async function handler(req, res) {
         error: cassa.pin_errato ? 'PIN di cassa errato' : 'Riservato alla cassa: accedi come titolare o inserisci il PIN di cassa' });
 
       const p = (await leggiRighe('quickpass_pass', { codice, tag }, { limite: 1 }))[0];
-      if (!p) return res.status(404).json({ success: false, error: 'Pass non trovato per questa tag' });
-      if (p.stato === 'usato') return res.status(409).json({ success: false, usato: true, pass: vistaPass(p), error: 'Pass già usato' });
-      if (Date.parse(p.scadenza) < Date.now()) return res.status(410).json({ success: false, scaduto: true, pass: vistaPass(p), error: 'Pass scaduto' });
+      if (!p) return res.status(404).json({ success: false, error: 'Codice non trovato per questa tag' });
+      if (p.stato === 'usato') return res.status(409).json({ success: false, usato: true, pass: vistaPass(p), error: 'Codice già usato' });
+      if (Date.parse(p.scadenza) < Date.now()) return res.status(410).json({ success: false, scaduto: true, pass: vistaPass(p), error: 'Codice scaduto' });
       if (azione === 'verifica') {
         // Per la cassa: chi ha consigliato l'amico, e l'avviso se il pass sembra ritirato da lui stesso
         let consigliatoDa = null;
@@ -260,16 +270,15 @@ export default async function handler(req, res) {
 
       // Atomico: riesce una volta sola anche con due convalide contemporanee
       const usati = await aggiornaRighe('quickpass_pass', { codice, tag, stato: 'attivo' }, { stato: 'usato', usato_il: new Date().toISOString() });
-      if (!usati.length) return res.status(409).json({ success: false, usato: true, error: 'Pass già usato' });
+      if (!usati.length) return res.status(409).json({ success: false, usato: true, error: 'Codice già usato' });
 
-      // Pass di un amico: ogni N amici portati, chi ha consigliato riceve il premio
+      // Regalo di chi ha ricevuto un link personale: ogni N utilizzi, chi l'ha condiviso guadagna il premio
       let premioSbloccato = null;
       if (p.tipo === 'amico' && p.invito) {
         const inv = (await leggiRighe('quickpass_inviti', { codice: p.invito }, { limite: 1 }))[0];
-        const amiciUsati = (await leggiRighe('quickpass_pass', { invito: p.invito, tipo: 'amico', stato: 'usato' }, { colonne: 'codice' })).length;
-        if (inv && amiciUsati > 0 && amiciUsati % c.perPremio === 0 && String(f.quickpass_premio_a || '').trim()) {
-          const premio = await nuovoCodiceOppureEsistente(inv, amiciUsati / c.perPremio, testo(f.quickpass_premio_a, 200), tag);
-          if (premio) premioSbloccato = { nome: inv.nome, premio: premio.premio };
+        if (inv) {
+          const creati = await allineaPremi(inv, c, f, tag);
+          if (creati.length) premioSbloccato = { nome: inv.nome, premio: creati[0].premio };
         }
       }
       return res.status(200).json({ success: true, pass: vistaPass(usati[0]), premio_sbloccato: premioSbloccato });
@@ -287,14 +296,21 @@ export default async function handler(req, res) {
     }
 
     if (azione === 'riepilogo') {
-      const inviti = await leggiRighe('quickpass_inviti', { tag }, { colonne: 'codice,nome' });
-      const pass = await leggiRighe('quickpass_pass', { tag }, { ordine: 'created_at.desc' });
-      const nomeInvito = Object.fromEntries(inviti.map(i => [i.codice, primoNome(i.nome)]));
-      const amici = pass.filter(p => p.tipo === 'amico'), premi = pass.filter(p => p.tipo === 'premio');
+      // Numeri contati dal database (giusti anche oltre le 1.000 righe) e solo gli ultimi 30 movimenti
+      const [inviti, ritirati, usati, premi, premiUsati, ultimi] = await Promise.all([
+        contaRighe('quickpass_inviti', { tag }),
+        contaRighe('quickpass_pass', { tag, tipo: 'amico' }),
+        contaRighe('quickpass_pass', { tag, tipo: 'amico', stato: 'usato' }),
+        contaRighe('quickpass_pass', { tag, tipo: 'premio' }),
+        contaRighe('quickpass_pass', { tag, tipo: 'premio', stato: 'usato' }),
+        leggiRighe('quickpass_pass', { tag }, { ordine: 'created_at.desc', limite: 30 })
+      ]);
+      const codiciInvito = [...new Set(ultimi.map(p => p.invito).filter(Boolean))];
+      const nomeInvito = Object.fromEntries(await Promise.all(codiciInvito.map(async codice =>
+        [codice, primoNome(((await leggiRighe('quickpass_inviti', { codice }, { colonne: 'nome', limite: 1 }))[0] || {}).nome)])));
       return res.status(200).json({ success: true, pin_impostato: !!f.quickpass_pin_hash, numeri: {
-        inviti: inviti.length, pass_ritirati: amici.length, pass_usati: amici.filter(p => p.stato === 'usato').length,
-        premi_maturati: premi.length, premi_usati: premi.filter(p => p.stato === 'usato').length
-      }, ultimi: pass.slice(0, 30).map(p => ({ ...vistaPass(p), invitato_da: p.invito ? nomeInvito[p.invito] || null : null })) });
+        inviti, pass_ritirati: ritirati, pass_usati: usati, premi_maturati: premi, premi_usati: premiUsati
+      }, ultimi: ultimi.map(p => ({ ...vistaPass(p), invitato_da: p.invito ? nomeInvito[p.invito] || null : null })) });
     }
 
     return res.status(400).json({ success: false, error: 'Azione sconosciuta' });
@@ -304,7 +320,29 @@ export default async function handler(req, res) {
   }
 }
 
-// Il k-esimo premio di un invito è unico (vincolo unique invito+ordine): se due convalide
+// Premi dovuti a un link personale: uno per ogni soglia raggiunta (ordine 1, 2, 3…). Si ricalcolano da capo a ogni
+// conferma e si creano quelli che mancano. Con conferme simultanee due richieste possono leggere lo stesso conteggio:
+// la conferma che arriva per ultima vede tutti gli utilizzi e completa i premi; i doppioni sono impossibili perché
+// il database rifiuta due premi con lo stesso ordine (vincolo unique invito+ordine). Nessuna migrazione necessaria.
+async function allineaPremi(inv, c, f, tag) {
+  const premio = testo(f.quickpass_premio_a, 200);
+  if (!premio) return [];
+  const [usati, presenti] = await Promise.all([
+    contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'amico', stato: 'usato' }),
+    contaRighe('quickpass_pass', { invito: inv.codice, tipo: 'premio' })
+  ]);
+  const dovuti = Math.floor(usati / c.perPremio);
+  let mancano = dovuti - presenti;
+  const creati = [];
+  // I buchi possono stare solo tra gli ultimi premi: si parte dall'ultimo dovuto e si scende (al massimo 50 tentativi)
+  for (let ordine = dovuti; ordine >= 1 && mancano > 0 && dovuti - ordine < 50; ordine--) {
+    const riga = await nuovoCodiceOppureEsistente(inv, ordine, premio, tag);
+    if (riga) { creati.push(riga); mancano--; }
+  }
+  return creati;
+}
+
+// Il k-esimo premio di un invito è unico (vincolo unique invito+ordine): se due conferme
 // arrivano insieme, il secondo inserimento non crea un doppione
 async function nuovoCodiceOppureEsistente(inv, ordine, premio, tag) {
   for (let i = 0; i < 4; i++) {

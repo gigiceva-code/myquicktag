@@ -46,8 +46,11 @@ globalThis.fetch=async (url,opt={})=>{
   if(tabelleQP[nomeTab]){ // stesse regole della migrazione: codici unici, (invito, ordine) unico
     const T=tabelleQP[nomeTab]; const filtra=r=>[...u.searchParams].every(([k,v])=>!v.startsWith('eq.')||String(r[k])===decodeURIComponent(v.slice(3)));
     if(m==='GET'){ let out=T.filter(filtra); if(u.searchParams.get('order')==='created_at.desc') out=[...out].reverse();
-      const lim=u.searchParams.get('limit'); if(lim) out=out.slice(0,+lim); const sel=u.searchParams.get('select');
-      if(sel&&sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out),{status:200}); }
+      // Come il vero Supabase: al massimo 1.000 righe per lettura; con "Prefer: count=exact" il totale è in Content-Range
+      const totale=out.length; const lim=u.searchParams.get('limit'); out=out.slice(0,Math.min(lim?+lim:1000,1000)); const sel=u.searchParams.get('select');
+      if(sel&&sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null])));
+      const intest=String(opt.headers?.Prefer||'').includes('count=exact')?{'Content-Range':out.length?`0-${out.length-1}/${totale}`:`*/${totale}`}:{};
+      return new Response(JSON.stringify(out),{status:200,headers:intest}); }
     if(m==='POST'){ const b=JSON.parse(opt.body); if(T.some(r=>r.codice===b.codice) || (b.ordine!=null && T.some(r=>r.invito===b.invito&&r.ordine===b.ordine))) return new Response('{"code":"23505"}',{status:409});
       const r={created_at:new Date().toISOString(),stato:nomeTab==='quickpass_pass'?'attivo':undefined,...b}; T.push(r); return new Response(JSON.stringify([r]),{status:201}); }
     if(m==='PATCH'){ const b=JSON.parse(opt.body); const t=T.filter(filtra); t.forEach(r=>Object.assign(r,b)); return new Response(JSON.stringify(t),{status:200}); }
@@ -571,7 +574,7 @@ delete process.env.RINNOVO_GRATUITO;
   const passB=r.body.pass;
   ok(r.code===200 && /^[A-Z0-9]{6}$/.test(passB.codice) && passB.premio==='Dolce in omaggio' && passB.stato==='attivo' && !('dispositivo' in passB) && !('contatto' in passB),'quick pass: l\'amico ritira un pass personale (senza dati interni)');
   const lead=JSON.parse(riga('pizzeriaqp').lead_capture_leads)[0];
-  ok(lead.nome==='Luca' && lead.fonte==='Quick Pass' && lead.consenso_offerte===true,'quick pass: il recapito facoltativo arriva in I miei contatti con il consenso');
+  ok(lead.nome==='Luca' && lead.fonte==='QuickGift' && lead.consenso_offerte===true,'quick pass: il recapito facoltativo arriva in I miei contatti con il consenso');
   r=await qp('ritira',{invito:inv.codice,nome:'Luca di nuovo',dispositivo:telB},{ip:'4.4.4.2'});
   ok(r.body.esistente && r.body.pass.codice===passB.codice,'quick pass: un solo pass per telefono');
 
@@ -656,6 +659,60 @@ delete process.env.RINNOVO_GRATUITO;
   ok(im.telefono.length===40 && im.rete.length===40 && !im.telefono.includes('a'.repeat(10)),'antifrode: telefono e rete salvati solo come impronte');
   r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
   ok(r.body.tags.find(t=>t.username_system==='cantiereqp').quickpass_attivo===true,'Identity Console: sa quali tag hanno il Quick Pass (pulsante della cassa)');
+}
+{
+  // QUICKGIFT SU LARGA SCALA (05/11/2026): un influencer pubblica il suo link in una storia e migliaia di follower lo usano.
+  // Il vero database restituisce al massimo 1.000 righe per lettura: i conti devono essere giusti anche oltre.
+  const qp4=(azione,body={},extra={})=>call('quickpass.js',{method:'POST',ip:extra.ip,headers:extra.headers,body:{u:'creatorqp',azione,...body}});
+  rows.push({id:'qp4',username_system:'creatorqp',username_display:'@CreatorQP',stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',
+    quickpass_premio_a:'Un mese di contenuti riservati',quickpass_premio_b:'Accesso a una masterclass esclusiva',quickpass_amici_per_premio:1,quickpass_limite:1600,created_at:new Date().toISOString()});
+  let r=await qp4('invito',{nome:'Giulia Influencer',dispositivo:'telefono-giulia-0000001'},{ip:'7.7.7.1'});
+  const inv=r.body.invito.codice;
+  // 20 follower diversi dallo stesso indirizzo dell'operatore mobile: nessuno viene respinto
+  let respinti=0; const codici=new Set();
+  for(let i=0;i<20;i++){ r=await qp4('ritira',{invito:inv,nome:'Follower'+i,dispositivo:'follower-telefono-'+String(i).padStart(6,'0')},{ip:'100.64.0.1'}); if(r.code!==200) respinti++; else codici.add(r.body.pass.codice); }
+  ok(respinti===0 && codici.size===20,'scala: 20 follower dallo stesso indirizzo dell\'operatore ricevono 20 codici personali diversi');
+  ok(tabelleQP.quickpass_pass.filter(p=>p.invito===inv).length===20,'scala: ogni regalo è attribuito al link dell\'influencer');
+  // 1.500 regali già usati (oltre la soglia delle 1.000 righe)
+  for(let i=0;i<1500;i++) tabelleQP.quickpass_pass.push({codice:'S'+String(i).padStart(5,'0'),tag:'creatorqp',tipo:'amico',invito:inv,nome:'F'+i,premio:'x',stato:'usato',scadenza:'2099-01-01T00:00:00Z',created_at:new Date().toISOString()});
+  for(let i=1;i<=1500;i++) tabelleQP.quickpass_pass.push({codice:'P'+String(i).padStart(5,'0'),tag:'creatorqp',tipo:'premio',invito:inv,nome:'Giulia Influencer',premio:'x',ordine:i,stato:'usato',scadenza:'2099-01-01T00:00:00Z',created_at:new Date().toISOString()});
+  r=await qp4('stato',{invito:inv});
+  ok(r.body.invito.amici_ritirati===1520 && r.body.invito.amici_usati===1500 && r.body.invito.premi_totali===1500,'scala: chi condivide vede i numeri giusti anche oltre le 1.000 persone');
+  r=await qp4('riepilogo',{},{headers:conSessione(jwtAnna)});
+  ok(r.body.numeri.pass_ritirati===1520 && r.body.numeri.pass_usati===1500 && r.body.numeri.premi_maturati===1500 && r.body.ultimi.length===30,'scala: il titolare vede i numeri giusti, con gli ultimi 30 movimenti');
+  r=await qp4('info',{invito:inv});
+  ok(r.body.posti_rimasti===80,'scala: i regali rimasti si contano giusti oltre le 1.000 righe (1.600 − 1.520)');
+  // Il 1.501° utilizzo fa scattare il 1.501° premio
+  const c0=[...codici][0];
+  r=await qp4('convalida',{codice:c0},{headers:conSessione(jwtAnna)});
+  ok(r.code===200 && r.body.premio_sbloccato && tabelleQP.quickpass_pass.some(p=>p.invito===inv&&p.tipo==='premio'&&p.ordine===1501),'scala: oltre le 1.000 persone il premio scatta ancora al momento giusto');
+  // Il numero massimo di regali vale anche oltre le 1.000 righe
+  for(let i=0;i<80;i++) tabelleQP.quickpass_pass.push({codice:'L'+String(i).padStart(5,'0'),tag:'creatorqp',tipo:'amico',invito:null,nome:'X',premio:'x',stato:'attivo',scadenza:'2099-01-01T00:00:00Z',created_at:new Date().toISOString()});
+  r=await qp4('ritira',{invito:inv,nome:'Ultimo',dispositivo:'follower-telefono-ultimo1'},{ip:'100.64.0.2'});
+  ok(r.code===410 && r.body.esauriti,'scala: raggiunto il numero massimo (1.600) i regali sono esauriti');
+}
+{
+  // QUICKGIFT, CONFERME SIMULTANEE (05/11/2026): due cassieri (o tanti utilizzi online) confermano nello stesso istante
+  // regali dello stesso link. Ogni soglia raggiunta deve dare esattamente un premio: niente doppioni, niente premi persi.
+  for (const [nome,perPremio,quanti,attesi] of [['simultqp1',1,5,5],['simultqp2',2,5,2],['simultqp3',3,6,2]]) {
+    const q=(azione,body={},extra={})=>call('quickpass.js',{method:'POST',ip:extra.ip,headers:extra.headers,body:{u:nome,azione,...body}});
+    rows.push({id:nome,username_system:nome,stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',
+      quickpass_premio_a:'Premio',quickpass_premio_b:'Regalo',quickpass_amici_per_premio:perPremio,created_at:new Date().toISOString()});
+    const inv=(await q('invito',{nome:'Chi condivide',dispositivo:'telefono-condivide-'+nome},{ip:'8.8.1.1'})).body.invito.codice;
+    const codici=[];
+    for(let i=0;i<quanti;i++) codici.push((await q('ritira',{invito:inv,nome:'Persona'+i,dispositivo:'telefono-riceve-'+nome+'-'+i},{ip:'8.8.2.'+i})).body.pass.codice);
+    const esiti=await Promise.all(codici.map(c=>q('convalida',{codice:c},{headers:conSessione(jwtAnna)})));
+    const premi=tabelleQP.quickpass_pass.filter(p=>p.invito===inv&&p.tipo==='premio');
+    const ordini=premi.map(p=>p.ordine).sort((a,b)=>a-b);
+    ok(esiti.every(e=>e.code===200) && premi.length===attesi && ordini.every((o,k)=>o===k+1),
+      `conferme simultanee (premio ogni ${perPremio}, ${quanti} conferme insieme): esattamente ${attesi} premi, nessuno perso né doppio`);
+    if (perPremio===1) {
+      // Una conferma interrotta a metà (premio non creato): lo recupera la pagina di chi condivide
+      const i=tabelleQP.quickpass_pass.findIndex(p=>p.invito===inv&&p.tipo==='premio'&&p.ordine===3); tabelleQP.quickpass_pass.splice(i,1);
+      const r=await q('stato',{invito:inv});
+      ok(r.body.invito.premi_totali===5 && tabelleQP.quickpass_pass.filter(p=>p.invito===inv&&p.tipo==='premio'&&p.ordine===3).length===1,'premio perso per una conferma interrotta: lo ricrea la pagina di chi condivide');
+    }
+  }
 }
 {
   // QUICK PASS ONLINE (02/11/2026): dove si usa il pass e recapito per l'uso online

@@ -9,6 +9,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 - Scrivere **in italiano** e **dare del tu** al titolare (richiesta del 23/10/2026), con spiegazioni semplici e concrete: il titolare non è uno sviluppatore.
   Dire cosa cambia per lui e per i clienti, non i dettagli tecnici.
+- **Nomi e parole (04/11/2026, richiesta del titolare):** il marchio si scrive sempre **myquicktag**, tutto minuscolo
+  (mai "MyQuickTag"). Nei testi usare il maschile universale ("l'amico", non "l'amica").
+- **"Clic", non "tocco" (05/11/2026, richiesta del titolare):** nei testi si scrive "con un clic", "fai clic".
 - **Marketing e conversione (richiesta del 27/10/2026):** il titolare non è un esperto di web marketing. Per ogni
   cosa che vedono i clienti proporre sempre, di propria iniziativa, la versione più professionale e orientata alla
   conversione (testi, posizione dei pulsanti, anteprime, misurazione), spiegando in breve il perché. Non limitarsi a
@@ -154,7 +157,68 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   con i recapiti della tag). Il pass dell'amico e il premio hanno "Usa il pass su WhatsApp / via email": messaggio già
   scritto con premio, codice e link `/u/<tag>?cassa=<codice>`, che il titolare tocca per convalidare. Solo online: niente QR.
   Migrazione `20261102000000_quick_pass_online.sql`.
-  Nell'**Identity Console** ogni tag con il Quick Pass ha il pulsante "Cassa Quick Pass · convalida i pass" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
+  **QuickGift (04/11/2026, decisione del titolare dopo un audit di ChatGPT valutato insieme):** il Quick Pass si chiama
+  **QuickGift** in tutto ciò che si vede ("Un regalo da condividere. Un premio da guadagnare."). Il nome tecnico resta
+  `quickpass` (file, API, colonne, tabelle, chiavi del telefono, `?pass=`, `?cassa=`): nessuna migrazione, vecchi link e
+  codici validi. **Parole fisse:** *regalo* = quello dell'amico invitato, *premio* = quello del cliente che condivide.
+  Tag: pulsante "REGALA A UN AMICO" nell'Action Center; il cliente vede i tre passi (mandi il regalo → l'amico riceve X →
+  quando lo usa guadagni Y), "Crea il tuo link regalo", poi "Il tuo link da condividere", barra di avanzamento
+  ("Ti manca 1 amico…") e conteggi in parole semplici. L'amico vede: chi gli fa il regalo → il regalo in grande → dove si
+  usa → nome → "Ricevi il tuo regalo"; recapito e consenso dopo, sotto "Facoltativo", mai spuntati. Dopo: riquadro "Come si
+  usa" (negozio: "prima di pagare, mostra il QR…"; online: solo il pulsante). Cassa: "✓ VALIDO", "DA CONSEGNARE", per chi e
+  chi glielo ha mandato, poi "Ho consegnato: conferma". Editor: schema delle tre figure sempre in vista (Tu → il tuo cliente
+  → il suo amico, evidenziata quella del passo) e **3 passi** al posto di 5 (1 regalo + proposte per attività, 2 premio +
+  "dopo quanti amici" 1·3·5 con 1 consigliato, 3 dove si usa + riepilogo + cassa); freccia in alto e INDIETRO tornano al
+  passo precedente. Non adottate (motivato al titolare): le tre configurazioni "Semplice / Crescita / Fidelizzazione"
+  (cambiavano solo il numero di amici: più scelte, più confusione). Da far vedere al legale: premiare chi porta clienti può
+  rientrare nelle "operazioni a premio".
+  **QuickGift universale e su larga scala (05/11/2026, dopo un secondo audit di ChatGPT valutato con il titolare):**
+  "QuickGift non regala necessariamente qualcosa: permette di condividere qualcosa di valore" (materiale, digitale, un
+  accesso, un'esperienza, un vantaggio), per attività, professionisti, creator e influencer. Niente più categorie di
+  attività nell'editor (`QP_PROPOSTE` è un'unica lista di idee universali); domande "Che cosa vuoi regalare?" e "Che cosa
+  riconosci a chi lo condivide?"; schema "Tu → Chi condivide → Chi riceve"; "In negozio" → "Di persona" (valore salvato
+  sempre `negozio`); "dopo quanti utilizzi"; pulsante sulla tag "CONDIVIDI UN REGALO". **Link regalo del titolare**
+  `/u/<tag>?regalo=1` (nel pannello del titolare sulla tag e nel riquadro cassa dell'editor): chi lo apre riceve il regalo
+  con un codice personale, senza premio a nessuno (stessa strada dei vecchi `?qp_ref=invito`). **Conti giusti oltre le
+  1.000 righe:** Supabase restituisce al massimo 1.000 righe per lettura, quindi i numeri ora si contano con
+  `contaRighe` (lib/db.js, `Prefer: count=exact`) in info, ritira (numero massimo), stato, convalida (premio ogni N) e
+  riepilogo (che restituisce solo gli ultimi 30 movimenti). **Limiti per connessione alzati** (molti operatori mobili fanno
+  uscire migliaia di clienti dallo stesso IP): ritira 100/ora per IP e tag + 500/giorno per IP; link personali 30/ora per
+  IP e tag + 100/giorno per IP. Prove "scala" in `test/api.test.mjs` (1.520 regali, 1.500 premi), che falliscono con il
+  codice di prima. **Limiti noti, non risolti:** il premio scatta a ogni utilizzo (un influencer "affiliato" con
+  "ogni 1" riceve un premio per ogni follower: usare "dopo quanti" e il numero massimo); la conferma resta manuale (online
+  ogni persona scrive al titolare: non regge migliaia di utilizzi); un regalo per browser, non per persona (chi usa due
+  browser ne riceve due: per i regali di valore impostare il numero massimo). **Prossima fase proposta: consegna
+  automatica** per i regali digitali (chi riceve il regalo ottiene subito il contenuto o il link, l'utilizzo si registra
+  da solo, senza cassa): da decidere con il titolare.
+  **Dopo il terzo audit (05/11/2026):**
+  - **Conferme simultanee:** due conferme insieme sullo stesso link potevano leggere lo stesso conteggio e far saltare
+    un premio. Ora `allineaPremi` (api/quickpass.js) ricalcola a ogni conferma tutti i premi dovuti (uno per soglia,
+    `ordine` 1, 2, 3…) e crea quelli mancanti; i doppioni li rifiuta il vincolo unique `(invito, ordine)` già esistente,
+    quindi nessuna migrazione. Lo stesso ricalcolo parte quando chi condivide apre la sua pagina (azione `stato`): un
+    premio perso per una conferma interrotta a metà si ricrea lì. Prove: "conferme simultanee" (ogni 1, 2, 3) e
+    "conferma interrotta" in `test/api.test.mjs`, che falliscono con il codice precedente. ChatGPT chiedeva una
+    transazione nel database (funzione SQL): possibile in futuro, ma il ricalcolo dà la stessa garanzia senza migrazioni.
+  - **Avviso nell'editor** (non un blocco) con "1 utilizzo" e nessun numero massimo: "chi condivide guadagnerà un premio
+    per ogni regalo effettivamente utilizzato… non è previsto un tetto ai premi maturabili" (passo 2 e riepilogo).
+  - **Limiti per connessione attuali:** `ritira` 100/ora per IP e tag + 500/giorno per IP; link personali 30/ora per IP e
+    tag + 100/giorno per IP; PIN di cassa 10 tentativi ogni 15 minuti. Altre protezioni non legate all'IP: un regalo per
+    browser, numero massimo di regali facoltativo, codici monouso. Rischio residuo: un grande evento su un unico Wi-Fi
+    (oltre 100 regali all'ora dallo stesso IP). **Proposta (non fatta):** verifica anti-robot invisibile (Cloudflare
+    Turnstile, gratuita) che scatta solo oltre la soglia, al posto del blocco.
+  - **Prove di carico (proposta, non fatte):** le prove "scala" verificano i conti oltre le 1.000 righe su un database
+    finto, non la tenuta sotto migliaia di richieste insieme. Prova realistica, solo su `myquicktag-prova` e sul Preview
+    (mai sulla produzione): 1) caricare 5.000-10.000 righe finte con SQL su una tag di prova; 2) uno script (es. k6 o
+    autocannon) con il bypass della protezione del Preview: 20-50 ritiri al secondo per 2-3 minuti da indirizzi diversi,
+    più conferme simultanee; 3) misurare errori, tempi e i limiti del piano gratuito (Vercel: durata e numero delle
+    chiamate; Supabase: connessioni); 4) cancellare le righe di prova.
+  - **Parole:** "clic" al posto di "tocco" in tutto il sito e nelle email (richiesta del titolare); "CONDIVIDI UN
+    REGALO" anche nell'anteprima dell'editor; corona al posto del negozio per "Tu" nello schema. I modelli in
+    `supabase/email/` vanno ricaricati su entrambi i progetti (`applica.py`, serve `SUPABASE_ACCESS_TOKEN`) oppure
+    corretti a mano in Supabase → Authentication → Email Templates.
+  - **Affiliazione:** il titolare non vuole un programma di affiliazione per ora. Chiunque, influencer compresi, può già
+    creare il suo link personale da una tag: basta così finché myquicktag non sarà molto diffuso.
+  Nell'**Identity Console** ogni tag con QuickGift ha il pulsante "Cassa QuickGift · conferma i regali" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
@@ -191,12 +255,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 207 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 231 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/quickpass.e2e.mjs` → 14 prove nel browser del Quick Pass, dall'invito alla cassa (istruzioni in testa al file).
+- `test/quickpass.e2e.mjs` → 36 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).

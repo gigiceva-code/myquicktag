@@ -14,7 +14,7 @@ const SITO = 'https://myquicktag.it';
 const NOMI_SEZIONI = {
   identity: 'Identity', business: 'Business', media: 'Vetrina', network: 'Network', action_center: 'Action Center',
   contatti: 'Contatti', social: 'Social & link', sito: 'Sito web', bio: 'Biografia', cv: 'Curriculum',
-  qr: 'Access Tag', gallery: 'Galleria', pdf: 'Documenti', flash: 'Offerta flash', quickpass: 'Quick Pass'
+  qr: 'Access Tag', gallery: 'Galleria', pdf: 'Documenti', flash: 'Offerta flash', quickpass: 'QuickGift'
 };
 const IMMAGINE_PREDEFINITA = `${SITO}/icons/og-image.png`;
 

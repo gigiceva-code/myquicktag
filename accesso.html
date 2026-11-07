@@ -53,13 +53,13 @@
     <!-- CODICE DI VERIFICA (dopo la registrazione) -->
     <section class="vista" id="v-codice">
         <h1 class="titolo">Controlla la tua email</h1>
-        <p class="sottotitolo" id="codice-testo">Ti abbiamo mandato un'email per confermare l'indirizzo. <b>Tocca il link</b> che contiene, poi torna qui e premi "Ho confermato".</p>
+        <p class="sottotitolo" id="codice-testo">Ti abbiamo mandato un'email per confermare l'indirizzo. <b>Fai clic sul link</b> che contiene, poi torna qui e premi "Ho confermato".</p>
         <div class="card">
             <button class="btn btn-primary" type="button" id="c-confermato">Ho confermato l'email</button>
             <div class="messaggio" id="msg-confermato" role="status"></div>
         </div>
         <form class="card" id="f-codice">
-            <p class="note" style="margin-top:0">L'email contiene un codice? Puoi scriverlo qui invece di toccare il link.</p>
+            <p class="note" style="margin-top:0">L'email contiene un codice? Puoi scriverlo qui invece di fare clic sul link.</p>
             <div class="field"><label for="c-codice">Codice ricevuto via email</label><input type="text" id="c-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
             <button class="btn btn-secondary" type="submit">Verifica il codice</button>
             <div class="messaggio" role="status"></div>
@@ -86,7 +86,7 @@
     <!-- CODICE DI RECUPERO -->
     <section class="vista" id="v-codice-recupero">
         <h1 class="titolo">Controlla la tua email</h1>
-        <p class="sottotitolo">Se l'email corrisponde a un account, ti abbiamo mandato un messaggio: <b>tocca il link</b> che contiene per scegliere la nuova password (il link vale una volta sola).</p>
+        <p class="sottotitolo">Se l'email corrisponde a un account, ti abbiamo mandato un messaggio: <b>fai clic sul link</b> che contiene per scegliere la nuova password (il link vale una volta sola).</p>
         <form class="card" id="f-codice-recupero">
             <p class="note" style="margin-top:0">L'email contiene un codice? Puoi scriverlo qui.</p>
             <div class="field"><label for="cr-codice">Codice ricevuto via email</label><input type="text" id="cr-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
@@ -298,7 +298,7 @@
             dimenticaPasso();
             mostra('accedi');
             document.getElementById('a-email').value = emailInCorso;
-            msg(document.getElementById('f-accedi'), 'Se hai già toccato il link nell\'email, scrivi la password per entrare.', true);
+            msg(document.getElementById('f-accedi'), 'Se hai già fatto clic sul link nell\'email, scrivi la password per entrare.', true);
             return;
         }
         this.disabled = true;
@@ -307,7 +307,7 @@
         if (error) {
             m.className = 'messaggio ko';
             m.textContent = (error.code || '') === 'email_not_confirmed'
-                ? 'L\'email non risulta ancora confermata: tocca il link nell\'email e riprova (guarda anche nella posta indesiderata).'
+                ? 'L\'email non risulta ancora confermata: fai clic sul link nell\'email e riprova (guarda anche nella posta indesiderata).'
                 : spiega(error);
             return;
         }
