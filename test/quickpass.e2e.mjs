@@ -153,35 +153,40 @@ await browser.close();
   await b2.close();
 }
 
-// ---------- CONFIGURAZIONE GUIDATA NELL'EDITOR: schema delle tre figure, 3 passi, indietro sempre possibile ----------
+// ---------- QUICKGIFT IN UNA PAGINA NELL'EDITOR: frase che si compila da sola, schede Tu → Amico A → Amico B ----------
 {
   const b3 = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
   const c3 = await b3.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
   await c3.route(/cdn\.jsdelivr\.net\/npm\/@supabase|fonts\.googleapis|cdnjs\.cloudflare\.com/, r => r.abort());
   const ed = await c3.newPage();
-  ed.on('dialog', d => d.dismiss());
+  const avvisi = []; ed.on('dialog', d => { avvisi.push(d.message()); d.dismiss(); });
   await ed.goto(`${B}/edit.html`); await ed.waitForTimeout(1500);
-  await ed.evaluate(() => { userPlan = 'GOLD'; document.querySelectorAll('#drawer-quickpass .premium-lock-overlay').forEach(o => o.style.display = 'none'); apriDrawer('drawer-quickpass'); });
+  await ed.evaluate(() => { userPlan = 'GOLD'; statoUtente = 'prenotazione'; document.querySelectorAll('#drawer-quickpass .premium-lock-overlay').forEach(o => o.style.display = 'none'); apriDrawer('drawer-quickpass'); });
   await ed.waitForTimeout(500);
-  const passo = () => ed.evaluate(() => [...document.querySelectorAll('#drawer-quickpass .qp-passo')].find(e => e.style.display !== 'none')?.dataset.passo);
-  const schema = await ed.textContent('#qp-schema');
-  ok(schema.includes('TU') && schema.includes('CHI CONDIVIDE') && schema.includes('CHI RICEVE') && schema.includes('chi l\'ha condiviso guadagna il premio'), 'Editor: lo schema mostra le tre figure e quando arriva il premio');
-  ok(await passo() === '1' && (await ed.textContent('#drawer-quickpass')).includes('PASSO 1 DI 3') && !(await ed.isVisible('#qp-indietro')), 'Editor: si parte da «Che cosa vuoi regalare?», passo 1 di 3');
-  ok(!(await ed.$('#qp-attivita')) && (await ed.textContent('.qp-passo[data-passo="1"] .qp-proposte')).includes('Accesso a un contenuto esclusivo'), 'Editor: nessuna categoria da scegliere, idee universali');
-  await ed.click('#qp-avanti'); ok(await passo() === '1', 'Editor: senza regalo non si va avanti');
-  await ed.click('.qp-passo[data-passo="1"] .qp-proposta >> nth=1'); await ed.click('#qp-avanti');
-  ok(await passo() === '2', 'Editor: scelto il regalo, passo 2 (premio per chi condivide)');
-  await ed.click('.qp-passo[data-passo="2"] .qp-proposta >> nth=0');
-  ok((await ed.textContent('#qp-soglia-nota')).includes('non è previsto un tetto ai premi'), 'Editor: con "1 utilizzo" e nessun numero massimo compare l\'avviso (senza bloccare)');
-  await foto(ed, '10-editor-avviso');
-  await ed.click('#qp-soglie .qp-soglia[data-amici="3"]');
-  ok(!(await ed.$('#qp-soglia-nota .qp-avviso-tetto')), 'Editor: con "3 utilizzi" l\'avviso sparisce');
-  ok(await ed.inputValue('#field-qp-amici') === '3', 'Editor: "dopo quanti amici" si sceglie con un clic');
+  const pagina = await ed.textContent('#drawer-quickpass');
+  const iTu = pagina.indexOf('TU · TITOLARE DELLA TAG'), iA = pagina.indexOf('AMICO A · CHI MANDA IL LINK'), iB = pagina.indexOf('AMICO B · CHI RICEVE IL LINK');
+  ok(iTu > 0 && iTu < iA && iA < iB && !(await ed.$('#qp-indietro')) && !(await ed.$('.qp-passo')), 'Editor: una sola pagina, nell\'ordine Tu → Amico A → Amico B, senza passi');
+  ok((await ed.textContent('#qp-frase')).includes('il regalo') && (await ed.textContent('#qp-frase')).includes('il premio'), 'Editor: la frase in alto mostra gli spazi ancora da compilare');
   await ed.click('#qp-avanti');
-  const riep = await ed.textContent('#qp-riepilogo');
-  ok(await passo() === '3' && riep.includes('10% sul primo acquisto') && riep.includes('Ogni 3 utilizzi') && riep.includes('Lo usa di persona'), 'Editor: passo 3 con il riepilogo che rispecchia le scelte');
-  await foto(ed, '9-editor-riepilogo');
-  await ed.$eval('#drawer-quickpass .header-back', el => el.click()); ok(await passo() === '2', 'Editor: la freccia in alto dal passo 3 torna al 2');
-  await ed.click('#qp-indietro'); ok(await passo() === '1', 'Editor: INDIETRO dal passo 2 torna all\'1');
+  ok(avvisi.some(t => t.includes('regalo dell\'amico B')), 'Editor: senza regalo non si salva e si viene portati al campo');
+  ok(!(await ed.$('.qp-proposta')) && await ed.inputValue('#field-qp-premio-a') === '' && await ed.inputValue('#field-qp-premio-b') === '' && await ed.inputValue('#field-qp-contatto') === '', 'Editor: nessun campo precompilato e nessuna idea da scegliere');
+  await ed.click('#drawer-quickpass button:has-text("Ti servono idee")'); await ed.waitForTimeout(400);
+  const strategia = await ed.textContent('#strategia-content');
+  ok(await ed.evaluate(() => getComputedStyle(document.getElementById('drawer-strategia').lastElementChild).display === 'none'), 'Strategia: chi è già Gold non vede «Scopri i piani e sblocca»');
+  ok(strategia.includes('Idee per il regalo e il premio') && strategia.includes('Amico A') && strategia.includes('una consulenza introduttiva gratuita'), 'Editor: le idee per regalo e premio stanno nella Strategia');
+  await ed.evaluate(() => chiudiStrategia()); await ed.waitForTimeout(400);
+  await ed.fill('#field-qp-premio-b', '10% sul primo acquisto');
+  await ed.fill('#field-qp-premio-a', 'Una sessione extra gratuita');
+  ok((await ed.textContent('#qp-soglia-nota')).includes('non è previsto un tetto ai premi'), 'Editor: con "1 utilizzo" e nessun numero massimo compare l\'avviso (senza bloccare)');
+  await ed.click('#qp-soglie .qp-soglia[data-amici="3"]');
+  ok(await ed.inputValue('#field-qp-amici') === '3' && !(await ed.$('#qp-soglia-nota .qp-avviso-tetto')), 'Editor: "dopo 3 utilizzi" si sceglie con un clic e l\'avviso sparisce');
+  const frase = await ed.textContent('#qp-frase');
+  ok(frase.includes('10% sul primo acquisto') && frase.includes('Ogni 3 amici B') && frase.includes('Una sessione extra gratuita') && frase.includes('di persona'), 'Editor: la frase in alto si compila mentre si scrive');
+  await ed.evaluate(() => document.getElementById('qp-frase').scrollIntoView());
+  await foto(ed, '9-editor-pagina');
+  await ed.evaluate(() => document.getElementById('qp-soglie').scrollIntoView({ block: 'center' }));
+  await foto(ed, '10-editor-pagina-sotto');
+  await ed.click('#qp-modi .qp-modo[data-modo="online"]');
+  ok(await ed.isVisible('#field-qp-contatto') && (await ed.textContent('#qp-frase')).includes('lo usa online'), 'Editor: scegliendo Online compare il recapito e la frase si aggiorna');
   await b3.close();
 }
