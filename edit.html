@@ -996,59 +996,57 @@
 
     <div class="drawer-glass" id="drawer-quickpass">
         <div class="drawer-header-liquido" style="margin-bottom: 14px;">
-            <div class="header-back" onclick="qpFrecciaIndietro()"><i class="fas fa-chevron-left"></i></div>
+            <div class="header-back" onclick="apriDrawer('env-action')"><i class="fas fa-chevron-left"></i></div>
             <div class="header-title" style="font-weight: 400;">QUICKGIFT</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
-        <!-- CONFIGURAZIONE GUIDATA QUICKGIFT (04/11/2026): schema delle tre figure sempre in vista, poi
-             1 il regalo (chi riceve) · 2 il premio (chi condivide) · 3 dove si usa, riepilogo e cassa. Esempi universali, nessuna categoria.
+        <!-- QUICKGIFT IN UNA PAGINA (08/11/2026, idea del titolare): in alto la frase che riassume il meccanismo e si compila
+             da sola, poi lo schema da compilare, una scheda per persona nell'ordine in cui succede:
+             Tu (titolare della tag) → Amico A (chi manda il link) → Amico B (chi riceve il link).
              I campi field-qp-* sono gli stessi di prima: il salvataggio (raccogliDatiDalForm) non cambia. -->
         <div id="qp-wizard" style="display: flex; flex-direction: column; gap: 0; margin-bottom: 14px; flex: 1; min-height: 0; overflow-y: auto; padding: 0 2px 10px 2px;">
           <div style="position: relative;" class="premium-field-container">
 
-            <!-- SCHEMA: Tu → chi condivide → chi riceve (evidenziata la figura del passo in corso) -->
-            <div id="qp-schema" style="border: 1px solid rgba(229,193,88,0.25); background: rgba(229,193,88,0.04); border-radius: 16px; padding: 14px 10px 12px; margin-bottom: 18px;">
-                <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 4px;">
-                    <div class="qp-figura" data-figura="tu" style="flex: 1; text-align: center;">
-                        <div class="qp-figura-icona" style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); color: #e5c158;"><i class="fas fa-crown"></i></div>
-                        <div style="font-size: 0.62rem; color: #fff; font-weight: 700; letter-spacing: 1px;">TU</div>
-                        <div style="font-size: 0.62rem; color: #9ca3af; line-height: 1.35; margin-top: 2px;">scegli regalo e premio</div>
-                    </div>
-                    <div style="color: rgba(229,193,88,0.6); padding-top: 12px; font-size: 0.8rem;"><i class="fas fa-chevron-right"></i></div>
-                    <div class="qp-figura" data-figura="cliente" style="flex: 1; text-align: center;">
-                        <div class="qp-figura-icona" style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); color: #e5c158;"><i class="fas fa-user"></i></div>
-                        <div style="font-size: 0.62rem; color: #fff; font-weight: 700; letter-spacing: 1px;">CHI CONDIVIDE</div>
-                        <div style="font-size: 0.62rem; color: #9ca3af; line-height: 1.35; margin-top: 2px;">manda il tuo regalo</div>
-                    </div>
-                    <div style="color: rgba(229,193,88,0.6); padding-top: 12px; font-size: 0.8rem;"><i class="fas fa-chevron-right"></i></div>
-                    <div class="qp-figura" data-figura="amico" style="flex: 1; text-align: center;">
-                        <div class="qp-figura-icona" style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); color: #e5c158;"><i class="fas fa-gift"></i></div>
-                        <div style="font-size: 0.62rem; color: #fff; font-weight: 700; letter-spacing: 1px;">CHI RICEVE</div>
-                        <div style="font-size: 0.62rem; color: #9ca3af; line-height: 1.35; margin-top: 2px;">lo usa con un codice</div>
+            <!-- LA FRASE: tutto il meccanismo in una riga, aggiornata mentre si scrive -->
+            <div id="qp-frase" style="border: 1px solid rgba(229,193,88,0.35); background: rgba(229,193,88,0.06); border-radius: 16px; padding: 16px; margin-bottom: 16px; font-size: 0.9rem; color: #e5e7eb; line-height: 1.6;"></div>
+
+            <!-- TU: titolare della tag -->
+            <div class="qp-scheda" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 12px; background: rgba(255,255,255,0.02);">
+                <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px;">
+                    <div style="flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; border: 1px solid #e5c158; background: rgba(229,193,88,0.12); color: #e5c158; display: flex; align-items: center; justify-content: center;"><i class="fas fa-crown"></i></div>
+                    <div>
+                        <div style="font-size: 0.72rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;">TU · TITOLARE DELLA TAG</div>
+                        <div style="font-size: 0.78rem; color: #9ca3af; line-height: 1.45; margin-top: 3px;">Scegli regalo e premio, e confermi quando il regalo viene usato.</div>
                     </div>
                 </div>
-                <div style="font-size: 0.72rem; color: #e5e7eb; text-align: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.45;">Quando il regalo viene usato, chi l'ha condiviso guadagna il premio.<br><span style="color: #9ca3af;">Il premio scatta solo a risultato ottenuto.</span></div>
+                <label style="font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; display: block; letter-spacing: 1px;">DOVE SI USA IL REGALO</label>
+                <input type="hidden" id="field-qp-modo" value="negozio">
+                <!-- di persona (QR in cassa; valore 'negozio'), online (WhatsApp o email con il link della cassa), entrambi -->
+                <div id="qp-modi" style="display: flex; gap: 8px;">
+                    <button type="button" class="qp-modo" data-modo="negozio" style="flex: 1; padding: 11px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e5e7eb; cursor: pointer; font-size: 0.75rem; line-height: 1.3;"><i class="fas fa-handshake" style="display: block; margin-bottom: 4px; color: #e5c158;"></i>Di persona</button>
+                    <button type="button" class="qp-modo" data-modo="online" style="flex: 1; padding: 11px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e5e7eb; cursor: pointer; font-size: 0.75rem; line-height: 1.3;"><i class="fas fa-globe" style="display: block; margin-bottom: 4px; color: #e5c158;"></i>Online</button>
+                    <button type="button" class="qp-modo" data-modo="entrambi" style="flex: 1; padding: 11px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e5e7eb; cursor: pointer; font-size: 0.75rem; line-height: 1.3;"><i class="fas fa-arrows-left-right" style="display: block; margin-bottom: 4px; color: #e5c158;"></i>Entrambi</button>
+                </div>
+                <div id="qp-contatto-box" style="display: none; margin-top: 12px;">
+                    <label style="font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">DOVE TI SCRIVONO PER USARE IL REGALO</label>
+                    <input type="text" id="field-qp-contatto" maxlength="120" placeholder="Numero WhatsApp o email" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none;">
+                    <div style="font-size: 0.72rem; color: #9ca3af; margin-top: 6px; line-height: 1.45;">L'amico B ti scrive con un messaggio già pronto, con il codice e un link: fai clic e confermi dalla cassa.</div>
+                </div>
             </div>
 
-            <!-- 1. IL REGALO (lo riceve chi apre il link) -->
-            <div class="qp-passo" data-passo="1">
-                <div style="font-size: 0.65rem; color: #e5c158; letter-spacing: 2px; font-weight: 700;">PASSO 1 DI 3</div>
-                <div style="font-size: 1.15rem; color: #fff; font-weight: 600; line-height: 1.35; margin: 4px 0 6px;">Che cosa vuoi regalare?</div>
-                <div style="font-size: 0.82rem; color: #9ca3af; line-height: 1.5; margin-bottom: 14px;">Lo riceve chi apre il link: un vantaggio, un accesso, un contenuto o un'esperienza. Scegli un'idea o scrivi la tua.</div>
-                <div class="qp-proposte" data-campo="field-qp-premio-b" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;"></div>
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">IL REGALO</label>
-                <input type="text" id="field-qp-premio-b" maxlength="80" placeholder="Es. Accesso a una masterclass esclusiva" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none;">
-            </div>
-
-            <!-- 2. IL PREMIO (lo guadagna chi condivide) -->
-            <div class="qp-passo" data-passo="2" style="display: none;">
-                <div style="font-size: 0.65rem; color: #e5c158; letter-spacing: 2px; font-weight: 700;">PASSO 2 DI 3</div>
-                <div style="font-size: 1.15rem; color: #fff; font-weight: 600; line-height: 1.35; margin: 4px 0 6px;">Che cosa riconosci a chi lo condivide?</div>
-                <div style="font-size: 0.82rem; color: #9ca3af; line-height: 1.5; margin-bottom: 18px;">Lo guadagna quando il regalo viene usato davvero. Sceglilo in proporzione a quanto vale per te una persona nuova.</div>
-                <div class="qp-proposte" data-campo="field-qp-premio-a" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;"></div>
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">IL PREMIO</label>
-                <input type="text" id="field-qp-premio-a" maxlength="80" placeholder="Es. Un mese di contenuti riservati" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 18px;">
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; display: block; letter-spacing: 1px;">DOPO QUANTI UTILIZZI ARRIVA IL PREMIO?</label>
+            <!-- AMICO A: chi manda il link (guadagna il premio) -->
+            <div class="qp-scheda" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 12px; background: rgba(255,255,255,0.02);">
+                <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px;">
+                    <div style="flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; border: 1px solid #e5c158; background: rgba(229,193,88,0.12); color: #e5c158; display: flex; align-items: center; justify-content: center; font-weight: 800;">A</div>
+                    <div>
+                        <div style="font-size: 0.72rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;">AMICO A · CHI MANDA IL LINK</div>
+                        <div style="font-size: 0.78rem; color: #9ca3af; line-height: 1.45; margin-top: 3px;">Condivide il tuo regalo. Quando l'amico B lo usa, guadagna il premio.</div>
+                    </div>
+                </div>
+                <label style="font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">IL PREMIO DELL'AMICO A</label>
+                <input type="text" id="field-qp-premio-a" maxlength="80" placeholder="Es. Un mese di contenuti riservati" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 10px;">
+                <div class="qp-proposte" data-campo="field-qp-premio-a" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;"></div>
+                <label style="font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; display: block; letter-spacing: 1px;">IL PREMIO ARRIVA DOPO</label>
                 <select id="field-qp-amici" style="display: none;">
                     <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5">5</option>
                 </select>
@@ -1056,42 +1054,35 @@
                 <div id="qp-soglia-nota" style="font-size: 0.72rem; color: #9ca3af; margin-top: 8px; line-height: 1.45;"></div>
             </div>
 
-            <!-- 3. DOVE SI USA, RIEPILOGO, CASSA E OPZIONI -->
-            <div class="qp-passo" data-passo="3" style="display: none;">
-                <div style="font-size: 0.65rem; color: #e5c158; letter-spacing: 2px; font-weight: 700;">PASSO 3 DI 3</div>
-                <div style="font-size: 1.15rem; color: #fff; font-weight: 600; line-height: 1.35; margin: 4px 0 14px;">Dove si usa il regalo</div>
-                <!-- di persona (QR in cassa; valore 'negozio'), online (WhatsApp o email con il link della cassa), entrambi -->
-                <div style="margin-bottom: 18px;">
-                    <input type="hidden" id="field-qp-modo" value="negozio">
-                    <div id="qp-modi" style="display: flex; gap: 8px;">
-                        <button type="button" class="qp-modo" data-modo="negozio" style="flex: 1; padding: 12px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e5e7eb; cursor: pointer; font-size: 0.75rem; line-height: 1.3;"><i class="fas fa-handshake" style="display: block; margin-bottom: 4px; color: #e5c158;"></i>Di persona</button>
-                        <button type="button" class="qp-modo" data-modo="online" style="flex: 1; padding: 12px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e5e7eb; cursor: pointer; font-size: 0.75rem; line-height: 1.3;"><i class="fas fa-globe" style="display: block; margin-bottom: 4px; color: #e5c158;"></i>Online</button>
-                        <button type="button" class="qp-modo" data-modo="entrambi" style="flex: 1; padding: 12px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e5e7eb; cursor: pointer; font-size: 0.75rem; line-height: 1.3;"><i class="fas fa-arrows-left-right" style="display: block; margin-bottom: 4px; color: #e5c158;"></i>Entrambi</button>
-                    </div>
-                    <div id="qp-contatto-box" style="display: none; margin-top: 12px;">
-                        <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">DOVE TI SCRIVONO PER USARE IL REGALO</label>
-                        <input type="text" id="field-qp-contatto" maxlength="120" placeholder="Numero WhatsApp o email" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none;">
-                        <div style="font-size: 0.72rem; color: #9ca3af; margin-top: 6px; line-height: 1.45;">Chi ha il regalo ti scrive con un messaggio già pronto, con il codice e un link: fai clic e confermi dalla cassa.</div>
+            <!-- AMICO B: chi riceve il link (riceve il regalo) -->
+            <div class="qp-scheda" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 16px; background: rgba(255,255,255,0.02);">
+                <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px;">
+                    <div style="flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; border: 1px solid #e5c158; background: rgba(229,193,88,0.12); color: #e5c158; display: flex; align-items: center; justify-content: center; font-weight: 800;">B</div>
+                    <div>
+                        <div style="font-size: 0.72rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;">AMICO B · CHI RICEVE IL LINK</div>
+                        <div style="font-size: 0.78rem; color: #9ca3af; line-height: 1.45; margin-top: 3px;">Apre il link e riceve il regalo, con un codice personale da usare.</div>
                     </div>
                 </div>
-                <div style="font-size: 0.65rem; color: #e5c158; letter-spacing: 2px; font-weight: 700;">RIEPILOGO</div>
-                <div id="qp-riepilogo" style="margin: 4px 0 16px;"></div>
-                <details style="margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px;">
-                    <summary style="cursor: pointer; font-size: 0.75rem; color: #d1d5db; letter-spacing: 1px;">OPZIONI AVANZATE (facoltative)</summary>
-                    <div style="margin-top: 14px;">
-                        <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">NUMERO MASSIMO DI REGALI</label>
-                        <input type="number" id="field-qp-limite" min="1" placeholder="Nessun limite" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 14px;">
-                        <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">FINE DELLA CAMPAGNA</label>
-                        <input type="datetime-local" id="field-qp-scadenza" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; color-scheme: dark;">
-                    </div>
-                </details>
-                <!-- CASSA: PIN per i dipendenti, link della cassa e primi numeri (api/quickpass.js) -->
-                <div id="qp-cassa-editor" style="border: 1px solid rgba(229, 193, 88, 0.3); background: rgba(229, 193, 88, 0.04); border-radius: 14px; padding: 16px; margin-bottom: 14px;">
-                    <div style="font-size: 0.75rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 8px;"><i class="fas fa-cash-register" style="margin-right: 6px;"></i>CASSA</div>
-                    <div id="qp-cassa-contenuto" style="font-size: 0.8rem; color: #d1d5db; line-height: 1.5;">Disponibile dopo l'attivazione della tag.</div>
-                </div>
-                <button type="button" onclick="eliminaAsset('quickpass'); qpPasso(1);" style="width: 100%; background: transparent; border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 10px; border-radius: 12px; cursor: pointer; font-size: 0.7rem; letter-spacing: 1px;"><i class="fas fa-trash-alt"></i> ELIMINA QUICKGIFT</button>
+                <label style="font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">IL REGALO DELL'AMICO B</label>
+                <input type="text" id="field-qp-premio-b" maxlength="80" placeholder="Es. Una consulenza introduttiva gratuita" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 10px;">
+                <div class="qp-proposte" data-campo="field-qp-premio-b" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
             </div>
+
+            <details style="margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px;">
+                <summary style="cursor: pointer; font-size: 0.75rem; color: #d1d5db; letter-spacing: 1px;">OPZIONI AVANZATE (facoltative)</summary>
+                <div style="margin-top: 14px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">NUMERO MASSIMO DI REGALI</label>
+                    <input type="number" id="field-qp-limite" min="1" placeholder="Nessun limite" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 14px;">
+                    <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">FINE DELLA CAMPAGNA</label>
+                    <input type="datetime-local" id="field-qp-scadenza" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; color-scheme: dark;">
+                </div>
+            </details>
+            <!-- CASSA: PIN per i dipendenti, link della cassa, numeri e link regalo del titolare (api/quickpass.js) -->
+            <div id="qp-cassa-editor" style="border: 1px solid rgba(229, 193, 88, 0.3); background: rgba(229, 193, 88, 0.04); border-radius: 14px; padding: 16px; margin-bottom: 14px;">
+                <div style="font-size: 0.75rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 8px;"><i class="fas fa-cash-register" style="margin-right: 6px;"></i>CASSA</div>
+                <div id="qp-cassa-contenuto" style="font-size: 0.8rem; color: #d1d5db; line-height: 1.5;">Disponibile dopo l'attivazione della tag.</div>
+            </div>
+            <button type="button" onclick="eliminaAsset('quickpass'); qpAggiorna();" style="width: 100%; background: transparent; border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 10px; border-radius: 12px; cursor: pointer; font-size: 0.7rem; letter-spacing: 1px;"><i class="fas fa-trash-alt"></i> ELIMINA QUICKGIFT</button>
 
             <div class="premium-lock-overlay">
                 <i class="fas fa-lock" style="color: #d4af37; font-size: 1.5rem; margin-bottom: 10px;"></i>
@@ -1100,8 +1091,7 @@
           </div>
         </div>
         <div id="qp-nav" style="display: flex; gap: 10px;">
-            <button type="button" id="qp-indietro" onclick="qpIndietro()" style="flex: 0 0 auto; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0 18px; border-radius: 14px; cursor: pointer; font-size: 0.75rem; letter-spacing: 1px;">INDIETRO</button>
-            <button type="button" id="qp-avanti" class="btn-crea" onclick="qpAvanti()" style="flex: 1; margin: 0;">AVANTI</button>
+            <button type="button" id="qp-avanti" class="btn-crea" onclick="qpAvanti()" style="flex: 1; margin: 0;">SALVA E PUBBLICA</button>
         </div>
     </div>
 

@@ -218,6 +218,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
     corretti a mano in Supabase → Authentication → Email Templates.
   - **Affiliazione:** il titolare non vuole un programma di affiliazione per ora. Chiunque, influencer compresi, può già
     creare il suo link personale da una tag: basta così finché myquicktag non sarà molto diffuso.
+  **QuickGift in una pagina (08/11/2026, idea del titolare):** la configurazione dell'editor non ha più passi. In alto
+  la frase "Come funziona il tuo QuickGift" che si compila mentre si scrive (`qpFrase`), poi una scheda per persona
+  nell'ordine in cui succede: **Tu · titolare della tag** (dove si usa) → **Amico A · chi manda il link** (premio e "dopo
+  quanti utilizzi", con l'avviso senza tetto) → **Amico B · chi riceve il link** (regalo); idee da scegliere con un clic
+  (4 per campo), opzioni avanzate, cassa e link regalo, un solo pulsante "Salva e pubblica". Al salvataggio, se manca
+  qualcosa si viene portati al campo. "Amico A / Amico B" sono le parole della configurazione; sulla tag pubblica i testi
+  restano "chi condivide / chi riceve".
   Nell'**Identity Console** ogni tag con QuickGift ha il pulsante "Cassa QuickGift · conferma i regali" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
@@ -260,7 +267,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/quickpass.e2e.mjs` → 36 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/quickpass.e2e.mjs` → 33 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).
