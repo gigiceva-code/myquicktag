@@ -1008,7 +1008,9 @@
           <div style="position: relative;" class="premium-field-container">
 
             <!-- LA FRASE: tutto il meccanismo in una riga, aggiornata mentre si scrive -->
-            <div id="qp-frase" style="border: 1px solid rgba(229,193,88,0.35); background: rgba(229,193,88,0.06); border-radius: 16px; padding: 16px; margin-bottom: 16px; font-size: 0.9rem; color: #e5e7eb; line-height: 1.6;"></div>
+            <div id="qp-frase" style="border: 1px solid rgba(229,193,88,0.35); background: rgba(229,193,88,0.06); border-radius: 16px; padding: 16px; margin-bottom: 10px; font-size: 0.9rem; color: #e5e7eb; line-height: 1.6;"></div>
+            <!-- Idee ed esempi per regalo e premio stanno nella STRATEGIA (decisione del titolare, 08/11/2026): qui nessun campo precompilato -->
+            <button type="button" onclick="apriStrategia('quickpass', event)" style="display: block; width: 100%; text-align: left; background: none; border: none; color: #9ca3af; font-size: 0.75rem; padding: 2px 4px 14px; cursor: pointer;"><i class="fas fa-bolt" style="color: #e5c158; margin-right: 6px;"></i>Ti servono idee per il regalo e il premio? <span style="color: #e5c158; font-weight: 700; letter-spacing: 1px;">STRATEGIA ›</span></button>
 
             <!-- TU: titolare della tag -->
             <div class="qp-scheda" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 12px; background: rgba(255,255,255,0.02);">
@@ -1044,8 +1046,7 @@
                     </div>
                 </div>
                 <label style="font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">IL PREMIO DELL'AMICO A</label>
-                <input type="text" id="field-qp-premio-a" maxlength="80" placeholder="Es. Un mese di contenuti riservati" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 10px;">
-                <div class="qp-proposte" data-campo="field-qp-premio-a" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;"></div>
+                <input type="text" id="field-qp-premio-a" maxlength="80" placeholder="Scrivi il premio" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 16px;">
                 <label style="font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; display: block; letter-spacing: 1px;">IL PREMIO ARRIVA DOPO</label>
                 <select id="field-qp-amici" style="display: none;">
                     <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5">5</option>
@@ -1064,8 +1065,7 @@
                     </div>
                 </div>
                 <label style="font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; letter-spacing: 1px;">IL REGALO DELL'AMICO B</label>
-                <input type="text" id="field-qp-premio-b" maxlength="80" placeholder="Es. Una consulenza introduttiva gratuita" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 10px;">
-                <div class="qp-proposte" data-campo="field-qp-premio-b" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+                <input type="text" id="field-qp-premio-b" maxlength="80" placeholder="Scrivi il regalo" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none;">
             </div>
 
             <details style="margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px;">

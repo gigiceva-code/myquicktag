@@ -536,7 +536,7 @@ delete process.env.RINNOVO_GRATUITO;
   const db=new Function(src.slice(a,b)+'; return databaseStrategie;')();
   const html=fs.readFileSync(new URL('../edit.html', import.meta.url),'utf8');
   const chiavi=[...html.matchAll(/apriStrategia\('([a-z]+)'/g)].map(m=>m[1]);
-  ok(chiavi.length===9 && chiavi.every(k=>db[k] && db[k].titolo && db[k].testo.includes('Cosa ottieni')),'strategie: ogni pulsante STRATEGIA dell\'editor ha il suo testo (perché, come, cosa ottieni)');
+  ok(new Set(chiavi).size===9 && chiavi.every(k=>db[k] && db[k].titolo && db[k].testo.includes('Cosa ottieni')),'strategie: ogni pulsante STRATEGIA dell\'editor ha il suo testo (perché, come, cosa ottieni)');
   const tutto=Object.values(db).map(v=>v.testo).join(' ')+html;
   ok(!/matematicamente|Dark Mode|filtrando le recensioni negative|Costringendo|L'80%|crollano del 20%/i.test(tutto),'strategie: niente statistiche senza fonte, funzioni inesistenti o recensioni filtrate');
 }
