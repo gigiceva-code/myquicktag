@@ -328,6 +328,17 @@ nomiProtetti.push({nome:'zz',tipo:'gold',regola:'esatto',assegnato_a:'anna@esemp
 r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtAnna),body:{tag:'zz'}});
 ok(r.code===200 && riga('zz').proprietario_id===anna.id,'nome corto assegnato a una persona: prenotabile solo da lei');
 
+// Nome "black" assegnato a una persona (es. @myquicktag al titolare del sito): solo lei, gli altri nomi simili restano bloccati
+nomiProtetti.push({nome:'brandx',tipo:'black',regola:'contiene'},{nome:'mybrandx',tipo:'black',regola:'esatto',assegnato_a:'bruno@esempio.it'});
+r=await call('check-and-create.js',{method:'POST',body:{tag:'mybrandx'}});
+ok(r.code===400 && r.body.codice==='riservato' && !riga('mybrandx'),'nome black assegnato: senza account resta riservato');
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtAnna),body:{tag:'mybrandx'}});
+ok(r.code===400 && r.body.codice==='riservato' && !riga('mybrandx'),'nome black assegnato: un altro account non lo prende');
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtBruno),body:{tag:'mybrandxofficial'}});
+ok(r.code===400 && r.body.codice==='riservato','nome black assegnato: i nomi simili restano bloccati anche per lui');
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtBruno),body:{tag:'mybrandx'}});
+ok(r.code===200 && riga('mybrandx').proprietario_id===bruno.id,'nome black assegnato: l\'account con quell\'email lo prenota');
+
 // Nome libero prenotato, poi messo in lista: l'attivazione viene bloccata (la tag non si cancella)
 r=await call('check-and-create.js',{method:'POST',body:{tag:'futurobrand'}});
 const tokFuturo=r.body.sessionToken;

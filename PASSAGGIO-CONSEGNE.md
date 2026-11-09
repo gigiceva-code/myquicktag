@@ -250,6 +250,11 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Nell'**Identity Console** ogni tag con QuickGift ha il pulsante "Cassa QuickGift · conferma i regali" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
+- **Nomi assegnati anche se "black" (09/11/2026):** in `controllaNome` (lib/nomi-riservati.js) un nome con una riga
+  "esatto" e `assegnato_a` vale per quella sola email verificata, qualunque sia il tipo (tranne `system`). Serve per dare
+  **@myquicktag** al titolare del sito: le righe `quicktag` e `myquicktag` "contiene" (black) continuano a bloccare per
+  tutti gli altri ogni nome che contiene "quicktag" (anche "myquicktagofficial"). Per assegnarlo: in `nomi_riservati`
+  la riga `myquicktag` diventa regola `esatto` con `assegnato_a` = email dell'account del titolare.
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
   «Accetto di ricevere offerte e novità da @Nome» sotto il modulo, con nota «Facoltativo…» e link alla Privacy.
   `api/add-lead.js` salva nel contatto `consenso_offerte` (solo se `true` esplicito), `consenso_testo` (il testo accettato)
