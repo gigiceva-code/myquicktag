@@ -97,33 +97,40 @@
     // REGALO = quello dell'amico invitato · PREMIO = quello del cliente che condivide. Mai mescolate.
     // Dove si usa (negozio / online / entrambi) e il link "Usa il regalo" verso il titolare, con un messaggio
     // già scritto che contiene il codice e il link della cassa (lo tocca il titolare e conferma)
+    // Dove si usa: di persona (QR in cassa), online (come un codice sconto: si inserisce quando si ordina o si prenota,
+    // il titolare lo verifica e lo conferma nella cassa di myquicktag), entrambi. Niente WhatsApp: si resta in myquicktag.
     function modoUso() {
         const m = (cacheDatiUtente && cacheDatiUtente.quickpass_modo) || 'negozio';
-        const contatto = String((cacheDatiUtente && cacheDatiUtente.quickpass_contatto) || '').trim();
-        return (m === 'online' || m === 'entrambi') && contatto ? { modo: m, contatto } : { modo: 'negozio', contatto: '' };
+        return { modo: m === 'online' || m === 'entrambi' ? m : 'negozio', link: linkNegozio() };
+    }
+    // Link facoltativo dove si compra o si prenota (casella quickpass_contatto). I vecchi recapiti (numero o email) non sono un link.
+    function linkNegozio() {
+        let v = String((cacheDatiUtente && cacheDatiUtente.quickpass_contatto) || '').trim();
+        if (!v || v.includes('@') || /\s/.test(v) || !/[a-z]{2,}\.[a-z]{2,}/i.test(v)) return '';
+        if (!/^https?:\/\//i.test(v)) v = 'https://' + v;
+        try { const u = new URL(v); return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : ''; } catch (e) { return ''; }
     }
     function parola(p) { return p && p.tipo === 'premio' ? 'premio' : 'regalo'; }
-    function linkUsoOnline(p) {
-        const { contatto } = modoUso();
-        const cassa = `${window.location.origin}/u/${nomeTag()}?cassa=${p.codice}`;
-        const testo = `Ciao ${nomeVisibile()}, vorrei usare il mio ${parola(p)} QuickGift: ${p.premio}. Codice ${p.codice} (a nome di ${p.nome}). Per confermarlo: ${cassa}`;
-        if (contatto.includes('@')) return `mailto:${encodeURIComponent(contatto)}?subject=${encodeURIComponent('QuickGift ' + p.codice)}&body=${encodeURIComponent(testo)}`;
-        return `https://wa.me/${contatto.replace(/\D/g, '')}?text=${encodeURIComponent(testo)}`;
+    function copiaCodice(codice) {
+        const fatto = () => { if (typeof mostraToast === 'function') mostraToast('Codice copiato!'); };
+        if (navigator.clipboard) navigator.clipboard.writeText(codice).then(fatto).catch(() => {}); else fatto();
+        if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT CODICE COPIATO');
     }
     // Come si usa, in parole semplici: nessuno deve indovinare cosa fare con un QR
     function comeSiUsa(modo) {
         const negozio = `<div><strong style="color: #fff;">Di persona:</strong> mostra il QR o detta il codice a ${esc(nomeVisibile())}, prima di pagare se c'è un acquisto.</div>`;
-        const online = `<div><strong style="color: #fff;">Online:</strong> fai clic sul pulsante qui sotto e invia il messaggio: il codice è già scritto.</div>`;
+        const online = `<div><strong style="color: #fff;">Online:</strong> inserisci il codice quando ordini o prenoti, nel campo «codice sconto» o nelle note.</div>`;
         return modo === 'online' ? online : modo === 'entrambi' ? negozio + online : negozio;
     }
 
     // Il regalo (o il premio) come "biglietto": cosa, per chi, QR, codice, scadenza e come si usa
     function htmlPass(p, sottotitolo) {
         const usato = p.stato === 'usato', scaduto = p.scaduto;
-        const { modo, contatto } = modoUso();
+        const { modo, link } = modoUso();
         const conQr = modo !== 'online';
-        const email = contatto.includes('@');
-        const bottoneOnline = modo === 'negozio' || usato || scaduto ? '' : `<a href="${esc(linkUsoOnline(p))}" target="_blank" rel="noopener noreferrer" onclick="if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT USATO ONLINE')" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 16px; padding: 15px; background: ${ORO}; color: #000; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase;"><i class="${email ? 'fas fa-envelope' : 'fab fa-whatsapp'}" style="font-size: 1.1rem;"></i> Usa il ${parola(p)} ${email ? 'via email' : 'su WhatsApp'}</a>`;
+        // Online come un codice sconto: si copia il codice e (se il titolare l'ha indicato) si va dove si compra o si prenota
+        const bottoneOnline = modo === 'negozio' || usato || scaduto ? '' : `<button type="button" onclick="mqtQuickPass.copiaCodice('${esc(p.codice)}')" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 16px; padding: 15px; background: ${ORO}; color: #000; border: none; border-radius: 12px; font-weight: 800; font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;"><i class="fas fa-copy" style="font-size: 1rem;"></i> Copia il codice</button>` +
+            (link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer" onclick="if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT VAI AL NEGOZIO')" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; padding: 14px; background: transparent; border: 1px solid ${ORO}; color: ${ORO}; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase;"><i class="fas fa-arrow-up-right-from-square"></i> Vai dove usarlo</a>` : '');
         const nota = usato ? `Usato il ${dataBreve(p.usato_il)}` : scaduto ? 'Scaduto' : `Valido fino al ${dataBreve(p.scadenza)}`;
         return `<div style="padding: 28px 22px 22px; text-align: center;">
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.5); letter-spacing: 3px; text-transform: uppercase;">${esc(sottotitolo)}</div>
@@ -170,7 +177,7 @@
             return;
         }
         const { modo } = modoUso();
-        const dove = modo === 'online' ? 'Lo usi online, con un messaggio già pronto.' : modo === 'entrambi' ? 'Lo usi di persona o online, con un codice personale.' : 'Lo usi di persona: basta mostrare il tuo codice personale.';
+        const dove = modo === 'online' ? 'Lo usi online, come un codice sconto.' : modo === 'entrambi' ? 'Lo usi di persona o online, con un codice personale.' : 'Lo usi di persona: basta mostrare il tuo codice personale.';
         const titolo = info.da ? `${esc(info.da)} ti ha fatto un regalo` : 'Hai ricevuto un regalo';
         overlay(`<div style="padding: 32px 22px 22px; text-align: center;">
             <i class="fas fa-gift" style="font-size: 2.6rem; color: ${ORO}; margin-bottom: 14px; filter: drop-shadow(0 0 14px rgba(212,175,55,0.4));"></i>
@@ -300,8 +307,8 @@
             html += `<div style="text-align: center; padding: 22px 18px; border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; background: rgba(255,255,255,0.03);">
                 <div style="font-size: 0.65rem; color: rgba(255,255,255,0.5); letter-spacing: 3px; text-transform: uppercase;">Il tuo link da condividere</div>
                 ${htmlTrePassi(premioB, premioA, perPremio)}
-                <button type="button" onclick="mqtQuickPass.invia()" style="${stileBottone} display: flex; align-items: center; justify-content: center; gap: 10px;"><i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Manda il regalo su WhatsApp</button>
-                <button type="button" onclick="mqtQuickPass.condividi()" style="width: 100%; margin-top: 10px; padding: 14px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 12px; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;">Altre app</button>
+                <button type="button" onclick="mqtQuickPass.condividiSu('whatsapp')" style="${stileBottone} display: flex; align-items: center; justify-content: center; gap: 10px;"><i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Manda il regalo su WhatsApp</button>
+                ${htmlCanali()}
                 <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 12px; word-break: break-all;">${esc(link)}</div>
                 ${avanzamento}
                 <div style="display: grid; grid-template-columns: repeat(${guadagnati ? 3 : 2}, 1fr); gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
@@ -351,11 +358,42 @@
         const link = `${window.location.origin}/u/${nomeTag()}?pass=${m.invito ? m.invito.codice : ''}`;
         return { link, testo: `Ho un regalo per te da ${nomeVisibile()}: ${cacheDatiUtente.quickpass_premio_b || ''}. Lo ricevi qui:` };
     }
-    function invia() {
-        const { link, testo } = messaggioInvito();
-        if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT INVIATO');
-        window.open(`https://wa.me/?text=${encodeURIComponent(`${testo} ${link}`)}`, '_blank', 'noopener');
+    // Tutti i modi di condividere il link (l'amico A può usare il canale che preferisce: più canali, più persone su myquicktag)
+    const CANALI = [
+        ['telegram', 'fab fa-telegram', 'Telegram'], ['facebook', 'fab fa-facebook', 'Facebook'], ['sms', 'fas fa-comment-sms', 'SMS'],
+        ['email', 'fas fa-envelope', 'Email'], ['copia', 'fas fa-link', 'Copia link'], ['qr', 'fas fa-qrcode', 'Mostra QR']
+    ];
+    function htmlCanali() {
+        const bottone = ([id, icona, nome]) => `<button type="button" onclick="mqtQuickPass.condividiSu('${id}')" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); color: #fff; border-radius: 12px; font-size: 0.66rem; letter-spacing: 0.5px; cursor: pointer;"><i class="${icona}" style="font-size: 1.15rem; color: ${ORO};"></i>${nome}</button>`;
+        return `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px;">${CANALI.map(bottone).join('')}</div>` +
+            (navigator.share ? `<button type="button" onclick="mqtQuickPass.condividiSu('altre')" style="width: 100%; margin-top: 8px; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 12px; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i>Altre app (Instagram, Messenger…)</button>` : '');
     }
+    function condividiSu(canale) {
+        const { link, testo } = messaggioInvito();
+        const tutto = `${testo} ${link}`, e = encodeURIComponent;
+        if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT CONDIVISO ' + canale.toUpperCase());
+        const apri = url => window.open(url, '_blank', 'noopener');
+        if (canale === 'whatsapp') apri(`https://wa.me/?text=${e(tutto)}`);
+        else if (canale === 'telegram') apri(`https://t.me/share/url?url=${e(link)}&text=${e(testo)}`);
+        else if (canale === 'facebook') apri(`https://www.facebook.com/sharer/sharer.php?u=${e(link)}`);
+        else if (canale === 'sms') window.location.href = `sms:?&body=${e(tutto)}`;
+        else if (canale === 'email') window.location.href = `mailto:?subject=${e('Un regalo per te da ' + nomeVisibile())}&body=${e(tutto)}`;
+        else if (canale === 'copia') { if (navigator.clipboard) navigator.clipboard.writeText(tutto).then(() => { if (typeof mostraToast === 'function') mostraToast('Link copiato!'); }); }
+        else if (canale === 'qr') mostraQrLink(link);
+        else if (canale === 'altre') condividi();
+    }
+    // QR del link da mostrare sullo schermo: l'amico B lo inquadra dal vivo
+    function mostraQrLink(link) {
+        const o = overlay(`<div style="padding: 32px 22px 24px; text-align: center;">
+            <div style="font-size: 0.65rem; color: ${ORO}; letter-spacing: 3px; text-transform: uppercase; font-weight: 700;">Il tuo link regalo</div>
+            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.75); margin: 10px 0 18px; line-height: 1.5;">Fallo inquadrare con la fotocamera: chi lo apre riceve il regalo.</div>
+            <div class="mqt-qp-qr-link" style="margin: 0 auto; width: 216px; height: 216px; padding: 12px; background: #fff; border-radius: 14px;"></div>
+            <button type="button" onclick="mqtQuickPass.chiudi()" style="${stileBottone} margin-top: 22px;">Fatto</button>
+        </div>`);
+        const el = o.querySelector('.mqt-qp-qr-link');
+        if (el && typeof QRCode !== 'undefined') new QRCode(el, { text: link, width: 192, height: 192, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+    }
+    function invia() { condividiSu('whatsapp'); }
     function condividi() {
         const { link, testo } = messaggioInvito();
         if (navigator.share) {
@@ -470,5 +508,5 @@
         if (invito.length === 8 || p.get('regalo') || p.get('qp_ref') === 'invito') paginaAmico(invito.length === 8 ? invito : '');
     }
 
-    window.mqtQuickPass = { avvio, sezione, ritira, creaInvito, invia, condividi, cassa, verifica, chiudi, condividiLinkTitolare };
+    window.mqtQuickPass = { avvio, sezione, ritira, creaInvito, invia, condividi, condividiSu, copiaCodice, cassa, verifica, chiudi, condividiLinkTitolare };
 })();
