@@ -1863,7 +1863,7 @@ function gestisciVIPSwitch(checkbox) {
                         ['fa-crown', 'Tu:', 'scegli regalo e premio e pubblichi il tuo link regalo dove vuoi: storia, bio, post, newsletter.'],
                         ['fa-share-nodes', 'Amico A:', 'dalla tua tag crea il suo link e lo manda con un clic.'],
                         ['fa-gift', 'Amico B:', 'apre il link, vede «Marco ti ha fatto un regalo» e lo riceve con un codice personale, diverso per ogni persona anche se il link lo aprono in migliaia.'],
-                        ['fa-circle-check', 'Conferma:', 'di persona inquadri il QR del regalo; online il codice arriva con l\'ordine, come un codice sconto, e lo scrivi nella cassa. Ogni codice vale una volta sola, e l\'amico A guadagna il suo premio.']
+                        ['fa-circle-check', 'Conferma:', 'di persona inquadri il QR del regalo; online l\'amico B ti indica il suo codice quando ordina, prenota o richiede il regalo, e tu lo scrivi nella cassa. Ogni codice vale una volta sola, e l\'amico A guadagna il suo premio.']
                     ]],
                     ['Cosa ottieni', 'Persone nuove già ben disposte, a un costo pari al solo premio, e numeri chiari: link creati, regali richiesti, regali usati. Scegli il premio in proporzione a quanto vale per te una persona nuova, e usa scadenza e numero massimo di regali per tenere tutto sotto controllo.'],
                     _boxStrategia('Idee per il regalo e il premio', _elencoStrategia('Il regalo convince l\'amico B a provarti; il premio motiva l\'amico A a condividere. Qualche esempio da adattare:', [
@@ -2154,7 +2154,7 @@ async function caricaCassaQuickPass() {
     const cifra = (v, etichetta) => `<div style="flex: 1; text-align: center;"><div style="font-size: 1.2rem; color: #fff; font-weight: 600;">${v || 0}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px;">${etichetta}</div></div>`;
     box.innerHTML = `
         <div style="display: flex; gap: 6px; margin: 4px 0 14px;">${cifra(n.inviti, 'LINK CREATI')}${cifra(n.pass_ritirati, 'REGALI RICHIESTI')}${cifra(n.pass_usati, 'REGALI USATI')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
-        <div style="margin-bottom: 6px;">Di persona: inquadra con la fotocamera il QR del regalo. Online: apri la cassa e scrivi il codice che trovi nell'ordine. Se sei collegato come titolare confermi subito; i tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
+        <div style="margin-bottom: 6px;">Di persona: inquadra con la fotocamera il QR del regalo. Online: apri la cassa e scrivi il codice che l'amico B ti ha indicato. Se sei collegato come titolare confermi subito; i tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
         <div style="display: flex; gap: 8px; margin: 10px 0 6px;">
             <input type="password" id="qp-pin-nuovo" inputmode="numeric" maxlength="6" placeholder="${r.pin_impostato ? 'PIN impostato ••••' : 'Nuovo PIN (4-6 cifre)'}" style="flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 16px; outline: none;">
             <button type="button" onclick="salvaPinQuickPass()" style="background: #e5c158; color: #111; border: none; border-radius: 10px; padding: 0 16px; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer;">SALVA PIN</button>
@@ -2257,7 +2257,7 @@ function qpFrase() {
     const regalo = qpVal('field-qp-premio-b'), premio = qpVal('field-qp-premio-a');
     const n = parseInt(qpVal('field-qp-amici'), 10) || 1;
     const modo = qpVal('field-qp-modo') || 'negozio';
-    const dove = { negozio: 'di persona', online: 'online come codice sconto', entrambi: 'di persona o online come codice sconto' }[modo];
+    const dove = { negozio: 'di persona', online: 'online con il suo codice personale', entrambi: 'di persona o online con il suo codice personale' }[modo];
     box.innerHTML = `<div style="font-size: 0.6rem; color: #e5c158; letter-spacing: 2px; font-weight: 700; margin-bottom: 8px;">COME FUNZIONA IL TUO QUICKGIFT</div>
         L'<strong style="color: #fff;">amico A</strong> manda il tuo link all'<strong style="color: #fff;">amico B</strong>, che riceve
         ${regalo ? `<strong style="color: #fff;">${qpEsc(regalo)}</strong>` : vuoto('il regalo')} e lo usa ${dove}.

@@ -122,12 +122,12 @@ const lead = JSON.parse((db.rows.find(r => r.username_system === TAG) || {}).lea
 ok(lead && lead.nome === 'Luca' && lead.consenso_offerte === true && lead.fonte === 'QuickGift', 'Il recapito di Luca arriva in I miei contatti con il consenso');
 await browser.close();
 
-// ---------- QUICKGIFT ONLINE COME CODICE SCONTO: niente WhatsApp, il codice si usa quando si ordina e si conferma in cassa ----------
+// ---------- QUICKGIFT ONLINE: niente WhatsApp, il codice personale si indica quando si ordina o si prenota e si conferma in cassa ----------
 {
   const TAG2 = 'negoziowebqp' + Date.now().toString(36).slice(-4);
   await fetch(`${B}/__seed`, { method: 'POST', body: JSON.stringify({
-    username_system: TAG2, username_display: '@NegozioWeb', stato: 'attivo', data_scadenza: '2099-01-01',
-    quickpass_premio_a: 'Un buono da 10 €', quickpass_premio_b: 'Spedizione gratuita sul primo ordine', quickpass_modo: 'online', quickpass_contatto: 'www.negozioweb.it/shop'
+    username_system: TAG2, username_display: '@AcademyWeb', stato: 'attivo', data_scadenza: '2099-01-01',
+    quickpass_premio_a: 'Un mese di contenuti riservati', quickpass_premio_b: 'Accesso alla masterclass online', quickpass_modo: 'online', quickpass_contatto: 'www.negozioweb.it/shop'
   }) });
   const b2 = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
   const ctx = async (w, h, dpr) => { const c = await b2.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: dpr, isMobile: true });
@@ -144,12 +144,12 @@ await browser.close();
   ok((await anna.textContent('#mqt-qp-overlay')).includes('Il tuo link regalo') && !!(await anna.$('#mqt-qp-overlay .mqt-qp-qr-link')), 'Condivisione: «Mostra QR» fa comparire il QR del link da far inquadrare');
   const bea = await ctx(375, 812, 3);
   await bea.goto(link2.replace(/^https?:\/\/[^/]+/, B)); await bea.waitForTimeout(1800);
-  ok((await bea.textContent('#mqt-qp-overlay')).includes('come un codice sconto'), 'Online: la pagina del regalo dice che si usa come un codice sconto');
+  ok((await bea.textContent('#mqt-qp-overlay')).includes('con il tuo codice personale'), 'Online: la pagina del regalo dice che si usa con il codice personale');
   await bea.fill('#qp-nome', 'Bea'); await bea.click('#qp-ritira'); await bea.waitForTimeout(1500);
   await foto(bea, '8-pass-online');
   const testoOnline = await bea.textContent('#mqt-qp-overlay');
   const vai = await bea.$('#mqt-qp-overlay a:has-text("Vai dove usarlo")');
-  ok(testoOnline.includes('Copia il codice') && testoOnline.includes('codice sconto') && !(await bea.$('#mqt-qp-overlay a[href*="wa.me"]')), 'Online: «Copia il codice» e istruzioni da codice sconto, niente WhatsApp');
+  ok(testoOnline.includes('Copia il codice') && testoOnline.includes('quando ordini, prenoti o richiedi il regalo') && !testoOnline.includes('sconto') && !(await bea.$('#mqt-qp-overlay a[href*="wa.me"]')), 'Online: «Copia il codice» e istruzioni neutre (nessuno «sconto»), niente WhatsApp');
   ok(!!vai && (await vai.getAttribute('href')) === 'https://www.negozioweb.it/shop', 'Online: «Vai dove usarlo» porta al link indicato dal titolare');
   ok(testoOnline.includes('Online:') && !testoOnline.includes('Di persona:') && !(await bea.$('#mqt-qp-overlay .mqt-qp-qr')), 'Online: istruzioni solo per l\'uso online, niente QR da cassa');
   await b2.close();
@@ -189,7 +189,7 @@ await browser.close();
   await ed.evaluate(() => document.getElementById('qp-soglie').scrollIntoView({ block: 'center' }));
   await foto(ed, '10-editor-pagina-sotto');
   await ed.click('#qp-modi .qp-modo[data-modo="online"]');
-  ok(await ed.isVisible('#field-qp-contatto') && (await ed.textContent('#qp-contatto-box')).includes('codice sconto') && (await ed.textContent('#qp-frase')).includes('online come codice sconto'), 'Editor: scegliendo Online si spiega il codice sconto, il link è facoltativo e la frase si aggiorna');
+  ok(await ed.isVisible('#field-qp-contatto') && (await ed.textContent('#qp-contatto-box')).includes('codice personale') && !(await ed.textContent('#qp-contatto-box')).includes('sconto') && (await ed.textContent('#qp-frase')).includes('online con il suo codice personale'), 'Editor: scegliendo Online si spiega il codice personale (nessuno «sconto»), il link è facoltativo e la frase si aggiorna');
   avvisi.length = 0; await ed.fill('#field-qp-contatto', '+39 333 1234567'); await ed.click('#qp-avanti');
   ok(avvisi.some(t => t.includes('non sembra un indirizzo web')), 'Editor: un numero di telefono al posto del link viene segnalato');
   await b3.close();

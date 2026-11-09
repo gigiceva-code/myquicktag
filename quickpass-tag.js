@@ -97,8 +97,9 @@
     // REGALO = quello dell'amico invitato · PREMIO = quello del cliente che condivide. Mai mescolate.
     // Dove si usa (negozio / online / entrambi) e il link "Usa il regalo" verso il titolare, con un messaggio
     // già scritto che contiene il codice e il link della cassa (lo tocca il titolare e conferma)
-    // Dove si usa: di persona (QR in cassa), online (come un codice sconto: si inserisce quando si ordina o si prenota,
-    // il titolare lo verifica e lo conferma nella cassa di myquicktag), entrambi. Niente WhatsApp: si resta in myquicktag.
+    // Dove si usa: di persona (QR in cassa), online (il codice personale si indica quando si ordina, si prenota o si
+    // richiede il regalo; il titolare lo verifica e lo conferma nella cassa di myquicktag), entrambi. Parole neutre:
+    // il regalo può essere qualsiasi cosa, non per forza uno sconto (richiesta del titolare, 09/11/2026). Niente WhatsApp: si resta in myquicktag.
     function modoUso() {
         const m = (cacheDatiUtente && cacheDatiUtente.quickpass_modo) || 'negozio';
         return { modo: m === 'online' || m === 'entrambi' ? m : 'negozio', link: linkNegozio() };
@@ -119,7 +120,7 @@
     // Come si usa, in parole semplici: nessuno deve indovinare cosa fare con un QR
     function comeSiUsa(modo) {
         const negozio = `<div><strong style="color: #fff;">Di persona:</strong> mostra il QR o detta il codice a ${esc(nomeVisibile())}, prima di pagare se c'è un acquisto.</div>`;
-        const online = `<div><strong style="color: #fff;">Online:</strong> inserisci il codice quando ordini o prenoti, nel campo «codice sconto» o nelle note.</div>`;
+        const online = `<div><strong style="color: #fff;">Online:</strong> indica questo codice quando ordini, prenoti o richiedi il regalo: ${esc(nomeVisibile())} lo verifica e lo conferma.</div>`;
         return modo === 'online' ? online : modo === 'entrambi' ? negozio + online : negozio;
     }
 
@@ -128,7 +129,7 @@
         const usato = p.stato === 'usato', scaduto = p.scaduto;
         const { modo, link } = modoUso();
         const conQr = modo !== 'online';
-        // Online come un codice sconto: si copia il codice e (se il titolare l'ha indicato) si va dove si compra o si prenota
+        // Online: si copia il codice personale e (se il titolare l'ha indicato) si va dove si usa
         const bottoneOnline = modo === 'negozio' || usato || scaduto ? '' : `<button type="button" onclick="mqtQuickPass.copiaCodice('${esc(p.codice)}')" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 16px; padding: 15px; background: ${ORO}; color: #000; border: none; border-radius: 12px; font-weight: 800; font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;"><i class="fas fa-copy" style="font-size: 1rem;"></i> Copia il codice</button>` +
             (link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer" onclick="if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT VAI AL NEGOZIO')" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; padding: 14px; background: transparent; border: 1px solid ${ORO}; color: ${ORO}; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase;"><i class="fas fa-arrow-up-right-from-square"></i> Vai dove usarlo</a>` : '');
         const nota = usato ? `Usato il ${dataBreve(p.usato_il)}` : scaduto ? 'Scaduto' : `Valido fino al ${dataBreve(p.scadenza)}`;
@@ -177,7 +178,7 @@
             return;
         }
         const { modo } = modoUso();
-        const dove = modo === 'online' ? 'Lo usi online, come un codice sconto.' : modo === 'entrambi' ? 'Lo usi di persona o online, con un codice personale.' : 'Lo usi di persona: basta mostrare il tuo codice personale.';
+        const dove = modo === 'online' ? 'Lo usi online, con il tuo codice personale.' : modo === 'entrambi' ? 'Lo usi di persona o online, con un codice personale.' : 'Lo usi di persona: basta mostrare il tuo codice personale.';
         const titolo = info.da ? `${esc(info.da)} ti ha fatto un regalo` : 'Hai ricevuto un regalo';
         overlay(`<div style="padding: 32px 22px 22px; text-align: center;">
             <i class="fas fa-gift" style="font-size: 2.6rem; color: ${ORO}; margin-bottom: 14px; filter: drop-shadow(0 0 14px rgba(212,175,55,0.4));"></i>
@@ -467,7 +468,7 @@
             ${p.consigliato_da ? `<div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 4px;">Glielo ha mandato <strong>${esc(p.consigliato_da)}</strong></div>` : ''}
             <div style="font-size: 0.72rem; color: rgba(255,255,255,0.45); margin-top: 6px;">Valido fino al ${dataBreve(p.scadenza)}</div>
             ${p.sospetto ? `<div style="font-size: 0.78rem; color: #f59e0b; margin-top: 10px; line-height: 1.45; text-align: left;">⚠ Questo regalo sembra richiesto da chi l'ha mandato (stesso telefono o stesso nome). Verifica che sia davvero una persona nuova prima di confermare.</div>` : ''}
-            <div style="font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 12px; line-height: 1.45;">Consegna il ${premio ? 'premio' : 'regalo'} o applica lo sconto, poi conferma qui sotto.</div></div>`;
+            <div style="font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 12px; line-height: 1.45;">Prima consegna il ${premio ? 'premio' : 'regalo'}, poi conferma qui sotto.</div></div>`;
         const btn = document.getElementById('qp-cassa-azione');
         btn.textContent = 'Ho consegnato: conferma';
         btn.onclick = convalida;

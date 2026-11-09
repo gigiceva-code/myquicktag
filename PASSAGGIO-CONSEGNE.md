@@ -230,10 +230,14 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   **Strategia** di QuickGift (riquadro "Idee per il regalo e il premio"), raggiungibile dal link "Ti servono idee…" sotto la
   frase. La Strategia non mostra più "Scopri i piani e sblocca" a chi è già Gold.
   **Tutto in myquicktag (09/11/2026, decisione del titolare: il titolare deve lavorare nell'app, non su WhatsApp):**
-  - **Online = codice sconto:** niente più "Usa il regalo su WhatsApp". L'amico B ha "Copia il codice" e l'istruzione
-    "inseriscilo quando ordini o prenoti (campo codice sconto o note)"; il titolare lo verifica e lo conferma nella cassa.
-    La casella `quickpass_contatto` ora contiene un **link facoltativo dove si compra o si prenota** ("Vai dove usarlo");
-    i vecchi valori (numero o email) non vengono mostrati come link. Nessuna migrazione.
+  - **Online con il codice personale** (funziona come un coupon, ma nei testi non si dice "sconto"): niente più "Usa il
+    regalo su WhatsApp". L'amico B ha "Copia il codice" e l'istruzione "indica questo codice quando ordini, prenoti o
+    richiedi il regalo"; il titolare lo verifica e lo conferma nella cassa. La casella `quickpass_contatto` ora contiene un
+    **link facoltativo dove si usa il regalo** ("Vai dove usarlo"); i vecchi valori (numero o email) non vengono mostrati
+    come link. Nessuna migrazione.
+  - **Parole neutre (09/11/2026, richiesta del titolare):** mai "codice sconto" nei testi di QuickGift, perché farebbe
+    pensare che il regalo debba essere uno sconto. Online si parla di "codice personale" da indicare "quando ordini,
+    prenoti o richiedi il regalo"; in cassa "Prima consegna il regalo, poi conferma". I campi restano vuoti: decide il titolare.
   - **Condivisione dell'amico A:** WhatsApp (pulsante principale), Telegram, Facebook, SMS, email, copia link, **mostra
     QR** (il QR del link sullo schermo, da far inquadrare dal vivo) e "Altre app" (menu del telefono: Instagram, Messenger…).
   - **Cassa dei dipendenti senza invii:** tolto "Invia il link della cassa ai dipendenti"; c'è il **QR della cassa** da far
