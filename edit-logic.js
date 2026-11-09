@@ -1863,7 +1863,7 @@ function gestisciVIPSwitch(checkbox) {
                         ['fa-crown', 'Tu:', 'scegli regalo e premio e pubblichi il tuo link regalo dove vuoi: storia, bio, post, newsletter.'],
                         ['fa-share-nodes', 'Amico A:', 'dalla tua tag crea il suo link e lo manda con un clic.'],
                         ['fa-gift', 'Amico B:', 'apre il link, vede «Marco ti ha fatto un regalo» e lo riceve con un codice personale, diverso per ogni persona anche se il link lo aprono in migliaia.'],
-                        ['fa-circle-check', 'Conferma:', 'di persona inquadri il QR, online fai clic sul link del messaggio. Ogni codice vale una volta sola, e l\'amico A guadagna il suo premio.']
+                        ['fa-circle-check', 'Conferma:', 'di persona inquadri il QR del regalo; online l\'amico B ti indica il suo codice quando ordina, prenota o richiede il regalo, e tu lo scrivi nella cassa. Ogni codice vale una volta sola, e l\'amico A guadagna il suo premio.']
                     ]],
                     ['Cosa ottieni', 'Persone nuove già ben disposte, a un costo pari al solo premio, e numeri chiari: link creati, regali richiesti, regali usati. Scegli il premio in proporzione a quanto vale per te una persona nuova, e usa scadenza e numero massimo di regali per tenere tutto sotto controllo.'],
                     _boxStrategia('Idee per il regalo e il premio', _elencoStrategia('Il regalo convince l\'amico B a provarti; il premio motiva l\'amico A a condividere. Qualche esempio da adattare:', [
@@ -2154,13 +2154,18 @@ async function caricaCassaQuickPass() {
     const cifra = (v, etichetta) => `<div style="flex: 1; text-align: center;"><div style="font-size: 1.2rem; color: #fff; font-weight: 600;">${v || 0}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px;">${etichetta}</div></div>`;
     box.innerHTML = `
         <div style="display: flex; gap: 6px; margin: 4px 0 14px;">${cifra(n.inviti, 'LINK CREATI')}${cifra(n.pass_ritirati, 'REGALI RICHIESTI')}${cifra(n.pass_usati, 'REGALI USATI')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
-        <div style="margin-bottom: 6px;">Quando qualcuno ti mostra il regalo, inquadra il suo QR con la fotocamera: se sei collegato come titolare lo confermi subito. I tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
+        <div style="margin-bottom: 6px;">Di persona: inquadra con la fotocamera il QR del regalo. Online: apri la cassa e scrivi il codice che l'amico B ti ha indicato. Se sei collegato come titolare confermi subito; i tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
         <div style="display: flex; gap: 8px; margin: 10px 0 6px;">
             <input type="password" id="qp-pin-nuovo" inputmode="numeric" maxlength="6" placeholder="${r.pin_impostato ? 'PIN impostato ••••' : 'Nuovo PIN (4-6 cifre)'}" style="flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 16px; outline: none;">
             <button type="button" onclick="salvaPinQuickPass()" style="background: #e5c158; color: #111; border: none; border-radius: 10px; padding: 0 16px; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer;">SALVA PIN</button>
         </div>
         <div id="qp-pin-esito" style="font-size: 0.72rem; min-height: 1em; color: #9ca3af;">${r.pin_impostato ? 'PIN attivo. Scrivine uno nuovo per cambiarlo.' : 'Nessun PIN: per ora confermi solo tu.'}</div>
-        <button type="button" onclick="condividiLinkCassa()" style="width: 100%; margin-top: 10px; padding: 12px; background: transparent; border: 1px solid rgba(229,193,88,0.4); color: #e5c158; border-radius: 10px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; cursor: pointer;"><i class="fas fa-share-alt" style="margin-right: 6px;"></i>INVIA IL LINK DELLA CASSA AI DIPENDENTI</button>
+        <div style="font-size: 0.75rem; color: #9ca3af; line-height: 1.5; margin-top: 8px;">Il PIN dillo a voce ai tuoi dipendenti. Sul telefono o tablet della cassa basta inserirlo una volta: viene ricordato.</div>
+        <button type="button" onclick="mostraQrCassa()" style="width: 100%; margin-top: 10px; padding: 12px; background: transparent; border: 1px solid rgba(229,193,88,0.4); color: #e5c158; border-radius: 10px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; cursor: pointer;"><i class="fas fa-qrcode" style="margin-right: 6px;"></i>QR DELLA CASSA</button>
+        <div id="qp-qr-cassa" style="display: none; text-align: center; margin-top: 12px;">
+            <div style="display: inline-block; padding: 10px; background: #fff; border-radius: 12px;"><div id="qp-qr-cassa-codice"></div></div>
+            <div style="font-size: 0.72rem; color: #9ca3af; margin-top: 8px; line-height: 1.45;">Fallo inquadrare al telefono o al tablet della cassa: si apre la cassa di myquicktag.</div>
+        </div>
         <button type="button" onclick="window.open('/u/' + NOME_SISTEMA + '?cassa=1', '_blank')" style="width: 100%; margin-top: 8px; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 10px; font-size: 0.72rem; letter-spacing: 1px; cursor: pointer;">APRI LA CASSA</button>
         <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(229,193,88,0.2);">
             <div style="font-size: 0.7rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;">IL TUO LINK REGALO</div>
@@ -2193,12 +2198,18 @@ function condividiLinkRegalo() {
     else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => alert('Link regalo copiato.'));
 }
 
-function condividiLinkCassa() {
-    const link = `${window.location.origin}/u/${NOME_SISTEMA}?cassa=1`;
-    const testo = 'Link della cassa QuickGift: aprilo quando un cliente mostra il suo regalo (ti servirà il PIN di cassa).';
-    if (navigator.share) navigator.share({ title: 'Cassa QuickGift', text: testo, url: link }).catch(() => {});
-    else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => alert('Link della cassa copiato.'));
+// QR della cassa: si mostra sullo schermo e lo inquadra il telefono o il tablet della cassa (nessun invio fuori da myquicktag)
+function mostraQrCassa() {
+    const box = document.getElementById('qp-qr-cassa'), el = document.getElementById('qp-qr-cassa-codice');
+    if (!box || !el) return;
+    const aperto = box.style.display !== 'none';
+    box.style.display = aperto ? 'none' : 'block';
+    if (!aperto && !el.dataset.fatto && typeof QRCode !== 'undefined') {
+        el.dataset.fatto = '1';
+        new QRCode(el, { text: `${window.location.origin}/u/${NOME_SISTEMA}?cassa=1`, width: 168, height: 168, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+    }
 }
+
 
 // ============================================================
 // TORNA ALL'IDENTITY CONSOLE (dashboard dell'account) senza modificare la tag
@@ -2246,7 +2257,7 @@ function qpFrase() {
     const regalo = qpVal('field-qp-premio-b'), premio = qpVal('field-qp-premio-a');
     const n = parseInt(qpVal('field-qp-amici'), 10) || 1;
     const modo = qpVal('field-qp-modo') || 'negozio';
-    const dove = { negozio: 'di persona', online: 'online', entrambi: 'di persona o online' }[modo];
+    const dove = { negozio: 'di persona', online: 'online con il suo codice personale', entrambi: 'di persona o online con il suo codice personale' }[modo];
     box.innerHTML = `<div style="font-size: 0.6rem; color: #e5c158; letter-spacing: 2px; font-weight: 700; margin-bottom: 8px;">COME FUNZIONA IL TUO QUICKGIFT</div>
         L'<strong style="color: #fff;">amico A</strong> manda il tuo link all'<strong style="color: #fff;">amico B</strong>, che riceve
         ${regalo ? `<strong style="color: #fff;">${qpEsc(regalo)}</strong>` : vuoto('il regalo')} e lo usa ${dove}.
@@ -2298,7 +2309,8 @@ function qpAvanti() {
     const manca = (id, testo) => { alert(testo); const c = document.getElementById(id); if (c) { c.scrollIntoView({ block: 'center' }); c.focus(); } };
     if (!qpVal('field-qp-premio-b')) return manca('field-qp-premio-b', 'Scrivi il regalo dell\'amico B. Ti servono idee? Guarda la STRATEGIA.');
     if (!qpVal('field-qp-premio-a')) return manca('field-qp-premio-a', 'Scrivi il premio dell\'amico A. Ti servono idee? Guarda la STRATEGIA.');
-    if (qpVal('field-qp-modo') !== 'negozio' && !qpVal('field-qp-contatto')) return manca('field-qp-contatto', 'Scrivi il numero WhatsApp o l\'email a cui ti scrivono per usare il regalo online.');
+    const link = qpVal('field-qp-contatto');
+    if (qpVal('field-qp-modo') !== 'negozio' && link && (link.includes('@') || /\s/.test(link) || !/[a-z]{2,}\.[a-z]{2,}/i.test(link))) return manca('field-qp-contatto', 'Il link dove si compra o si prenota non sembra un indirizzo web (es. www.tuosito.it). Correggilo o lascialo vuoto.');
     // Tag attiva → si pubblica subito (un solo clic); tag in prenotazione → resta nella bozza fino all'attivazione
     if (statoUtente === 'attivo') salvaEDirigi('pubblica'); else chiudiSenzaSalvare();
 }

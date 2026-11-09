@@ -229,6 +229,24 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   niente esempi nei campi, il recapito online non si riempie da solo); le idee per regalo e premio stanno nella
   **Strategia** di QuickGift (riquadro "Idee per il regalo e il premio"), raggiungibile dal link "Ti servono idee…" sotto la
   frase. La Strategia non mostra più "Scopri i piani e sblocca" a chi è già Gold.
+  **Tutto in myquicktag (09/11/2026, decisione del titolare: il titolare deve lavorare nell'app, non su WhatsApp):**
+  - **Online con il codice personale** (funziona come un coupon, ma nei testi non si dice "sconto"): niente più "Usa il
+    regalo su WhatsApp". L'amico B ha "Copia il codice" e l'istruzione "indica questo codice quando ordini, prenoti o
+    richiedi il regalo"; il titolare lo verifica e lo conferma nella cassa. La casella `quickpass_contatto` ora contiene un
+    **link facoltativo dove si usa il regalo** ("Vai dove usarlo"); i vecchi valori (numero o email) non vengono mostrati
+    come link. Nessuna migrazione.
+  - **Parole neutre (09/11/2026, richiesta del titolare):** mai "codice sconto" nei testi di QuickGift, perché farebbe
+    pensare che il regalo debba essere uno sconto. Online si parla di "codice personale" da indicare "quando ordini,
+    prenoti o richiedi il regalo"; in cassa "Prima consegna il regalo, poi conferma". I campi restano vuoti: decide il titolare.
+  - **Condivisione dell'amico A:** WhatsApp (pulsante principale), Telegram, Facebook, SMS, email, copia link, **mostra
+    QR** (il QR del link sullo schermo, da far inquadrare dal vivo) e "Altre app" (menu del telefono: Instagram, Messenger…).
+  - **Cassa dei dipendenti senza invii:** tolto "Invia il link della cassa ai dipendenti"; c'è il **QR della cassa** da far
+    inquadrare al telefono o tablet della cassa e la frase "Il PIN dillo a voce… basta inserirlo una volta".
+  - **E-commerce con centinaia di ordini al giorno (piano, non fatto):** 1) conferma di più codici insieme in cassa
+    (si incolla l'elenco dei codici degli ordini); 2) conferma automatica: una chiave segreta per tag e un'azione nuova in
+    `api/quickpass.js` (nessuna funzione in più) che il negozio chiama quando riceve un ordine con il codice, tramite
+    Shopify Flow, WooCommerce webhook, Zapier o Make; la parte myquicktag è piccola, il collegamento va configurato per
+    ogni negozio. Da costruire quando arriva un cliente con quei numeri.
   Nell'**Identity Console** ogni tag con QuickGift ha il pulsante "Cassa QuickGift · conferma i regali" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
@@ -271,7 +289,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/quickpass.e2e.mjs` → 35 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/quickpass.e2e.mjs` → 38 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).
