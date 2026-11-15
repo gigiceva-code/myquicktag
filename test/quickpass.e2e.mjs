@@ -155,7 +155,7 @@ await browser.close();
   await b2.close();
 }
 
-// ---------- QUICKGIFT IN UNA PAGINA NELL'EDITOR: frase che si compila da sola, schede Tu → Amico A → Amico B ----------
+// ---------- QUICKGIFT IN QUATTRO DOMANDE NELL'EDITOR: nessun esempio, riepilogo che si compila, impostazioni facoltative ----------
 {
   const b3 = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
   const c3 = await b3.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
@@ -163,34 +163,37 @@ await browser.close();
   const ed = await c3.newPage();
   const avvisi = []; ed.on('dialog', d => { avvisi.push(d.message()); d.dismiss(); });
   await ed.goto(`${B}/edit.html`); await ed.waitForTimeout(1500);
-  await ed.evaluate(() => { userPlan = 'GOLD'; statoUtente = 'prenotazione'; document.querySelectorAll('#drawer-quickpass .premium-lock-overlay').forEach(o => o.style.display = 'none'); apriDrawer('drawer-quickpass'); });
+  await ed.evaluate(() => { userPlan = 'GOLD'; statoUtente = 'attivo'; document.querySelectorAll('#drawer-quickpass .premium-lock-overlay').forEach(o => o.style.display = 'none'); apriDrawer('drawer-quickpass'); });
   await ed.waitForTimeout(500);
   const pagina = await ed.textContent('#drawer-quickpass');
-  const iTu = pagina.indexOf('TU · TITOLARE DELLA TAG'), iA = pagina.indexOf('AMICO A · CHI MANDA IL LINK'), iB = pagina.indexOf('AMICO B · CHI RICEVE IL LINK');
-  ok(iTu > 0 && iTu < iA && iA < iB && !(await ed.$('#qp-indietro')) && !(await ed.$('.qp-passo')), 'Editor: una sola pagina, nell\'ordine Tu → Amico A → Amico B, senza passi');
-  ok((await ed.textContent('#qp-frase')).includes('il regalo') && (await ed.textContent('#qp-frase')).includes('il premio'), 'Editor: la frase in alto mostra gli spazi ancora da compilare');
+  const domande = ['Cosa ottiene chi ti porta un amico?', 'Cosa offri all\'amico che arriva?', 'Ogni quanti amici lo ottiene?', 'Dove si usa l\'offerta?'].map(d => pagina.indexOf(d));
+  ok(domande.every((x, i) => x > 0 && (i === 0 || x > domande[i - 1])), 'Editor: quattro domande, nell\'ordine del wireframe');
+  ok(!pagina.includes('Per esempio') && !(await ed.$('.qp-proposta')) && await ed.inputValue('#field-qp-premio-a') === '' && await ed.inputValue('#field-qp-premio-b') === '', 'Editor: nessun esempio e nessun campo precompilato');
+  ok(!/amico A|amico B|link personale/i.test(pagina.split('ALTRE IMPOSTAZIONI')[0]), 'Editor: niente termini tecnici nelle domande');
+  ok(!(await ed.isVisible('#qp-attivo')) && (await ed.textContent('#qp-avanti')).includes('ATTIVA QUICKGIFT'), 'Editor: prima dell\'attivazione il pulsante dice «Attiva QuickGift» e il riquadro cassa non c\'è');
   await ed.click('#qp-avanti');
-  ok(avvisi.some(t => t.includes('regalo dell\'amico B')), 'Editor: senza regalo non si salva e si viene portati al campo');
-  ok(!(await ed.$('.qp-proposta')) && await ed.inputValue('#field-qp-premio-a') === '' && await ed.inputValue('#field-qp-premio-b') === '' && await ed.inputValue('#field-qp-contatto') === '', 'Editor: nessun campo precompilato e nessuna idea da scegliere');
-  await ed.click('#drawer-quickpass button:has-text("Ti servono idee")'); await ed.waitForTimeout(400);
+  ok(avvisi.some(t => t.includes('domanda 1')), 'Editor: senza risposta alla domanda 1 non si attiva e si viene portati al campo');
+  await ed.fill('#field-qp-premio-a', 'Una sessione extra gratuita');
+  await ed.fill('#field-qp-premio-b', 'Una consulenza introduttiva');
+  ok((await ed.textContent('#qp-soglia-nota')).includes('senza un tetto'), 'Editor: con «ogni amico» e nessun numero massimo c\'è l\'avviso, dentro le impostazioni facoltative');
+  await ed.click('#qp-soglie .qp-soglia[data-amici="3"]');
+  ok(await ed.inputValue('#field-qp-amici') === '3' && (await ed.textContent('#qp-soglie')).includes('OGNI') && !(await ed.$('#qp-soglia-nota .qp-avviso-tetto')), 'Editor: «ogni 3 amici» si sceglie con un clic e l\'avviso sparisce');
+  const frase = await ed.textContent('#qp-frase');
+  ok(frase.includes('Chi ti porta 3 amici') && frase.includes('e così ogni 3 amici') && frase.includes('Una sessione extra gratuita') && frase.includes('Una consulenza introduttiva') && frase.includes('di persona'), 'Editor: il riepilogo si compila mentre si scrive');
+  await foto(ed, '9-editor-pagina');
+  await ed.evaluate(() => document.getElementById('qp-frase').scrollIntoView({ block: 'center' }));
+  await foto(ed, '10-editor-pagina-sotto');
+  await ed.click('#drawer-quickpass button:has-text("STRATEGIA")'); await ed.waitForTimeout(400);
   const strategia = await ed.textContent('#strategia-content');
   ok(await ed.evaluate(() => getComputedStyle(document.getElementById('drawer-strategia').lastElementChild).display === 'none'), 'Strategia: chi è già Gold non vede «Scopri i piani e sblocca»');
-  ok(strategia.includes('Idee per il regalo e il premio') && strategia.includes('Amico A') && strategia.includes('una consulenza introduttiva gratuita'), 'Editor: le idee per regalo e premio stanno nella Strategia');
+  ok(['Come funziona', 'Come si diffonde', 'L\'amico che arriva', 'Quando si conferma', 'Chi porta un amico', 'Idee da adattare'].every(t => strategia.includes(t)), 'Strategia: spiegazione completa e idee, fuori dalla configurazione');
   await ed.evaluate(() => chiudiStrategia()); await ed.waitForTimeout(400);
-  await ed.fill('#field-qp-premio-b', '10% sul primo acquisto');
-  await ed.fill('#field-qp-premio-a', 'Una sessione extra gratuita');
-  ok((await ed.textContent('#qp-soglia-nota')).includes('non è previsto un tetto ai premi'), 'Editor: con "1 utilizzo" e nessun numero massimo compare l\'avviso (senza bloccare)');
-  await ed.click('#qp-soglie .qp-soglia[data-amici="3"]');
-  ok(await ed.inputValue('#field-qp-amici') === '3' && !(await ed.$('#qp-soglia-nota .qp-avviso-tetto')), 'Editor: "dopo 3 utilizzi" si sceglie con un clic e l\'avviso sparisce');
-  const frase = await ed.textContent('#qp-frase');
-  ok(frase.includes('10% sul primo acquisto') && frase.includes('Ogni 3 amici B') && frase.includes('Una sessione extra gratuita') && frase.includes('di persona'), 'Editor: la frase in alto si compila mentre si scrive');
-  await ed.evaluate(() => document.getElementById('qp-frase').scrollIntoView());
-  await foto(ed, '9-editor-pagina');
-  await ed.evaluate(() => document.getElementById('qp-soglie').scrollIntoView({ block: 'center' }));
-  await foto(ed, '10-editor-pagina-sotto');
   await ed.click('#qp-modi .qp-modo[data-modo="online"]');
-  ok(await ed.isVisible('#field-qp-contatto') && (await ed.textContent('#qp-contatto-box')).includes('codice personale') && !(await ed.textContent('#qp-contatto-box')).includes('sconto') && (await ed.textContent('#qp-frase')).includes('online con il suo codice personale'), 'Editor: scegliendo Online si spiega il codice personale (nessuno «sconto»), il link è facoltativo e la frase si aggiorna');
+  ok(await ed.isVisible('#field-qp-contatto') && (await ed.textContent('#qp-contatto-box')).includes('codice personale') && !(await ed.textContent('#qp-contatto-box')).includes('sconto') && (await ed.textContent('#qp-frase')).includes('lo usa online'), 'Editor: scegliendo Online si spiega il codice personale e il link è facoltativo');
   avvisi.length = 0; await ed.fill('#field-qp-contatto', '+39 333 1234567'); await ed.click('#qp-avanti');
   ok(avvisi.some(t => t.includes('non sembra un indirizzo web')), 'Editor: un numero di telefono al posto del link viene segnalato');
+  // Dopo l'attivazione (risposte salvate, tag attiva): riquadro "QuickGift è attivo" e pulsante "Salva le modifiche"
+  await ed.evaluate(() => qpAvvia()); await ed.waitForTimeout(300);
+  ok(await ed.isVisible('#qp-attivo') && (await ed.textContent('#qp-attivo')).includes('QUICKGIFT È ATTIVO') && (await ed.textContent('#qp-avanti')).includes('SALVA LE MODIFICHE'), 'Editor: dopo l\'attivazione compare «QuickGift è attivo» e il pulsante diventa «Salva le modifiche»');
   await b3.close();
 }
