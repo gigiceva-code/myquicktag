@@ -2152,8 +2152,8 @@ async function caricaCassaQuickPass() {
     const n = r.numeri || {};
     const cifra = (v, etichetta) => `<div style="flex: 1; text-align: center;"><div style="font-size: 1.2rem; color: #fff; font-weight: 600;">${v || 0}</div><div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 1px;">${etichetta}</div></div>`;
     box.innerHTML = `
-        <div style="display: flex; gap: 6px; margin: 4px 0 14px;">${cifra(n.inviti, 'LINK CREATI')}${cifra(n.pass_ritirati, 'REGALI RICHIESTI')}${cifra(n.pass_usati, 'REGALI USATI')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
-        <div style="margin-bottom: 6px;">Di persona: inquadra con la fotocamera il QR del regalo. Online: apri la cassa e scrivi il codice che l'amico B ti ha indicato. Se sei collegato come titolare confermi subito; i tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
+        <div style="display: flex; gap: 6px; margin: 4px 0 14px;">${cifra(n.inviti, 'LINK CREATI')}${cifra(n.pass_ritirati, 'OFFERTE RICHIESTE')}${cifra(n.pass_usati, 'OFFERTE USATE')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
+        <div style="margin-bottom: 6px;">Di persona: inquadra con la fotocamera il QR che ti mostrano. Online: apri la cassa e scrivi il codice che ti hanno indicato. Se sei collegato come titolare confermi subito; i tuoi dipendenti usano il <strong style="color: #fff;">PIN di cassa</strong>.</div>
         <div style="display: flex; gap: 8px; margin: 10px 0 6px;">
             <input type="password" id="qp-pin-nuovo" inputmode="numeric" maxlength="6" placeholder="${r.pin_impostato ? 'PIN impostato ••••' : 'Nuovo PIN (4-6 cifre)'}" style="flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 16px; outline: none;">
             <button type="button" onclick="salvaPinQuickPass()" style="background: #e5c158; color: #111; border: none; border-radius: 10px; padding: 0 16px; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer;">SALVA PIN</button>
@@ -2167,9 +2167,9 @@ async function caricaCassaQuickPass() {
         </div>
         <button type="button" onclick="window.open('/u/' + NOME_SISTEMA + '?cassa=1', '_blank')" style="width: 100%; margin-top: 8px; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 10px; font-size: 0.72rem; letter-spacing: 1px; cursor: pointer;">APRI LA CASSA</button>
         <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(229,193,88,0.2);">
-            <div style="font-size: 0.7rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;">IL TUO LINK REGALO</div>
-            <div style="margin: 6px 0 10px;">Pubblicalo dove vuoi: storia, bio, post, newsletter. Chi lo apre riceve il regalo con un codice personale.</div>
-            <button type="button" onclick="condividiLinkRegalo()" style="width: 100%; padding: 12px; background: #e5c158; color: #111; border: none; border-radius: 10px; font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; cursor: pointer;"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i>CONDIVIDI IL LINK REGALO</button>
+            <div style="font-size: 0.7rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;">PUBBLICA LA TUA OFFERTA</div>
+            <div style="margin: 6px 0 10px;">Vuoi far arrivare l'offerta direttamente a chi ti segue? Pubblica questo link in una storia, nella bio, in un post o in una newsletter: chi lo apre riceve l'offerta con un codice personale. Qui nessuno ottiene un premio, perché a portarli sei tu.</div>
+            <button type="button" onclick="condividiLinkRegalo()" style="width: 100%; padding: 12px; background: #e5c158; color: #111; border: none; border-radius: 10px; font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; cursor: pointer;"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i>PUBBLICA L'OFFERTA</button>
             <div style="font-size: 0.68rem; color: #9ca3af; margin-top: 8px; word-break: break-all;">${window.location.origin}/u/${NOME_SISTEMA}?regalo=1</div>
         </div>`;
 }
@@ -2189,12 +2189,12 @@ async function salvaPinQuickPass() {
     if (r.success) campo.value = '';
 }
 
-// Link regalo del titolare (es. un influencer nella sua storia): chi lo apre riceve il regalo con un codice personale
+// Pubblica la tua offerta (link del titolare: storia, bio, post): chi lo apre riceve l'offerta con un codice personale
 function condividiLinkRegalo() {
     const link = `${window.location.origin}/u/${NOME_SISTEMA}?regalo=1`;
-    const testo = `Ho un regalo per te: ${qpVal('field-qp-premio-b')}. Lo ricevi qui:`;
+    const testo = `Ho un'offerta per te: ${qpVal('field-qp-premio-b')}. La ricevi qui:`;
     if (navigator.share) navigator.share({ title: 'QuickGift', text: testo, url: link }).catch(() => {});
-    else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => alert('Link regalo copiato.'));
+    else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => alert('Link copiato.'));
 }
 
 // QR della cassa: si mostra sullo schermo e lo inquadra il telefono o il tablet della cassa (nessun invio fuori da myquicktag)

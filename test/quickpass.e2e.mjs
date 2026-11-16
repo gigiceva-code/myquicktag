@@ -117,6 +117,11 @@ const paginaFollower = await follower.textContent('#mqt-qp-overlay');
 ok(paginaFollower.includes('Hai ricevuto un regalo') && paginaFollower.includes('Una consulenza introduttiva gratuita'), 'Link del titolare: chi lo apre vede il regalo');
 await follower.fill('#qp-nome', 'Sara'); await follower.click('#qp-ritira'); await follower.waitForTimeout(1500);
 ok((await follower.textContent('#mqt-qp-overlay')).includes('Il tuo regalo'), 'Link del titolare: il follower riceve il suo regalo personale');
+// Pannello del titolare sulla tag: "Pubblica la tua offerta" spiega a cosa serve il link e che non dà premi a nessuno
+await follower.evaluate(() => { mqtQuickPass.chiudi(); cacheDatiUtente.sei_proprietario = true; sbloccaTag(); apriMacroArea('action_center'); apriSezione('quickpass'); }); await follower.waitForTimeout(1200);
+const pannello = await follower.textContent('#corpoSezione');
+ok(pannello.includes('PUBBLICA LA TUA OFFERTA') && pannello.includes('nessuno ottiene un premio') && pannello.includes("Pubblica l'offerta") && pannello.includes('OFFERTE RICHIESTE') && !pannello.includes('REGALI RICHIESTI'), 'Titolare: «Pubblica la tua offerta» spiegato chiaramente e numeri con le parole nuove');
+await foto(follower, '11-titolare');
 const db = await (await fetch(`${B}/__db`)).json();
 const lead = JSON.parse((db.rows.find(r => r.username_system === TAG) || {}).lead_capture_leads || '[]')[0];
 ok(lead && lead.nome === 'Luca' && lead.consenso_offerte === true && lead.fonte === 'QuickGift', 'Il recapito di Luca arriva in I miei contatti con il consenso');
