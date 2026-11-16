@@ -257,6 +257,11 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   senza tetto, elimina). Pulsante "Attiva QuickGift" → "Salva le modifiche" quando è già attivo; da attivo, in alto il
   riquadro "QuickGift è attivo" con cassa, PIN, QR, numeri e link. Due verbi fissi: "ottiene" per chi porta l'amico,
   "offri/offerta" per l'amico. Motore, database e API invariati.
+  **"Pubblica la tua offerta" (16/11/2026, il titolare non capiva a cosa servisse il suo link):** il link del titolare
+  (`?regalo=1`) resta, ma nel pannello sulla tag e nel riquadro "QuickGift è attivo" ora si chiama "Pubblica la tua offerta",
+  con la spiegazione "chi lo apre riceve l'offerta… qui nessuno ottiene un premio, perché a portarli sei tu" e il pulsante
+  "Pubblica l'offerta". Nei testi per il titolare "offerta" al posto di "regalo" (numeri: "offerte richieste / usate");
+  le pagine di chi riceve continuano a dire "il tuo regalo".
   Nell'**Identity Console** ogni tag con QuickGift ha il pulsante "Cassa QuickGift · conferma i regali" (`/u/<tag>?cassa=1`). Prove: `test/api.test.mjs`,
   `test/quickpass.e2e.mjs` (tre telefoni). **Fase 2 (da fare):** scheda risultati con stima in euro, avviso al
   commerciante a ogni pass usato, testi di rinnovo basati sui risultati.
@@ -304,7 +309,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/quickpass.e2e.mjs` → 40 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/quickpass.e2e.mjs` → 41 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).

@@ -244,22 +244,22 @@
         const cifra = (v, e) => `<div><div style="font-size: 1.3rem; color: #fff; font-weight: 600;">${v || 0}</div><div style="font-size: 0.55rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; line-height: 1.3; margin-top: 2px;">${e}</div></div>`;
         return `<div style="text-align: center; padding: 6px 4px;">
             <div style="font-size: 0.65rem; color: ${ORO}; letter-spacing: 3px; text-transform: uppercase; font-weight: 700;">Sei il titolare</div>
-            <div style="font-size: 0.9rem; color: #e8e8ed; line-height: 1.6; margin: 12px 0 18px;">Qui chi ti segue condivide il tuo regalo. Quando qualcuno ti mostra o ti manda il suo codice, confermalo dalla cassa.</div>
+            <div style="font-size: 0.9rem; color: #e8e8ed; line-height: 1.6; margin: 12px 0 18px;">Qui chi ti segue porta i suoi amici. Quando qualcuno ti mostra o ti indica il suo codice, confermalo dalla cassa.</div>
             <button type="button" onclick="mqtQuickPass.cassa('')" style="${stileBottone}">Apri la cassa</button>
             <div style="margin-top: 20px; padding: 16px; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; background: rgba(255,255,255,0.03); text-align: left;">
-                <div style="font-size: 0.6rem; color: ${ORO}; letter-spacing: 2px; font-weight: 700;">IL TUO LINK REGALO</div>
-                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.75); line-height: 1.5; margin: 8px 0 12px;">Pubblicalo dove vuoi: storia, bio, post, newsletter. Chi lo apre riceve il regalo con un codice personale.</div>
-                <button type="button" onclick="mqtQuickPass.condividiLinkTitolare()" style="width: 100%; padding: 13px; background: transparent; border: 1px solid ${ORO}; color: ${ORO}; border-radius: 12px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i>Condividi il link regalo</button>
+                <div style="font-size: 0.6rem; color: ${ORO}; letter-spacing: 2px; font-weight: 700;">PUBBLICA LA TUA OFFERTA</div>
+                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.75); line-height: 1.5; margin: 8px 0 12px;">Vuoi far arrivare l'offerta direttamente a chi ti segue? Pubblica questo link in una storia, nella bio, in un post o in una newsletter: chi lo apre riceve l'offerta con un codice personale. Qui nessuno ottiene un premio, perché a portarli sei tu.</div>
+                <button type="button" onclick="mqtQuickPass.condividiLinkTitolare()" style="width: 100%; padding: 13px; background: transparent; border: 1px solid ${ORO}; color: ${ORO}; border-radius: 12px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i>Pubblica l'offerta</button>
                 <div style="font-size: 0.68rem; color: rgba(255,255,255,0.4); margin-top: 10px; word-break: break-all;">${esc(linkTitolare())}</div>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 20px;">${cifra(n.inviti, 'LINK CREATI')}${cifra(n.pass_ritirati, 'REGALI RICHIESTI')}${cifra(n.pass_usati, 'REGALI USATI')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
-            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 14px; line-height: 1.5;">In cassa, più veloce: inquadra con la fotocamera il QR del regalo.</div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 20px;">${cifra(n.inviti, 'LINK CREATI')}${cifra(n.pass_ritirati, 'OFFERTE RICHIESTE')}${cifra(n.pass_usati, 'OFFERTE USATE')}${cifra(n.premi_maturati, 'PREMI DATI')}</div>
+            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 14px; line-height: 1.5;">In cassa, più veloce: inquadra con la fotocamera il QR che ti mostrano.</div>
         </div>`;
     }
-    // Link regalo del titolare (es. un influencer nella sua storia): chi lo apre riceve il regalo, senza premio a nessuno
+    // Link del titolare ("Pubblica la tua offerta": storia, bio, post): chi lo apre riceve l'offerta, senza premio a nessuno
     function linkTitolare() { return `${window.location.origin}/u/${nomeTag()}?regalo=1`; }
     function condividiLinkTitolare() {
-        const link = linkTitolare(), testo = `Ho un regalo per te: ${(cacheDatiUtente && cacheDatiUtente.quickpass_premio_b) || ''}. Lo ricevi qui:`;
+        const link = linkTitolare(), testo = `Ho un'offerta per te: ${(cacheDatiUtente && cacheDatiUtente.quickpass_premio_b) || ''}. La ricevi qui:`;
         if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT LINK TITOLARE');
         if (navigator.share) navigator.share({ title: nomeVisibile(), text: testo, url: link }).catch(() => {});
         else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => { if (typeof mostraToast === 'function') mostraToast('Link copiato!'); });
