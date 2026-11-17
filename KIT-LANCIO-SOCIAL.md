@@ -53,10 +53,10 @@ TikTok si può), mai "official".
 
 ### Instagram (profilo professionale, categoria "Servizio internet" o "Prodotto/servizio")
 - **Nome:** myquicktag
-- **Bio** (massimo 150 caratteri):
-  > La tua presenza digitale in un solo @nome ✦
-  > Un link, un QR, tutto ciò che sei.
+- **Bio** (68 caratteri, così si legge tutta senza "altro"):
+  > Il tuo @nome, un link, un QR ✦
   > 3 mesi tutto sbloccato, senza carta ↓
+  Ancora più corta, se serve: *Il tuo @nome è ancora libero? ↓*
 - **Link:** myquicktag.it/u/myquicktag
 - **Storie in evidenza** (5, con copertine nere e un'icona verde, come il logo): *Cos'è · Come si crea · QuickGift · Le vostre
   tag · Domande*.
