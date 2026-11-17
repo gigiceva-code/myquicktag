@@ -13,7 +13,7 @@ Oggi è quasi vuota (niente foto, niente bio, nessun canale) e ha ancora il vecc
 
 Si configura dall'editor, entrando con **info@myquicktag.it**. In ordine:
 
-1. **Foto profilo:** il logo di myquicktag su sfondo scuro, quadrato (almeno 800×800). Lo stesso logo va usato come
+1. **Foto profilo:** `materiali-social/logo-myquicktag-800.png` (il logo, 800×800). Lo stesso logo va usato come
    foto su Instagram, TikTok e LinkedIn: chi passa da un canale all'altro deve riconoscerlo subito.
 2. **Bio** (da copiare):
    > La tua presenza digitale in un solo @nome. Un link, un QR, tutto ciò che sei: contatti, social, foto e
@@ -58,7 +58,7 @@ TikTok si può), mai "official".
   > Un link, un QR, tutto ciò che sei.
   > 3 mesi tutto sbloccato, senza carta ↓
 - **Link:** myquicktag.it/u/myquicktag
-- **Storie in evidenza** (5, con copertine nere e un'icona dorata): *Cos'è · Come si crea · QuickGift · Le vostre
+- **Storie in evidenza** (5, con copertine nere e un'icona verde, come il logo): *Cos'è · Come si crea · QuickGift · Le vostre
   tag · Domande*.
 
 ### TikTok (account business)
