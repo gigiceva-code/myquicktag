@@ -747,7 +747,13 @@ function aggiornaContatoriDashboard(record) {
     }
     const senzaRinnovo = " Ti scriveremo all'email del tuo account prima della scadenza per spiegarti come continuare.";
 
-    if (abb && trialEl) {
+    // Piano assegnato (omaggio o pagato): nessuna scadenza da mostrare né avvisi di fine prova
+    const pianoAssegnato = String(record.plan || '').toUpperCase();
+    const conPiano = pianoAssegnato === 'GOLD' || pianoAssegnato === 'PREMIUM';
+    if (abb && trialEl && conPiano) {
+        trialEl.innerText = pianoAssegnato === 'GOLD' ? 'Gold' : 'Premium';
+        trialEl.style.color = "#e5c158";
+    } else if (abb && trialEl) {
         if (abb.fase === 'attiva') {
             trialEl.innerText = abb.giorni_alla_scadenza + " gg";
             trialEl.style.color = (abb.giorni_alla_scadenza <= 14) ? "#ffab00" : "#ffffff";
@@ -761,7 +767,7 @@ function aggiornaContatoriDashboard(record) {
     }
 
     // Avviso di rinnovo: ultimi 14 giorni del piano e periodo di grazia (tag ancora online)
-    if (abb && (abb.fase === 'grazia' || (abb.fase === 'attiva' && abb.giorni_alla_scadenza <= 14))) {
+    if (abb && !conPiano && (abb.fase === 'grazia' || (abb.fase === 'attiva' && abb.giorni_alla_scadenza <= 14))) {
         if (paywallBanner) paywallBanner.style.display = "block";
         if (paywallText) {
             // Modello C: alla fine della prova la tag NON si spegne, passa al piano Base gratuito
@@ -773,7 +779,7 @@ function aggiornaContatoriDashboard(record) {
     }
 
     // Prova finita (modello C): la tag è online con il piano Base e si può modificare
-    if (abb && abb.fase === 'scaduta' && abb.piano_effettivo === 'BASE') {
+    if (abb && !conPiano && abb.fase === 'scaduta' && abb.piano_effettivo === 'BASE') {
         if (paywallBanner) paywallBanner.style.display = "block";
         if (paywallText) paywallText.innerText = "La prova è terminata: la tua tag resta online gratis con il piano Base. Le sezioni avanzate sono nascoste, non cancellate: torneranno visibili con Premium o Gold.";
     }

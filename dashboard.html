@@ -82,6 +82,9 @@
     function statoTag(t) {
         if (t.stato === 'in attesa') return { badge: 'badge-warn', testo: 'Da attivare', sub: 'Prenotata: completa e attiva entro 24 ore' };
         const a = t.abbonamento || {};
+        // Piano assegnato (omaggio, e in futuro pagato): si mostra il piano, non la data della prova
+        const assegnato = String(t.plan || '').toUpperCase();
+        if (assegnato === 'GOLD' || assegnato === 'PREMIUM') return { badge: 'badge-ok', testo: assegnato === 'GOLD' ? 'Gold' : 'Premium', sub: 'Piano attivo, senza scadenza' };
         // Modello C (17/11/2026): la tag resta sempre online; finita la prova con tutto sbloccato passa al piano Base
         if (a.fase === 'scaduta') return a.piano_effettivo && a.piano_effettivo !== 'BASE'
             ? { badge: 'badge-ok', testo: a.piano_effettivo === 'GOLD' ? 'Gold' : 'Premium', sub: 'Online' }
