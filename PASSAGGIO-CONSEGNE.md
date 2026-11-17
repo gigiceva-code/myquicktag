@@ -281,7 +281,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   sempre / A pagamento · in arrivo"); lucchetti con gli stessi elenchi di `apriDrawer`. `update-profile` non blocca più
   le tag oltre la prova; Vasetto (`add-lead`) e QuickGift (`quickpass`) funzionano solo con piano Gold; anteprima dei
   link (`manifest`) sempre con bio e foto. Identity Console, `profile.html` e `account.html`: "Prova in chiusura",
-  "Base", nessun "Disattivata". Termini (punto 7) e FAQ della home riscritti per il modello C.
+  "Base", nessun "Disattivata". Termini (ora punto 8) e FAQ della home riscritti per il modello C.
 - **VIP Vault verificato sul server (17/11/2026):** prima link e PIN dei canali riservati arrivavano in chiaro al browser
   e il PIN si confrontava nella pagina. Ora `filtraPerPiano` toglie url e PIN dei canali VIP (resta la posizione
   `vault`) e `get-profile` accetta `POST {azione:'vault', u, vault, pin}`: confronto sul server (tempo costante), 10
@@ -307,6 +307,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   della tag né nei Numeri. Le città si salvano in chiaro (`decodeURIComponent`: prima "Council%20Bluffs") e
   `analytics.html` decodifica anche quelle già salvate. Nella Identity Console dell'account ufficiale i Numeri sono un
   riquadro in cima con l'anteprima dei 7 giorni; in `profile.html` sotto "Gold" c'è scritto "Piano".
+- **QuickGift e responsabilità (17/11/2026, prima del lancio):** termini, nuovo **punto 6** ("QuickGift: offerte e premi del
+  titolare della tag": il titolare è l'unico promotore e risponde delle norme sulle promozioni; myquicktag fornisce solo lo
+  strumento; può sospendere campagne abusive); gli altri punti scalano di uno. Nell'editor una **dichiarazione
+  obbligatoria** del titolare (casella `qp-dichiarazione`, mai già spuntata, si azzera a ogni apertura) senza la quale
+  QuickGift non si salva. `SCHEDA-LEGALE-QUICKGIFT.md`: scheda di una pagina con le tre domande da portare a una
+  consulenza (anche gratuita). Il titolare ha scelto di lanciare con QuickGift attivo; se l'avvocato lo sconsiglia, si
+  nasconde dietro "in arrivo".
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
   «Accetto di ricevere offerte e novità da @Nome» sotto il modulo, con nota «Facoltativo…» e link alla Privacy.
   `api/add-lead.js` salva nel contatto `consenso_offerte` (solo se `true` esplicito), `consenso_testo` (il testo accettato)
@@ -346,7 +353,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
-- `test/quickpass.e2e.mjs` → 41 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/quickpass.e2e.mjs` → 42 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
 - `test/piano.e2e.mjs` → 7 prove nel browser del piano effettivo (modello C) e del VIP Vault verificato sul server.
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
