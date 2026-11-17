@@ -302,6 +302,11 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - **Piani assegnati (17/11/2026):** @myquicktag (account info@myquicktag.it) ha `plan = 'GOLD'` permanente. Le tag con
   piano assegnato (omaggio o, in futuro, pagato) mostrano "Gold"/"Premium · piano attivo, senza scadenza" in Identity
   Console, `account.html` e `profile.html`, senza date né avvisi di fine prova.
+- **Visite vere (17/11/2026):** `track-view` non conta più robot e anteprime automatiche (user-agent con bot, crawl,
+  spider, headless, lighthouse, preview, inspection, facebookexternalhit, curl, python… o vuoto): né nelle statistiche
+  della tag né nei Numeri. Le città si salvano in chiaro (`decodeURIComponent`: prima "Council%20Bluffs") e
+  `analytics.html` decodifica anche quelle già salvate. Nella Identity Console dell'account ufficiale i Numeri sono un
+  riquadro in cima con l'anteprima dei 7 giorni; in `profile.html` sotto "Gold" c'è scritto "Piano".
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
   «Accetto di ricevere offerte e novità da @Nome» sotto il modulo, con nota «Facoltativo…» e link alla Privacy.
   `api/add-lead.js` salva nel contatto `consenso_offerte` (solo se `true` esplicito), `consenso_testo` (il testo accettato)

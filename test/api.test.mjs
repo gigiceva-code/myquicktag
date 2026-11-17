@@ -88,7 +88,7 @@ globalThis.fetch=async (url,opt={})=>{
 };
 function res(){ const o={code:0,body:null,h:{}}; o.status=c=>{o.code=c;return o}; o.json=b=>{o.body=b;return o}; o.send=b=>{o.body=b;return o}; o.setHeader=(k,v)=>o.h[k]=v; return o;}
 let ipN=0;
-const call=async(f,req)=>{const m=await import(R+f); const r=res(); await m.default({query:{},...req,headers:{'x-forwarded-for':req.ip||('10.0.0.'+(++ipN%250)),...(req.headers||{})}},r); return r;};
+const call=async(f,req)=>{const m=await import(R+f); const r=res(); await m.default({query:{},...req,headers:{'x-forwarded-for':req.ip||('10.0.0.'+(++ipN%250)),'user-agent':'Mozilla/5.0 (Linux; Android 14) Mobile Safari',...(req.headers||{})}},r); return r;};
 const conSessione=jwt=>({authorization:'Bearer '+jwt});
 const ok=(c,msg)=>{console.log((c?'OK  ':'FAIL')+' '+msg); if(!c) process.exitCode=1;};
 const riga=nome=>rows.find(x=>x.username_system===nome);
@@ -800,6 +800,14 @@ delete process.env.RINNOVO_GRATUITO;
   ok(contatori.size===n,'contatori: solo eventi dell\'elenco chiuso, nessun dato personale come nome di evento');
   ok([...contatori.keys()].every(k=>/^\d{4}-\d{2}-\d{2}\|[a-z_]+$/.test(k)),'contatori: nel database solo giorno, evento e numero');
   for(let i=0;i<25;i++) await call('track-view.js',{method:'POST',query:{evento:'home'},ip:'9.9.9.50'});
+  const h0=conta('home_visita');
+  await call('track-view.js',{method:'POST',query:{evento:'home'},ip:'9.9.9.60',headers:{'user-agent':'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}});
+  await call('track-view.js',{method:'POST',query:{evento:'home'},ip:'9.9.9.61',headers:{'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/120.0 Safari/537.36'}});
+  ok(conta('home_visita')===h0,'contatori: i robot (Google, browser senza schermo) non contano come visite');
+  rows.push({id:'ct2',username_system:'visitecitta',stato:'attivo',data_scadenza:'2099-01-01',created_at:new Date().toISOString(),views:0});
+  await call('track-view.js',{method:'POST',query:{u:'visitecitta'},ip:'9.9.9.62',headers:{'user-agent':'Mozilla/5.0 (Linux; Android 14) Mobile','x-vercel-ip-city':'Council%20Bluffs','x-vercel-ip-country':'US'}});
+  await call('track-view.js',{method:'POST',query:{u:'visitecitta'},ip:'9.9.9.63',headers:{'user-agent':'Googlebot/2.1'}});
+  ok(riga('visitecitta').views===1 && Object.keys(JSON.parse(riga('visitecitta').analytics_data).geo).includes('Council Bluffs, US'),'statistiche: città in chiaro (niente %20) e i robot non contano come visite');
   ok(conta('home_visita')<=prima.home_visita+21,'contatori: le visite della home a raffica dallo stesso indirizzo non gonfiano i numeri');
   let r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'numeri'}});
   ok(r.code===403,'Numeri: riservati all\'account ufficiale (gli altri account non li vedono)');
