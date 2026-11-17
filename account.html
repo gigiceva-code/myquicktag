@@ -156,7 +156,9 @@
     const NOMI_PIANO = { BASE: 'Base', PREMIUM: 'Premium', GOLD: 'Gold' };
 
     function mostraPiano(fields, abb) {
-        const piano = String(fields.plan || 'BASE').toUpperCase().trim();
+        // Piano effettivo deciso dal server (prova = tutto sbloccato); "assegnato" = Gold/Premium omaggio o pagato
+        const assegnato = String(fields.plan || '').toUpperCase().trim();
+        const piano = String(fields.piano_effettivo || assegnato || 'BASE').toUpperCase().trim();
         document.getElementById('piano-nome').textContent = NOMI_PIANO[piano] || piano;
 
         const statoEl = document.getElementById('piano-stato');
@@ -174,6 +176,13 @@
         // Il pulsante compare solo se il server accetterebbe il rinnovo (rinnovo gratuito acceso e negli ultimi 14 giorni)
         btnRinnova.style.display = abb.rinnovo_disponibile ? 'block' : 'none';
 
+        if (assegnato === 'GOLD' || assegnato === 'PREMIUM') {
+            statoEl.textContent = NOMI_PIANO[assegnato];
+            statoEl.className = 'badge badge-ok';
+            notaEl.textContent = 'Piano attivo, senza scadenza.';
+            document.getElementById('piano-scadenza').textContent = '—';
+            return;
+        }
         // Modello C (17/11/2026): alla fine della prova la tag resta online con il piano Base
         if (abb.fase === 'attiva') {
             const inScadenza = abb.giorni_alla_scadenza <= 14;
