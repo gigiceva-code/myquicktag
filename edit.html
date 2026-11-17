@@ -1117,6 +1117,9 @@
         <!-- CONTENITORE SCORREVOLE (Padding 120px per evitare il tastone verde) -->
         <div style="display: flex; flex-direction: column; gap: 16px; overflow-y: auto; padding: 5px 5px 120px 5px;">
             
+            <!-- MODELLO C (17/11/2026): il piano lo decide il server (piano_effettivo); qui solo la spiegazione, niente "Simula" -->
+            <div id="piano-spiegazione" style="background: #111827; color: #f3f4f6; border-radius: 12px; padding: 16px; font-size: 0.8rem; line-height: 1.55;"></div>
+
                         <!-- CARD: PIANO BASE -->
             <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
                 <div style="font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 4px;">Base</div>
@@ -1126,7 +1129,7 @@
                     <li><i class="fas fa-check" style="color: #10b981; margin-right: 8px;"></i>Sito Web e QR Code</li>
                     <li><i class="fas fa-check" style="color: #10b981; margin-right: 8px;"></i>Fino a 5 Link Social</li>
                 </ul>
-                <div onclick="sbloccaPianoInAnteprima('BASE')" style="text-align: center; border: 1px solid #d1d5db; background: #ffffff; padding: 10px; border-radius: 8px; color: #374151; font-size: 0.75rem; font-weight: 600; cursor: pointer; text-transform: uppercase;">Simula Base</div>
+                <div class="piano-stato" data-piano="BASE" style="text-align: center; padding: 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #d1d5db; color: #374151;"></div>
             </div>
 
             <!-- CARD: PIANO PREMIUM -->
@@ -1139,7 +1142,7 @@
                     <li><i class="fas fa-check" style="color: #10b981; margin-right: 8px;"></i>Azione Rapida (CTA)</li>
                     <li><i class="fas fa-check" style="color: #10b981; margin-right: 8px;"></i>Galleria (Max 6 foto)</li>
                 </ul>
-                <div onclick="sbloccaPianoInAnteprima('PREMIUM')" style="text-align: center; background: #10b981; padding: 10px; border-radius: 8px; color: #ffffff; font-size: 0.75rem; font-weight: 600; cursor: pointer; text-transform: uppercase;">Simula Premium</div>
+                <div class="piano-stato" data-piano="PREMIUM" style="text-align: center; padding: 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #d1d5db; color: #374151;"></div>
             </div>
 
             <!-- CARD: PIANO GOLD (Dark Card) -->
@@ -1154,7 +1157,7 @@
                     <li><i class="fas fa-check" style="color: #e5c158; margin-right: 8px;"></i>Live Status e Timer Shop</li>
                     <li><i class="fas fa-check" style="color: #e5c158; margin-right: 8px;"></i>QuickGift e VIP Vault</li>
                 </ul>
-                <div onclick="sbloccaPianoInAnteprima('GOLD')" style="text-align: center; background: #e5c158; padding: 10px; border-radius: 8px; color: #111827; font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Simula Gold</div>
+                <div class="piano-stato" data-piano="GOLD" style="text-align: center; padding: 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #d1d5db; color: #374151;"></div>
             </div>
         </div>
     </div>

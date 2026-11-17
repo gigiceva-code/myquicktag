@@ -1,6 +1,5 @@
 import { trovaTag } from '../lib/db.js';
 import { nomeTag } from '../lib/nome-canonico.js';
-import { calcolaAbbonamento } from '../lib/abbonamento.js';
 
 // ============================================================
 // ANTEPRIMA DEI LINK (WhatsApp, Facebook, Telegram, iMessage…)
@@ -49,12 +48,10 @@ async function anteprima(req, res, nome) {
       const nomeVisibile = riga(String(f.username_display || nome).replace(/^@/, ''), 40);
       titolo = nomeSezione ? `@${nomeVisibile} · ${nomeSezione}` : `@${nomeVisibile}`;
       descrizione = `Scopri @${nomeVisibile} su myquicktag.`;
-      // Tag scaduta: ai visitatori solo il nome (come in get-profile.js)
-      if (calcolaAbbonamento(record).fase !== 'scaduta') {
-        if (riga(f.bio, 160)) descrizione = riga(f.bio, 160);
-        const urlFoto = fotoAnteprima(f.avatar_url);
-        if (urlFoto) { immagine = urlFoto; foto = true; }
-      }
+      // Modello C: la tag resta sempre online (bio e foto sono del piano Base)
+      if (riga(f.bio, 160)) descrizione = riga(f.bio, 160);
+      const urlFoto = fotoAnteprima(f.avatar_url);
+      if (urlFoto) { immagine = urlFoto; foto = true; }
     }
   } catch (e) {
     console.error('Anteprima tag:', e.dettagli || e.message);

@@ -864,15 +864,12 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                     }
                     return;
                 }
-                // Tag disattivata (90 giorni + 14 di grazia trascorsi): si torna alla dashboard per rinnovare
-                if (data.abbonamento && data.abbonamento.fase === 'scaduta') {
-                    alert("Tag disattivata\n\nIl piano e il periodo di grazia sono terminati. Rinnova dalla dashboard per riattivarla e modificarla.");
-                    window.location.href = `/profile.html?u=${NOME_SISTEMA}`;
-                    return;
-                }
+                // Modello C: finita la prova la tag resta online e modificabile con il piano Base
+                abbonamentoEditor = data.abbonamento || null;
 
                 statoUtente = (data.fields?.stato || 'in attesa').toLowerCase().trim();
-                userPlan = (data.fields?.plan || 'BASE').toUpperCase().trim();
+                // Piano deciso SOLO dal server (lib/abbonamento.js → pianoEffettivo): Gold durante la prova, poi piano pagato o Base
+                userPlan = (data.fields?.piano_effettivo || 'BASE').toUpperCase().trim();
 
                 // PRENOTAZIONE 24H: il server (get-profile.js) fornisce reservation_expires_at + server_now
                 // solo per i record "in attesa". Traduciamo subito la scadenza sull'orologio di QUESTO
@@ -887,8 +884,9 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                     datiPrenotazioneServer = null;
                 }
 
-                const pianoSimulato = localStorage.getItem('mqt_temp_plan_' + NOME_SISTEMA);
-                if (pianoSimulato) userPlan = pianoSimulato;
+                // I vecchi pulsanti "Simula" salvavano un piano finto sul telefono: si cancella, non vale più
+                try { localStorage.removeItem('mqt_temp_plan_' + NOME_SISTEMA); } catch (e) {}
+                aggiornaStatoPiani();
                 
                // ========================================================
                 // MOTORE SAAS DI SELF-HEALING (Sincronizzazione Intelligente)
@@ -1168,26 +1166,30 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
             chiudiSenzaSalvare();
         }
 
-       function sbloccaPianoInAnteprima(nuovoPianoSelezionato) {
-            userPlan = nuovoPianoSelezionato; 
-            localStorage.setItem('mqt_temp_plan_' + NOME_SISTEMA, userPlan); 
+       // Cassetto "Scegli il piano" (modello C, 17/11/2026): solo spiegazione e stato, il piano lo decide il server
+       let abbonamentoEditor = null;
+       function aggiornaStatoPiani() {
+            const fmt = d => { try { return new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return d; } };
+            const a = abbonamentoEditor;
+            const inProva = !a || a.fase !== 'scaduta';
+            const box = document.getElementById('piano-spiegazione');
+            if (box) box.innerHTML = inProva
+                ? `<b style="color:#e5c158;">Prova con tutto sbloccato</b>${a && a.data_scadenza ? ` fino al ${fmt(a.data_scadenza)}` : ' per 90 giorni dall\'attivazione'}. Poi la tua tag resta online <b>gratis con il piano Base</b>; Premium e Gold saranno a pagamento. Nessun addebito automatico.`
+                : (userPlan === 'BASE' ? `<b style="color:#e5c158;">La prova è terminata.</b> La tua tag resta online gratis con il piano Base: le sezioni avanzate sono nascoste, non cancellate. Premium e Gold a pagamento stanno arrivando.` : `<b style="color:#e5c158;">Piano ${userPlan === 'GOLD' ? 'Gold' : 'Premium'} attivo.</b>`);
+            document.querySelectorAll('.piano-stato').forEach(el => {
+                const p = el.dataset.piano, mio = p === userPlan;
+                el.textContent = mio ? (inProva && p === 'GOLD' ? 'Incluso nella tua prova' : 'Il tuo piano') : (p === 'BASE' ? 'Gratis per sempre' : 'A pagamento · in arrivo');
+                el.style.background = mio ? '#e5c158' : 'transparent';
+                el.style.color = mio ? '#111827' : '#6b7280';
+                el.style.borderColor = mio ? '#e5c158' : '#d1d5db';
+            });
             aggiornaLucchetti();
-            
-            // Reindirizzamento logico all'Editor principale invece di chiudere i cassetti
-            apriDrawer('drawer-master'); 
-            
-           setTimeout(() => {
-                if(nuovoPianoSelezionato === 'BASE') {
-                    alert(`Hai impostato il piano BASE.\n\nLe funzioni avanzate sono state nuovamente bloccate per mostrarti l'anteprima reale.`);
-                } else {
-                    alert(`Fantastico! Hai selezionato il piano ${nuovoPianoSelezionato}.\n\nI lucchetti del tuo piano sono sbloccati. Ora puoi configurare queste funzioni e vedere l'anteprima in tempo reale.`);
-                }
-            }, 400);
-        }
+       }
 
      function aggiornaLucchetti() {
-   const cassettiGold = ['drawer-review', 'drawer-lead-capture', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass'];
-    const cassettiPremium = ['drawer-gallery', 'drawer-showcase', 'drawer-quick']; 
+   // Stessi elenchi di apriDrawer e del server (lib/abbonamento.js → CAMPI_GOLD / CAMPI_PREMIUM)
+   const cassettiGold = ['drawer-review', 'drawer-lead-capture', 'drawer-live-status', 'drawer-flash', 'drawer-shop', 'drawer-quickpass', 'drawer-video', 'drawer-showcase'];
+    const cassettiPremium = ['drawer-gallery', 'drawer-quick']; 
     
     document.querySelectorAll('.premium-field-container').forEach(container => {
         const overlay = container.querySelector('.premium-lock-overlay');

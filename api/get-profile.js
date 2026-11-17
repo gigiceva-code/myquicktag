@@ -1,5 +1,7 @@
 import { trovaTag, aggiornaTag } from '../lib/db.js';
-import { calcolaAbbonamento, dateAttivazione, rinnovoDisponibile } from '../lib/abbonamento.js';
+import crypto from 'crypto';
+import { calcolaAbbonamento, dateAttivazione, rinnovoDisponibile, pianoEffettivo, filtraPerPiano, consente } from '../lib/abbonamento.js';
+import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
 import { nomeTag } from '../lib/nome-canonico.js';
 import { dirittiSullaTag } from '../lib/sessione.js';
 
@@ -31,7 +33,35 @@ function scegli(fields, elenco) {
   return out;
 }
 
+// VIP VAULT (17/11/2026): il PIN si verifica qui, sul server. Link e PIN dei canali riservati non arrivano mai
+// al browser dei visitatori (filtraPerPiano); con il PIN giusto si riceve solo il link di quel canale.
+// Tentativi limitati: 10 ogni 15 minuti per connessione e tag.
+async function apriVault(req, res) {
+  const body = req.body || {};
+  const tag = nomeTag(body.u);
+  const indice = Number.isInteger(body.vault) ? body.vault : parseInt(body.vault, 10);
+  const pin = String(body.pin || '');
+  if (!tag || !Number.isInteger(indice) || indice < 0 || !pin) return res.status(400).json({ success: false, error: 'Richiesta non valida' });
+  if (!(await entroILimiti(req, tag, [{ nome: 'vip-pin', per: 'ip+tag', max: 10, finestra: 900, chiuso: true }]))) return rispondiTroppiTentativi(res);
+  const record = await trovaTag(tag, ['stato', 'plan', 'data_scadenza', 'config_canali']);
+  if (!record || String(record.fields.stato || '').toLowerCase().trim() !== 'attivo' || !consente(pianoEffettivo(record), 'GOLD')) {
+    return res.status(404).json({ success: false, error: 'Contenuto non disponibile' });
+  }
+  let canali = [];
+  try { canali = JSON.parse(record.fields.config_canali || '[]'); } catch (e) { canali = []; }
+  const c = Array.isArray(canali) ? canali[indice] : null;
+  if (!c || !(c.vip === true || c.vip === 'true') || !c.pin) return res.status(404).json({ success: false, error: 'Contenuto non disponibile' });
+  const a = Buffer.from(String(c.pin)), b = Buffer.from(pin);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return res.status(403).json({ success: false, error: 'PIN errato' });
+  return res.status(200).json({ success: true, url: c.url || '' });
+}
+
 export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    try { if ((req.body || {}).azione === 'vault') return await apriVault(req, res); }
+    catch (e) { console.error('CRASH VAULT:', e.dettagli || e.message); return res.status(500).json({ success: false, error: 'Errore server' }); }
+    return res.status(400).json({ success: false, error: 'Azione sconosciuta' });
+  }
   const { u, token } = req.query;
 
   if (!u) return res.status(400).json({ success: false, error: "Username mancante" });
@@ -80,16 +110,15 @@ export default async function handler(req, res) {
         }
         risposta.abbonamento = calcolaAbbonamento(record);
         risposta.abbonamento.rinnovo_disponibile = rinnovoDisponibile(risposta.abbonamento);
-        // Tag scaduta: ai visitatori non si mostrano più i contenuti, solo il nome
-        if (risposta.abbonamento.fase === 'scaduta' && !tokenValido) {
-          risposta.fields = {
-            username_system: fieldsPubblici.username_system,
-            username_display: fieldsPubblici.username_display,
-            stato: fieldsPubblici.stato,
-            has_password: fieldsPubblici.has_password
-          };
-        }
       }
+
+      // MODELLO C: piano effettivo deciso qui (prova con tutto sbloccato, poi piano pagato o Base). La tag resta
+      // sempre online: ai visitatori arrivano solo le sezioni del piano, e mai link e PIN del VIP Vault.
+      // Il proprietario riceve tutto (l'editor conserva i contenuti) e applica la stessa regola alla sua anteprima.
+      const piano = pianoEffettivo(record);
+      risposta.fields = tokenValido ? risposta.fields : filtraPerPiano(risposta.fields, piano);
+      risposta.fields.piano_effettivo = piano;
+      if (risposta.abbonamento) risposta.abbonamento.piano_effettivo = piano;
 
       // Le risposte con dati privati non vanno mai in cache
       if (tokenValido) res.setHeader('Cache-Control', 'no-store');

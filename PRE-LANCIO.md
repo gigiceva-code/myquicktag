@@ -141,6 +141,16 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - "Fai l'Upgrade" (dashboard) e il checkout di una tag già attiva mostrano per ora "Upgrade in arrivo".
 - Per i test si può impostare il piano a mano su Supabase (tabella `tags`, colonna `plan`: `PREMIUM` o `GOLD`).
 
+### Audit pre-lancio (17/11/2026) e modello C
+- [x] **Modello C deciso dal titolare:** finita la prova la tag resta online gratis con il Base; Premium e Gold a
+      pagamento (quando ci sarà Stripe). Fatto nel codice: regola unica del piano sul server, via i pulsanti "Simula".
+- [x] **VIP Vault** verificato sul server (prima PIN e link erano visibili a chiunque).
+- [x] **Privacy e cookie:** Cloudinary e video YouTube/Vimeo dichiarati.
+- [ ] **Contatori anonimi del percorso** (visite home, verifiche nome, registrazioni, tag completate): da attivare prima del lancio.
+- [ ] Entro ~60 giorni dal lancio: email di scadenza (30/7/0 giorni), schermata di scelta alla fine della prova, Stripe
+      (dopo il commercialista), preset Cloudinary firmato, backup settimanale del database, home riscritta.
+- [ ] Parere legale su termini e QuickGift (operazioni a premio, responsabilità del titolare della tag).
+
 ### Strategia di lancio: 3 mesi gratis con tutto sbloccato (deciso il 09/10/2026)
 - **Perché (il titolare non vuole doverlo ripetere):** il titolare è lavoratore dipendente e la famiglia
   (moglie e tre figli) vive del suo unico stipendio. Non vuole aprire partita IVA e pagare tasse e

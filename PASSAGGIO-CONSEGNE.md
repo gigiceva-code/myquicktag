@@ -270,6 +270,25 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   **@myquicktag** al titolare del sito: le righe `quicktag` e `myquicktag` "contiene" (black) continuano a bloccare per
   tutti gli altri ogni nome che contiene "quicktag" (anche "myquicktagofficial"). Per assegnarlo: in `nomi_riservati`
   la riga `myquicktag` diventa regola `esatto` con `assegnato_a` = email dell'account del titolare.
+- **Modello C e piano effettivo (17/11/2026, deciso dal titolare dopo l'audit pre-lancio):** una regola sola sul server,
+  `pianoEffettivo(record)` in `lib/abbonamento.js`: tag in attesa o attiva nei 90 giorni + 14 di tolleranza → **GOLD**
+  (prova con tutto sbloccato); dopo → il piano pagato (colonna `plan`, scritta solo dal server, oggi solo a mano per gli
+  omaggi) oppure **BASE**. La tag **non si spegne mai**: `get-profile` manda ai visitatori solo le sezioni del piano
+  (`filtraPerPiano`: elenchi `CAMPI_GOLD`, `CAMPI_PREMIUM`, contatti estesi del VCF, 5 link nel Base) e il campo
+  `piano_effettivo`; il proprietario riceve tutto (contenuti conservati) e `tag-logic.js` applica la stessa regola alla
+  sua anteprima (`filtraCampiPiano`, elenchi uguali controllati da una prova). Editor: `userPlan` = `piano_effettivo`,
+  tolti i pulsanti "Simula" (il cassetto "Scegli il piano" ora spiega la prova e mostra "Il tuo piano / Gratis per
+  sempre / A pagamento · in arrivo"); lucchetti con gli stessi elenchi di `apriDrawer`. `update-profile` non blocca più
+  le tag oltre la prova; Vasetto (`add-lead`) e QuickGift (`quickpass`) funzionano solo con piano Gold; anteprima dei
+  link (`manifest`) sempre con bio e foto. Identity Console, `profile.html` e `account.html`: "Prova in chiusura",
+  "Base", nessun "Disattivata". Termini (punto 7) e FAQ della home riscritti per il modello C.
+- **VIP Vault verificato sul server (17/11/2026):** prima link e PIN dei canali riservati arrivavano in chiaro al browser
+  e il PIN si confrontava nella pagina. Ora `filtraPerPiano` toglie url e PIN dei canali VIP (resta la posizione
+  `vault`) e `get-profile` accetta `POST {azione:'vault', u, vault, pin}`: confronto sul server (tempo costante), 10
+  tentativi ogni 15 minuti per connessione e tag, solo piano Gold; con il PIN giusto restituisce solo quel link. Il PIN
+  resta in chiaro nel database (lo legge solo il server). Limite intrinseco: chi conosce il PIN può girare il link.
+- **Privacy e cookie (17/11/2026):** aggiunti Cloudinary (immagini e documenti) e i video YouTube/Vimeo incorporati; i
+  video YouTube ora usano youtube-nocookie.com.
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
   «Accetto di ricevere offerte e novità da @Nome» sotto il modulo, con nota «Facoltativo…» e link alla Privacy.
   `api/add-lead.js` salva nel contatto `consenso_offerte` (solo se `true` esplicito), `consenso_testo` (il testo accettato)
@@ -310,6 +329,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
 - `test/quickpass.e2e.mjs` → 41 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/piano.e2e.mjs` → 7 prove nel browser del piano effettivo (modello C) e del VIP Vault verificato sul server.
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
   (istruzioni d'uso in testa al file; serve Playwright).

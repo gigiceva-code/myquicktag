@@ -174,21 +174,21 @@
         // Il pulsante compare solo se il server accetterebbe il rinnovo (rinnovo gratuito acceso e negli ultimi 14 giorni)
         btnRinnova.style.display = abb.rinnovo_disponibile ? 'block' : 'none';
 
+        // Modello C (17/11/2026): alla fine della prova la tag resta online con il piano Base
         if (abb.fase === 'attiva') {
             const inScadenza = abb.giorni_alla_scadenza <= 14;
-            statoEl.textContent = inScadenza ? `Scade tra ${abb.giorni_alla_scadenza} gg` : 'Attiva';
+            statoEl.textContent = inScadenza ? `Prova: ${abb.giorni_alla_scadenza} gg` : 'Attiva';
             statoEl.className = 'badge ' + (inScadenza ? 'badge-warn' : 'badge-ok');
-            notaEl.textContent = inScadenza
-                ? 'Rinnova ora: i giorni che ti restano non vanno persi.'
-                : `Mancano ${abb.giorni_alla_scadenza} giorni alla scadenza. Potrai rinnovare negli ultimi 14 giorni.`;
+            notaEl.textContent = `Tutto sbloccato per altri ${abb.giorni_alla_scadenza} giorni. Poi la tua tag resta online gratis con il piano Base.`;
         } else if (abb.fase === 'grazia') {
-            statoEl.textContent = 'Scaduta';
+            statoEl.textContent = 'Prova in chiusura';
             statoEl.className = 'badge badge-warn';
-            notaEl.textContent = `La tua tag resta online ancora ${abb.giorni_alla_disattivazione} giorni: rinnova per non perderla.`;
+            notaEl.textContent = `Tutto sbloccato ancora ${abb.giorni_alla_disattivazione} giorni, poi la tua tag resta online gratis con il piano Base.`;
         } else {
-            statoEl.textContent = 'Disattivata';
-            statoEl.className = 'badge badge-ko';
-            notaEl.textContent = 'La tag non è visibile al pubblico. Rinnova per riattivarla con tutti i tuoi contenuti.';
+            const p = abb.piano_effettivo || 'BASE';
+            statoEl.textContent = p === 'GOLD' ? 'Gold' : p === 'PREMIUM' ? 'Premium' : 'Base';
+            statoEl.className = 'badge badge-ok';
+            notaEl.textContent = p === 'BASE' ? 'Online gratis con il piano Base: le sezioni avanzate sono nascoste, non cancellate.' : 'Online.';
         }
     }
 

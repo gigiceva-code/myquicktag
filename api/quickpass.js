@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { trovaTag, aggiornaTag, leggiRighe, contaRighe, inserisciRiga, aggiornaRighe, aggiungiLead } from '../lib/db.js';
-import { calcolaAbbonamento } from '../lib/abbonamento.js';
+import { pianoEffettivo } from '../lib/abbonamento.js';
 import { pulisciTesto } from '../lib/pulizia.js';
 import { entroILimiti, rispondiTroppiTentativi, ipRichiesta } from '../lib/limiti.js';
 import { nomeTag } from '../lib/nome-canonico.js';
@@ -25,7 +25,7 @@ const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // senza 0/O e 1/I, facili 
 const GIORNO_MS = 24 * 60 * 60 * 1000;
 const GIORNI_PASS = 30;
 const GIORNI_PREMIO = 60;
-const COLONNE_TAG = ['stato', 'data_scadenza', 'proprietario_id', 'username_display', 'quickpass_premio_a', 'quickpass_premio_b',
+const COLONNE_TAG = ['stato', 'plan', 'data_scadenza', 'proprietario_id', 'username_display', 'quickpass_premio_a', 'quickpass_premio_b',
   'quickpass_limite', 'quickpass_scadenza', 'quickpass_amici_per_premio', 'quickpass_pin_hash'];
 
 function codiceCasuale(lunghezza) {
@@ -65,7 +65,7 @@ function campagna(record) {
   const f = record?.fields || {};
   const scadenza = f.quickpass_scadenza ? Date.parse(f.quickpass_scadenza) : null;
   const attiva = !!record && String(f.stato || '').toLowerCase().trim() === 'attivo' &&
-    calcolaAbbonamento(record).fase !== 'scaduta' &&
+    pianoEffettivo(record) === 'GOLD' && // QuickGift è una funzione Gold (prova inclusa)
     !!String(f.quickpass_premio_a || '').trim() && !!String(f.quickpass_premio_b || '').trim() &&
     !(scadenza && Date.now() > scadenza);
   return { attiva, scadenza: scadenza || null, limite: parseInt(f.quickpass_limite, 10) > 0 ? parseInt(f.quickpass_limite, 10) : null,

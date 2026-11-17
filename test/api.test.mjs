@@ -501,7 +501,7 @@ delete process.env.RINNOVO_GRATUITO;
   ok(h.includes('https://res.cloudinary.com/etgsaztr/image/upload/c_fill,g_face,w_600,h_600,f_jpg,q_auto/v1/foto.jpg') && h.includes('twitter:card" content="summary"'),'anteprima: foto della tag ritagliata quadrata');
   rows.push({id:'ant2',username_system:'scaduto',username_display:'Scaduto',stato:'attivo',bio:'segreto',avatar_url:'https://res.cloudinary.com/x/image/upload/a.jpg',data_scadenza:'2020-01-01',created_at:new Date().toISOString()});
   r=await call('manifest.js',{query:{u:'scaduto',anteprima:'1'}});
-  ok(r.body.includes('content="@Scaduto"') && !r.body.includes('segreto') && r.body.includes('/icons/og-image.png'),'anteprima: tag scaduta → solo il nome, immagine del marchio');
+  ok(r.body.includes('content="@Scaduto"') && r.body.includes('segreto'),'anteprima (modello C): finita la prova la tag resta online, con bio e foto');
   rows.push({id:'ant3',username_system:'attesa',stato:'in attesa',bio:'bozza privata',avatar_url:'javascript:alert(1)',created_at:new Date().toISOString()});
   r=await call('manifest.js',{query:{u:'attesa',anteprima:'1'}});
   ok(r.body.includes('og:title" content="myquicktag"') && !r.body.includes('bozza privata') && !r.body.includes('javascript:'),'anteprima: tag non attiva → anteprima generica, nessun contenuto della bozza');
@@ -724,6 +724,61 @@ delete process.env.RINNOVO_GRATUITO;
       ok(r.body.invito.premi_totali===5 && tabelleQP.quickpass_pass.filter(p=>p.invito===inv&&p.tipo==='premio'&&p.ordine===3).length===1,'premio perso per una conferma interrotta: lo ricrea la pagina di chi condivide');
     }
   }
+}
+{
+  // MODELLO C E PIANO EFFETTIVO (17/11/2026): tutto sbloccato per 90 giorni + 14, poi Base gratuito (tag sempre online,
+  // contenuti avanzati conservati ma non mostrati); il piano lo decide solo il server. VIP Vault verificato sul server.
+  const { pianoEffettivo, filtraPerPiano } = await import(R.replace('/api/','/lib/')+'abbonamento.js');
+  const oggi = new Date(), giorni = n => new Date(oggi.getTime() + n*86400000).toISOString().slice(0,10);
+  const canali = JSON.stringify([
+    {nome:'instagram',url:'https://instagram.com/a'},{nome:'tiktok',url:'https://tiktok.com/@a'},{nome:'listino',url:'https://segreto.it/listino.pdf',vip:true,pin:'4321'},
+    {nome:'x',url:'https://x.com/a'},{nome:'facebook',url:'https://facebook.com/a'},{nome:'youtube',url:'https://youtube.com/a'},{nome:'linkedin',url:'https://linkedin.com/in/a'}]);
+  const base = {stato:'attivo',proprietario_id:anna.id,created_at:new Date().toISOString(),config_canali:canali,bio:'ciao',
+    review_url:'https://g.page/r',quickpass_premio_a:'P',quickpass_premio_b:'R',lead_capture_attivo:'true',gallery_data:'["https://res.cloudinary.com/a.jpg"]',
+    quick_action_tipo:'whatsapp',quick_action_url:'393331112222',modulo_vcf:JSON.stringify({telefono1:'111',telefono2:'222',indirizzo:'Via Roma 1'})};
+  rows.push({id:'pc1',username_system:'inprova',data_scadenza:giorni(30),...base},{id:'pc2',username_system:'finitaprova',data_scadenza:giorni(-30),...base},
+    {id:'pc3',username_system:'omaggiogold',data_scadenza:giorni(-30),plan:'GOLD',...base},{id:'pc4',username_system:'intolleranza',data_scadenza:giorni(-5),...base});
+  ok(pianoEffettivo({fields:riga('inprova')})==='GOLD' && pianoEffettivo({fields:riga('intolleranza')})==='GOLD' && pianoEffettivo({fields:riga('finitaprova')})==='BASE' && pianoEffettivo({fields:riga('omaggiogold')})==='GOLD' && pianoEffettivo({fields:{stato:'in attesa'}})==='GOLD',
+    'piano effettivo: Gold in prova e nei 14 giorni di tolleranza, Base dopo, Gold per gli omaggi, tutto sbloccato in configurazione');
+  let r=await call('get-profile.js',{query:{u:'inprova'}});
+  let f=r.body.fields, ch=JSON.parse(f.config_canali);
+  ok(f.piano_effettivo==='GOLD' && f.review_url && f.quickpass_premio_a && f.gallery_data && ch.length===7,'in prova il pubblico vede tutto (tre mesi di accesso completo)');
+  ok(!JSON.stringify(r.body).includes('segreto.it') && !JSON.stringify(r.body).includes('4321') && ch.find(c=>c.vip).vault===2,'VIP Vault: link e PIN non arrivano mai al browser dei visitatori');
+  r=await call('get-profile.js',{query:{u:'finitaprova'}});
+  f=r.body.fields; ch=JSON.parse(f.config_canali);
+  ok(r.code===200 && f.piano_effettivo==='BASE' && f.bio==='ciao' && !f.review_url && !f.quickpass_premio_a && !f.lead_capture_attivo && !f.gallery_data && !f.quick_action_url,'modello C: finita la prova la tag resta online con le sole sezioni Base');
+  ok(ch.length===5 && !ch.some(c=>c.vip) && JSON.parse(f.modulo_vcf).telefono1==='111' && !JSON.parse(f.modulo_vcf).telefono2 && !JSON.parse(f.modulo_vcf).indirizzo,'modello C: nel Base 5 link, niente VIP Vault e solo i contatti principali');
+  ok(riga('finitaprova').review_url && riga('finitaprova').gallery_data,'modello C: i contenuti avanzati restano conservati nel database');
+  r=await call('get-profile.js',{query:{u:'finitaprova'},headers:conSessione(jwtAnna)});
+  ok(r.body.fields.review_url && r.body.fields.piano_effettivo==='BASE' && JSON.parse(r.body.fields.config_canali)[2].pin==='4321','il proprietario riceve tutto (l\'editor conserva i contenuti) e il piano effettivo');
+  r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'finitaprova',bio:'aggiornata'}});
+  ok(r.code===200 && riga('finitaprova').bio==='aggiornata','modello C: dopo la prova la tag si può ancora modificare');
+  r=await call('add-lead.js',{method:'POST',body:{u:'finitaprova',nome:'X',contatto:'3330000000'}});
+  ok(r.code===404,'modello C: nel Base il Vasetto contatti non riceve nuovi contatti');
+  r=await call('quickpass.js',{method:'POST',body:{u:'finitaprova',azione:'invito',nome:'X',dispositivo:'telefono-x-000000001'}});
+  ok(r.code===410,'modello C: nel Base QuickGift non crea nuovi link');
+  r=await call('get-profile.js',{query:{u:'omaggiogold'}});
+  ok(r.body.fields.piano_effettivo==='GOLD' && r.body.fields.review_url,'piano Gold assegnato (omaggio): tutto visibile anche dopo la prova');
+  // VIP Vault: verifica del PIN sul server
+  r=await call('get-profile.js',{method:'POST',body:{azione:'vault',u:'inprova',vault:2,pin:'0000'},ip:'6.6.6.1'});
+  ok(r.code===403 && !JSON.stringify(r.body).includes('segreto'),'VIP Vault: PIN errato rifiutato, nessun link');
+  r=await call('get-profile.js',{method:'POST',body:{azione:'vault',u:'inprova',vault:2,pin:'4321'},ip:'6.6.6.1'});
+  ok(r.code===200 && r.body.url==='https://segreto.it/listino.pdf','VIP Vault: con il PIN giusto il server restituisce il link');
+  r=await call('get-profile.js',{method:'POST',body:{azione:'vault',u:'inprova',vault:0,pin:'4321'},ip:'6.6.6.1'});
+  ok(r.code===404,'VIP Vault: un canale non riservato non si apre con il PIN');
+  r=await call('get-profile.js',{method:'POST',body:{azione:'vault',u:'finitaprova',vault:2,pin:'4321'},ip:'6.6.6.1'});
+  ok(r.code===404,'VIP Vault: nel piano Base il canale riservato non si apre');
+  let bloccato=false;
+  for(let i=0;i<12;i++){ r=await call('get-profile.js',{method:'POST',body:{azione:'vault',u:'intolleranza',vault:2,pin:'9'+i},ip:'6.6.6.9'}); if(r.code===429) bloccato=true; }
+  ok(bloccato,'VIP Vault: tentativi limitati (niente prove a raffica del PIN)');
+  // La tag pubblica (anteprima del proprietario) usa gli STESSI elenchi del server
+  const { CAMPI_GOLD, CAMPI_PREMIUM, LINK_BASE } = await import(R.replace('/api/','/lib/')+'abbonamento.js');
+  const tl=fs.readFileSync(new URL('../tag-logic.js', import.meta.url),'utf8');
+  const elenco=nome=>JSON.parse(tl.match(new RegExp('const '+nome+' = (\\[[\\s\\S]*?\\]);'))[1].replace(/'/g,'"'));
+  ok(JSON.stringify(elenco('CAMPI_GOLD_TAG'))===JSON.stringify(CAMPI_GOLD) && JSON.stringify(elenco('CAMPI_PREMIUM_TAG'))===JSON.stringify(CAMPI_PREMIUM) && tl.includes('const LINK_BASE_TAG = '+LINK_BASE+';'),'piano: tag pubblica e server usano gli stessi elenchi di sezioni');
+  ok(!tl.includes('pinRiservato') && !/input\.value === /.test(tl),'VIP Vault: nessun confronto del PIN nel browser');
+  const el=fs.readFileSync(new URL('../edit-logic.js', import.meta.url),'utf8'), eh=fs.readFileSync(new URL('../edit.html', import.meta.url),'utf8');
+  ok(!eh.includes('sbloccaPianoInAnteprima') && !el.includes("userPlan = pianoSimulato") && el.includes("data.fields?.piano_effettivo"),'editor: niente più «Simula», il piano arriva dal server');
 }
 {
   // QUICK PASS ONLINE (02/11/2026): dove si usa il pass e recapito per l'uso online

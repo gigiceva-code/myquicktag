@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { trovaTag, aggiungiLead } from '../lib/db.js';
-import { calcolaAbbonamento } from '../lib/abbonamento.js';
+import { pianoEffettivo } from '../lib/abbonamento.js';
 import { pulisciTesto } from '../lib/pulizia.js';
 import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
 import { nomeTag } from '../lib/nome-canonico.js';
@@ -50,10 +50,10 @@ export default async function handler(req, res) {
 
   try {
     // Si accettano contatti solo per tag attive, online e con la raccolta contatti accesa
-    const record = await trovaTag(username, ['stato', 'data_scadenza', 'lead_capture_attivo']);
+    const record = await trovaTag(username, ['stato', 'plan', 'data_scadenza', 'lead_capture_attivo']);
     const stato = String(record?.fields?.stato || '').toLowerCase().trim();
     const raccoltaAttiva = String(record?.fields?.lead_capture_attivo || '') === 'true';
-    if (!record || stato !== 'attivo' || !raccoltaAttiva || calcolaAbbonamento(record).fase === 'scaduta') {
+    if (!record || stato !== 'attivo' || !raccoltaAttiva || pianoEffettivo(record) !== 'GOLD') { // il Vasetto è una funzione Gold
       return res.status(404).json({ success: false, error: 'Raccolta contatti non disponibile' });
     }
 
