@@ -146,7 +146,7 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
       pagamento (quando ci sarà Stripe). Fatto nel codice: regola unica del piano sul server, via i pulsanti "Simula".
 - [x] **VIP Vault** verificato sul server (prima PIN e link erano visibili a chiunque).
 - [x] **Privacy e cookie:** Cloudinary e video YouTube/Vimeo dichiarati.
-- [ ] **Contatori anonimi del percorso** (visite home, verifiche nome, registrazioni, tag completate): da attivare prima del lancio.
+- [x] **Contatori anonimi del percorso** (17/11/2026): pagina `numeri.html` per l'account ufficiale (info@myquicktag.it, o le email in `NUMERI_EMAIL`).
 - [ ] Entro ~60 giorni dal lancio: email di scadenza (30/7/0 giorni), schermata di scelta alla fine della prova, Stripe
       (dopo il commercialista), preset Cloudinary firmato, backup settimanale del database, home riscritta.
 - [ ] Parere legale su termini e QuickGift (operazioni a premio, responsabilità del titolare della tag).

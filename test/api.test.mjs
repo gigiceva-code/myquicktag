@@ -11,7 +11,7 @@ process.env.SUPABASE_URL='https://fake.supabase.co'; process.env.SUPABASE_SECRET
 delete process.env.RINNOVO_GRATUITO;
 const R=new URL('../api/', import.meta.url).href;
 const tabelleQP={quickpass_inviti:[],quickpass_pass:[]}; // Quick Pass (migrazione 20261029000000)
-const rows=[]; const limiti=new Map(); const segnalazioni=[]; const emailInviate=[]; let resendGiu=false;
+const rows=[]; const limiti=new Map(); const contatori=new Map(); const segnalazioni=[]; const emailInviate=[]; let resendGiu=false;
 // Lista protetta di prova (nel database vero: tabella nomi_riservati)
 const nomiProtetti=[
   {nome:'admin',tipo:'system',regola:'esatto'}, {nome:'myquicktag',tipo:'black',regola:'contiene'},
@@ -67,6 +67,10 @@ globalThis.fetch=async (url,opt={})=>{
   if(u.pathname.endsWith('/rpc/nome_assegnato_a')){ // migrazione 20261011000000
     const b=JSON.parse(opt.body); const n=nomiProtetti.find(x=>x.attivo!==false && x.regola==='esatto' && x.nome===b.p_nome.toLowerCase() && x.assegnato_a);
     return new Response(JSON.stringify(n?n.assegnato_a:null),{status:200}); }
+  if(u.pathname.endsWith('/rpc/conta_evento')){ const b=JSON.parse(opt.body); if(!/^[a-z_]{1,40}$/.test(b.p_evento)) return new Response('{"code":"23514"}',{status:400});
+    const g=new Date().toISOString().slice(0,10); const k=g+'|'+b.p_evento; contatori.set(k,(contatori.get(k)||0)+1); return new Response(null,{status:204}); }
+  if(u.pathname.endsWith('/rpc/numeri_lancio')){ const eventi=[...contatori].map(([k,n])=>({giorno:k.split('|')[0],evento:k.split('|')[1],conteggio:n}));
+    return new Response(JSON.stringify({eventi,account:[],prenotazioni:[],attivazioni:[],totali:{account:2,tag_attive:rows.filter(r=>r.stato==='attivo').length}}),{status:200}); }
   if(u.pathname.endsWith('/rpc/consuma_tentativo')){ const b=JSON.parse(opt.body); const n=(limiti.get(b.p_chiave)||0)+1; limiti.set(b.p_chiave,n); return new Response(JSON.stringify(n<=b.p_max),{status:200}); }
   if(u.pathname.endsWith('/rpc/gestisci_lead')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null',{status:200});
     let l=JSON.parse(r.lead_capture_leads||'[]');
@@ -779,6 +783,34 @@ delete process.env.RINNOVO_GRATUITO;
   ok(!tl.includes('pinRiservato') && !/input\.value === /.test(tl),'VIP Vault: nessun confronto del PIN nel browser');
   const el=fs.readFileSync(new URL('../edit-logic.js', import.meta.url),'utf8'), eh=fs.readFileSync(new URL('../edit.html', import.meta.url),'utf8');
   ok(!eh.includes('sbloccaPianoInAnteprima') && !el.includes("userPlan = pianoSimulato") && el.includes("data.fields?.piano_effettivo"),'editor: niente più «Simula», il piano arriva dal server');
+}
+{
+  // CONTATORI ANONIMI DEL PERCORSO (17/11/2026): solo totali per giorno, nessun dato personale; pagina Numeri riservata
+  const conta = ev => [...contatori].filter(([k]) => k.endsWith('|'+ev)).reduce((t,[,n]) => t+n, 0);
+  const prima = Object.fromEntries(['home_visita','nome_verificato','nome_prenotato','console_aperta','tag_condivisa'].map(e => [e, conta(e)]));
+  await call('track-view.js',{method:'POST',query:{evento:'home'},ip:'9.9.9.1'});
+  await call('check-and-create.js',{method:'POST',body:{tag:'contatoretest'},ip:'9.9.9.2'});
+  await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
+  rows.push({id:'ct1',username_system:'contaclick',stato:'attivo',data_scadenza:'2099-01-01',created_at:new Date().toISOString(),analytics_log:'[]'});
+  await call('track-click.js',{method:'POST',body:{u:'contaclick',sezione:'CONDIVISIONE TAG'},ip:'9.9.9.3'});
+  ok(conta('home_visita')===prima.home_visita+1 && conta('nome_verificato')===prima.nome_verificato+1 && conta('nome_prenotato')===prima.nome_prenotato+1 && conta('console_aperta')===prima.console_aperta+1 && conta('tag_condivisa')===prima.tag_condivisa+1,
+    'contatori: home, nome provato, nome prenotato, Identity Console e condivisione contati');
+  const { contaEvento } = await import(R.replace('/api/','/lib/')+'contatori.js');
+  const n=contatori.size; await contaEvento('email_di_mario@x.it'); await contaEvento('evento_inventato');
+  ok(contatori.size===n,'contatori: solo eventi dell\'elenco chiuso, nessun dato personale come nome di evento');
+  ok([...contatori.keys()].every(k=>/^\d{4}-\d{2}-\d{2}\|[a-z_]+$/.test(k)),'contatori: nel database solo giorno, evento e numero');
+  for(let i=0;i<25;i++) await call('track-view.js',{method:'POST',query:{evento:'home'},ip:'9.9.9.50'});
+  ok(conta('home_visita')<=prima.home_visita+21,'contatori: le visite della home a raffica dallo stesso indirizzo non gonfiano i numeri');
+  let r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'numeri'}});
+  ok(r.code===403,'Numeri: riservati all\'account ufficiale (gli altri account non li vedono)');
+  process.env.NUMERI_EMAIL=anna.email;
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'numeri',giorni:30}});
+  ok(r.code===200 && Array.isArray(r.body.numeri.eventi) && r.body.numeri.eventi.some(e=>e.evento==='home_visita') && !JSON.stringify(r.body).includes('@esempio.it'),'Numeri: l\'account ammesso vede i totali, senza email');
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
+  ok(r.body.vede_numeri===true,'Identity Console: il link «Numeri» compare solo all\'account ammesso');
+  delete process.env.NUMERI_EMAIL;
+  r=await call('account.js',{method:'POST',body:{azione:'numeri'}});
+  ok(r.code===401,'Numeri: senza accesso nessun dato');
 }
 {
   // QUICK PASS ONLINE (02/11/2026): dove si usa il pass e recapito per l'uso online

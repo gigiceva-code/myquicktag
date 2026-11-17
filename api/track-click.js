@@ -1,4 +1,5 @@
 import { registraClick } from '../lib/db.js';
+import { contaEvento } from '../lib/contatori.js';
 import { nomeTag } from '../lib/nome-canonico.js';
 import { entroILimiti } from '../lib/limiti.js';
 
@@ -34,6 +35,7 @@ export default async function handler(req, res) {
   try {
     const trovata = await registraClick(username, click);
     if (!trovata) return res.status(404).json({ success: false, error: 'Tag non trovata' });
+    if (/^CONDIVISIONE|^QUICKGIFT CONDIVISO|^QUICKGIFT LINK TITOLARE/.test(sezione.toUpperCase())) await contaEvento('tag_condivisa');
     return res.status(200).json({ success: true });
   } catch (e) {
     console.error('CRASH TRACK-CLICK:', e.dettagli || e);

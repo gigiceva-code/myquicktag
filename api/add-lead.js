@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { contaEvento } from '../lib/contatori.js';
 import { trovaTag, aggiungiLead } from '../lib/db.js';
 import { pianoEffettivo } from '../lib/abbonamento.js';
 import { pulisciTesto } from '../lib/pulizia.js';
@@ -64,6 +65,7 @@ export default async function handler(req, res) {
       consenso_offerte: consenso,
       ...(consenso ? { consenso_testo: testoConsenso || 'Accetto di ricevere offerte e novità', consenso_data: new Date(ora).toISOString() } : {})
     });
+    await contaEvento('contatto_lasciato');
     return res.status(200).json({ success: true });
   } catch (e) {
     console.error('CRASH ADD-LEAD:', e.dettagli || e);

@@ -10,6 +10,7 @@
 import { tagDelProprietario } from '../lib/db.js';
 import { tokenAccount, utenteDaToken } from '../lib/sessione.js';
 import { calcolaAbbonamento, pianoEffettivo } from '../lib/abbonamento.js';
+import { contaEvento, numeriLancio, puoVedereNumeri } from '../lib/contatori.js';
 
 function contaNuovi(testo) {
   try {
@@ -52,6 +53,12 @@ export default async function handler(req, res) {
     const utente = jwt ? await utenteDaToken(jwt) : null;
     if (!utente) return res.status(401).json({ success: false, error: 'Sessione scaduta: accedi di nuovo' });
 
+    // Pagina "Numeri" (numeri.html): solo per le email ammesse (lib/contatori.js → NUMERI_EMAIL)
+    if (azione === 'numeri') {
+      if (!puoVedereNumeri(utente.email)) return res.status(403).json({ success: false, error: 'Pagina riservata' });
+      return res.status(200).json({ success: true, numeri: await numeriLancio(Math.min(366, Math.max(7, parseInt(body.giorni, 10) || 30))) });
+    }
+
     if (azione === 'mie-tag') {
       const records = await tagDelProprietario(utente.id);
       const tags = records.map(r => {
@@ -72,7 +79,8 @@ export default async function handler(req, res) {
         if (stato === 'in attesa') voce.prenotata_il = r.createdTime;
         return voce;
       });
-      return res.status(200).json({ success: true, tags });
+      await contaEvento('console_aperta');
+      return res.status(200).json({ success: true, tags, vede_numeri: puoVedereNumeri(utente.email) });
     }
 
     return res.status(400).json({ success: false, error: 'Azione non valida' });

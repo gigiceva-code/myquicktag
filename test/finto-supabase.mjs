@@ -38,7 +38,7 @@ function gotrue(metodo,url,headers,body){
   return err(404,'not_found','not found '+p);
 }
 const tabelleQP={quickpass_inviti:[],quickpass_pass:[]}; // Quick Pass (api/quickpass.js, migrazione 20261029000000)
-const segnalazioni=[]; // tabella segnalazioni (api/segnala.js); l'email non parte: RESEND_API_KEY assente
+const segnalazioni=[]; const contatori={}; // contatori anonimi (lib/contatori.js) // tabella segnalazioni (api/segnala.js); l'email non parte: RESEND_API_KEY assente
 // ---- finto PostgREST (stesse regole di test/api.test.mjs) ----
 globalThis.fetch=async (url,opt={})=>{
   const u=new URL(url); const m=opt.method||'GET';
@@ -49,6 +49,9 @@ globalThis.fetch=async (url,opt={})=>{
   if(u.pathname.endsWith('/rpc/gestisci_lead')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null');
     let l=JSON.parse(r.lead_capture_leads||'[]'); if(b.p_azione==='visti') l=l.map(e=>({...e,visto:true})); else if(b.p_azione==='richiamato') l=l.map(e=>e.id===b.p_id?{...e,richiamato:b.p_valore,visto:true}:e); else if(b.p_azione==='elimina') l=l.filter(e=>e.id!==b.p_id);
     r.lead_capture_leads=JSON.stringify(l); return new Response(JSON.stringify(r.lead_capture_leads)); }
+  if(u.pathname.endsWith('/rpc/conta_evento')){ const b=JSON.parse(opt.body); contatori[b.p_evento]=(contatori[b.p_evento]||0)+1; return new Response(null,{status:204}); }
+  if(u.pathname.endsWith('/rpc/numeri_lancio')){ const g=new Date().toISOString().slice(0,10);
+    return new Response(JSON.stringify({eventi:Object.entries(contatori).map(([evento,conteggio])=>({giorno:g,evento,conteggio})),account:[],prenotazioni:[],attivazioni:[],totali:{account:1,tag_attive:rows.filter(r=>r.stato==='attivo').length}})); }
   if(u.pathname.includes('/rpc/')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null');
     const campo=u.pathname.endsWith('aggiungi_lead')?'lead_capture_leads':'analytics_log'; const voce=b.p_lead||b.p_click; const lista=JSON.parse(r[campo]||'[]'); lista.unshift(voce); r[campo]=JSON.stringify(lista); return new Response('true'); }
   const nomeTab=u.pathname.replace('/rest/v1/','');
