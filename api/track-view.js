@@ -6,6 +6,13 @@ export default async function handler(req, res) {
   // Accetta solo richieste POST
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
 
+  // Robot e anteprime automatiche (motori di ricerca, controlli dei link, browser senza schermo) non sono visite vere:
+  // non si contano, così le statistiche dei titolari e i Numeri restano fedeli alle persone
+  const agente = String(req.headers['user-agent'] || '');
+  if (!agente || /bot|crawl|spider|slurp|headless|lighthouse|preview|inspection|facebookexternalhit|python|curl|wget|java\/|go-http|axios|node-fetch|scrapy|monitor|uptime/i.test(agente)) {
+    return res.status(200).json({ success: true, contata: false, automatica: true });
+  }
+
   // Contatore anonimo della home (lib/contatori.js): solo +1 al giorno, niente dati; limite contro le raffiche
   if (req.query.evento === 'home') {
     if (await entroILimiti(req, 'home', [{ nome: 'home', per: 'ip', max: 20, finestra: 3600 }])) await contaEvento('home_visita');
@@ -35,7 +42,9 @@ export default async function handler(req, res) {
     // ====================================================
     const userAgent = req.headers['user-agent'] || '';
     // Vercel ci regala la città e lo stato in questi header speciali
-    const city = req.headers['x-vercel-ip-city'] || 'Sconosciuta';
+    // Vercel manda il nome della città codificato (es. "Council%20Bluffs"): lo si salva in chiaro
+    let city = req.headers['x-vercel-ip-city'] || 'Sconosciuta';
+    try { city = decodeURIComponent(city); } catch (e) { /* nome non decodificabile: resta com'è */ }
     const country = req.headers['x-vercel-ip-country'] || 'XX';
 
    // Riconoscimento Dispositivo Avanzato

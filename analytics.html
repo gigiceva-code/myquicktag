@@ -308,7 +308,11 @@
         }
 
         const geo = analytics.geo || {};
-        const geoArray = Object.entries(geo).map(([city, count]) => ({ city, count }));
+        // I nomi delle città arrivavano codificati (es. "Council%20Bluffs"): si leggono in chiaro, anche quelli già salvati
+        const leggibile = c => { try { return decodeURIComponent(c); } catch (e) { return c; } };
+        const unite = {};
+        Object.entries(geo).forEach(([city, count]) => { const k = leggibile(city); unite[k] = (unite[k] || 0) + count; });
+        const geoArray = Object.entries(unite).map(([city, count]) => ({ city, count }));
         geoArray.sort((a, b) => b.count - a.count);
         const topGeo = geoArray.slice(0, 4); // Mostriamo le top 4
         

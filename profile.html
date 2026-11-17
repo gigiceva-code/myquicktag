@@ -441,7 +441,7 @@
         <i class="fas fa-shield-alt"></i>
         <div style="display: flex; flex-direction: column;">
             <span class="stat-value" id="days-left">- gg</span>
-            <span class="stat-label">Scadenza</span>
+            <span class="stat-label" id="days-left-label">Scadenza</span>
         </div>
     </div>
 </div> 
@@ -752,6 +752,7 @@ function aggiornaContatoriDashboard(record) {
     const conPiano = pianoAssegnato === 'GOLD' || pianoAssegnato === 'PREMIUM';
     if (abb && trialEl && conPiano) {
         trialEl.innerText = pianoAssegnato === 'GOLD' ? 'Gold' : 'Premium';
+        const etichetta = document.getElementById('days-left-label'); if (etichetta) etichetta.innerText = 'Piano';
         trialEl.style.color = "#e5c158";
     } else if (abb && trialEl) {
         if (abb.fase === 'attiva') {

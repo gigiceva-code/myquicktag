@@ -28,11 +28,21 @@
         <div class="card" id="avviso-non-tua" style="display: none; border-color: rgba(255,171,0,0.4);">
             <p class="note" style="margin: 0; color: #ffab00;">La tag che stavi aprendo non è collegata a questo account. Qui trovi le tue tag.</p>
         </div>
+        <!-- Solo per l'account ufficiale (api/account.js → vede_numeri): i numeri anonimi del lancio, in cima e ben visibili -->
+        <a href="/numeri.html" class="card" id="card-numeri" style="display: none; text-decoration: none; color: inherit; border-color: rgba(229,193,88,0.45); background: rgba(229,193,88,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                <div>
+                    <div style="font-size: 0.7rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;"><i class="fas fa-chart-simple" style="margin-right: 6px;"></i>NUMERI DI MYQUICKTAG</div>
+                    <div style="font-size: 0.78rem; color: var(--text-sec); margin-top: 4px;">Come va il sito: visite, nomi provati, registrazioni</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: #e5c158;"></i>
+            </div>
+            <div id="numeri-anteprima" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; text-align: center;"></div>
+        </a>
         <div id="elenco"></div>
 
         <a href="/?nuova=1#s1" class="btn btn-primary" id="btn-aggiungi"><i class="fas fa-plus"></i> Aggiungi una tag</a>
-        <!-- Solo per l'account ufficiale (api/account.js → vede_numeri): i numeri anonimi del lancio -->
-        <a href="/numeri.html" class="btn" id="link-numeri" style="display: none; margin-top: 10px;"><i class="fas fa-chart-simple"></i> Numeri di myquicktag</a>
+
 
         <!-- ACCOUNT -->
         <div class="card" style="margin-top: 22px;">
@@ -122,13 +132,27 @@
         }));
     }
 
+    // Anteprima dei Numeri (ultimi 7 giorni) per l'account ufficiale
+    async function mostraNumeri() {
+        const card = document.getElementById('card-numeri');
+        card.style.display = 'block';
+        try {
+            const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ azione: 'numeri', giorni: 7 }) });
+            const d = await r.json();
+            if (!d.success) return;
+            const n = d.numeri || {}, somma = ev => (n.eventi || []).filter(e => e.evento === ev).reduce((t, e) => t + e.conteggio, 0);
+            const cifra = (v, e) => `<div><div style="font-size: 1.2rem; font-weight: 700; color: #fff;">${v}</div><div style="font-size: 0.6rem; color: var(--text-sec); letter-spacing: 0.5px;">${e}</div></div>`;
+            document.getElementById('numeri-anteprima').innerHTML = cifra(somma('home_visita'), 'VISITE HOME 7 GG') + cifra(somma('nome_verificato'), 'NOMI PROVATI 7 GG') + cifra((n.totali || {}).tag_attive || 0, 'TAG ATTIVE');
+        } catch (e) { /* l'anteprima è facoltativa: il link alla pagina resta */ }
+    }
+
     async function caricaTags() {
         const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ azione: 'mie-tag' }) });
         if (r.status === 401) { mqtSessione.scaduta(); return null; }
         const d = await r.json();
         if (!d.success) throw new Error(d.error || 'Errore');
         mqtSessione.ricordaTags(d.tags.map(t => t.username_system));
-        if (d.vede_numeri) document.getElementById('link-numeri').style.display = 'flex';
+        if (d.vede_numeri) mostraNumeri();
         return d.tags;
     }
 
