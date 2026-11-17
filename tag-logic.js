@@ -1,25 +1,55 @@
 
 // ============================================================
-// GESTIONE VIP VAULT E VARIABILI GLOBALI
+// VIP VAULT, PIANO EFFETTIVO E VARIABILI GLOBALI
 // ============================================================
-let urlRiservato = "";
-let pinRiservato = "";
+let vaultRiservato = null; // posizione del canale riservato: link e PIN restano sul server
 let cacheDatiUtente = {};
 let usernameCorrente = "";
 let macroAreaCorrente = ""; // Variabile di stato essenziale
 let sezioneCorrente = ""; // Sezione aperta dentro la stanza (per "Condividi" e i link ?sezione=)
 
-function apriVipVault(url, pin, event) {
+// PIANO EFFETTIVO (modello C, 17/11/2026): lo decide il server (lib/abbonamento.js → pianoEffettivo) e ai visitatori
+// arrivano già solo le sezioni del piano. Il proprietario riceve tutti i suoi contenuti: per fargli vedere la tag come
+// la vedono gli altri, qui si applica la STESSA regola (test/api.test.mjs controlla che gli elenchi coincidano).
+const PIANI_TAG = ['BASE', 'PREMIUM', 'GOLD'];
+const CAMPI_GOLD_TAG = ['review_url', 'review_contact', 'lead_capture_attivo', 'lead_capture_titolo',
+    'live_status_color', 'live_status_text', 'live_status_micro', 'live_status_action_type', 'live_status_action_label', 'live_status_action_url',
+    'flash_text', 'flash_micro', 'flash_expiry', 'shop_attivo', 'shop_titolo', 'shop_prezzo', 'shop_link', 'shop_scadenza',
+    'quickpass_premio_a', 'quickpass_premio_b', 'quickpass_limite', 'quickpass_scadenza', 'quickpass_amici_per_premio', 'quickpass_modo', 'quickpass_contatto',
+    'video_url', 'video_cta_text', 'video_cta_url', 'pdf_label', 'pdf_url'];
+const CAMPI_PREMIUM_TAG = ['gallery_data', 'quick_action_tipo', 'quick_action_label', 'quick_action_url', 'quick_action_copertina'];
+const VCF_PREMIUM_TAG = ['telefono2', 'email2', 'indirizzo', 'piva'];
+const LINK_BASE_TAG = 5;
+function pianoTag() { return (cacheDatiUtente && cacheDatiUtente.piano_effettivo) || 'BASE'; }
+function pianoConsente(minimo, piano = pianoTag()) { return PIANI_TAG.indexOf(piano) >= PIANI_TAG.indexOf(minimo); }
+function filtraCampiPiano(fields, piano) {
+    const out = { ...fields };
+    if (!pianoConsente('GOLD', piano)) CAMPI_GOLD_TAG.forEach(c => delete out[c]);
+    if (!pianoConsente('PREMIUM', piano)) {
+        CAMPI_PREMIUM_TAG.forEach(c => delete out[c]);
+        try { const v = typeof out.modulo_vcf === 'string' ? JSON.parse(out.modulo_vcf || '{}') : (out.modulo_vcf || {}); VCF_PREMIUM_TAG.forEach(k => delete v[k]); out.modulo_vcf = JSON.stringify(v); } catch (e) {}
+    }
+    let canali = [];
+    try { canali = JSON.parse(out.config_canali || '[]'); } catch (e) {}
+    if (Array.isArray(canali)) {
+        let lista = canali.map((c, i) => (c && (c.vip === true || c.vip === 'true')) ? { ...c, url: '', pin: '', vip: true, vault: i } : c);
+        if (!pianoConsente('GOLD', piano)) lista = lista.filter(c => !c.vip);
+        if (!pianoConsente('PREMIUM', piano)) lista = lista.slice(0, LINK_BASE_TAG);
+        out.config_canali = JSON.stringify(lista);
+    }
+    return out;
+}
+
+// VIP VAULT (17/11/2026): il browser non conosce né il link né il PIN. Il PIN si invia al server
+// (api/get-profile.js, azione "vault"), che con il PIN giusto restituisce solo il link di quel canale.
+function apriVipVault(indice, event) {
     if (event) {
         event.preventDefault();
         event.stopPropagation();
     }
-    urlRiservato = url;
-    pinRiservato = pin;
-    
+    vaultRiservato = indice;
     const overlay = document.getElementById('vip-vault-overlay');
     const input = document.getElementById('vip-pin-input');
-    
     if (overlay && input) {
         input.value = "";
         input.placeholder = "****";
@@ -32,26 +62,41 @@ function apriVipVault(url, pin, event) {
 function chiudiVipVault() {
     const overlay = document.getElementById('vip-vault-overlay');
     if (overlay) overlay.style.display = 'none';
-    urlRiservato = "";
-    pinRiservato = "";
+    vaultRiservato = null;
 }
 
-function verificaPinVip() {
+function erroreVip(testo) {
     const input = document.getElementById('vip-pin-input');
     if (!input) return;
-    
-    if (input.value === pinRiservato) {
+    input.style.borderColor = "#ff4444";
+    input.value = "";
+    input.placeholder = testo;
+    setTimeout(() => {
+        input.style.borderColor = "rgba(229, 193, 88, 0.3)";
+        input.placeholder = "****";
+    }, 1800);
+}
+
+async function verificaPinVip() {
+    const input = document.getElementById('vip-pin-input');
+    if (!input || vaultRiservato === null || !input.value) return;
+    // La finestra si apre subito (gesto dell'utente), così il browser non la blocca; il link arriva dopo la verifica
+    const finestra = window.open('', '_blank');
+    let r = {};
+    try {
+        const risposta = await fetch('/api/get-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ azione: 'vault', u: usernameCorrente, vault: vaultRiservato, pin: input.value }) });
+        r = await risposta.json();
+        r.status = risposta.status;
+    } catch (e) { r = {}; }
+    if (r.success && r.url) {
         chiudiVipVault();
-        window.open(urlRiservato, '_blank', 'noopener noreferrer');
-    } else {
-        input.style.borderColor = "#ff4444";
-        input.value = "";
-        input.placeholder = "ERRATO";
-        setTimeout(() => {
-            input.style.borderColor = "rgba(229, 193, 88, 0.3)";
-            input.placeholder = "****";
-        }, 1500);
+        if (finestra) { finestra.opener = null; finestra.location.href = r.url; }
+        else window.location.href = r.url;
+        return;
     }
+    if (finestra) finestra.close();
+    erroreVip(r.status === 429 ? 'RIPROVA PIÙ TARDI' : r.status === 403 ? 'ERRATO' : 'NON DISPONIBILE');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -163,23 +208,21 @@ const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}$
         // Testi del proprietario ripuliti prima di mostrarli (session.js → mqtPulisci):
         // nessun codice nascosto può partire sul telefono di chi apre la tag
         fields = mqtPulisci.campi(fields);
+        // Il proprietario vede la tag come i visitatori: sezioni del suo piano, VIP Vault chiuso (si apre col PIN)
+        if (isOwner) fields = filtraCampiPiano(fields, fields.piano_effettivo || 'BASE');
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
 
-      // DURATA TAG (90 giorni + 14 di grazia): fase calcolata dal server
+      // DURATA DELLA PROVA (90 giorni + 14 di tolleranza): fase calcolata dal server. Modello C: la tag resta sempre online,
+      // finita la prova con il piano Base (le sezioni avanzate sono nascoste, non cancellate).
       const faseTag = data.abbonamento ? data.abbonamento.fase : 'attiva';
-      if (stato === "attivo" && faseTag === 'scaduta' && !isOwner) {
-            // Tag disattivata: il server non manda più i contenuti ai visitatori
-            mostraErrore(`@${(fields.username_display || fields.username_system || '').replace('@', '')}<br>non è al momento attiva.`);
-            return;
-      }
 
       if (stato === "attivo") {
             renderizzaTagCompleta(fields);
-            if (isOwner && faseTag === 'scaduta') {
-                setTimeout(() => mostraToast('Tag disattivata: non è visibile al pubblico. Rinnovala dalla dashboard'), 800);
+            if (isOwner && faseTag === 'scaduta' && fields.piano_effettivo === 'BASE') {
+                setTimeout(() => mostraToast('Prova terminata: la tag resta online con il piano Base. Le sezioni avanzate sono nascoste, non cancellate'), 800);
             } else if (isOwner && faseTag === 'grazia') {
-                setTimeout(() => mostraToast(`Piano scaduto: la tag resta online ancora ${data.abbonamento.giorni_alla_disattivazione} giorni. Rinnovala dalla dashboard`), 800);
+                setTimeout(() => mostraToast(`Prova in chiusura: tutto sbloccato ancora ${data.abbonamento.giorni_alla_disattivazione} giorni, poi piano Base`), 800);
             }
             
             // ============================================================
@@ -335,7 +378,7 @@ function gestisciVisibilitaCaselle(fields) {
     let hasActionCenter = false;
 
     // Controllo A: Azione Rapida
-    const piano = (fields.plan || '').toUpperCase();
+    const piano = fields.piano_effettivo || 'BASE';
     if (fields.quick_action_tipo && fields.quick_action_url && piano !== 'BASE') {
         hasActionCenter = true;
     }
@@ -809,7 +852,7 @@ function renderizzaQuickAction(tipo, url) {
     const btnQA = document.getElementById('room-quick-action');
     if (!btnQA) return;
 
-    const piano = (cacheDatiUtente.plan || '').toUpperCase();
+    const piano = pianoTag();
     if (!tipo || !url || piano === 'BASE') {
         btnQA.style.display = 'none';
         return;
@@ -1002,7 +1045,7 @@ function apriMacroArea(area, skipHistory = false) {
         titolo.textContent = 'ACTION CENTER';
         
         // 1. Inserimento Azione Rapida
-        const piano = (cacheDatiUtente.plan || '').toUpperCase();
+        const piano = pianoTag();
         if (cacheDatiUtente.quick_action_tipo && cacheDatiUtente.quick_action_url && piano !== 'BASE') {
             const qaTipo = cacheDatiUtente.quick_action_tipo.toLowerCase();
             const cfg = quickActionConfig[qaTipo] || { icon: '<i class="fas fa-bolt"></i>', label: 'Azione Rapida' };
@@ -1213,7 +1256,7 @@ function apriSezione(tipo) {
     if (tipo === 'contatti') {
         titolo.textContent = 'Contatti';
         corpo.innerHTML = '';
-        const piano = (cacheDatiUtente.plan || '').toUpperCase();
+        const piano = pianoTag();
         let vcf = {};
         try { 
             const raw = cacheDatiUtente.modulo_vcf;
@@ -1305,7 +1348,7 @@ function apriSezione(tipo) {
                 const link = document.createElement('a');
                 if (isVip) {
                     link.href = "#";
-                    link.onclick = (e) => apriVipVault(canale.url, canale.pin, e);
+                    link.onclick = (e) => apriVipVault(canale.vault, e);
                 } else {
                     link.href = canale.url;
                     link.target = '_blank';
@@ -1945,12 +1988,12 @@ function convertiUrlInEmbed(url) {
     // Converte i link YouTube normali
     if (url.includes('youtube.com/watch?v=')) {
         const videoId = url.split('v=')[1].split('&')[0];
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
+        return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
     } 
     // Converte i link YouTube corti
     else if (url.includes('youtu.be/')) {
         const videoId = url.split('youtu.be/')[1].split('?')[0];
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
+        return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
     } 
     // Converte i link Vimeo
     else if (url.includes('vimeo.com/')) {

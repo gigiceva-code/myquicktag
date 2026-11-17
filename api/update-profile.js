@@ -140,10 +140,8 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, action: 'renewed', abbonamento: calcolaAbbonamento(recordRinnovato) });
     }
 
-    // Tag scaduta (finita anche la grazia): niente modifiche finché non viene rinnovata
-    if (abbonamento && abbonamento.fase === 'scaduta') {
-      return res.status(403).json({ error: "Tag scaduta: rinnova per modificarla", scaduta: true, abbonamento });
-    }
+    // Modello C (17/11/2026): finita la prova la tag resta online con il piano Base e si può sempre modificare.
+    // I contenuti delle sezioni avanzate si conservano: sono le pagine pubbliche (get-profile) a non mostrarli.
 
     const fieldsToSave = estraiCampi(body);
 

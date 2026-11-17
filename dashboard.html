@@ -80,10 +80,13 @@
     function statoTag(t) {
         if (t.stato === 'in attesa') return { badge: 'badge-warn', testo: 'Da attivare', sub: 'Prenotata: completa e attiva entro 24 ore' };
         const a = t.abbonamento || {};
-        if (a.fase === 'scaduta') return { badge: 'badge-ko', testo: 'Disattivata', sub: 'Non è visibile al pubblico' };
-        if (a.fase === 'grazia') return { badge: 'badge-warn', testo: 'Scaduta', sub: `Resta online ancora ${a.giorni_alla_disattivazione} giorni` };
-        if (a.giorni_alla_scadenza <= 14) return { badge: 'badge-warn', testo: `Scade tra ${a.giorni_alla_scadenza} gg`, sub: 'Attiva fino al ' + data(a.data_scadenza) };
-        return { badge: 'badge-ok', testo: 'Attiva', sub: 'Attiva fino al ' + data(a.data_scadenza) };
+        // Modello C (17/11/2026): la tag resta sempre online; finita la prova con tutto sbloccato passa al piano Base
+        if (a.fase === 'scaduta') return a.piano_effettivo && a.piano_effettivo !== 'BASE'
+            ? { badge: 'badge-ok', testo: a.piano_effettivo === 'GOLD' ? 'Gold' : 'Premium', sub: 'Online' }
+            : { badge: 'badge-ok', testo: 'Base', sub: 'Online gratis: le sezioni avanzate sono nascoste, non cancellate' };
+        if (a.fase === 'grazia') return { badge: 'badge-warn', testo: 'Prova in chiusura', sub: `Tutto sbloccato ancora ${a.giorni_alla_disattivazione} giorni, poi piano Base gratuito` };
+        if (a.giorni_alla_scadenza <= 14) return { badge: 'badge-warn', testo: `Prova: ${a.giorni_alla_scadenza} gg`, sub: 'Tutto sbloccato fino al ' + data(a.data_scadenza) + ', poi piano Base gratuito' };
+        return { badge: 'badge-ok', testo: 'Attiva', sub: 'Tutto sbloccato fino al ' + data(a.data_scadenza) };
     }
 
     function disegna(tags) {

@@ -9,7 +9,7 @@
 // azione 'mie-tag' → elenco delle tag di cui l'account è proprietario
 import { tagDelProprietario } from '../lib/db.js';
 import { tokenAccount, utenteDaToken } from '../lib/sessione.js';
-import { calcolaAbbonamento } from '../lib/abbonamento.js';
+import { calcolaAbbonamento, pianoEffettivo } from '../lib/abbonamento.js';
 
 function contaNuovi(testo) {
   try {
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
           // Quick Pass configurato: l'Identity Console mostra il pulsante della cassa
           quickpass_attivo: !!(String(f.quickpass_premio_a || '').trim() && String(f.quickpass_premio_b || '').trim())
         };
-        if (stato === 'attivo') voce.abbonamento = calcolaAbbonamento(r);
+        if (stato === 'attivo') voce.abbonamento = { ...calcolaAbbonamento(r), piano_effettivo: pianoEffettivo(r) };
         if (stato === 'in attesa') voce.prenotata_il = r.createdTime;
         return voce;
       });

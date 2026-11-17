@@ -752,11 +752,11 @@ function aggiornaContatoriDashboard(record) {
             trialEl.innerText = abb.giorni_alla_scadenza + " gg";
             trialEl.style.color = (abb.giorni_alla_scadenza <= 14) ? "#ffab00" : "#ffffff";
         } else if (abb.fase === 'grazia') {
-            trialEl.innerText = "Scaduta";
+            trialEl.innerText = "In chiusura";
             trialEl.style.color = "#ffab00";
         } else {
-            trialEl.innerText = "Disattivata";
-            trialEl.style.color = "#ff4444";
+            trialEl.innerText = abb.piano_effettivo === 'GOLD' ? "Gold" : abb.piano_effettivo === 'PREMIUM' ? "Premium" : "Base";
+            trialEl.style.color = "#ffffff";
         }
     }
 
@@ -764,25 +764,18 @@ function aggiornaContatoriDashboard(record) {
     if (abb && (abb.fase === 'grazia' || (abb.fase === 'attiva' && abb.giorni_alla_scadenza <= 14))) {
         if (paywallBanner) paywallBanner.style.display = "block";
         if (paywallText) {
+            // Modello C: alla fine della prova la tag NON si spegne, passa al piano Base gratuito
             paywallText.innerText = abb.fase === 'grazia'
-                ? `Il piano è scaduto il ${formattaData(abb.data_scadenza)}. La tua tag resta online ancora ${abb.giorni_alla_disattivazione} giorni: rinnova per non perderla.`
-                : `Il tuo piano scade il ${formattaData(abb.data_scadenza)} (tra ${abb.giorni_alla_scadenza} giorni). Rinnova ora: i giorni rimasti non vanno persi.`;
-            if (!abb.rinnovo_disponibile) paywallText.innerText = paywallText.innerText.replace(/: rinnova per non perderla\.|\. Rinnova ora: i giorni rimasti non vanno persi\./, '.') + senzaRinnovo;
+                ? `La prova con tutto sbloccato è finita il ${formattaData(abb.data_scadenza)}: hai ancora ${abb.giorni_alla_disattivazione} giorni con tutto sbloccato, poi la tua tag resta online gratis con il piano Base.`
+                : `La tua prova con tutto sbloccato finisce il ${formattaData(abb.data_scadenza)} (tra ${abb.giorni_alla_scadenza} giorni). Poi la tua tag resta online gratis con il piano Base.`;
+            paywallText.innerText += senzaRinnovo;
         }
     }
 
-    // Tag disattivata (finita anche la grazia): non è più visibile e non si può modificare
-    if (abb && abb.fase === 'scaduta') {
+    // Prova finita (modello C): la tag è online con il piano Base e si può modificare
+    if (abb && abb.fase === 'scaduta' && abb.piano_effettivo === 'BASE') {
         if (paywallBanner) paywallBanner.style.display = "block";
-        if (paywallText) paywallText.innerText = "La tua tag è disattivata: non è più visibile al pubblico. Rinnova per riattivarla subito con tutti i tuoi contenuti.";
-        if (btnEdit) {
-            btnEdit.style.opacity = "0.4"; 
-            btnEdit.style.pointerEvents = "none"; 
-            btnEdit.onclick = function(e) {
-                e.preventDefault();
-                alert("Tag disattivata. Rinnova per modificarla.");
-            };
-        }
+        if (paywallText) paywallText.innerText = "La prova è terminata: la tua tag resta online gratis con il piano Base. Le sezioni avanzate sono nascoste, non cancellate: torneranno visibili con Premium o Gold.";
     }
 
     // CONTATTI RACCOLTI DAL VASETTO: pulsante con il numero dei nuovi + avviso nel campanello
