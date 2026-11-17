@@ -1,4 +1,5 @@
 import { trovaTag, aggiornaTag, assegnaProprietario } from '../lib/db.js';
+import { contaEvento } from '../lib/contatori.js';
 import { pulisciTesto, pulisciJson, pulisciValore } from '../lib/pulizia.js';
 import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito, rinnovoGratuitoAttivo } from '../lib/abbonamento.js';
 import { nomeTag, formaCanonica } from '../lib/nome-canonico.js';
@@ -192,6 +193,7 @@ export default async function handler(req, res) {
         console.error("DB ATTIVAZIONE REJECTED:", erroreAttivazione.dettagli || erroreAttivazione.message);
         return res.status(500).json({ error: "Attivazione non riuscita. Riprova." });
       }
+      await contaEvento('tag_attivata');
       return res.status(200).json({ success: true, action: 'activated', data_scadenza: date.data_scadenza });
     }
 

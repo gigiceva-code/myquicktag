@@ -1,9 +1,16 @@
 import { trovaTag, aggiornaTag } from '../lib/db.js';
+import { contaEvento } from '../lib/contatori.js';
 import { nomeTag } from '../lib/nome-canonico.js';
 import { entroILimiti } from '../lib/limiti.js';
 export default async function handler(req, res) {
   // Accetta solo richieste POST
   if (req.method !== 'POST') return res.status(405).send('Metodo non consentito');
+
+  // Contatore anonimo della home (lib/contatori.js): solo +1 al giorno, niente dati; limite contro le raffiche
+  if (req.query.evento === 'home') {
+    if (await entroILimiti(req, 'home', [{ nome: 'home', per: 'ip', max: 20, finestra: 3600 }])) await contaEvento('home_visita');
+    return res.status(200).json({ success: true });
+  }
 
   const { u } = req.query;
   if (!u) return res.status(400).json({ error: "Utente mancante" });
@@ -102,6 +109,7 @@ export default async function handler(req, res) {
         views: currentViews + 1,
         analytics_data: JSON.stringify(analyticsData) // Impacchettiamo tutto in una sola cella
     });
+    await contaEvento('tag_visita');
     return res.status(200).json({ success: true });
 
   } catch (e) {

@@ -1000,5 +1000,9 @@ if (document.readyState === 'loading') {
     initMyquicktag();
 }
 </script>
+<script>
+    // Contatore anonimo della home (api/track-view.js → evento=home): solo +1 al giorno, nessun dato personale
+    try { fetch('/api/track-view?evento=home', { method: 'POST', keepalive: true }).catch(function () {}); } catch (e) {}
+</script>
 </body>
 </html>

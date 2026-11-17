@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { contaEvento } from '../lib/contatori.js';
 import { trovaTag, aggiornaTag, leggiRighe, contaRighe, inserisciRiga, aggiornaRighe, aggiungiLead } from '../lib/db.js';
 import { pianoEffettivo } from '../lib/abbonamento.js';
 import { pulisciTesto } from '../lib/pulizia.js';
@@ -138,6 +139,7 @@ export default async function handler(req, res) {
         { nome: 'qp-invito-ip', per: 'ip', max: 100, finestra: 86400 }
       ]))) return rispondiTroppiTentativi(res);
       const invito = await nuovoCodice('quickpass_inviti', { tag, nome, dispositivo: disp, telefono: improntaTelefono(body.telefono), rete: improntaRete(req) }, 8);
+      await contaEvento('quickgift_link');
       return res.status(200).json({ success: true, invito: { codice: invito.codice, nome: invito.nome } });
     }
 
@@ -215,6 +217,7 @@ export default async function handler(req, res) {
           });
         } catch (e) { console.error('QUICKPASS contatto non salvato:', e.dettagli || e.message); }
       }
+      await contaEvento('quickgift_richiesto');
       return res.status(200).json({ success: true, pass: vistaPass(pass) });
     }
 
@@ -281,6 +284,7 @@ export default async function handler(req, res) {
           if (creati.length) premioSbloccato = { nome: inv.nome, premio: creati[0].premio };
         }
       }
+      await contaEvento('quickgift_usato');
       return res.status(200).json({ success: true, pass: vistaPass(usati[0]), premio_sbloccato: premioSbloccato });
     }
 

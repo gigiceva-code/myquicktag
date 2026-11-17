@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex">
+    <title>Numeri | myquicktag</title>
+    <meta name="theme-color" content="#000000">
+    <link href="/fonts/inter.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/account.css">
+    <script src="/session.js"></script>
+    <style>
+        .griglia { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .cifra { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; }
+        .cifra b { display: block; font-size: 1.5rem; color: #fff; }
+        .cifra span { font-size: 0.68rem; color: var(--text-sec); letter-spacing: 0.5px; }
+        .imbuto .riga { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; }
+        .imbuto .riga small { color: var(--text-sec); margin-left: 6px; }
+        .tabella { overflow-x: auto; }
+        .tabella table { border-collapse: collapse; font-size: 0.72rem; min-width: 640px; width: 100%; }
+        .tabella th, .tabella td { padding: 7px 6px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.06); white-space: nowrap; }
+        .tabella th:first-child, .tabella td:first-child { text-align: left; }
+        .tabella th { color: var(--text-sec); font-weight: 600; }
+        .periodo { display: flex; gap: 8px; margin-bottom: 14px; }
+        .periodo button { flex: 1; padding: 9px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e5e7eb; cursor: pointer; }
+        .periodo button.on { border-color: #e5c158; color: #e5c158; background: rgba(229,193,88,0.08); }
+    </style>
+</head>
+<body>
+<!-- NUMERI DEL LANCIO (17/11/2026): solo totali anonimi per giorno (tabella contatori + dati già esistenti),
+     visibili solo alle email ammesse (lib/contatori.js → NUMERI_EMAIL, di base info@myquicktag.it). -->
+<div class="wrap">
+    <div class="top-bar">
+        <a href="/dashboard.html" class="btn-back" aria-label="Torna alla Identity Console"><i class="fas fa-chevron-left"></i></a>
+        <div><h1>Numeri</h1><p style="text-transform: none; color: var(--text-sec);">Solo totali anonimi, nessun dato personale</p></div>
+    </div>
+    <div id="loading" role="status"><i class="fas fa-spinner fa-spin"></i></div>
+    <div id="contenuto" style="display: none;">
+        <div class="periodo"><button data-g="7">7 giorni</button><button data-g="30" class="on">30 giorni</button><button data-g="90">90 giorni</button></div>
+        <div class="card"><h2 class="card-title"><i class="fas fa-users"></i> Oggi in totale</h2><div class="griglia" id="totali"></div></div>
+        <div class="card"><h2 class="card-title"><i class="fas fa-filter"></i> Il percorso nel periodo</h2><div class="imbuto" id="imbuto"></div>
+            <p class="note" style="margin-top: 10px;">Tra parentesi: quanti passano al passo dopo, rispetto al passo prima.</p></div>
+        <div class="card"><h2 class="card-title"><i class="fas fa-calendar-day"></i> Giorno per giorno</h2><div class="tabella" id="giorni"></div></div>
+    </div>
+    <div class="card" id="errore" style="display: none;"><p class="note" style="margin: 0;" id="errore-testo"></p></div>
+</div>
+<script>
+    const PASSI = [
+        ['home_visita', 'Visite della home'], ['nome_verificato', 'Nomi provati'], ['nome_prenotato', 'Nomi prenotati'],
+        ['account', 'Account confermati'], ['attivazioni', 'Tag attivate']
+    ];
+    const ALTRI = [
+        ['console_aperta', 'Aperture Identity Console'], ['tag_visita', 'Visite alle tag'], ['tag_condivisa', 'Condivisioni'],
+        ['contatto_lasciato', 'Contatti lasciati'], ['quickgift_link', 'Link QuickGift creati'], ['quickgift_richiesto', 'Regali QuickGift richiesti'], ['quickgift_usato', 'QuickGift confermati in cassa']
+    ];
+    const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let giorni = 30;
+
+    function perGiorno(n) {
+        const m = {};
+        (n.eventi || []).forEach(e => { (m[e.giorno] = m[e.giorno] || {})[e.evento] = e.conteggio; });
+        [['account', n.account], ['prenotazioni_db', n.prenotazioni], ['attivazioni', n.attivazioni]].forEach(([k, l]) => (l || []).forEach(e => { (m[e.giorno] = m[e.giorno] || {})[k] = e.conteggio; }));
+        return m;
+    }
+    function disegna(n) {
+        const t = n.totali || {};
+        const cifra = (v, e) => `<div class="cifra"><b>${esc(v ?? 0)}</b><span>${esc(e)}</span></div>`;
+        document.getElementById('totali').innerHTML = cifra(t.account, 'Account confermati') + cifra(t.account_attivi_7_giorni, 'Account attivi (7 giorni)') +
+            cifra(t.tag_attive, 'Tag attive') + cifra(t.tag_complete, 'Tag complete (foto, bio, contatto)') + cifra(t.tag_con_quickgift, 'Tag con QuickGift');
+        const m = perGiorno(n), somma = k => Object.values(m).reduce((s, g) => s + (g[k] || 0), 0);
+        let prima = null;
+        document.getElementById('imbuto').innerHTML = PASSI.map(([k, nome]) => {
+            const v = somma(k), perc = prima ? ` <small>(${Math.round(v / prima * 100)}%)</small>` : '';
+            prima = v || null;
+            return `<div class="riga"><span>${esc(nome)}</span><b>${v}${perc}</b></div>`;
+        }).join('') + ALTRI.map(([k, nome]) => `<div class="riga"><span>${esc(nome)}</span><b>${somma(k)}</b></div>`).join('');
+        const colonne = [...PASSI, ...ALTRI];
+        const date = Object.keys(m).sort().reverse();
+        document.getElementById('giorni').innerHTML = date.length
+            ? `<table><tr><th>Giorno</th>${colonne.map(([, n]) => `<th>${esc(n)}</th>`).join('')}</tr>${date.map(d => `<tr><td>${esc(new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }))}</td>${colonne.map(([k]) => `<td>${m[d][k] || ''}</td>`).join('')}</tr>`).join('')}</table>`
+            : '<p class="note" style="margin: 0;">Ancora nessun dato in questo periodo.</p>';
+    }
+    async function carica() {
+        document.getElementById('loading').style.display = 'block';
+        const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ azione: 'numeri', giorni }) });
+        document.getElementById('loading').style.display = 'none';
+        if (r.status === 401) { mqtSessione.scaduta(); return; }
+        const d = await r.json().catch(() => ({}));
+        if (!d.success) {
+            document.getElementById('errore').style.display = 'block';
+            document.getElementById('errore-testo').textContent = r.status === 403 ? 'Questa pagina è riservata all\'account ufficiale di myquicktag.' : (d.error || 'Numeri non disponibili, riprova.');
+            return;
+        }
+        document.getElementById('contenuto').style.display = 'block';
+        disegna(d.numeri || {});
+    }
+    document.querySelectorAll('.periodo button').forEach(b => b.addEventListener('click', () => {
+        document.querySelectorAll('.periodo button').forEach(x => x.classList.toggle('on', x === b));
+        giorni = parseInt(b.dataset.g, 10); carica();
+    }));
+    if (!mqtSessione.haAccount()) location.replace('/accesso.html?torna=/numeri.html'); else carica();
+</script>
+</body>
+</html>

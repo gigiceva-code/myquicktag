@@ -1,4 +1,5 @@
 import { trovaTag, creaTag, eliminaTag } from '../lib/db.js';
+import { contaEvento } from '../lib/contatori.js';
 import { controllaNome } from '../lib/nomi-riservati.js';
 import { formaCanonica } from '../lib/nome-canonico.js';
 import { entroILimiti, rispondiTroppiTentativi } from '../lib/limiti.js';
@@ -35,6 +36,7 @@ export default async function handler(req, res) {
 
         // Nomi di sistema, black list e gold list (tabella nomi_riservati + lib/nomi-riservati.js):
         // valgono anche per chi chiama direttamente l'API. Un nome assegnato vale per quell'email.
+        await contaEvento('nome_verificato');
         const nomeNonDisponibile = await controllaNome(tag, utente?.email);
         if (nomeNonDisponibile) {
             return res.status(400).json({ success: false, codice: nomeNonDisponibile.codice, message: nomeNonDisponibile.messaggio, email: nomeNonDisponibile.email });
@@ -84,6 +86,7 @@ export default async function handler(req, res) {
 
              // Il client usa questo createdTime (fonte server) per calcolare la scadenza a 24h,
              // invece di affidarsi al proprio orologio locale.
+             await contaEvento('nome_prenotato');
              res.status(200).json({ success: true, message: 'Tag riservato!', createdTime: newRecord.createdTime, username: tag, sessionToken: generaRicevuta(tag, newRecord.createdTime), proprietario: !!utente });
 
     } catch (error) {

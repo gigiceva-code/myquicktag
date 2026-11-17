@@ -289,6 +289,16 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   resta in chiaro nel database (lo legge solo il server). Limite intrinseco: chi conosce il PIN può girare il link.
 - **Privacy e cookie (17/11/2026):** aggiunti Cloudinary (immagini e documenti) e i video YouTube/Vimeo incorporati; i
   video YouTube ora usano youtube-nocookie.com.
+- **Contatori anonimi del percorso (17/11/2026, ok del titolare):** tabella `contatori` (giorno, evento, conteggio) con
+  le funzioni `conta_evento` e `numeri_lancio` (migrazione `20261117000000_contatori.sql`, applicata a prova e
+  produzione; solo il server le usa). Nessun IP, nome o email: solo totali per giorno di un elenco chiuso di eventi
+  (`lib/contatori.js` → `EVENTI`): home (`track-view?evento=home`, max 20/ora per IP), nomi provati e prenotati
+  (`check-and-create`), tag attivate (`update-profile`), aperture della Identity Console (`account` mie-tag), visite e
+  condivisioni delle tag (`track-view`, `track-click`), contatti lasciati, link/regali/conferme QuickGift. Account
+  confermati, prenotazioni e attivazioni per giorno e i totali (tag complete = foto + bio + un contatto) si ricavano dai
+  dati esistenti in `numeri_lancio`. Pagina **`numeri.html`** (link "Numeri di myquicktag" nella Identity Console) solo
+  per le email in `NUMERI_EMAIL` su Vercel (separate da virgola; se manca: info@myquicktag.it). Un contatore che non va
+  non blocca mai il sito.
 - **Consenso alle offerte nel Vasetto (28/10/2026, richiesto dal titolare):** casella facoltativa e mai già spuntata
   «Accetto di ricevere offerte e novità da @Nome» sotto il modulo, con nota «Facoltativo…» e link alla Privacy.
   `api/add-lead.js` salva nel contatto `consenso_offerte` (solo se `true` esplicito), `consenso_testo` (il testo accettato)

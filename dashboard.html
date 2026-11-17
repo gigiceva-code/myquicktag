@@ -31,6 +31,8 @@
         <div id="elenco"></div>
 
         <a href="/?nuova=1#s1" class="btn btn-primary" id="btn-aggiungi"><i class="fas fa-plus"></i> Aggiungi una tag</a>
+        <!-- Solo per l'account ufficiale (api/account.js → vede_numeri): i numeri anonimi del lancio -->
+        <a href="/numeri.html" class="btn" id="link-numeri" style="display: none; margin-top: 10px;"><i class="fas fa-chart-simple"></i> Numeri di myquicktag</a>
 
         <!-- ACCOUNT -->
         <div class="card" style="margin-top: 22px;">
@@ -123,6 +125,7 @@
         const d = await r.json();
         if (!d.success) throw new Error(d.error || 'Errore');
         mqtSessione.ricordaTags(d.tags.map(t => t.username_system));
+        if (d.vede_numeri) document.getElementById('link-numeri').style.display = 'flex';
         return d.tags;
     }
 
