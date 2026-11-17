@@ -197,6 +197,9 @@ await browser.close();
   ok(await ed.isVisible('#field-qp-contatto') && (await ed.textContent('#qp-contatto-box')).includes('codice personale') && !(await ed.textContent('#qp-contatto-box')).includes('sconto') && (await ed.textContent('#qp-frase')).includes('lo usa online'), 'Editor: scegliendo Online si spiega il codice personale e il link è facoltativo');
   avvisi.length = 0; await ed.fill('#field-qp-contatto', '+39 333 1234567'); await ed.click('#qp-avanti');
   ok(avvisi.some(t => t.includes('non sembra un indirizzo web')), 'Editor: un numero di telefono al posto del link viene segnalato');
+  await ed.fill('#field-qp-contatto', '');
+  avvisi.length = 0; await ed.click('#qp-avanti');
+  ok(!(await ed.isChecked('#qp-dichiarazione')) && avvisi.some(t => t.includes('decisi e garantiti da te')), 'Editor: senza la dichiarazione del titolare (mai già spuntata) QuickGift non si salva');
   // Dopo l'attivazione (risposte salvate, tag attiva): riquadro "QuickGift è attivo" e pulsante "Salva le modifiche"
   await ed.evaluate(() => qpAvvia()); await ed.waitForTimeout(300);
   ok(await ed.isVisible('#qp-attivo') && (await ed.textContent('#qp-attivo')).includes('QUICKGIFT È ATTIVO') && (await ed.textContent('#qp-avanti')).includes('SALVA LE MODIFICHE'), 'Editor: dopo l\'attivazione compare «QuickGift è attivo» e il pulsante diventa «Salva le modifiche»');

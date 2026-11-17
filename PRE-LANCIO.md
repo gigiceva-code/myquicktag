@@ -149,7 +149,8 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - [x] **Contatori anonimi del percorso** (17/11/2026): pagina `numeri.html` per l'account ufficiale (info@myquicktag.it, o le email in `NUMERI_EMAIL`).
 - [ ] Entro ~60 giorni dal lancio: email di scadenza (30/7/0 giorni), schermata di scelta alla fine della prova, Stripe
       (dopo il commercialista), preset Cloudinary firmato, backup settimanale del database, home riscritta.
-- [ ] Parere legale su termini e QuickGift (operazioni a premio, responsabilità del titolare della tag).
+- [x] Clausola QuickGift nei termini (punto 6) e dichiarazione obbligatoria del titolare nell'editor (17/11/2026).
+- [ ] Parere legale (anche consulenza gratuita) con `SCHEDA-LEGALE-QUICKGIFT.md`: operazioni a premio, termini, privacy.
 
 ### Strategia di lancio: 3 mesi gratis con tutto sbloccato (deciso il 09/10/2026)
 - **Perché (il titolare non vuole doverlo ripetere):** il titolare è lavoratore dipendente e la famiglia

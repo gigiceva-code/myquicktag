@@ -2244,6 +2244,7 @@ const qpEsc = t => String(t || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<'
 
 function qpAvvia() {
     qpAggiorna();
+    const dichiarazione = document.getElementById('qp-dichiarazione'); if (dichiarazione) dichiarazione.checked = false; // mai già spuntata
     // Già attivo = tag attiva e QuickGift con le risposte salvate: si mostra il riquadro con cassa e link
     const attivo = statoUtente === 'attivo' && !!(qpVal('field-qp-premio-a') && qpVal('field-qp-premio-b'));
     const box = document.getElementById('qp-attivo'); if (box) box.style.display = attivo ? 'block' : 'none';
@@ -2311,6 +2312,8 @@ function qpAvanti() {
     if (!qpVal('field-qp-premio-b')) return manca('field-qp-premio-b', 'Rispondi alla domanda 2: cosa offri all\'amico che arriva? Ti servono idee? Guarda la STRATEGIA.');
     const link = qpVal('field-qp-contatto');
     if (qpVal('field-qp-modo') !== 'negozio' && link && (link.includes('@') || /\s/.test(link) || !/[a-z]{2,}\.[a-z]{2,}/i.test(link))) return manca('field-qp-contatto', 'Il link dove si usa l\'offerta non sembra un indirizzo web (es. www.tuosito.it). Correggilo o lascialo vuoto.');
+    // Dichiarazione del titolare (termini, punto 6): QuickGift si salva solo se il titolare conferma di essere il promotore
+    if (!document.getElementById('qp-dichiarazione')?.checked) return manca('qp-dichiarazione', 'Per attivare QuickGift conferma che offerta e premio sono decisi e garantiti da te e rispettano le norme sulle promozioni.');
     // Tag attiva → si pubblica subito (un solo clic); tag in prenotazione → resta nella bozza fino all'attivazione
     if (statoUtente === 'attivo') salvaEDirigi('pubblica'); else chiudiSenzaSalvare();
 }
