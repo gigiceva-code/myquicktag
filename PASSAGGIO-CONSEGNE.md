@@ -1,7 +1,7 @@
 # Passaggio di consegne — myquicktag
 
 Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md`
-(decisioni aperte e cose da fare prima del lancio). Aggiornato al 23/10/2026.
+(decisioni aperte e cose da fare prima del lancio). Aggiornato al 17/11/2026.
 
 ---
 
@@ -41,6 +41,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 ## Dove sta cosa
 
 - **Sito pubblico:** https://myquicktag.it (Vercel, ramo `main`). Tag pubblica: `/u/<nome>`.
+- **Documenti per il titolare:** `KIT-LANCIO-SOCIAL.md` (lancio social e tag ufficiale), `SCHEDA-LEGALE-QUICKGIFT.md`
+  (domande per il legale). Tag ufficiale: `@myquicktag` (account info@myquicktag.it, piano GOLD assegnato).
 - **Vercel:** team `gigiceva-codes-projects`, progetto `myquicktag`. È l'unico progetto collegato al codice: il doppione
   `myquicktag-e34a` (senza variabili né dominio, rifaceva ogni pubblicazione) è stato eliminato dal titolare il 23/10/2026.
   Variabili: `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (Production → progetto `myquicktag`;
@@ -362,6 +364,14 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   le fa il titolare, poi si controllano i log/dati su Supabase.
 
 ## Prossimi passi (in ordine)
+
+**Lavoro da finire (17/11/2026), da ricordare al titolare finché non è chiuso:**
+- **Parere legale su QuickGift:** il titolare deve portare `SCHEDA-LEGALE-QUICKGIFT.md` a una consulenza (anche
+  gratuita). Se il legale lo sconsiglia: nascondere QuickGift dietro "in arrivo" (~30 minuti). Se dà indicazioni:
+  adeguare termini (punto 6), dichiarazione nell'editor e privacy. Dettagli in `PRE-LANCIO.md` → "Audit pre-lancio".
+- **Lancio social:** kit pronto in `KIT-LANCIO-SOCIAL.md` (tag ufficiale @myquicktag, bio, messaggi, 7 post, 5 video).
+  Quando il titolare manda i link dei profili: sostituirli a "I canali ufficiali sono in arrivo" nel footer della home.
+
 
 0. **Account con Supabase Auth: online su myquicktag.it dal 18/10/2026** (pull request #7 unita in `main`, produzione
    configurata). Restano le prove sul sito vero: account del titolare, iPhone (app installata), visitatore da un altro
