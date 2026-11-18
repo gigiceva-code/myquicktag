@@ -145,6 +145,9 @@ export default async function handler(req, res) {
     // I contenuti delle sezioni avanzate si conservano: sono le pagine pubbliche (get-profile) a non mostrarli.
 
     const fieldsToSave = estraiCampi(body);
+    // Diagnostica (18/11/2026): quali campi arrivano e quanto sono lunghi, mai il contenuto
+    console.log('SALVA', safeUsername, 'ricevuti:', Object.keys(body || {}).length,
+      'campi:', Object.entries(fieldsToSave).map(([k, v]) => `${k}=${String(v).length}`).join(' '));
 
     // --- ATTIVAZIONE: da "in attesa" ad "attivo". Serve la sessione di un account (email verificata):
     // la tag diventa di quell'account. Chi ha prenotato senza account usa la ricevuta + l'account

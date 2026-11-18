@@ -150,7 +150,15 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - [ ] Entro ~60 giorni dal lancio: email di scadenza (30/7/0 giorni), schermata di scelta alla fine della prova, Stripe
       (dopo il commercialista), preset Cloudinary firmato, backup settimanale del database, home riscritta.
 - [x] Clausola QuickGift nei termini (punto 6) e dichiarazione obbligatoria del titolare nell'editor (17/11/2026).
-- [ ] Parere legale (anche consulenza gratuita) con `SCHEDA-LEGALE-QUICKGIFT.md`: operazioni a premio, termini, privacy.
+- [ ] **LAVORO DA FINIRE — parere legale su QuickGift** (il titolare ha scelto di lanciare con QuickGift attivo):
+      portare `SCHEDA-LEGALE-QUICKGIFT.md` a una consulenza, anche gratuita (operazioni a premio DPR 430/2001,
+      termini punto 6 e dichiarazione, privacy titolare/responsabile del trattamento). Quando arriva la risposta:
+      se va bene, adeguare termini e testi a quello che dice; se lo sconsiglia, nascondere QuickGift con
+      "in arrivo" (circa 30 minuti di lavoro). Finché manca, la tag ufficiale @myquicktag non usa QuickGift.
+
+### Social e tag ufficiale (17/11/2026)
+- [ ] Configurare la tag ufficiale @myquicktag (foto, bio, bottone "Crea la tua tag", via il vecchio QuickGift): istruzioni in `KIT-LANCIO-SOCIAL.md`, parte 1.
+- [ ] Aprire Instagram, TikTok e LinkedIn con il kit (`KIT-LANCIO-SOCIAL.md`); poi mettere i link veri in fondo alla home al posto di "I canali ufficiali sono in arrivo".
 
 ### Strategia di lancio: 3 mesi gratis con tutto sbloccato (deciso il 09/10/2026)
 - **Perché (il titolare non vuole doverlo ripetere):** il titolare è lavoratore dipendente e la famiglia
