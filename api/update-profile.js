@@ -9,6 +9,15 @@ import { dirittiSullaTag } from '../lib/sessione.js';
 // Campi salvati come testo JSON: si puliscono i valori, non la sintassi
 const CAMPI_JSON = ['draft_json', 'modulo_vcf', 'config_canali', 'sedi_json', 'gallery_data', 'pocket_cloud', 'partners_data'];
 
+// Campi che il titolare può svuotare (18/11/2026): un testo vuoto inviato apposta li cancella (null),
+// così "Elimina" nell'editor funziona davvero. Gli altri campi vuoti si ignorano come prima.
+const CAMPI_SVUOTABILI = ['bio', 'cv', 'email', 'sito_web', 'quick_action_label', 'quick_action_url', 'avatar_url',
+  'live_status_color', 'live_status_text', 'live_status_micro', 'live_status_action_label', 'live_status_action_url',
+  'flash_text', 'flash_micro', 'flash_expiry', 'pdf_label', 'pdf_url',
+  'quickpass_premio_a', 'quickpass_premio_b', 'quickpass_limite', 'quickpass_scadenza', 'quickpass_contatto',
+  'review_url', 'review_contact', 'video_url', 'video_cta_text', 'video_cta_url',
+  'lead_capture_titolo', 'shop_titolo', 'shop_prezzo', 'shop_link', 'shop_scadenza'];
+
 // Campi che si possono scrivere da qui, letti da un oggetto (la richiesta o la bozza), ripuliti
 function estraiCampi(sorgente) {
   const fieldsToSave = {};
@@ -39,6 +48,7 @@ function estraiCampi(sorgente) {
         // Gli apostrofi restano ("Un'azienda"): la protezione è la pulizia più sotto (lib/pulizia.js)
         let valueClean = sorgente[f].trim();
         
+        if (valueClean === "" && CAMPI_SVUOTABILI.includes(f)) { fieldsToSave[f] = null; return; }
         if (f === 'draft_json' || valueClean !== "") {
           if (f === "digital_style") {
             const upper = valueClean.toUpperCase();
@@ -146,8 +156,10 @@ export default async function handler(req, res) {
 
     const fieldsToSave = estraiCampi(body);
     // Diagnostica (18/11/2026): quali campi arrivano e quanto sono lunghi, mai il contenuto
-    console.log('SALVA', safeUsername, 'ricevuti:', Object.keys(body || {}).length,
-      'campi:', Object.entries(fieldsToSave).map(([k, v]) => `${k}=${String(v).length}`).join(' '));
+    const diag = body && typeof body._diag === 'object' && body._diag ? Object.entries(body._diag)
+      .filter(([, v]) => typeof v === 'number' || typeof v === 'boolean').map(([k, v]) => `${String(k).slice(0, 20)}=${v}`).join(' ') : '';
+    console.log('SALVA', safeUsername, 'ricevuti:', Object.keys(body || {}).length, 'diag:', diag,
+      'campi:', Object.entries(fieldsToSave).map(([k, v]) => `${k}=${v === null ? 'vuoto' : String(v).length}`).join(' '));
 
     // --- ATTIVAZIONE: da "in attesa" ad "attivo". Serve la sessione di un account (email verificata):
     // la tag diventa di quell'account. Chi ha prenotato senza account usa la ricevuta + l'account
