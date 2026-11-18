@@ -188,8 +188,9 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
   `@myquicktag` e `@massimogiachino` (amico scrittore, tag omaggio).
 - **Nomi della famiglia del titolare riservati (18/11/2026)** in `nomi_riservati` (tipo `gold`, regola `esatto`,
   categoria `famiglia`): Martina (`martinamicelli`, `marty`; ha già `@martina`), Matteo (`matteomicelli`, `matteo`,
-  `matte`, `matti`), assegnati alle loro email; Maia (`maiamicelli`, `maia`) e Daniela (`danielasito`, `daniela`,
-  `dani`, `dany`) ancora senza email: quando il titolare le manda, scriverle in `assegnato_a`. Chi ha il nome
+  `matte`, `matti`), Daniela (`danielasito`, `daniela`, `dani`, `dany`), assegnati alle loro email. Maia (`maiamicelli`, `maia`) ha 9 anni:
+  i termini chiedono 18 anni, quindi i suoi nomi restano riservati senza email (nessuno può registrarli) finché
+  potrà avere un account. Chi ha il nome
   assegnato lo prenota entrando prima nel proprio account.
 
 ### Modello dei piani e pagamenti (dopo la prova, in sospeso)
