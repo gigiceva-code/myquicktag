@@ -767,6 +767,14 @@
                     tokenSalvati = {};
                 }
                 bodyRichiesta.sessionToken = tokenSalvati[NOME_SISTEMA];
+                // Diagnostica (18/11/2026): solo numeri e sì/no, nessun contenuto
+                try {
+                    const lun = id => (document.getElementById(id)?.value || '').length;
+                    bodyRichiesta._diag = { bio: lun('field-bio'), email: lun('field-email'), foto: lun('field-avatar-url'),
+                        bottone: lun('field-qa-url'), social: document.querySelectorAll('#social-internal-track .social-block-live').length,
+                        caricamento: !!isLoadingDati, bozzaLocale: !!localStorage.getItem('mqt_draft_full_' + NOME_SISTEMA),
+                        pubblica: azione === 'pubblica', visibile: document.visibilityState === 'visible' };
+                } catch (e) {}
 
                 const response = await fetch('/api/update-profile', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyRichiesta) 

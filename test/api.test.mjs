@@ -127,6 +127,9 @@ r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtBruno),bo
 ok(r.code===401 && riga('prova').bio==='ciao','un altro account non può modificare la tag');
 r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',bio:'nuova bio',proprietario_id:bruno.id}});
 ok(r.code===200 && riga('prova').bio==='nuova bio' && riga('prova').proprietario_id===anna.id,'il proprietario salva; proprietario_id dal browser ignorato');
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',quickpass_premio_a:'Un caffè',quickpass_premio_b:'Un dolce'}});
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'prova',bio:'',quickpass_premio_a:'',quickpass_premio_b:'',digital_style:'',username_display:''}});
+ok(r.code===200 && riga('prova').bio==null && riga('prova').quickpass_premio_a==null && riga('prova').quickpass_premio_b==null && riga('prova').username_display==='@Prova','Elimina: bio e QuickGift svuotati davvero; nome e stile vuoti ignorati');
 r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',bio:'x',sessionToken:jwtAnna}});
 ok(r.code===200,'sessione accettata anche nel campo sessionToken (pagine esistenti)');
 r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'nessuno',bio:'x'}});
