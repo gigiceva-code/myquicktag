@@ -731,6 +731,16 @@ function generaQR(url) {
     new QRCode(wrapper, { text: url, width: 84, height: 84, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
 }
 
+// Indirizzo del sito scritto a mano ("www.miosito.it"): senza https:// il telefono lo aprirebbe come
+// pagina di myquicktag (404). Si completa; solo indirizzi web http/https.
+function indirizzoWeb(url) {
+    url = String(url || '').trim();
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url)) return url;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return '';
+    return 'https://' + url.replace(/^\/+/, '');
+}
+
 function renderizzaSitoWeb(url) {
     const casella = document.getElementById('casella-sito');
     if (!casella) return;
@@ -1218,7 +1228,7 @@ function apriSezione(tipo) {
         titolo.textContent = 'Sito Web';
         corpo.innerHTML = '';
 
-        const urlSito = cacheDatiUtente.sito_web || '';
+        const urlSito = indirizzoWeb(cacheDatiUtente.sito_web);
         const dominioPulito = urlSito.replace(/https?:\/\/(www\.)?/, '').split('/')[0];
 
         if (!urlSito) {
