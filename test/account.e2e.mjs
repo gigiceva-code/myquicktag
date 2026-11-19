@@ -77,6 +77,11 @@ ok(!rispV.includes('mario@bar.it') && !rispV.includes('proprietario_id') && !ris
 // 3. Dashboard e seconda tag dallo stesso account
 await A.goto(B+'/dashboard.html'); await A.waitForTimeout(2000); await shot(A,'05-dashboard-1');
 ok(/bar mario/i.test(await A.textContent('#elenco')),'dashboard: mostra la tag');
+// Una tag gratuita per account: al posto di "Aggiungi una tag" la regola spiegata
+ok(!(await A.isVisible('#btn-aggiungi')) && (await A.isVisible('#limite-tag')) && /una tag gratuita/.test(await A.textContent('#limite-tag')),'limite: con una tag attiva niente "Aggiungi una tag", spiegata la regola');
+// Eccezione decisa dal titolare (TAG_ILLIMITATE_EMAIL): Mario può avere più tag
+await fetch(B+'/__env?k=TAG_ILLIMITATE_EMAIL&v=mario@bar.it');
+await A.reload(); await A.waitForTimeout(2000);
 await A.click('#btn-aggiungi'); await A.waitForTimeout(1200);
 await A.fill('#tag-input','Mario Pizza'); await A.click('#btn-verifica-principale'); await A.waitForTimeout(1000);
 await A.click('#btn-entra-spazio'); await A.waitForURL(/edit/); await A.waitForTimeout(2000);

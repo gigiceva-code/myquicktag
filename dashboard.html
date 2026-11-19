@@ -52,6 +52,10 @@
         <div id="elenco"></div>
 
         <a href="/?nuova=1#s1" class="btn btn-primary" id="btn-aggiungi"><i class="fas fa-plus"></i> Aggiungi una tag</a>
+        <!-- Una tag gratuita per account (lib/abbonamento.js): al posto del bottone, la regola spiegata -->
+        <div class="card" id="limite-tag" style="display: none; text-align: center;">
+            <p class="note" style="margin: 0;"><b style="color: #e5c158;">Ogni account include una tag gratuita.</b><br>Le tag aggiuntive saranno a pagamento: disponibili a breve.</p>
+        </div>
 
 
         <!-- ACCOUNT -->
@@ -171,6 +175,10 @@
         if (!d.success) throw new Error(d.error || 'Errore');
         mqtSessione.ricordaTags(d.tags.map(t => t.username_system));
         if (d.vede_numeri) mostraNumeri();
+        if (d.puo_aggiungere === false) {
+            document.getElementById('btn-aggiungi').style.display = 'none';
+            document.getElementById('limite-tag').style.display = 'block';
+        }
         return d.tags;
     }
 

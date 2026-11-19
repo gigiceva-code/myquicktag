@@ -184,6 +184,15 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - **Collegato:** per mandare il messaggio a fine prova serve l'**email del cliente**, che oggi non chiediamo
   (audit, punto 1.4): va raccolta dal lancio, altrimenti non si potrà avvisare nessuno.
 
+### Una tag gratuita per account (deciso il 19/11/2026)
+- Ogni account include **una tag gratuita**; le tag aggiuntive saranno **a pagamento** (come i domini: niente
+  giustificazioni, si compra). Finché non ci sono i pagamenti la seconda tag non si può attivare: la Identity
+  Console mostra "Le tag aggiuntive saranno a pagamento: disponibili a breve".
+- Controllo sul server alla prenotazione (dentro l'account) e all'attivazione (`lib/abbonamento.js` →
+  `puoAggiungereTag`). Contano solo le tag attive. Termini, punto 8, aggiornati.
+- Eccezioni decise dal titolare: variabile Vercel `TAG_ILLIMITATE_EMAIL` (email separate da virgole).
+- Con Stripe: la seconda tag si compra dal checkout, anche con il piano Base.
+
 ### Account omaggio per persone scelte (al lancio, su richiesta del titolare)
 - Il titolare configurerà personalmente, sul telefono di ciascuno, le tag di alcuni titolari di attività e amici
   influencer, e vuole che quegli account siano **senza obbligo di rinnovo** per un anno o per sempre.

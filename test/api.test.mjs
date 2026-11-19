@@ -173,6 +173,13 @@ ok(r.code===401,'ricevuta scaduta rifiutata');
 // ============================================================
 // 2. MULTI-TAG: un account, più tag
 // ============================================================
+// Una tag gratuita per account (19/11/2026): Anna ha già @prova attiva
+r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtAnna),body:{tag:'annabar'}});
+ok(r.code===403 && r.body.codice==='limite_tag' && /una tag gratuita/.test(r.body.message) && !riga('annabar'),'limite: con una tag attiva non se ne prenota un\'altra dentro l\'account');
+r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
+ok(r.code===200 && r.body.puo_aggiungere===false,'limite: la dashboard sa che non si può aggiungere una tag');
+// Eccezione decisa dal titolare (TAG_ILLIMITATE_EMAIL): Anna può avere più tag
+process.env.TAG_ILLIMITATE_EMAIL=anna.email;
 r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtAnna),body:{tag:'annabar'}});
 ok(r.code===200 && r.body.proprietario===true && riga('annabar').proprietario_id===anna.id,'seconda tag prenotata dentro l\'account: è già dell\'account');
 r=await call('update-profile.js',{method:'POST',body:{username_system:'annabar',bio:'x',sessionToken:r.body.sessionToken}});
@@ -185,6 +192,11 @@ ok(r.code===401 && !riga('carlanome'),'prenotazione con sessione non valida/non 
 r=await call('check-and-create.js',{method:'POST',headers:conSessione(jwtBruno),body:{tag:'brunoshop'}});
 r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtBruno),body:{username_system:'brunoshop',stato:'attivo'}});
 ok(riga('brunoshop').proprietario_id===bruno.id && riga('brunoshop').stato==='attivo','un altro account ha la sua tag');
+// Limite anche all'attivazione: prenotazione senza account, poi attivazione con un account che ha già una tag attiva
+r=await call('check-and-create.js',{method:'POST',body:{tag:'brunodue'}});
+r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtBruno),body:{username_system:'brunodue',stato:'attivo',sessionToken:r.body.sessionToken}});
+ok(r.code===403 && r.body.codice==='limite_tag' && riga('brunodue').stato==='in attesa' && !riga('brunodue').proprietario_id,'limite: la seconda tag non si attiva con un account che ne ha già una');
+process.env.TAG_ILLIMITATE_EMAIL=anna.email+','+bruno.email; // da qui le prove dei nomi assegnati usano account con più tag
 r=await call('account.js',{method:'POST',headers:conSessione(jwtAnna),body:{azione:'mie-tag'}});
 const nomiAnna=(r.body.tags||[]).map(t=>t.username_system).sort().join();
 ok(r.code===200 && nomiAnna==='annabar,prova','dashboard di Anna: le sue due tag e nessun\'altra');

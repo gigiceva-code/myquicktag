@@ -1,7 +1,7 @@
-import { trovaTag, aggiornaTag, assegnaProprietario } from '../lib/db.js';
+import { trovaTag, aggiornaTag, assegnaProprietario, tagDelProprietario } from '../lib/db.js';
 import { contaEvento } from '../lib/contatori.js';
 import { pulisciTesto, pulisciJson, pulisciValore } from '../lib/pulizia.js';
-import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito, rinnovoGratuitoAttivo } from '../lib/abbonamento.js';
+import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito, rinnovoGratuitoAttivo, puoAggiungereTag, MESSAGGIO_LIMITE_TAG } from '../lib/abbonamento.js';
 import { nomeTag, formaCanonica } from '../lib/nome-canonico.js';
 import { controllaNome } from '../lib/nomi-riservati.js';
 import { dirittiSullaTag } from '../lib/sessione.js';
@@ -175,6 +175,10 @@ export default async function handler(req, res) {
     if (staAttivando) {
       if (!diritti.utente) {
         return res.status(401).json({ error: "Accedi o crea il tuo account per attivare la tag", serve_account: true });
+      }
+      // Una tag gratuita per account: si ricontrolla qui (chi ha prenotato senza account entra solo ora)
+      if (!puoAggiungereTag(diritti.utente.email, await tagDelProprietario(diritti.utente.id), recordAttuale.id)) {
+        return res.status(403).json({ error: MESSAGGIO_LIMITE_TAG, codice: 'limite_tag' });
       }
       // Nomi protetti ricontrollati all'attivazione (un nome assegnato vale solo per quell'email)
       const protetto = await controllaNome(safeUsername, diritti.utente.email);

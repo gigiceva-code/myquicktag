@@ -1,4 +1,5 @@
-import { trovaTag, creaTag, eliminaTag } from '../lib/db.js';
+import { trovaTag, creaTag, eliminaTag, tagDelProprietario } from '../lib/db.js';
+import { puoAggiungereTag, MESSAGGIO_LIMITE_TAG } from '../lib/abbonamento.js';
 import { contaEvento } from '../lib/contatori.js';
 import { controllaNome } from '../lib/nomi-riservati.js';
 import { formaCanonica } from '../lib/nome-canonico.js';
@@ -32,6 +33,11 @@ export default async function handler(req, res) {
         const utente = jwt ? await utenteDaToken(jwt) : null;
         if (jwt && !utente) {
             return res.status(401).json({ success: false, codice: 'sessione', message: 'Sessione scaduta: accedi di nuovo.' });
+        }
+
+        // Una tag gratuita per account (lib/abbonamento.js): chi è dentro l'account e ne ha già una attiva lo sa subito
+        if (utente && !puoAggiungereTag(utente.email, await tagDelProprietario(utente.id))) {
+            return res.status(403).json({ success: false, codice: 'limite_tag', message: MESSAGGIO_LIMITE_TAG });
         }
 
         // Nomi di sistema, black list e gold list (tabella nomi_riservati + lib/nomi-riservati.js):
