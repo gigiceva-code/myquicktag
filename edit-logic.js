@@ -943,6 +943,8 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                 // ========================================================
 
                 if (f) {
+                    // Vecchi valori salvati in maiuscolo ("TITANIUM", "OBSIDIAN GOLD"): stesso nome dei pulsanti dell'editor
+                    if (f.digital_style) { f.digital_style = String(f.digital_style).trim().toLowerCase().replace(/\s+/g, '_').replace(/^black$/, 'black_dna').replace(/^obsidian$/, 'obsidian_gold'); }
                     if (f.digital_style) { localStorage.setItem('mqt_theme_' + NOME_SISTEMA, f.digital_style); const radioTheme = document.querySelector(`input[name="digital_style"][value="${f.digital_style}"]`); if (radioTheme) radioTheme.checked = true; }
                     if (f.digital_layout) { localStorage.setItem('mqt_layout_' + NOME_SISTEMA, f.digital_layout); const radioLayout = document.querySelector(`input[name="digital_layout"][value="${f.digital_layout}"]`); if (radioLayout) radioLayout.checked = true; }
 

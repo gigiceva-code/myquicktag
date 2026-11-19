@@ -268,9 +268,9 @@ function formattaBadge(testoBruto) {
 function renderizzaTagCompleta(fields) {
     const container = document.getElementById('profile-content');
     if (container) {
-        container.setAttribute('data-theme', fields.digital_style || 'black_dna');
+        container.setAttribute('data-theme', stileTag(fields.digital_style));
         container.setAttribute('data-layout', fields.digital_layout || 'badge');
-        document.body.setAttribute('data-qr-theme', fields.digital_style || 'black_dna'); 
+        document.body.setAttribute('data-qr-theme', stileTag(fields.digital_style)); 
     }
 
     const nomeDaMostrare = fields.username_display || fields.username_system;
@@ -1483,6 +1483,13 @@ window.addEventListener('popstate', (e) => {
 // ============================================================
 // POCKET DEL VISITATORE (solo su questo telefono, senza account)
 // ============================================================
+// Stile della tag come lo usa style.css (minuscolo, "TITANIUM" o "OBSIDIAN GOLD" salvati in passato compresi)
+function stileTag(valore) {
+    const v = String(valore || '').trim().toLowerCase().replace(/\s+/g, '_');
+    const stile = ({ black: 'black_dna', obsidian: 'obsidian_gold' })[v] || v;
+    return ['black_dna', 'titanium', 'obsidian_gold', 'satin_rose', 'emerald'].includes(stile) ? stile : 'black_dna';
+}
+
 function appInstallata() {
     try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; }
 }

@@ -9,6 +9,15 @@ import { dirittiSullaTag } from '../lib/sessione.js';
 // Campi salvati come testo JSON: si puliscono i valori, non la sintassi
 const CAMPI_JSON = ['draft_json', 'modulo_vcf', 'config_canali', 'sedi_json', 'gallery_data', 'pocket_cloud', 'partners_data'];
 
+// Stili della tag (stessi valori dell'editor e di style.css). Un valore sconosciuto si ignora.
+const STILI = ['black_dna', 'titanium', 'obsidian_gold', 'satin_rose', 'emerald'];
+export function normalizzaStile(valore) {
+  const v = String(valore || '').trim().toLowerCase().replace(/\s+/g, '_');
+  const vecchi = { black: 'black_dna', obsidian: 'obsidian_gold' };
+  const stile = vecchi[v] || v;
+  return STILI.includes(stile) ? stile : null;
+}
+
 // Campi che il titolare può svuotare (18/11/2026): un testo vuoto inviato apposta li cancella (null),
 // così "Elimina" nell'editor funziona davvero. Gli altri campi vuoti si ignorano come prima.
 const CAMPI_SVUOTABILI = ['bio', 'cv', 'email', 'sito_web', 'quick_action_label', 'quick_action_url', 'avatar_url',
@@ -51,10 +60,11 @@ function estraiCampi(sorgente) {
         if (valueClean === "" && CAMPI_SVUOTABILI.includes(f)) { fieldsToSave[f] = null; return; }
         if (f === 'draft_json' || valueClean !== "") {
           if (f === "digital_style") {
-            const upper = valueClean.toUpperCase();
-            if (upper === "BLACK" || upper === "BLACK DNA") valueClean = "BLACK DNA";
-            else if (upper === "TITANIUM") valueClean = "TITANIUM";
-            else if (upper === "OBSIDIAN" || upper === "OBSIDIAN GOLD") valueClean = "OBSIDIAN GOLD";
+            // Stile: sempre il nome usato da editor e tag (style.css → data-theme), minuscolo. Prima "titanium"
+            // diventava "TITANIUM" e la tag non lo riconosceva (19/11/2026). I vecchi nomi si convertono.
+            const stile = normalizzaStile(valueClean);
+            if (!stile) return;
+            valueClean = stile;
           }
           
           if (f === "stato") valueClean = valueClean.toLowerCase();
