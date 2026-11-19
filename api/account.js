@@ -9,7 +9,7 @@
 // azione 'mie-tag' → elenco delle tag di cui l'account è proprietario
 import { tagDelProprietario } from '../lib/db.js';
 import { tokenAccount, utenteDaToken } from '../lib/sessione.js';
-import { calcolaAbbonamento, pianoEffettivo } from '../lib/abbonamento.js';
+import { calcolaAbbonamento, pianoEffettivo, puoAggiungereTag } from '../lib/abbonamento.js';
 import { contaEvento, numeriLancio, puoVedereNumeri } from '../lib/contatori.js';
 
 function contaNuovi(testo) {
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
         return voce;
       });
       await contaEvento('console_aperta');
-      return res.status(200).json({ success: true, tags, vede_numeri: puoVedereNumeri(utente.email) });
+      return res.status(200).json({ success: true, tags, vede_numeri: puoVedereNumeri(utente.email), puo_aggiungere: puoAggiungereTag(utente.email, records) });
     }
 
     return res.status(400).json({ success: false, error: 'Azione non valida' });

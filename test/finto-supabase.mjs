@@ -84,6 +84,7 @@ http.createServer(async (req,res)=>{
   if(p.startsWith('/__db')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify({rows,utenti:[...utenti.values()].map(u=>({email:u.email,confermato:u.confermato,data:u.data})),sessioni:sessioni.size})); return; }
   // Il "link" dell'email di conferma: Supabase conferma l'indirizzo quando viene toccato
   if(p.startsWith('/__conferma')){ const u=utenti.get(String(url.searchParams.get('email')).toLowerCase()); if(u){u.confermato=new Date().toISOString(); u.codice=null;} res.end(u?'ok':'no'); return; }
+  if(p.startsWith('/__env')){ const k=url.searchParams.get('k'); if(/^[A-Z_]+$/.test(k||'')) process.env[k]=url.searchParams.get('v')||''; res.end('ok'); return; }
   if(p.startsWith('/__seed')){ const b=JSON.parse(body); rows.push({id:crypto.randomUUID(),created_at:new Date().toISOString(),views:0,proprietario_id:null,...b}); res.end('ok'); return; }
   if(p.startsWith('/auth/v1/')){ if(req.method==='OPTIONS'){res.writeHead(204,cors);res.end();return;}
     const [st,b]=gotrue(req.method,url,{authorization:req.headers.authorization},body?JSON.parse(body):{}); res.writeHead(st,{'Content-Type':'application/json',...cors}); res.end(b==null?'':JSON.stringify(b)); return; }
