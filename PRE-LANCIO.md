@@ -149,6 +149,10 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - [x] **Contatori anonimi del percorso** (17/11/2026): pagina `numeri.html` per l'account ufficiale (info@myquicktag.it, o le email in `NUMERI_EMAIL`).
 - [ ] Entro ~60 giorni dal lancio: email di scadenza (30/7/0 giorni), schermata di scelta alla fine della prova, Stripe
       (dopo il commercialista), preset Cloudinary firmato, backup settimanale del database, home riscritta.
+- [ ] Entro ~60 giorni dal lancio (deciso il 19/11/2026): **Pocket legato all'account**. Oggi le tag salvate con SALVA
+      restano solo nel browser (`mqt_pocket`). Da fare: tabella per account, SALVA nell'account per chi ha fatto
+      l'accesso (gli altri continuano sul telefono, senza obbligo di registrarsi), al primo accesso le tag del telefono
+      passano nell'account, una riga nell'informativa privacy, cancellazione insieme all'account. ~mezza giornata.
 - [x] Clausola QuickGift nei termini (punto 6) e dichiarazione obbligatoria del titolare nell'editor (17/11/2026).
 - [ ] **LAVORO DA FINIRE — parere legale su QuickGift** (il titolare ha scelto di lanciare con QuickGift attivo):
       portare `SCHEDA-LEGALE-QUICKGIFT.md` a una consulenza, anche gratuita (operazioni a premio DPR 430/2001,

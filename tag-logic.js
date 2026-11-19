@@ -212,6 +212,12 @@ const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}$
         if (isOwner) fields = filtraCampiPiano(fields, fields.piano_effettivo || 'BASE');
         cacheDatiUtente = fields;
         usernameCorrente = fields.username_system;
+        // Il titolare (confermato dal server) al posto di SALVA vede GESTISCI: porta alla Identity Console.
+        // Serve soprattutto dall'app installata, che si apre sulla tag (19/11/2026).
+        if (isOwner && data.fields.sei_proprietario) mostraTastoGestisci();
+        // Nell'app installata (soprattutto iPhone, che non condivide l'accesso con Safari e non ha la barra degli
+        // indirizzi) chi non è entrato vede ACCEDI: dopo l'accesso torna qui e, se è il titolare, trova GESTISCI.
+        else if (appInstallata()) mostraTastoAccedi();
 
       // DURATA DELLA PROVA (90 giorni + 14 di tolleranza): fase calcolata dal server. Modello C: la tag resta sempre online,
       // finita la prova con il piano Base (le sezioni avanzate sono nascoste, non cancellate).
@@ -1477,6 +1483,33 @@ window.addEventListener('popstate', (e) => {
 // ============================================================
 // POCKET DEL VISITATORE (solo su questo telefono, senza account)
 // ============================================================
+function appInstallata() {
+    try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; }
+}
+function mostraTastoAccedi() {
+    const btn = document.getElementById('btn-salva-pocket');
+    const testo = document.getElementById('testo-salva-top');
+    const dot = document.getElementById('dot-salva');
+    if (!btn || !testo) return;
+    btn.onclick = () => { window.location.href = '/accesso.html?torna=' + encodeURIComponent(location.pathname + location.search); };
+    btn.setAttribute('role', 'button');
+    btn.setAttribute('aria-label', 'Accedi al tuo account');
+    testo.textContent = 'ACCEDI';
+    if (dot) { dot.style.animation = 'none'; dot.style.backgroundColor = '#e5c158'; }
+}
+
+function mostraTastoGestisci() {
+    const btn = document.getElementById('btn-salva-pocket');
+    const testo = document.getElementById('testo-salva-top');
+    const dot = document.getElementById('dot-salva');
+    if (!btn || !testo) return;
+    btn.onclick = () => { window.location.href = '/dashboard.html'; };
+    btn.setAttribute('role', 'button');
+    btn.setAttribute('aria-label', 'Gestisci la tua tag: apri la Identity Console');
+    testo.textContent = 'GESTISCI';
+    if (dot) { dot.style.animation = 'none'; dot.style.backgroundColor = '#e5c158'; dot.style.boxShadow = '0 0 8px #e5c158'; }
+}
+
 // Il visitatore salva la tag con "SALVA" e la ritrova nel Pocket (/pocket.html) insieme alle altre.
 // Niente registrazione e niente dati inviati al server: l'elenco resta nel browser (mqt_pocket).
 function salvaNelPocketCorrente() {

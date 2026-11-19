@@ -168,6 +168,19 @@
             margin-top: 4px;
         }
 
+        .dopo-prova {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            text-align: left;
+        }
+        .dopo-prova p { margin: 0 0 6px; }
+        .dopo-prova p:last-child { margin-bottom: 0; }
+        .dopo-prova .dopo-prova-forte { color: #374151; font-weight: 500; }
+
         .note-fiducia {
             font-size: 0.75rem;
             color: var(--text-muted);
@@ -339,6 +352,13 @@
                     <span class="price-tag" id="display-price">0,00 €</span>
                 </div>
                 <div class="scadenza-prova" id="display-scadenza"></div>
+                <!-- Cosa succede dopo la prova (19/11/2026, testo concordato dal titolare): detto prima di attivare -->
+                <div class="dopo-prova" id="dopo-prova">
+                    <p>Utilizza tutte le funzionalità di myquicktag gratuitamente per 90 giorni.</p>
+                    <p>Alla fine della prova avrai altri 14 giorni con tutte le funzionalità attive. Successivamente, la tua tag resterà online gratuitamente con il piano Base, e i contenuti delle funzioni avanzate restano salvati.</p>
+                    <p>Premium e Gold saranno facoltativi. Quando saranno disponibili, potrai conoscere i relativi prezzi e decidere liberamente se attivarli.</p>
+                    <p class="dopo-prova-forte">Nessun rinnovo automatico. Nessun obbligo di acquisto. Nessun addebito.</p>
+                </div>
             </div>
 
             <!-- Niente loghi delle carte finché l'attivazione è gratuita: con Stripe li mostra la sua pagina di pagamento -->
@@ -459,6 +479,7 @@
                         document.querySelector("#step-payment .main-title").innerText = "Rinnova la tua tag";
                         document.getElementById("passi-attivazione").style.display = "none";
                         document.getElementById("elenco-inclusi").style.display = "none";
+                        document.getElementById("dopo-prova").style.display = "none";
                         document.getElementById("display-username").innerText = `@${nomeRinnovo}`;
                         document.getElementById("display-offerta").innerText = "Rinnovo";
                         document.getElementById("receipt-username").innerText = `@${nomeRinnovo}`;
