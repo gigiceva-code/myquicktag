@@ -97,6 +97,13 @@ await ev(A,"apriDrawer('drawer-master')"); await ev(A,"gestisciAzioneMaster()");
 d=await db(); ok(d.rows.find(r=>r.username_system==='mariopizza').bio==='Pizza al taglio.' && d.rows.find(r=>r.username_system==='barmario').bio==='Colazioni e aperitivi in piazza.','pubblicazione: cambia solo la tag modificata');
 for (const pg of ['analytics.html','contatti.html','profile.html','account.html']) { await A.goto(B+'/'+pg+'?u=barmario'); await A.waitForTimeout(1800); ok(!/accesso|dashboard/.test(A.url()),`${pg}: il proprietario entra`); }
 await shot(A,'07-profile-tag');
+// Sulla propria tag il titolare vede GESTISCI (→ Identity Console) al posto di SALVA; un visitatore vede SALVA
+await A.goto(B+'/u/barmario'); await A.waitForTimeout(2500);
+ok((await A.textContent('#testo-salva-top')).trim()==='GESTISCI','tag del titolare: al posto di SALVA c\'è GESTISCI');
+await ev(A,"document.getElementById('btn-salva-pocket').click()"); await A.waitForURL(/dashboard/,{timeout:5000}).catch(()=>{});
+ok(/dashboard/.test(A.url()),'GESTISCI porta alla Identity Console');
+{ const cV=await telefono(); const V=await cV.newPage(); await V.goto(B+'/u/barmario'); await V.waitForTimeout(2500);
+  ok((await V.textContent('#testo-salva-top')).trim()==='SALVA','un visitatore vede sempre SALVA'); await cV.close(); }
 
 // 4. Nome gold assegnato a Mario (barsport → mario@bar.it)
 await A.goto(B+'/'); await A.fill('#tag-input','barsport'); await A.click('#btn-verifica-principale'); await A.waitForTimeout(1000);
