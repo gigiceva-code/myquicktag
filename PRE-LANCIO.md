@@ -184,6 +184,14 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - Il titolare configurerà personalmente, sul telefono di ciascuno, le tag di alcuni titolari di attività e amici
   influencer, e vuole che quegli account siano **senza obbligo di rinnovo** per un anno o per sempre.
 - Da fare nel codice **solo quando il titolare lo chiede** (es. una data di scadenza "omaggio" decisa dal server).
+- **Come si fa oggi (18/11/2026):** colonna `plan` = `GOLD` sulla tag (Supabase, tabella `tags`). Fatto per
+  `@myquicktag` e `@massimogiachino` (amico scrittore, tag omaggio).
+- **Nomi della famiglia del titolare riservati (18/11/2026)** in `nomi_riservati` (tipo `gold`, regola `esatto`,
+  categoria `famiglia`): Martina (`martinamicelli`, `marty`; ha già `@martina`), Matteo (`matteomicelli`, `matteo`,
+  `matte`, `matti`), Daniela (`danielasito`, `daniela`, `dani`, `dany`), assegnati alle loro email. Maia (`maiamicelli`, `maia`) ha 9 anni:
+  i termini chiedono 18 anni, quindi i suoi nomi restano riservati senza email (nessuno può registrarli) finché
+  potrà avere un account. Chi ha il nome
+  assegnato lo prenota entrando prima nel proprio account.
 
 ### Modello dei piani e pagamenti (dopo la prova, in sospeso)
 - Proposta discussa: Base gratis per sempre (con "Creato con myquicktag"), Premium e Gold a pagamento,

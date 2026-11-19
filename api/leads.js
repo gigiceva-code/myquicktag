@@ -3,7 +3,7 @@ import { nomeTag } from '../lib/nome-canonico.js';
 import { dirittiSullaTag } from '../lib/sessione.js';
 
 // ============================================================
-// CONTATTI RACCOLTI: azioni del proprietario (pagina "I miei contatti")
+// CONTATTI RACCOLTI: azioni del proprietario (pagina "Contatti ricevuti")
 // ============================================================
 // azione 'visti'      → tutti i contatti non sono più "nuovi"
 // azione 'richiamato' → segna (o toglie) un contatto come richiamato (id, valore)
