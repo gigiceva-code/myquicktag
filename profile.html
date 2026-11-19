@@ -820,7 +820,8 @@ function aggiornaContatoriDashboard(record) {
     const statScansioni = document.getElementById("stat-scansioni");
     if (statScansioni) {
         statScansioni.onclick = function() {
-            const userPlan = String(record.plan || "base").toLowerCase().trim();
+            // Piano deciso dal server (lib/abbonamento.js → pianoEffettivo): in prova è Gold, non la colonna "plan"
+            const userPlan = String(record.piano_effettivo || record.plan || "base").toLowerCase().trim();
             const utenteCorrente = record.username_system || localStorage.getItem("mqt_logged_user");
 
             if (userPlan.includes("gold") || userPlan.includes("premium")) {
