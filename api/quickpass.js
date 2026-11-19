@@ -205,7 +205,7 @@ export default async function handler(req, res) {
         telefono: tel, rete, sospetto
       }, 6);
 
-      // Recapito facoltativo: arriva anche in "I miei contatti", con il consenso alle offerte se dato
+      // Recapito facoltativo: arriva anche in "Contatti ricevuti", con il consenso alle offerte se dato
       if (contatto) {
         const consenso = body.consenso === true;
         try {

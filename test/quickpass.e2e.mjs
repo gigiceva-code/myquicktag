@@ -124,7 +124,7 @@ ok(pannello.includes('PUBBLICA LA TUA OFFERTA') && pannello.includes('nessuno ot
 await foto(follower, '11-titolare');
 const db = await (await fetch(`${B}/__db`)).json();
 const lead = JSON.parse((db.rows.find(r => r.username_system === TAG) || {}).lead_capture_leads || '[]')[0];
-ok(lead && lead.nome === 'Luca' && lead.consenso_offerte === true && lead.fonte === 'QuickGift', 'Il recapito di Luca arriva in I miei contatti con il consenso');
+ok(lead && lead.nome === 'Luca' && lead.consenso_offerte === true && lead.fonte === 'QuickGift', 'Il recapito di Luca arriva in Contatti ricevuti con il consenso');
 await browser.close();
 
 // ---------- QUICKGIFT ONLINE: niente WhatsApp, il codice personale si indica quando si ordina o si prenota e si conferma in cassa ----------

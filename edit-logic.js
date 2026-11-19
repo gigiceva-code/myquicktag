@@ -1513,7 +1513,7 @@ function gestisciVIPSwitch(checkbox) {
             });
         } 
 
-        // L'elenco completo dei contatti è nella pagina "I miei contatti" (contatti.html):
+        // L'elenco completo dei contatti è nella pagina "Contatti ricevuti" (contatti.html):
         // qui nell'editor si mostra solo quanti ne sono arrivati.
         function disegnaListaLeads(leadsArray) {
             const badge = document.getElementById('lead-count-badge');
@@ -1903,8 +1903,8 @@ function gestisciVIPSwitch(checkbox) {
                         ['fa-briefcase', 'Professionisti:', '«Ricevi la guida gratuita» oppure «Prenota una prima consulenza senza impegno.»'],
                         ['fa-cog', 'La regola:', 'il vantaggio deve valere più del gesto di lasciare il proprio contatto.']
                     ]],
-                    ['Cosa ottieni', 'Un elenco di persone interessate da ricontattare quando vuoi, senza pagare pubblicità per raggiungerle di nuovo. Il modulo chiede al visitatore, con una casella facoltativa, se accetta di ricevere offerte: in I miei contatti vedi chi ha detto sì. A chi non ha spuntato la casella scrivi solo per ciò che hai promesso nel titolo.'],
-                    _boxStrategia('<i class="fas fa-inbox" style="margin-right: 6px;"></i>Dove trovi i tuoi contatti', _testoStrategia('Ogni contatto arriva in <strong style="color: #ffffff;">Dashboard → I miei contatti</strong>. Il campanello ti segnala i nuovi; da lì li chiami, scrivi su WhatsApp o via email con un clic e li segni come richiamati.'), 'verde')
+                    ['Cosa ottieni', 'Un elenco di persone interessate da ricontattare quando vuoi, senza pagare pubblicità per raggiungerle di nuovo. Il modulo chiede al visitatore, con una casella facoltativa, se accetta di ricevere offerte: in Contatti ricevuti vedi chi ha detto sì. A chi non ha spuntato la casella scrivi solo per ciò che hai promesso nel titolo.'],
+                    _boxStrategia('<i class="fas fa-inbox" style="margin-right: 6px;"></i>Dove trovi i tuoi contatti', _testoStrategia('Ogni contatto arriva in <strong style="color: #ffffff;">Dashboard → Contatti ricevuti</strong>. Il campanello ti segnala i nuovi; da lì li chiami, scrivi su WhatsApp o via email con un clic e li segni come richiamati.'), 'verde')
                 )
             },
             'status': {
