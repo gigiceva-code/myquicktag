@@ -104,6 +104,12 @@ await ev(A,"document.getElementById('btn-salva-pocket').click()"); await A.waitF
 ok(/dashboard/.test(A.url()),'GESTISCI porta alla Identity Console');
 { const cV=await telefono(); const V=await cV.newPage(); await V.goto(B+'/u/barmario'); await V.waitForTimeout(2500);
   ok((await V.textContent('#testo-salva-top')).trim()==='SALVA','un visitatore vede sempre SALVA'); await cV.close(); }
+// App installata (iPhone: niente accesso condiviso con Safari): chi non è entrato vede ACCEDI, che porta all'accesso e poi torna alla tag
+{ const cI=await telefono(); await cI.addInitScript(()=>{ Object.defineProperty(navigator,'standalone',{get:()=>true}); });
+  const I=await cI.newPage(); await I.goto(B+'/u/barmario'); await I.waitForTimeout(2500);
+  ok((await I.textContent('#testo-salva-top')).trim()==='ACCEDI','app installata senza accesso: al posto di SALVA c\'è ACCEDI');
+  await I.evaluate(()=>document.getElementById('btn-salva-pocket').click()); await I.waitForURL(/accesso/,{timeout:5000}).catch(()=>{});
+  ok(/accesso\.html\?torna=%2Fu%2Fbarmario/.test(I.url()),'ACCEDI porta all\'accesso e poi torna alla tag'); await cI.close(); }
 
 // 4. Nome gold assegnato a Mario (barsport → mario@bar.it)
 await A.goto(B+'/'); await A.fill('#tag-input','barsport'); await A.click('#btn-verifica-principale'); await A.waitForTimeout(1000);
