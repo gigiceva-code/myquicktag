@@ -27,6 +27,7 @@
     <div id="contenuto">
         <div class="card" id="avviso-non-tua" style="display: none; border-color: rgba(255,171,0,0.4);">
             <p class="note" style="margin: 0; color: #ffab00;">La tag che stavi aprendo non è collegata a questo account. Qui trovi le tue tag.</p>
+            <button type="button" class="btn btn-secondary" id="btn-altro-account" style="margin-top: 12px;">Entra con un altro account</button>
         </div>
         <!-- Solo per l'account ufficiale (api/account.js → vede_numeri): i numeri anonimi del lancio, in cima e ben visibili -->
         <a href="/numeri.html" class="card" id="card-numeri" style="display: none; text-decoration: none; color: inherit; border-color: rgba(229,193,88,0.45); background: rgba(229,193,88,0.05);">
@@ -197,6 +198,12 @@
             if (!tags) return;
             disegna(tags);
             if (new URLSearchParams(location.search).get('avviso') === 'non-tua') document.getElementById('avviso-non-tua').style.display = 'block';
+            // Entra con un altro account: esce da questo e torna all'accesso, poi alla tag che si stava aprendo
+            document.getElementById('btn-altro-account').addEventListener('click', async () => {
+                const t = new URLSearchParams(location.search).get('torna') || '';
+                await mqtSessione.esci(false);
+                location.replace('/accesso.html' + (/^\/(?!\/)/.test(t) ? '?torna=' + encodeURIComponent(t) : ''));
+            });
             document.getElementById('loading').style.display = 'none';
             document.getElementById('contenuto').style.display = 'block';
         } catch (e) {

@@ -116,6 +116,7 @@ ok(/dashboard/.test(A.url()),'GESTISCI porta alla Identity Console');
   await I.evaluate(()=>document.getElementById('btn-salva-pocket').click()); await I.waitForURL(/accesso/,{timeout:5000}).catch(()=>{});
   ok(/accesso\.html\?torna=%2Fu%2Fbarmario/.test(I.url()),'ACCEDI porta all\'accesso e poi torna alla tag'); await cI.close(); }
 
+
 // 4. Nome gold assegnato a Mario (barsport → mario@bar.it)
 await A.goto(B+'/'); await A.fill('#tag-input','barsport'); await A.click('#btn-verifica-principale'); await A.waitForTimeout(1000);
 ok(await A.isVisible('#welcome-overlay'),'nome gold assegnato: l\'account con quell\'email lo prenota');
@@ -178,6 +179,18 @@ await E.waitForTimeout(2500);
 ok(/accesso\.html/.test(E.url()) && await E.isVisible('#v-nuova-password'),'link di recupero aperto sulla home: si arriva a "Scegli la nuova password"');
 await E.goto(B+'/#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired'); await E.waitForTimeout(2000);
 ok(/accesso\.html/.test(E.url()) && /scaduto o già usato/.test(await E.textContent('body')),'link scaduto o già usato: messaggio chiaro');
+
+// App installata di una tag di un ALTRO account, mentre si è dentro con il proprio (es. due tag di due account dello stesso titolare):
+// ACCEDI porta alla Identity Console con l'avviso e il tasto per entrare con l'altro account, che poi torna alla tag
+await fetch(B+'/__seed',{method:'POST',body:JSON.stringify({username_system:'tagaltrui',stato:'attivo',username_display:'@Altrui',bio:'x',data_scadenza:'2027-02-01',proprietario_id:'99999999-9999-9999-9999-999999999999'})});
+{ const cJ=await browser.newContext({ viewport:{width:390,height:844}, isMobile:true, hasTouch:true, storageState: await cA.storageState() }); await instradaCdn(cJ); await instradaSupabase(cJ);
+  await cJ.addInitScript(()=>{ Object.defineProperty(navigator,'standalone',{get:()=>true}); });
+  const J=await cJ.newPage(); await J.goto(B+'/u/tagaltrui'); await J.waitForTimeout(2500);
+  ok((await J.textContent('#testo-salva-top')).trim()==='ACCEDI','app installata, dentro con un altro account: ACCEDI');
+  await J.evaluate(()=>document.getElementById('btn-salva-pocket').click()); await J.waitForURL(/dashboard/,{timeout:8000}).catch(()=>{}); await J.waitForTimeout(1500);
+  ok(/avviso=non-tua/.test(J.url()) && await J.isVisible('#btn-altro-account'),'ACCEDI con un altro account: Identity Console con l\'avviso e "Entra con un altro account"');
+  await J.click('#btn-altro-account'); await J.waitForURL(/accesso/,{timeout:8000}).catch(()=>{});
+  ok(/accesso\.html\?torna=%2Fu%2Ftagaltrui/.test(J.url()),'"Entra con un altro account" esce e porta all\'accesso, poi alla tag'); await cJ.close(); }
 
 // 7. Esci
 await A.click('#btn-esci'); await A.waitForTimeout(1500);

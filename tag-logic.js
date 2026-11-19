@@ -1491,7 +1491,12 @@ function mostraTastoAccedi() {
     const testo = document.getElementById('testo-salva-top');
     const dot = document.getElementById('dot-salva');
     if (!btn || !testo) return;
-    btn.onclick = () => { window.location.href = '/accesso.html?torna=' + encodeURIComponent(location.pathname + location.search); };
+    // Già dentro con un altro account (es. un'altra tag dello stesso titolare): si passa da "motivo=sessione",
+    // che porta alla Identity Console con l'avviso e il tasto per entrare con l'account giusto
+    btn.onclick = () => {
+        const giaDentro = !!(window.mqtSessione && mqtSessione.haAccount());
+        window.location.href = '/accesso.html?' + (giaDentro ? 'motivo=sessione&' : '') + 'torna=' + encodeURIComponent(location.pathname + location.search);
+    };
     btn.setAttribute('role', 'button');
     btn.setAttribute('aria-label', 'Accedi al tuo account');
     testo.textContent = 'ACCEDI';

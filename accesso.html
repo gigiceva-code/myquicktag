@@ -220,7 +220,7 @@
                 data = { session: null };
             } else if (params.get('motivo') === 'sessione') {
                 // Sessione valida: il problema non è l'accesso ma la tag (non è di questo account)
-                location.replace('/dashboard.html?avviso=non-tua');
+                location.replace('/dashboard.html?avviso=non-tua&torna=' + encodeURIComponent(torna));
                 return;
             }
         }
