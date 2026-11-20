@@ -45,7 +45,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
                 <div>
                     <div style="font-size: 0.7rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;"><i class="fas fa-bookmark" style="margin-right: 6px;"></i>TAG SALVATE (POCKET)</div>
-                    <div id="pocket-sub" style="font-size: 0.78rem; color: var(--text-sec); margin-top: 4px;">Le tag che salvi con SALVA, su questo telefono</div>
+                    <div id="pocket-sub" style="font-size: 0.78rem; color: var(--text-sec); margin-top: 4px;">Le tag che salvi dal menu ⋯ di una tag, su questo telefono</div>
                 </div>
                 <i class="fas fa-chevron-right" style="color: #e5c158;"></i>
             </div>
@@ -124,7 +124,7 @@
         let n = 0;
         try { const p = JSON.parse(localStorage.getItem('mqt_pocket') || '[]'); n = Array.isArray(p) ? p.length : 0; } catch (e) {}
         const sub = document.getElementById('pocket-sub');
-        if (sub) sub.textContent = n === 0 ? 'Le tag che salvi con SALVA, su questo telefono' : (n === 1 ? '1 tag salvata su questo telefono' : n + ' tag salvate su questo telefono');
+        if (sub) sub.textContent = n === 0 ? 'Le tag che salvi dal menu ⋯ di una tag, su questo telefono' : (n === 1 ? '1 tag salvata su questo telefono' : n + ' tag salvate su questo telefono');
     })();
 
     function disegna(tags) {

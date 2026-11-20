@@ -25,11 +25,8 @@
         
         <!-- TOP BAR FINTA (Visibile solo in copertina) -->
         <div class="top-bar-finta">
-            <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); opacity: 0.6; transition: opacity 0.2s;">
-                <span style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
-            </div>
-            <div onclick="mostraInsight('FUNZIONI PUBBLICHE', 'I tasti <b>Salva in Pocket</b> e <b>QR Code</b> sono visibili qui per mostrarti il design finale, ma i loro automatismi si attiveranno esclusivamente nella tua Tag pubblica.', event)" style="cursor: pointer; opacity: 0.6; transition: opacity 0.2s;">
-                <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
+            <div onclick="mostraInsight('MENU DELLA TAG', 'Sulla tua tag pubblica questo tasto apre il menu per i visitatori: <b>Salva questa tag</b> nel loro Pocket, <b>Mostra il QR</b> e <b>Segnala</b>. Qui nell\'anteprima è solo per mostrarti il design.', event)" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; cursor: pointer; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(5px); opacity: 0.6;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/></svg>
             </div>
         </div> 
 
@@ -96,17 +93,23 @@
                 </button>
             </div>
         </div>
-   <!-- TORNA ALL'IDENTITY CONSOLE (dashboard dell'account) senza modificare la tag (speculare al pulsante EDITOR); compare solo con un account -->
-    <div id="btn-mie-tag" onclick="tornaAMieTag()" role="button" aria-label="Torna all'Identity Console" title="Identity Console" style="display: none; position: fixed; bottom: 25px; left: 25px; width: 44px; height: 44px; cursor: pointer; z-index: 1500; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); border-radius: 50%; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15);">
-        <i class="fas fa-chevron-left" style="color: #fff; font-size: 0.85rem;"></i>
+   <!-- BARRA FISSA DELL'EDITOR (20/11/2026): ‹ Console · Modifica · Pubblica, sempre a portata di dito -->
+    <div id="barra-editor" style="position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom)); width: calc(100% - 32px); max-width: 440px; z-index: 1500; display: flex; align-items: center; gap: 8px;">
+        <!-- Torna alla Identity Console senza pubblicare: compare solo con un account -->
+        <button type="button" id="btn-mie-tag" onclick="tornaAMieTag()" aria-label="Torna alla Identity Console" style="display: none; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; background: rgba(0,0,0,0.85); padding: 12px 14px; border-radius: 30px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); color: #fff; font-family: inherit;">
+            <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+            <span style="font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700;">Console</span>
+        </button>
+        <button type="button" id="btn-modifica" onclick="apriDrawer('drawer-master')" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; background: rgba(0,0,0,0.85); padding: 12px 14px; border-radius: 30px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(80, 200, 120, 0.4); color: #50C878; font-family: inherit;">
+            <i class="fas fa-pen" style="font-size: 0.8rem;"></i>
+            <span style="font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700;">Modifica</span>
+        </button>
+        <button type="button" id="btn-pubblica-barra" onclick="pubblicaDallaBarra()" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; background: #10b981; padding: 12px 14px; border-radius: 30px; border: none; color: #000; font-family: inherit; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <i class="fas fa-globe" style="font-size: 0.8rem;"></i>
+            <span id="testo-pubblica-barra" style="font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800;">Pubblica</span>
+        </button>
     </div>
-   <!-- 🚀 TELECOMANDO EDITOR GLOBALE -->
-    <div onclick="apriDrawer('drawer-master')" style="position: fixed; bottom: 25px; right: 25px; cursor: pointer; z-index: 1500; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.85); padding: 12px 18px; border-radius: 30px; backdrop-filter: blur(10px); border: 1px solid rgba(80, 200, 120, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.6); transition: transform 0.2s;">
-        <i class="fas fa-pen" style="color: #50C878; font-size: 0.9rem;"></i>
-        <span style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #50C878; font-weight: 700;">EDITOR</span>
-    </div>
- 
-    
+
 <!-- ============================================================ -->
     <!-- I CASSETTI DELL'EDITOR (Nascosti dietro le quinte)           -->
     <!-- ============================================================ -->
@@ -114,7 +117,7 @@
 <div class="drawer-glass" id="drawer-master">
         <div class="drawer-header-liquido" style="margin-bottom: 10px;">
             <div class="header-back" id="header-mie-tag" onclick="tornaAMieTag()" title="Identity Console" style="visibility: hidden;"><i class="fas fa-chevron-left"></i></div>
-           <div class="header-title" style="font-weight: 400; letter-spacing: 3px;">EDITOR</div>
+           <div class="header-title" style="font-weight: 400; letter-spacing: 3px;">MODIFICA</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         
@@ -205,7 +208,7 @@
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; padding: 0 10px;">
             <div id="insight-content" style="color: #fff; font-size: 0.8rem; line-height: 1.6; font-weight: 300;"></div>
         </div>
-        <button class="btn-crea" onclick="chiudiInsight()" style="margin-top: auto; margin-bottom: 20px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: #ffffff; font-size: 0.75rem; font-weight: 300; letter-spacing: 3px;">CHIUDI E TORNA ALL'EDITOR</button>
+        <button class="btn-crea" onclick="chiudiInsight()" style="margin-top: auto; margin-bottom: 20px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: #ffffff; font-size: 0.75rem; font-weight: 300; letter-spacing: 3px;">CHIUDI E TORNA ALLE MODIFICHE</button>
     </div>
 
     <!-- ========================================== -->

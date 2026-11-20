@@ -46,15 +46,15 @@
                 <span style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">CONDIVIDI</span>
             </div>
 
-            <!-- Bottone Salva Tag con LED pulsante -->
-            <div id="btn-salva-pocket" onclick="salvaNelPocketCorrente()" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); transition: all 0.3s;">
-                <div id="dot-salva" style="width: 6px; height: 6px; background-color: #fff; border-radius: 50%; animation: pulseWhiteDot 2s infinite;"></div>
-                <span id="testo-salva-top" style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;">SALVA</span>
+            <!-- GESTISCI (titolare) / ACCEDI (app installata senza accesso): nascosto ai visitatori (20/11/2026) -->
+            <div id="btn-salva-pocket" style="display: none; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; backdrop-filter: blur(5px); transition: all 0.3s;">
+                <div id="dot-salva" style="width: 6px; height: 6px; background-color: #e5c158; border-radius: 50%;"></div>
+                <span id="testo-salva-top" style="color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 1.5px;"></span>
             </div>
 
-            <!-- Trigger QR Originale -->
-            <div id="qr-luxury-trigger" class="qr-luxury-trigger" onclick="apriQRRapido()" style="position: static; margin: 0; padding: 0;">
-                <i class="fas fa-qrcode" style="font-size: 1.4rem; color: #fff;"></i>
+            <!-- MENU (⋯): salva questa tag, QR, segnala. Al posto di SALVA e del QR, che confondevano (20/11/2026) -->
+            <div id="btn-menu-top" role="button" aria-label="Altre opzioni" onclick="apriMenuTag()" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; cursor: pointer; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(5px);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/></svg>
             </div>
         </div>
     </div>
@@ -132,13 +132,12 @@
                 <i class="fas fa-unlock-alt"></i> Sblocca la tua myquicktag
             </button>
         </div>
-        <div id="cta-pubblica-container" style="display: none; width: 100%;">
-            <button onclick="pubblicaBozza()" style="width: 100%; padding: 16px; background: #10b981; border: none; border-radius: 12px; color: #000000; font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: -0.2px;">
-                Pubblica la tua tag
+        <!-- Bozza vista dal titolare: "Pubblica" fisso in basso, non copre più la tag (20/11/2026) -->
+        <div id="cta-pubblica-container" style="display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom)); width: calc(100% - 32px); max-width: 440px; z-index: 9000;">
+            <button onclick="pubblicaBozza()" style="width: 100%; padding: 14px 16px; background: #10b981; border: none; border-radius: 30px; color: #000000; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <span style="font-size: 0.95rem; font-weight: 700; letter-spacing: -0.2px;">Pubblica la tua tag</span>
+                <span style="font-size: 0.7rem; font-weight: 500; opacity: 0.75;">La bozza diventerà visibile a tutti</span>
             </button>
-            <p style="text-align: center; color: var(--text-sec); font-size: 0.8rem; margin-top: 10px;">
-                La tua tag diventerà visibile a tutti
-            </p>
         </div>
 
     </div>

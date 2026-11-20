@@ -316,7 +316,8 @@ function renderizzaTagCompleta(fields) {
     if (urlParams.get('mode') === 'draft') {
         if (fields.stato === 'attivo') {
             const ctaPubblica = document.getElementById('cta-pubblica-container');
-            if (ctaPubblica) ctaPubblica.style.display = 'block';
+            // Fuori dalla card, così resta fisso in basso sullo schermo (la card ha animazioni che lo sposterebbero)
+            if (ctaPubblica) { document.body.appendChild(ctaPubblica); ctaPubblica.style.display = 'block'; }
         } else {
             mostraOverlayAcquisto();
         }
@@ -1520,6 +1521,7 @@ function mostraTastoAccedi() {
     btn.setAttribute('aria-label', 'Accedi al tuo account');
     testo.textContent = 'ACCEDI';
     if (dot) { dot.style.animation = 'none'; dot.style.backgroundColor = '#e5c158'; }
+    btn.style.display = 'flex';
 }
 
 function mostraTastoGestisci() {
@@ -1532,9 +1534,48 @@ function mostraTastoGestisci() {
     btn.setAttribute('aria-label', 'Gestisci la tua tag: apri la Identity Console');
     testo.textContent = 'GESTISCI';
     if (dot) { dot.style.animation = 'none'; dot.style.backgroundColor = '#e5c158'; dot.style.boxShadow = '0 0 8px #e5c158'; }
+    btn.style.display = 'flex';
+    tagDelTitolare = true;
 }
 
-// Il visitatore salva la tag con "SALVA" e la ritrova nel Pocket (/pocket.html) insieme alle altre.
+// ============================================================
+// MENU ⋯ DELLA TAG (20/11/2026): salva questa tag (→ Pocket), QR, segnala
+// ============================================================
+let tagDelTitolare = false;
+function apriMenuTag() {
+    if (navigator.vibrate) navigator.vibrate(10);
+    let menu = document.getElementById('menu-tag');
+    if (!menu) {
+        menu = document.createElement('div');
+        menu.id = 'menu-tag';
+        menu.setAttribute('role', 'dialog');
+        menu.setAttribute('aria-label', 'Opzioni della tag');
+        menu.style.cssText = 'position:fixed; inset:0; z-index:12000; background:rgba(0,0,0,0.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; align-items:flex-end; justify-content:center;';
+        menu.addEventListener('click', e => { if (e.target === menu) chiudiMenuTag(); });
+        document.body.appendChild(menu);
+    }
+    const voce = (id, icona, titolo, sotto) => `<button type="button" id="${id}" style="width:100%; display:flex; align-items:center; gap:14px; padding:16px; margin-bottom:8px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:14px; color:#fff; text-align:left; cursor:pointer; font-family:inherit;">${icona}<span style="flex:1;"><span style="display:block; font-size:0.9rem; font-weight:600;">${titolo}</span><span style="display:block; font-size:0.72rem; color:#8e8e93; margin-top:3px;">${sotto}</span></span></button>`;
+    const ico = d => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e5c158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+    menu.innerHTML = `<div style="width:100%; max-width:440px; background:#111; border:1px solid rgba(255,255,255,0.1); border-bottom:none; border-radius:22px 22px 0 0; padding:18px 16px calc(18px + env(safe-area-inset-bottom));">
+        <div style="width:40px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin:0 auto 16px;"></div>
+        ${tagDelTitolare ? '' : voce('menu-salva', ico('<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>'), 'Salva questa tag', 'La ritrovi nel tuo Pocket, insieme alle altre')}
+        ${tagAttiva() ? voce('menu-qr', ico('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>'), 'Mostra il QR', 'Fallo inquadrare per aprire questa tag') : ''}
+        ${voce('menu-segnala', ico('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>'), 'Segnala questa tag', 'Imitazioni, truffe o contenuti offensivi')}
+        <button type="button" id="menu-chiudi" style="width:100%; padding:14px; background:none; border:none; color:#8e8e93; font-size:0.85rem; cursor:pointer; font-family:inherit;">Chiudi</button>
+    </div>`;
+    const su = (id, fn) => { const b = document.getElementById(id); if (b) b.onclick = () => { chiudiMenuTag(); fn(); }; };
+    su('menu-salva', salvaNelPocketCorrente);
+    su('menu-qr', apriQRRapido);
+    su('menu-segnala', apriSegnalazione);
+    su('menu-chiudi', () => {});
+    menu.style.display = 'flex';
+}
+function chiudiMenuTag() {
+    const menu = document.getElementById('menu-tag');
+    if (menu) menu.style.display = 'none';
+}
+
+// Il visitatore salva la tag dal menu ⋯ ("Salva questa tag") e la ritrova nel Pocket (/pocket.html) insieme alle altre.
 // Niente registrazione e niente dati inviati al server: l'elenco resta nel browser (mqt_pocket).
 function salvaNelPocketCorrente() {
     const usernameTag = String(cacheDatiUtente.username_system || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
@@ -1545,44 +1586,21 @@ function salvaNelPocketCorrente() {
     try { pocket = JSON.parse(localStorage.getItem('mqt_pocket') || '[]'); } catch (e) { pocket = []; }
     if (!Array.isArray(pocket)) pocket = [];
 
-    // Nome mostrato nel messaggio di conferma (sempre con la @ davanti)
-    const nomeConferma = '@' + String(nomeVisualizzato || usernameTag).replace(/^@+/, '');
-
-    if (pocket.some(item => item.username === usernameTag)) {
-        mostraOverlayPocket("TAG GIÀ SALVATA", " è già nel tuo Pocket.", '', nomeConferma);
-        return;
+    const gia = pocket.some(item => item.username === usernameTag);
+    if (!gia) {
+        pocket.push({
+            username: usernameTag,
+            nome: nomeVisualizzato,
+            url: `${window.location.origin}/u/${usernameTag}`,
+            dataSalvataggio: new Date().toISOString()
+        });
+        try { localStorage.setItem('mqt_pocket', JSON.stringify(pocket)); } catch (e) {
+            mostraToast('Non riesco a salvare su questo browser');
+            return;
+        }
     }
-
-    pocket.push({
-        username: usernameTag,
-        nome: nomeVisualizzato,
-        url: `${window.location.origin}/u/${usernameTag}`,
-        dataSalvataggio: new Date().toISOString()
-    });
-    try { localStorage.setItem('mqt_pocket', JSON.stringify(pocket)); } catch (e) {
-        mostraToast('Non riesco a salvare su questo browser');
-        return;
-    }
-
-    const btnPocketText = document.getElementById('testo-salva-top');
-    const dotSalva = document.getElementById('dot-salva');
-    if (btnPocketText && dotSalva) {
-        btnPocketText.textContent = 'SALVATO ✓';
-        btnPocketText.style.color = 'var(--theme-border, #d4af37)';
-        dotSalva.style.animation = 'none';
-        dotSalva.style.backgroundColor = 'var(--theme-border, #d4af37)';
-        dotSalva.style.boxShadow = '0 0 8px var(--theme-border, #d4af37)';
-    }
-
-    // Solo al primo salvataggio: invito facoltativo a mettere il Pocket sulla schermata Home
-    let primaVolta = false;
-    try {
-        primaVolta = !localStorage.getItem('mqt_pocket_invito');
-        if (primaVolta) localStorage.setItem('mqt_pocket_invito', new Date().toISOString());
-    } catch (e) {}
-    mostraOverlayPocket("SALVATA", " è nel tuo Pocket, insieme a tutte le tag che salvi.",
-        primaVolta ? "Vuoi ritrovarlo con un clic? Aggiungi il Pocket alla schermata Home: te lo spieghiamo nel Pocket." : '',
-        nomeConferma);
+    // Si apre il Pocket, con la spiegazione (per chi ha un account e per chi no) e il ritorno a questa tag
+    window.location.href = `/pocket.html?salvata=${encodeURIComponent(usernameTag)}${gia ? '&gia=1' : ''}`;
 }
 // MOTORE DELL'OVERLAY IMMERSIVO (Puro lusso fluttuante)
 // nome (facoltativo): la tag salvata, mostrata in evidenza all'inizio del messaggio
@@ -2304,3 +2322,20 @@ function tracciaClickSezione(nomeSezione) {
 
     } catch (e) {}
 } 
+
+// COPERTINA CLICCABILE (20/11/2026): chi tocca la foto o il nome entra nella tag, come con "ESPLORA TAG"
+(function () {
+    function collega() {
+        ['live-avatar-container', 'name-capsule-wrapper'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el || el.dataset.esplora) return;
+            el.dataset.esplora = '1';
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', () => {
+                const c = document.getElementById('profile-content');
+                if (c && c.classList.contains('locked')) sbloccaTag();
+            });
+        });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', collega); else collega();
+})();
