@@ -376,3 +376,15 @@ input[type="password"], input:not([type]), textarea, select {
     .drawer-glass { left: calc(50% + 225px) !important; }
     .drawer-backdrop { display: none !important; }
 }
+
+/* Riquadro "@nome · riservato per…" (tag non ancora attivata): nell'angolo della cornice anche su tablet e
+   computer, come sul telefono, invece che nell'angolo dello schermo (21/11/2026) */
+@media (min-width: 768px) {
+    #reservation-badge {
+        left: calc(50% - min(100vw - 32px, 410px) / 2 + 8px) !important;
+        top: calc(50% - 33px - min(100svh - 98px, 780px) / 2 + 8px) !important;
+    }
+}
+@media (min-width: 1100px) {
+    #reservation-badge { left: calc(50% - 225px - 205px + 8px) !important; }
+}
