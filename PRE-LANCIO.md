@@ -149,6 +149,10 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - [x] **Contatori anonimi del percorso** (17/11/2026): pagina `numeri.html` per l'account ufficiale (info@myquicktag.it, o le email in `NUMERI_EMAIL`).
 - [ ] Entro ~60 giorni dal lancio: email di scadenza (30/7/0 giorni), schermata di scelta alla fine della prova, Stripe
       (dopo il commercialista), preset Cloudinary firmato, backup settimanale del database, home riscritta.
+- [ ] **Tablet e computer (segnalato il 20/11/2026):** il sito è stato pensato e provato quasi solo sul telefono.
+      Da fare: schermate di home, tag, editor, Identity Console, checkout e pagine legali a 768 px (tablet) e
+      1440 px (computer), poi correggere impaginazione e proporzioni (es. home a due colonne, tag centrata con
+      sfondo curato, editor con anteprima e comandi affiancati).
 - [ ] Entro ~60 giorni dal lancio (deciso il 19/11/2026): **Pocket legato all'account**. Oggi le tag salvate con SALVA
       restano solo nel browser (`mqt_pocket`). Da fare: tabella per account, SALVA nell'account per chi ha fatto
       l'accesso (gli altri continuano sul telefono, senza obbligo di registrarsi), al primo accesso le tag del telefono
