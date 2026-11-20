@@ -98,6 +98,10 @@ ok(/bar mario/i.test(el) && /mariopizza|mario pizza/i.test(el),'dashboard: entra
 await A.click('a[href="/edit.html?u=mariopizza"]'); await A.waitForURL(/edit/); await A.waitForTimeout(2000);
 ok(await A.inputValue('#field-bio')==='La pizza di Mario.','dalla dashboard si apre l\'editor della tag giusta');
 ok(await A.isVisible('#barra-editor') && /console/i.test(await A.textContent('#btn-mie-tag')) && /modifica/i.test(await A.textContent('#btn-modifica')) && (await A.textContent('#testo-pubblica-barra')).trim()==='Pubblica','editor: barra fissa con Console, Modifica e Pubblica');
+await ev(A,"apriDrawer('drawer-contatti')"); await A.waitForTimeout(400);
+{ const prima=await A.isVisible('#avviso-telefono'); await A.click('#field-tel1'); await A.waitForTimeout(200);
+  ok(!prima && await A.isVisible('#avviso-telefono') && /visibile a tutti/.test(await A.textContent('#avviso-telefono')),'telefono: al clic sul campo compare l\'avviso che il numero è pubblico'); }
+await ev(A,"chiudiSenzaSalvare()");
 await ev(A,"apriDrawer('drawer-bio')"); await A.fill('#field-bio','Pizza al taglio.'); await ev(A,"chiudiSenzaSalvare()");
 await A.click('#btn-pubblica-barra'); await A.waitForTimeout(600);
 ok(await A.isVisible('#drawer-salvataggio') && /SALVA IN DASHBOARD/.test(await A.textContent('#drawer-salvataggio')),'Pubblica: si sceglie tra "Pubblica adesso" e "Salva in dashboard"');
