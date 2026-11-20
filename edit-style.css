@@ -365,3 +365,14 @@ input[type="password"], input:not([type]), textarea, select {
 #barra-editor .voce-modifica { color: #50C878; }
 #barra-editor .voce-pubblica { background: #10b981; color: #000; }
 #barra-editor .voce-pubblica:active { background: #0e9f70; }
+
+/* ============================================================
+   EDITOR SU COMPUTER (21/11/2026): anteprima a sinistra, pannello delle modifiche a destra.
+   Si vede la tag cambiare mentre si scrive; niente velo scuro sull'anteprima.
+   ============================================================ */
+@media (min-width: 1100px) {
+    #profile-content.app-container { left: calc(50% - 225px) !important; }
+    #barra-editor { left: calc(50% - 225px) !important; }
+    .drawer-glass { left: calc(50% + 225px) !important; }
+    .drawer-backdrop { display: none !important; }
+}
