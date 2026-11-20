@@ -70,6 +70,30 @@
         box-sizing: border-box;
         overflow: hidden;
     }
+    /* ============================================================
+       TABLET E COMPUTER (21/11/2026): sezioni senza grandi vuoti, testi più grandi, home a due colonne
+       ============================================================ */
+    #hero-anteprima { display: none; }
+    @media (min-width: 768px) {
+        section, #s1, #s2, #s3, #s4 { min-height: 0 !important; height: auto !important; }
+        #s1 { padding: 140px 40px 90px !important; }
+        #s2 { padding: 90px 40px !important; }
+        #s3 { padding: 90px 0 !important; gap: 40px; }
+        #s4 { padding: 90px 40px 60px !important; }
+        #s1 h1 { font-size: 46px !important; }
+        #s1 #hero-testo > p { font-size: 18px !important; }
+        #s2 h2, #s3 h2 { font-size: 34px !important; max-width: none !important; }
+    }
+    @media (min-width: 1024px) {
+        #s1 { gap: 90px; }
+        #hero-testo { align-items: flex-start !important; text-align: left !important; max-width: 560px !important; }
+        #hero-testo > div:not(#search-widget) { justify-content: flex-start !important; }
+        #s1 h1 { font-size: 54px !important; }
+        #hero-anteprima { display: flex; flex-direction: column; align-items: center; gap: 14px; z-index: 2; flex-shrink: 0; }
+        #hero-anteprima img { width: 270px; height: auto; border-radius: 34px; box-shadow: 0 40px 90px rgba(0,0,0,0.8), 0 0 60px rgba(80,200,120,0.12); }
+        #hero-anteprima span { font-size: 11px; letter-spacing: 1.5px; color: #6e6e73; text-transform: uppercase; }
+    }
+
     /* BOTTONI ELITE */
     button, .btn-cyber, .btn-verifica {
         transition: all 0.2s ease-in-out !important;
@@ -202,21 +226,21 @@
             <!-- GLOW DI SFONDO CENTRALE -->
             <div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: #50C878; filter: blur(180px); opacity: 0.12; border-radius: 50%; z-index: 1;"></div>
 
-            <div style="width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 2;">
+            <div id="hero-testo" style="width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 2;">
                 
                 <h1 class="reveal-item" style="font-size: 36px; font-weight: 300; line-height: 1.2; color: #ffffff; margin: 0 0 20px 0; letter-spacing: -0.5px;">
                     Il tuo spazio assoluto,<br><span style="font-weight: 700;">senza compromessi.</span>
                 </h1>
                 
                 <p class="reveal-item delay-1" style="color: #A0A0A0; font-size: 16px; font-weight: 300; line-height: 1.6; margin: 0 0 35px 0; max-width: 550px;">
-                    Il design incontra l'immediatezza. Nessuna app da scaricare, nessuna barriera. Il tuo portale personale, sempre online con un singolo click.
+                    Il design incontra l'immediatezza. Nessuna app da scaricare, nessuna barriera. Il tuo portale personale, sempre online con un solo clic.
                 </p> 
 
                 <!-- SPUNTE VERDI (Allineate orizzontalmente su desktop, a cascata su mobile) -->
                 <div class="reveal-item delay-1" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 50px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Tecnologia PWA nativa</span>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Si apre senza scaricare app</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -251,6 +275,12 @@
                     <p style="margin: 0; font-size: 11px; color: #ffffff; font-weight: 500; letter-spacing: 0.5px;">Tre mesi di accesso completo, nessuna carta richiesta.</p>
                 </div>
 
+            </div>
+
+            <!-- ANTEPRIMA DI UNA TAG (solo tablet in orizzontale e computer, 21/11/2026): chi arriva dal computer vede il prodotto -->
+            <div id="hero-anteprima" aria-hidden="true">
+                <img src="/icons/anteprima-tag.jpg" alt="" width="270" height="576" loading="lazy">
+                <span>Esempio di tag · @STUDIO ROSSI</span>
             </div>
         </section> 
                      <!-- ============================================================ -->
@@ -416,7 +446,7 @@
                 </p>
                 <h2 style="font-size: 24px; font-weight: 300; line-height: 1.3; color: #ffffff; max-width: 320px; margin: 0 auto; letter-spacing: 0.5px;">
                     Un ecosistema d'élite con<br>
-                    <span style="font-weight: 800;">un singolo click.</span>
+                    <span style="font-weight: 800;">un solo clic.</span>
                 </h2>
             </div>
               
