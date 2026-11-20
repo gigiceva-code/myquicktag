@@ -325,3 +325,10 @@ input[type="text"], input[type="url"], input[type="tel"], input[type="email"], i
 input[type="password"], input:not([type]), textarea, select {
     font-size: 16px !important;
 }
+
+/* @ DEL NOME (20/11/2026, richiesta del titolare): stesso colore e peso del nome, attaccata al nome.
+   Il prodotto è il @nome: la @ fa parte del nome, non è una decorazione. Vale per tutti gli stili. */
+#profile-content .username-display .at-symbol {
+    color: inherit !important; opacity: 1 !important; font-weight: inherit !important;
+    font-size: 1em !important; text-shadow: none !important; padding-right: 1px !important; margin-right: 0 !important; position: static !important;
+}

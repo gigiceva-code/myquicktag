@@ -865,3 +865,10 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
         fill: var(--theme-border, #d4af37);
     }
 }       
+
+/* @ DEL NOME (20/11/2026, richiesta del titolare): stesso colore e peso del nome, attaccata al nome.
+   Il prodotto è il @nome: la @ fa parte del nome, non è una decorazione. Vale per tutti gli stili. */
+#profile-content .username-display .at-symbol {
+    color: inherit !important; opacity: 1 !important; font-weight: inherit !important;
+    font-size: 1em !important; text-shadow: none !important; padding-right: 1px !important; margin-right: 0 !important; position: static !important;
+}
