@@ -1132,6 +1132,8 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                 } else {
                     document.getElementById('master-action-text').innerText = "COMPLETA E ATTIVA";
                 }
+                // Computer: il pannello delle modifiche si apre subito accanto all'anteprima (edit-style.css)
+                try { if (window.matchMedia('(min-width: 1100px)').matches) setTimeout(() => apriDrawer('drawer-master'), 400); } catch (e) {}
                 // Barra fissa in basso: "Pubblica" per una tag attiva, "Attiva" per la prima configurazione
                 const testoBarra = document.getElementById('testo-pubblica-barra');
                 if (testoBarra) testoBarra.innerText = statoUtente === 'attivo' ? 'Pubblica' : 'Attiva';

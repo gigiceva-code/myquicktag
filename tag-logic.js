@@ -269,6 +269,8 @@ function renderizzaTagCompleta(fields) {
     const container = document.getElementById('profile-content');
     if (container) {
         container.setAttribute('data-theme', stileTag(fields.digital_style));
+        // Alone dietro la cornice (tablet e computer): lo stesso colore della tag
+        try { const alone = document.getElementById('alone-tag'); if (alone) alone.style.setProperty('--alone-tag', getComputedStyle(container).getPropertyValue('--core-glow').trim() || 'rgba(255,255,255,0.08)'); } catch (e) {}
         container.setAttribute('data-layout', fields.digital_layout || 'badge');
         document.body.setAttribute('data-qr-theme', stileTag(fields.digital_style)); 
     }
