@@ -2359,3 +2359,11 @@ document.addEventListener('click', e => {
         qpSoglie(); qpFrase();
     }
 });
+
+// AVVISO SUL NUMERO DI TELEFONO (21/11/2026): al clic su un campo del telefono si ricorda che il numero è pubblico
+document.addEventListener('focusin', e => {
+    const id = e.target && e.target.id;
+    if (id !== 'field-tel1' && id !== 'field-tel2') return;
+    const avviso = document.getElementById('avviso-telefono');
+    if (avviso) avviso.style.display = 'block';
+});
