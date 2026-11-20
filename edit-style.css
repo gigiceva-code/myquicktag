@@ -332,3 +332,6 @@ input[type="password"], input:not([type]), textarea, select {
     color: inherit !important; opacity: 1 !important; font-weight: inherit !important;
     font-size: 1em !important; text-shadow: none !important; padding-right: 1px !important; margin-right: 0 !important; position: static !important;
 }
+
+/* Barra fissa in basso (Console · Modifica · Pubblica): HOME e CHIUDI restano sopra la barra (20/11/2026) */
+#mainGrid .exit-prompt { margin-bottom: 64px !important; }

@@ -726,10 +726,10 @@
             return (bioVal !== "" || sitoVal !== "" || emailVal !== "" || tel1Val !== "" || haSocial);
         }
 
-        // BARRA FISSA (20/11/2026): "Pubblica" pubblica subito; per una tag in prenotazione porta all'attivazione
+        // BARRA FISSA (20/11/2026): "Pubblica" apre la scelta "Pubblica adesso" / "Salva in dashboard" (bozza);
+        // per una tag in prenotazione porta all'attivazione
         function pubblicaDallaBarra() {
-            if (statoUtente === 'attivo') salvaEDirigi('pubblica');
-            else gestisciAzioneMaster();
+            gestisciAzioneMaster();
         }
 
         // 3. IL TASTONE VERDE (Apre il bivio o manda in cassa)
