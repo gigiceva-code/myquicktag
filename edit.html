@@ -81,7 +81,7 @@
         </div> 
     </div>
     <!-- IL TEATRO LIQUIDO DELL'ANTEPRIMA (Identico a tag.html) -->
-        <div id="overlaySezione" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; padding: 40px 24px 32px 24px; border-radius: 28px; z-index: 100; display: none; flex-direction: column; opacity: 0; transition: opacity 0.4s ease;">
+        <div id="overlaySezione" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; box-sizing: border-box; background-color: #000; padding: 40px 24px 32px 24px; border-radius: 28px; z-index: 100; display: none; flex-direction: column; opacity: 0; transition: opacity 0.4s ease;">
             <div id="titoloSezione" style="font-size: 0.8rem; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 20px; flex-shrink: 0;">TITOLO</div>
             
             <!-- MODIFICA QUI: justify-content cambiato da flex-start a center -->
@@ -93,22 +93,19 @@
                 </button>
             </div>
         </div>
-   <!-- BARRA FISSA DELL'EDITOR (20/11/2026): ‹ Console · Modifica · Pubblica, sempre a portata di dito -->
-    <div id="barra-editor" style="position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom)); width: calc(100% - 32px); max-width: 440px; z-index: 1500; display: flex; align-items: center; gap: 8px;">
+   <!-- BARRA DI NAVIGAZIONE DELL'EDITOR (20/11/2026): sotto la cornice, larga come la cornice e con gli stessi angoli -->
+    <nav id="barra-editor" aria-label="Azioni dell'editor">
         <!-- Torna alla Identity Console senza pubblicare: compare solo con un account -->
-        <button type="button" id="btn-mie-tag" onclick="tornaAMieTag()" aria-label="Torna alla Identity Console" style="display: none; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; background: rgba(0,0,0,0.85); padding: 12px 14px; border-radius: 30px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); color: #fff; font-family: inherit;">
-            <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
-            <span style="font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700;">Console</span>
+        <button type="button" id="btn-mie-tag" class="voce-barra" onclick="tornaAMieTag()" aria-label="Torna alla Identity Console" style="display: none;">
+            <i class="fas fa-chevron-left"></i><span>Console</span>
         </button>
-        <button type="button" id="btn-modifica" onclick="apriDrawer('drawer-master')" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; background: rgba(0,0,0,0.85); padding: 12px 14px; border-radius: 30px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(80, 200, 120, 0.4); color: #50C878; font-family: inherit;">
-            <i class="fas fa-pen" style="font-size: 0.8rem;"></i>
-            <span style="font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700;">Modifica</span>
+        <button type="button" id="btn-modifica" class="voce-barra voce-modifica" onclick="apriDrawer('drawer-master')">
+            <i class="fas fa-pen"></i><span>Modifica</span>
         </button>
-        <button type="button" id="btn-pubblica-barra" onclick="pubblicaDallaBarra()" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; background: #10b981; padding: 12px 14px; border-radius: 30px; border: none; color: #000; font-family: inherit; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-            <i class="fas fa-globe" style="font-size: 0.8rem;"></i>
-            <span id="testo-pubblica-barra" style="font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800;">Pubblica</span>
+        <button type="button" id="btn-pubblica-barra" class="voce-barra voce-pubblica" onclick="pubblicaDallaBarra()">
+            <i class="fas fa-globe"></i><span id="testo-pubblica-barra">Pubblica</span>
         </button>
-    </div>
+    </nav>
 
 <!-- ============================================================ -->
     <!-- I CASSETTI DELL'EDITOR (Nascosti dietro le quinte)           -->
@@ -191,7 +188,8 @@
         </div>
         
         <!-- BOTTONE PUBBLICA ANCORATO IN FONDO -->
-        <button class="btn-crea" onclick="gestisciAzioneMaster()" id="master-action-btn" style="background: #10b981; border: none; color: #000; flex-shrink: 0; padding: 18px; border-radius: 16px; margin-bottom: 5px;">
+        <!-- Nascosto (20/11/2026): si pubblica dalla barra fissa in basso, nell'anteprima -->
+        <button class="btn-crea" onclick="gestisciAzioneMaster()" id="master-action-btn" style="display: none; background: #10b981; border: none; color: #000; flex-shrink: 0; padding: 18px; border-radius: 16px; margin-bottom: 5px;">
             <i class="fas fa-globe" id="master-action-icon"></i> <span id="master-action-text">PUBBLICA ONLINE</span>
         </button>
     </div>
@@ -897,8 +895,8 @@
             </div>
             <input type="hidden" id="field-status-color" value="">
             <div style="position: relative;">
-                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">MESSAGGIO (Max 30 caratteri)</label>
-                <input type="text" id="field-status-text" placeholder="Seleziona uno stato..." maxlength="30" onblur="this.value = pulisciTesto(this.value)" oninput="aggiornaAnteprimaLive()" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
+                <label style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: block; letter-spacing: 1px;">MESSAGGIO (Max 80 caratteri)</label>
+                <input type="text" id="field-status-text" placeholder="Seleziona uno stato..." maxlength="80" onblur="this.value = pulisciTesto(this.value)" oninput="aggiornaAnteprimaLive()" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;">
             </div>
             <div id="status-action-toggle" onclick="toggleStatusAction()" style="font-size: 0.65rem; color: #d4af37; text-align: center; cursor: pointer; letter-spacing: 1px; margin-top: 5px; text-transform: uppercase;">
                 <i class="fas fa-plus-circle"></i> Aggiungi un'azione a questo stato
@@ -942,8 +940,8 @@
         </div>
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
             <div style="position: relative;">
-                <label style="font-size: 0.7rem; color: #e5c158; margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO DELL'ANNUNCIO (Max 40 caratteri)</label>
-                <input type="text" id="field-flash-text" placeholder="Es. -20% su tutto solo per oggi!" maxlength="40" style="width: 100%; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.3); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;" oninput="aggiornaAnteprimaLive()">
+                <label style="font-size: 0.7rem; color: #e5c158; margin-bottom: 4px; display: block; letter-spacing: 1px;">TESTO DELL'ANNUNCIO (Max 100 caratteri)</label>
+                <input type="text" id="field-flash-text" placeholder="Es. -20% su tutto solo per oggi!" maxlength="100" style="width: 100%; background: rgba(229, 193, 88, 0.05); border: 1px solid rgba(229, 193, 88, 0.3); color: #fff; padding: 14px 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none;" oninput="aggiornaAnteprimaLive()">
             </div>
             <div style="text-align: center; margin-top: 5px;">
                 <button type="button" onclick="spegniFlash()" style="background:transparent; border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:0.7rem; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">

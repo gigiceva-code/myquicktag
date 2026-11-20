@@ -99,7 +99,9 @@ await A.click('a[href="/edit.html?u=mariopizza"]'); await A.waitForURL(/edit/); 
 ok(await A.inputValue('#field-bio')==='La pizza di Mario.','dalla dashboard si apre l\'editor della tag giusta');
 ok(await A.isVisible('#barra-editor') && /console/i.test(await A.textContent('#btn-mie-tag')) && /modifica/i.test(await A.textContent('#btn-modifica')) && (await A.textContent('#testo-pubblica-barra')).trim()==='Pubblica','editor: barra fissa con Console, Modifica e Pubblica');
 await ev(A,"apriDrawer('drawer-bio')"); await A.fill('#field-bio','Pizza al taglio.'); await ev(A,"chiudiSenzaSalvare()");
-await A.click('#btn-pubblica-barra'); await A.waitForTimeout(1500);
+await A.click('#btn-pubblica-barra'); await A.waitForTimeout(600);
+ok(await A.isVisible('#drawer-salvataggio') && /SALVA IN DASHBOARD/.test(await A.textContent('#drawer-salvataggio')),'Pubblica: si sceglie tra "Pubblica adesso" e "Salva in dashboard"');
+await A.click("#drawer-salvataggio div[onclick=\"salvaEDirigi('pubblica')\"]"); await A.waitForTimeout(1500);
 d=await db(); ok(d.rows.find(r=>r.username_system==='mariopizza').bio==='Pizza al taglio.' && d.rows.find(r=>r.username_system==='barmario').bio==='Colazioni e aperitivi in piazza.','pubblicazione: cambia solo la tag modificata');
 for (const pg of ['analytics.html','contatti.html','profile.html','account.html']) { await A.goto(B+'/'+pg+'?u=barmario'); await A.waitForTimeout(1800); ok(!/accesso|dashboard/.test(A.url()),`${pg}: il proprietario entra`); }
 await shot(A,'07-profile-tag');
