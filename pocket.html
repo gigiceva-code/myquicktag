@@ -120,6 +120,11 @@
         .riga-attivita b { font-weight: 400; color: #fff; }
 
         /* INVITO: POCKET SULLA SCHERMATA HOME */
+        /* Appena salvata (?salvata=nome, 20/11/2026): conferma e spiegazione */
+        .salvata-box { flex-shrink: 0; border: 1px solid rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.06); border-radius: 16px; padding: 16px; margin-bottom: 18px; display: none; }
+        .salvata-box h2 { font-size: 0.9rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
+        .salvata-box p { font-size: 0.8rem; font-weight: 300; color: var(--text-sec); line-height: 1.6; }
+        .salvata-box a { display: inline-block; margin-top: 12px; color: #10b981; font-size: 0.8rem; font-weight: 600; text-decoration: none; }
         .invito-home { flex-shrink: 0; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 16px; padding: 16px; margin-bottom: 18px; display: none; }
         .invito-home h2 { font-size: 0.85rem; font-weight: 500; color: #fff; margin-bottom: 6px; }
         .invito-home p { font-size: 0.8rem; font-weight: 300; color: var(--text-sec); line-height: 1.6; }
@@ -148,6 +153,12 @@
             </div>
         </div>
 
+        <div class="salvata-box" id="salvata-box" role="status">
+            <h2 id="salvata-titolo"></h2>
+            <p id="salvata-testo"></p>
+            <a id="salvata-torna" href="/">‹ Torna alla tag</a>
+        </div>
+
         <div class="invito-home" id="invito-home" role="region" aria-label="Aggiungi il Pocket alla schermata Home">
             <h2>Ritrovalo con un clic</h2>
             <p id="invito-home-testo">Aggiungi il Pocket alla schermata Home: le tag che salvi saranno sempre a portata di mano.</p>
@@ -163,7 +174,7 @@
         <div class="empty-state" id="pocket-vuoto">
             <i class="far fa-bookmark"></i>
             <p>Il tuo Pocket<br>è vuoto</p>
-            <p style="text-transform: none; letter-spacing: 0.5px; margin-top: 14px; font-size: 0.8rem;">Premi SALVA su una tag per ritrovarla qui.</p>
+            <p style="text-transform: none; letter-spacing: 0.5px; margin-top: 14px; font-size: 0.8rem;">Su una tag apri il menu ⋯ e premi "Salva questa tag" per ritrovarla qui.</p>
         </div>
 
         <div class="bottom-bar">
@@ -179,12 +190,31 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         caricaPocket();
+        mostraAppenaSalvata();
         configuraRicerca();
         configuraInvitoHome();
         // "CHIUDI" torna alla tag da cui si arriva; aperto dalla schermata Home non ha dove tornare
         const daQuestoSito = document.referrer && document.referrer.indexOf(location.origin) === 0;
         if (!(history.length > 1 && daQuestoSito)) document.getElementById('btn-chiudi').style.display = 'none';
     });
+// Arrivo da "Salva questa tag" (tag-logic.js): conferma, dove la ritrova, ritorno alla tag
+function mostraAppenaSalvata() {
+        const p = new URLSearchParams(location.search);
+        const nome = String(p.get('salvata') || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
+        if (!nome) return;
+        let voce = null;
+        try { voce = (JSON.parse(localStorage.getItem('mqt_pocket') || '[]') || []).find(x => x.username === nome); } catch (e) {}
+        const mostrato = '@' + String((voce && voce.nome) || nome).replace(/^@+/, '');
+        const conAccount = !!(window.mqtSessione && mqtSessione.haAccount());
+        document.getElementById('salvata-titolo').textContent = (p.get('gia') ? mostrato + ' è già nel tuo Pocket' : mostrato + ' è nel tuo Pocket ✓');
+        document.getElementById('salvata-testo').textContent = conAccount
+            ? 'Le tag che salvi restano su questo telefono: le ritrovi qui e nella tua Identity Console, alla voce "Tag salvate".'
+            : 'Le tag che salvi restano su questo telefono, senza bisogno di registrarti. Le ritrovi qui, nel tuo Pocket: per riaprirlo con un clic aggiungilo alla schermata Home.';
+        document.getElementById('salvata-torna').href = '/u/' + nome;
+        document.getElementById('salvata-torna').textContent = '‹ Torna a ' + mostrato;
+        document.getElementById('salvata-box').style.display = 'block';
+        history.replaceState(null, '', location.pathname);
+    }
 function caricaPocket() {
         const contenitoreLista = document.getElementById('lista-pocket');
         const statoVuoto = document.getElementById('pocket-vuoto');

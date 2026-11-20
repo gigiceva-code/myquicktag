@@ -598,6 +598,11 @@ body[data-qr-theme="satin_rose"] { --theme-border: rgba(200, 150, 142, 0.8); }
     transition: opacity 0.6s ease;
 }
 .entrance-prompt span, .exit-prompt span { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: #86868b; }
+/* ESPLORA TAG più evidente (20/11/2026): scritta più chiara e un leggero invito al clic */
+.entrance-prompt span { color: #d1d1d6; font-size: 0.7rem; font-weight: 600; }
+.app-container.locked .entrance-prompt .mini-logo-wrapper { animation: mqtInvitoEsplora 2.6s ease-in-out infinite; }
+@keyframes mqtInvitoEsplora { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { .app-container.locked .entrance-prompt .mini-logo-wrapper { animation: none; } }
 
 .app-container.locked .entrance-prompt { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
 .app-container.unlocked .entrance-prompt { opacity: 0; pointer-events: none; transition-delay: 0s; }
@@ -860,3 +865,10 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
         fill: var(--theme-border, #d4af37);
     }
 }       
+
+/* @ DEL NOME (20/11/2026, richiesta del titolare): stesso colore e peso del nome, attaccata al nome.
+   Il prodotto è il @nome: la @ fa parte del nome, non è una decorazione. Vale per tutti gli stili. */
+#profile-content .username-display .at-symbol {
+    color: inherit !important; opacity: 1 !important; font-weight: inherit !important;
+    font-size: 1em !important; text-shadow: none !important; padding-right: 1px !important; margin-right: 0 !important; position: static !important;
+}

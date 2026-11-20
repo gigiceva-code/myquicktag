@@ -97,8 +97,9 @@ const el=await A.textContent('#elenco');
 ok(/bar mario/i.test(el) && /mariopizza|mario pizza/i.test(el),'dashboard: entrambe le tag');
 await A.click('a[href="/edit.html?u=mariopizza"]'); await A.waitForURL(/edit/); await A.waitForTimeout(2000);
 ok(await A.inputValue('#field-bio')==='La pizza di Mario.','dalla dashboard si apre l\'editor della tag giusta');
+ok(await A.isVisible('#barra-editor') && /console/i.test(await A.textContent('#btn-mie-tag')) && /modifica/i.test(await A.textContent('#btn-modifica')) && (await A.textContent('#testo-pubblica-barra')).trim()==='Pubblica','editor: barra fissa con Console, Modifica e Pubblica');
 await ev(A,"apriDrawer('drawer-bio')"); await A.fill('#field-bio','Pizza al taglio.'); await ev(A,"chiudiSenzaSalvare()");
-await ev(A,"apriDrawer('drawer-master')"); await ev(A,"gestisciAzioneMaster()"); await A.waitForTimeout(800); await ev(A,"salvaEDirigi('pubblica')"); await A.waitForTimeout(1500);
+await A.click('#btn-pubblica-barra'); await A.waitForTimeout(1500);
 d=await db(); ok(d.rows.find(r=>r.username_system==='mariopizza').bio==='Pizza al taglio.' && d.rows.find(r=>r.username_system==='barmario').bio==='Colazioni e aperitivi in piazza.','pubblicazione: cambia solo la tag modificata');
 for (const pg of ['analytics.html','contatti.html','profile.html','account.html']) { await A.goto(B+'/'+pg+'?u=barmario'); await A.waitForTimeout(1800); ok(!/accesso|dashboard/.test(A.url()),`${pg}: il proprietario entra`); }
 await shot(A,'07-profile-tag');
@@ -108,7 +109,17 @@ ok((await A.textContent('#testo-salva-top')).trim()==='GESTISCI','tag del titola
 await ev(A,"document.getElementById('btn-salva-pocket').click()"); await A.waitForURL(/dashboard/,{timeout:5000}).catch(()=>{});
 ok(/dashboard/.test(A.url()),'GESTISCI porta alla Identity Console');
 { const cV=await telefono(); const V=await cV.newPage(); await V.goto(B+'/u/barmario'); await V.waitForTimeout(2500);
-  ok((await V.textContent('#testo-salva-top')).trim()==='SALVA','un visitatore vede sempre SALVA'); await cV.close(); }
+  ok(!(await V.isVisible('#btn-salva-pocket')) && await V.isVisible('#btn-menu-top'),'un visitatore non vede GESTISCI/ACCEDI, vede il menu ⋯');
+  // Copertina cliccabile: il clic sul nome apre la tag come "ESPLORA TAG"
+  await V.click('#name-capsule-wrapper'); await V.waitForTimeout(800);
+  ok(await V.evaluate(()=>document.getElementById('profile-content').classList.contains('unlocked')),'clic sul nome: la tag si apre');
+  // Menu ⋯ → "Salva questa tag" → Pocket con la spiegazione e il ritorno alla tag
+  await V.click('#btn-menu-top'); await V.waitForTimeout(400);
+  ok(await V.isVisible('#menu-salva') && await V.isVisible('#menu-qr') && await V.isVisible('#menu-segnala'),'menu ⋯: Salva questa tag, Mostra il QR, Segnala');
+  await V.click('#menu-salva'); await V.waitForURL(/pocket/,{timeout:5000}).catch(()=>{}); await V.waitForTimeout(1200);
+  ok(/pocket\.html/.test(V.url()) && await V.isVisible('#salvata-box') && /nel tuo Pocket/.test(await V.textContent('#salvata-titolo')) && /senza bisogno di registrarti/.test(await V.textContent('#salvata-testo')) && (await V.getAttribute('#salvata-torna','href'))==='/u/barmario','Salva questa tag: si apre il Pocket con la spiegazione (senza account) e il ritorno alla tag');
+  ok((await V.evaluate(()=>JSON.parse(localStorage.getItem('mqt_pocket')||'[]').map(x=>x.username).join())).includes('barmario'),'la tag è nel Pocket del telefono');
+  await cV.close(); }
 // App installata (iPhone: niente accesso condiviso con Safari): chi non è entrato vede ACCEDI, che porta all'accesso e poi torna alla tag
 { const cI=await telefono(); await cI.addInitScript(()=>{ Object.defineProperty(navigator,'standalone',{get:()=>true}); });
   const I=await cI.newPage(); await I.goto(B+'/u/barmario'); await I.waitForTimeout(2500);

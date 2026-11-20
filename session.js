@@ -310,7 +310,7 @@
         brand.style.position = 'relative';
         const at = document.createElement('span');
         at.className = 'at-symbol';
-        at.style.cssText = 'position: absolute; right: 100%; padding-right: 4px; opacity: 0.4; font-weight: 300;';
+        // In linea con il nome (centrato insieme), stesso colore e peso (style.css, 20/11/2026)
         at.textContent = '@';
         const nome = document.createElement('span');
         nome.id = 'safe-username-span';
@@ -347,7 +347,7 @@
 
         // La parola più lunga deve stare su una riga, "@" compresa.
         const parolaLunga = testo.split(' ').reduce((a, b) => (b.length > a.length ? b : a), '');
-        const serve = (p) => larghezza(parolaLunga, stile, p) + larghezza('@', stile, p, 300) + 4;
+        const serve = (p) => larghezza(parolaLunga, stile, p) + larghezza('@', stile, p) + 1;
         while (px > MINIMO_PX && serve(px) > spazio) px -= 0.25;
         el.style.fontSize = px + 'px';
         if (serve(px) > spazio) el.style.overflowWrap = 'anywhere';

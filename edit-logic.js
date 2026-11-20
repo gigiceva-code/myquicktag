@@ -1,13 +1,16 @@
 
  let formModificato = false; // Il vero Dirty Flag
+ // Modifiche fatte in questa visita e non ancora pubblicate (non si azzera chiudendo un cassetto): serve a
+ // "‹ Console" per non perdere il lavoro senza avvisare (20/11/2026)
+ let modificheDaPubblicare = false;
 
         // FIX: Salva nel disco locale istantaneamente ad ogni tocco
-        document.addEventListener('input', () => { 
-            formModificato = true; 
+ document.addEventListener('input', () => { 
+            formModificato = true; if (!isLoadingDati) modificheDaPubblicare = true;
             if(typeof eseguiAutoSaveInvisibile === 'function') eseguiAutoSaveInvisibile(); 
         });
-        document.addEventListener('change', () => { 
-            formModificato = true; 
+ document.addEventListener('change', () => { 
+            formModificato = true; if (!isLoadingDati) modificheDaPubblicare = true;
             if(typeof eseguiAutoSaveInvisibile === 'function') eseguiAutoSaveInvisibile(); 
         });
         let ultimoSalvataggio = null; // Memoria del Dirty Flag
@@ -723,6 +726,12 @@
             return (bioVal !== "" || sitoVal !== "" || emailVal !== "" || tel1Val !== "" || haSocial);
         }
 
+        // BARRA FISSA (20/11/2026): "Pubblica" pubblica subito; per una tag in prenotazione porta all'attivazione
+        function pubblicaDallaBarra() {
+            if (statoUtente === 'attivo') salvaEDirigi('pubblica');
+            else gestisciAzioneMaster();
+        }
+
         // 3. IL TASTONE VERDE (Apre il bivio o manda in cassa)
         function gestisciAzioneMaster() {
             if (statoUtente === 'attivo') {
@@ -1121,8 +1130,11 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                 if (statoUtente === 'attivo') {
                     document.getElementById('master-action-text').innerText = "PUBBLICA ONLINE";
                 } else {
-                    document.getElementById('master-action-text').innerText = "COMPLETA TAG";
+                    document.getElementById('master-action-text').innerText = "COMPLETA E ATTIVA";
                 }
+                // Barra fissa in basso: "Pubblica" per una tag attiva, "Attiva" per la prima configurazione
+                const testoBarra = document.getElementById('testo-pubblica-barra');
+                if (testoBarra) testoBarra.innerText = statoUtente === 'attivo' ? 'Pubblica' : 'Attiva';
 
                 // 🚀 FORZA L'AGGIORNAMENTO GRAFICO (Evita blocchi se ci sono stati errori di rete)
                 if (typeof applicaTemaLive === "function") applicaTemaLive();
@@ -1811,7 +1823,7 @@ function gestisciVIPSwitch(checkbox) {
                     delayOnTouchOnly: true, 
                     onEnd: function () { 
                         // 🚀 FIX API: Avvisa il sistema che l'ordine è cambiato per far scattare il salvataggio
-                        formModificato = true; 
+ formModificato = true; if (!isLoadingDati) modificheDaPubblicare = true;
                         aggiornaAnteprimaLive(); 
                         eseguiAutoSaveInvisibile(); 
                     }
@@ -2228,7 +2240,7 @@ function mostraQrCassa() {
 // Le modifiche non salvate restano solo su questo telefono (bozza locale): uscendo da qui si scartano,
 // dopo una conferma, così al prossimo ingresso l'editor riparte dalla tag com'è davvero.
 function tornaAMieTag() {
-    if (formModificato && !confirm('Uscire senza salvare?\n\nLe modifiche fatte adesso andranno perse. Per tenerle usa EDITOR → Salva.')) return;
+    if ((formModificato || modificheDaPubblicare) && !confirm('Uscire senza pubblicare?\n\nLe modifiche fatte adesso andranno perse. Per tenerle premi Annulla e poi Pubblica.')) return;
     try { localStorage.removeItem('mqt_draft_full_' + NOME_SISTEMA); } catch (e) {}
     window.onbeforeunload = null;
     window.location.href = '/dashboard.html';
