@@ -388,3 +388,14 @@ input[type="password"], input:not([type]), textarea, select {
 @media (min-width: 1100px) {
     #reservation-badge { left: calc(50% - 225px - 205px + 8px) !important; }
 }
+
+/* Riquadro delle sezioni dell'anteprima (VETRINA, GALLERY…): stessa posizione e misura della cornice, così il
+   tasto INDIETRO/CHIUDI in fondo non finisce sotto la barra di navigazione (segnalato dal titolare, 21/11/2026) */
+#overlaySezione {
+    position: fixed !important;
+    top: calc(50% - 33px - env(safe-area-inset-bottom) / 2) !important; left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: calc(100% - 32px) !important; max-width: 410px !important;
+    height: calc(100svh - 32px - 66px - env(safe-area-inset-bottom)) !important; max-height: 780px !important;
+}
+@media (min-width: 1100px) { #overlaySezione { left: calc(50% - 225px) !important; } }
