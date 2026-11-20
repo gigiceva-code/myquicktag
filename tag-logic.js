@@ -747,6 +747,17 @@ function indirizzoWeb(url) {
     return 'https://' + url.replace(/^\/+/, '');
 }
 
+// Link esterno scritto a mano (bottone rapido, social, recensioni, video, shop): "www.sito.it" o "instagram.com/x"
+// diventano https://…; tel:, mailto:, sms: restano; javascript: e simili vengono scartati.
+function linkEsterno(url) {
+    url = String(url || '').trim();
+    if (!url) return '';
+    if (/^(https?:|mailto:|tel:|sms:)/i.test(url)) return url;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return '';
+    if (/^[\w.-]+\.[a-z]{2,}(\/|\?|#|$)/i.test(url.replace(/^\/+/, ''))) return 'https://' + url.replace(/^\/+/, '');
+    return url;
+}
+
 function renderizzaSitoWeb(url) {
     const casella = document.getElementById('casella-sito');
     if (!casella) return;
@@ -893,17 +904,18 @@ function eseguiQuickAction() {
     const url  = cacheDatiUtente.quick_action_url || '';
     if (!url) return;
 
-    // Logica pura: fa esattamente quello che gli dice l'editor, senza deviazioni
+    // Tipi dell'editor (edit.html → field-qa-tipo) più i vecchi nomi italiani. Prima "calling" e i link
+    // senza https:// finivano su una pagina 404 di myquicktag (20/11/2026).
+    const telefono = `tel:${url.replace(/[^\d+]/g, '')}`;
     const mappaProtocollo = {
         'whatsapp':  `https://wa.me/${url.replace(/\D/g,'')}`,
-        'chiamata':  `tel:${url}`,
-        'maps':      `https://maps.google.com/?q=${encodeURIComponent(url)}`,
-        'appuntamento': url,
-        'preventivo':   url,
-        'demo':         url
+        'calling':   telefono,
+        'chiamata':  telefono,
+        'maps':      /^https?:\/\//i.test(url) ? url : `https://maps.google.com/?q=${encodeURIComponent(url)}`
     };
-
-    const destinazione = mappaProtocollo[tipo] || url;
+    const destinazione = mappaProtocollo[tipo] || linkEsterno(url);
+    if (!destinazione) return;
+    if (/^tel:/i.test(destinazione)) { window.location.href = destinazione; return; }
     window.open(destinazione, '_blank', 'noopener noreferrer');
 }
 function scaricaVCF(vcf, fields) {
@@ -1366,7 +1378,7 @@ function apriSezione(tipo) {
                     link.href = "#";
                     link.onclick = (e) => apriVipVault(canale.vault, e);
                 } else {
-                    link.href = canale.url;
+                    link.href = linkEsterno(canale.url) || '#';
                     link.target = '_blank';
                     link.rel = 'noopener noreferrer';
                 }
@@ -1998,7 +2010,7 @@ function selezionaStelle(valore) {
     // LOGICA DI SMISTAMENTO (IL VERO SCUDO)
     // Regole di Google sulle recensioni: non si possono chiedere solo ai clienti soddisfatti ("review gating").
     // A chi dà 1-3 stelle si propone PRIMA il contatto diretto per rimediare, ma il link pubblico resta sempre.
-    const linkPubblicoScudo = cacheDatiUtente.review_url || '';
+    const linkPubblicoScudo = linkEsterno(cacheDatiUtente.review_url);
     if(valore <= 3) {
         // RECENSIONE NEGATIVA -> prima il contatto diretto, poi (più discreto) la recensione pubblica
         const contatto = cacheDatiUtente.review_contact || '';
@@ -2026,7 +2038,7 @@ function selezionaStelle(valore) {
         `;
     } else {
         // RECENSIONE POSITIVA (4 o 5) -> Via libera a Google
-        const linkPubblico = cacheDatiUtente.review_url || '#';
+        const linkPubblico = linkEsterno(cacheDatiUtente.review_url) || '#';
         actionContainer.innerHTML = `
             <div style="font-size: 0.85rem; color: #10b981; text-align: center; margin-bottom: 15px; font-weight: 400; line-height: 1.5;">Fantastico! Grazie mille.<br>Se ti va, condividi la tua esperienza pubblicamente.</div>
             <a href="${linkPubblico}" target="_blank" rel="noopener noreferrer" style="width: 100%; padding: 16px; background: #10b981; border: none; border-radius: 12px; color: #000; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); transition: transform 0.2s;">
@@ -2073,7 +2085,7 @@ tracciaClickSezione('SMART VIDEO');
     // Controlla se il professionista ha impostato un bottone CTA
     if (cacheDatiUtente.video_cta_text && cacheDatiUtente.video_cta_url) {
         ctaBtn.innerText = cacheDatiUtente.video_cta_text;
-        ctaBtn.href = cacheDatiUtente.video_cta_url;
+        ctaBtn.href = linkEsterno(cacheDatiUtente.video_cta_url) || '#';
         ctaContainer.style.display = 'block';
     } else {
         ctaContainer.style.display = 'none';
@@ -2194,7 +2206,7 @@ function controllaAcquistoIstantaneo() {
 
     const titolo = cacheDatiUtente.shop_titolo || "Offerta Esclusiva";
     const prezzo = cacheDatiUtente.shop_prezzo || "Acquista Ora";
-    const link = cacheDatiUtente.shop_link || "#";
+    const link = linkEsterno(cacheDatiUtente.shop_link) || "#";
 
     overlay.innerHTML = `
         <i class="fas fa-bolt" style="color: #e5c158; font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(229, 193, 88, 0.5));"></i>
