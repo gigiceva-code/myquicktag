@@ -20,7 +20,7 @@ export function normalizzaStile(valore) {
 
 // Campi che il titolare può svuotare (18/11/2026): un testo vuoto inviato apposta li cancella (null),
 // così "Elimina" nell'editor funziona davvero. Gli altri campi vuoti si ignorano come prima.
-const CAMPI_SVUOTABILI = ['bio', 'cv', 'email', 'sito_web', 'quick_action_label', 'quick_action_url', 'avatar_url',
+const CAMPI_SVUOTABILI = ['sottotitolo', 'bio', 'cv', 'email', 'sito_web', 'quick_action_label', 'quick_action_url', 'avatar_url',
   'live_status_color', 'live_status_text', 'live_status_micro', 'live_status_action_label', 'live_status_action_url',
   'flash_text', 'flash_micro', 'flash_expiry', 'pdf_label', 'pdf_url',
   'quickpass_premio_a', 'quickpass_premio_b', 'quickpass_limite', 'quickpass_scadenza', 'quickpass_contatto',
@@ -33,7 +33,7 @@ function estraiCampi(sorgente) {
 
   // --- FIX DATI 2: Aggiunto "quick_action_copertina" alla lista ---
   const nativeFields = [
-    "username_display", "bio", "cv", "digital_style", "digital_layout", "stato",
+    "username_display", "sottotitolo", "bio", "cv", "digital_style", "digital_layout", "stato",
     "email", "modulo_vcf", "sito_web", 
     "quick_action_tipo", "quick_action_label", "quick_action_url", "quick_action_copertina", "avatar_url",
     "live_status_color", "live_status_text", "live_status_micro", "live_status_action_type", "live_status_action_label", "live_status_action_url",
@@ -72,6 +72,7 @@ function estraiCampi(sorgente) {
           // Quick Pass: dove si usa il pass (vincolo del database); un valore diverso si ignora
           if (f === "quickpass_modo" && !["negozio", "online", "entrambi"].includes(valueClean)) return;
           if (f === "quickpass_contatto") valueClean = valueClean.slice(0, 120);
+          if (f === "sottotitolo") valueClean = valueClean.replace(/\s+/g, " ").slice(0, 60);
           
           if (f === "quickpass_limite" || f === "quickpass_amici_per_premio") {
               const parsed = parseInt(valueClean, 10);

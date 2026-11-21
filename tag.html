@@ -85,6 +85,13 @@
                     </div>
                 </div>
             </div>
+            <!-- COPERTINA CHE CONVERTE (21/11/2026): chi sei in una riga, l'azione principale e "Salva in rubrica",
+                 visibili appena si apre la tag. Spariscono quando si entra nelle stanze -->
+            <div id="copertina-azioni" class="copertina-azioni" hidden>
+                <p id="copertina-sottotitolo" hidden></p>
+                <button type="button" id="copertina-cta" hidden onclick="event.stopPropagation(); eseguiQuickAction()"></button>
+                <button type="button" id="copertina-rubrica" hidden onclick="event.stopPropagation(); salvaRubricaCopertina()"><i class="fas fa-address-book" aria-hidden="true"></i> Salva in rubrica</button>
+            </div>
         </div>
         
        
@@ -119,8 +126,8 @@
         <button class="room-link" id="room-media" onclick="apriMacroArea('media')" style="display:none;">VETRINA</button>
         <button class="room-link" id="room-network" onclick="apriMacroArea('network')" style="display:none;">NETWORK</button>
         
-        <!-- QUINTA STANZA: ACTION CENTER -->
-        <button class="room-link" id="room-action-center" onclick="apriMacroArea('action_center')" style="display:none; color: var(--theme-border, #d4af37) !important; font-weight: 500 !important; letter-spacing: 4px !important;">ACTION CENTER</button>
+        <!-- QUINTA STANZA: ACTION CENTER (per i visitatori si chiama PER TE, 21/11/2026) -->
+        <button class="room-link" id="room-action-center" onclick="apriMacroArea('action_center')" style="display:none; color: var(--theme-border, #d4af37) !important; font-weight: 500 !important; letter-spacing: 4px !important;">PER TE</button>
         
         <!-- TASTO DI RITORNO HOME -->
         <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTag()">

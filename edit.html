@@ -46,6 +46,12 @@
                     </div>
                 </div>
             </div>
+            <!-- COPERTINA CHE CONVERTE (21/11/2026): come sulla tag pubblica -->
+            <div id="copertina-azioni" class="copertina-azioni" hidden>
+                <p id="copertina-sottotitolo" hidden onclick="event.stopPropagation(); apriDrawer('drawer-identita')"></p>
+                <button type="button" id="copertina-cta" hidden onclick="event.stopPropagation(); apriDrawer('drawer-quick')"></button>
+                <button type="button" id="copertina-rubrica" hidden onclick="event.stopPropagation(); apriDrawer('drawer-contatti')"><i class="fas fa-address-book" aria-hidden="true"></i> Salva in rubrica</button>
+            </div>
             
         </div> <!-- FINE DEL MONOLITH -->
         
@@ -72,7 +78,7 @@
             <button class="room-link" id="room-network" onclick="apriDrawer('view-network')">NETWORK</button>
             
             <!-- QUINTA STANZA: ACTION CENTER -->
-            <button class="room-link" id="room-action-center" onclick="apriDrawer('view-action')" style="color: var(--theme-border, #d4af37) !important; font-weight: 500 !important;">ACTION CENTER</button>
+            <button class="room-link" id="room-action-center" onclick="apriDrawer('view-action')" style="color: var(--theme-border, #d4af37) !important; font-weight: 500 !important;">PER TE</button>
         
             <!-- TASTO DI RITORNO HOME -->
             <div id="exit-prompt" class="exit-prompt room-link" onclick="bloccaTagPreview()">
@@ -171,7 +177,7 @@
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-action')">
                     <i class="fas fa-rocket pillar-icon"></i><span class="pillar-text">ACTION CENTER</span>
                 </div>
-                <div class="info-click-area" style="padding: 10px; cursor: pointer;" onclick="mostraInsight('ACTION CENTER', '<b>Dove i visitatori diventano clienti.</b><br><br>Azione Rapida, Live Status, QuickGift, MQT Flash e Acquisto Istantaneo: gli strumenti che trasformano una visita in una chiamata, una prenotazione o un acquisto.', event)">
+                <div class="info-click-area" style="padding: 10px; cursor: pointer;" onclick="mostraInsight('ACTION CENTER', '<b>Dove i visitatori diventano clienti.</b><br><br>Azione Rapida, Live Status, QuickGift, Annuncio flash e Offerta a tempo: gli strumenti che trasformano una visita in una chiamata, una prenotazione o un acquisto.<br><br>Sulla tua tag i visitatori la vedono come <b>PER TE</b>: un invito chiaro, che si clicca volentieri.', event)">
                     <div class="luxury-info-icon">i</div>
                 </div>
             </div>
@@ -382,6 +388,7 @@
             <div class="header-title" style="font-weight: 400; color: #10b981;">ACTION CENTER</div>
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
+        <p style="margin: -8px 0 16px; text-align: center; font-size: 0.65rem; color: rgba(255,255,255,0.45); letter-spacing: 0.5px;">Sulla tua tag i visitatori la vedono come <b style="color: rgba(255,255,255,0.75);">PER TE</b></p>
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px;">
             <div class="edit-menu-item" style="padding-right: 15px !important;">
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('drawer-quick')">
@@ -473,6 +480,9 @@
                 <span id="label-nome-sistema" style="color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px; word-break: break-word;">@...</span>
             </div>
             <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.9rem;">
+            <label for="field-sottotitolo" style="font-size: 0.6rem; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; text-align: left;">Riga sotto il nome · facoltativa</label>
+            <input type="text" id="field-sottotitolo" maxlength="60" placeholder="Es. Pizzeria napoletana · Torino" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.9rem;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: left; margin-top: -6px; line-height: 1.5;">Chi sei e dove, in poche parole. Compare in copertina e nell'anteprima quando condividi la tag.</div>
         </div>
         <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME E LOGO</button>
     </div>
@@ -847,7 +857,7 @@
                     <span style="font-size: 0.8rem; color: #10b981; font-weight: 700; letter-spacing: 1px;">FISSA IN COPERTINA</span>
                     <span style="font-size: 0.6rem; color: rgba(255,255,255,0.5); margin-top: 4px;">Mostra il bottone fuori dalle stanze</span>
                 </div>
-                <input type="checkbox" id="input-qa-copertina" style="accent-color: #10b981; width: 20px; height: 20px; cursor: pointer;" onchange="aggiornaAnteprimaLive()">
+                <input type="checkbox" id="input-qa-copertina" checked style="accent-color: #10b981; width: 20px; height: 20px; cursor: pointer;" onchange="aggiornaAnteprimaLive()">
             </div>
 
             <div style="position: relative;" class="premium-field-container">

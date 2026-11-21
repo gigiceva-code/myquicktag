@@ -54,6 +54,35 @@
 
       // Aggiorna fisicamente il DOM della pagina simulando il design finale
        // Aggiorna fisicamente il DOM della pagina simulando il design finale
+        // COPERTINA CHE CONVERTE (21/11/2026): riga sotto il nome, azione fissata in copertina, "Salva in rubrica"
+        function aggiornaCopertinaAnteprima() {
+            const box = document.getElementById('copertina-azioni');
+            if (!box) return;
+            const val = id => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
+            const sotto = val('field-sottotitolo');
+            const elSotto = document.getElementById('copertina-sottotitolo');
+            elSotto.textContent = sotto; elSotto.hidden = !sotto;
+
+            const cta = document.getElementById('copertina-cta');
+            const fissa = document.getElementById('input-qa-copertina') && document.getElementById('input-qa-copertina').checked;
+            const haCta = !!(fissa && val('field-qa-label') && val('field-qa-url'));
+            cta.textContent = '';
+            if (haCta) {
+                const icone = { whatsapp: 'fab fa-whatsapp', calling: 'fas fa-phone-alt', email: 'far fa-envelope', maps: 'fas fa-map-marker-alt', appointment: 'far fa-calendar-alt', quote: 'fas fa-file-signature', link: 'fas fa-external-link-alt' };
+                const i = document.createElement('i'); i.className = icone[val('field-qa-tipo')] || 'fas fa-bolt';
+                const t = document.createElement('span'); t.textContent = val('field-qa-label');
+                cta.append(i, t);
+            }
+            cta.hidden = !haCta;
+
+            const haRubrica = !!(val('field-tel1') || val('field-tel2') || val('field-email'));
+            document.getElementById('copertina-rubrica').hidden = !haRubrica;
+
+            box.hidden = !(sotto || haCta || haRubrica);
+            const container = document.getElementById('profile-content');
+            if (container) container.classList.toggle('con-copertina', haCta || haRubrica);
+        }
+
         function aggiornaAnteprimaLive() {
             const previewCopertina = document.getElementById('preview-copertina');
             const roomIdentity = document.getElementById('room-identity');
@@ -66,6 +95,7 @@
 
             // Svuota la copertina
             previewCopertina.innerHTML = '';
+            aggiornaCopertinaAnteprima();
             
             // --- 1. ZONA COPERTINA (Design Pillole Luxury) ---
             const statusColor = document.getElementById('field-status-color') ? document.getElementById('field-status-color').value : "";
@@ -99,11 +129,7 @@
             if (qaInput && qaInput.value.trim() !== "") {
                 const testoScelto = qaInput.value.trim().toUpperCase();
                 if (qaCopertina) {
-                    previewCopertina.innerHTML += `
-                    <div class="feature-pill" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);" onclick="apriDrawer('drawer-quick')">
-                        <i class="fas fa-rocket" style="color: #10b981; font-size: 0.8rem;"></i>
-                        <span style="color: #10b981; font-weight: 700;">${testoScelto}</span>
-                    </div>`;
+                    // In copertina: lo mostra aggiornaCopertinaAnteprima(), come sulla tag pubblica
                 } else {
                     hasActionInRoom = true;
                 }
@@ -218,7 +244,7 @@
                 }
             }
             else if(area === 'action_center') {
-                titolo.textContent = 'ACTION CENTER';
+                titolo.textContent = 'PER TE';
                 const qaInput = document.getElementById('field-qa-label');
                 const qaCopertina = document.getElementById('input-qa-copertina') && document.getElementById('input-qa-copertina').checked;
                 if(qaInput && qaInput.value.trim() !== "" && !qaCopertina) {
@@ -645,6 +671,7 @@
                 username_system: NOME_SISTEMA, 
                 username_display: displayVal ? '@' + displayVal.toUpperCase() : '@' + NOME_SISTEMA.toUpperCase(), 
                 digital_style: styleVal, digital_layout: layoutVal, 
+                sottotitolo: document.getElementById('field-sottotitolo')?.value.trim() || "",
                 bio: document.getElementById('field-bio')?.value.trim() || "", 
                 sito_web: document.getElementById('field-sito')?.value.trim() || "", 
                 email: document.getElementById('field-email')?.value.trim() || "",
@@ -966,6 +993,7 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                         formattaBadge(nomeDaMostrare);
                     }
 
+                    if (f.sottotitolo && document.getElementById('field-sottotitolo')) document.getElementById('field-sottotitolo').value = f.sottotitolo;
                     if (f.bio && document.getElementById('field-bio')) document.getElementById('field-bio').value = f.bio;
                     if (f.sito_web && document.getElementById('field-sito')) document.getElementById('field-sito').value = f.sito_web;
                     if (f.email && document.getElementById('field-email')) document.getElementById('field-email').value = f.email;
@@ -973,7 +1001,7 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                     if (f.quick_action_tipo && document.getElementById('field-qa-tipo')) document.getElementById('field-qa-tipo').value = f.quick_action_tipo;
                     if (f.quick_action_label && document.getElementById('field-qa-label')) document.getElementById('field-qa-label').value = f.quick_action_label;
                     if (f.quick_action_url && document.getElementById('field-qa-url')) document.getElementById('field-qa-url').value = f.quick_action_url;
-                    if (document.getElementById('input-qa-copertina')) document.getElementById('input-qa-copertina').checked = (f.quick_action_copertina === 'true');
+                    if (document.getElementById('input-qa-copertina')) document.getElementById('input-qa-copertina').checked = (f.quick_action_copertina === 'true' || !f.quick_action_url); // mai configurata: in copertina di partenza (21/11/2026)
 
                     if (f.live_status_color) selezionaStatus(f.live_status_color);
                     if (f.live_status_text && document.getElementById('field-status-text')) document.getElementById('field-status-text').value = f.live_status_text;
@@ -2348,7 +2376,9 @@ document.addEventListener('input', e => {
     const id = e.target && e.target.id;
     if (id === 'field-qp-premio-a' || id === 'field-qp-premio-b') qpFrase();
     if (id === 'field-qp-limite') qpSoglie();
+    if (['field-sottotitolo', 'field-qa-label', 'field-qa-url', 'field-tel1', 'field-tel2', 'field-email'].includes(id)) aggiornaCopertinaAnteprima();
 });
+document.addEventListener('change', e => { if (e.target && e.target.id === 'field-qa-tipo') aggiornaCopertinaAnteprima(); });
 
 document.addEventListener('click', e => {
     const modo = e.target.closest && e.target.closest('#qp-modi .qp-modo');
