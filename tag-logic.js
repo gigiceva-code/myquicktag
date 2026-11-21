@@ -992,7 +992,7 @@ function apriMacroArea(area, skipHistory = false) {
 
     if (area === 'identity') {
         titolo.textContent = 'IDENTITY';
-        sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('qr')"><i class="fas fa-qrcode" style="font-size:1.2rem; width:25px; color:var(--accent-gold);"></i> <span style="flex:1; text-align:left;">ACCESS TAG</span></button>`;
+        sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('qr')"><i class="fas fa-qrcode" style="font-size:1.2rem; width:25px; color:var(--accent-gold);"></i> <span style="flex:1; text-align:left;">IL MIO QR</span></button>`;
         if (cacheDatiUtente.bio) {
             sottomenuHTML += `<button class="btn-social cascade-item" onclick="apriSezione('bio')"><i class="fas fa-pen-nib" style="font-size:1.2rem; width:25px; color:#fff;"></i> <span style="flex:1; text-align:left;">BIOGRAFIA</span></button>`;
         }
@@ -1174,7 +1174,7 @@ function apriSezione(tipo) {
     document.getElementById('icona-chiudi').className = 'fas fa-chevron-left';
 
     if (tipo === 'qr') {
-        titolo.textContent = 'ACCESS TAG';
+        titolo.textContent = 'IL MIO QR';
         // Tag non ancora attivata (checkout non completato): niente QR reale, come nell'editor
         if (!tagAttiva()) {
             corpo.innerHTML = QR_SIMULATO_HTML;
@@ -1214,7 +1214,7 @@ function apriSezione(tipo) {
         return;
     }
     if (tipo === 'flash') {
-        titolo.textContent = 'MQT FLASH';
+        titolo.textContent = 'ANNUNCIO FLASH';
         corpo.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px; text-align:center;">
                 <i class="fas fa-bolt" style="font-size: 3rem; color: #e5c158; margin-bottom: 10px;"></i>

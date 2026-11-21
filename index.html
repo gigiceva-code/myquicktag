@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>myquicktag - Instant Digital Identity</title>
+    <title>myquicktag · Il tuo piccolo sito sul telefono, in un @nome</title>
     
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23000000'/%3E%3Ccircle cx='50' cy='50' r='35' stroke='%2350C878' stroke-width='8' fill='none'/%3E%3Cline x1='72' y1='72' x2='90' y2='90' stroke='%2350C878' stroke-width='8' stroke-linecap='round'/%3E%3Ctext x='50' y='47' font-family='sans-serif' font-size='44' font-weight='bold' fill='%23ffffff' text-anchor='middle' dominant-baseline='central'%3E@%3C/text%3E%3C/svg%3E">
-    <meta name="description" content="Il tuo Tag. Il tuo spazio digitale. Sincronizza social, contatti e servizi in un unico @nome con il QR dinamico di myquicktag.">
-    <meta name="keywords" content="digital identity, biglietto da visita digitale, QR code dinamico, link in bio, smart tag, ecosistema digitale">
+    <meta name="description" content="Non una lista di link: un vero piccolo sito tuo, con contatti, vetrina, offerte e recensioni. Si apre con un link o un QR, senza app. Scopri se il tuo @nome è libero.">
+    <meta name="keywords" content="biglietto da visita digitale, mini sito, QR code, link in bio, pagina per attività, myquicktag">
     <meta name="author" content="myquicktag">
     <meta name="robots" content="index, follow">
 
@@ -17,8 +17,8 @@
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://myquicktag.it/">
-    <meta property="og:title" content="myquicktag | L'Evoluzione dell'Identità Digitale">
-    <meta property="og:description" content="Tutto il tuo ecosistema digitale in un solo clic. Verifica la disponibilità e prenota ora il tuo @nome.">
+    <meta property="og:title" content="myquicktag · Il tuo piccolo sito, in un solo @nome">
+    <meta property="og:description" content="Contatti, vetrina, offerte e recensioni in un piccolo sito elegante che si apre con un link o un QR. Scopri se il tuo @nome è libero.">
     <meta property="og:image" content="https://myquicktag.it/icons/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://myquicktag.it/">
     <meta name="twitter:title" content="myquicktag | Premium Digital Tag">
-    <meta name="twitter:description" content="Tutto il tuo ecosistema digitale in un solo clic. Verifica la disponibilità e prenota ora il tuo @nome.">
+    <meta name="twitter:description" content="Contatti, vetrina, offerte e recensioni in un piccolo sito elegante che si apre con un link o un QR. Scopri se il tuo @nome è libero.">
     <meta name="twitter:image" content="https://myquicktag.it/icons/og-image.png">
 
     <!-- La home non è installabile come app: ogni app è la tag di un utente (vedi tag.html) -->
@@ -190,6 +190,15 @@
     width: 18px;
 }
     
+
+    /* Esempio e 3 passi sotto la ricerca (audit 21/11/2026) */
+    #link-esempio { margin-top: 22px; color: #50C878; font-size: 14px; font-weight: 600; text-decoration: none; letter-spacing: 0.3px; border-bottom: 1px solid rgba(80,200,120,0.35); padding-bottom: 2px; }
+    #link-esempio:hover { border-bottom-color: #50C878; }
+    #tre-passi { list-style: none; margin: 30px 0 0; padding: 0; display: flex; gap: 10px; justify-content: center; width: 100%; max-width: 480px; }
+    #tre-passi li { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.02); }
+    #tre-passi b { width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(80,200,120,0.5); color: #50C878; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+    #tre-passi span { color: #cfcfcf; font-size: 12px; line-height: 1.35; text-align: center; }
+    @media (min-width: 1024px) { #tre-passi { justify-content: flex-start; } #link-esempio { align-self: flex-start; } }
 </style>
     </head>
 <body>
@@ -229,26 +238,26 @@
             <div id="hero-testo" style="width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 2;">
                 
                 <h1 class="reveal-item" style="font-size: 36px; font-weight: 300; line-height: 1.2; color: #ffffff; margin: 0 0 20px 0; letter-spacing: -0.5px;">
-                    Il tuo spazio assoluto,<br><span style="font-weight: 700;">senza compromessi.</span>
+                    Il tuo piccolo sito,<br><span style="font-weight: 700;">in un solo @nome.</span>
                 </h1>
                 
                 <p class="reveal-item delay-1" style="color: #A0A0A0; font-size: 16px; font-weight: 300; line-height: 1.6; margin: 0 0 35px 0; max-width: 550px;">
-                    Il design incontra l'immediatezza. Nessuna app da scaricare, nessuna barriera. Il tuo portale personale, sempre online con un solo clic.
+                    Non una lista di link: una vera pagina tua, con contatti, vetrina, offerte e recensioni. Si apre con un link o un QR sul telefono di chiunque, e la crei in un minuto dal tuo.
                 </p> 
 
                 <!-- SPUNTE VERDI (Allineate orizzontalmente su desktop, a cascata su mobile) -->
                 <div class="reveal-item delay-1" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 50px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Si apre senza scaricare app</span>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Pronta in un minuto</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">@nome esclusivo</span>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Si apre senza scaricare app</span>
                     </div> 
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Aggiornamenti in tempo reale</span>
+                        <span style="color: #ffffff; font-size: 14px; font-weight: 400;">Il tuo @nome, solo tuo</span>
                     </div>
                 </div>
 
@@ -275,6 +284,14 @@
                     <p style="margin: 0; font-size: 11px; color: #ffffff; font-weight: 500; letter-spacing: 0.5px;">Tre mesi di accesso completo, nessuna carta richiesta.</p>
                 </div>
 
+                <!-- ESEMPIO E 3 PASSI (audit 21/11/2026): chi arriva capisce subito cosa ottiene e come -->
+                <a id="link-esempio" class="reveal-item delay-2" href="/u/myquicktag" target="_blank" rel="noopener">Guarda una tag dal vivo <span aria-hidden="true">→</span></a>
+                <ol id="tre-passi" class="reveal-item delay-2" aria-label="Come funziona">
+                    <li><b>1</b><span>Scegli il tuo @nome</span></li>
+                    <li><b>2</b><span>Personalizzala dal telefono</span></li>
+                    <li><b>3</b><span>Condividi link e QR</span></li>
+                </ol>
+
             </div>
 
             <!-- ANTEPRIMA DI UNA TAG (solo tablet in orizzontale e computer, 21/11/2026): chi arriva dal computer vede il prodotto -->
@@ -293,10 +310,10 @@
                 <!-- INTESTAZIONE SEZIONE -->
                 <div style="text-align: center; max-width: 550px;">
                     <p style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;">
-                        PROGETTATO PER IL BUSINESS
+                        PER CHI LAVORA
                     </p>
                     <h2 style="font-size: 28px; font-weight: 300; line-height: 1.25; color: #ffffff; margin: 0; letter-spacing: -0.5px;">
-                        Un unico strumento.<br><span style="font-weight: 700;">Infinita flessibilità.</span>
+                        Per ogni mestiere,<br><span style="font-weight: 700;">la tag che lavora per te.</span>
                     </h2>
                 </div>
 
@@ -308,7 +325,7 @@
                     </button>
                     
                     <button class="target-tab" onclick="switchTarget('local', this, 2)" style="flex: 1 0 auto; padding: 12px 18px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; color: #888888; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
-                        Attività Locali & Retail
+                        Negozi & Locali
                     </button>
                     
                     <button class="target-tab" onclick="switchTarget('creator', this, 3)" style="flex: 1 0 auto; padding: 12px 18px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; color: #888888; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; transition: all 0.25s ease; white-space: nowrap;">
@@ -331,19 +348,19 @@
                     <div id="content-pro" class="target-content" style="display: block;">
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                             <span style="display: inline-block; width: 6px; height: 6px; background: #50C878; border-radius: 50%; box-shadow: 0 0 8px #50C878;"></span>
-                            <span style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Corporate & B2B Standard</span>
+                            <span style="color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Studi e aziende</span>
                         </div>
                         <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; letter-spacing: -0.3px;">
-                            Digitalizzazione dei contatti aziendali
+                            Il biglietto da visita che non finisce mai
                         </h3>
                         <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300; margin: 0 0 25px 0;">
-                            Elimina la carta. Permetti a clienti e partner di salvare la tua scheda VCF completa in rubrica con una semplice scansione del QR. Integra cataloghi PDF, link LinkedIn ed email istituzionali.
+                            Basta carta. Chi inquadra il tuo QR salva i tuoi contatti in rubrica con un clic, scarica brochure e listini in PDF e ti scrive su WhatsApp o via email.
                         </p>
                         
                         <div style="display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Rubrica VCF nativa</span>
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Documenti e Brochure PDF</span>
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Dominio @nome riservato</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Contatto da salvare in rubrica</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Brochure e listini PDF</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Il tuo @nome riservato</span>
                         </div>
                     </div>
 
@@ -351,19 +368,19 @@
                     <div id="content-local" class="target-content" style="display: none;">
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                             <span style="display: inline-block; width: 6px; height: 6px; background: #e5c158; border-radius: 50%; box-shadow: 0 0 8px #e5c158;"></span>
-                            <span style="color: #e5c158; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Retail & Hospitality</span>
+                            <span style="color: #e5c158; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Negozi, bar e ristoranti</span>
                         </div>
                         <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; letter-spacing: -0.3px;">
-                            Punto di contatto fisico-digitale
+                            Il tuo locale, sul telefono dei clienti
                         </h3>
                         <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300; margin: 0 0 25px 0;">
-                            Pensato per B&B, ristoranti e strutture fisiche. Esponi il QR sul bancone o sui tavoli: i visitatori accedono al menu, lanciano la navigazione Maps o usufruiscono di promozioni flash istantanee.
+                            Pensata per B&B, ristoranti, negozi e saloni. Metti il QR sul bancone o sui tavoli: i clienti vedono menu e servizi, ti trovano su Maps, prenotano e scoprono le offerte del giorno.
                         </p>
 
                         <div style="display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Modulo Promo Flash</span>
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Indicazioni Maps & Booking</span>
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Azione Rapida configurabile</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Annuncio flash del giorno</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Indicazioni Maps e prenotazioni</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Bottone principale a tua scelta</span>
                         </div>
                     </div>
 
@@ -371,19 +388,19 @@
                     <div id="content-creator" class="target-content" style="display: none;">
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                             <span style="display: inline-block; width: 6px; height: 6px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 8px #3b82f6;"></span>
-                            <span style="color: #3b82f6; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Media & Personal Brand</span>
+                            <span style="color: #3b82f6; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Creator e personal brand</span>
                         </div>
                         <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; letter-spacing: -0.3px;">
-                            L'hub unico per la tua community
+                            Tutto il tuo mondo, in un posto solo
                         </h3>
                         <p style="color: #A0A0A0; font-size: 14px; line-height: 1.6; font-weight: 300; margin: 0 0 25px 0;">
-                            Centralizza la tua presenza online. Raggruppa tutti i canali social, condividi gallerie fotografiche ad alta risoluzione e sfrutta la sezione VIP Vault protetta da PIN per contenuti riservati.
+                            Riunisci tutti i tuoi social, mostra le foto più belle in alta qualità e tieni i contenuti speciali in un'area riservata protetta da PIN, solo per chi vuoi tu.
                         </p>
 
                         <div style="display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Protezione VIP Vault (PIN)</span>
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Galleria Media dedicata</span>
-                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Link social unificati</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Area riservata con PIN</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Galleria foto dedicata</span>
+                            <span style="color: #ffffff; font-size: 12px; font-weight: 400; opacity: 0.8;">✓ Tutti i social insieme</span>
                         </div>
                     </div>
 
@@ -442,11 +459,11 @@
 
             <div class="reveal-item" style="text-align: center; padding: 0 20px;">
                 <p style="color: #50C878; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px;">
-                    POTENZA ILLIMITATA
+                    TUTTO IN UNA TAG
                 </p>
                 <h2 style="font-size: 24px; font-weight: 300; line-height: 1.3; color: #ffffff; max-width: 320px; margin: 0 auto; letter-spacing: 0.5px;">
-                    Un ecosistema d'élite con<br>
-                    <span style="font-weight: 800;">un solo clic.</span>
+                    Molto più di un link.<br>
+                    <span style="font-weight: 800;">Un vero piccolo sito.</span>
                 </h2>
             </div>
               
@@ -456,26 +473,26 @@
 
                 <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
                     <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">✨</div>
-                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Presence</h3>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Farsi trovare</h3>
                     <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
-                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Espandi la tua presenza.</p>
-                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Sincronizza social, contatti e siti web in un unico link perfetto.</p>
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Ovunque ti cerchino.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Contatti, social, sito e indirizzo in una sola pagina che si apre con un clic.</p>
                 </div>
 
                 <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
                     <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">📱</div>
-                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Showcase</h3>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Mostrare il meglio</h3>
                     <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
                     <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Presenta il meglio di te.</p>
-                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Mostra servizi e catalogo ai tuoi clienti con un'eleganza assoluta.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Servizi, prezzi, foto e catalogo presentati con un'eleganza che si nota.</p>
                 </div>
 
                 <div class="glass-panel" style="width: 280px; height: 320px; scroll-snap-align: center; flex-shrink: 0; border-radius: 16px; padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
                     <div class="emoji-luxury" style="margin-bottom: 25px; font-size: 32px;">⭐</div>
-                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Digital Reputation</h3>
+                    <h3 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Farsi scegliere</h3>
                     <div style="width: 30px; height: 2px; background: #50C878; margin: 0 auto 20px auto;"></div>
-                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Consolida la tua autorità.</p>
-                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Raccogli feedback reali e aumenta la tua credibilità in tempo reale.</p>
+                    <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">La fiducia che fa la differenza.</p>
+                    <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6; font-weight: 300; margin: 0;">Recensioni vere e offerte del momento che convincono chi ti sta guardando.</p>
                 </div>
 
                 <div style="min-width: calc(50vw - 160px); flex-shrink: 0;"></div>
@@ -556,8 +573,8 @@
     </a>
 
     <a href="javascript:void(0)" onclick="chiudiOverlay('menu-overlay'); scrollToSection('s2')" style="color: #ffffff; text-decoration: none; display: flex; flex-direction: column; gap: 4px;">
-        <span style="font-size: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Casi d'Uso</span>
-        <span style="color: #A0A0A0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px;">Per Aziende, Creator e Retail</span>
+        <span style="font-size: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Per chi è</span>
+        <span style="color: #A0A0A0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px;">Professionisti, negozi e creator</span>
     </a>
 
     <a href="javascript:void(0)" onclick="chiudiOverlay('menu-overlay'); scrollToSection('s4')" style="color: #ffffff; text-decoration: none; display: flex; flex-direction: column; gap: 4px;">
@@ -642,7 +659,7 @@
         <!-- BADGE STATUS ELEGANTE -->
         <div style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; margin-bottom: 20px;">
             <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);"></span>
-            <span style="color: #ffffff; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">Status: Disponibile</span>
+            <span style="color: #ffffff; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">Disponibile</span>
         </div>
 
         <!-- IL NOME ISOLATO (Non andrà mai a capo male) -->
@@ -650,7 +667,7 @@
             @nome
         </h2>
 
-        <p style="color: #888888; font-size: 14px; font-weight: 300; margin-bottom: 40px; line-height: 1.5; padding: 0 15px;">Ora puoi creare il tuo spazio digitale, vedere l'anteprima e decidere con calma.</p>
+        <p style="color: #888888; font-size: 14px; font-weight: 300; margin-bottom: 40px; line-height: 1.5; padding: 0 15px;">è libero ed è tuo per 24 ore. Crea il tuo piccolo sito ora: ci vuole un minuto, e decidi tu se attivarlo.</p>
 
         <!-- LISTA VANTAGGI (Icone vettoriali bianche) -->
         <div style="text-align: left; display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; padding: 0 10px;">
@@ -659,7 +676,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"></path></svg>
                 <div>
                     <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 4px; letter-spacing: 0.3px;">Crea la tua tag</strong>
-                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Entra, gioca con i dettagli e guarda il tuo ecosistema nascere in tempo reale.</span>
+                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Aggiungi foto, contatti e servizi e guardala prendere forma mentre scrivi.</span>
                 </div>
             </div>
 
@@ -667,7 +684,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
                 <div>
                     <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 4px; letter-spacing: 0.3px;">Guarda l'anteprima</strong>
-                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Scopri come la tua identità si trasforma in una PWA sul telefono di chi incontri.</span>
+                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Vedi esattamente come apparirà sul telefono di chi la apre.</span>
                 </div>
             </div>
 
@@ -675,7 +692,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
                 <div>
                     <strong style="color: #ffffff; font-size: 14px; font-weight: 600; display: block; margin-bottom: 4px; letter-spacing: 0.3px;">Nessun impegno</strong>
-                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Esplora l'editor in totale libertà. Sarai tu a decidere se e quando attivarlo.</span>
+                    <span style="color: #888888; font-size: 13px; font-weight: 300; line-height: 1.45; display: block;">Nessuna carta richiesta. Sarai tu a decidere se e quando metterla online.</span>
                 </div>
             </div>
 
@@ -683,7 +700,7 @@
 
         <!-- BOTTONE PREMIUM (Bianco Assoluto) -->
         <button id="btn-entra-spazio" onclick="procediAllaRegistrazione()" style="width: 100%; padding: 20px; background: #ffffff; color: #000000; border: none; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out;">
-            ENTRA NEL TUO SPAZIO
+            CREA LA MIA TAG
         </button> 
     </div>
 </div>
