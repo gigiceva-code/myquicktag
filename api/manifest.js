@@ -107,7 +107,7 @@ export default async function handler(req, res) {
       "id": `/u/${finalUser}`,
       "name": `myquicktag ${displayUtente}`,
       "short_name": displayUtente,
-      "description": "Il tuo piccolo sito, in un @nome",
+      "description": "Tutto ciò che sei, in un solo @nome",
       "start_url": `/u/${finalUser}`,
       "scope": `/u/${finalUser}`,
       "display": "fullscreen",     

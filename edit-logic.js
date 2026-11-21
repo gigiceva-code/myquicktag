@@ -1951,7 +1951,7 @@ function gestisciVIPSwitch(checkbox) {
             'shop': {
                 titolo: "LA VENDITA A TEMPO",
                 testo: _strategia(
-                    ['Da «ci penso» a «lo prendo»', 'Tra l\'interesse e l\'acquisto c\'è spesso un rinvio, e un rinvio è quasi sempre una vendita persa. La vendita lampo presenta un\'offerta con una scadenza visibile e un pulsante che porta direttamente al pagamento.'],
+                    ['Da «ci penso» a «lo prendo»', 'Tra l\'interesse e l\'acquisto c\'è spesso un rinvio, e un rinvio è quasi sempre una vendita persa. L\'offerta a tempo presenta un\'offerta con una scadenza visibile e un pulsante che porta direttamente al pagamento.'],
                     ['Come costruire un\'offerta che converte', 'Il timer funziona solo con un\'offerta chiara e realmente limitata:', [
                         ['fa-gift', 'Prodotti:', '«Box degustazione per due a 39 €, solo fino a domenica.»'],
                         ['fa-briefcase', 'Servizi:', '«Pacchetto di 3 sessioni a prezzo di lancio, iscrizioni aperte fino al 30.»'],
