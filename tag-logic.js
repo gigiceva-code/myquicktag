@@ -1225,11 +1225,12 @@ function apriSezione(tipo) {
         if (arrayFoto.length === 0) {
             corpo.textContent = 'Nessuna immagine presente nella galleria.';
         } else {
-            let grigliaHTML = '<div class="gallery-grid">';
+            // Fino a 4 foto due per riga (più grandi), da 5 in su tre per riga
+            let grigliaHTML = `<div class="gallery-grid${arrayFoto.length <= 4 ? ' poche' : ''}">`;
             let trackHTML = '';
             
             arrayFoto.forEach((urlOriginale, index) => {
-                const urlMiniatura = urlOriginale.replace('/upload/', '/upload/c_fill,w_300,h_300,q_auto,f_auto/');
+                const urlMiniatura = urlOriginale.replace('/upload/', '/upload/c_fill,g_auto,w_320,h_400,q_auto,f_auto/');
                 const urlHD = urlOriginale.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
                 
                 grigliaHTML += `<div class="gallery-thumb" style="background-image: url('${urlMiniatura}');" onclick="apriLightbox(${index})"></div>`;

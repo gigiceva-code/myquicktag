@@ -716,7 +716,9 @@ html.no-pull-refresh, body.no-pull-refresh { overscroll-behavior-y: none !import
     padding: 15px 0 !important; 
     border: none !important;
 }
-.gallery-thumb { aspect-ratio: 1; border-radius: 8px; cursor: pointer; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.2s; }
+.corpo-sezione > .gallery-grid.poche { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+/* Miniature verticali 4:5 (21/11/2026): riempiono meglio la sezione e vanno bene con le foto fatte col telefono */
+.gallery-thumb { aspect-ratio: 4 / 5; border-radius: 8px; cursor: pointer; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.2s; }
 .gallery-thumb:active { transform: scale(0.95); }
 
 /* ============================================================
