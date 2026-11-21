@@ -379,9 +379,10 @@
                 titolo.textContent = 'GALLERY';
                 const galleryData = document.getElementById('field-gallery-data') ? document.getElementById('field-gallery-data').value : "[]";
                 let arrayFoto = []; try { arrayFoto = JSON.parse(galleryData); } catch(e){}
-                let html = '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; padding: 15px 0;">';
+                // Come sulla tag pubblica: fino a 4 foto due per riga, poi tre; miniature verticali 4:5
+                let html = `<div style="display: grid; grid-template-columns: repeat(${arrayFoto.length <= 4 ? 2 : 3}, 1fr); gap: ${arrayFoto.length <= 4 ? 10 : 8}px; width: 100%; padding: 15px 0;">`;
                 arrayFoto.forEach(url => {
-                    html += `<div style="aspect-ratio: 1; border-radius: 8px; background-image: url('${url}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08);"></div>`;
+                    html += `<div style="aspect-ratio: 4 / 5; border-radius: 8px; background-image: url('${url}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08);"></div>`;
                 });
                 html += '</div>';
                 corpo.innerHTML = html;
