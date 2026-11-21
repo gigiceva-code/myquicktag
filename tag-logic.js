@@ -757,6 +757,9 @@ function linkEsterno(url) {
     if (!url) return '';
     if (/^(https?:|mailto:|tel:|sms:)/i.test(url)) return url;
     if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return '';
+    // Un'email o un numero di telefono scritti in un campo "link" (20/11/2026): si apre la posta o la chiamata
+    if (/^[^\s@/]+@[^\s@/]+\.[a-z]{2,}$/i.test(url)) return 'mailto:' + url;
+    if (/^\+?[\d\s().-]{6,}$/.test(url) && url.replace(/\D/g, '').length >= 6) return 'tel:' + url.replace(/[^\d+]/g, '');
     if (/^[\w.-]+\.[a-z]{2,}(\/|\?|#|$)/i.test(url.replace(/^\/+/, ''))) return 'https://' + url.replace(/^\/+/, '');
     return url;
 }
@@ -861,7 +864,13 @@ const quickActionConfig = {
     'preventivo':   { icon: '<i class="fas fa-file-signature"></i>', label: 'Richiedi preventivo' },
     'chiamata':     { icon: '<i class="fas fa-phone-alt"></i>', label: 'Chiama ora' },
     'maps':         { icon: '<i class="fas fa-map-marker-alt"></i>', label: 'Trovami su Maps' },
-    'demo':         { icon: '<i class="fas fa-music"></i>', label: 'Ascolta demo' }
+    'demo':         { icon: '<i class="fas fa-music"></i>', label: 'Ascolta demo' },
+    // Nomi usati dall'editor (edit.html → field-qa-tipo)
+    'calling':      { icon: '<i class="fas fa-phone-alt"></i>', label: 'Chiama ora' },
+    'appointment':  { icon: '<i class="far fa-calendar-alt"></i>', label: 'Prenota appuntamento' },
+    'quote':        { icon: '<i class="fas fa-file-signature"></i>', label: 'Richiedi preventivo' },
+    'email':        { icon: '<i class="far fa-envelope"></i>', label: 'Scrivimi una email' },
+    'link':         { icon: '<i class="fas fa-external-link-alt"></i>', label: 'Apri il link' }
 };
 
 const socialIcons = {
@@ -914,11 +923,12 @@ function eseguiQuickAction() {
         'whatsapp':  `https://wa.me/${url.replace(/\D/g,'')}`,
         'calling':   telefono,
         'chiamata':  telefono,
-        'maps':      /^https?:\/\//i.test(url) ? url : `https://maps.google.com/?q=${encodeURIComponent(url)}`
+        'maps':      /^https?:\/\//i.test(url) ? url : `https://maps.google.com/?q=${encodeURIComponent(url)}`,
+        'email':     `mailto:${url.replace(/^mailto:/i, '').trim()}`
     };
     const destinazione = mappaProtocollo[tipo] || linkEsterno(url);
     if (!destinazione) return;
-    if (/^tel:/i.test(destinazione)) { window.location.href = destinazione; return; }
+    if (/^(tel|mailto):/i.test(destinazione)) { window.location.href = destinazione; return; }
     window.open(destinazione, '_blank', 'noopener noreferrer');
 }
 function scaricaVCF(vcf, fields) {
