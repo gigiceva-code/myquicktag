@@ -939,7 +939,8 @@ function renderizzaCopertina(fields) {
     cta.hidden = !haCta;
 
     const vcf = vcfDellaTag(fields);
-    const haRubrica = piano !== 'BASE' && ['telefono1', 'telefono2', 'email1'].some(k => String(vcf[k] || '').trim() !== '');
+    // Come la stanza dei contatti: vale anche l'email del campo Email, non solo quella della scheda (21/11/2026)
+    const haRubrica = piano !== 'BASE' && (['telefono1', 'telefono2', 'email1'].some(k => String(vcf[k] || '').trim() !== '') || String(fields.email || '').trim() !== '');
     document.getElementById('copertina-rubrica').hidden = !haRubrica;
 
     box.hidden = !(sottotitolo || haCta || haRubrica);
@@ -947,11 +948,14 @@ function renderizzaCopertina(fields) {
     if (container) container.classList.toggle('con-copertina', haCta || haRubrica);
 }
 function salvaRubricaCopertina() {
+    if (!tagAttiva()) { mostraToast('Funzionerà quando la tag sarà attiva'); return; }
     tracciaClickSezione('SALVA RUBRICA');
     scaricaVCF(vcfDellaTag(cacheDatiUtente), cacheDatiUtente);
 }
 
 function eseguiQuickAction() {
+    // Tag non ancora attivata (anteprima prima del checkout): il bottone si vede ma non apre nulla (21/11/2026)
+    if (!tagAttiva()) { mostraToast('Funzionerà quando la tag sarà attiva'); return; }
     tracciaClickSezione('QUICK ACTION');
     const tipo = (cacheDatiUtente.quick_action_tipo || '').toLowerCase();
     const url  = cacheDatiUtente.quick_action_url || '';
