@@ -932,3 +932,5 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
 /* Con bottoni in copertina il nome sale un po', così nulla tocca ESPLORA TAG */
 .app-container.locked.con-copertina .header-monolith { transform: translateY(21vh); }
 @media (max-height: 760px) { .app-container.locked.con-copertina .header-monolith { transform: translateY(10vh); } }
+/* Telefoni bassi con nome lungo su due righe (forma divider): ancora un po' di respiro sopra ESPLORA TAG */
+@media (max-height: 700px) { .app-container.locked.con-copertina .header-monolith { transform: translateY(5vh); } }
