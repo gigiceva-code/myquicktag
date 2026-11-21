@@ -895,3 +895,40 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
     #firma-myquicktag b { color: #a1a1a6; font-weight: 600; }
     #firma-myquicktag:hover b { color: #fff; }
 }
+
+/* ============================================================
+   COPERTINA CHE CONVERTE (21/11/2026): riga sotto il nome, azione principale, "Salva in rubrica".
+   Sobria, nei colori dello stile della tag; sparisce quando si entra nelle stanze
+   ============================================================ */
+.copertina-azioni {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    width: 100%; margin-top: 16px; max-height: 260px; overflow: visible;
+    transition: opacity 0.4s ease, max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.copertina-azioni[hidden], .copertina-azioni [hidden] { display: none !important; }
+.app-container.unlocked .copertina-azioni { opacity: 0; max-height: 0; margin-top: 0; overflow: hidden; pointer-events: none; }
+#copertina-sottotitolo {
+    margin: 0; padding: 0 30px; text-align: center; line-height: 1.6;
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255, 255, 255, 0.62);
+}
+#copertina-cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 8px; padding: 15px 24px; max-width: calc(100% - 44px);
+    border-radius: 999px; border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.35));
+    background: rgba(255, 255, 255, 0.04); color: #ffffff; cursor: pointer; pointer-events: auto;
+    font-family: inherit; font-size: 0.72rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    box-shadow: 0 0 28px -10px var(--core-glow, rgba(255, 255, 255, 0.3));
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+#copertina-cta i { color: var(--theme-border, #ffffff); font-size: 0.95rem; }
+#copertina-cta span { text-align: center; line-height: 1.4; }
+@media (max-width: 380px) { #copertina-cta { letter-spacing: 1.5px; padding: 14px 20px; } }
+#copertina-cta:active { transform: scale(0.97); background: rgba(255, 255, 255, 0.08); }
+#copertina-rubrica {
+    background: none; border: none; padding: 6px 10px; cursor: pointer; pointer-events: auto; font-family: inherit;
+    color: rgba(255, 255, 255, 0.6); font-size: 0.65rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+}
+#copertina-rubrica i { margin-right: 6px; }
+/* Con bottoni in copertina il nome sale un po', così nulla tocca ESPLORA TAG */
+.app-container.locked.con-copertina .header-monolith { transform: translateY(21vh); }
+@media (max-height: 760px) { .app-container.locked.con-copertina .header-monolith { transform: translateY(10vh); } }

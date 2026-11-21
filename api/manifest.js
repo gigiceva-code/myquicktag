@@ -42,11 +42,14 @@ async function anteprima(req, res, nome) {
   let immagine = IMMAGINE_PREDEFINITA;
   let foto = false;
   try {
-    const record = nome ? await trovaTag(nome, ['stato', 'username_display', 'bio', 'avatar_url', 'data_scadenza']) : null;
+    const record = nome ? await trovaTag(nome, ['stato', 'username_display', 'sottotitolo', 'bio', 'avatar_url', 'data_scadenza']) : null;
     const f = record ? record.fields : {};
     if (record && String(f.stato || '').toLowerCase().trim() === 'attivo') {
       const nomeVisibile = riga(String(f.username_display || nome).replace(/^@/, ''), 40);
       titolo = nomeSezione ? `@${nomeVisibile} · ${nomeSezione}` : `@${nomeVisibile}`;
+      // Riga sotto il nome (21/11/2026): nell'anteprima di WhatsApp si capisce subito chi è
+      const sottotitolo = riga(f.sottotitolo, 60);
+      if (sottotitolo && !nomeSezione) titolo = `@${nomeVisibile} · ${sottotitolo}`;
       descrizione = `Scopri @${nomeVisibile} su myquicktag.`;
       // Modello C: la tag resta sempre online (bio e foto sono del piano Base)
       if (riga(f.bio, 160)) descrizione = riga(f.bio, 160);

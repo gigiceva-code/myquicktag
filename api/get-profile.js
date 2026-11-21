@@ -10,7 +10,7 @@ import { dirittiSullaTag } from '../lib/sessione.js';
 // ai visitatori finché non viene aggiunta qui di proposito.
 export const CAMPI_PUBBLICI = [
   'username_system', 'stato', 'plan', 'data_inizio', 'data_scadenza', 'views',
-  'username_display', 'bio', 'cv', 'digital_style', 'digital_layout', 'avatar_url', 'email',
+  'username_display', 'sottotitolo', 'bio', 'cv', 'digital_style', 'digital_layout', 'avatar_url', 'email',
   'modulo_vcf', 'config_canali', 'sito_web', 'sedi_json', 'gallery_data', 'partners_data',
   'quick_action_tipo', 'quick_action_label', 'quick_action_url', 'quick_action_copertina',
   'live_status_color', 'live_status_text', 'live_status_micro', 'live_status_action_type', 'live_status_action_label', 'live_status_action_url',

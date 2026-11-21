@@ -292,6 +292,7 @@ function renderizzaTagCompleta(fields) {
     generaQR(urlPubblico);
     renderizzaSitoWeb(fields.sito_web);
     gestisciVisibilitaCaselle(fields);
+    renderizzaCopertina(fields);
     
     if (container) {
         container.classList.add('ready');
@@ -388,7 +389,7 @@ function gestisciVisibilitaCaselle(fields) {
 
     // Controllo A: Azione Rapida
     const piano = fields.piano_effettivo || 'BASE';
-    if (fields.quick_action_tipo && fields.quick_action_url && piano !== 'BASE') {
+    if (fields.quick_action_tipo && fields.quick_action_url && piano !== 'BASE' && fields.quick_action_copertina !== 'true') {
         hasActionCenter = true;
     }
 
@@ -910,6 +911,46 @@ function renderizzaQuickAction(tipo, url) {
     btnQA.style.display = 'flex';
 }
 
+// COPERTINA CHE CONVERTE (21/11/2026): riga sotto il nome, azione principale fissata in copertina
+// ("Fissa in copertina" nell'editor: prima la tag pubblica la ignorava) e "Salva in rubrica"
+function vcfDellaTag(fields) {
+    try { const raw = fields.modulo_vcf; return (typeof raw === 'object' && raw) ? raw : JSON.parse(raw || '{}'); } catch (e) { return {}; }
+}
+function renderizzaCopertina(fields) {
+    const box = document.getElementById('copertina-azioni');
+    if (!box) return;
+    const piano = fields.piano_effettivo || 'BASE';
+
+    const sottotitolo = String(fields.sottotitolo || '').trim();
+    const elSotto = document.getElementById('copertina-sottotitolo');
+    elSotto.textContent = sottotitolo;
+    elSotto.hidden = !sottotitolo;
+
+    const cta = document.getElementById('copertina-cta');
+    const haCta = fields.quick_action_copertina === 'true' && !!fields.quick_action_tipo && !!fields.quick_action_url && piano !== 'BASE';
+    cta.textContent = '';
+    if (haCta) {
+        const cfg = quickActionConfig[String(fields.quick_action_tipo).toLowerCase()] || { icon: '<i class="fas fa-bolt"></i>', label: 'Contattami' };
+        cta.insertAdjacentHTML('afterbegin', cfg.icon);
+        const testo = document.createElement('span');
+        testo.textContent = String(fields.quick_action_label || '').trim() || cfg.label;
+        cta.appendChild(testo);
+    }
+    cta.hidden = !haCta;
+
+    const vcf = vcfDellaTag(fields);
+    const haRubrica = piano !== 'BASE' && ['telefono1', 'telefono2', 'email1'].some(k => String(vcf[k] || '').trim() !== '');
+    document.getElementById('copertina-rubrica').hidden = !haRubrica;
+
+    box.hidden = !(sottotitolo || haCta || haRubrica);
+    const container = document.getElementById('profile-content');
+    if (container) container.classList.toggle('con-copertina', haCta || haRubrica);
+}
+function salvaRubricaCopertina() {
+    tracciaClickSezione('SALVA RUBRICA');
+    scaricaVCF(vcfDellaTag(cacheDatiUtente), cacheDatiUtente);
+}
+
 function eseguiQuickAction() {
     tracciaClickSezione('QUICK ACTION');
     const tipo = (cacheDatiUtente.quick_action_tipo || '').toLowerCase();
@@ -1083,11 +1124,12 @@ function apriMacroArea(area, skipHistory = false) {
         // -------------------------------------
     }
     else if (area === 'action_center') {
-        titolo.textContent = 'ACTION CENTER';
+        titolo.textContent = 'PER TE';
         
         // 1. Inserimento Azione Rapida
         const piano = pianoTag();
-        if (cacheDatiUtente.quick_action_tipo && cacheDatiUtente.quick_action_url && piano !== 'BASE') {
+        // Fissata in copertina: lì c'è già, qui non si ripete
+        if (cacheDatiUtente.quick_action_tipo && cacheDatiUtente.quick_action_url && piano !== 'BASE' && cacheDatiUtente.quick_action_copertina !== 'true') {
             const qaTipo = cacheDatiUtente.quick_action_tipo.toLowerCase();
             const cfg = quickActionConfig[qaTipo] || { icon: '<i class="fas fa-bolt"></i>', label: 'Azione Rapida' };
             const label = cacheDatiUtente.quick_action_label || cfg.label;
