@@ -163,7 +163,7 @@
 
             if(area === 'identity') {
                 titolo.textContent = 'IDENTITY';
-                html += `<div style="${btnStyle}" onclick="apriSezioneAnteprima('qr')"><i class="fas fa-qrcode" style="${iconBase} color: #d4af37;"></i><span style="${spanStyle}">ACCESS TAG</span></div>`;
+                html += `<div style="${btnStyle}" onclick="apriSezioneAnteprima('qr')"><i class="fas fa-qrcode" style="${iconBase} color: #d4af37;"></i><span style="${spanStyle}">IL MIO QR</span></div>`;
                 
                 const bio = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
                 if(bio) {
@@ -272,7 +272,7 @@
                 corpo.innerHTML = `<div class="testo-lettura">${bio.replace(/\n/g, '<br>')}</div>`;
             }
             else if (tipo === 'qr') {
-                titolo.textContent = 'ACCESS TAG';
+                titolo.textContent = 'IL MIO QR';
                 corpo.innerHTML = `
                     <div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding-top: 20px;">
                         <div style="width:190px; height:190px; border-radius: 20px; padding:10px; background:#fff; display:flex; justify-content:center; align-items:center;">
@@ -1939,7 +1939,7 @@ function gestisciVIPSwitch(checkbox) {
             'flash': {
                 titolo: "L'ANNUNCIO IN PRIMO PIANO",
                 testo: _strategia(
-                    ['Le notizie importanti si perdono', 'Tra post e storie, un avviso importante passa inosservato. MQT Flash mette un messaggio breve in evidenza sulla tua tag per 24 ore: lo vede chiunque la apra, poi scompare da solo.'],
+                    ['Le notizie importanti si perdono', 'Tra post e storie, un avviso importante passa inosservato. L\'annuncio flash mette un messaggio breve in evidenza sulla tua tag per 24 ore: lo vede chiunque la apra, poi scompare da solo.'],
                     ['Come usarlo', 'Brevi, concreti, con un\'informazione utile subito:', [
                         ['fa-clock', 'Disponibilità dell\'ultimo minuto:', '«Si è liberato un tavolo per 4 stasera alle 21.»'],
                         ['fa-bullhorn', 'Novità:', '«Il nuovo menu d\'autunno è online» oppure «Webinar gratuito oggi alle 18.»'],
@@ -1951,7 +1951,7 @@ function gestisciVIPSwitch(checkbox) {
             'shop': {
                 titolo: "LA VENDITA A TEMPO",
                 testo: _strategia(
-                    ['Da «ci penso» a «lo prendo»', 'Tra l\'interesse e l\'acquisto c\'è spesso un rinvio, e un rinvio è quasi sempre una vendita persa. L\'Acquisto Istantaneo presenta un\'offerta con una scadenza visibile e un pulsante che porta direttamente al pagamento.'],
+                    ['Da «ci penso» a «lo prendo»', 'Tra l\'interesse e l\'acquisto c\'è spesso un rinvio, e un rinvio è quasi sempre una vendita persa. L\'offerta a tempo presenta un\'offerta con una scadenza visibile e un pulsante che porta direttamente al pagamento.'],
                     ['Come costruire un\'offerta che converte', 'Il timer funziona solo con un\'offerta chiara e realmente limitata:', [
                         ['fa-gift', 'Prodotti:', '«Box degustazione per due a 39 €, solo fino a domenica.»'],
                         ['fa-briefcase', 'Servizi:', '«Pacchetto di 3 sessioni a prezzo di lancio, iscrizioni aperte fino al 30.»'],
