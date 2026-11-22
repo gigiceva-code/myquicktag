@@ -482,7 +482,7 @@
             <input type="text" id="field-username_display" placeholder="Es. Concessionaria Audi" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.9rem;">
             <label for="field-sottotitolo" style="font-size: 0.6rem; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; text-align: left;">Riga sotto il nome · facoltativa</label>
             <input type="text" id="field-sottotitolo" maxlength="60" placeholder="Es. Pizzeria napoletana · Torino" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; outline: none; text-align: center; font-size: 0.9rem;">
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: left; margin-top: -6px; line-height: 1.5;">Chi sei e dove, in poche parole. Compare in copertina e nell'anteprima quando condividi la tag.</div>
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.62); text-align: left; margin-top: -6px; line-height: 1.5;">Chi sei e dove, in poche parole. Compare in copertina e nell'anteprima quando condividi la tag.</div>
         </div>
         <button class="btn-crea" onclick="salvaIdentitaEApriStile()">SALVA NOME E LOGO</button>
     </div>
@@ -495,7 +495,7 @@
         </div>
         <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 10px;">
          <textarea id="field-bio" placeholder="Scrivi qui la tua bio o la descrizione del tuo business..." onblur="this.value = pulisciTesto(this.value)" style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; resize: none;"></textarea> 
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.62); text-align: center;">
                 Un testo breve e incisivo converte molto di più.
             </div>
         </div>
@@ -514,7 +514,7 @@
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 10px;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.62); text-align: center; margin-bottom: 10px;">
                 Carica il tuo CV in formato PDF. Verrà ospitato nel cloud ad alta velocità.
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px;">
@@ -522,7 +522,7 @@
                 <label for="cv-upload" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%;">
                     <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #fff; margin-bottom: 10px;"></i>
                     <span id="cv-upload-text" style="color: #fff; font-size: 0.8rem; font-weight: 600;">Seleziona il PDF del tuo CV</span>
-                    <span style="font-size: 0.6rem; color: rgba(255,255,255,0.4); margin-top: 5px;">Max 5 MB</span>
+                    <span style="font-size: 0.6rem; color: rgba(255,255,255,0.62); margin-top: 5px;">Max 5 MB</span>
                 </label>
                 <div id="cv-loader" style="display: none; margin-top: 15px; width: 100%; text-align: center;">
                     <i class="fas fa-circle-notch fa-spin" style="color: #10b981; font-size: 1.2rem;"></i>
@@ -546,7 +546,7 @@
             <div class="header-close" onclick="chiudiSenzaSalvare()"><i class="fas fa-times"></i></div>
         </div>
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 20px;">
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 5px; line-height: 1.5;">
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.62); text-align: center; margin-bottom: 5px; line-height: 1.5;">
                 4 e 5 stelle andranno online, 1-3 stelle arriveranno a te in privato.
             </div>
             <div style="position: relative;" class="premium-field-container">
@@ -782,7 +782,7 @@
                             <div style="font-size: 0.7rem; color: #e5c158; font-weight: 600; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
                                 <i class="fas fa-lock"></i> VIP VAULT
                             </div>
-                            <div style="font-size: 0.55rem; color: rgba(255,255,255,0.4); margin-top: 4px;">Proteggi con PIN (Solo Gold)</div>
+                            <div style="font-size: 0.55rem; color: rgba(255,255,255,0.62); margin-top: 4px;">Proteggi con PIN (Solo Gold)</div>
                         </div>
                         <input type="checkbox" id="smart-link-vip" class="vip-switch" onchange="gestisciVIPSwitch(this)">
                     </div>
@@ -1194,10 +1194,10 @@
         
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px; padding: 0 5px;">
             <div onclick="salvaEDirigi('bozza')" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;">
-                <i class="fas fa-inbox" style="color: rgba(255,255,255,0.4); font-size: 1.2rem;"></i>
+                <i class="fas fa-inbox" style="color: rgba(255,255,255,0.62); font-size: 1.2rem;"></i>
                 <div style="flex: 1;">
                     <div style="color: #fff; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">SALVA IN DASHBOARD</div>
-                    <div style="color: rgba(255,255,255,0.4); font-size: 0.6rem; margin-top: 4px; letter-spacing: 0.5px;">Bozza privata, non visibile online.</div>
+                    <div style="color: rgba(255,255,255,0.62); font-size: 0.6rem; margin-top: 4px; letter-spacing: 0.5px;">Bozza privata, non visibile online.</div>
                 </div>
                 <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.2); font-size: 0.8rem;"></i>
             </div>

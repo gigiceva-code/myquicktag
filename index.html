@@ -8,6 +8,7 @@
     <title>myquicktag · Tutto ciò che sei, in un solo @nome</title>
     
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23000000'/%3E%3Ccircle cx='50' cy='50' r='35' stroke='%2350C878' stroke-width='8' fill='none'/%3E%3Cline x1='72' y1='72' x2='90' y2='90' stroke='%2350C878' stroke-width='8' stroke-linecap='round'/%3E%3Ctext x='50' y='47' font-family='sans-serif' font-size='44' font-weight='bold' fill='%23ffffff' text-anchor='middle' dominant-baseline='central'%3E@%3C/text%3E%3C/svg%3E">
+    <link rel="canonical" href="https://myquicktag.it/">
     <meta name="description" content="Contatti, vetrina, servizi e recensioni in uno spazio elegante che porta il tuo nome. Si apre con un link o un QR, senza app. Scopri se il tuo @nome è libero.">
     <meta name="keywords" content="biglietto da visita digitale, mini sito, QR code, link in bio, pagina per attività, myquicktag">
     <meta name="author" content="myquicktag">
@@ -202,6 +203,30 @@
     /* Social ufficiali (22/11/2026) */
     .social-ufficiali a { color: #cfcfcf; text-decoration: none; border-bottom: 1px solid rgba(80,200,120,0.35); padding-bottom: 2px; }
     .social-ufficiali a:hover { color: #50C878; }
+
+    /* Fascia esempi (audit 22/11/2026) */
+    #esempi { background: #000; padding: 70px 0 60px; text-align: center; overflow: hidden; }
+    .esempi-etichetta { color: #50C878; font-size: 11px; font-weight: 700; letter-spacing: 3px; margin: 0 0 12px; }
+    #esempi h2 { font-size: 28px; font-weight: 300; line-height: 1.25; color: #fff; margin: 0 0 34px; letter-spacing: -0.5px; padding: 0 20px; }
+    #esempi h2 span { font-weight: 700; }
+    .esempi-fascia { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 6px calc(50% - 120px) 18px; scrollbar-width: none; -webkit-overflow-scrolling: touch; outline: none; }
+    .esempi-fascia::-webkit-scrollbar { display: none; }
+    .esempio-card { flex: 0 0 240px; margin: 0; scroll-snap-align: center; }
+    .esempio-card img { display: block; width: 240px; height: auto; border-radius: 26px; box-shadow: 0 18px 40px rgba(0,0,0,0.6); }
+    .esempio-card figcaption { margin-top: 14px; color: #cfcfcf; font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; }
+    .esempio-tua { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; height: 498px; border: 1px dashed rgba(80,200,120,0.5); border-radius: 26px; text-decoration: none; background: rgba(80,200,120,0.04); }
+    .esempio-tua span { font-size: 54px; color: #50C878; line-height: 1; }
+    .esempio-tua b { color: #fff; font-size: 20px; font-weight: 700; }
+    .esempio-tua em { color: #50C878; font-style: normal; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+    .esempi-nota { margin: 10px 0 0; color: #8a8a8f; font-size: 11px; letter-spacing: 1px; }
+    .esempi-fascia { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%); }
+    .esempi-frecce { display: none; }
+    @media (min-width: 1024px) {
+        .esempi-fascia { padding: 6px 80px 18px; } #esempi h2 { font-size: 34px; }
+        .esempi-frecce { display: flex; justify-content: center; gap: 14px; margin-top: 6px; }
+        .esempi-frecce button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.03); color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+        .esempi-frecce button:hover { border-color: #50C878; color: #50C878; }
+    }
 </style>
     </head>
 <body>
@@ -303,6 +328,31 @@
                 <span>Esempio di tag · @STUDIO ROSSI</span>
             </div>
         </section> 
+        <!-- ============================================================ -->
+        <!-- FASCIA ESEMPI (audit 22/11/2026): chi arriva vede subito come può essere la sua tag -->
+        <!-- ============================================================ -->
+        <section id="esempi" class="reveal-item" aria-labelledby="esempi-titolo">
+            <p class="esempi-etichetta">UNA TAG PER OGNI MESTIERE</p>
+            <h2 id="esempi-titolo">Ecco come può essere<br><span>la tua.</span></h2>
+            <div class="esempi-fascia" tabindex="0" aria-label="Esempi di tag, scorri di lato">
+                <figure class="esempio-card"><img src="/icons/esempi/studio.webp" alt="Esempio di tag: Studio di architettura" width="240" height="498" loading="lazy" decoding="async"><figcaption>Studio di architettura</figcaption></figure>
+                <figure class="esempio-card"><img src="/icons/esempi/pizzeria.webp" alt="Esempio di tag: Pizzeria" width="240" height="498" loading="lazy" decoding="async"><figcaption>Pizzeria</figcaption></figure>
+                <figure class="esempio-card"><img src="/icons/esempi/fotografa.webp" alt="Esempio di tag: Fotografa" width="240" height="498" loading="lazy" decoding="async"><figcaption>Fotografa</figcaption></figure>
+                <figure class="esempio-card"><img src="/icons/esempi/trainer.webp" alt="Esempio di tag: Personal trainer" width="240" height="498" loading="lazy" decoding="async"><figcaption>Personal trainer</figcaption></figure>
+                <figure class="esempio-card"><img src="/icons/esempi/parrucchiera.webp" alt="Esempio di tag: Parrucchiera" width="240" height="498" loading="lazy" decoding="async"><figcaption>Parrucchiera</figcaption></figure>
+                <figure class="esempio-card"><img src="/icons/esempi/avvocato.webp" alt="Esempio di tag: Studio legale" width="240" height="498" loading="lazy" decoding="async"><figcaption>Studio legale</figcaption></figure>
+                <figure class="esempio-card"><img src="/icons/esempi/caffetteria.webp" alt="Esempio di tag: Caffetteria" width="240" height="498" loading="lazy" decoding="async"><figcaption>Caffetteria</figcaption></figure>
+                <figure class="esempio-card"><img src="/icons/esempi/musicista.webp" alt="Esempio di tag: Musicista" width="240" height="498" loading="lazy" decoding="async"><figcaption>Musicista</figcaption></figure>
+                <figure class="esempio-card"><img src="/icons/esempi/influencer.webp" alt="Esempio di tag: Influencer" width="240" height="498" loading="lazy" decoding="async"><figcaption>Influencer</figcaption></figure>
+                <a class="esempio-card esempio-tua" href="#s1" onclick="event.preventDefault(); scrollToSection('s1')"><span>@</span><b>La tua?</b><em>Scegli il tuo nome</em></a>
+            </div>
+            <div class="esempi-frecce" aria-hidden="true">
+                <button type="button" tabindex="-1" onclick="document.querySelector('.esempi-fascia').scrollBy({left: -280, behavior: 'smooth'})">‹</button>
+                <button type="button" tabindex="-1" onclick="document.querySelector('.esempi-fascia').scrollBy({left: 280, behavior: 'smooth'})">›</button>
+            </div>
+            <p class="esempi-nota">Scorri di lato · Esempi creati con myquicktag</p>
+        </section>
+
                      <!-- ============================================================ -->
         <!-- SECTION 2: ARCHITETTURA TARGET E CASI D'USO (MINIMAL LUXURY)  -->
         <!-- ============================================================ -->
@@ -559,11 +609,11 @@
                     <a href="https://www.tiktok.com/@myquicktag" target="_blank" rel="noopener">TIKTOK</a>
                     <a href="https://www.facebook.com/share/18vkstt3DY/" target="_blank" rel="noopener">FACEBOOK</a>
                 </p>
-                <p style="color: #555555; font-size: 10px; letter-spacing: 2px; margin-top: 10px;">MYQUICKTAG © 2026</p>
+                <p style="color: #8a8a8f; font-size: 10px; letter-spacing: 2px; margin-top: 10px;">MYQUICKTAG © 2026</p>
                 <p style="font-size: 10px; letter-spacing: 1px; margin: 4px 0 0; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-                    <a href="/privacy.html" style="color: #777777; text-decoration: none;">PRIVACY</a>
-                    <a href="/cookie.html" style="color: #777777; text-decoration: none;">COOKIE</a>
-                    <a href="/termini.html" style="color: #777777; text-decoration: none;">TERMINI DI SERVIZIO</a>
+                    <a href="/privacy.html" style="color: #a0a0a5; text-decoration: none;">PRIVACY</a>
+                    <a href="/cookie.html" style="color: #a0a0a5; text-decoration: none;">COOKIE</a>
+                    <a href="/termini.html" style="color: #a0a0a5; text-decoration: none;">TERMINI DI SERVIZIO</a>
                 </p>
             </div>
         </section>
