@@ -7,7 +7,7 @@
 // e la verifica con Supabase (lib/sessione.js) prima di ogni operazione.
 //
 // azione 'mie-tag' → elenco delle tag di cui l'account è proprietario
-import { tagDelProprietario, tagDaRicordare, aggiornaTag } from '../lib/db.js';
+import { tagDelProprietario, tagDaRicordare, aggiornaTag, emailDelProprietario } from '../lib/db.js';
 import { emailPromemoria, inviaEmail, partiMancanti } from '../lib/email.js';
 import { tokenAccount, utenteDaToken } from '../lib/sessione.js';
 import { calcolaAbbonamento, pianoEffettivo, puoAggiungereTag } from '../lib/abbonamento.js';
@@ -37,7 +37,7 @@ export function configurazionePubblica() {
 
 // PROMEMORIA DEL GIORNO DOPO (lib/email.js): lo chiama Vercel Cron ogni mattina (vercel.json),
 // con l'intestazione Authorization: Bearer <CRON_SECRET>. Sta qui perché il piano Hobby di Vercel
-// ammette al massimo 12 funzioni. Una sola email per tag; l'indirizzo salvato si cancella dopo.
+// ammette al massimo 12 funzioni. Una sola email per tag; l'indirizzo si legge dall'account al momento.
 async function inviaPromemoria(req, res) {
   const segreto = process.env.CRON_SECRET;
   if (!segreto || req.headers.authorization !== `Bearer ${segreto}`) return res.status(401).json({ success: false });
@@ -48,11 +48,13 @@ async function inviaPromemoria(req, res) {
     const mancanti = partiMancanti(f);
     try {
       if (mancanti.length) {
-        const ok = await inviaEmail({ to: f.promemoria_a, ...emailPromemoria({ tag: f.username_system, nome: f.username_display, mancanti }) });
+        const destinatario = await emailDelProprietario(f.proprietario_id);
+        if (!destinatario) { await aggiornaTag(r.id, { promemoria_in_attesa: false }); continue; }
+        const ok = await inviaEmail({ to: destinatario, ...emailPromemoria({ tag: f.username_system, nome: f.username_display, mancanti }) });
         if (!ok) { errori++; continue; } // riprova domani, finché la tag resta nella finestra dei 4 giorni
         inviati++;
       } else completi++;
-      await aggiornaTag(r.id, { promemoria_il: new Date().toISOString(), promemoria_a: null });
+      await aggiornaTag(r.id, { promemoria_il: new Date().toISOString(), promemoria_in_attesa: false });
     } catch (e) { errori++; console.error('PROMEMORIA:', e.dettagli || e.message); }
   }
   console.log(`PROMEMORIA: ${inviati} inviati, ${completi} tag già complete, ${errori} errori`);

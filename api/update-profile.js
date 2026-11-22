@@ -226,12 +226,12 @@ export default async function handler(req, res) {
       }
       await contaEvento('tag_attivata');
       // Email di benvenuto (lib/email.js) e, se alla tag manca qualcosa, promemoria il giorno dopo.
-      // L'email del titolare resta salvata solo finché il promemoria non parte (api/account.js).
+      // Il promemoria rilegge l'email dall'account al momento dell'invio (api/account.js): qui non si salva.
       try {
         const finali = { ...recordAttuale.fields, ...fieldsToSave };
         const mancanti = partiMancanti(finali);
         const inviata = await inviaEmail({ to: diritti.utente.email, ...emailBenvenuto({ tag: safeUsername, nome: finali.username_display, mancanti, scadenza: date.data_scadenza }) });
-        await aggiornaTag(recordAttuale.id, { email_benvenuto_il: new Date().toISOString(), promemoria_a: mancanti.length ? diritti.utente.email : null });
+        await aggiornaTag(recordAttuale.id, { email_benvenuto_il: new Date().toISOString(), promemoria_in_attesa: mancanti.length > 0 });
         if (!inviata) console.error("EMAIL BENVENUTO: non partita per @" + safeUsername);
       } catch (erroreEmail) {
         console.error('EMAIL BENVENUTO:', erroreEmail.dettagli || erroreEmail.message);
