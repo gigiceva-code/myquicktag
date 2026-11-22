@@ -107,7 +107,8 @@ await A.click('#btn-pubblica-barra'); await A.waitForTimeout(600);
 ok(await A.isVisible('#drawer-salvataggio') && /SALVA IN DASHBOARD/.test(await A.textContent('#drawer-salvataggio')),'Pubblica: si sceglie tra "Pubblica adesso" e "Salva in dashboard"');
 await A.click("#drawer-salvataggio div[onclick=\"salvaEDirigi('pubblica')\"]"); await A.waitForTimeout(1500);
 d=await db(); ok(d.rows.find(r=>r.username_system==='mariopizza').bio==='Pizza al taglio.' && d.rows.find(r=>r.username_system==='barmario').bio==='Colazioni e aperitivi in piazza.','pubblicazione: cambia solo la tag modificata');
-for (const pg of ['analytics.html','contatti.html','profile.html','account.html']) { await A.goto(B+'/'+pg+'?u=barmario'); await A.waitForTimeout(1800); ok(!/accesso|dashboard/.test(A.url()),`${pg}: il proprietario entra`); }
+for (const pg of ['analytics.html','contatti.html','account.html']) { await A.goto(B+'/'+pg+'?u=barmario'); await A.waitForTimeout(1800); ok(!/accesso|dashboard/.test(A.url()),`${pg}: il proprietario entra`); }
+await A.goto(B+'/profile.html?u=barmario'); await A.waitForTimeout(1500); ok(/dashboard/.test(A.url()),'Gestione tag unita alla Identity Console: il vecchio indirizzo porta lì');
 await shot(A,'07-profile-tag');
 // Sulla propria tag il titolare vede GESTISCI (→ Identity Console) al posto di SALVA; un visitatore vede SALVA
 await A.goto(B+'/u/barmario'); await A.waitForTimeout(2500);

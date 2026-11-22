@@ -146,7 +146,7 @@
     // Pagina riservata al proprietario: serve una sessione valida su questo dispositivo
     if (!mqtSessione.valida(tag)) { mqtSessione.scaduta(tag); return; }
 
-    const dashboard = `/profile.html?u=${encodeURIComponent(tag)}`;
+    const dashboard = '/dashboard.html';
     document.getElementById('btn-back').href = dashboard;
     document.getElementById('nome-tag').textContent = '@' + tag;
     document.getElementById('btn-cambia-piano').href = `/checkout.html?u=${encodeURIComponent(tag)}`;

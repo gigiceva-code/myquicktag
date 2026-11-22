@@ -140,10 +140,11 @@
                 ? `<a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-pen"></i> Completa e attiva</a>`
                 : `<a href="/u/${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-eye"></i> Apri la tag</a>
                    <a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-pen"></i> Modifica</a>
-                   <a href="/analytics.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-chart-line"></i> Statistiche</a>
+                   <a href="/analytics.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-chart-line"></i> Statistiche${t.views ? ' · ' + esc(t.views) : ''}</a>
                    <a href="/contatti.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-inbox"></i> Contatti ricevuti ${t.contatti_nuovi ? '<span class="pallino">' + t.contatti_nuovi + '</span>' : ''}</a>
                    ${t.quickpass_attivo ? `<a href="/u/${n}?cassa=1" data-tag="${esc(t.username_system)}" style="grid-column: 1 / -1; border-color: rgba(229,193,88,0.5); color: #e5c158;"><i class="fas fa-cash-register"></i> Cassa QuickGift · conferma i regali</a>` : ''}
-                   <a href="/profile.html?u=${n}" data-tag="${esc(t.username_system)}" style="grid-column: 1 / -1;"><i class="fas fa-sliders-h"></i> Gestisci (piano, bozza, QR)</a>`;
+                   <a href="/account.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-crown"></i> Il tuo piano</a>
+                   ${t.ha_bozza ? `<a href="/tag.html?u=${n}&mode=draft" data-tag="${esc(t.username_system)}"><i class="fas fa-file-pen"></i> Anteprima bozza</a>` : ''}`;
             return `<div class="card tag-card">
                 <div class="testa"><div><div class="nome">${esc(nome)}</div><div class="sub">${esc(s.sub)}${t.ha_bozza && t.stato === 'attivo' ? ' · bozza non pubblicata' : ''}</div></div>
                 <span class="badge ${s.badge}">${esc(s.testo)}</span></div>

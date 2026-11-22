@@ -108,7 +108,7 @@
 <div class="wrap">
 
     <div class="top-bar">
-        <a href="/profile.html" id="btn-back" class="btn-back" aria-label="Torna alla dashboard"><i class="fas fa-chevron-left"></i></a>
+        <a href="/dashboard.html" id="btn-back" class="btn-back" aria-label="Torna alla dashboard"><i class="fas fa-chevron-left"></i></a>
         <div>
             <h1>Contatti ricevuti</h1>
             <p id="sottotitolo">Chi ti ha lasciato un recapito dal vasetto</p>
@@ -130,7 +130,7 @@
     // Pagina riservata al proprietario: serve una sessione valida su questo dispositivo
     if (!mqtSessione.valida(tag)) { mqtSessione.scaduta(tag); return; }
 
-    document.getElementById('btn-back').href = `/profile.html?u=${encodeURIComponent(tag)}`;
+    document.getElementById('btn-back').href = '/dashboard.html';
     const elenco = document.getElementById('elenco');
     let leads = [];
 

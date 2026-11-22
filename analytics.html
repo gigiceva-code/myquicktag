@@ -254,7 +254,7 @@
         if(btnBack) {
             btnBack.addEventListener('click', (e) => {
                 e.preventDefault();
-                setTimeout(() => window.location.href = usernameCorrente ? `/profile.html?u=${usernameCorrente}` : '/profile.html', 150);
+                setTimeout(() => window.location.href = '/dashboard.html', 150);
             });
         }
 
@@ -271,6 +271,9 @@
                 const viewsReali = data.fields.views || 0;
                 animaContatore('counter-views', viewsReali);
                 if (!viewsReali) mostraPrimiPassi(data.fields, usernameCorrente);
+                // Piano Base: le visite si vedono, il dettaglio è di Premium e Gold (prima lo filtrava Gestione tag)
+                const piano = String(data.fields.piano_effettivo || 'BASE').toUpperCase();
+                if (piano === 'BASE' && String(data.fields.stato || '').toLowerCase().trim() === 'attivo') { mostraInvitoPiano(usernameCorrente); return; }
 
                 // 2. DISPOSITIVI E LOCALITÀ (Macro - da analytics_data)
                 if (data.fields.analytics_data) {
@@ -314,6 +317,17 @@
             };
         }
         box.hidden = false;
+    }
+
+    function mostraInvitoPiano(nome) {
+        document.querySelectorAll('.analytics-card').forEach(c => { if (c.id !== 'primi-passi') c.style.display = 'none'; });
+        const card = document.createElement('section');
+        card.className = 'analytics-card';
+        card.innerHTML = '<div class="card-header"><i class="fas fa-chart-line"></i><h3>Statistiche complete</h3></div>' +
+            '<p style="margin: 4px 0 18px; font-size: 0.85rem; line-height: 1.55; color: #b8b8bd;">Orari, dispositivi, città e clic su ogni sezione sono inclusi nei piani Premium e Gold.</p>' +
+            '<a style="display:block; text-align:center; padding: 15px; border-radius: 12px; background: #fff; color: #000; font-weight: 800; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none;"></a>';
+        const a = card.querySelector('a'); a.textContent = 'Scopri i piani'; a.href = '/checkout.html?u=' + encodeURIComponent(nome);
+        document.querySelector('.hero-stats-row').after(card);
     }
 
     // --- ELABORAZIONE DATI VECCHI (DISPOSITIVI/GEO) ---
