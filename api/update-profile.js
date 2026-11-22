@@ -1,4 +1,5 @@
 import { trovaTag, aggiornaTag, assegnaProprietario, tagDelProprietario } from '../lib/db.js';
+import { emailBenvenuto, inviaEmail, partiMancanti } from '../lib/email.js';
 import { contaEvento } from '../lib/contatori.js';
 import { pulisciTesto, pulisciJson, pulisciValore } from '../lib/pulizia.js';
 import { calcolaAbbonamento, dateAttivazione, nuovaScadenzaRinnovo, rinnovoConsentito, rinnovoGratuitoAttivo, puoAggiungereTag, MESSAGGIO_LIMITE_TAG } from '../lib/abbonamento.js';
@@ -224,6 +225,17 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "Attivazione non riuscita. Riprova." });
       }
       await contaEvento('tag_attivata');
+      // Email di benvenuto (lib/email.js) e, se alla tag manca qualcosa, promemoria il giorno dopo.
+      // L'email del titolare resta salvata solo finché il promemoria non parte (api/account.js).
+      try {
+        const finali = { ...recordAttuale.fields, ...fieldsToSave };
+        const mancanti = partiMancanti(finali);
+        const inviata = await inviaEmail({ to: diritti.utente.email, ...emailBenvenuto({ tag: safeUsername, nome: finali.username_display, mancanti, scadenza: date.data_scadenza }) });
+        await aggiornaTag(recordAttuale.id, { email_benvenuto_il: new Date().toISOString(), promemoria_a: mancanti.length ? diritti.utente.email : null });
+        if (!inviata) console.error("EMAIL BENVENUTO: non partita per @" + safeUsername);
+      } catch (erroreEmail) {
+        console.error('EMAIL BENVENUTO:', erroreEmail.dettagli || erroreEmail.message);
+      }
       return res.status(200).json({ success: true, action: 'activated', data_scadenza: date.data_scadenza });
     }
 

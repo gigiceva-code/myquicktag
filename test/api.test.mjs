@@ -80,7 +80,8 @@ globalThis.fetch=async (url,opt={})=>{
     r.lead_capture_leads=JSON.stringify(l); return new Response(JSON.stringify(r.lead_capture_leads),{status:200}); }
   if(u.pathname.includes('/rpc/')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null',{status:200});
     const campo=u.pathname.endsWith('aggiungi_lead')?'lead_capture_leads':'analytics_log'; const voce=b.p_lead||b.p_click; const lista=JSON.parse(r[campo]||'[]'); lista.unshift(voce); r[campo]=JSON.stringify(lista); return new Response('true',{status:200}); }
-  const f=(r)=>{for(const [k,v] of u.searchParams){ if(v.startsWith('eq.')&&String(r[k])!==decodeURIComponent(v.slice(3)))return false; if(v==='is.null'&&r[k]!=null)return false;}return true;};
+  const f=(r)=>{for(const [k,v] of u.searchParams){ if(v.startsWith('eq.')&&String(r[k])!==decodeURIComponent(v.slice(3)))return false; if(v==='is.null'&&r[k]!=null)return false; if(v==='not.is.null'&&r[k]==null)return false;
+    if(v.startsWith('lt.')&&!(r[k]!=null&&String(r[k])<decodeURIComponent(v.slice(3))))return false; if(v.startsWith('gt.')&&!(r[k]!=null&&String(r[k])>decodeURIComponent(v.slice(3))))return false;}return true;};
   if(m==='GET'){ let out=rows.filter(f); const sel=u.searchParams.get('select'); if(sel!=='*') out=out.map(r=>Object.fromEntries(sel.split(',').map(c=>[c,r[c]??null]))); return new Response(JSON.stringify(out),{status:200}); }
   if(m==='POST'){ const b=JSON.parse(opt.body); if(!/^[a-z0-9]{1,30}$/.test(b.username_system)) return new Response('{"code":"23514"}',{status:400}); if(rows.some(r=>r.username_system===b.username_system)) return new Response('{"code":"23505"}',{status:409}); const r={id:crypto.randomUUID(),created_at:new Date().toISOString().replace('Z','123+00:00'),views:0,password:null,draft_json:null,proprietario_id:null,...b}; rows.push(r); return new Response(JSON.stringify([r]),{status:201}); }
   if(m==='PATCH'){ const b=JSON.parse(opt.body); const toccate=rows.filter(f); toccate.forEach(r=>Object.assign(r,b)); return String(opt.headers.Prefer||'').includes('representation') ? new Response(JSON.stringify(toccate),{status:200}) : new Response(null,{status:204}); }
@@ -118,6 +119,7 @@ r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),bod
 const p=riga('prova');
 ok(r.code===200 && r.body.action==='activated' && r.body.data_scadenza===p.data_scadenza && p.stato==='attivo' && p.proprietario_id===anna.id,'attivazione: ricevuta + account verificato → attiva e di proprietà dell\'account');
 ok(p.bio==='ciao' && p.username_display==='@Prova' && p.draft_json==='','attivazione: la bozza diventa la tag pubblica');
+ok(p.email_benvenuto_il && p.promemoria_a==='anna@esempio.it','attivazione: benvenuto registrato e promemoria in attesa (manca la foto)');
 ok(p.data_inizio && p.data_scadenza && !p.password,'attivazione: date scritte dal server, nessuna password salvata nella tag');
 r=await call('update-profile.js',{method:'POST',body:{username_system:'prova',bio:'hack',sessionToken:ric}});
 ok(r.code===401 && riga('prova').bio==='ciao','dopo l\'attivazione la ricevuta non vale più');
@@ -484,6 +486,33 @@ delete process.env.RINNOVO_GRATUITO;
 }
 
 // ============================================================
+// EMAIL DI BENVENUTO E PROMEMORIA (lib/email.js, api/update-profile.js, api/account.js?cron=promemoria)
+{
+  process.env.RESEND_API_KEY='re_test'; emailInviate.length=0;
+  const { partiMancanti, emailBenvenuto, emailPromemoria } = await import(new URL('../lib/email.js', import.meta.url).href);
+  ok(JSON.stringify(partiMancanti({}))==='["foto","bio","contatto"]' && partiMancanti({avatar_url:'x',bio:'y',modulo_vcf:'{"telefono1":"333"}'}).length===0 && partiMancanti({avatar_url:'x',bio:'y',config_canali:'[{"nome":"Instagram"}]'}).length===0,'email: riconosce foto, bio e contatto mancanti');
+  const b=emailBenvenuto({tag:'bar<x>',nome:'@BAR',mancanti:['foto'],scadenza:'2027-02-20'});
+  ok(b.subject==='@BAR è online' && b.html.includes('Completa la tua tag') && !b.html.includes('<x>') && b.html.includes('20 febbraio 2027'),'benvenuto: oggetto, bottone giusto, testo protetto, data della prova');
+  ok(emailPromemoria({tag:'bar',nome:'@BAR',mancanti:['foto']}).subject==='@BAR: ti manca solo la foto o il logo','promemoria: oggetto con la parte mancante');
+  // Cron: senza la chiave giusta non parte
+  process.env.CRON_SECRET='segreto-cron';
+  let r=await call('account.js',{method:'GET',query:{cron:'promemoria'},headers:{authorization:'Bearer sbagliato'}});
+  ok(r.code===401 && emailInviate.length===0,'promemoria: senza la chiave del cron non parte nulla');
+  const ieri=new Date(Date.now()-26*3600000).toISOString(), oggi=new Date(Date.now()-2*3600000).toISOString(), vecchio=new Date(Date.now()-6*86400000).toISOString();
+  const base={stato:'attivo',proprietario_id:anna.id,views:0};
+  rows.push({id:crypto.randomUUID(),created_at:ieri,username_system:'promoa',username_display:'@PROMOA',...base,email_benvenuto_il:ieri,promemoria_a:'a@x.it',bio:'ciao'});
+  rows.push({id:crypto.randomUUID(),created_at:ieri,username_system:'promob',...base,email_benvenuto_il:ieri,promemoria_a:'b@x.it',bio:'ciao',avatar_url:'f',email:'b@x.it'});
+  rows.push({id:crypto.randomUUID(),created_at:oggi,username_system:'promoc',...base,email_benvenuto_il:oggi,promemoria_a:'c@x.it'});
+  rows.push({id:crypto.randomUUID(),created_at:vecchio,username_system:'promod',...base,email_benvenuto_il:vecchio,promemoria_a:'d@x.it'});
+  r=await call('account.js',{method:'GET',query:{cron:'promemoria'},headers:{authorization:'Bearer segreto-cron'}});
+  const rg=n=>rows.find(x=>x.username_system===n);
+  ok(r.code===200 && r.body.inviati===1 && r.body.completi===1 && emailInviate.length===1 && emailInviate[0].to[0]==='a@x.it' && /PROMOA/.test(emailInviate[0].subject),'promemoria: parte solo alla tag incompleta attivata ieri');
+  ok(rg('promoa').promemoria_il && rg('promoa').promemoria_a===null && rg('promob').promemoria_a===null && rg('promoc').promemoria_a==='c@x.it' && rg('promod').promemoria_a==='d@x.it','promemoria: indirizzo cancellato dopo l\'invio; tag di oggi o troppo vecchie non toccate');
+  r=await call('account.js',{method:'GET',query:{cron:'promemoria'},headers:{authorization:'Bearer segreto-cron'}});
+  ok(r.body.inviati===0 && emailInviate.length===1,'promemoria: mai due volte alla stessa tag');
+  delete process.env.CRON_SECRET; delete process.env.RESEND_API_KEY; emailInviate.length=0;
+}
+
 // SEGNALA QUESTA TAG (api/segnala.js)
 // ============================================================
 {
