@@ -19,5 +19,11 @@
       "source": "/u/:username/manifest.json",
       "destination": "/api/manifest?u=:username"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/account?cron=promemoria",
+      "schedule": "17 7 * * *"
+    }
   ]
 }

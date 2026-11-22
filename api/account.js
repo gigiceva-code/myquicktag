@@ -7,7 +7,8 @@
 // e la verifica con Supabase (lib/sessione.js) prima di ogni operazione.
 //
 // azione 'mie-tag' → elenco delle tag di cui l'account è proprietario
-import { tagDelProprietario } from '../lib/db.js';
+import { tagDelProprietario, tagDaRicordare, aggiornaTag, emailDelProprietario } from '../lib/db.js';
+import { emailPromemoria, inviaEmail, partiMancanti } from '../lib/email.js';
 import { tokenAccount, utenteDaToken } from '../lib/sessione.js';
 import { calcolaAbbonamento, pianoEffettivo, puoAggiungereTag } from '../lib/abbonamento.js';
 import { contaEvento, numeriLancio, puoVedereNumeri } from '../lib/contatori.js';
@@ -34,7 +35,37 @@ export function configurazionePubblica() {
   return { url, chiave };
 }
 
+// PROMEMORIA DEL GIORNO DOPO (lib/email.js): lo chiama Vercel Cron ogni mattina (vercel.json),
+// con l'intestazione Authorization: Bearer <CRON_SECRET>. Sta qui perché il piano Hobby di Vercel
+// ammette al massimo 12 funzioni. Una sola email per tag; l'indirizzo si legge dall'account al momento.
+async function inviaPromemoria(req, res) {
+  const segreto = process.env.CRON_SECRET;
+  if (!segreto || req.headers.authorization !== `Bearer ${segreto}`) return res.status(401).json({ success: false });
+  let inviati = 0, completi = 0, errori = 0;
+  const tags = await tagDaRicordare();
+  for (const r of tags) {
+    const f = r.fields;
+    const mancanti = partiMancanti(f);
+    try {
+      if (mancanti.length) {
+        const destinatario = await emailDelProprietario(f.proprietario_id);
+        if (!destinatario) { await aggiornaTag(r.id, { promemoria_in_attesa: false }); continue; }
+        const ok = await inviaEmail({ to: destinatario, ...emailPromemoria({ tag: f.username_system, nome: f.username_display, mancanti }) });
+        if (!ok) { errori++; continue; } // riprova domani, finché la tag resta nella finestra dei 4 giorni
+        inviati++;
+      } else completi++;
+      await aggiornaTag(r.id, { promemoria_il: new Date().toISOString(), promemoria_in_attesa: false });
+    } catch (e) { errori++; console.error('PROMEMORIA:', e.dettagli || e.message); }
+  }
+  console.log(`PROMEMORIA: ${inviati} inviati, ${completi} tag già complete, ${errori} errori`);
+  return res.status(200).json({ success: true, inviati, completi, errori });
+}
+
 export default async function handler(req, res) {
+  if (req.method === 'GET' && String(req.query?.cron || '') === 'promemoria') {
+    try { return await inviaPromemoria(req, res); }
+    catch (e) { console.error('CRASH PROMEMORIA:', e.dettagli || e.message); return res.status(500).json({ success: false }); }
+  }
   // azione=config (GET, pubblica): indirizzo e chiave pubblica di Supabase per la libreria di accesso
   if (req.method === 'GET' && String(req.query?.azione || '') === 'config') {
     res.setHeader('Cache-Control', 'public, max-age=300');
