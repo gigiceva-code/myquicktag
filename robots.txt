@@ -1,0 +1,17 @@
+# myquicktag.it — pagine pubbliche per i motori di ricerca (22/11/2026)
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /edit.html
+Disallow: /dashboard.html
+Disallow: /profile.html
+Disallow: /analytics.html
+Disallow: /checkout.html
+Disallow: /account.html
+Disallow: /accesso.html
+Disallow: /contatti.html
+Disallow: /numeri.html
+Disallow: /pocket.html
+Disallow: /celebration.html
+
+Sitemap: https://myquicktag.it/sitemap.xml

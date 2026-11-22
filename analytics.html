@@ -102,6 +102,7 @@
             gap: 12px;
         }
 
+        #primi-passi[hidden] { display: none; }
         .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
         .card-header i { color: var(--accent-smeraldo); font-size: 0.95rem; opacity: 0.9; }
         .card-header h3 { font-size: 0.75rem; font-weight: 500; letter-spacing: 2px; color: var(--text-main); text-transform: uppercase; }
@@ -152,14 +153,24 @@
 
     <section class="hero-stats-row">
         <div class="hero-stat-box">
-            <span class="stat-title">Scansioni</span>
+            <span class="stat-title">Visite</span>
             <div class="stat-big" id="counter-views">0</div>
         </div>
         <div class="hero-stat-box right">
             <span class="stat-title">Sezione più vista</span>
-            <div class="stat-medium" id="top-section-name">N/A</div>
+            <div class="stat-medium" id="top-section-name">—</div>
             <div style="font-size: 0.65rem; color: var(--text-sec); margin-top: 4px;" id="top-section-time">Picco orario: --:--</div>
         </div>
+    </section>
+
+    <!-- STATISTICHE VUOTE CHE AIUTANO (audit 22/11/2026): con 0 visite, un invito a condividere invece di una pagina di zeri -->
+    <section class="analytics-card" id="primi-passi" hidden>
+        <div class="card-header">
+            <i class="fas fa-paper-plane"></i>
+            <h3 id="primi-passi-titolo">Ancora nessuna visita</h3>
+        </div>
+        <p id="primi-passi-testo" style="margin: 4px 0 18px; font-size: 0.85rem; line-height: 1.55; color: #b8b8bd;">Le statistiche si accendono alla prima visita. Condividi la tua tag su WhatsApp, Instagram o con il QR: chi la apre comparirà qui.</p>
+        <button type="button" id="primi-passi-btn" style="width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--accent-smeraldo); color: #000; font-family: inherit; font-weight: 800; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;">Condividi la tua tag</button>
     </section>
 
     <section class="analytics-card">
@@ -259,6 +270,7 @@
                 // 1. SCANSIONI (Macro)
                 const viewsReali = data.fields.views || 0;
                 animaContatore('counter-views', viewsReali);
+                if (!viewsReali) mostraPrimiPassi(data.fields, usernameCorrente);
 
                 // 2. DISPOSITIVI E LOCALITÀ (Macro - da analytics_data)
                 if (data.fields.analytics_data) {
@@ -282,6 +294,27 @@
             document.getElementById('counter-views').innerText = "-";
         }
     });
+
+    // Nessuna visita ancora: tag attiva → invito a condividerla; tag non attiva → invito ad attivarla
+    function mostraPrimiPassi(fields, nome) {
+        const box = document.getElementById('primi-passi');
+        const btn = document.getElementById('primi-passi-btn');
+        const attiva = String(fields.stato || '').toLowerCase().trim() === 'attivo';
+        if (!attiva) {
+            document.getElementById('primi-passi-titolo').textContent = 'La tua tag non è ancora online';
+            document.getElementById('primi-passi-testo').textContent = 'Attivala gratis: da quel momento ogni visita comparirà qui, con orari, dispositivi e clic.';
+            btn.textContent = 'Attiva la tua tag';
+            btn.onclick = () => { window.location.href = '/edit.html?u=' + encodeURIComponent(nome); };
+        } else {
+            const link = window.location.origin + '/u/' + encodeURIComponent(nome);
+            btn.onclick = async () => {
+                if (navigator.share) { try { await navigator.share({ title: '@' + nome, url: link }); } catch (e) {} return; }
+                try { await navigator.clipboard.writeText(link); btn.textContent = 'Link copiato'; setTimeout(() => { btn.textContent = 'Condividi la tua tag'; }, 2000); }
+                catch (e) { window.prompt('Copia il link della tua tag', link); }
+            };
+        }
+        box.hidden = false;
+    }
 
     // --- ELABORAZIONE DATI VECCHI (DISPOSITIVI/GEO) ---
     function elaboraMacroAnalytics(analytics) {
@@ -346,7 +379,7 @@
         });
 
         // Trova Top Sezione
-        let topSezione = "N/A";
+        let topSezione = "—";
         let maxSezClick = 0;
         for (const [sez, count] of Object.entries(mappaSezioni)) {
             if (count > maxSezClick) { maxSezClick = count; topSezione = sez; }
