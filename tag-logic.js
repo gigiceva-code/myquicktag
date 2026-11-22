@@ -163,7 +163,7 @@ async function avviaFlusso(username) {
 
         if (modeDraft) {
             if (!isOwner) {
-                window.location.href = `/profile.html?u=${username}`;
+                window.location.href = '/dashboard.html';
                 return;
             }
         }

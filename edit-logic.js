@@ -83,7 +83,28 @@
             if (container) container.classList.toggle('con-copertina', haCta || haRubrica);
         }
 
+        // GUIDA IN 3 TAPPE (audit 22/11/2026): Foto · Bio · Un contatto, spuntate guardando i campi
+        function aggiornaGuida() {
+            const box = document.getElementById('guida-tappe');
+            if (!box) return;
+            const val = id => (document.getElementById(id) ? String(document.getElementById(id).value || '').trim() : '');
+            const track = document.getElementById('social-internal-track');
+            const fatte = {
+                foto: !!val('field-avatar-url'),
+                bio: !!val('field-bio'),
+                contatto: !!(val('field-tel1') || val('field-tel2') || val('field-email') || (track && track.children.length > 0))
+            };
+            let n = 0;
+            box.querySelectorAll('.guida-tappa').forEach(b => { const ok = fatte[b.dataset.tappa]; b.classList.toggle('fatta', ok); if (ok) n++; });
+            document.getElementById('guida-conta').textContent = n + '/3';
+            document.getElementById('guida-avanzamento').style.width = Math.round(n / 3 * 100) + '%';
+            box.hidden = n === 3;
+            const pallino = document.getElementById('pallino-guida');
+            if (pallino) pallino.hidden = n === 3;
+        }
+
         function aggiornaAnteprimaLive() {
+            aggiornaGuida();
             const previewCopertina = document.getElementById('preview-copertina');
             const roomIdentity = document.getElementById('room-identity');
             const roomBusiness = document.getElementById('room-business');
@@ -1625,6 +1646,7 @@ function gestisciVIPSwitch(checkbox) {
                     
                     // Assegna il link al campo nascosto
                     document.getElementById('field-avatar-url').value = imageUrl;
+                    aggiornaGuida();
 
                     // 4. AGGIORNAMENTO FORZATO DELLA COPERTINA PRINCIPALE (Il fix visivo)
                     const liveContainer = document.getElementById('live-avatar-container');
@@ -2377,6 +2399,7 @@ document.addEventListener('input', e => {
     if (id === 'field-qp-premio-a' || id === 'field-qp-premio-b') qpFrase();
     if (id === 'field-qp-limite') qpSoglie();
     if (['field-sottotitolo', 'field-qa-label', 'field-qa-url', 'field-tel1', 'field-tel2', 'field-email'].includes(id)) aggiornaCopertinaAnteprima();
+    if (['field-bio', 'field-tel1', 'field-tel2', 'field-email', 'field-avatar-url'].includes(id)) aggiornaGuida();
 });
 document.addEventListener('change', e => { if (e.target && e.target.id === 'field-qa-tipo') aggiornaCopertinaAnteprima(); });
 

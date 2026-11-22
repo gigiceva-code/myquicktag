@@ -496,7 +496,7 @@
                         document.getElementById("loading-screen").innerHTML = `
                             <h2 class="main-title">Upgrade in arrivo</h2>
                             <p class="subtitle">I piani Premium e Gold saranno disponibili con l'apertura dei pagamenti.</p>
-                            <a href="/profile.html?u=${targetUserClean}" class="action-button" style="text-decoration:none;">Torna alla dashboard</a>`;
+                            <a href="/dashboard.html" class="action-button" style="text-decoration:none;">Torna alla dashboard</a>`;
                         return;
                     }
 
@@ -692,7 +692,7 @@
      // 4. REINDIRIZZAMENTO FINALE ALLA TAG ORA ATTIVA (Corretto per tag.html)
         function vaiAllaTag() {
             if (!targetUserClean) return;
-            if (modalitaRinnovo) { window.location.href = `/profile.html?u=${targetUserClean}`; return; }
+            if (modalitaRinnovo) { window.location.href = '/dashboard.html'; return; }
             localStorage.setItem('mqt_logged_user', targetUserClean);
             // Invito a installare: segno solo per questa scheda (tag-logic.js), mai nell'indirizzo che l'iPhone salva
             try { sessionStorage.setItem('mqt_benvenuto', targetUserClean); } catch (e) {}

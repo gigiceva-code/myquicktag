@@ -106,7 +106,7 @@
             <i class="fas fa-chevron-left"></i><span>Console</span>
         </button>
         <button type="button" id="btn-modifica" class="voce-barra voce-modifica" onclick="apriDrawer('drawer-master')">
-            <i class="fas fa-pen"></i><span>Modifica</span>
+            <i class="fas fa-pen"></i><span>Modifica</span><b id="pallino-guida" hidden aria-label="Tappe da completare"></b>
         </button>
         <button type="button" id="btn-pubblica-barra" class="voce-barra voce-pubblica" onclick="pubblicaDallaBarra()">
             <i class="fas fa-globe"></i><span id="testo-pubblica-barra">Pubblica</span>
@@ -126,6 +126,15 @@
         
         <!-- ELENCO VOCI SCORREVOLE (Salva lo spazio su schermi piccoli) -->
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px; margin-bottom: 15px;">
+
+            <!-- GUIDA IN 3 TAPPE (audit 22/11/2026): si spunta da sola e porta dritto al campo; sparisce a tag completa -->
+            <div id="guida-tappe" hidden>
+                <div class="guida-testa"><span>La tua tag in 3 tappe</span><b id="guida-conta">0/3</b></div>
+                <div class="guida-barra"><i id="guida-avanzamento"></i></div>
+                <button type="button" class="guida-tappa" data-tappa="foto" onclick="apriDrawer('drawer-identita')"><em></em><span>Foto o logo</span><small>La prima cosa che si guarda</small></button>
+                <button type="button" class="guida-tappa" data-tappa="bio" onclick="apriDrawer('drawer-bio')"><em></em><span>Due righe su di te</span><small>Chi sei e cosa fai</small></button>
+                <button type="button" class="guida-tappa" data-tappa="contatto" onclick="apriDrawer('drawer-contatti')"><em></em><span>Un contatto</span><small>Telefono o email, per farti trovare</small></button>
+            </div>
             
             <div class="edit-menu-item" style="justify-content: space-between; padding-right: 0 !important;">
                 <div style="display: flex; align-items: center; flex: 1;" onclick="apriDrawer('env-identity')">

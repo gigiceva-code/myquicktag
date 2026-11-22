@@ -101,4 +101,5 @@
     .azioni { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
     .azioni a { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 6px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); min-height: 44px; box-sizing: border-box; text-align: center; }
     .azioni a i { color: var(--accent-smeraldo); }
+    .azioni a:last-child:nth-child(odd) { grid-column: 1 / -1; } /* voce dispari in fondo: larga quanto la scheda */
     .pallino { display: inline-block; min-width: 18px; padding: 1px 6px; border-radius: 10px; background: var(--danger); color: #fff; font-size: 0.7rem; }
