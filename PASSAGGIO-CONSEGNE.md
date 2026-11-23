@@ -105,7 +105,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   Va percepito come un servizio, non come pubblicità: niente finestre automatiche, niente richieste di email.
   Il Pocket ha un suo manifest (`pocket-manifest.json`), ma **non su iPhone**: lì l'app installata avrebbe una memoria
   separata da Safari e risulterebbe vuota, quindi l'icona sulla Home apre Safari. Rimossa la vecchia sincronizzazione
-  "cloud" del Pocket (era legata al login dismesso). Futuro, dopo il lancio: copia del Pocket legata a un account.
+  "cloud" del Pocket (era legata al login dismesso).
+- **Pocket nell'account (23/11/2026, fatto):** con un account le tag salvate vanno anche nella tabella `pocket`
+  (Supabase, RLS: ognuno vede solo le sue; migrazione `20261123000000_pocket_account.sql`), scritta dal browser con la
+  sessione (`session.js` → `mqtSessione.pocket`), quindi senza funzioni server in più. Senza account resta `mqt_pocket`
+  nel browser con l'invito "Accedi per ritrovarla ovunque"; al primo accesso il Pocket del browser passa nell'account.
+  Motivo: sul telefono fotocamera (QR) e PWA del Pocket usano browser diversi, ognuno con la sua memoria.
+  Test: `test/pocket.e2e.mjs`.
 - **Navigazione dashboard (01/11/2026, segnalato dal titolare dopo la prova di Martina):** le dashboard sono due:
   `dashboard.html` = **"Identity Console"** (account, nuova; nome scelto dal titolare l'01/11) e `profile.html` =
   **"Gestione tag"** della singola tag (piano, rinnovo, bozza, QR; grafica vecchia). Tutti i "torna alla dashboard" portano all'Identity Console: editor dopo "Salva in dashboard",
