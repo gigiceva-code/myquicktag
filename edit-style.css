@@ -463,3 +463,13 @@ input[type="password"], input:not([type]), textarea, select {
 #barra-editor .voce-pubblica:has(small:not([hidden])) { gap: 1px; }
 #nota-prima-di-attivare { margin: 0 0 14px; padding: 13px 15px; border-radius: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); color: #e6e6ea; font-size: 0.8rem; line-height: 1.5; }
 #nota-prima-di-attivare b { color: #fff; }
+/* Telefoni molto bassi (23/11/2026): copertina compatta come sulla tag pubblica */
+@media (max-height: 600px) {
+    .app-container.con-copertina .copertina-azioni { gap: 9px; margin-top: 10px; }
+    .app-container.con-copertina #copertina-cta { margin-top: 4px; padding: 12px 22px; }
+    #profile-content.app-container.locked.con-copertina .entrance-prompt { bottom: 14px !important; gap: 6px; }
+}
+@media (max-height: 540px) {
+    .app-container.con-copertina #copertina-rubrica { display: none !important; }
+    #profile-content.app-container.locked.con-copertina .header-monolith { transform: translateY(6vh); }
+}
