@@ -444,6 +444,8 @@
         let targetUserClean = usernameScelto.replace('@', '').trim().toLowerCase();
         // Rinnovo (dalla dashboard): stessa pagina, ma per una tag già attiva del proprietario
         const modalitaRinnovo = urlParams.get("rinnovo") === "1";
+        // Contatore anonimo del passaggio "pagina di attivazione aperta" (api/track-view.js, 23/11/2026)
+        if (!modalitaRinnovo) { try { fetch('/api/track-view?evento=checkout', { method: 'POST', keepalive: true }).catch(function () {}); } catch (e) {} }
 
         // Data in italiano, es. "21 gennaio 2027" (AAAA-MM-GG dal server, oppure un istante in ms)
         function dataEstesa(valore) {

@@ -109,7 +109,7 @@
             <i class="fas fa-pen"></i><span>Modifica</span><b id="pallino-guida" hidden aria-label="Tappe da completare"></b>
         </button>
         <button type="button" id="btn-pubblica-barra" class="voce-barra voce-pubblica" onclick="pubblicaDallaBarra()">
-            <i class="fas fa-globe"></i><span id="testo-pubblica-barra">Pubblica</span>
+            <i class="fas fa-globe"></i><span id="testo-pubblica-barra">Pubblica</span><small id="nota-attiva" hidden>3 mesi · senza carta</small>
         </button>
     </nav>
 
@@ -127,6 +127,8 @@
         <!-- ELENCO VOCI SCORREVOLE (Salva lo spazio su schermi piccoli) -->
         <div style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding: 0 5px; margin-bottom: 15px;">
 
+            <!-- Compare se si preme "Attiva gratis" con la tag ancora vuota (23/11/2026), al posto dell'avviso di sistema -->
+            <div id="nota-prima-di-attivare" hidden>Ci siamo quasi. Per metterla online aggiungi almeno una cosa: <b>due righe su di te, un contatto, un social o il sito</b>. Poi premi di nuovo <b>Attiva gratis</b>.</div>
             <!-- GUIDA IN 3 TAPPE (audit 22/11/2026): si spunta da sola e porta dritto al campo; sparisce a tag completa -->
             <div id="guida-tappe" hidden>
                 <div class="guida-testa"><span>La tua tag in 3 tappe</span><b id="guida-conta">0/3</b></div>

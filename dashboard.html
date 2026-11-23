@@ -105,7 +105,7 @@
     function msg(el, t, ok) { el.textContent = t; el.className = 'messaggio ' + (ok ? 'ok' : 'ko'); }
 
     function statoTag(t) {
-        if (t.stato === 'in attesa') return { badge: 'badge-warn', testo: 'Da attivare', sub: 'Prenotata: completa e attiva entro 24 ore' };
+        if (t.stato === 'in attesa') return { badge: 'badge-warn', testo: 'Da attivare', sub: 'Prenotata per 24 ore: attivala gratis per metterla online' };
         const a = t.abbonamento || {};
         // Piano assegnato (omaggio, e in futuro pagato): si mostra il piano, non la data della prova
         const assegnato = String(t.plan || '').toUpperCase();
@@ -137,7 +137,7 @@
             const n = encodeURIComponent(t.username_system);
             const nome = t.username_display ? t.username_display.replace(/^@?/, '@') : '@' + t.username_system;
             const azioni = t.stato === 'in attesa'
-                ? `<a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-pen"></i> Completa e attiva</a>`
+                ? `<a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-bolt"></i> Attiva gratis</a>`
                 : `<a href="/u/${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-eye"></i> Apri la tag</a>
                    <a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-pen"></i> Modifica</a>
                    <a href="/analytics.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-chart-line"></i> Statistiche${t.views ? ' · ' + esc(t.views) : ''}</a>
