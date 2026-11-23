@@ -117,7 +117,76 @@
         try { localStorage.setItem('mqt_keys', JSON.stringify(chiavi)); } catch (e) {}
     }
 
+    // ============================================================
+    // POCKET NELL'ACCOUNT (23/11/2026): con un account le tag salvate stanno anche nella tabella "pocket"
+    // (Supabase, protetta: ognuno vede solo le sue) e si ritrovano su ogni browser e dispositivo.
+    // Senza account restano in questo browser (mqt_pocket), come prima; al primo accesso passano nell'account.
+    // ============================================================
+    const P_LISTA = 'mqt_pocket', P_ATTESA = 'mqt_pocket_attesa', P_TOLTE = 'mqt_pocket_tolte', P_UNITO = 'mqt_pocket_unito';
+    function leggiJson(k, predefinito) { try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? predefinito : v; } catch (e) { return predefinito; } }
+    function scriviJson(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    const nomeValido = u => /^[a-z0-9_-]{1,40}$/.test(String(u || ''));
+    const riga = v => ({ username: v.username, nome: String(v.nome || '').slice(0, 80) || null, salvata_il: v.dataSalvataggio || new Date().toISOString() });
+    async function sessionePocket() {
+        if (!haSessioneSalvata()) return null;
+        try {
+            const sb = await client();
+            const { data } = await sb.auth.getSession();
+            return data && data.session ? { sb: sb, uid: data.session.user.id } : null;
+        } catch (e) { return null; }
+    }
+    const pocket = {
+        locale: function () { const l = leggiJson(P_LISTA, []); return Array.isArray(l) ? l : []; },
+        // Salva la tag: subito in questo browser e, se c'è un account, nell'account. true = è nell'account
+        aggiungi: async function (voce) {
+            if (!voce || !nomeValido(voce.username)) return false;
+            const l = this.locale();
+            if (!l.some(x => x.username === voce.username)) { l.push(voce); scriviJson(P_LISTA, l); }
+            scriviJson(P_TOLTE, leggiJson(P_TOLTE, []).filter(u => u !== voce.username));
+            const s = await sessionePocket();
+            if (s) {
+                const { error } = await s.sb.from('pocket').upsert(riga(voce), { onConflict: 'utente,username' });
+                if (!error) return true;
+            }
+            const attesa = leggiJson(P_ATTESA, []);
+            if (!attesa.includes(voce.username)) { attesa.push(voce.username); scriviJson(P_ATTESA, attesa); }
+            return false;
+        },
+        togli: async function (username) {
+            scriviJson(P_LISTA, this.locale().filter(x => x.username !== username));
+            scriviJson(P_ATTESA, leggiJson(P_ATTESA, []).filter(u => u !== username));
+            const s = await sessionePocket();
+            if (s) { const { error } = await s.sb.from('pocket').delete().eq('username', username); if (!error) return; }
+            const tolte = leggiJson(P_TOLTE, []);
+            if (!tolte.includes(username)) { tolte.push(username); scriviJson(P_TOLTE, tolte); }
+        },
+        // Unione con l'account: la prima volta su questo browser carica tutto il Pocket locale, poi solo
+        // le aggiunte e le rimozioni fatte senza account; alla fine il browser ha la stessa lista dell'account.
+        // Restituisce la lista aggiornata, oppure null (nessun account o rete assente: resta quella locale)
+        sincronizza: async function () {
+            const s = await sessionePocket();
+            if (!s) return null;
+            try {
+                const prima = leggiJson(P_UNITO, '') !== s.uid;
+                const attesa = leggiJson(P_ATTESA, []);
+                const daCaricare = this.locale().filter(x => nomeValido(x.username) && (prima || attesa.includes(x.username)));
+                if (daCaricare.length) {
+                    const { error } = await s.sb.from('pocket').upsert(daCaricare.map(riga), { onConflict: 'utente,username', ignoreDuplicates: true });
+                    if (error) return null;
+                }
+                const tolte = leggiJson(P_TOLTE, []);
+                if (tolte.length) await s.sb.from('pocket').delete().in('username', tolte);
+                const { data, error } = await s.sb.from('pocket').select('username,nome,salvata_il').order('salvata_il', { ascending: true });
+                if (error || !Array.isArray(data)) return null;
+                const lista = data.map(r => ({ username: r.username, nome: r.nome || '@' + r.username, url: location.origin + '/u/' + r.username, dataSalvataggio: r.salvata_il }));
+                scriviJson(P_LISTA, lista); scriviJson(P_ATTESA, []); scriviJson(P_TOLTE, []); scriviJson(P_UNITO, s.uid);
+                return lista;
+            } catch (e) { return null; }
+        }
+    };
+
     window.mqtSessione = {
+        pocket: pocket,
         client: client,
         tokenAccount: tokenAccount,
         haAccount: haSessioneSalvata,
@@ -170,6 +239,8 @@
                 chiaviSessione().forEach(function (k) { localStorage.removeItem(k); });
                 localStorage.removeItem('mqt_keys');
                 localStorage.removeItem('mqt_logged_user');
+                // Il Pocket già unito all'account resta nell'account: su questo browser non si lascia una copia
+                if (localStorage.getItem(P_UNITO)) [P_LISTA, P_ATTESA, P_TOLTE, P_UNITO].forEach(function (k) { localStorage.removeItem(k); });
             } catch (e) {}
         },
 

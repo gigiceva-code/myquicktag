@@ -156,6 +156,7 @@
         <div class="salvata-box" id="salvata-box" role="status">
             <h2 id="salvata-titolo"></h2>
             <p id="salvata-testo"></p>
+            <a id="salvata-accedi" href="/accesso.html?torna=%2Fpocket.html" style="display: none; margin-right: 18px;">Accedi per ritrovarla ovunque</a>
             <a id="salvata-torna" href="/">‹ Torna alla tag</a>
         </div>
 
@@ -191,6 +192,8 @@
     document.addEventListener("DOMContentLoaded", () => {
         caricaPocket();
         mostraAppenaSalvata();
+        // Con un account: la lista si allinea a quella dell'account (le tag salvate da altri browser o telefoni)
+        if (window.mqtSessione && mqtSessione.haAccount()) mqtSessione.pocket.sincronizza().then(lista => { if (lista) caricaPocket(); });
         configuraRicerca();
         configuraInvitoHome();
         // "CHIUDI" torna alla tag da cui si arriva; aperto dalla schermata Home non ha dove tornare
@@ -206,10 +209,12 @@ function mostraAppenaSalvata() {
         try { voce = (JSON.parse(localStorage.getItem('mqt_pocket') || '[]') || []).find(x => x.username === nome); } catch (e) {}
         const mostrato = '@' + String((voce && voce.nome) || nome).replace(/^@+/, '');
         const conAccount = !!(window.mqtSessione && mqtSessione.haAccount());
+        const nellAccount = p.get('account') === '1';
         document.getElementById('salvata-titolo').textContent = (p.get('gia') ? mostrato + ' è già nel tuo Pocket' : mostrato + ' è nel tuo Pocket ✓');
         document.getElementById('salvata-testo').textContent = conAccount
-            ? 'Le tag che salvi restano su questo telefono: le ritrovi qui e nella tua Identity Console, alla voce "Tag salvate".'
-            : 'Le tag che salvi restano su questo telefono, senza bisogno di registrarti. Le ritrovi qui, nel tuo Pocket: per riaprirlo con un clic aggiungilo alla schermata Home.';
+            ? (nellAccount ? 'È salvata nel tuo account: la ritrovi qui, nella tua Identity Console e su ogni telefono o browser in cui accedi.' : 'È salvata su questo telefono: passerà nel tuo account appena la connessione torna disponibile.')
+            : 'È salvata su questo telefono, senza bisogno di registrarti. Con un account myquicktag la ritrovi su tutti i tuoi dispositivi.';
+        if (!conAccount) document.getElementById('salvata-accedi').style.display = 'inline-block';
         document.getElementById('salvata-torna').href = '/u/' + nome;
         document.getElementById('salvata-torna').textContent = '‹ Torna a ' + mostrato;
         document.getElementById('salvata-box').style.display = 'block';
@@ -370,10 +375,12 @@ function caricaPocket() {
         rigaContatto.style.transform = "translateX(-20px)";
         
      setTimeout(() => {
-            // Rimuovi dalla memoria del telefono
-            let pocketLocale = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
-            pocketLocale = pocketLocale.filter(c => c.username !== username);
-            localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale));
+            // Rimuovi dal telefono e, se c'è un account, anche dall'account (session.js)
+            if (window.mqtSessione && mqtSessione.pocket) mqtSessione.pocket.togli(username).catch(() => {});
+            else {
+                let pocketLocale = JSON.parse(localStorage.getItem('mqt_pocket') || '[]');
+                localStorage.setItem('mqt_pocket', JSON.stringify(pocketLocale.filter(c => c.username !== username)));
+            }
             
             
             // Ricarica la grafica

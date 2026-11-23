@@ -3,7 +3,7 @@
 import http from 'http'; import fs from 'fs'; import path from 'path'; import crypto from 'crypto';
 const ROOT=new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 process.env.SUPABASE_URL='https://fake.supabase.co'; process.env.SUPABASE_PUBLISHABLE_KEY='sb_publishable_finta'; process.env.SUPABASE_SECRET_KEY='sb_secret_x'; process.env.SESSION_SECRET='s';
-const rows=[]; const nomiProtetti=[{nome:'admin',tipo:'system',regola:'esatto'},{nome:'ferrari',tipo:'gold',regola:'esatto'},{nome:'barsport',tipo:'gold',regola:'esatto',assegnato_a:'mario@bar.it'}];
+const rows=[]; const pocket=[]; const nomiProtetti=[{nome:'admin',tipo:'system',regola:'esatto'},{nome:'ferrari',tipo:'gold',regola:'esatto'},{nome:'barsport',tipo:'gold',regola:'esatto',assegnato_a:'mario@bar.it'}];
 // ---- finto GoTrue ----
 const utenti=new Map(); // email → {id,email,pwd,confermato,data,codice,codiceRec}
 const sessioni=new Map(); // access_token → {email, sid}
@@ -81,13 +81,26 @@ http.createServer(async (req,res)=>{
   let body=''; for await (const c of req) body+=c;
   if(p.startsWith('/__segnalazioni')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify(segnalazioni)); return; }
   if(p.startsWith('/__inbox')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify(inbox)); return; }
-  if(p.startsWith('/__db')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify({rows,utenti:[...utenti.values()].map(u=>({email:u.email,confermato:u.confermato,data:u.data})),sessioni:sessioni.size})); return; }
+  if(p.startsWith('/__db')){ res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify({rows,pocket,utenti:[...utenti.values()].map(u=>({email:u.email,confermato:u.confermato,data:u.data})),sessioni:sessioni.size})); return; }
   // Il "link" dell'email di conferma: Supabase conferma l'indirizzo quando viene toccato
   if(p.startsWith('/__conferma')){ const u=utenti.get(String(url.searchParams.get('email')).toLowerCase()); if(u){u.confermato=new Date().toISOString(); u.codice=null;} res.end(u?'ok':'no'); return; }
   if(p.startsWith('/__env')){ const k=url.searchParams.get('k'); if(/^[A-Z_]+$/.test(k||'')) process.env[k]=url.searchParams.get('v')||''; res.end('ok'); return; }
   if(p.startsWith('/__seed')){ const b=JSON.parse(body); rows.push({id:crypto.randomUUID(),created_at:new Date().toISOString(),views:0,proprietario_id:null,...b}); res.end('ok'); return; }
   if(p.startsWith('/auth/v1/')){ if(req.method==='OPTIONS'){res.writeHead(204,cors);res.end();return;}
     const [st,b]=gotrue(req.method,url,{authorization:req.headers.authorization},body?JSON.parse(body):{}); res.writeHead(st,{'Content-Type':'application/json',...cors}); res.end(b==null?'':JSON.stringify(b)); return; }
+  // Tabella pocket (migrazione pocket_account): il browser ci parla con la sessione dell'account, ognuno vede solo le sue righe
+  if(p==='/rest/v1/pocket'){ if(req.method==='OPTIONS'){res.writeHead(204,cors);res.end();return;}
+    const x=utenteDaBearer(req.headers.authorization); const out=(st,b)=>{res.writeHead(st,{'Content-Type':'application/json',...cors}); res.end(b==null?'':JSON.stringify(b));};
+    if(!x) return out(401,{message:'JWT richiesto'});
+    const mie=pocket.filter(r=>r.utente===x.u.id);
+    if(req.method==='GET') return out(200,mie.sort((a,b)=>String(a.salvata_il).localeCompare(String(b.salvata_il))).map(r=>({username:r.username,nome:r.nome,salvata_il:r.salvata_il})));
+    if(req.method==='POST'){ const ign=String(req.headers.prefer||'').includes('ignore-duplicates'); let b=JSON.parse(body||'[]'); if(!Array.isArray(b)) b=[b];
+      if(b.some(v=>!/^[a-z0-9_-]{1,40}$/.test(v.username||''))) return out(400,{code:'23514'});
+      for(const v of b){ const e=mie.find(r=>r.username===v.username); if(e){ if(!ign) Object.assign(e,v); } else pocket.push({utente:x.u.id,salvata_il:new Date().toISOString(),...v}); }
+      return out(201,null); }
+    if(req.method==='DELETE'){ const f=url.searchParams.get('username')||''; const nomi=f.startsWith('eq.')?[f.slice(3)]:f.startsWith('in.(')?f.slice(4,-1).split(',').map(v=>v.replace(/^"|"$/g,'')):[];
+      for(let i=pocket.length-1;i>=0;i--) if(pocket[i].utente===x.u.id&&nomi.includes(pocket[i].username)) pocket.splice(i,1); return out(204,null); }
+    return out(405,null); }
   let mu=p.match(/^\/u\/([^/]+)\/?$/); if(mu){ p='/tag.html'; url.searchParams.set('u',mu[1]); }
   if(p.startsWith('/api/')){
     try{ body=body?JSON.parse(body):{}; }catch{}
