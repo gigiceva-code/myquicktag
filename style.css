@@ -934,3 +934,18 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
 @media (max-height: 760px) { .app-container.locked.con-copertina .header-monolith { transform: translateY(10vh); } }
 /* Telefoni bassi con nome lungo su due righe (forma divider): ancora un po' di respiro sopra ESPLORA TAG */
 @media (max-height: 700px) { .app-container.locked.con-copertina .header-monolith { transform: translateY(5vh); } }
+/* TELEFONI MOLTO BASSI (iPhone SE con le barre di Safari: ~550 px utili, 23/11/2026): copertina compatta.
+   Logo e spazi più piccoli, ESPLORA TAG più in basso; sotto i 540 px "Salva in rubrica" resta solo nei contatti */
+@media (max-height: 600px) {
+    .app-container.locked.con-copertina .header-monolith { transform: translateY(4.5vh); }
+    .app-container.locked.con-copertina .orbital-container { transform: scale(0.74) !important; height: 62px !important; margin-bottom: 12px !important; transform-origin: center top; }
+    .app-container.con-copertina .copertina-azioni { gap: 9px; margin-top: 10px; }
+    .app-container.con-copertina #copertina-cta { margin-top: 4px; padding: 12px 22px; }
+    .app-container.con-copertina #copertina-rubrica { padding: 2px 10px; }
+    .app-container.locked.con-copertina .entrance-prompt { bottom: 16px !important; gap: 6px; }
+    .app-container.locked.con-copertina .entrance-prompt .mini-logo-wrapper { transform: scale(0.8); }
+}
+@media (max-height: 540px) {
+    .app-container.con-copertina #copertina-rubrica { display: none !important; }
+    .app-container.locked.con-copertina .header-monolith { transform: translateY(3.5vh); }
+}
