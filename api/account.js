@@ -7,8 +7,8 @@
 // e la verifica con Supabase (lib/sessione.js) prima di ogni operazione.
 //
 // azione 'mie-tag' → elenco delle tag di cui l'account è proprietario
-import { tagDelProprietario, tagDaRicordare, aggiornaTag, emailDelProprietario } from '../lib/db.js';
-import { emailPromemoria, inviaEmail, partiMancanti } from '../lib/email.js';
+import { tagDelProprietario, tagDaRicordare, aggiornaTag, emailDelProprietario, prenotazioniInScadenza } from '../lib/db.js';
+import { emailPromemoria, emailScadenza, inviaEmail, partiMancanti } from '../lib/email.js';
 import { tokenAccount, utenteDaToken } from '../lib/sessione.js';
 import { calcolaAbbonamento, pianoEffettivo, puoAggiungereTag } from '../lib/abbonamento.js';
 import { contaEvento, numeriLancio, puoVedereNumeri } from '../lib/contatori.js';
@@ -58,7 +58,23 @@ async function inviaPromemoria(req, res) {
     } catch (e) { errori++; console.error('PROMEMORIA:', e.dettagli || e.message); }
   }
   console.log(`PROMEMORIA: ${inviati} inviati, ${completi} tag già complete, ${errori} errori`);
-  return res.status(200).json({ success: true, inviati, completi, errori });
+  // Prenotazioni in scadenza (23/11/2026): stessa chiamata, due volte al giorno (vercel.json), così ogni
+  // prenotazione di un account viene vista quando le restano meno di 12 ore. Una sola email per tag.
+  let scadenze = 0;
+  for (const r of await prenotazioniInScadenza()) {
+    const f = r.fields;
+    try {
+      const destinatario = await emailDelProprietario(f.proprietario_id);
+      const oreRimaste = 24 - (Date.now() - new Date(r.createdTime).getTime()) / 3600000;
+      const ok = destinatario && oreRimaste > 0.5
+        ? await inviaEmail({ to: destinatario, ...emailScadenza({ tag: f.username_system, nome: f.username_display, oreRimaste }) })
+        : false;
+      if (ok) scadenze++;
+      if (ok || !destinatario) await aggiornaTag(r.id, { avviso_scadenza_il: new Date().toISOString() });
+    } catch (e) { errori++; console.error('SCADENZA:', e.dettagli || e.message); }
+  }
+  console.log(`PRENOTAZIONI IN SCADENZA: ${scadenze} avvisi inviati`);
+  return res.status(200).json({ success: true, inviati, completi, scadenze, errori });
 }
 
 export default async function handler(req, res) {

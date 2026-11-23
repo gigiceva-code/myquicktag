@@ -512,6 +512,17 @@ delete process.env.RINNOVO_GRATUITO;
   ok(rg('promoa').promemoria_il && rg('promoa').promemoria_in_attesa===false && rg('promob').promemoria_in_attesa===false && rg('promoc').promemoria_in_attesa===true && rg('promod').promemoria_in_attesa===true,'promemoria: segnato come fatto; tag di oggi o troppo vecchie non toccate');
   r=await call('account.js',{method:'GET',query:{cron:'promemoria'},headers:{authorization:'Bearer segreto-cron'}});
   ok(r.body.inviati===0 && emailInviate.length===1,'promemoria: mai due volte alla stessa tag');
+  // Prenotazioni in scadenza: solo tag in attesa di un account, prenotate tra 12 e 24 ore fa, una volta sola
+  emailInviate.length=0;
+  const ore=h=>new Date(Date.now()-h*3600000).toISOString();
+  rows.push({id:crypto.randomUUID(),created_at:ore(18),username_system:'scadea',stato:'in attesa',proprietario_id:ua.id});
+  rows.push({id:crypto.randomUUID(),created_at:ore(3),username_system:'scadeb',stato:'in attesa',proprietario_id:ua.id});
+  rows.push({id:crypto.randomUUID(),created_at:ore(18),username_system:'scadec',stato:'in attesa'});
+  rows.push({id:crypto.randomUUID(),created_at:ore(30),username_system:'scaded',stato:'in attesa',proprietario_id:ua.id});
+  r=await call('account.js',{method:'GET',query:{cron:'promemoria'},headers:{authorization:'Bearer segreto-cron'}});
+  ok(r.body.scadenze===1 && emailInviate.length===1 && /@scadea è ancora tuo per circa 6 ore/.test(emailInviate[0].subject) && emailInviate[0].to[0]==='a@x.it' && rg('scadea').avviso_scadenza_il && !rg('scadeb').avviso_scadenza_il,'scadenza: avviso solo alla prenotazione di un account a metà strada (6 ore rimaste)');
+  r=await call('account.js',{method:'GET',query:{cron:'promemoria'},headers:{authorization:'Bearer segreto-cron'}});
+  ok(r.body.scadenze===0 && emailInviate.length===1,'scadenza: mai due avvisi per la stessa prenotazione');
   delete process.env.CRON_SECRET; delete process.env.RESEND_API_KEY; emailInviate.length=0;
 }
 
