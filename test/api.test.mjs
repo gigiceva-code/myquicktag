@@ -515,7 +515,7 @@ delete process.env.RINNOVO_GRATUITO;
   // Prenotazioni in scadenza: solo tag in attesa di un account, prenotate tra 12 e 24 ore fa, una volta sola
   emailInviate.length=0;
   const ore=h=>new Date(Date.now()-h*3600000).toISOString();
-  rows.push({id:crypto.randomUUID(),created_at:ore(18),username_system:'scadea',stato:'in attesa',proprietario_id:ua.id});
+  rows.push({id:crypto.randomUUID(),created_at:ore(17.5),username_system:'scadea',stato:'in attesa',proprietario_id:ua.id});
   rows.push({id:crypto.randomUUID(),created_at:ore(3),username_system:'scadeb',stato:'in attesa',proprietario_id:ua.id});
   rows.push({id:crypto.randomUUID(),created_at:ore(18),username_system:'scadec',stato:'in attesa'});
   rows.push({id:crypto.randomUUID(),created_at:ore(30),username_system:'scaded',stato:'in attesa',proprietario_id:ua.id});

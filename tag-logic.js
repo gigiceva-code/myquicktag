@@ -1635,8 +1635,9 @@ function chiudiMenuTag() {
 }
 
 // Il visitatore salva la tag dal menu ⋯ ("Salva questa tag") e la ritrova nel Pocket (/pocket.html) insieme alle altre.
-// Niente registrazione e niente dati inviati al server: l'elenco resta nel browser (mqt_pocket).
-function salvaNelPocketCorrente() {
+// Senza account l'elenco resta nel browser (mqt_pocket); con un account va anche nell'account e si ritrova
+// su ogni dispositivo (session.js → mqtSessione.pocket, 23/11/2026).
+async function salvaNelPocketCorrente() {
     const usernameTag = String(cacheDatiUtente.username_system || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
     if (!usernameTag) return;
     const nomeVisualizzato = cacheDatiUtente.username_display || cacheDatiUtente.username_system;
@@ -1646,20 +1647,20 @@ function salvaNelPocketCorrente() {
     if (!Array.isArray(pocket)) pocket = [];
 
     const gia = pocket.some(item => item.username === usernameTag);
-    if (!gia) {
-        pocket.push({
-            username: usernameTag,
-            nome: nomeVisualizzato,
-            url: `${window.location.origin}/u/${usernameTag}`,
-            dataSalvataggio: new Date().toISOString()
-        });
+    const voce = { username: usernameTag, nome: nomeVisualizzato, url: `${window.location.origin}/u/${usernameTag}`, dataSalvataggio: new Date().toISOString() };
+    let nellAccount = false;
+    if (window.mqtSessione && mqtSessione.pocket) {
+        // Con l'account si aspetta il salvataggio (al massimo 4 secondi): se la rete non risponde resta nel browser
+        try { nellAccount = await Promise.race([mqtSessione.pocket.aggiungi(voce), new Promise(r => setTimeout(() => r(false), 4000))]); } catch (e) { nellAccount = false; }
+    } else if (!gia) {
+        pocket.push(voce);
         try { localStorage.setItem('mqt_pocket', JSON.stringify(pocket)); } catch (e) {
             mostraToast('Non riesco a salvare su questo browser');
             return;
         }
     }
     // Si apre il Pocket, con la spiegazione (per chi ha un account e per chi no) e il ritorno a questa tag
-    window.location.href = `/pocket.html?salvata=${encodeURIComponent(usernameTag)}${gia ? '&gia=1' : ''}`;
+    window.location.href = `/pocket.html?salvata=${encodeURIComponent(usernameTag)}${gia ? '&gia=1' : ''}${nellAccount ? '&account=1' : ''}`;
 }
 // MOTORE DELL'OVERLAY IMMERSIVO (Puro lusso fluttuante)
 // nome (facoltativo): la tag salvata, mostrata in evidenza all'inizio del messaggio

@@ -119,12 +119,15 @@
         return { badge: 'badge-ok', testo: 'Attiva', sub: 'Tutto sbloccato fino al ' + data(a.data_scadenza) };
     }
 
-    // Quante tag ci sono nel Pocket di questo telefono (l'elenco resta nel browser: mqt_pocket)
-    (function contaPocket() {
-        let n = 0;
-        try { const p = JSON.parse(localStorage.getItem('mqt_pocket') || '[]'); n = Array.isArray(p) ? p.length : 0; } catch (e) {}
+    // Quante tag ci sono nel Pocket: con l'account si allinea a quelle salvate su ogni dispositivo (session.js)
+    function scriviPocket(n, account) {
         const sub = document.getElementById('pocket-sub');
-        if (sub) sub.textContent = n === 0 ? 'Le tag che salvi dal menu ⋯ di una tag, su questo telefono' : (n === 1 ? '1 tag salvata su questo telefono' : n + ' tag salvate su questo telefono');
+        const dove = account ? 'nel tuo account' : 'su questo telefono';
+        if (sub) sub.textContent = n === 0 ? 'Le tag che salvi dal menu ⋯ di una tag' : (n === 1 ? '1 tag salvata ' + dove : n + ' tag salvate ' + dove);
+    }
+    (function contaPocket() {
+        scriviPocket(mqtSessione.pocket.locale().length, false);
+        mqtSessione.pocket.sincronizza().then(lista => { if (lista) scriviPocket(lista.length, true); });
     })();
 
     function disegna(tags) {
