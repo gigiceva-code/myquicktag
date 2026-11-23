@@ -18,6 +18,12 @@ export default async function handler(req, res) {
     if (await entroILimiti(req, 'home', [{ nome: 'home', per: 'ip', max: 20, finestra: 3600 }])) await contaEvento('home_visita');
     return res.status(200).json({ success: true });
   }
+  // Passaggi intermedi dell'attivazione (23/11/2026): tasto "Attiva gratis" nell'editor e pagina di checkout
+  const PASSI = { attiva: 'attiva_premuto', checkout: 'checkout_visita' };
+  if (PASSI[req.query.evento]) {
+    if (await entroILimiti(req, 'passo-' + req.query.evento, [{ nome: 'passo-' + req.query.evento, per: 'ip', max: 20, finestra: 3600 }])) await contaEvento(PASSI[req.query.evento]);
+    return res.status(200).json({ success: true });
+  }
 
   const { u } = req.query;
   if (!u) return res.status(400).json({ error: "Utente mancante" });

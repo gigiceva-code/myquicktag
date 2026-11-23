@@ -101,6 +101,8 @@
             box.hidden = n === 3;
             const pallino = document.getElementById('pallino-guida');
             if (pallino) pallino.hidden = n === 3;
+            const nota = document.getElementById('nota-prima-di-attivare');
+            if (nota && !nota.hidden && verificaCompletamentoBase()) nota.hidden = true;
         }
 
         function aggiornaAnteprimaLive() {
@@ -786,10 +788,14 @@
             if (statoUtente === 'attivo') {
                 apriDrawer('drawer-salvataggio');
             } else {
+                try { fetch('/api/track-view?evento=attiva', { method: 'POST', keepalive: true }).catch(() => {}); } catch (e) {}
                 if (verificaCompletamentoBase()) {
                     salvaEDirigi('checkout');
                 } else {
-                    alert("⚠️ Configurazione Incompleta\n\nPrima di procedere devi inserire almeno un contenuto nella tua tag.\nCompila almeno uno di questi campi:\n- Biografia\n- Sito Web\n- Email o Telefono\n- Un Canale Social");
+                    // Tag ancora vuota: al posto dell'avviso di sistema, il pannello Modifica con la guida e una riga gentile
+                    const nota = document.getElementById('nota-prima-di-attivare');
+                    if (nota) nota.hidden = false;
+                    apriDrawer('drawer-master');
                 }
             }
         }
@@ -1180,13 +1186,16 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
                 if (statoUtente === 'attivo') {
                     document.getElementById('master-action-text').innerText = "PUBBLICA ONLINE";
                 } else {
-                    document.getElementById('master-action-text').innerText = "COMPLETA E ATTIVA";
+                    document.getElementById('master-action-text').innerText = "ATTIVA GRATIS";
                 }
                 // Computer: il pannello delle modifiche si apre subito accanto all'anteprima (edit-style.css)
                 try { if (window.matchMedia('(min-width: 1100px)').matches) setTimeout(() => apriDrawer('drawer-master'), 400); } catch (e) {}
                 // Barra fissa in basso: "Pubblica" per una tag attiva, "Attiva" per la prima configurazione
                 const testoBarra = document.getElementById('testo-pubblica-barra');
-                if (testoBarra) testoBarra.innerText = statoUtente === 'attivo' ? 'Pubblica' : 'Attiva';
+                if (testoBarra) testoBarra.innerText = statoUtente === 'attivo' ? 'Pubblica' : 'Attiva gratis';
+                // Sotto "Attiva gratis" una riga che toglie la paura del pagamento (23/11/2026)
+                const notaAttiva = document.getElementById('nota-attiva');
+                if (notaAttiva) notaAttiva.hidden = statoUtente === 'attivo';
 
                 // 🚀 FORZA L'AGGIORNAMENTO GRAFICO (Evita blocchi se ci sono stati errori di rete)
                 if (typeof applicaTemaLive === "function") applicaTemaLive();

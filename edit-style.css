@@ -456,3 +456,10 @@ input[type="password"], input:not([type]), textarea, select {
 #pallino-guida { position: absolute; top: 8px; left: calc(50% + 12px); width: 8px; height: 8px; border-radius: 50%; background: #50C878; box-shadow: 0 0 10px #50C878; animation: mqtPallino 2s ease-in-out infinite; }
 @keyframes mqtPallino { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 @media (prefers-reduced-motion: reduce) { #pallino-guida { animation: none; } }
+
+/* Tasto "Attiva gratis" con la riga rassicurante sotto (23/11/2026) */
+#barra-editor .voce-pubblica small { font-size: 0.5rem; font-weight: 600; letter-spacing: 0.8px; opacity: 0.75; text-transform: uppercase; }
+#barra-editor .voce-pubblica small[hidden], #nota-prima-di-attivare[hidden] { display: none !important; }
+#barra-editor .voce-pubblica:has(small:not([hidden])) { gap: 1px; }
+#nota-prima-di-attivare { margin: 0 0 14px; padding: 13px 15px; border-radius: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); color: #e6e6ea; font-size: 0.8rem; line-height: 1.5; }
+#nota-prima-di-attivare b { color: #fff; }
