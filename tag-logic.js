@@ -1604,7 +1604,8 @@ function mostraTastoGestisci() {
     const testo = document.getElementById('testo-salva-top');
     const dot = document.getElementById('dot-salva');
     if (!btn || !testo) return;
-    btn.onclick = () => { window.location.href = '/dashboard.html'; };
+    // Si apre la Identity Console sulla scheda di questa tag (con più tag nello stesso account, 24/11/2026)
+    btn.onclick = () => { window.location.href = '/dashboard.html#tag-' + encodeURIComponent(usernameCorrente || ''); };
     btn.setAttribute('role', 'button');
     btn.setAttribute('aria-label', 'Gestisci la tua tag: apri la Identity Console');
     testo.textContent = 'GESTISCI';
@@ -1996,7 +1997,19 @@ async function installaPWA() {
         }
         return;
     }
-    mostraToast('Apri dal browser Chrome per installare');
+    mostraIstruzioniAndroid();
+}
+
+// Android senza installazione diretta (24/11/2026): succede quando la tag si apre dentro un'altra app (email,
+// WhatsApp, Instagram: in alto c'è una X), in un browser diverso da Chrome, o se l'invito è stato rifiutato da poco.
+function mostraIstruzioniAndroid() {
+    const overlay = document.getElementById('tag-welcome-overlay');
+    if (!overlay) return;
+    const corpo = document.getElementById('welcome-corpo');
+    if (corpo) corpo.innerHTML = 'Tocca <strong>⋮</strong> in alto a destra e scegli <strong>«Installa app»</strong> oppure <strong>«Aggiungi a schermata Home»</strong>.<br><br><span style="opacity:.75">Se in alto a sinistra vedi una <strong>X</strong>, la tag è aperta dentro un\'altra app: tocca prima <strong>⋮</strong> → <strong>«Apri in Chrome»</strong>.</span>';
+    const btn = document.getElementById('trigger-pwa-install');
+    if (btn) btn.style.display = 'none';
+    overlay.style.display = 'flex';
 }
 
 function mostraIstruzioniIOS() {
