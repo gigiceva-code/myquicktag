@@ -105,6 +105,30 @@
             if (nota && !nota.hidden && verificaCompletamentoBase()) nota.hidden = true;
         }
 
+// Numero di telefono leggibile (24/11/2026): la tastiera numerica di Android non ha lo spazio, quindi
+        // "3385630421" diventa "338 5630421" e "+393385630421" diventa "+39 338 5630421". I fissi italiani
+        // (prefisso di lunghezza variabile) e i numeri esteri restano come sono, con solo gli spazi in ordine.
+        function formattaTelefono(valore) {
+            const grezzo = String(valore || '').trim();
+            if (!grezzo) return '';
+            let n = grezzo.replace(/[\s.\-\/()]/g, '');
+            if (/^0039/.test(n)) n = '+39' + n.slice(4);
+            let prefisso = '';
+            if (n.startsWith('+39')) { prefisso = '+39'; n = n.slice(3); }
+            else if (n.startsWith('+')) return grezzo.replace(/\s+/g, ' ');
+            if (!/^\d+$/.test(n)) return grezzo.replace(/\s+/g, ' ');
+            if (!/^3\d{8,9}$/.test(n)) return grezzo.replace(/\s+/g, ' ');
+            const corpo = n.slice(0, 3) + ' ' + n.slice(3);
+            return (prefisso ? prefisso + ' ' : '') + corpo;
+        }
+        // All'uscita dal campo il numero si mette in ordine da solo (spazio dopo il prefisso)
+        document.addEventListener('focusout', e => {
+            if (e.target && (e.target.id === 'field-tel1' || e.target.id === 'field-tel2')) {
+                const bello = formattaTelefono(e.target.value);
+                if (bello !== e.target.value) { e.target.value = bello; e.target.dispatchEvent(new Event('input', { bubbles: true })); }
+            }
+        });
+
         function aggiornaAnteprimaLive() {
             aggiornaGuida();
             const previewCopertina = document.getElementById('preview-copertina');

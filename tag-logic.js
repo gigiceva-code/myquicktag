@@ -976,6 +976,22 @@ function eseguiQuickAction() {
     if (/^(tel|mailto):/i.test(destinazione)) { window.location.href = destinazione; return; }
     window.open(destinazione, '_blank', 'noopener noreferrer');
 }
+// Numero di telefono leggibile (24/11/2026): la tastiera numerica di Android non ha lo spazio, quindi
+// "3385630421" diventa "338 5630421" e "+393385630421" diventa "+39 338 5630421". I fissi italiani
+// (prefisso di lunghezza variabile) e i numeri esteri restano come sono, con solo gli spazi in ordine.
+function formattaTelefono(valore) {
+    const grezzo = String(valore || '').trim();
+    if (!grezzo) return '';
+    let n = grezzo.replace(/[\s.\-\/()]/g, '');
+    if (/^0039/.test(n)) n = '+39' + n.slice(4);
+    let prefisso = '';
+    if (n.startsWith('+39')) { prefisso = '+39'; n = n.slice(3); }
+    else if (n.startsWith('+')) return grezzo.replace(/\s+/g, ' ');
+    if (!/^\d+$/.test(n)) return grezzo.replace(/\s+/g, ' ');
+    if (!/^3\d{8,9}$/.test(n)) return grezzo.replace(/\s+/g, ' ');
+    const corpo = n.slice(0, 3) + ' ' + n.slice(3);
+    return (prefisso ? prefisso + ' ' : '') + corpo;
+}
 function scaricaVCF(vcf, fields) {
     const nome = vcf.nome || fields.username_display || fields.username_system || '';
     const tel1 = vcf.telefono1 || '';
@@ -1359,11 +1375,11 @@ function apriSezione(tipo) {
         const piva = vcf.piva || '';
 
         const campiBase = [];
-        if (tel1) campiBase.push({ icona: 'fas fa-phone', label: tel1, azione: `tel:${tel1}`, copia: tel1 });
+        if (tel1) campiBase.push({ icona: 'fas fa-phone', label: formattaTelefono(tel1), azione: `tel:${tel1.replace(/[^\d+]/g, '')}`, copia: formattaTelefono(tel1) });
         if (email) campiBase.push({ icona: 'fas fa-envelope', label: email, azione: `mailto:${email}`, copia: email });
 
         const campiPremium = [];
-        if (tel2) campiPremium.push({ icona: 'fas fa-phone', label: tel2, azione: `tel:${tel2}`, copia: tel2 });
+        if (tel2) campiPremium.push({ icona: 'fas fa-phone', label: formattaTelefono(tel2), azione: `tel:${tel2.replace(/[^\d+]/g, '')}`, copia: formattaTelefono(tel2) });
         if (email2) campiPremium.push({ icona: 'fas fa-envelope', label: email2, azione: `mailto:${email2}`, copia: email2 });
         if (indirizzo) campiPremium.push({ icona: 'fas fa-map-marker-alt', label: indirizzo, azione: `https://maps.google.com/?q=${encodeURIComponent(indirizzo)}`, copia: indirizzo });
         if (piva) campiPremium.push({ icona: 'fas fa-file-invoice', label: 'P.IVA: ' + piva, azione: null, copia: piva });
