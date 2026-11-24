@@ -1967,9 +1967,11 @@ function appInstallata() {
         ['standalone', 'fullscreen', 'minimal-ui'].some(m => window.matchMedia(`(display-mode: ${m})`).matches);
 }
 
+let attesaInstallazione = null; // chi aspetta il permesso di installare (vedi installaPWA)
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault(); 
     pwaInstallEvent = e; 
+    if (attesaInstallazione) { attesaInstallazione(e); attesaInstallazione = null; }
     const btnInstall = document.getElementById('trigger-pwa-install');
     if (btnInstall) btnInstall.style.display = 'block';
 });
@@ -1981,6 +1983,15 @@ async function installaPWA() {
         return;
     }
 
+    // Con la rete lenta Chrome dà il permesso di installare qualche istante dopo l'apertura (24/11/2026):
+    // si aspetta fino a 3 secondi prima di passare alle istruzioni a mano
+    if (!pwaInstallEvent) {
+        const btn = document.getElementById('trigger-pwa-install');
+        const testoPrima = btn ? btn.textContent : '';
+        if (btn) { btn.textContent = 'Un momento…'; btn.disabled = true; }
+        await new Promise(risolvi => { attesaInstallazione = risolvi; setTimeout(() => { attesaInstallazione = null; risolvi(null); }, 3000); });
+        if (btn) { btn.textContent = testoPrima; btn.disabled = false; }
+    }
     if (pwaInstallEvent) {
         try {
             pwaInstallEvent.prompt();
@@ -2006,7 +2017,7 @@ function mostraIstruzioniAndroid() {
     const overlay = document.getElementById('tag-welcome-overlay');
     if (!overlay) return;
     const corpo = document.getElementById('welcome-corpo');
-    if (corpo) corpo.innerHTML = 'Tocca <strong>⋮</strong> in alto a destra e scegli <strong>«Installa app»</strong> oppure <strong>«Aggiungi a schermata Home»</strong>.<br><br><span style="opacity:.75">Se in alto a sinistra vedi una <strong>X</strong>, la tag è aperta dentro un\'altra app: tocca prima <strong>⋮</strong> → <strong>«Apri in Chrome»</strong>.</span>';
+    if (corpo) corpo.innerHTML = '<span style="display:block">Tocca <b style="display:inline; font-weight:700; color:#fff;">⋮</b> in alto a destra e scegli <b style="display:inline; font-weight:700; color:#fff;">«Installa app»</b> oppure <b style="display:inline; font-weight:700; color:#fff;">«Aggiungi a schermata Home»</b>.<br><br><span style="opacity:.75">Se in alto a sinistra vedi una <b style="display:inline; font-weight:700; color:#fff;">X</b>, la tag è aperta dentro un\'altra app: tocca prima <b style="display:inline; font-weight:700; color:#fff;">⋮</b> → <b style="display:inline; font-weight:700; color:#fff;">«Apri in Chrome»</b>.</span></span>';
     const btn = document.getElementById('trigger-pwa-install');
     if (btn) btn.style.display = 'none';
     overlay.style.display = 'flex';
