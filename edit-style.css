@@ -473,3 +473,8 @@ input[type="password"], input:not([type]), textarea, select {
     .app-container.con-copertina #copertina-rubrica { display: none !important; }
     #profile-content.app-container.locked.con-copertina .header-monolith { transform: translateY(6vh); }
 }
+
+/* PANNELLI LUNGHI (24/11/2026): se il contenuto supera il riquadro (es. Contatti con l'avviso del telefono)
+   il pannello scorre e il bottone APPLICA resta sempre visibile in fondo */
+.drawer-glass { overflow-y: auto !important; overscroll-behavior: contain; }
+.drawer-glass > .btn-crea { position: sticky; bottom: 0; flex-shrink: 0; z-index: 5; box-shadow: 0 -18px 22px 4px #000; }
