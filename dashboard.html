@@ -148,17 +148,30 @@
                    ${t.quickpass_attivo ? `<a href="/u/${n}?cassa=1" data-tag="${esc(t.username_system)}" style="grid-column: 1 / -1; border-color: rgba(229,193,88,0.5); color: #e5c158;"><i class="fas fa-cash-register"></i> Cassa QuickGift · conferma i regali</a>` : ''}
                    <a href="/account.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-crown"></i> Il tuo piano</a>
                    ${t.ha_bozza ? `<a href="/tag.html?u=${n}&mode=draft" data-tag="${esc(t.username_system)}"><i class="fas fa-file-pen"></i> Anteprima bozza</a>` : ''}`;
-            return `<div class="card tag-card">
+            return `<div class="card tag-card" id="tag-${esc(t.username_system)}">
                 <div class="testa"><div><div class="nome">${esc(nome)}</div><div class="sub">${esc(s.sub)}${t.ha_bozza && t.stato === 'attivo' ? ' · bozza non pubblicata' : ''}</div></div>
                 <span class="badge ${s.badge}">${esc(s.testo)}</span></div>
                 <div class="azioni">${azioni}</div></div>`;
         }).join('');
+        // Più tag nello stesso account (24/11/2026): in cima i nomi, un clic porta alla scheda di quella tag
+        if (tags.length > 1) {
+            elenco.insertAdjacentHTML('afterbegin', '<p class="etichetta-tag">LE TUE TAG IN QUESTO ACCOUNT</p><div class="scorciatoie-tag">' + tags.map(t => `<a href="#tag-${esc(t.username_system)}">${esc(t.username_display ? t.username_display.replace(/^@?/, '@') : '@' + t.username_system)}</a>`).join('') + '</div>');
+            elenco.querySelectorAll('.scorciatoie-tag a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); evidenzia(a.getAttribute('href').slice(1)); }));
+        }
+        // Arrivo da GESTISCI di una tag: si va alla sua scheda e la si mette in risalto
+        if (location.hash.startsWith('#tag-')) setTimeout(() => evidenzia(decodeURIComponent(location.hash.slice(1))), 150);
         // Le pagine della singola tag ricordano quale tag stai gestendo su questo dispositivo
         elenco.querySelectorAll('a[data-tag]').forEach(a => a.addEventListener('click', () => {
             try { localStorage.setItem('mqt_logged_user', a.dataset.tag); } catch (e) {}
         }));
     }
 
+    function evidenzia(id) {
+        const card = document.getElementById(id);
+        if (!card) return;
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.remove('in-risalto'); void card.offsetWidth; card.classList.add('in-risalto');
+    }
     // Anteprima dei Numeri (ultimi 7 giorni) per l'account ufficiale
     async function mostraNumeri() {
         const card = document.getElementById('card-numeri');

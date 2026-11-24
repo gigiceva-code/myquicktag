@@ -103,3 +103,11 @@
     .azioni a i { color: var(--accent-smeraldo); }
     .azioni a:last-child:nth-child(odd) { grid-column: 1 / -1; } /* voce dispari in fondo: larga quanto la scheda */
     .pallino { display: inline-block; min-width: 18px; padding: 1px 6px; border-radius: 10px; background: var(--danger); color: #fff; font-size: 0.7rem; }
+
+/* Più tag nello stesso account (24/11/2026): scorciatoie in cima e risalto della scheda richiesta */
+.scorciatoie-tag { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.scorciatoie-tag a { padding: 9px 14px; border-radius: 999px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.04); color: #fff; font-size: 0.8rem; font-weight: 600; text-decoration: none; }
+.scorciatoie-tag a:active { background: rgba(80,200,120,0.12); }
+.tag-card.in-risalto { animation: mqtRisalto 2.4s ease; }
+@keyframes mqtRisalto { 0%, 60% { border-color: var(--accent-smeraldo); box-shadow: 0 0 0 1px var(--accent-smeraldo), 0 0 24px rgba(80,200,120,0.25); } 100% { box-shadow: none; } }
+.etichetta-tag { margin: 4px 0 8px; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; color: var(--accent-smeraldo); }
