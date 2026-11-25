@@ -18,7 +18,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   "far funzionare" quello che chiede.
 - Prima di cambiare il **prodotto** (piani, prezzi, cosa vede il cliente) chiedere; per correzioni e
   sicurezza si può procedere spiegando dopo.
-- **Flusso git:** si lavora sul ramo `sviluppo-v2`; quando è pronto si apre una pull request verso
+- **Flusso git:** si lavora sul ramo `sviluppo-v2` (o sul ramo `claude/…` assegnato alla sessione, poi `sviluppo-v2` si riallinea a `main`); quando è pronto si apre una pull request verso
   `main` e, se il titolare lo chiede, la si unisce con "merge commit" (finora l'ha sempre chiesto).
   Dopo l'unione riallineare `sviluppo-v2` a `main` (fast-forward).
 - **Prove:** il titolare prova dal telefono. Il Preview di Vercel è protetto (serve l'accesso a Vercel
@@ -374,7 +374,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Prossimi passi (in ordine)
 
-**Stato al 25/11/2026 (fine sessione):** online fino alla PR #73 (`main` = `sviluppo-v2` = `ccr-9f612cdb-67o8z3`).
+**Stato al 25/11/2026 (sera):** online fino alla PR #75 (`main` = `sviluppo-v2`).
+- **PR #75 (25/11, sera):** l'informativa privacy (`privacy.html`, punto «Pocket») dice ora che con un account le tag
+  salvate vanno nell'account (@nome, nome mostrato e data), visibili solo al titolare e cancellate con l'account; senza
+  account restano solo sul telefono. Prima diceva «solo sul tuo telefono» anche per chi aveva fatto l'accesso. Da far
+  vedere al legale insieme al resto. `PRE-LANCIO.md` allineato: durata della tag con il modello C, Pocket nell'account e
+  social fatti (resta LinkedIn).
 - **Fatto il 24-25/11:** video TikTok «Prova a mettere myquicktag nella tua bio» (`materiali-social/video-tiktok-linkinbio.mp4`,
   44 s, senza emoji, ritmo lento: pubblicato dal titolare su TikTok, Instagram, Facebook, Pinterest; post LinkedIn dal
   profilo personale con il link nel primo commento). Rombo del divider tra le righe vere; foto profilo da Cloudinary
