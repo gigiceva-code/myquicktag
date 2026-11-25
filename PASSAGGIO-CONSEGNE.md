@@ -377,6 +377,19 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   adeguare termini (punto 6), dichiarazione nell'editor e privacy. Dettagli in `PRE-LANCIO.md` → "Audit pre-lancio".
 - **Lancio social:** kit pronto in `KIT-LANCIO-SOCIAL.md` (tag ufficiale @myquicktag, bio, messaggi, 7 post, 5 video).
   Quando il titolare manda i link dei profili: sostituirli a "I canali ufficiali sono in arrivo" nel footer della home.
+  (Fatto il 22-23/11: Instagram, TikTok, Facebook, Pinterest nel menu e in fondo alla home; LinkedIn quando c'è la pagina.)
+
+**Idee in attesa del parere degli utenti (24/11/2026, decisione del titolare: prima sentire chi installa la tag):**
+- **Social in copertina per chi usa la tag come "link in bio":** una fila di icone social (max 5, sobrie, nel colore
+  dello stile) sotto il bottone principale, prese dai social già inseriti in NETWORK, con l'interruttore "Mostra i
+  social in copertina". Restare con UN solo bottone grande (no effetto raccoglitore di link); esempi pronti per il
+  bottone a scelta (tipo "Link" dell'Azione rapida); sull'iPhone SE icone più piccole. Nessun costo server.
+- **Nomi delle stanze in italiano** (Chi sono · Contatti · Servizi · Vetrina · Offerte): da provare su 2–3 tag omaggio.
+- **Frase vera di un cliente in home** (Mario @mariosap, Massimo, Luca @lucam) appena il titolare la raccoglie.
+- **Numeri:** a inizio dicembre confrontare visite → nomi provati → prenotati → Attiva premuto → attivazione aperta →
+  account → attivate (pagina Numeri) per capire dove si fermano le persone.
+- **Pulizia Supabase:** colonna vuota `tags.promemoria_a` da cancellare (la cancellazione via MCP chiede una conferma
+  che non arriva al titolare).
 
 
 0. **Account con Supabase Auth: online su myquicktag.it dal 18/10/2026** (pull request #7 unita in `main`, produzione

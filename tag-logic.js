@@ -265,6 +265,11 @@ function formattaBadge(testoBruto) {
 
     // Rombo sotto o tra le righe (forma "divider"): lo decide mqtBadgeNome misurando il nome
 }
+function fotoProfiloLeggera(url) {
+    const u = String(url || '');
+    if (!/res\.cloudinary\.com\/.+\/image\/upload\/(v\d+\/)?[^/]+$/.test(u)) return u; // altre foto o già trasformate
+    return u.replace('/image/upload/', '/image/upload/c_fill,g_auto,w_320,h_320,q_auto,f_auto/');
+}
 function renderizzaTagCompleta(fields) {
     const container = document.getElementById('profile-content');
     if (container) {
@@ -282,7 +287,8 @@ function renderizzaTagCompleta(fields) {
     const liveImg = document.getElementById('live-avatar-img');
     
     if (fields.avatar_url && liveImg && liveContainer) {
-        liveImg.src = fields.avatar_url;
+        // Foto alleggerita da Cloudinary (25/11/2026): l'originale del telefono pesava e si caricava piano
+        liveImg.src = fotoProfiloLeggera(fields.avatar_url);
         liveContainer.style.display = 'flex';
     } else if (liveContainer) {
         liveContainer.style.display = 'none';

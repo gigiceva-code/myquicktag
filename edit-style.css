@@ -478,3 +478,12 @@ input[type="password"], input:not([type]), textarea, select {
    il pannello scorre e il bottone APPLICA resta sempre visibile in fondo */
 .drawer-glass { overflow-y: auto !important; overscroll-behavior: contain; }
 .drawer-glass > .btn-crea { position: sticky; bottom: 0; flex-shrink: 0; z-index: 5; box-shadow: 0 -18px 22px 4px #000; }
+
+/* Foto profilo più grande sui telefoni alti, come nella tag pubblica (style.css, 25/11/2026) */
+@media (min-height: 761px) {
+    .orbital-container { width: 118px; }
+    .app-container.locked .orbital-container { height: 118px !important; }
+    .orbital-sphere { width: 106px; height: 106px; border-radius: 28px !important; }
+    .orbital-ring { border-radius: 32px !important; }
+    #profile-content.app-container.locked.con-copertina .header-monolith { transform: translateY(calc(12vh - 34px)); }
+}
