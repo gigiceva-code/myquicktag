@@ -153,8 +153,8 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
       Da fare: schermate di home, tag, editor, Identity Console, checkout e pagine legali a 768 px (tablet) e
       1440 px (computer), poi correggere impaginazione e proporzioni (es. home a due colonne, tag centrata con
       sfondo curato, editor con anteprima e comandi affiancati).
-- [ ] Entro ~60 giorni dal lancio (deciso il 19/11/2026): **Pocket legato all'account**. Oggi le tag salvate con SALVA
-      restano solo nel browser (`mqt_pocket`). Da fare: tabella per account, SALVA nell'account per chi ha fatto
+- [x] Entro ~60 giorni dal lancio (deciso il 19/11/2026, **fatto il 23/11/2026**, vedi `PASSAGGIO-CONSEGNE.md` → "Pocket nell'account"): **Pocket legato all'account**. Prima le tag salvate con SALVA
+      restavano solo nel browser (`mqt_pocket`). Fatto: tabella per account, SALVA nell'account per chi ha fatto
       l'accesso (gli altri continuano sul telefono, senza obbligo di registrarsi), al primo accesso le tag del telefono
       passano nell'account, una riga nell'informativa privacy, cancellazione insieme all'account. ~mezza giornata.
 - [x] Clausola QuickGift nei termini (punto 6) e dichiarazione obbligatoria del titolare nell'editor (17/11/2026).
@@ -166,7 +166,8 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 
 ### Social e tag ufficiale (17/11/2026)
 - [ ] Configurare la tag ufficiale @myquicktag (foto, bio, bottone "Crea la tua tag", via il vecchio QuickGift): istruzioni in `KIT-LANCIO-SOCIAL.md`, parte 1.
-- [ ] Aprire Instagram, TikTok e LinkedIn con il kit (`KIT-LANCIO-SOCIAL.md`); poi mettere i link veri in fondo alla home al posto di "I canali ufficiali sono in arrivo".
+- [x] Aprire Instagram, TikTok, Facebook e Pinterest con il kit (`KIT-LANCIO-SOCIAL.md`) e mettere i link veri nel menu e in fondo alla home (fatto il 22-23/11/2026).
+- [ ] LinkedIn: aggiungere il link nel menu e in fondo alla home quando c'è la pagina aziendale.
 
 ### Strategia di lancio: 3 mesi gratis con tutto sbloccato (deciso il 09/10/2026)
 - **Perché (il titolare non vuole doverlo ripetere):** il titolare è lavoratore dipendente e la famiglia
@@ -283,4 +284,4 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - **Contatti del vasetto (Lead Capture):** arrivano in Dashboard → I miei contatti (`contatti.html`), con il numero dei nuovi sul pulsante e sul campanello; "nuovo/visto" e "richiamato" sono salvati sul server, quindi valgono su tutti i dispositivi del proprietario. Nell'editor resta solo l'impostazione del vasetto, con l'indicazione di dove trovare i contatti (anche nella guida della funzione).
 - **Password:** è quella dell'account (Supabase Auth), scelta alla creazione dell'account; si cambia da "Le mie tag" → "Cambia password" oppure con "Password dimenticata" (codice via email). Dopo il cambio gli altri dispositivi devono riaccedere.
 - **Database:** solo le funzioni in `api/` parlano con Supabase (tramite `lib/db.js`), con la chiave segreta. Il browser non ha accesso diretto.
-- **Durata tag:** 90 giorni + 14 di grazia (tag ancora online e modificabile), poi disattivata finché non viene rinnovata. I contenuti non vengono cancellati.
+- **Durata tag (modello C, dal 17/11/2026):** 90 giorni di prova con tutto sbloccato (Gold) + 14 di tolleranza, poi la tag resta online gratis con il piano Base (o con il piano assegnato/pagato). Non si spegne mai e i contenuti non vengono cancellati: le sezioni fuori piano sono solo nascoste ai visitatori.
