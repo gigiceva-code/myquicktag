@@ -949,3 +949,15 @@ body[data-qr-theme="satin_rose"] #overlaySezione { border: 1px solid rgba(200, 1
     .app-container.con-copertina #copertina-rubrica { display: none !important; }
     .app-container.locked.con-copertina .header-monolith { transform: translateY(3.5vh); }
 }
+/* FOTO PROFILO PIÙ GRANDE SUI TELEFONI ALTI (25/11/2026): +40% (84 → 118 px) solo da 761 px di altezza in su.
+   Sotto i 760 px resta com'era: lì lo spazio serve al bottone in copertina e a "Salva in rubrica".
+   Misure vere (non scale), così il filo di luce resta di 1 px e la foto è nitida. */
+@media (min-height: 761px) {
+    .orbital-container { width: 118px; }
+    .app-container.locked .orbital-container { height: 118px !important; }
+    .orbital-sphere { width: 106px; height: 106px; border-radius: 28px !important; }
+    .orbital-ring { border-radius: 32px !important; }
+    /* Con bottoni in copertina la foto cresce verso l'alto: nome, bottone e "Salva in rubrica" restano
+       esattamente dov'erano (a 761-790 px di altezza altrimenti "Salva in rubrica" toccava ESPLORA TAG) */
+    .app-container.locked.con-copertina .header-monolith { transform: translateY(calc(21vh - 34px)); }
+}
