@@ -2280,7 +2280,7 @@ async function caricaCassaQuickPass() {
             <div style="font-size: 0.7rem; color: #e5c158; font-weight: 700; letter-spacing: 1.5px;">PUBBLICA LA TUA OFFERTA</div>
             <div style="margin: 6px 0 10px;">Vuoi far arrivare l'offerta direttamente a chi ti segue? Pubblica questo link in una storia, nella bio, in un post o in una newsletter: chi lo apre riceve l'offerta con un codice personale. Qui nessuno ottiene un premio, perché a portarli sei tu.</div>
             <button type="button" onclick="condividiLinkRegalo()" style="width: 100%; padding: 12px; background: #e5c158; color: #111; border: none; border-radius: 10px; font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; cursor: pointer;"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i>PUBBLICA L'OFFERTA</button>
-            <div style="font-size: 0.68rem; color: #9ca3af; margin-top: 8px; word-break: break-all;">${window.location.origin}/u/${NOME_SISTEMA}?regalo=1</div>
+            <div style="font-size: 0.68rem; color: #9ca3af; margin-top: 8px; word-break: break-all;">${window.location.origin}/@${NOME_SISTEMA}?regalo=1</div>
         </div>`;
 }
 
@@ -2301,7 +2301,7 @@ async function salvaPinQuickPass() {
 
 // Pubblica la tua offerta (link del titolare: storia, bio, post): chi lo apre riceve l'offerta con un codice personale
 function condividiLinkRegalo() {
-    const link = `${window.location.origin}/u/${NOME_SISTEMA}?regalo=1`;
+    const link = `${window.location.origin}/@${NOME_SISTEMA}?regalo=1`;
     const testo = `Ho un'offerta per te: ${qpVal('field-qp-premio-b')}. La ricevi qui:`;
     if (navigator.share) navigator.share({ title: 'QuickGift', text: testo, url: link }).catch(() => {});
     else if (navigator.clipboard) navigator.clipboard.writeText(`${testo} ${link}`).then(() => alert('Link copiato.'));

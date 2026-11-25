@@ -1809,8 +1809,9 @@ function condividiProfilo(event) {
         mostraToast('Attiva la tua tag per condividerla');
         return;
     }
-    // Indirizzo /u/<nome>: è quello che WhatsApp & co. trasformano nell'anteprima con nome, bio e foto (vercel.json)
-    const url = `${window.location.origin}/u/${usernameCorrente}`;
+    // Indirizzo /@<nome> (25/11/2026): si legge "@nome". Porta a /u/<nome>, che WhatsApp & co. trasformano
+    // nell'anteprima con nome, bio e foto (vercel.json)
+    const url = `${window.location.origin}/@${usernameCorrente}`;
     const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
     // Il messaggio dice subito cosa c'è dietro il link: chi lo riceve sa perché aprirlo
     _condividi(`@${nome} · myquicktag`, url, `@${nome}: contatti, social e servizi in un solo clic.`, 'CONDIVISIONE TAG');
@@ -1822,7 +1823,7 @@ function condividiSezione() {
     if (!tagAttiva()) { mostraToast('Attiva la tua tag per condividerla'); return; }
     if (!macroAreaCorrente) { condividiProfilo(); return; }
     const chiave = sezioneCorrente ? `${macroAreaCorrente}.${sezioneCorrente}` : macroAreaCorrente;
-    const url = `${window.location.origin}/u/${usernameCorrente}?sezione=${encodeURIComponent(chiave)}`;
+    const url = `${window.location.origin}/@${usernameCorrente}?sezione=${encodeURIComponent(chiave)}`;
     const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
     const titolo = document.getElementById('titoloSezione').textContent;
     const sezione = titolo.charAt(0).toUpperCase() + titolo.slice(1).toLowerCase();
@@ -1852,7 +1853,7 @@ function apriSezioneDaLink(valore) {
 function condividiContatto(valore) {
     const nome = String(cacheDatiUtente.username_display || usernameCorrente).replace(/^@+/, '');
     const chiave = macroAreaCorrente ? `${macroAreaCorrente}.contatti` : '';
-    const url = `${window.location.origin}/u/${usernameCorrente}${chiave ? `?sezione=${encodeURIComponent(chiave)}` : ''}`;
+    const url = `${window.location.origin}/@${usernameCorrente}${chiave ? `?sezione=${encodeURIComponent(chiave)}` : ''}`;
     if (!tagAttiva()) { mostraToast('Attiva la tua tag per condividerla'); return; }
     if (navigator.share) {
         tracciaClickSezione('CONDIVISIONE CONTATTO');

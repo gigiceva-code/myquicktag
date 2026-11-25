@@ -257,7 +257,7 @@
         </div>`;
     }
     // Link del titolare ("Pubblica la tua offerta": storia, bio, post): chi lo apre riceve l'offerta, senza premio a nessuno
-    function linkTitolare() { return `${window.location.origin}/u/${nomeTag()}?regalo=1`; }
+    function linkTitolare() { return `${window.location.origin}/@${nomeTag()}?regalo=1`; }
     function condividiLinkTitolare() {
         const link = linkTitolare(), testo = `Ho un'offerta per te: ${(cacheDatiUtente && cacheDatiUtente.quickpass_premio_b) || ''}. La ricevi qui:`;
         if (typeof tracciaClickSezione === 'function') tracciaClickSezione('QUICKGIFT LINK TITOLARE');
@@ -298,7 +298,7 @@
         });
 
         if (s.invito) {
-            const link = `${window.location.origin}/u/${nomeTag()}?pass=${s.invito.codice}`;
+            const link = `${window.location.origin}/@${nomeTag()}?pass=${s.invito.codice}`;
             const usati = s.invito.amici_usati || 0;
             const guadagnati = s.invito.premi_totali ?? ((s.invito.premi || []).length);
             const fatti = usati % perPremio, mancano = perPremio - fatti;
@@ -356,7 +356,7 @@
 
     function messaggioInvito() {
         const m = memoria();
-        const link = `${window.location.origin}/u/${nomeTag()}?pass=${m.invito ? m.invito.codice : ''}`;
+        const link = `${window.location.origin}/@${nomeTag()}?pass=${m.invito ? m.invito.codice : ''}`;
         return { link, testo: `Ho un regalo per te da ${nomeVisibile()}: ${cacheDatiUtente.quickpass_premio_b || ''}. Lo ricevi qui:` };
     }
     // Tutti i modi di condividere il link (l'amico A può usare il canale che preferisce: più canali, più persone su myquicktag)

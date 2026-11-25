@@ -31,11 +31,11 @@ await p.goto(`${B}/tag.html?u=pizzeriadamario`); await p.waitForTimeout(2500);
 ok(await p.isVisible('#btn-condividi-top'), 'copertina: CONDIVIDI visibile');
 await p.click('#btn-condividi-top');
 let d = await ultimo(p);
-ok(d && d.url.endsWith('/u/pizzeriadamario') && d.title === '@PizzeriaDaMario · myquicktag' && d.text === '@PizzeriaDaMario: contatti, social e servizi in un solo clic.', 'copertina: condivide /u/<nome> (indirizzo con anteprima) con un messaggio');
+ok(d && d.url.endsWith('/@pizzeriadamario') && d.title === '@PizzeriaDaMario · myquicktag' && d.text === '@PizzeriaDaMario: contatti, social e servizi in un solo clic.', 'copertina: condivide /@<nome> (porta all\'indirizzo con anteprima) con un messaggio');
 await p.evaluate(() => apriMacroArea('network')); await p.waitForTimeout(1200);
 ok(await p.isVisible('#btn-condividi-sezione'), 'stanza: CONDIVIDI in basso accanto a CHIUDI');
 await p.click('#btn-condividi-sezione');
-ok((await ultimo(p)).url.endsWith('/u/pizzeriadamario?sezione=network'), 'stanza: link alla stanza');
+ok((await ultimo(p)).url.endsWith('/@pizzeriadamario?sezione=network'), 'stanza: link alla stanza');
 await p.evaluate(() => apriSezione('contatti')); await p.waitForTimeout(1200);
 await p.click('#btn-condividi-sezione');
 d = await ultimo(p);
@@ -54,7 +54,7 @@ await p.evaluate(() => apriSezione('contatti')); await p.waitForTimeout(800);
 // L'iconcina accanto al numero: il numero va nel testo, il link riapre i contatti (prima: numero usato come link → 404)
 await p.click('#corpoSezione button');
 d = await ultimo(p);
-ok(d.text === '@PizzeriaDaMario: 333 1234567' && d.url.endsWith('/u/pizzeriadamario?sezione=network.contatti'), 'contatto singolo: numero nel testo e link ai contatti, mai il numero come link');
+ok(d.text === '@PizzeriaDaMario: 333 1234567' && d.url.endsWith('/@pizzeriadamario?sezione=network.contatti'), 'contatto singolo: numero nel testo e link ai contatti, mai il numero come link');
 
 p = await telefono();
 await p.goto(`${B}/tag.html?u=pizzeriadamario&sezione=network.contatti`); await p.waitForTimeout(3500);

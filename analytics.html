@@ -309,7 +309,7 @@
             btn.textContent = 'Attiva la tua tag';
             btn.onclick = () => { window.location.href = '/edit.html?u=' + encodeURIComponent(nome); };
         } else {
-            const link = window.location.origin + '/u/' + encodeURIComponent(nome);
+            const link = window.location.origin + '/@' + encodeURIComponent(nome);
             btn.onclick = async () => {
                 if (navigator.share) { try { await navigator.share({ title: '@' + nome, url: link }); } catch (e) {} return; }
                 try { await navigator.clipboard.writeText(link); btn.textContent = 'Link copiato'; setTimeout(() => { btn.textContent = 'Condividi la tua tag'; }, 2000); }
