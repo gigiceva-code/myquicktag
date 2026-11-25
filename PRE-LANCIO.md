@@ -153,7 +153,7 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
       Da fare: schermate di home, tag, editor, Identity Console, checkout e pagine legali a 768 px (tablet) e
       1440 px (computer), poi correggere impaginazione e proporzioni (es. home a due colonne, tag centrata con
       sfondo curato, editor con anteprima e comandi affiancati).
-- [x] Entro ~60 giorni dal lancio (deciso il 19/11/2026, **fatto il 23/11/2026**, vedi `PASSAGGIO-CONSEGNE.md` → "Pocket nell'account"): **Pocket legato all'account**. Prima le tag salvate con SALVA
+- [x] Entro ~60 giorni dal lancio (deciso il 19/11/2026, **fatto il 23/11/2026**, vedi `PASSAGGIO-CONSEGNE.md` → "Pocket nell'account"; riga nell'informativa privacy aggiunta il 25/11): **Pocket legato all'account**. Prima le tag salvate con SALVA
       restavano solo nel browser (`mqt_pocket`). Fatto: tabella per account, SALVA nell'account per chi ha fatto
       l'accesso (gli altri continuano sul telefono, senza obbligo di registrarsi), al primo accesso le tag del telefono
       passano nell'account, una riga nell'informativa privacy, cancellazione insieme all'account. ~mezza giornata.
