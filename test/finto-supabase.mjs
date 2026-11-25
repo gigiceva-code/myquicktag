@@ -101,6 +101,8 @@ http.createServer(async (req,res)=>{
     if(req.method==='DELETE'){ const f=url.searchParams.get('username')||''; const nomi=f.startsWith('eq.')?[f.slice(3)]:f.startsWith('in.(')?f.slice(4,-1).split(',').map(v=>v.replace(/^"|"$/g,'')):[];
       for(let i=pocket.length-1;i>=0;i--) if(pocket[i].utente===x.u.id&&nomi.includes(pocket[i].username)) pocket.splice(i,1); return out(204,null); }
     return out(405,null); }
+  // Come vercel.json: /@nome porta a /u/nome (stessa query)
+  let ma=p.match(/^\/@([^/]+)\/?$/); if(ma){ res.writeHead(307,{Location:'/u/'+ma[1]+url.search}); return res.end(); }
   let mu=p.match(/^\/u\/([^/]+)\/?$/); if(mu){ p='/tag.html'; url.searchParams.set('u',mu[1]); }
   if(p.startsWith('/api/')){
     try{ body=body?JSON.parse(body):{}; }catch{}
