@@ -1,7 +1,7 @@
 # Passaggio di consegne — myquicktag
 
 Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md`
-(decisioni aperte e cose da fare prima del lancio). Aggiornato al 17/11/2026.
+(decisioni aperte e cose da fare prima del lancio). Aggiornato al 25/11/2026.
 
 ---
 
@@ -40,7 +40,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Dove sta cosa
 
-- **Sito pubblico:** https://myquicktag.it (Vercel, ramo `main`). Tag pubblica: `/u/<nome>`.
+- **Sito pubblico:** https://myquicktag.it (Vercel, ramo `main`). Tag pubblica: `/@<nome>` (dal 25/11/2026, rinvio in
+  `vercel.json` verso `/u/<nome>`, che resta l'indirizzo vero: manifest, app installate, anteprime WhatsApp, QR).
 - **Documenti per il titolare:** `KIT-LANCIO-SOCIAL.md` (lancio social e tag ufficiale), `SCHEDA-LEGALE-QUICKGIFT.md`
   (domande per il legale). Tag ufficiale: `@myquicktag` (account info@myquicktag.it, piano GOLD assegnato).
 - **Vercel:** team `gigiceva-codes-projects`, progetto `myquicktag`. È l'unico progetto collegato al codice: il doppione
@@ -337,7 +338,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   bozza (recapiti, galleria…), come `lib/pulizia.js`. Prima "Pubblica" dalla tag salvava `{”telefono1”:…}` (illeggibile):
   è successo solo alla tag `martina` in produzione, riparata a mano il 25/10.
 - **Forma "divider" del @nome:** il rombo va sotto il nome se sta su una riga, esattamente tra le due righe se va a capo.
-  Lo decide `session.js` → `mqtBadgeNome` misurando il nome (non contando le lettere). Nell'esagono il nome lungo si
+  Lo decide `session.js` → `mqtBadgeNome` contando le righe vere sullo schermo (`righeVere`, dal 25/11/2026: prima
+  misurava il nome senza la "@" e con "@MASSIMO GIACHINO" il rombo finiva sotto). Nell'esagono il nome lungo si
   rimpicciolisce fino a stare dentro.
 - `session.js` (caricato da tutte le pagine): `mqtSessione` (account, ricevute, portachiavi del dispositivo,
   `proprietarioOppureEsci`) e `mqtPulisci` (pulizia dei testi prima di mostrarli).
@@ -356,12 +358,13 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
-- `node test/api.test.mjs` → 231 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 287 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
-- `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 46 prove nel browser (telefono simulato): registrazione con
+- `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 62 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
 - `test/quickpass.e2e.mjs` → 42 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/pocket.e2e.mjs` → 8 prove del Pocket nell'account (tag salvata in un browser, ritrovata in un altro).
 - `test/piano.e2e.mjs` → 7 prove nel browser del piano effettivo (modello C) e del VIP Vault verificato sul server.
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
 - `test/xss-tag.e2e.mjs` → prova nel browser che la tag pubblica non esegua codice nascosto
@@ -370,6 +373,21 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   le fa il titolare, poi si controllano i log/dati su Supabase.
 
 ## Prossimi passi (in ordine)
+
+**Stato al 25/11/2026 (fine sessione):** online fino alla PR #73 (`main` = `sviluppo-v2` = `ccr-9f612cdb-67o8z3`).
+- **Fatto il 24-25/11:** video TikTok «Prova a mettere myquicktag nella tua bio» (`materiali-social/video-tiktok-linkinbio.mp4`,
+  44 s, senza emoji, ritmo lento: pubblicato dal titolare su TikTok, Instagram, Facebook, Pinterest; post LinkedIn dal
+  profilo personale con il link nel primo commento). Rombo del divider tra le righe vere; foto profilo da Cloudinary
+  ridotta a 320×320 (`fotoProfiloLeggera` in tag-logic.js); foto profilo +40% (118/106 px) **solo da 761 px di altezza**,
+  sotto invariata, con bottoni in copertina cresce verso l'alto (style.css e edit-style.css, in fondo). Indirizzo
+  `myquicktag.it/@nome`: CONDIVIDI, sezioni, contatti, statistiche, QuickGift ed email usano già `/@`.
+- **Clienti con la tag nella bio:** Massimo Giachino (`@massimogiachino`, Instagram) e il titolare (@myquicktag). Possono
+  sostituire il link in bio con la forma `/@nome` (il vecchio `/u/` funziona comunque). Da verificare sulla tag vera di
+  Massimo: rombo in mezzo, foto più grande e caricamento rapido (dal container non si raggiungono il sito né Cloudinary).
+- **Idea aperta:** dominio personale (es. massimogiachino.it) come vantaggio del piano GOLD — il titolare non ha deciso.
+  Proposto anche: istruzioni per la firma email Gmail con "@nome" cliccabile da dare ai clienti.
+- **Video:** pagina temporanea `_studio2.html` nella radice (mai committata) + Playwright `recordVideo` 1080×1920 +
+  ffmpeg; lo script è in `/tmp/claude-0/qp/video2.mjs` (si perde al riavvio del container).
 
 **Lavoro da finire (17/11/2026), da ricordare al titolare finché non è chiuso:**
 - **Parere legale su QuickGift:** il titolare deve portare `SCHEDA-LEGALE-QUICKGIFT.md` a una consulenza (anche
