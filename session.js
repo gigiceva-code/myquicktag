@@ -408,8 +408,13 @@
         // Forma "divider": se il nome sta su una riga il rombo va sotto (classe nome-corto), se va a capo
         // il rombo va esattamente tra le due righe. Si decide misurando il nome, non contando le lettere:
         // "RISTORANTEDALUIGI" (17) sta su una riga e prima aveva il rombo sopra le lettere.
+        // 25/11/2026: si contano le righe vere sullo schermo ("@MASSIMO GIACHINO" andava a capo ma la
+        // misura senza la "@" diceva una riga, e il rombo finiva sotto invece che in mezzo).
         const wrapper = el.closest('.username-capsule-wrapper');
-        if (wrapper) wrapper.classList.toggle('nome-corto', larghezza(testo, stile, px) <= spazio);
+        if (wrapper) {
+            const vere = righeVere(el, px);
+            wrapper.classList.toggle('nome-corto', vere ? vere === 1 : larghezza('@' + testo, stile, px) <= spazio);
+        }
 
         // Solo l'esagono (layout "badge", quello di base) rimpicciolisce il nome: nelle forme "divider" e
         // "pure" il nome lungo va a capo apposta.
@@ -422,6 +427,21 @@
         while (px > MINIMO_PX && serve(px) > spazio) px -= 0.25;
         el.style.fontSize = px + 'px';
         if (serve(px) > spazio) el.style.overflowWrap = 'anywhere';
+    }
+
+    // Righe in cui il nome è davvero disposto (0 se la tag non è ancora visibile: allora si misura)
+    function righeVere(el, px) {
+        const tops = [];
+        const passa = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        while (passa.nextNode()) {
+            const r = document.createRange(); r.selectNodeContents(passa.currentNode);
+            for (const q of r.getClientRects()) if (q.width > 0) tops.push(q.top);
+        }
+        if (!tops.length) return 0;
+        tops.sort((a, b) => a - b);
+        let n = 1;
+        for (let i = 1; i < tops.length; i++) if (tops[i] - tops[i - 1] > px * 0.8) n++;
+        return n;
     }
 
     window.mqtBadgeNome = { scrivi };

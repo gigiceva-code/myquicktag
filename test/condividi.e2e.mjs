@@ -54,7 +54,7 @@ await p.evaluate(() => apriSezione('contatti')); await p.waitForTimeout(800);
 // L'iconcina accanto al numero: il numero va nel testo, il link riapre i contatti (prima: numero usato come link → 404)
 await p.click('#corpoSezione button');
 d = await ultimo(p);
-ok(d.text === '@PizzeriaDaMario: 3331234567' && d.url.endsWith('/u/pizzeriadamario?sezione=network.contatti'), 'contatto singolo: numero nel testo e link ai contatti, mai il numero come link');
+ok(d.text === '@PizzeriaDaMario: 333 1234567' && d.url.endsWith('/u/pizzeriadamario?sezione=network.contatti'), 'contatto singolo: numero nel testo e link ai contatti, mai il numero come link');
 
 p = await telefono();
 await p.goto(`${B}/tag.html?u=pizzeriadamario&sezione=network.contatti`); await p.waitForTimeout(3500);
