@@ -556,6 +556,42 @@ delete process.env.RINNOVO_GRATUITO;
 }
 
 // ============================================================
+// INDIRIZZO PUBBLICO myquicktag.it/@nome (vercel.json, dal 25/11/2026)
+// È nelle bio Instagram e nei biglietti dei clienti: se questa regola si rompe, quei link smettono
+// di funzionare. NON togliere né cambiare la regola senza un rinvio equivalente.
+// ============================================================
+{
+  const vj=JSON.parse(fs.readFileSync(new URL('../vercel.json', import.meta.url)));
+  // Confronto come fa Vercel: ":nome" = un solo pezzo dell'indirizzo (senza "/")
+  const combacia=(source,path)=>{
+    const re=new RegExp('^'+source.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/:([a-z]+)/gi,'(?<$1>[^/]+)')+'$');
+    const m=path.match(re); return m?(m.groups||{}):null;
+  };
+  const applica=(dest,par)=>dest.replace(/:([a-z]+)/gi,(_,k)=>par[k]);
+  const segui=(path,ua)=>{
+    for(const r of vj.redirects||[]){ const p=combacia(r.source,path); if(p) return {rinvio:applica(r.destination,p),permanente:r.permanent}; }
+    for(const r of vj.rewrites||[]){
+      const p=combacia(r.source,path); if(!p) continue;
+      const h=(r.has||[]).every(c=>c.type==='header' && c.key==='user-agent' && new RegExp(c.value).test(ua));
+      if(h) return {pagina:applica(r.destination,p)};
+    }
+    return null;
+  };
+  const telefono='Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1';
+  const regoleAt=(vj.redirects||[]).filter(r=>r.source.startsWith('/@'));
+  ok(regoleAt.length===1 && regoleAt[0].source==='/@:username' && regoleAt[0].destination==='/u/:username','indirizzo /@nome: vercel.json ha la regola /@:username → /u/:username');
+  for(const nome of ['massimogiachino','myquicktag','bar-sport_2']){
+    const passo1=segui('/@'+nome,telefono);
+    ok(passo1?.rinvio==='/u/'+nome,`indirizzo /@nome: /@${nome} rinvia a /u/${nome}`);
+    ok(segui(passo1?.rinvio||'',telefono)?.pagina==='/tag.html?u='+nome,`indirizzo /@nome: /@${nome} apre la tag (tag.html)`);
+    ok(segui(passo1?.rinvio||'','facebookexternalhit/1.1')?.pagina?.startsWith('/api/manifest?u='+nome),`indirizzo /@nome: Instagram/Facebook/WhatsApp ricevono l'anteprima di /@${nome}`);
+  }
+  // Il rinvio resta temporaneo (307): se un giorno servisse cambiarlo, browser e social non lo hanno memorizzato per sempre
+  ok(regoleAt[0]?.permanent===false,'indirizzo /@nome: il rinvio è temporaneo (non memorizzato per sempre dai browser)');
+  ok(!(vj.redirects||[]).some(r=>r!==regoleAt[0] && combacia(r.source,'/@prova')) && !(vj.rewrites||[]).some(r=>combacia(r.source,'/@prova')),'indirizzo /@nome: nessun\'altra regola intercetta /@nome');
+}
+
+// ============================================================
 // ANTEPRIMA DEI LINK SU WHATSAPP (api/manifest.js?anteprima=1, vercel.json)
 // ============================================================
 {
