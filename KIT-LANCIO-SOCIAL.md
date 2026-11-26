@@ -40,6 +40,7 @@ Si configura dall'editor, entrando con **info@myquicktag.it**. In ordine:
     in anteprima e tieni quello più leggibile al telefono.
 
 **Il link per le bio dei social:** `myquicktag.it/u/myquicktag`
+(dal 25/11/2026 vale anche `myquicktag.it/@myquicktag`: nel campo link di Instagram va scritto **con `https://` davanti**, `https://myquicktag.it/@myquicktag`, altrimenti Instagram lo dà non valido per via della `@`; provato da Massimo il 26/11. Le due forme aprono la stessa tag.)
 
 **Prova finale:** apri la tag dal telefono di qualcun altro, in modalità visitatore, e controlla che ogni
 bottone funzioni.

@@ -1,0 +1,23 @@
+# Prove automatiche: a ogni pull request e a ogni pubblicazione su main lancia le prove del server
+# (test/api.test.mjs: finto database, nessuna installazione). Se una prova fallisce, la pull request diventa rossa.
+name: Prove
+
+on:
+  pull_request:
+  push:
+    branches: [main, sviluppo-v2]
+
+permissions:
+  contents: read
+
+jobs:
+  prove-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove del server (api/, vercel.json, indirizzo /@nome)
+        run: node test/api.test.mjs
