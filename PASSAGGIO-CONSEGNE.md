@@ -362,6 +362,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 
 ## Test
 
+- **Controllo automatico su GitHub (26/11/2026):** `.github/workflows/prove.yml` lancia `node test/api.test.mjs` a ogni
+  pull request e a ogni push su `main`/`sviluppo-v2`. Se è rosso, **non unire**: prima correggere. Le prove nel browser
+  (`*.e2e.mjs`) non sono nel controllo (servono Playwright e la libreria di Supabase): si lanciano a mano.
 - `node test/api.test.mjs` → 299 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 62 prove nel browser (telefono simulato): registrazione con
