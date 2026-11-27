@@ -404,7 +404,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   **Non si cancellano da sole le foto su Cloudinary** (il caricamento è senza chiave segreta): la privacy promette la
   rimozione entro 30 giorni, quindi per ora va fatta a mano dal pannello di Cloudinary (o automatizzata con la chiave
   API di Cloudinary su Vercel). Privacy (punto 6) e termini (punto 11) aggiornati.
-- **Editor più chiaro:** pulsante in basso «Modifica la tag»; pannello «Cosa vuoi modificare?» con i 6 campi più usati a un
+- **Editor più chiaro:** pulsante in basso «Modifica la tag»; pannello «Modifica la tag» con i 6 campi più usati a un
   clic (Foto e nome, Chi sei, Telefono/email/indirizzo, Social e link, Sito web, Colori e stile) e sotto ogni sezione una
   riga in italiano (es. NETWORK → «Telefono, email, social, sito»); i nomi delle sezioni restano quelli del tono lusso. Con la
   tag vuota l'anteprima mostra «Inizia da qui».
