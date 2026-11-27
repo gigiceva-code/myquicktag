@@ -170,8 +170,15 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
 - [ ] Applicare la stessa migrazione a `myquicktag-prova` (il 27/11 il collegamento al database di prova andava in
       timeout): finché manca, sul Preview «Elimina» dà errore.
 - [x] «Attiva gratis» porta sempre all'attivazione (prima l'account, poi la tag).
-- [ ] Foto e documenti su Cloudinary delle tag/account eliminati: rimozione a mano entro 30 giorni (lo promette la
-      privacy) oppure automatica con la chiave API di Cloudinary su Vercel (da decidere).
+- [ ] **LAVORO DA FARE (rimandato dal titolare il 27/11, forse domenica): cancellazione automatica delle foto su
+      Cloudinary** quando si elimina una tag o un account (la privacy promette la rimozione entro 30 giorni; finché manca,
+      va fatta a mano dal pannello di Cloudinary). Piano concordato: **nessuna funzione Vercel nuova** (restano 12 su 12),
+      tutto dentro `api/account.js` prima delle funzioni SQL di cancellazione: raccogliere i file della tag (avatar,
+      galleria, PDF, curriculum), chiederne l'eliminazione all'API di Cloudinary; se Cloudinary non risponde la tag si
+      cancella lo stesso e si annotano i file rimasti. **Serve dal titolare:** su cloudinary.com → Settings → API Keys
+      copiare API Key e API Secret e metterle su Vercel come `CLOUDINARY_API_KEY` e `CLOUDINARY_API_SECRET` (Production e
+      Preview), mai in chat. Senza chiavi il codice salta il passaggio. Dopo, con la stessa chiave: pulizia delle foto
+      sostituite nell'editor.
 
 ### Social e tag ufficiale (17/11/2026)
 - [ ] Configurare la tag ufficiale @myquicktag (foto, bio, bottone "Crea la tua tag", via il vecchio QuickGift): istruzioni in `KIT-LANCIO-SOCIAL.md`, parte 1.

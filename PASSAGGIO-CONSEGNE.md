@@ -431,6 +431,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   ffmpeg; lo script è in `/tmp/claude-0/qp/video2.mjs` (si perde al riavvio del container).
 
 **Lavoro da finire (17/11/2026), da ricordare al titolare finché non è chiuso:**
+- **Cancellazione automatica delle foto su Cloudinary** (rimandata dal titolare il 27/11, forse domenica): piano e cosa
+  serve in `PRE-LANCIO.md` → "Cancellazione e attivazione". Da ricordare anche: migrazione `20261126000000` da applicare a
+  `myquicktag-prova` (il 27/11 andava in timeout).
 - **Parere legale su QuickGift:** il titolare deve portare `SCHEDA-LEGALE-QUICKGIFT.md` a una consulenza (anche
   gratuita). Se il legale lo sconsiglia: nascondere QuickGift dietro "in arrivo" (~30 minuti). Se dà indicazioni:
   adeguare termini (punto 6), dichiarazione nell'editor e privacy. Dettagli in `PRE-LANCIO.md` → "Audit pre-lancio".
