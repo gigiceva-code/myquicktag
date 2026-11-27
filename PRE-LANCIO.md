@@ -165,8 +165,10 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
       "in arrivo" (circa 30 minuti di lavoro). Finché manca, la tag ufficiale @myquicktag non usa QuickGift.
 
 ### Cancellazione e attivazione (26/11/2026)
-- [x] L'utente può eliminare una tag o l'account dalla Identity Console (migrazione `20261126000000_elimina_account.sql`:
-      va applicata a `myquicktag-prova` e, con l'ok del titolare, a `myquicktag` **prima** di unire il codice in `main`).
+- [x] L'utente può eliminare una tag o l'account dalla Identity Console (migrazione `20261126000000_elimina_account.sql`,
+      applicata a `myquicktag` il 27/11/2026 con l'ok del titolare).
+- [ ] Applicare la stessa migrazione a `myquicktag-prova` (il 27/11 il collegamento al database di prova andava in
+      timeout): finché manca, sul Preview «Elimina» dà errore.
 - [x] «Attiva gratis» porta sempre all'attivazione (prima l'account, poi la tag).
 - [ ] Foto e documenti su Cloudinary delle tag/account eliminati: rimozione a mano entro 30 giorni (lo promette la
       privacy) oppure automatica con la chiave API di Cloudinary su Vercel (da decidere).

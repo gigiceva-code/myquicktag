@@ -398,7 +398,7 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   nella Identity Console «Elimina questa tag» / «Annulla la prenotazione» (conferma scrivendo il nome) e la scheda
   «Elimina l'account» (conferma scrivendo ELIMINA). Server: azioni `elimina-tag` ed `elimina-account` in api/account.js
   (nessuna funzione nuova), che chiamano le funzioni SQL `elimina_tag_account` ed `elimina_account` della migrazione
-  `20261126000000_elimina_account.sql` (controllo del proprietario e cancellazione in un'unica operazione: tag, regali e
+  `20261126000000_elimina_account.sql` (applicata alla produzione il 27/11; **manca su `myquicktag-prova`**, che andava in timeout) (controllo del proprietario e cancellazione in un'unica operazione: tag, regali e
   link QuickGift, Pocket a cascata, account di Supabase Auth). Il nome torna libero subito. All'account eliminato parte
   un'email di conferma (`emailAccountEliminato`). Restano solo segnalazioni (max 24 mesi) e contatori anonimi.
   **Non si cancellano da sole le foto su Cloudinary** (il caricamento è senza chiave segreta): la privacy promette la
