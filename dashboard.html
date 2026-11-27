@@ -92,6 +92,25 @@
             <button type="button" class="btn btn-secondary" id="btn-esci">Esci da questo dispositivo</button>
             <button type="button" class="btn btn-danger" id="btn-esci-ovunque">Esci da tutti i dispositivi</button>
         </div>
+
+        <!-- ELIMINA ACCOUNT (26/11/2026): l'utente può andarsene in qualsiasi momento, senza scrivere a nessuno -->
+        <div class="card" style="margin-top: 22px; border-color: rgba(255,68,68,0.25);">
+            <h2 class="card-title" style="color: #ff8a8a;"><i class="fas fa-user-xmark" style="color: #ff8a8a;"></i> Elimina l'account</h2>
+            <p class="note" style="margin: 0 0 12px;">Cancella per sempre il tuo account, tutte le tue tag con i loro contenuti, i contatti ricevuti, le statistiche e il Pocket. I nomi tornano liberi. Non si può annullare.</p>
+            <button type="button" class="btn btn-danger" id="btn-elimina-account">Elimina il mio account</button>
+        </div>
+
+        <!-- Finestra di conferma: si scrive la parola richiesta, così un clic sbagliato non cancella niente -->
+        <div id="conferma-elimina" role="dialog" aria-modal="true" aria-labelledby="ce-titolo" hidden style="position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 16px;">
+            <div class="card" style="max-width: 400px; width: 100%; margin: 0; border-color: rgba(255,68,68,0.4); background: #111113; max-height: calc(100svh - 32px); overflow-y: auto;">
+                <h2 class="card-title" id="ce-titolo" style="color: #ff8a8a;">Elimina</h2>
+                <p class="note" id="ce-testo" style="margin: 0 0 12px;"></p>
+                <div class="field"><label for="ce-campo" id="ce-etichetta"></label><input type="text" id="ce-campo" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+                <button type="button" class="btn btn-danger" id="ce-conferma" disabled>Elimina per sempre</button>
+                <button type="button" class="btn btn-secondary" id="ce-annulla">Annulla</button>
+                <div class="messaggio" id="ce-msg" role="status"></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -141,7 +160,8 @@
             const nome = t.username_display ? t.username_display.replace(/^@?/, '@') : '@' + t.username_system;
             const azioni = t.stato === 'in attesa'
                 ? `<a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-bolt"></i> Attiva gratis</a>`
-                : `<a href="/u/${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-eye"></i> Apri la tag</a>
+                : `${(t.mancanti || []).length ? `<a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}" class="completa-tag"><i class="fas fa-wand-magic-sparkles"></i> Completa la tua tag · manca ${esc(t.mancanti.map(m => ({ foto: 'la foto', bio: 'la bio', contatto: 'un contatto' })[m] || m).join(', '))}</a>` : ''}
+                   <a href="/u/${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-eye"></i> Apri la tag</a>
                    <a href="/edit.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-pen"></i> Modifica</a>
                    <a href="/analytics.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-chart-line"></i> Statistiche${t.views ? ' · ' + esc(t.views) : ''}</a>
                    <a href="/contatti.html?u=${n}" data-tag="${esc(t.username_system)}"><i class="fas fa-inbox"></i> Contatti ricevuti ${t.contatti_nuovi ? '<span class="pallino">' + t.contatti_nuovi + '</span>' : ''}</a>
@@ -151,7 +171,8 @@
             return `<div class="card tag-card" id="tag-${esc(t.username_system)}">
                 <div class="testa"><div><div class="nome">${esc(nome)}</div><div class="sub">${esc(s.sub)}${t.ha_bozza && t.stato === 'attivo' ? ' · bozza non pubblicata' : ''}</div></div>
                 <span class="badge ${s.badge}">${esc(s.testo)}</span></div>
-                <div class="azioni">${azioni}</div></div>`;
+                <div class="azioni">${azioni}</div>
+                <button type="button" class="link-elimina" data-elimina="${esc(t.username_system)}">${t.stato === 'in attesa' ? 'Annulla la prenotazione' : 'Elimina questa tag'}</button></div>`;
         }).join('');
         // Più tag nello stesso account (24/11/2026): in cima i nomi, un clic porta alla scheda di quella tag
         if (tags.length > 1) {
@@ -160,6 +181,7 @@
         }
         // Arrivo da GESTISCI di una tag: si va alla sua scheda e la si mette in risalto
         if (location.hash.startsWith('#tag-')) setTimeout(() => evidenzia(decodeURIComponent(location.hash.slice(1))), 150);
+        elenco.querySelectorAll('[data-elimina]').forEach(b => b.addEventListener('click', () => chiediEliminaTag(b.dataset.elimina)));
         // Le pagine della singola tag ricordano quale tag stai gestendo su questo dispositivo
         elenco.querySelectorAll('a[data-tag]').forEach(a => a.addEventListener('click', () => {
             try { localStorage.setItem('mqt_logged_user', a.dataset.tag); } catch (e) {}
@@ -276,6 +298,62 @@
         await mqtSessione.esci(true);
         location.href = '/';
     });
+
+    // ELIMINA TAG / ACCOUNT (26/11/2026): conferma scritta, poi il server cancella tutto (api/account.js)
+    function apriConferma({ titolo, testo, etichetta, parola, confronta, azione }) {
+        const box = document.getElementById('conferma-elimina'), campo = document.getElementById('ce-campo');
+        const btn = document.getElementById('ce-conferma'), m = document.getElementById('ce-msg');
+        document.getElementById('ce-titolo').textContent = titolo;
+        document.getElementById('ce-testo').textContent = testo;
+        document.getElementById('ce-etichetta').textContent = etichetta;
+        campo.value = ''; campo.placeholder = parola; btn.disabled = true; m.textContent = ''; m.className = 'messaggio';
+        campo.oninput = () => { btn.disabled = !confronta(campo.value); };
+        btn.onclick = async () => {
+            btn.disabled = true; btn.textContent = 'Eliminazione…';
+            try { await azione(campo.value, m); } catch (e) { msg(m, 'Errore di connessione. Riprova.', false); }
+            btn.textContent = 'Elimina per sempre'; btn.disabled = !confronta(campo.value);
+        };
+        box.hidden = false; setTimeout(() => campo.focus(), 50);
+    }
+    function chiudiConferma() { document.getElementById('conferma-elimina').hidden = true; }
+    document.getElementById('ce-annulla').addEventListener('click', chiudiConferma);
+    const soloLettere = v => String(v || '').toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '');
+
+    function chiediEliminaTag(nome) {
+        apriConferma({
+            titolo: 'Elimina @' + nome,
+            testo: 'La tag sparisce subito: chi la apre o inquadra il suo QR non la troverà più. Si cancellano contenuti, contatti ricevuti, statistiche e QuickGift. Il nome torna libero e chiunque potrà prenderlo. Non si può annullare.',
+            etichetta: 'Per confermare scrivi ' + nome,
+            parola: nome,
+            confronta: v => soloLettere(v) === nome,
+            azione: async (v, m) => {
+                const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ azione: 'elimina-tag', u: nome, conferma: v }) });
+                if (r.status === 401) { mqtSessione.scaduta(); return; }
+                const d = await r.json();
+                if (!d.success) return msg(m, d.error || 'Eliminazione non riuscita. Riprova.', false);
+                try { const k = JSON.parse(localStorage.getItem('mqt_keys') || '[]').filter(x => x !== nome); localStorage.setItem('mqt_keys', JSON.stringify(k)); localStorage.removeItem('mqt_draft_full_' + nome); if (localStorage.getItem('mqt_logged_user') === nome) localStorage.removeItem('mqt_logged_user'); } catch (e) {}
+                chiudiConferma();
+                const tags = await caricaTags(); if (tags) disegna(tags);
+                if (tags && !tags.length) document.getElementById('btn-aggiungi').style.display = '';
+            }
+        });
+    }
+    document.getElementById('btn-elimina-account').addEventListener('click', () => apriConferma({
+        titolo: 'Elimina il tuo account',
+        testo: 'Cancelliamo subito il tuo account (' + (utente && utente.email || '') + '), tutte le tue tag con contenuti, contatti ricevuti, statistiche, QuickGift e il Pocket. I nomi tornano liberi. Riceverai un\'ultima email di conferma. Non si può annullare.',
+        etichetta: 'Per confermare scrivi ELIMINA',
+        parola: 'ELIMINA',
+        confronta: v => v.trim().toUpperCase() === 'ELIMINA',
+        azione: async (v, m) => {
+            const r = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ azione: 'elimina-account', conferma: v }) });
+            if (r.status === 401) { mqtSessione.scaduta(); return; }
+            const d = await r.json();
+            if (!d.success) return msg(m, d.error || 'Eliminazione non riuscita. Riprova.', false);
+            try { await mqtSessione.esci(false); } catch (e) {}
+            try { ['mqt_keys', 'mqt_session_tokens', 'mqt_logged_user', 'mqt_pocket'].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+            location.replace('/?account=eliminato');
+        }
+    }));
 
     avvia();
 })();

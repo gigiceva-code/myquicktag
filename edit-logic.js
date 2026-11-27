@@ -99,10 +99,10 @@
             document.getElementById('guida-conta').textContent = n + '/3';
             document.getElementById('guida-avanzamento').style.width = Math.round(n / 3 * 100) + '%';
             box.hidden = n === 3;
+            const inizia = document.getElementById('inizia-qui');
+            if (inizia) inizia.hidden = n > 0;
             const pallino = document.getElementById('pallino-guida');
             if (pallino) pallino.hidden = n === 3;
-            const nota = document.getElementById('nota-prima-di-attivare');
-            if (nota && !nota.hidden && verificaCompletamentoBase()) nota.hidden = true;
         }
 
 // Numero di telefono leggibile (24/11/2026): la tastiera numerica di Android non ha lo spazio, quindi
@@ -789,18 +789,6 @@
                 .trim();
         }
 
-        // 2. FUNZIONE DI VERIFICA (Recuperata dal vecchio file)
-        function verificaCompletamentoBase() {
-            const bioVal = document.getElementById('field-bio') ? document.getElementById('field-bio').value.trim() : "";
-            const sitoVal = document.getElementById('field-sito') ? document.getElementById('field-sito').value.trim() : "";
-            const emailVal = document.getElementById('field-email') ? document.getElementById('field-email').value.trim() : "";
-            const tel1Val = document.getElementById('field-tel1') ? document.getElementById('field-tel1').value.trim() : "";
-            const internalTrack = document.getElementById('social-internal-track');
-            const haSocial = internalTrack && internalTrack.children.length > 0;
-
-            return (bioVal !== "" || sitoVal !== "" || emailVal !== "" || tel1Val !== "" || haSocial);
-        }
-
         // BARRA FISSA (20/11/2026): "Pubblica" apre la scelta "Pubblica adesso" / "Salva in dashboard" (bozza);
         // per una tag in prenotazione porta all'attivazione
         function pubblicaDallaBarra() {
@@ -813,14 +801,11 @@
                 apriDrawer('drawer-salvataggio');
             } else {
                 try { fetch('/api/track-view?evento=attiva', { method: 'POST', keepalive: true }).catch(() => {}); } catch (e) {}
-                if (verificaCompletamentoBase()) {
-                    salvaEDirigi('checkout');
-                } else {
-                    // Tag ancora vuota: al posto dell'avviso di sistema, il pannello Modifica con la guida e una riga gentile
-                    const nota = document.getElementById('nota-prima-di-attivare');
-                    if (nota) nota.hidden = false;
-                    apriDrawer('drawer-master');
-                }
+                // PRIMA L'ACCOUNT, POI LA TAG (26/11/2026, decisione del titolare dopo la prova di Luca: 12 clic su
+                // "Attiva gratis" con la tag vuota e nessun checkout aperto). Si va sempre all'attivazione: il nome
+                // diventa suo e la guida in 3 tappe lo accompagna dopo. Ai visitatori una tag ancora vuota
+                // compare "in preparazione" (tag-logic.js → segnaInPreparazione).
+                salvaEDirigi('checkout');
             }
         }
 

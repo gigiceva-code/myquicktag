@@ -102,6 +102,11 @@
     .azioni a { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 6px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); min-height: 44px; box-sizing: border-box; text-align: center; }
     .azioni a i { color: var(--accent-smeraldo); }
     .azioni a:last-child:nth-child(odd) { grid-column: 1 / -1; } /* voce dispari in fondo: larga quanto la scheda */
+    /* "Completa la tua tag" (26/11/2026): in cima, larga e verde; la regola della voce dispari conta le altre */
+    .azioni a.completa-tag { grid-column: 1 / -1; background: #10b981; color: #000; border-color: #10b981; }
+    .azioni a.completa-tag i { color: #000; }
+    .azioni a.completa-tag ~ a:last-child:nth-child(odd) { grid-column: auto; }
+    .azioni a.completa-tag ~ a:last-child:nth-child(even) { grid-column: 1 / -1; }
     .pallino { display: inline-block; min-width: 18px; padding: 1px 6px; border-radius: 10px; background: var(--danger); color: #fff; font-size: 0.7rem; }
 
 /* Più tag nello stesso account (24/11/2026): scorciatoie in cima e risalto della scheda richiesta */
@@ -111,3 +116,7 @@
 .tag-card.in-risalto { animation: mqtRisalto 2.4s ease; }
 @keyframes mqtRisalto { 0%, 60% { border-color: var(--accent-smeraldo); box-shadow: 0 0 0 1px var(--accent-smeraldo), 0 0 24px rgba(80,200,120,0.25); } 100% { box-shadow: none; } }
 .etichetta-tag { margin: 4px 0 8px; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; color: var(--accent-smeraldo); }
+
+/* Elimina questa tag (26/11/2026): discreto, sotto i pulsanti della scheda */
+.link-elimina { display: block; margin: 12px auto 0; background: none; border: none; color: rgba(255,138,138,0.75); font-size: 0.75rem; text-decoration: underline; cursor: pointer; padding: 6px; font-family: inherit; }
+#conferma-elimina[hidden] { display: none !important; }

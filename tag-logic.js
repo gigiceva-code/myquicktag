@@ -225,6 +225,8 @@ const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}$
 
       if (stato === "attivo") {
             renderizzaTagCompleta(fields);
+            if (!isOwner && !tagHaContenuti(fields)) segnaInPreparazione();
+            if (isOwner && data.fields.sei_proprietario && !tagHaContenuti(fields)) mostraCompletaTag(fields.username_system);
             if (isOwner && faseTag === 'scaduta' && fields.piano_effettivo === 'BASE') {
                 setTimeout(() => mostraToast('Prova terminata: la tag resta online con il piano Base. Le sezioni avanzate sono nascoste, non cancellate'), 800);
             } else if (isOwner && faseTag === 'grazia') {
@@ -257,6 +259,39 @@ const response = await fetch(`/api/get-profile?u=${username}&_cb=${cacheBuster}$
         mostraErrore("Errore di connessione. Riprova tra qualche istante.");
     }
 } 
+// TAG IN PREPARAZIONE (26/11/2026): con "prima l'account, poi la tag" una tag può essere attiva ma ancora vuota.
+// Il visitatore non deve vedere una pagina nera: vede il nome e "in preparazione", senza "ESPLORA TAG".
+function tagHaContenuti(f) {
+    const pieno = v => String(v || '').trim() !== '';
+    const lista = v => { try { const x = typeof v === 'string' ? JSON.parse(v || '[]') : v; return Array.isArray(x) && x.length > 0; } catch (e) { return false; } };
+    let rubrica = false;
+    try { const v = typeof f.modulo_vcf === 'object' && f.modulo_vcf ? f.modulo_vcf : JSON.parse(f.modulo_vcf || '{}'); rubrica = Object.values(v).some(pieno); } catch (e) {}
+    return pieno(f.avatar_url) || pieno(f.bio) || pieno(f.sottotitolo) || pieno(f.email) || pieno(f.sito_web) || rubrica ||
+        lista(f.config_canali) || lista(f.gallery_data) || pieno(f.video_url) || pieno(f.pdf_url) ||
+        (pieno(f.quick_action_tipo) && pieno(f.quick_action_url)) || pieno(f.flash_text) || pieno(f.review_url);
+}
+function segnaInPreparazione() {
+    const box = document.getElementById('copertina-azioni');
+    const sotto = document.getElementById('copertina-sottotitolo');
+    if (box && sotto) { sotto.textContent = 'Tag in preparazione. Torna a trovarci presto.'; sotto.hidden = false; box.hidden = false; }
+    const entra = document.getElementById('entrance-prompt');
+    if (entra) entra.style.display = 'none';
+}
+
+// Il titolare che ha appena attivato una tag vuota: pulsante fisso in basso verso l'editor
+function mostraCompletaTag(nome) {
+    if (document.getElementById('cta-completa-tag')) return;
+    const box = document.createElement('div');
+    box.id = 'cta-completa-tag';
+    box.style.cssText = 'position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom)); width: calc(100% - 32px); max-width: 440px; z-index: 9000;';
+    const a = document.createElement('a');
+    a.href = '/edit.html?u=' + encodeURIComponent(nome);
+    a.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 14px 16px; background: #10b981; border-radius: 30px; color: #000; text-decoration: none; box-shadow: 0 10px 30px rgba(0,0,0,0.6);';
+    a.innerHTML = '<span style="font-size: 0.95rem; font-weight: 700; letter-spacing: -0.2px;">Completa la tua tag</span><span style="font-size: 0.7rem; font-weight: 500; opacity: 0.75;">Foto, due righe su di te e un contatto: 2 minuti</span>';
+    box.appendChild(a);
+    document.body.appendChild(box);
+}
+
 function formattaBadge(testoBruto) {
     const el = document.getElementById('tag-username');
     if(!el) return;

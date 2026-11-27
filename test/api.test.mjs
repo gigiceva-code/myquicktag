@@ -28,7 +28,7 @@ function apriSessione(utente){ const jwt=`${b64({alg:'ES256',typ:'JWT'})}.${b64(
 const anna={id:'11111111-1111-1111-1111-111111111111',email:'anna@esempio.it',email_confirmed_at:'2026-10-01T00:00:00Z'};
 const bruno={id:'22222222-2222-2222-2222-222222222222',email:'bruno@esempio.it',email_confirmed_at:'2026-10-01T00:00:00Z'};
 const nonConfermato={id:'33333333-3333-3333-3333-333333333333',email:'carla@esempio.it',email_confirmed_at:null};
-let authGiu=false; const utentiExtra=[];
+let authGiu=false; const utentiExtra=[]; const accountEliminati=[];
 
 globalThis.fetch=async (url,opt={})=>{
   const u=new URL(url); const m=opt.method||'GET';
@@ -79,6 +79,13 @@ globalThis.fetch=async (url,opt={})=>{
     else if(b.p_azione==='elimina') l=l.filter(e=>e.id!==b.p_id);
     r.lead_capture_leads=JSON.stringify(l); return new Response(JSON.stringify(r.lead_capture_leads),{status:200}); }
   if(u.pathname.endsWith('/rpc/email_del_proprietario')){ const b=JSON.parse(opt.body); const ut=[anna,bruno,nonConfermato,...utentiExtra].find(x=>x.id===b.p_id&&x.email_confirmed_at); return new Response(JSON.stringify(ut?ut.email:null),{status:200}); }
+  // Cancellazione (migrazione 20261126000000): stessa logica delle funzioni SQL
+  if(u.pathname.endsWith('/rpc/elimina_tag_account')){ const b=JSON.parse(opt.body); const i=rows.findIndex(x=>x.username_system===b.p_tag&&x.proprietario_id===b.p_utente); if(i<0) return new Response('false',{status:200});
+    for(const t of Object.values(tabelleQP)) for(let k=t.length-1;k>=0;k--) if(t[k].tag===b.p_tag) t.splice(k,1); rows.splice(i,1); return new Response('true',{status:200}); }
+  if(u.pathname.endsWith('/rpc/elimina_account')){ const b=JSON.parse(opt.body); const mie=rows.filter(x=>x.proprietario_id===b.p_utente).map(x=>x.username_system);
+    for(const t of Object.values(tabelleQP)) for(let k=t.length-1;k>=0;k--) if(mie.includes(t[k].tag)) t.splice(k,1);
+    for(let k=rows.length-1;k>=0;k--) if(rows[k].proprietario_id===b.p_utente) rows.splice(k,1);
+    for(const [j,ut] of sessioni) if(ut.id===b.p_utente) sessioni.delete(j); accountEliminati.push(b.p_utente); return new Response(String(mie.length),{status:200}); }
   if(u.pathname.includes('/rpc/')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null',{status:200});
     const campo=u.pathname.endsWith('aggiungi_lead')?'lead_capture_leads':'analytics_log'; const voce=b.p_lead||b.p_click; const lista=JSON.parse(r[campo]||'[]'); lista.unshift(voce); r[campo]=JSON.stringify(lista); return new Response('true',{status:200}); }
   const f=(r)=>{for(const [k,v] of u.searchParams){ if(v.startsWith('eq.')&&String(r[k])!==decodeURIComponent(v.slice(3)))return false; if(v==='is.null'&&r[k]!=null)return false; if(v==='not.is.null'&&r[k]==null)return false;
@@ -932,4 +939,39 @@ delete process.env.RINNOVO_GRATUITO;
   ok(riga('negoziowebqp').quickpass_modo==='online','quick pass online: un modo non previsto viene ignorato');
   r=await call('get-profile.js',{query:{u:'negoziowebqp'}});
   ok(r.body.fields.quickpass_modo==='online' && r.body.fields.quickpass_contatto==='+39 333 1234567','quick pass online: la tag pubblica sa dove si usa il pass e a chi scrivere');
+}
+{
+  // CANCELLAZIONE DI TAG E ACCOUNT (26/11/2026): l'utente può andarsene in qualsiasi momento
+  const dario={id:'44444444-4444-4444-4444-444444444444',email:'dario@esempio.it',email_confirmed_at:'2026-11-01T00:00:00Z'}; utentiExtra.push(dario);
+  const jwtDario=apriSessione(dario);
+  rows.push({id:'del1',username_system:'dariouno',stato:'attivo',proprietario_id:dario.id,data_scadenza:'2099-01-01',bio:'Ciao',lead_capture_leads:'[{"id":"l1","nome":"Zoe"}]',created_at:new Date().toISOString()});
+  rows.push({id:'del2',username_system:'dariodue',stato:'in attesa',proprietario_id:dario.id,created_at:new Date().toISOString()});
+  rows.push({id:'del3',username_system:'annaresta',stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',created_at:new Date().toISOString()});
+  tabelleQP.quickpass_inviti.push({codice:'invdario',tag:'dariouno'}); tabelleQP.quickpass_pass.push({codice:'passdario',tag:'dariouno'});
+  // Tag attiva vuota: la Console dice cosa manca (prima l'account, poi la tag)
+  let r=await call('account.js',{method:'POST',headers:conSessione(jwtDario),body:{azione:'mie-tag'}});
+  const uno=r.body.tags.find(t=>t.username_system==='dariouno');
+  ok(r.code===200 && JSON.stringify(uno.mancanti)==='["foto","contatto"]' && !('mancanti' in r.body.tags.find(t=>t.username_system==='dariodue')),'Identity Console: per una tag attiva incompleta indica cosa manca (foto, contatto)');
+  // Tag: serve il nome scritto per conferma
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtDario),body:{azione:'elimina-tag',u:'dariouno'}});
+  ok(r.code===400 && riga('dariouno'),'elimina tag: senza la conferma scritta non cancella niente');
+  r=await call('account.js',{method:'POST',body:{azione:'elimina-tag',u:'dariouno',conferma:'dariouno'}});
+  ok(r.code===401 && riga('dariouno'),'elimina tag: senza accesso non cancella niente');
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtDario),body:{azione:'elimina-tag',u:'annaresta',conferma:'annaresta'}});
+  ok(r.code===404 && riga('annaresta'),'elimina tag: la tag di un altro account non si può cancellare');
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtDario),body:{azione:'elimina-tag',u:'@DarioUno',conferma:'dario uno'}});
+  ok(r.code===200 && !riga('dariouno') && !tabelleQP.quickpass_inviti.some(x=>x.tag==='dariouno') && !tabelleQP.quickpass_pass.some(x=>x.tag==='dariouno') && riga('dariodue'),'elimina tag: cancellata con contenuti e QuickGift, le altre tag restano');
+  r=await call('check-and-create.js',{method:'POST',body:{tag:'dariouno'}});
+  ok(r.code===200 && r.body.success,'elimina tag: il nome torna libero');
+  // Account: serve ELIMINA
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtDario),body:{azione:'elimina-account',conferma:'si'}});
+  ok(r.code===400 && accountEliminati.length===0,'elimina account: senza «ELIMINA» non cancella niente');
+  process.env.RESEND_API_KEY='re_test'; const primaEmail=emailInviate.length;
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtDario),body:{azione:'elimina-account',conferma:'elimina'}});
+  ok(r.code===200 && accountEliminati.includes(dario.id) && !rows.some(x=>x.proprietario_id===dario.id) && riga('annaresta'),'elimina account: cancellati account e tutte le sue tag, gli altri account restano');
+  const conferma=emailInviate.slice(primaEmail).find(e=>[].concat(e.to).includes('dario@esempio.it'));
+  ok(conferma && /eliminato/.test(conferma.subject) && conferma.html.includes('@dariodue'),'elimina account: arriva l\'email di conferma con i nomi delle tag');
+  delete process.env.RESEND_API_KEY;
+  r=await call('account.js',{method:'POST',headers:conSessione(jwtDario),body:{azione:'mie-tag'}});
+  ok(r.code===401,'elimina account: la vecchia sessione non vale più');
 }

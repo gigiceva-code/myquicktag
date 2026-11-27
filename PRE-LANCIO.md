@@ -164,6 +164,15 @@ premio a chi condivide) può rientrare nelle "operazioni a premio"; verificare c
       se va bene, adeguare termini e testi a quello che dice; se lo sconsiglia, nascondere QuickGift con
       "in arrivo" (circa 30 minuti di lavoro). Finché manca, la tag ufficiale @myquicktag non usa QuickGift.
 
+### Cancellazione e attivazione (26/11/2026)
+- [x] L'utente può eliminare una tag o l'account dalla Identity Console (migrazione `20261126000000_elimina_account.sql`,
+      applicata a `myquicktag` il 27/11/2026 con l'ok del titolare).
+- [ ] Applicare la stessa migrazione a `myquicktag-prova` (il 27/11 il collegamento al database di prova andava in
+      timeout): finché manca, sul Preview «Elimina» dà errore.
+- [x] «Attiva gratis» porta sempre all'attivazione (prima l'account, poi la tag).
+- [ ] Foto e documenti su Cloudinary delle tag/account eliminati: rimozione a mano entro 30 giorni (lo promette la
+      privacy) oppure automatica con la chiave API di Cloudinary su Vercel (da decidere).
+
 ### Social e tag ufficiale (17/11/2026)
 - [ ] Configurare la tag ufficiale @myquicktag (foto, bio, bottone "Crea la tua tag", via il vecchio QuickGift): istruzioni in `KIT-LANCIO-SOCIAL.md`, parte 1.
 - [x] Aprire Instagram, TikTok, Facebook e Pinterest con il kit (`KIT-LANCIO-SOCIAL.md`) e mettere i link veri nel menu e in fondo alla home (fatto il 22-23/11/2026).

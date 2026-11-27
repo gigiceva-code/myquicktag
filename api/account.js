@@ -6,9 +6,11 @@
 // non passa mai da qui. Questa funzione riceve solo la sessione (Authorization: Bearer <jwt>)
 // e la verifica con Supabase (lib/sessione.js) prima di ogni operazione.
 //
-// azione 'mie-tag' → elenco delle tag di cui l'account è proprietario
-import { tagDelProprietario, tagDaRicordare, aggiornaTag, emailDelProprietario, prenotazioniInScadenza } from '../lib/db.js';
-import { emailPromemoria, emailScadenza, inviaEmail, partiMancanti } from '../lib/email.js';
+// azione 'mie-tag'         → elenco delle tag di cui l'account è proprietario
+// azione 'elimina-tag'     → cancella una sua tag (conferma: il nome della tag)
+// azione 'elimina-account' → cancella tutte le sue tag e l'account (conferma: ELIMINA)
+import { tagDelProprietario, tagDaRicordare, aggiornaTag, emailDelProprietario, prenotazioniInScadenza, eliminaTagAccount, eliminaAccount, normalizzaUsername } from '../lib/db.js';
+import { emailPromemoria, emailScadenza, emailAccountEliminato, inviaEmail, partiMancanti } from '../lib/email.js';
 import { tokenAccount, utenteDaToken } from '../lib/sessione.js';
 import { calcolaAbbonamento, pianoEffettivo, puoAggiungereTag } from '../lib/abbonamento.js';
 import { contaEvento, numeriLancio, puoVedereNumeri } from '../lib/contatori.js';
@@ -123,11 +125,33 @@ export default async function handler(req, res) {
           quickpass_attivo: !!(String(f.quickpass_premio_a || '').trim() && String(f.quickpass_premio_b || '').trim())
         };
         if (stato === 'attivo') voce.abbonamento = { ...calcolaAbbonamento(r), piano_effettivo: pianoEffettivo(r) };
+        // Tag attiva ma incompleta (26/11/2026, "prima l'account, poi la tag"): la Console indica cosa manca
+        if (stato === 'attivo') voce.mancanti = partiMancanti(f);
         if (stato === 'in attesa') voce.prenotata_il = r.createdTime;
         return voce;
       });
       await contaEvento('console_aperta');
       return res.status(200).json({ success: true, tags, vede_numeri: puoVedereNumeri(utente.email), puo_aggiungere: puoAggiungereTag(utente.email, records) });
+    }
+
+    // CANCELLAZIONE (26/11/2026, richiesta del titolare: "l'utente deve potersi disiscrivere in qualsiasi momento").
+    // Serve la sessione dell'account e una conferma scritta, così un clic sbagliato non cancella niente.
+    if (azione === 'elimina-tag') {
+      const tag = normalizzaUsername(body.u || '');
+      if (!tag || normalizzaUsername(body.conferma || '') !== tag) return res.status(400).json({ success: false, error: 'Per confermare scrivi il nome della tag.' });
+      const fatto = await eliminaTagAccount(utente.id, tag);
+      if (!fatto) return res.status(404).json({ success: false, error: 'Questa tag non è nel tuo account.' });
+      console.log('ELIMINA TAG: una tag cancellata dal suo titolare');
+      return res.status(200).json({ success: true });
+    }
+    if (azione === 'elimina-account') {
+      if (String(body.conferma || '').trim().toUpperCase() !== 'ELIMINA') return res.status(400).json({ success: false, error: 'Per confermare scrivi ELIMINA.' });
+      const email = utente.email;
+      const nomi = (await tagDelProprietario(utente.id)).map(r => r.fields.username_system).filter(Boolean);
+      const cancellate = await eliminaAccount(utente.id);
+      console.log(`ELIMINA ACCOUNT: account cancellato con ${cancellate} tag`);
+      if (email) await inviaEmail({ to: email, ...emailAccountEliminato({ tags: nomi }) });
+      return res.status(200).json({ success: true, tag_cancellate: cancellate });
     }
 
     return res.status(400).json({ success: false, error: 'Azione non valida' });
