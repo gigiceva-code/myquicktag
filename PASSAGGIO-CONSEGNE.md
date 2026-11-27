@@ -1,7 +1,7 @@
 # Passaggio di consegne — myquicktag
 
 Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md`
-(decisioni aperte e cose da fare prima del lancio). Aggiornato al 25/11/2026.
+(decisioni aperte e cose da fare prima del lancio). Aggiornato al 26/11/2026.
 
 ---
 
@@ -365,12 +365,14 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - **Controllo automatico su GitHub (26/11/2026):** `.github/workflows/prove.yml` lancia `node test/api.test.mjs` a ogni
   pull request e a ogni push su `main`/`sviluppo-v2`. Se è rosso, **non unire**: prima correggere. Le prove nel browser
   (`*.e2e.mjs`) non sono nel controllo (servono Playwright e la libreria di Supabase): si lanciano a mano.
-- `node test/api.test.mjs` → 299 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
+- `node test/api.test.mjs` → 309 prove delle funzioni `api/` con un finto database e un finto Supabase Auth
   (nessuna installazione). Rilanciarle dopo ogni modifica al server e aggiungerne per le novità.
 - `test/account.e2e.mjs` + `test/finto-supabase.mjs` → 62 prove nel browser (telefono simulato): registrazione con
   codice, attivazione, multi-tag, nome gold assegnato, tag di altri account, recupero password, revoca delle sessioni,
   uscita, pagina ricaricata mentre si aspetta il codice (succede passando all'app della posta). Istruzioni in testa al file (servono Playwright e la libreria di Supabase).
 - `test/quickpass.e2e.mjs` → 42 prove nel browser di QuickGift: dal link alla cassa, uso online e configurazione guidata nell'editor (istruzioni in testa al file).
+- `test/attivazione.e2e.mjs` → 14 prove nel browser: tag vuota → attivazione → account, «in preparazione», «Completa la tua tag»,
+  cancellazione di tag e account.
 - `test/pocket.e2e.mjs` → 8 prove del Pocket nell'account (tag salvata in un browser, ritrovata in un altro).
 - `test/piano.e2e.mjs` → 7 prove nel browser del piano effettivo (modello C) e del VIP Vault verificato sul server.
 - `test/condividi.e2e.mjs` → 12 prove nel browser di CONDIVIDI e dei link alle sezioni (istruzioni in testa al file).
@@ -380,6 +382,33 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   le fa il titolare, poi si controllano i log/dati su Supabase.
 
 ## Prossimi passi (in ordine)
+
+**26/11/2026 — attivazione, cancellazione, editor (dopo la prova di Luca Turletti e le fatiche di Mario e Massimo):**
+- **Cosa era successo a Luca:** ha prenotato @lucaturle e @luca, ha premuto 12 volte «Attiva gratis» e non è mai arrivato
+  al checkout (Numeri: attiva_premuto 12, checkout_visita 0, account 0). Con la tag vuota il pulsante riapriva il pannello
+  Modifica con la frase «Ci siamo quasi…» e lui pensava di aver sbagliato. Prenotazioni senza account: si liberano da sole
+  dopo 24 ore.
+- **Prima l'account, poi la tag (decisione del titolare, «strada A»):** «Attiva gratis» porta sempre al checkout, anche
+  con la tag vuota (`gestisciAzioneMaster` in edit-logic.js; tolti la nota e `verificaCompletamentoBase`). Una tag attiva
+  ma vuota: ai visitatori «Tag in preparazione. Torna a trovarci presto.» senza ESPLORA TAG (`tagHaContenuti` e
+  `segnaInPreparazione` in tag-logic.js); al titolare il pulsante fisso «Completa la tua tag» (`mostraCompletaTag`);
+  nella Identity Console il pulsante verde «Completa la tua tag · manca …» (`mie-tag` restituisce `mancanti`, da
+  `partiMancanti` di lib/email.js). L'email di prenotazione in scadenza non chiede più di aggiungere un contenuto.
+- **Cancellazione da parte dell'utente (richiesta del titolare: «deve potersi disiscrivere in qualsiasi momento»):**
+  nella Identity Console «Elimina questa tag» / «Annulla la prenotazione» (conferma scrivendo il nome) e la scheda
+  «Elimina l'account» (conferma scrivendo ELIMINA). Server: azioni `elimina-tag` ed `elimina-account` in api/account.js
+  (nessuna funzione nuova), che chiamano le funzioni SQL `elimina_tag_account` ed `elimina_account` della migrazione
+  `20261126000000_elimina_account.sql` (controllo del proprietario e cancellazione in un'unica operazione: tag, regali e
+  link QuickGift, Pocket a cascata, account di Supabase Auth). Il nome torna libero subito. All'account eliminato parte
+  un'email di conferma (`emailAccountEliminato`). Restano solo segnalazioni (max 24 mesi) e contatori anonimi.
+  **Non si cancellano da sole le foto su Cloudinary** (il caricamento è senza chiave segreta): la privacy promette la
+  rimozione entro 30 giorni, quindi per ora va fatta a mano dal pannello di Cloudinary (o automatizzata con la chiave
+  API di Cloudinary su Vercel). Privacy (punto 6) e termini (punto 11) aggiornati.
+- **Editor più chiaro:** pulsante in basso «Modifica la tag»; pannello «Cosa vuoi modificare?» con i 6 campi più usati a un
+  clic (Foto e nome, Chi sei, Telefono/email/indirizzo, Social e link, Sito web, Colori e stile) e sotto ogni sezione una
+  riga in italiano (es. NETWORK → «Telefono, email, social, sito»); i nomi delle sezioni restano quelli del tono lusso. Con la
+  tag vuota l'anteprima mostra «Inizia da qui».
+- Prove: `test/api.test.mjs` (+10, ora 309), nuovo `test/attivazione.e2e.mjs` (14 prove nel browser).
 
 **Stato al 25/11/2026 (sera):** online fino alla PR #75 (`main` = `sviluppo-v2`).
 - **PR #75 (25/11, sera):** l'informativa privacy (`privacy.html`, punto «Pocket») dice ora che con un account le tag

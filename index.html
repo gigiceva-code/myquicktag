@@ -1075,6 +1075,17 @@ function controllaMemoriaProprieta() {
         return;
     }
 
+    // Account appena eliminato dalla Identity Console (26/11/2026): una riga di saluto, poi l'indirizzo torna pulito
+    if (new URLSearchParams(window.location.search).get('account') === 'eliminato') {
+        history.replaceState(null, '', '/');
+        const avviso = document.createElement('div');
+        avviso.setAttribute('role', 'status');
+        avviso.textContent = 'Il tuo account è stato eliminato. Grazie per aver provato myquicktag.';
+        avviso.style.cssText = 'position: fixed; left: 50%; transform: translateX(-50%); top: calc(16px + env(safe-area-inset-top)); width: calc(100% - 32px); max-width: 440px; z-index: 99999; padding: 14px 16px; border-radius: 14px; background: #111; border: 1px solid rgba(255,255,255,0.15); color: #fff; font-size: 0.9rem; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6);';
+        document.body.appendChild(avviso);
+        setTimeout(() => avviso.remove(), 6000);
+    }
+
     const tagInput = document.getElementById('tag-input');
     if (tagInput) {
         tagInput.addEventListener('keypress', function (e) {

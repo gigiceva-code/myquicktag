@@ -459,10 +459,8 @@ input[type="password"], input:not([type]), textarea, select {
 
 /* Tasto "Attiva gratis" con la riga rassicurante sotto (23/11/2026) */
 #barra-editor .voce-pubblica small { font-size: 0.5rem; font-weight: 600; letter-spacing: 0.8px; opacity: 0.75; text-transform: uppercase; }
-#barra-editor .voce-pubblica small[hidden], #nota-prima-di-attivare[hidden] { display: none !important; }
+#barra-editor .voce-pubblica small[hidden] { display: none !important; }
 #barra-editor .voce-pubblica:has(small:not([hidden])) { gap: 1px; }
-#nota-prima-di-attivare { margin: 0 0 14px; padding: 13px 15px; border-radius: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); color: #e6e6ea; font-size: 0.8rem; line-height: 1.5; }
-#nota-prima-di-attivare b { color: #fff; }
 /* Telefoni molto bassi (23/11/2026): copertina compatta come sulla tag pubblica */
 @media (max-height: 600px) {
     .app-container.con-copertina .copertina-azioni { gap: 9px; margin-top: 10px; }
@@ -487,3 +485,15 @@ input[type="password"], input:not([type]), textarea, select {
     .orbital-ring { border-radius: 32px !important; }
     #profile-content.app-container.locked.con-copertina .header-monolith { transform: translateY(calc(12vh - 34px)); }
 }
+
+/* EDITOR PIÙ CHIARO (26/11/2026): scorciatoie ai campi più usati e una riga in italiano sotto ogni sezione */
+.etichetta-rapide { margin: 14px 4px 8px; font-size: 0.62rem; letter-spacing: 2px; color: rgba(255,255,255,0.45); font-weight: 600; }
+.scorciatoie-editor { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
+.scorciatoie-editor button { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 10px 12px; border-radius: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; font: inherit; font-size: 0.8rem; font-weight: 500; text-align: left; cursor: pointer; line-height: 1.25; }
+.scorciatoie-editor button i { color: #10b981; width: 16px; text-align: center; flex-shrink: 0; }
+.scorciatoie-editor button:active { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.4); }
+.edit-menu-item span.pillar-text small.pillar-sub { display: block; margin-top: 3px; font-size: 0.7rem; letter-spacing: 0.2px; text-transform: none; color: rgba(255,255,255,0.5); font-weight: 400; }
+#inizia-qui { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 26px auto 0; padding: 14px 20px; max-width: 280px; border-radius: 16px; background: rgba(16,185,129,0.1); border: 1px dashed rgba(16,185,129,0.6); color: #fff; font: inherit; cursor: pointer; position: relative; z-index: 12; }
+#inizia-qui[hidden] { display: none !important; }
+#inizia-qui b { font-size: 0.95rem; color: #10b981; }
+#inizia-qui span { font-size: 0.75rem; color: rgba(255,255,255,0.7); text-align: center; line-height: 1.4; }

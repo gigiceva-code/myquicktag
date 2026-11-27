@@ -52,6 +52,15 @@ globalThis.fetch=async (url,opt={})=>{
   if(u.pathname.endsWith('/rpc/conta_evento')){ const b=JSON.parse(opt.body); contatori[b.p_evento]=(contatori[b.p_evento]||0)+1; return new Response(null,{status:204}); }
   if(u.pathname.endsWith('/rpc/numeri_lancio')){ const g=new Date().toISOString().slice(0,10);
     return new Response(JSON.stringify({eventi:Object.entries(contatori).map(([evento,conteggio])=>({giorno:g,evento,conteggio})),account:[],prenotazioni:[],attivazioni:[],totali:{account:1,tag_attive:rows.filter(r=>r.stato==='attivo').length}})); }
+  // Cancellazione (migrazione 20261126000000)
+  if(u.pathname.endsWith('/rpc/elimina_tag_account')){ const b=JSON.parse(opt.body); const i=rows.findIndex(x=>x.username_system===b.p_tag&&x.proprietario_id===b.p_utente); if(i<0) return new Response('false');
+    for(const t of Object.values(tabelleQP)) for(let k=t.length-1;k>=0;k--) if(t[k].tag===b.p_tag) t.splice(k,1); rows.splice(i,1); return new Response('true'); }
+  if(u.pathname.endsWith('/rpc/elimina_account')){ const b=JSON.parse(opt.body); const mie=rows.filter(x=>x.proprietario_id===b.p_utente).map(x=>x.username_system);
+    for(const t of Object.values(tabelleQP)) for(let k=t.length-1;k>=0;k--) if(mie.includes(t[k].tag)) t.splice(k,1);
+    for(let k=rows.length-1;k>=0;k--) if(rows[k].proprietario_id===b.p_utente) rows.splice(k,1);
+    for(let k=pocket.length-1;k>=0;k--) if(pocket[k].utente===b.p_utente) pocket.splice(k,1);
+    for(const [email,ut] of utenti) if(ut.id===b.p_utente){ utenti.delete(email); chiudi(v=>v.email===email); }
+    return new Response(String(mie.length)); }
   if(u.pathname.includes('/rpc/')){ const b=JSON.parse(opt.body); const r=rows.find(x=>x.username_system===b.p_username); if(!r) return new Response('null');
     const campo=u.pathname.endsWith('aggiungi_lead')?'lead_capture_leads':'analytics_log'; const voce=b.p_lead||b.p_click; const lista=JSON.parse(r[campo]||'[]'); lista.unshift(voce); r[campo]=JSON.stringify(lista); return new Response('true'); }
   const nomeTab=u.pathname.replace('/rest/v1/','');
