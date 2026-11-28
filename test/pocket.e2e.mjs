@@ -76,4 +76,9 @@ ok(d.pocket.length === 1 && !/LUCA M/i.test(await A.textContent('#lista-pocket')
 await A.evaluate(() => mqtSessione.esci(false)); await A.waitForTimeout(500);
 ok(await A.evaluate(() => !localStorage.getItem('mqt_pocket')), 'uscendo dall\'account il Pocket non resta nel browser (sta nell\'account)');
 
+// 7. (28/11/2026, segnalato dal titolare) Pocket aperto dove non si è entrati: niente "è vuoto" e basta, ma l'invito ad accedere
+await A.goto(B + '/pocket.html'); await A.waitForTimeout(1500);
+ok(await A.isVisible('#pocket-accedi') && /non risulti entrato/.test(await A.textContent('#pocket-accedi')), 'senza accesso: il Pocket spiega che mostra solo questo telefono e invita ad accedere');
+ok(!(await PB.goto(B + '/pocket.html').then(() => PB.waitForTimeout(2000)).then(() => PB.isVisible('#pocket-accedi'))), 'con l\'accesso: nessun invito, si vedono le tag dell\'account');
+
 await browser.close();

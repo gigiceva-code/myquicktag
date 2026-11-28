@@ -169,6 +169,14 @@
             </div>
         </div>
 
+        <!-- ACCEDI PER VEDERE IL POCKET DELL'ACCOUNT (28/11/2026, segnalato dal titolare): aperto da un'app o da un browser
+             in cui non si è entrati, il Pocket mostrava "è vuoto" anche con le tag salvate nell'account -->
+        <div class="salvata-box" id="pocket-accedi" role="region" aria-label="Accedi per vedere le tag salvate" style="display: none;">
+            <h2 id="pocket-accedi-titolo">Hai salvato delle tag con il tuo account?</h2>
+            <p id="pocket-accedi-testo">Qui non risulti entrato: per questo vedi solo le tag salvate su questo telefono. Accedi e ritrovi tutte quelle del tuo account.</p>
+            <a href="/accesso.html?torna=%2Fpocket.html">Accedi al tuo account</a>
+        </div>
+
         <div class="pocket-list" id="lista-pocket">
             </div>
 
@@ -193,13 +201,27 @@
         caricaPocket();
         mostraAppenaSalvata();
         // Con un account: la lista si allinea a quella dell'account (le tag salvate da altri browser o telefoni)
-        if (window.mqtSessione && mqtSessione.haAccount()) mqtSessione.pocket.sincronizza().then(lista => { if (lista) caricaPocket(); });
+        if (window.mqtSessione && mqtSessione.haAccount()) mqtSessione.pocket.sincronizza().then(lista => {
+            if (lista) caricaPocket();
+            else mostraInvitoAccesso(true); // sessione scaduta o rete assente: la lista dell'account non è arrivata
+        });
+        else mostraInvitoAccesso(false);
         configuraRicerca();
         configuraInvitoHome();
         // "CHIUDI" torna alla tag da cui si arriva; aperto dalla schermata Home non ha dove tornare
         const daQuestoSito = document.referrer && document.referrer.indexOf(location.origin) === 0;
         if (!(history.length > 1 && daQuestoSito)) document.getElementById('btn-chiudi').style.display = 'none';
     });
+// Senza account su questo browser (o con la sessione scaduta) il Pocket mostra solo le tag di questo telefono:
+// lo diciamo chiaramente, con il pulsante per accedere (non quando si arriva da un salvataggio, che ha già il suo invito)
+function mostraInvitoAccesso(scaduta) {
+        if (document.getElementById('salvata-box').style.display === 'block') return;
+        if (scaduta) {
+            document.getElementById('pocket-accedi-titolo').textContent = 'Accedi di nuovo per vedere tutte le tue tag';
+            document.getElementById('pocket-accedi-testo').textContent = 'Non siamo riusciti a leggere il Pocket del tuo account (accesso scaduto o connessione assente): qui vedi solo le tag salvate su questo telefono.';
+        }
+        document.getElementById('pocket-accedi').style.display = 'block';
+    }
 // Arrivo da "Salva questa tag" (tag-logic.js): conferma, dove la ritrova, ritorno alla tag
 function mostraAppenaSalvata() {
         const p = new URLSearchParams(location.search);
