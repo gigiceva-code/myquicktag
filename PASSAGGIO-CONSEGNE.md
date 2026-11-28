@@ -121,6 +121,8 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   menu di un'altra tag installata, su Samsung può essere un altro browser) il Pocket diceva «è vuoto» anche con le tag
   nell'account. Ora mostra il riquadro «Hai salvato delle tag con il tuo account? … Accedi al tuo account» (o «Accedi di
   nuovo» se la sessione è scaduta/la lista non arriva). I salvataggi nell'account funzionavano (verificato nel database).
+  Sotto il titolo «Tag salvate nell'account g•••@gmail.com» (email in parte nascosta): il Pocket è **dell'account**, non
+  della tag; chi ha due account (come il titolare: personale e @myquicktag) ha due Pocket diversi, ed è giusto così.
 - **Navigazione dashboard (01/11/2026, segnalato dal titolare dopo la prova di Martina):** le dashboard sono due:
   `dashboard.html` = **"Identity Console"** (account, nuova; nome scelto dal titolare l'01/11) e `profile.html` =
   **"Gestione tag"** della singola tag (piano, rinnovo, bozza, QR; grafica vecchia). Tutti i "torna alla dashboard" portano all'Identity Console: editor dopo "Salva in dashboard",
