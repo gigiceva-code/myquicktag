@@ -117,6 +117,12 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   nel browser con l'invito "Accedi per ritrovarla ovunque"; al primo accesso il Pocket del browser passa nell'account.
   Motivo: sul telefono fotocamera (QR) e PWA del Pocket usano browser diversi, ognuno con la sua memoria.
   Test: `test/pocket.e2e.mjs`.
+  **28/11/2026 (segnalato dal titolare con 3 screenshot):** aperto da un'app/browser in cui non si è entrati (es. dal
+  menu di un'altra tag installata, su Samsung può essere un altro browser) il Pocket diceva «è vuoto» anche con le tag
+  nell'account. Ora mostra il riquadro «Hai salvato delle tag con il tuo account? … Accedi al tuo account» (o «Accedi di
+  nuovo» se la sessione è scaduta/la lista non arriva). I salvataggi nell'account funzionavano (verificato nel database).
+  Sotto il titolo «Tag salvate nell'account g•••@gmail.com» (email in parte nascosta): il Pocket è **dell'account**, non
+  della tag; chi ha due account (come il titolare: personale e @myquicktag) ha due Pocket diversi, ed è giusto così.
 - **Navigazione dashboard (01/11/2026, segnalato dal titolare dopo la prova di Martina):** le dashboard sono due:
   `dashboard.html` = **"Identity Console"** (account, nuova; nome scelto dal titolare l'01/11) e `profile.html` =
   **"Gestione tag"** della singola tag (piano, rinnovo, bozza, QR; grafica vecchia). Tutti i "torna alla dashboard" portano all'Identity Console: editor dopo "Salva in dashboard",
@@ -341,6 +347,10 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
 - **Pulizia nel browser e "Pubblica" (25/10/2026):** `mqtPulisci` (session.js) pulisce anche dentro i JSON annidati nella
   bozza (recapiti, galleria…), come `lib/pulizia.js`. Prima "Pubblica" dalla tag salvava `{”telefono1”:…}` (illeggibile):
   è successo solo alla tag `martina` in produzione, riparata a mano il 25/10.
+- **Nome mostrato con punteggiatura (28/11/2026, @lagarage voleva «La.Garage»):** il campo «Come si scrive il tuo nome»
+  (Foto e nome) accetta maiuscole, spazi, punti, trattini e "_" purché le lettere restino quelle del @nome
+  (`mqtNome.canonico`, stessa regola di `lib/nome-canonico.js` usata dal server). Prima l'editor ammetteva solo gli spazi.
+  L'indirizzo resta solo lettere e numeri: «la.garage» e «lagarage» sono lo stesso nome (anti-imitazione, come Instagram).
 - **Forma "divider" del @nome:** il rombo va sotto il nome se sta su una riga, esattamente tra le due righe se va a capo.
   Lo decide `session.js` → `mqtBadgeNome` contando le righe vere sullo schermo (`righeVere`, dal 25/11/2026: prima
   misurava il nome senza la "@" e con "@MASSIMO GIACHINO" il rombo finiva sotto). Nell'esagono il nome lungo si
@@ -431,6 +441,9 @@ Da leggere all'inizio di ogni nuova sessione di lavoro, insieme a `PRE-LANCIO.md
   ffmpeg; lo script è in `/tmp/claude-0/qp/video2.mjs` (si perde al riavvio del container).
 
 **Lavoro da finire (17/11/2026), da ricordare al titolare finché non è chiuso:**
+- **Cancellazione automatica delle foto su Cloudinary** (rimandata dal titolare il 27/11, forse domenica): piano e cosa
+  serve in `PRE-LANCIO.md` → "Cancellazione e attivazione". Da ricordare anche: migrazione `20261126000000` da applicare a
+  `myquicktag-prova` (il 27/11 andava in timeout).
 - **Parere legale su QuickGift:** il titolare deve portare `SCHEDA-LEGALE-QUICKGIFT.md` a una consulenza (anche
   gratuita). Se il legale lo sconsiglia: nascondere QuickGift dietro "in arrivo" (~30 minuti). Se dà indicazioni:
   adeguare termini (punto 6), dichiarazione nell'editor e privacy. Dettagli in `PRE-LANCIO.md` → "Audit pre-lancio".

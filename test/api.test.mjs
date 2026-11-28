@@ -975,3 +975,13 @@ delete process.env.RINNOVO_GRATUITO;
   r=await call('account.js',{method:'POST',headers:conSessione(jwtDario),body:{azione:'mie-tag'}});
   ok(r.code===401,'elimina account: la vecchia sessione non vale più');
 }
+{
+  // NOME MOSTRATO CON PUNTI E TRATTINI (28/11/2026, @lagarage voleva «La.Garage»): stesse lettere, punteggiatura libera
+  rows.push({id:'lg1',username_system:'lagarage',stato:'attivo',proprietario_id:anna.id,data_scadenza:'2099-01-01',created_at:new Date().toISOString()});
+  let r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'lagarage',username_display:'@La.Garage'}});
+  ok(r.code===200 && riga('lagarage').username_display==='@La.Garage','nome mostrato: «@La.Garage» accettato per @lagarage');
+  r=await call('update-profile.js',{method:'POST',headers:conSessione(jwtAnna),body:{username_system:'lagarage',username_display:'La-Garage_TO'}});
+  ok(riga('lagarage').username_display==='@La.Garage','nome mostrato: lettere diverse dal @nome rifiutate (resta il precedente)');
+  const src=fs.readFileSync(new URL('../edit-logic.js', import.meta.url),'utf8');
+  ok(/mqtNome\.canonico\(inputVal\)/.test(src) && !/sono ammessi unicamente gli spazi/.test(src),'editor: il nome mostrato usa la stessa regola del server (non più «solo spazi»)');
+}

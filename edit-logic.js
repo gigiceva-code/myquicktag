@@ -1249,10 +1249,13 @@ const response = await fetch(`/api/get-profile?u=${NOME_SISTEMA}&token=${encodeU
             const fieldDisplay = document.getElementById('field-username_display');
             if(!fieldDisplay) return;
             const inputVal = fieldDisplay.value;
-            const inseritoSenzaSpazi = inputVal.toLowerCase().replace(/\s/g, '');
+            // Stessa regola del server (lib/nome-canonico.js, 28/11/2026): maiuscole, spazi, punti, trattini e "_"
+            // sono ammessi per scrivere il brand come si deve (es. @La.Garage), le lettere devono restare quelle del
+            // @nome. Prima qui erano ammessi solo gli spazi e «La.garage» veniva rifiutato (segnalato dal titolare).
+            const forma = window.mqtNome ? mqtNome.canonico(inputVal) : { nome: inputVal.toLowerCase().replace(/[\s._-]/g, '').replace(/^@+/, '') };
 
-            if (inputVal.trim() !== '' && inseritoSenzaSpazi !== NOME_SISTEMA) {
-                alert("⚠️ AZIONE NON CONSENTITA ⚠️\n\nIl tuo Tag è registrato come @" + NOME_SISTEMA.toUpperCase() + ".\nNon puoi alterare il brand originario, sono ammessi unicamente gli spazi.");
+            if (inputVal.trim() !== '' && forma.nome !== NOME_SISTEMA) {
+                alert("Il nome mostrato deve restare @" + NOME_SISTEMA + "\n\nPuoi cambiare maiuscole e minuscole e aggiungere spazi, punti, trattini o trattini bassi (es. @" + NOME_SISTEMA.charAt(0).toUpperCase() + NOME_SISTEMA.slice(1) + "), ma non le lettere: il tuo indirizzo resta myquicktag.it/@" + NOME_SISTEMA + ".");
                 fieldDisplay.value = NOME_SISTEMA; formattaBadge(NOME_SISTEMA); return; 
             }
             chiudiSenzaSalvare();
